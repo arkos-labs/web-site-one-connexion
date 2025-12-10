@@ -17,7 +17,7 @@ import Header from "@/components/client/Header";
 import Footer from "@/components/client/Footer";
 import { Package, Truck, Clock, AlertCircle, Zap, Loader2 } from "lucide-react";
 import { geocoderAdresse, calculerDistance } from "@/services/locationiq";
-import { calculerToutesLesFormules, type FormuleNew, type CalculTarifaireResult } from "@/utils/pricingEngineNew";
+import { calculerToutesLesFormules, type FormuleNew, type CalculTarifaireResult } from "@/utils/pricingEngine";
 import { loadPricingConfigCached } from "@/utils/pricingConfigLoader";
 import { OrderSummary } from "@/components/orders/OrderSummary";
 import { AddressAutocomplete } from "@/components/ui/AddressAutocomplete";
@@ -842,10 +842,10 @@ const CommandeSansCompte = () => {
                                                     <div
                                                         key={f.id}
                                                         className={`rounded-lg border-2 p-3 text-center transition-all ${isDisabled
-                                                                ? "opacity-50 cursor-not-allowed bg-gray-50 border-gray-200"
-                                                                : formData.formula === f.id
-                                                                    ? "border-[#FFCC00] bg-[#FFCC00]/10 cursor-pointer"
-                                                                    : "border-gray-100 hover:border-gray-200 cursor-pointer"
+                                                            ? "opacity-50 cursor-not-allowed bg-gray-50 border-gray-200"
+                                                            : formData.formula === f.id
+                                                                ? "border-[#FFCC00] bg-[#FFCC00]/10 cursor-pointer"
+                                                                : "border-gray-100 hover:border-gray-200 cursor-pointer"
                                                             }`}
                                                         onClick={() => {
                                                             if (!isDisabled) {
@@ -854,16 +854,16 @@ const CommandeSansCompte = () => {
                                                         }}
                                                     >
                                                         <f.icon className={`h-5 w-5 mx-auto mb-1 ${isDisabled
-                                                                ? "text-gray-300"
-                                                                : formData.formula === f.id
-                                                                    ? "text-[#0B2D55]"
-                                                                    : "text-gray-400"
+                                                            ? "text-gray-300"
+                                                            : formData.formula === f.id
+                                                                ? "text-[#0B2D55]"
+                                                                : "text-gray-400"
                                                             }`} />
                                                         <span className={`text-xs font-bold block ${isDisabled
-                                                                ? "text-gray-400"
-                                                                : formData.formula === f.id
-                                                                    ? "text-[#0B2D55]"
-                                                                    : "text-gray-500"
+                                                            ? "text-gray-400"
+                                                            : formData.formula === f.id
+                                                                ? "text-[#0B2D55]"
+                                                                : "text-gray-500"
                                                             }`}>
                                                             {f.label}
                                                         </span>

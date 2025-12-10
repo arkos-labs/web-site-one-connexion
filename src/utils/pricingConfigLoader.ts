@@ -1,5 +1,5 @@
 import { getTariffMetadata } from "@/services/settingsService";
-import { PricingConfig } from "@/utils/pricingEngineNew";
+import { PricingConfig } from "@/utils/pricingEngine";
 
 /**
  * Charge la configuration de pricing depuis Supabase

@@ -17,7 +17,7 @@ import {
     DEFAULT_PRIX_BON,
     type FormuleNew,
     type CalculTarifaireResult
-} from "@/utils/pricingEngineNew";
+} from "@/utils/pricingEngine";
 import { MapPin, ArrowRight, Calculator, Info } from "lucide-react";
 
 const PricingSimulator = () => {

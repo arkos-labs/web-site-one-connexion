@@ -1,5 +1,5 @@
 import { OrderFormData } from "./OrderWizardModal";
-import { CalculTarifaireResult, FormuleNew } from "@/utils/pricingEngineNew";
+import { CalculTarifaireResult, FormuleNew } from "@/utils/pricingEngine";
 import { MapPin, Clock, Package, Truck, User } from "lucide-react";
 
 interface WizardSummaryProps {

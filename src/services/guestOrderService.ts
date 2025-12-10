@@ -1,5 +1,5 @@
 import { supabase } from '@/lib/supabase';
-import { CalculTarifaireResult, FormuleNew } from '@/utils/pricingEngineNew';
+import { CalculTarifaireResult, FormuleNew } from '@/utils/pricingEngine';
 
 export interface GuestOrderData {
     // Informations client

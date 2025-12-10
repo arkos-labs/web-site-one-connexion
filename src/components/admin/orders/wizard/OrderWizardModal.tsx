@@ -16,7 +16,7 @@ import { StepFormula } from "./steps/StepFormula";
 import { StepConfirmation } from "./steps/StepConfirmation";
 import { supabase } from "@/lib/supabase";
 import { geocoderAdresse, calculerDistance } from "@/services/locationiq";
-import { calculerToutesLesFormules, type FormuleNew, type CalculTarifaireResult } from "@/utils/pricingEngineNew";
+import { calculerToutesLesFormules, type FormuleNew, type CalculTarifaireResult } from "@/utils/pricingEngine";
 import { UniversalModal } from "@/components/ui/UniversalModal";
 
 // Types

@@ -16,7 +16,7 @@ import {
     Calendar,
     CheckCircle2
 } from "lucide-react";
-import type { CalculTarifaireResult } from "@/utils/pricingEngineNew";
+import type { CalculTarifaireResult } from "@/utils/pricingEngine";
 
 interface OrderSummaryProps {
     // Adresses

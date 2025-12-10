@@ -11,6 +11,7 @@
 ### ✅ CE QUI EST FAIT (83%)
 - ✅ Tarification dynamique
 - ✅ Consolidation moteur pricing (pricingEngine.ts vs pricingEngineNew.ts)
+- ✅ Réparation critique Header
 - ✅ Mot de passe oublié
 - ✅ Pages légales (CGV, Mentions, Cookies)
 - ✅ Véhicules & Documents (backend)

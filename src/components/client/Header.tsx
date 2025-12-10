@@ -28,7 +28,6 @@ const Header = () => {
                 setIsUserMenuOpen(false);
             }
         };
-
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
@@ -64,28 +63,19 @@ const Header = () => {
     }, []);
 
     const determineUserRoleAndName = async (currentUser: any) => {
-        // 1. Check if Admin (Email check for now, or metadata)
-        // Remplacez par votre logique d'admin réelle si différente
         const isAdmin = currentUser.email === "admin@oneconnexion.com" || currentUser.user_metadata?.role === 'admin';
-
         if (isAdmin) {
             setUserRole("admin");
             setUserName("Administrateur");
             return;
         }
-
-        // 2. If not admin, assume Client and fetch profile
         setUserRole("client");
-
-        // Try to get name from metadata first (faster)
         const metadataName = currentUser.user_metadata?.full_name || currentUser.user_metadata?.company_name;
         if (metadataName) {
             setUserName(metadataName);
         }
-
-        // Then fetch from DB to be sure/get updated info
         try {
-            const { data, error } = await supabase
+            const { data } = await supabase
                 .from('clients')
                 .select('company_name, first_name, last_name')
                 .eq('user_id', currentUser.id)
@@ -95,11 +85,10 @@ const Header = () => {
                 const displayName = data.company_name || `${data.first_name || ''} ${data.last_name || ''}`.trim();
                 if (displayName) setUserName(displayName);
             } else if (!metadataName) {
-                // Fallback if no profile and no metadata
                 setUserName(currentUser.email?.split('@')[0] || "Client");
             }
         } catch (error) {
-            console.error("Erreur lors de la récupération du profil:", error);
+            console.error("Erreur profil:", error);
             if (!metadataName) setUserName("Client");
         }
     };
@@ -114,37 +103,33 @@ const Header = () => {
     };
 
     const getInitials = (name: string | null) => {
-        if (!name) return "U";
+        if (!name || !name.trim()) return "U";
         if (name === "Administrateur") return "A";
-        const parts = name.split(" ");
-        if (parts.length >= 2) {
+        const parts = name.trim().split(" ");
+        if (parts.length >= 2 && parts[0] && parts[1]) {
             return (parts[0][0] + parts[1][0]).toUpperCase();
         }
         return name.substring(0, 2).toUpperCase();
     };
 
+    // Navigation allégée
     const navLinks = [
-        { name: "Accueil", path: "/" },
-        { name: "Tarifs", path: "/tarifs" },
         { name: "Expertises", path: "/expertises" },
+        { name: "Tarifs", path: "/tarifs" },
         { name: "Comment ça marche", path: "/fonctionnement" },
-        { name: "Avis clients", path: "/avis" },
-        { name: "FAQ", path: "/faq" },
         { name: "Contact", path: "/contact" },
     ];
 
     return (
         <>
-            <header
-                className="fixed top-0 left-0 right-0 z-50 py-4 shadow-md bg-gradient-to-r from-primary via-primary to-primary/95"
-            >
+            <header className="fixed top-0 left-0 right-0 z-50 py-3 shadow-md bg-gradient-to-r from-primary via-primary to-primary/95 transition-all duration-300">
                 <div className="container mx-auto px-4 md:px-6">
                     <div className="flex items-center justify-between">
                         {/* Logo */}
                         <Logo variant="light" size="md" />
 
-                        {/* Desktop Navigation */}
-                        <nav className="hidden md:flex items-center gap-8">
+                        {/* Desktop Navigation (Visible uniquement sur Grand Écran LG) */}
+                        <nav className="hidden lg:flex items-center gap-6">
                             {navLinks.map((link) => (
                                 <NavLink
                                     key={link.path}
@@ -156,134 +141,78 @@ const Header = () => {
                         </nav>
 
                         {/* Auth Buttons */}
-                        <div className="hidden md:flex items-center gap-4">
+                        <div className="hidden lg:flex items-center gap-4">
                             {user ? (
                                 <div className="relative" ref={userMenuRef}>
                                     <button
                                         onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                                        className="flex items-center gap-3 px-4 py-2 rounded-lg transition-all duration-300 bg-white/10 hover:bg-white/20 text-white backdrop-blur-sm"
+                                        className="flex items-center gap-2 px-2 py-1.5 rounded-full transition-all duration-300 bg-white/10 hover:bg-white/20 text-white backdrop-blur-sm border border-white/10"
                                     >
-                                        <div className={`w-9 h-9 rounded-full flex items-center justify-center font-semibold text-sm ${userRole === 'admin' ? "bg-red-500" : "bg-cta"
-                                            } text-white`}>
+                                        <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs ${userRole === 'admin' ? "bg-red-500" : "bg-cta"} text-white shadow-sm`}>
                                             {getInitials(userName)}
                                         </div>
-                                        <div className="flex flex-col items-start">
-                                            <span className="text-xs opacity-80">Bonjour,</span>
-                                            <span className="text-sm font-semibold max-w-[150px] truncate">{userName || "Compte"}</span>
-                                        </div>
-                                        <ChevronDown className={`w-4 h-4 transition-transform ${isUserMenuOpen ? "rotate-180" : ""}`} />
+                                        {/* Version Compacte : Pas de nom, juste le chevron */}
+                                        <ChevronDown className={`w-4 h-4 mr-1 transition-transform ${isUserMenuOpen ? "rotate-180" : ""}`} />
                                     </button>
 
                                     {/* Dropdown Menu */}
                                     {isUserMenuOpen && (
-                                        <div className="absolute right-0 mt-2 w-72 bg-white rounded-lg shadow-strong border border-border overflow-hidden animate-in slide-in-from-top-2">
-                                            <div className={`p-4 ${userRole === 'admin' ? "bg-gradient-to-r from-red-600 to-red-800" : "bg-gradient-hero"} text-white`}>
-                                                <div className="flex items-center gap-3">
-                                                    <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center font-bold text-lg">
-                                                        {getInitials(userName)}
-                                                    </div>
-                                                    <div className="overflow-hidden">
-                                                        <p className="font-semibold truncate">{userName || "Compte"}</p>
-                                                        <p className="text-xs opacity-90 truncate">{user?.email}</p>
-                                                        {userRole === 'admin' && (
-                                                            <span className="inline-block mt-1 px-2 py-0.5 bg-white/20 rounded text-[10px] font-bold uppercase tracking-wider">
-                                                                Administrateur
-                                                            </span>
-                                                        )}
-                                                    </div>
-                                                </div>
+                                        <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-xl border border-gray-100 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+                                            <div className={`p-4 ${userRole === 'admin' ? "bg-red-600" : "bg-primary"} text-white`}>
+                                                <p className="font-semibold truncate text-sm">{userName || "Compte"}</p>
+                                                <p className="text-xs opacity-80 truncate">{user?.email}</p>
                                             </div>
 
-                                            <div className="p-2">
+                                            <div className="p-1.5">
                                                 {userRole === 'admin' ? (
-                                                    // Menu Admin
                                                     <>
-                                                        <Link
-                                                            to="/dashboard-admin"
-                                                            onClick={() => setIsUserMenuOpen(false)}
-                                                            className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-red-50 transition-colors text-primary"
-                                                        >
-                                                            <ShieldCheck className="w-4 h-4 text-red-600" />
-                                                            <span className="font-medium">Dashboard Admin</span>
+                                                        <Link to="/dashboard-admin" onClick={() => setIsUserMenuOpen(false)} className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-50 text-sm text-gray-700">
+                                                            <ShieldCheck className="w-4 h-4 text-red-600" /> Dashboard Admin
                                                         </Link>
-                                                        <Link
-                                                            to="/dashboard-admin/commandes"
-                                                            onClick={() => setIsUserMenuOpen(false)}
-                                                            className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-red-50 transition-colors text-primary"
-                                                        >
-                                                            <Package className="w-4 h-4 text-red-600" />
-                                                            <span className="font-medium">Gérer les commandes</span>
+                                                        <Link to="/dashboard-admin/commandes" onClick={() => setIsUserMenuOpen(false)} className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-50 text-sm text-gray-700">
+                                                            <Package className="w-4 h-4 text-red-600" /> Gérer les commandes
                                                         </Link>
                                                     </>
                                                 ) : (
-                                                    // Menu Client
                                                     <>
-                                                        <Link
-                                                            to="/client/dashboard"
-                                                            onClick={() => setIsUserMenuOpen(false)}
-                                                            className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-accent-light transition-colors text-primary"
-                                                        >
-                                                            <LayoutDashboard className="w-4 h-4 text-accent-main" />
-                                                            <span className="font-medium">Mon tableau de bord</span>
+                                                        <Link to="/client/dashboard" onClick={() => setIsUserMenuOpen(false)} className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-50 text-sm text-gray-700">
+                                                            <LayoutDashboard className="w-4 h-4 text-primary" /> Tableau de bord
                                                         </Link>
-                                                        <Link
-                                                            to="/client/orders"
-                                                            onClick={() => setIsUserMenuOpen(false)}
-                                                            className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-accent-light transition-colors text-primary"
-                                                        >
-                                                            <Package className="w-4 h-4 text-accent-main" />
-                                                            <span className="font-medium">Mes commandes</span>
+                                                        <Link to="/client/orders" onClick={() => setIsUserMenuOpen(false)} className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-50 text-sm text-gray-700">
+                                                            <Package className="w-4 h-4 text-primary" /> Mes commandes
                                                         </Link>
-                                                        <Link
-                                                            to="/client/settings"
-                                                            onClick={() => setIsUserMenuOpen(false)}
-                                                            className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-accent-light transition-colors text-primary"
-                                                        >
-                                                            <Settings className="w-4 h-4 text-accent-main" />
-                                                            <span className="font-medium">Paramètres</span>
+                                                        <Link to="/client/settings" onClick={() => setIsUserMenuOpen(false)} className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-50 text-sm text-gray-700">
+                                                            <Settings className="w-4 h-4 text-primary" /> Paramètres
                                                         </Link>
                                                     </>
                                                 )}
                                             </div>
-
-                                            <div className="border-t border-border p-2">
-                                                <button
-                                                    onClick={handleLogout}
-                                                    className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-destructive/10 transition-colors text-destructive w-full"
-                                                >
-                                                    <LogOut className="w-4 h-4" />
-                                                    <span className="font-medium">Se déconnecter</span>
+                                            <div className="border-t border-gray-100 p-1.5">
+                                                <button onClick={handleLogout} className="flex w-full items-center gap-2 px-3 py-2 rounded-md hover:bg-red-50 text-sm text-red-600">
+                                                    <LogOut className="w-4 h-4" /> Se déconnecter
                                                 </button>
                                             </div>
                                         </div>
                                     )}
                                 </div>
                             ) : (
-                                <>
+                                <div className="flex items-center gap-3">
                                     <Link to="/login">
-                                        <Button
-                                            variant="ghost"
-                                            className="font-medium text-white hover:text-cta hover:bg-white/10"
-                                        >
-                                            <LogIn className="w-4 h-4 mr-2" />
-                                            Se connecter
+                                        <Button variant="ghost" size="sm" className="text-white hover:text-white/80 hover:bg-white/10 font-medium">
+                                            Connexion
                                         </Button>
                                     </Link>
                                     <Link to="/register">
-                                        <Button className="bg-cta hover:bg-cta/90 text-white font-bold shadow-md hover:shadow-lg transition-all">
-                                            <User className="w-4 h-4 mr-2" />
-                                            Créer un compte
+                                        <Button size="sm" className="bg-cta hover:bg-cta/90 text-white font-bold shadow-md">
+                                            Compte Pro
                                         </Button>
                                     </Link>
-                                </>
+                                </div>
                             )}
                         </div>
 
-                        {/* Mobile Menu Button */}
-                        <button
-                            className="md:hidden p-2 text-white"
-                            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                        >
+                        {/* Mobile Menu Button (Visible en dessous de LG) */}
+                        <button className="lg:hidden p-2 text-white hover:bg-white/10 rounded-lg transition-colors" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
                             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
                         </button>
                     </div>
@@ -291,105 +220,44 @@ const Header = () => {
 
                 {/* Mobile Menu Overlay */}
                 {isMobileMenuOpen && (
-                    <div className="md:hidden absolute top-full left-0 right-0 bg-white shadow-lg border-t border-gray-100 p-4 flex flex-col gap-4 animate-in slide-in-from-top-5">
+                    <div className="lg:hidden absolute top-[60px] left-0 right-0 bg-white shadow-xl border-t border-gray-100 p-4 flex flex-col gap-2 animate-in slide-in-from-top-2">
                         {navLinks.map((link) => (
-                            <Link
-                                key={link.path}
-                                to={link.path}
-                                className={`px-4 py-3 rounded-lg text-sm font-medium transition-colors ${location.pathname === link.path
-                                    ? "bg-primary/5 text-primary"
-                                    : "text-gray-600 hover:bg-gray-50 hover:text-primary"
-                                    }`}
-                            >
+                            <Link key={link.path} to={link.path} className={`px-4 py-3 rounded-lg text-sm font-medium transition-colors ${location.pathname === link.path ? "bg-primary/5 text-primary" : "text-gray-600 hover:bg-gray-50"}`}>
                                 {link.name}
                             </Link>
                         ))}
                         <div className="h-px bg-gray-100 my-2" />
-
                         {user ? (
                             <>
-                                <div className={`px-4 py-2 ${userRole === 'admin' ? "bg-red-600" : "bg-gradient-hero"} rounded-lg text-white`}>
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center font-bold">
-                                            {getInitials(userName)}
-                                        </div>
-                                        <div>
-                                            <span className="block text-sm font-semibold">{userName || "Compte"}</span>
-                                            <span className="block text-xs opacity-90">{user?.email}</span>
-                                        </div>
+                                <div className="px-4 py-2 flex items-center gap-3 mb-2">
+                                    <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xs">
+                                        {getInitials(userName)}
+                                    </div>
+                                    <div className="overflow-hidden">
+                                        <span className="block text-sm font-semibold truncate">{userName}</span>
+                                        <span className="block text-xs text-gray-500 truncate">{user?.email}</span>
                                     </div>
                                 </div>
-
-                                {userRole === 'admin' ? (
-                                    <>
-                                        <Link to="/dashboard-admin" className="w-full">
-                                            <Button className="w-full justify-start bg-red-600 hover:bg-red-700 text-white">
-                                                <ShieldCheck className="w-4 h-4 mr-2" />
-                                                Dashboard Admin
-                                            </Button>
-                                        </Link>
-                                        <Link to="/dashboard-admin/commandes" className="w-full">
-                                            <Button variant="outline" className="w-full justify-start border-red-200 text-red-600">
-                                                <Package className="w-4 h-4 mr-2" />
-                                                Gérer les commandes
-                                            </Button>
-                                        </Link>
-                                    </>
-                                ) : (
-                                    <>
-                                        <Link to="/client/dashboard" className="w-full">
-                                            <Button className="w-full justify-start bg-primary text-white">
-                                                <LayoutDashboard className="w-4 h-4 mr-2" />
-                                                Mon tableau de bord
-                                            </Button>
-                                        </Link>
-                                        <Link to="/client/orders" className="w-full">
-                                            <Button variant="outline" className="w-full justify-start border-primary/20 text-primary">
-                                                <Package className="w-4 h-4 mr-2" />
-                                                Mes commandes
-                                            </Button>
-                                        </Link>
-                                        <Link to="/client/settings" className="w-full">
-                                            <Button variant="outline" className="w-full justify-start border-primary/20 text-primary">
-                                                <Settings className="w-4 h-4 mr-2" />
-                                                Paramètres
-                                            </Button>
-                                        </Link>
-                                    </>
-                                )}
-
-                                <Button
-                                    variant="outline"
-                                    className="w-full justify-start text-destructive border-destructive/20 hover:bg-destructive/10"
-                                    onClick={handleLogout}
-                                >
-                                    <LogOut className="w-4 h-4 mr-2" />
-                                    Se déconnecter
+                                <Link to={userRole === 'admin' ? "/dashboard-admin" : "/client/dashboard"}>
+                                    <Button className="w-full justify-start mb-2" variant="outline">
+                                        <LayoutDashboard className="w-4 h-4 mr-2" /> Accéder au Dashboard
+                                    </Button>
+                                </Link>
+                                <Button variant="ghost" className="w-full justify-start text-red-600 hover:bg-red-50 hover:text-red-700" onClick={handleLogout}>
+                                    <LogOut className="w-4 h-4 mr-2" /> Se déconnecter
                                 </Button>
                             </>
                         ) : (
-                            <>
-                                <Link to="/login" className="w-full">
-                                    <Button variant="outline" className="w-full justify-start border-primary/20 text-primary">
-                                        <LogIn className="w-4 h-4 mr-2" />
-                                        Se connecter
-                                    </Button>
-                                </Link>
-                                <Link to="/register" className="w-full">
-                                    <Button className="w-full justify-start bg-cta hover:bg-cta/90 text-white font-bold">
-                                        <User className="w-4 h-4 mr-2" />
-                                        Créer un compte
-                                    </Button>
-                                </Link>
-                            </>
+                            <div className="flex flex-col gap-2">
+                                <Link to="/login" className="w-full"><Button variant="outline" className="w-full justify-center">Se connecter</Button></Link>
+                                <Link to="/register" className="w-full"><Button className="w-full justify-center bg-cta hover:bg-cta/90">Créer un compte</Button></Link>
+                            </div>
                         )}
                     </div>
                 )}
             </header>
-            {/* Spacer to account for fixed header height */}
-            <div className="h-[72px]" aria-hidden="true" />
+            <div className="h-[64px]" aria-hidden="true" />
         </>
     );
 };
-
 export default Header;

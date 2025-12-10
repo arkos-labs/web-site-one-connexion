@@ -12,7 +12,7 @@ import {
     calculerToutesLesFormules,
     type FormuleNew,
     type CalculTarifaireResult
-} from '@/utils/pricingEngineNew';
+} from '@/utils/pricingEngine';
 
 // ============================================================================
 // COMPOSANT : Affichage du Prix d'une Course

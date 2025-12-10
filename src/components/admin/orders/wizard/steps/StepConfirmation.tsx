@@ -1,5 +1,5 @@
 import { OrderFormData } from "../OrderWizardModal";
-import { CalculTarifaireResult, FormuleNew } from "@/utils/pricingEngineNew";
+import { CalculTarifaireResult, FormuleNew } from "@/utils/pricingEngine";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, AlertTriangle, ArrowLeft, Package } from "lucide-react";
 
