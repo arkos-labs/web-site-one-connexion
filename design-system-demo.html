@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>One Connexion - Nouvelle Charte Graphique</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&family=Manrope:wght@200;300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #FFFFFF;
+            color: #1A2E3D;
+            line-height: 1.6;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, #0B2D63 0%, #00A3E0 100%);
+            color: white;
+            margin-bottom: 3rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 8px 24px rgba(11, 45, 99, 0.16);
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 2.5rem 0 1.5rem;
+            color: #0B2D63;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.75rem;
+            color: #0B2D63;
+        }
+
+        .subtitle {
+            font-size: 1.125rem;
+            opacity: 0.95;
+            font-weight: 400;
+        }
+
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .color-card {
+            background: white;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(11, 45, 99, 0.12);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .color-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(11, 45, 99, 0.16);
+        }
+
+        .color-swatch {
+            height: 140px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .color-info {
+            padding: 1.25rem;
+        }
+
+        .color-name {
+            font-weight: 700;
+            font-size: 1.125rem;
+            margin-bottom: 0.5rem;
+            color: #0B2D63;
+        }
+
+        .color-hex {
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+            color: #6B7280;
+            margin-bottom: 0.25rem;
+        }
+
+        .color-hsl {
+            font-family: 'Courier New', monospace;
+            font-size: 0.75rem;
+            color: #9CA3AF;
+        }
+
+        .color-usage {
+            font-size: 0.875rem;
+            color: #6B7280;
+            margin-top: 0.75rem;
+            line-height: 1.5;
+        }
+
+        /* Buttons Demo */
+        .button-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .btn {
+            padding: 0.875rem 1.75rem;
+            border-radius: 0.5rem;
+            border: none;
+            font-family: 'Manrope', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-primary {
+            background: #0B2D63;
+            color: white;
+            box-shadow: 0 4px 12px rgba(11, 45, 99, 0.25);
+        }
+
+        .btn-primary:hover {
+            background: #082044;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(11, 45, 99, 0.30);
+        }
+
+        .btn-cta {
+            background: linear-gradient(135deg, #FFB800 0%, #FF9500 100%);
+            color: #0B2D63;
+            font-weight: 700;
+            box-shadow: 0 4px 16px rgba(255, 184, 0, 0.35);
+        }
+
+        .btn-cta:hover {
+            background: linear-gradient(135deg, #E6A600 0%, #E68600 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 184, 0, 0.45);
+        }
+
+        .btn-accent {
+            background: #00A3E0;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 163, 224, 0.25);
+        }
+
+        .btn-accent:hover {
+            background: #0088BD;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: #22C55E;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #16A34A;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #F7F8FA;
+            color: #0B2D63;
+            border: 1px solid #E0E3E7;
+        }
+
+        .btn-secondary:hover {
+            background: #EBEEF2;
+        }
+
+        .btn-danger {
+            background: #EF4444;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #DC2626;
+            transform: translateY(-2px);
+        }
+
+        /* Status Badges */
+        .badge-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .badge {
+            padding: 0.5rem 1.25rem;
+            border-radius: 2rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .badge-pending {
+            background: #FFF7ED;
+            color: #F59E0B;
+            border: 1px solid #FED7AA;
+        }
+
+        .badge-accepted {
+            background: #EFF6FF;
+            color: #00A3E0;
+            border: 1px solid #BFDBFE;
+        }
+
+        .badge-dispatched {
+            background: #F5F3FF;
+            color: #7C3AED;
+            border: 1px solid #DDD6FE;
+        }
+
+        .badge-in-progress {
+            background: #FFFBEB;
+            color: #D97706;
+            border: 1px solid #FDE68A;
+        }
+
+        .badge-delivered {
+            background: #F0FDF4;
+            color: #22C55E;
+            border: 1px solid #BBF7D0;
+        }
+
+        .badge-cancelled {
+            background: #FEF2F2;
+            color: #EF4444;
+            border: 1px solid #FECACA;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 0.5rem;
+            padding: 1.75rem;
+            margin: 1rem 0;
+            box-shadow: 0 1px 3px rgba(11, 45, 99, 0.08);
+            border: 1px solid #E0E3E7;
+        }
+
+        .card-header {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #0B2D63;
+        }
+
+        .card-content {
+            color: #4B5563;
+            line-height: 1.7;
+        }
+
+        /* Typography Demo */
+        .typography-demo {
+            margin: 2rem 0;
+        }
+
+        .text-hero {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin: 1rem 0;
+            background: linear-gradient(135deg, #0B2D63 0%, #00A3E0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .text-title-lg {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 1rem 0;
+            color: #0B2D63;
+        }
+
+        .text-title-md {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 1rem 0;
+            color: #0B2D63;
+        }
+
+        .text-body {
+            font-size: 1rem;
+            margin: 1rem 0;
+            color: #4B5563;
+        }
+
+        .text-small {
+            font-size: 0.875rem;
+            color: #6B7280;
+            margin: 1rem 0;
+        }
+
+        .section {
+            margin: 3rem 0;
+        }
+
+        .gradient-demo {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .gradient-card {
+            height: 150px;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.125rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .gradient-hero {
+            background: linear-gradient(135deg, #0B2D63 0%, #00A3E0 100%);
+        }
+
+        .gradient-cta {
+            background: linear-gradient(135deg, #FFB800 0%, #FF9500 100%);
+            color: #0B2D63;
+        }
+
+        .gradient-accent {
+            background: linear-gradient(135deg, #00A3E0 0%, #0B2D63 100%);
+        }
+
+        .gradient-subtle {
+            background: linear-gradient(180deg, #FFFFFF 0%, #F7F8FA 100%);
+            color: #0B2D63;
+            border: 1px solid #E0E3E7;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 12px rgba(11, 45, 99, 0.12);
+            border-left: 4px solid #FFB800;
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #0B2D63;
+            margin-bottom: 0.75rem;
+        }
+
+        .feature-description {
+            color: #6B7280;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>⚡ One Connexion Express</h1>
+        <p class="subtitle">Nouvelle Charte Graphique - Navy Corporate, Yellow Energy, Blue Dynamic</p>
+    </header>
+
+    <div class="container">
+        <!-- Couleurs Principales -->
+        <section class="section">
+            <h2>🎨 Couleurs Principales</h2>
+            <div class="color-grid">
+                <div class="color-card">
+                    <div class="color-swatch" style="background: #0B2D63; color: white;">Navy Corporate</div>
+                    <div class="color-info">
+                        <div class="color-name">Navy Corporate</div>
+                        <div class="color-hex">#0B2D63</div>
+                        <div class="color-hsl">215 80% 22%</div>
+                        <div class="color-usage">Couleur principale, sidebar, headers, texte important</div>
+                    </div>
+                </div>
+                <div class="color-card">
+                    <div class="color-swatch" style="background: #FFB800; color: #0B2D63;">Yellow Energy</div>
+                    <div class="color-info">
+                        <div class="color-name">Yellow Energy</div>
+                        <div class="color-hex">#FFB800</div>
+                        <div class="color-hsl">43 100% 50%</div>
+                        <div class="color-usage">CTA, boutons d'action, highlights, urgence</div>
+                    </div>
+                </div>
+                <div class="color-card">
+                    <div class="color-swatch" style="background: #00A3E0; color: white;">Blue Dynamic</div>
+                    <div class="color-info">
+                        <div class="color-name">Blue Dynamic</div>
+                        <div class="color-hex">#00A3E0</div>
+                        <div class="color-hsl">196 100% 44%</div>
+                        <div class="color-usage">Accents, liens, badges, informations</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Couleurs Sémantiques -->
+        <section class="section">
+            <h2>✨ Couleurs Sémantiques</h2>
+            <div class="color-grid">
+                <div class="color-card">
+                    <div class="color-swatch" style="background: #22C55E; color: white;">Success</div>
+                    <div class="color-info">
+                        <div class="color-name">Success</div>
+                        <div class="color-hex">#22C55E</div>
+                        <div class="color-hsl">142 71% 45%</div>
+                        <div class="color-usage">Confirmations, statuts positifs</div>
+                    </div>
+                </div>
+                <div class="color-card">
+                    <div class="color-swatch" style="background: #F59E0B; color: white;">Warning</div>
+                    <div class="color-info">
+                        <div class="color-name">Warning</div>
+                        <div class="color-hex">#F59E0B</div>
+                        <div class="color-hsl">38 92% 50%</div>
+                        <div class="color-usage">Alertes, attention</div>
+                    </div>
+                </div>
+                <div class="color-card">
+                    <div class="color-swatch" style="background: #EF4444; color: white;">Destructive</div>
+                    <div class="color-info">
+                        <div class="color-name">Destructive</div>
+                        <div class="color-hex">#EF4444</div>
+                        <div class="color-hsl">0 84% 60%</div>
+                        <div class="color-usage">Erreurs, suppressions</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gradients -->
+        <section class="section">
+            <h2>🌈 Gradients</h2>
+            <div class="gradient-demo">
+                <div class="gradient-card gradient-hero">
+                    Gradient Hero<br>
+                    <small style="font-size: 0.875rem; font-weight: 400;">Navy → Blue Dynamic</small>
+                </div>
+                <div class="gradient-card gradient-cta">
+                    Gradient CTA<br>
+                    <small style="font-size: 0.875rem; font-weight: 400;">Yellow → Orange</small>
+                </div>
+                <div class="gradient-card gradient-accent">
+                    Gradient Accent<br>
+                    <small style="font-size: 0.875rem; font-weight: 400;">Blue Dynamic → Navy</small>
+                </div>
+                <div class="gradient-card gradient-subtle">
+                    Gradient Subtle<br>
+                    <small style="font-size: 0.875rem; font-weight: 400;">White → Light Gray</small>
+                </div>
+            </div>
+        </section>
+
+        <!-- Boutons -->
+        <section class="section">
+            <h2>🔘 Boutons</h2>
+            <div class="button-grid">
+                <button class="btn btn-primary">Bouton Primary (Navy)</button>
+                <button class="btn btn-cta">Bouton CTA (Yellow) ⚡</button>
+                <button class="btn btn-accent">Bouton Accent (Blue)</button>
+                <button class="btn btn-success">Bouton Success</button>
+                <button class="btn btn-secondary">Bouton Secondary</button>
+                <button class="btn btn-danger">Bouton Danger</button>
+            </div>
+        </section>
+
+        <!-- Badges de Statut -->
+        <section class="section">
+            <h2>🏷️ Badges de Statut</h2>
+            <div class="badge-grid">
+                <span class="badge badge-pending">⏳ En attente</span>
+                <span class="badge badge-accepted">✓ Accepté</span>
+                <span class="badge badge-dispatched">🚚 Dispatché</span>
+                <span class="badge badge-in-progress">⚡ En cours</span>
+                <span class="badge badge-delivered">✓ Livré</span>
+                <span class="badge badge-cancelled">✗ Annulé</span>
+            </div>
+        </section>
+
+        <!-- Typographie -->
+        <section class="section">
+            <h2>📝 Typographie</h2>
+            <div class="typography-demo">
+                <div class="text-hero">Titre Hero (56px)</div>
+                <div class="text-title-lg">Titre Large (32px) - Plus Jakarta Sans</div>
+                <div class="text-title-md">Titre Moyen (24px) - Plus Jakarta Sans</div>
+                <div class="text-body">Texte de corps (16px) - Manrope - Lorem ipsum dolor sit amet, consectetur
+                    adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
+                <div class="text-small">Texte petit (14px) - Manrope - Texte secondaire et labels</div>
+            </div>
+        </section>
+
+        <!-- Features -->
+        <section class="section">
+            <h2>✨ Caractéristiques du Design</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <div class="feature-title">Énergique & Dynamique</div>
+                    <div class="feature-description">
+                        Le jaune vibrant attire l'attention sur les actions importantes et crée un sentiment d'urgence
+                        et d'énergie.
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💼</div>
+                    <div class="feature-title">Professionnel & Fiable</div>
+                    <div class="feature-description">
+                        Le navy corporate inspire confiance et autorité, parfait pour une entreprise de livraison
+                        professionnelle.
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <div class="feature-title">Moderne & Innovant</div>
+                    <div class="feature-description">
+                        Le bleu dynamique apporte une touche de modernité et d'innovation à l'interface.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Principes -->
+        <section class="section">
+            <h2>📐 Principes de Design</h2>
+            <div class="card">
+                <h3>1. Contraste Fort</h3>
+                <p class="card-content">Le navy foncé et le jaune vif créent un contraste puissant qui attire
+                    l'attention et améliore la lisibilité.</p>
+            </div>
+            <div class="card">
+                <h3>2. Hiérarchie Claire</h3>
+                <p class="card-content">
+                    <strong>60%</strong> - Blanc et gris clairs (arrière-plans)<br>
+                    <strong>30%</strong> - Navy Corporate (éléments principaux)<br>
+                    <strong>10%</strong> - Yellow Energy + Blue Dynamic (accents et CTA)
+                </p>
+            </div>
+            <div class="card">
+                <h3>3. Typographie Moderne</h3>
+                <p class="card-content">
+                    <strong>Plus Jakarta Sans</strong> pour les titres (display) - Moderne, géométrique, impactant<br>
+                    <strong>Manrope</strong> pour le corps de texte - Lisible, professionnel, équilibré
+                </p>
+            </div>
+            <div class="card">
+                <h3>4. Effets Visuels Dynamiques</h3>
+                <p class="card-content">Gradients énergiques, ombres professionnelles avec une lueur jaune pour les CTA,
+                    transitions fluides.</p>
+            </div>
+        </section>
+    </div>
+</body>
+
+</html>

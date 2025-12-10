@@ -1,0 +1,1509 @@
+{
+  "date": "2025-12-05T23:31:40.687245",
+  "villes_analysees": 75,
+  "villes_ok": 0,
+  "villes_probleme": 75,
+  "villes_manquantes": 113,
+  "audits": [
+    {
+      "nom": "Melun",
+      "code_postal": "77000",
+      "departement": "77",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Meaux",
+      "code_postal": "77100",
+      "departement": "77",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Brie-Comte-Robert",
+      "code_postal": "77170",
+      "departement": "77",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Noisiel",
+      "code_postal": "77604",
+      "departement": "77",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Dammarie-les-Lys",
+      "code_postal": "77160",
+      "departement": "77",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Torcy",
+      "code_postal": "77200",
+      "departement": "77",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Mitry-Mory",
+      "code_postal": "77600",
+      "departement": "77",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Fontainebleau",
+      "code_postal": "77300",
+      "departement": "77",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Le Mée-sur-Seine",
+      "code_postal": "77350",
+      "departement": "77",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Lagny-sur-Marne",
+      "code_postal": "77400",
+      "departement": "77",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Champs-sur-Marne",
+      "code_postal": "77420",
+      "departement": "77",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Marne-la-Vallée",
+      "code_postal": "77200",
+      "departement": "77",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Chelles",
+      "code_postal": "77500",
+      "departement": "77",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Bussy-Saint-Georges",
+      "code_postal": "77600",
+      "departement": "77",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Serris",
+      "code_postal": "77700",
+      "departement": "77",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Montereau-Fault-Yonne",
+      "code_postal": "77130",
+      "departement": "77",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Versailles",
+      "code_postal": "78000",
+      "departement": "78",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Les Mureaux",
+      "code_postal": "78200",
+      "departement": "78",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Le Chesnay",
+      "code_postal": "78150",
+      "departement": "78",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Saint-Germain-en-Laye",
+      "code_postal": "78100",
+      "departement": "78",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Poissy",
+      "code_postal": "78300",
+      "departement": "78",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Conflans-Sainte-Honorine",
+      "code_postal": "78560",
+      "departement": "78",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Chatou",
+      "code_postal": "78400",
+      "departement": "78",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Vaux-sur-Seine",
+      "code_postal": "78960",
+      "departement": "78",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Évry-Courcouronnes",
+      "code_postal": "91000",
+      "departement": "91",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Corbeil-Essonnes",
+      "code_postal": "91100",
+      "departement": "91",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Massy",
+      "code_postal": "91300",
+      "departement": "91",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Savigny-sur-Orge",
+      "code_postal": "91140",
+      "departement": "91",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Sainte-Geneviève-des-Bois",
+      "code_postal": "91700",
+      "departement": "91",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Viry-Châtillon",
+      "code_postal": "91170",
+      "departement": "91",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Athis-Mons",
+      "code_postal": "91200",
+      "departement": "91",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Palaiseau",
+      "code_postal": "91120",
+      "departement": "91",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Boulogne-Billancourt",
+      "code_postal": "92100",
+      "departement": "92",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Clichy",
+      "code_postal": "92110",
+      "departement": "92",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Neuilly-sur-Seine",
+      "code_postal": "92200",
+      "departement": "92",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Levallois-Perret",
+      "code_postal": "92300",
+      "departement": "92",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Courbevoie",
+      "code_postal": "92400",
+      "departement": "92",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Rueil-Malmaison",
+      "code_postal": "92500",
+      "departement": "92",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Asnières-sur-Seine",
+      "code_postal": "92600",
+      "departement": "92",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "La Garenne-Colombes",
+      "code_postal": "92700",
+      "departement": "92",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Bobigny",
+      "code_postal": "93000",
+      "departement": "93",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Montreuil",
+      "code_postal": "93100",
+      "departement": "93",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Saint-Denis",
+      "code_postal": "93200",
+      "departement": "93",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Aubervilliers",
+      "code_postal": "93300",
+      "departement": "93",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Saint-Ouen-sur-Seine",
+      "code_postal": "93400",
+      "departement": "93",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Pantin",
+      "code_postal": "93500",
+      "departement": "93",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Créteil",
+      "code_postal": "94000",
+      "departement": "94",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Saint-Maur-des-Fossés",
+      "code_postal": "94100",
+      "departement": "94",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Ivry-sur-Seine",
+      "code_postal": "94200",
+      "departement": "94",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Cachan",
+      "code_postal": "94230",
+      "departement": "94",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Vincennes",
+      "code_postal": "94300",
+      "departement": "94",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Vitry-sur-Seine",
+      "code_postal": "94400",
+      "departement": "94",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Cergy",
+      "code_postal": "95000",
+      "departement": "95",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Argenteuil",
+      "code_postal": "95100",
+      "departement": "95",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Sarcelles",
+      "code_postal": "95200",
+      "departement": "95",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Paris 1er",
+      "code_postal": "75001",
+      "departement": "75",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Paris 2e",
+      "code_postal": "75002",
+      "departement": "75",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Paris 3e",
+      "code_postal": "75003",
+      "departement": "75",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Paris 4e",
+      "code_postal": "75004",
+      "departement": "75",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Paris 5e",
+      "code_postal": "75005",
+      "departement": "75",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Paris 6e",
+      "code_postal": "75006",
+      "departement": "75",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Paris 7e",
+      "code_postal": "75007",
+      "departement": "75",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Paris 8e",
+      "code_postal": "75008",
+      "departement": "75",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Paris 9e",
+      "code_postal": "75009",
+      "departement": "75",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Paris 10e",
+      "code_postal": "75010",
+      "departement": "75",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Paris 11e",
+      "code_postal": "75011",
+      "departement": "75",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Paris 12e",
+      "code_postal": "75012",
+      "departement": "75",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Paris 13e",
+      "code_postal": "75013",
+      "departement": "75",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Paris 14e",
+      "code_postal": "75014",
+      "departement": "75",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Paris 15e",
+      "code_postal": "75015",
+      "departement": "75",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Paris 16e",
+      "code_postal": "75016",
+      "departement": "75",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Paris 17e",
+      "code_postal": "75017",
+      "departement": "75",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Paris 18e",
+      "code_postal": "75018",
+      "departement": "75",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Paris 19e",
+      "code_postal": "75019",
+      "departement": "75",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    },
+    {
+      "nom": "Paris 20e",
+      "code_postal": "75020",
+      "departement": "75",
+      "formules": [
+        "NORMAL",
+        "EXPRESS",
+        "URGENCE",
+        "VL_NORMAL",
+        "VL_EXPRESS"
+      ],
+      "geocod_ok": false,
+      "latitude": null,
+      "longitude": null,
+      "localite_geocod": null,
+      "message_geocod": "⏸️  Géocodage désactivé (pas de clé API)",
+      "est_dans_idf_officiel": true,
+      "est_hors_idf": false,
+      "doublons_potentiels": []
+    }
+  ]
+}

@@ -1,0 +1,491 @@
+================================================================================
+AUDIT COMPLET - GRILLE TARIFAIRE ILE-DE-FRANCE
+================================================================================
+
+Date: 2025-12-05 23:31:40
+Villes analysées: 75
+Villes géocodées OK: 0
+Villes avec problèmes: 75
+
+
+================================================================================
+A. LISTE DES VILLES OK
+================================================================================
+Total: 0 villes géocodées correctement
+
+
+================================================================================
+B. LISTE DES VILLES PROBLÈME
+================================================================================
+Total: 75 villes non localisées ou ambiguës
+
+  ❌ Paris 10e (75010)
+     Département: 75
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Paris 11e (75011)
+     Département: 75
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Paris 12e (75012)
+     Département: 75
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Paris 13e (75013)
+     Département: 75
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Paris 14e (75014)
+     Département: 75
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Paris 15e (75015)
+     Département: 75
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Paris 16e (75016)
+     Département: 75
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Paris 17e (75017)
+     Département: 75
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Paris 18e (75018)
+     Département: 75
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Paris 19e (75019)
+     Département: 75
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Paris 1er (75001)
+     Département: 75
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Paris 20e (75020)
+     Département: 75
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Paris 2e (75002)
+     Département: 75
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Paris 3e (75003)
+     Département: 75
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Paris 4e (75004)
+     Département: 75
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Paris 5e (75005)
+     Département: 75
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Paris 6e (75006)
+     Département: 75
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Paris 7e (75007)
+     Département: 75
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Paris 8e (75008)
+     Département: 75
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Paris 9e (75009)
+     Département: 75
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Brie-Comte-Robert (77170)
+     Département: 77
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Bussy-Saint-Georges (77600)
+     Département: 77
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Champs-sur-Marne (77420)
+     Département: 77
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Chelles (77500)
+     Département: 77
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Dammarie-les-Lys (77160)
+     Département: 77
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Fontainebleau (77300)
+     Département: 77
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Lagny-sur-Marne (77400)
+     Département: 77
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Le Mée-sur-Seine (77350)
+     Département: 77
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Marne-la-Vallée (77200)
+     Département: 77
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Meaux (77100)
+     Département: 77
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Melun (77000)
+     Département: 77
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Mitry-Mory (77600)
+     Département: 77
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Montereau-Fault-Yonne (77130)
+     Département: 77
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Noisiel (77604)
+     Département: 77
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Serris (77700)
+     Département: 77
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Torcy (77200)
+     Département: 77
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Chatou (78400)
+     Département: 78
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Conflans-Sainte-Honorine (78560)
+     Département: 78
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Le Chesnay (78150)
+     Département: 78
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Les Mureaux (78200)
+     Département: 78
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Poissy (78300)
+     Département: 78
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Saint-Germain-en-Laye (78100)
+     Département: 78
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Vaux-sur-Seine (78960)
+     Département: 78
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Versailles (78000)
+     Département: 78
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Athis-Mons (91200)
+     Département: 91
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Corbeil-Essonnes (91100)
+     Département: 91
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Massy (91300)
+     Département: 91
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Palaiseau (91120)
+     Département: 91
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Sainte-Geneviève-des-Bois (91700)
+     Département: 91
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Savigny-sur-Orge (91140)
+     Département: 91
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Viry-Châtillon (91170)
+     Département: 91
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Évry-Courcouronnes (91000)
+     Département: 91
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Asnières-sur-Seine (92600)
+     Département: 92
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Boulogne-Billancourt (92100)
+     Département: 92
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Clichy (92110)
+     Département: 92
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Courbevoie (92400)
+     Département: 92
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ La Garenne-Colombes (92700)
+     Département: 92
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Levallois-Perret (92300)
+     Département: 92
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Neuilly-sur-Seine (92200)
+     Département: 92
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Rueil-Malmaison (92500)
+     Département: 92
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Aubervilliers (93300)
+     Département: 93
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Bobigny (93000)
+     Département: 93
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Montreuil (93100)
+     Département: 93
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Pantin (93500)
+     Département: 93
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Saint-Denis (93200)
+     Département: 93
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Saint-Ouen-sur-Seine (93400)
+     Département: 93
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Cachan (94230)
+     Département: 94
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Créteil (94000)
+     Département: 94
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Ivry-sur-Seine (94200)
+     Département: 94
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Saint-Maur-des-Fossés (94100)
+     Département: 94
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Vincennes (94300)
+     Département: 94
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Vitry-sur-Seine (94400)
+     Département: 94
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Argenteuil (95100)
+     Département: 95
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Cergy (95000)
+     Département: 95
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+  ❌ Sarcelles (95200)
+     Département: 95
+     Problème: ⏸️  Géocodage désactivé (pas de clé API)
+
+
+================================================================================
+C. VILLES MANQUANTES DANS LE FICHIER TARIFAIRE
+================================================================================
+Total: 113 communes manquantes en Île-de-France
+
+
+  SEINE-ET-MARNE (77)
+  --------------------------------------------------
+    • Aulnay-sous-Bois
+    • Chailly-en-Bière
+    • Chailly-en-Brie
+    • Chaintreaux
+    • Chalautre-la-Grande
+    • Challuy
+    • Chambry
+    • Champcenetz
+    • Champeaux
+    • Champmotteux
+    • Champrosay
+    • Changis-sur-Marne
+    • Chaour
+    • Chapelle-Gauthier
+    • Chapelle-Iger
+    • Chapelle-Moutils
+    • Chapelle-Rablais
+    • Chapelle-la-Reine
+    • Charmentray
+    • Charny
+    • Charte
+    • Chartres-de-Bretagne
+    • Chartronges
+    • Chastenay
+    • Chateau-Landon
+    • Chateaubleau
+    • Chateaumeillant
+    • Chateauneuf-en-Thymerais
+    • Chateauroux
+    • Chateauroux-les-Alpes
+    • Chateauroux-sur-Loire
+    • Chatelain
+    • Chatelard
+    • Chatelaudren
+    • Chatelguyon
+    • Chatenay-Malabry
+    • Chatenois
+    • Coulommiers
+    • Cély
+    • Esbly
+    • Fontenay-Trésigny
+    • Gretz-Armainvilliers
+    • Magny-le-Hameau
+    • Magny-le-Hongre
+    • Moret-sur-Loing
+    • Nangis
+    • Nemours
+    • Provins
+    • Roissy-en-Brie
+    • Villeparisis
+  (50 communes manquantes)
+
+  YVELINES (78)
+  --------------------------------------------------
+    • Bonnières-sur-Seine
+    • Dreux
+    • Gaillon
+    • Gisors
+    • Guernes
+    • Guerville
+    • Houdan
+    • Mantes-la-Jolie
+    • Montfort-l'Amaury
+    • Rambouillet
+    • Saint-Cyr-l'Ecole
+    • Épône
+  (12 communes manquantes)
+
+  ESSONNE (91)
+  --------------------------------------------------
+    • Brunoy
+    • Dourdan
+    • Fontainebleau
+    • Juvisy-sur-Orge
+    • Longjumeau
+    • Mennecy
+    • Nozay
+    • Orge
+    • Orsay
+    • Saint-Chéron
+    • Étampes
+  (11 communes manquantes)
+
+  HAUTS-DE-SEINE (92)
+  --------------------------------------------------
+    • Antony
+    • Colombes
+    • Gennevilliers
+    • Issy-les-Moulineaux
+    • La Défense
+    • Malakoff
+    • Meudon
+    • Montrouge
+    • Nanterre
+    • Puteaux
+    • Sèvres
+  (11 communes manquantes)
+
+  SEINE-SAINT-DENIS (93)
+  --------------------------------------------------
+    • Bondy
+    • Gagny
+    • Neuilly-sur-Marne
+    • Noisy-le-Grand
+    • Noisy-le-Sec
+    • Romainville
+    • Rosny-sous-Bois
+    • Saint-Herblain
+    • Villemomble
+  (9 communes manquantes)
+
+  VAL-DE-MARNE (94)
+  --------------------------------------------------
+    • Alfortville
+    • Charenton-le-Pont
+    • Choisy-le-Roi
+    • Fontenay-sous-Bois
+    • Maisons-Alfort
+    • Orly
+    • Thiais
+    • Villejuif
+  (8 communes manquantes)
+
+  VAL-D'OISE (95)
+  --------------------------------------------------
+    • Andrésy
+    • Conflans-Sainte-Honorine
+    • Enghien-les-Bains
+    • Eragny
+    • Gonesse
+    • Montmorency
+    • Osny
+    • Pontoise
+    • Taverny
+    • Val-de-Marne
+    • Vaux-sur-Seine
+    • Éragny-sur-Oise
+  (12 communes manquantes)
+
+================================================================================
+D. RÉSUMÉ STATISTIQUE
+================================================================================
+
+Villes par département:
+  • Paris: 20
+  • Seine-et-Marne: 16
+  • Yvelines: 8
+  • Essonne: 8
+  • Hauts-de-Seine: 8
+  • Seine-Saint-Denis: 6
+  • Val-de-Marne: 6
+  • Val-d'Oise: 3
+
+Formules disponibles:
+  • EXPRESS: 75 villes
+  • NORMAL: 75 villes
+  • URGENCE: 75 villes
+  • VL_EXPRESS: 75 villes
+  • VL_NORMAL: 75 villes
+
+================================================================================
