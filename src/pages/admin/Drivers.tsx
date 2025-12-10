@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Driver } from "@/types/drivers";
 import { getDriverStatusLabel, getDriverStatusBadgeColor } from "@/types/orders";
+import { mapVehicleToDriverVehicle, mapDocumentToDriverDocument } from "@/types/vehiclesDocuments";
 import { toast } from "sonner";
 
 import { supabase } from "@/lib/supabase";
@@ -103,13 +104,7 @@ const Drivers = () => {
             vehicle: (() => {
               const driverVehicles = vehiclesData?.filter((v: any) => v.driver_id === d.id) || [];
               const primaryVehicle = driverVehicles.find((v: any) => v.status === 'active') || driverVehicles[0];
-              return primaryVehicle ? {
-                type: primaryVehicle.vehicle_type,
-                model: `${primaryVehicle.brand} ${primaryVehicle.model}`,
-                license_plate: primaryVehicle.license_plate,
-                color: primaryVehicle.color,
-                year: primaryVehicle.year
-              } : undefined;
+              return primaryVehicle ? mapVehicleToDriverVehicle(primaryVehicle) : undefined;
             })(),
             documents: (() => {
               const driverDocs = documentsData?.filter((doc: any) => doc.driver_id === d.id) || [];
