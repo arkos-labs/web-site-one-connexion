@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Package, MapPin, Clock, User, Euro, AlertCircle, Loader2 } from "lucide-react";
 import { geocoderAdresse } from "@/services/locationiq";
-import { calculerToutesLesFormules, type FormuleNew, type CalculTarifaireResult } from "@/utils/pricingEngineNew";
+import { calculerToutesLesFormules, type FormuleNew, type CalculTarifaireResult } from "@/utils/pricingEngine";
 import { loadPricingConfigCached } from "@/utils/pricingConfigLoader";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { OrderSummary } from "@/components/orders/OrderSummary";

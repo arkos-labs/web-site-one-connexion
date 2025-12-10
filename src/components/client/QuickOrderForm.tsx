@@ -19,7 +19,7 @@ import {
     Loader2,
 } from "lucide-react";
 import { geocoderAdresse, calculerDistance } from "@/services/locationiq";
-import { calculerToutesLesFormules, type FormuleNew, type CalculTarifaireResult } from "@/utils/pricingEngineNew";
+import { calculerToutesLesFormules, type FormuleNew, type CalculTarifaireResult } from "@/utils/pricingEngine";
 import { loadPricingConfigCached } from "@/utils/pricingConfigLoader";
 
 interface QuickOrderFormProps {

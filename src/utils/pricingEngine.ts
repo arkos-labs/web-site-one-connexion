@@ -1,407 +1,383 @@
 /**
- * ONE CONNEXION EXPRESS - MOTEUR TARIFAIRE OFFICIEL
+ * ONE CONNEXION - MOTEUR TARIFAIRE
+ * =========================================
  * 
- * Ce module implémente la logique tarifaire basée sur le système de BONS.
+ * LOGIQUE TARIFAIRE :
  * 
- * RÈGLES TARIFAIRES :
- * - 1 bon = 5,50 €
- * - Prix = nombre de bons × 5,50 €
- * - Le nombre de bons dépend uniquement de la VILLE D'ARRIVÉE
+ * 1. PRISE EN CHARGE (OBLIGATOIRE ET FIXE)
+ *    - Chaque ville possède 5 tarifs de prise en charge
+ *    - Dépend UNIQUEMENT de la ville de départ et de la formule
+ *    - Toujours facturée (Paris→Ville, Ville→Paris, Ville→Ville, etc.)
+ *    - Le trajet chauffeur vide n'est JAMAIS facturé
  * 
- * FORMULES & DÉLAIS :
- * - Standard (N) : 2h à 4h
- * - Express (E) : 1h30 à 2h
- * - Flash Express (F) : 30 min à 1h
+ * 2. SUPPLÉMENT KILOMÉTRIQUE (SEULEMENT SI BANLIEUE → BANLIEUE)
+ *    - Ajouté UNIQUEMENT si ville_départ ≠ Paris ET ville_arrivée ≠ Paris
+ *    - Formule : supplément = distance_km × 0.1 bon
+ *    - Distance obtenue via LocationIQ Distance Matrix (valeur exacte en mètres)
  * 
- * @version 2.0
- * @date 2025-12-03
+ * 3. CALCUL FINAL
+ *    - total_bons = prise_en_charge + supplément
+ *    - total_euros = total_bons × 5.5
+ * 
+ * @version 1.0
+ * @date 2025-12-04
  */
 
 // ============================================================================
 // TYPES ET INTERFACES
 // ============================================================================
 
-export type Formule = 'STANDARD' | 'EXPRESS' | 'FLASH_EXPRESS';
+/**
+ * Les 5 formules disponibles
+ */
+export type FormuleNew = 'NORMAL' | 'EXPRESS' | 'URGENCE' | 'VL_NORMAL' | 'VL_EXPRESS';
 
-export interface TarifVille {
-    N: number; // Standard
-    E: number; // Express
-    F: number; // Flash Express
+/**
+ * Structure des tarifs de prise en charge pour une ville
+ */
+export interface PriseEnChargeVille {
+    NORMAL: number;      // Prise en charge en bons
+    EXPRESS: number;
+    URGENCE: number;
+    VL_NORMAL: number;
+    VL_EXPRESS: number;
 }
 
-export interface PricingResult {
-    // Données de base
-    formule: Formule;
-    villeArrivee: string;
+/**
+ * Configuration dynamique du moteur de pricing
+ */
+export interface PricingConfig {
+    bonValueEur: number;
+    supplementPerKmBons: number;
+}
 
-    // Calcul tarifaire
-    nombreBons: number;
-    supplementBons: number;  // Supplément kilométrique (0.1 bon/km)
-    prixUnitaireBon: number;
-    prixTotal: number;
+/**
+ * Résultat du calcul tarifaire
+ */
+export interface CalculTarifaireResult {
+    // Données d'entrée
+    villeDepart: string;
+    villeArrivee: string;
+    formule: FormuleNew;
+
+    // Distance
+    distanceKm: number;
+
+    // Calcul détaillé
+    priseEnCharge: number;      // En bons
+    supplement: number;          // En bons (0 si Paris impliqué)
+    totalBons: number;
+    totalEuros: number;
 
     // Métadonnées
-    delaiEstime: string;
-    formuleLabel: string;
+    isParisDansTrajet: boolean;  // true si Paris est départ OU arrivée
+    supplementApplique: boolean; // true si supplément kilométrique appliqué
 }
 
 // ============================================================================
 // CONSTANTES
 // ============================================================================
 
-const PRIX_BON = 5.50; // Prix unitaire d'un bon en euros
+/**
+ * Prix unitaire d'un bon (DÉFAUT)
+ * Peut être surchargé via PricingConfig
+ */
+export const DEFAULT_PRIX_BON = 5.5;
+
+/**
+ * Tarif du supplément kilométrique (en bons par km) (DÉFAUT)
+ * Appliqué uniquement pour banlieue → banlieue
+ * Peut être surchargé via PricingConfig
+ */
+export const DEFAULT_SUPPLEMENT_PAR_KM = 0.1;
 
 // ============================================================================
-// BASE TARIFAIRE OFFICIELLE
+// BASE TARIFAIRE - PRISES EN CHARGE PAR VILLE
 // ============================================================================
 
-export const BASE_TARIFAIRE: Record<string, TarifVille> = {
-    // Paris (75)
-    "PARIS": { N: 3, E: 5, F: 7 },
+/**
+ * Tarifs de prise en charge pour chaque ville d'Île-de-France
+ * 
+ * IMPORTANT : Ces tarifs représentent la PRISE EN CHARGE uniquement,
+ * pas le prix total de la course.
+ * 
+ * Format : { VILLE: { NORMAL, EXPRESS, URGENCE, VL_NORMAL, VL_EXPRESS } }
+ * Tous les montants sont en BONS (à multiplier par 5.5€)
+ */
+export const PRISES_EN_CHARGE: Record<string, PriseEnChargeVille> = {
+    // ============================================================================
+    // PARIS (75)
+    // ============================================================================
+    "PARIS": { NORMAL: 2, EXPRESS: 4, URGENCE: 7, VL_NORMAL: 7, VL_EXPRESS: 14 },
+    "PARIS-01": { NORMAL: 2, EXPRESS: 4, URGENCE: 7, VL_NORMAL: 7, VL_EXPRESS: 14 },
+    "PARIS-02": { NORMAL: 2, EXPRESS: 4, URGENCE: 7, VL_NORMAL: 7, VL_EXPRESS: 14 },
+    "PARIS-03": { NORMAL: 3, EXPRESS: 6, URGENCE: 9, VL_NORMAL: 8, VL_EXPRESS: 18 },
+    "PARIS-04": { NORMAL: 3, EXPRESS: 6, URGENCE: 9, VL_NORMAL: 8, VL_EXPRESS: 18 },
+    "PARIS-05": { NORMAL: 3, EXPRESS: 6, URGENCE: 9, VL_NORMAL: 8, VL_EXPRESS: 18 },
+    "PARIS-06": { NORMAL: 3, EXPRESS: 6, URGENCE: 9, VL_NORMAL: 8, VL_EXPRESS: 18 },
+    "PARIS-07": { NORMAL: 2, EXPRESS: 4, URGENCE: 7, VL_NORMAL: 7, VL_EXPRESS: 14 },
+    "PARIS-08": { NORMAL: 2, EXPRESS: 4, URGENCE: 7, VL_NORMAL: 7, VL_EXPRESS: 14 },
+    "PARIS-09": { NORMAL: 2, EXPRESS: 4, URGENCE: 7, VL_NORMAL: 7, VL_EXPRESS: 14 },
+    "PARIS-10": { NORMAL: 3, EXPRESS: 6, URGENCE: 9, VL_NORMAL: 8, VL_EXPRESS: 18 },
+    "PARIS-11": { NORMAL: 3, EXPRESS: 6, URGENCE: 9, VL_NORMAL: 8, VL_EXPRESS: 18 },
+    "PARIS-12": { NORMAL: 3, EXPRESS: 6, URGENCE: 9, VL_NORMAL: 8, VL_EXPRESS: 18 },
+    "PARIS-13": { NORMAL: 3, EXPRESS: 6, URGENCE: 9, VL_NORMAL: 8, VL_EXPRESS: 18 },
+    "PARIS-14": { NORMAL: 3, EXPRESS: 6, URGENCE: 9, VL_NORMAL: 8, VL_EXPRESS: 18 },
+    "PARIS-15": { NORMAL: 2, EXPRESS: 4, URGENCE: 7, VL_NORMAL: 7, VL_EXPRESS: 14 },
+    "PARIS-16": { NORMAL: 2, EXPRESS: 4, URGENCE: 7, VL_NORMAL: 7, VL_EXPRESS: 14 },
+    "PARIS-17": { NORMAL: 2, EXPRESS: 4, URGENCE: 7, VL_NORMAL: 7, VL_EXPRESS: 14 },
+    "PARIS-18": { NORMAL: 3, EXPRESS: 6, URGENCE: 9, VL_NORMAL: 8, VL_EXPRESS: 18 },
+    "PARIS-19": { NORMAL: 3, EXPRESS: 6, URGENCE: 9, VL_NORMAL: 8, VL_EXPRESS: 18 },
+    "PARIS-20": { NORMAL: 3, EXPRESS: 6, URGENCE: 9, VL_NORMAL: 8, VL_EXPRESS: 18 },
 
-    // Hauts-de-Seine (92)
-    "ANTONY": { N: 6, E: 10, F: 14 },
-    "ASNIERES-SUR-SEINE": { N: 4, E: 8, F: 12 },
-    "BAGNEUX": { N: 5, E: 9, F: 13 },
-    "BOIS-COLOMBES": { N: 4, E: 8, F: 12 },
-    "BOULOGNE-BILLANCOURT": { N: 3, E: 6, F: 9 },
-    "BOURG-LA-REINE": { N: 5, E: 9, F: 13 },
-    "CHATENAY-MALABRY": { N: 7, E: 11, F: 15 },
-    "CHATILLON": { N: 4, E: 8, F: 12 },
-    "CHAVILLE": { N: 6, E: 10, F: 14 },
-    "CLAMART": { N: 5, E: 9, F: 13 },
-    "CLICHY": { N: 3, E: 5, F: 9 },
-    "COLOMBES": { N: 5, E: 10, F: 15 },
-    "COURBEVOIE": { N: 3, E: 6, F: 9 },
-    "FONTENAY-AUX-ROSES": { N: 6, E: 10, F: 14 },
-    "GARCHES": { N: 7, E: 11, F: 15 },
-    "GENNEVILLIERS": { N: 5, E: 10, F: 15 },
-    "ISSY-LES-MOULINEAUX": { N: 3, E: 6, F: 9 },
-    "LA DEFENSE": { N: 4, E: 8, F: 12 },
-    "LA GARENNE-COLOMBES": { N: 4, E: 8, F: 12 },
-    "LE PLESSIS-ROBINSON": { N: 7, E: 11, F: 15 },
-    "LEVALLOIS-PERRET": { N: 3, E: 5, F: 7 },
-    "MALAKOFF": { N: 4, E: 8, F: 12 },
-    "MARNES-LA-COQUETTE": { N: 8, E: 12, F: 16 },
-    "MEUDON": { N: 7, E: 12, F: 15 },
-    "MONTROUGE": { N: 3, E: 6, F: 9 },
-    "NANTERRE": { N: 4, E: 8, F: 12 },
-    "NEUILLY-SUR-SEINE": { N: 3, E: 5, F: 7 },
-    "PUTEAUX": { N: 4, E: 8, F: 12 },
-    "RUEIL-MALMAISON": { N: 8, E: 14, F: 19 },
-    "SAINT-CLOUD": { N: 6, E: 10, F: 14 },
-    "SCEAUX": { N: 6, E: 10, F: 14 },
-    "SEVRES": { N: 5, E: 10, F: 15 },
-    "SURESNES": { N: 4, E: 8, F: 12 },
-    "VANVES": { N: 3, E: 6, F: 9 },
-    "VAUCRESSON": { N: 8, E: 12, F: 16 },
-    "VILLE-DAVRAY": { N: 7, E: 11, F: 15 },
-    "VILLENEUVE-LA-GARENNE": { N: 5, E: 10, F: 15 },
+    // ============================================================================
+    // SEINE-ET-MARNE (77)
+    // ============================================================================
+    "MELUN": { NORMAL: 24, EXPRESS: 27, URGENCE: 30, VL_NORMAL: 28, VL_EXPRESS: 31 },
+    "COLLEGIEN": { NORMAL: 15, EXPRESS: 18, URGENCE: 21, VL_NORMAL: 19, VL_EXPRESS: 22 },
+    "MEAUX": { NORMAL: 20, EXPRESS: 23, URGENCE: 26, VL_NORMAL: 24, VL_EXPRESS: 27 },
+    "BRIE-COMTE-ROBERT": { NORMAL: 20, EXPRESS: 25, URGENCE: 30, VL_NORMAL: 25, VL_EXPRESS: 30 },
+    "NOISIEL": { NORMAL: 15, EXPRESS: 18, URGENCE: 21, VL_NORMAL: 19, VL_EXPRESS: 22 },
+    "DAMMARIE-LES-LYS": { NORMAL: 22, EXPRESS: 25, URGENCE: 28, VL_NORMAL: 26, VL_EXPRESS: 29 },
+    "TORCY": { NORMAL: 15, EXPRESS: 18, URGENCE: 21, VL_NORMAL: 19, VL_EXPRESS: 22 },
+    "MITRY-MORY": { NORMAL: 14, EXPRESS: 17, URGENCE: 20, VL_NORMAL: 18, VL_EXPRESS: 21 },
+    "FONTAINEBLEAU": { NORMAL: 30, EXPRESS: 33, URGENCE: 36, VL_NORMAL: 34, VL_EXPRESS: 37 },
+    "LE-MEE-SUR-SEINE": { NORMAL: 23, EXPRESS: 26, URGENCE: 29, VL_NORMAL: 27, VL_EXPRESS: 30 },
+    "LAGNY-SUR-MARNE": { NORMAL: 12, EXPRESS: 15, URGENCE: 18, VL_NORMAL: 16, VL_EXPRESS: 19 },
+    "CHAMPS-SUR-MARNE": { NORMAL: 10, EXPRESS: 13, URGENCE: 16, VL_NORMAL: 14, VL_EXPRESS: 17 },
+    "MARNE-LA-VALLEE": { NORMAL: 15, EXPRESS: 18, URGENCE: 21, VL_NORMAL: 19, VL_EXPRESS: 22 },
+    "CHELLES": { NORMAL: 12, EXPRESS: 15, URGENCE: 18, VL_NORMAL: 16, VL_EXPRESS: 19 },
+    "BUSSY-SAINT-GEORGES": { NORMAL: 13, EXPRESS: 16, URGENCE: 19, VL_NORMAL: 17, VL_EXPRESS: 20 },
+    "SERRIS": { NORMAL: 14, EXPRESS: 17, URGENCE: 20, VL_NORMAL: 18, VL_EXPRESS: 21 },
+    "MONTEREAU-FAULT-YONNE": { NORMAL: 25, EXPRESS: 28, URGENCE: 31, VL_NORMAL: 29, VL_EXPRESS: 32 },
 
-    // Seine-Saint-Denis (93)
-    "AUBERVILLIERS": { N: 3, E: 6, F: 9 },
-    "AULNAY-SOUS-BOIS": { N: 6, E: 12, F: 16 },
-    "BAGNOLET": { N: 3, E: 6, F: 10 },
-    "BOBIGNY": { N: 5, E: 10, F: 15 },
-    "BONDY": { N: 5, E: 10, F: 14 },
-    "CLICHY-SOUS-BOIS": { N: 8, E: 14, F: 18 },
-    "COUBRON": { N: 10, E: 15, F: 20 },
-    "DRANCY": { N: 5, E: 10, F: 14 },
-    "DUGNY": { N: 6, E: 11, F: 15 },
-    "EPINAY-SUR-SEINE": { N: 6, E: 11, F: 15 },
-    "GAGNY": { N: 7, E: 12, F: 16 },
-    "GOURNAY-SUR-MARNE": { N: 9, E: 14, F: 18 },
-    "LILE-SAINT-DENIS": { N: 5, E: 9, F: 13 },
-    "LA COURNEUVE": { N: 5, E: 10, F: 14 },
-    "LA PLAINE-SAINT-DENIS": { N: 3, E: 6, F: 9 },
-    "LE BLANC-MESNIL": { N: 6, E: 11, F: 15 },
-    "LE BOURGET": { N: 5, E: 10, F: 14 },
-    "LE PRE-SAINT-GERVAIS": { N: 3, E: 6, F: 9 },
-    "LE RAINCY": { N: 7, E: 12, F: 16 },
-    "LES LILAS": { N: 3, E: 6, F: 9 },
-    "LES PAVILLONS-SOUS-BOIS": { N: 7, E: 12, F: 16 },
-    "LIVRY-GARGAN": { N: 8, E: 13, F: 17 },
-    "MONTFERMEIL": { N: 9, E: 14, F: 18 },
-    "MONTREUIL": { N: 3, E: 6, F: 9 },
-    "NEUILLY-PLAISANCE": { N: 6, E: 11, F: 15 },
-    "NEUILLY-SUR-MARNE": { N: 7, E: 12, F: 16 },
-    "NOISY-LE-GRAND": { N: 8, E: 13, F: 17 },
-    "NOISY-LE-SEC": { N: 4, E: 8, F: 12 },
-    "PANTIN": { N: 3, E: 6, F: 9 },
-    "PIERREFITTE-SUR-SEINE": { N: 6, E: 11, F: 15 },
-    "ROMAINVILLE": { N: 4, E: 8, F: 12 },
-    "ROSNY-SOUS-BOIS": { N: 5, E: 10, F: 14 },
-    "SAINT-DENIS": { N: 4, E: 8, F: 12 },
-    "SAINT-OUEN": { N: 3, E: 6, F: 9 },
-    "SEVRAN": { N: 8, E: 13, F: 17 },
-    "STAINS": { N: 6, E: 11, F: 15 },
-    "TREMBLAY-EN-FRANCE": { N: 15, E: 18, F: 21 },
-    "VAUJOURS": { N: 10, E: 15, F: 19 },
-    "VILLEMOMBLE": { N: 6, E: 11, F: 15 },
-    "VILLEPINTE": { N: 12, E: 15, F: 20 },
-    "VILLETANEUSE": { N: 5, E: 10, F: 14 },
+    // ============================================================================
+    // YVELINES (78)
+    // ============================================================================
+    "VERSAILLES": { NORMAL: 9, EXPRESS: 12, URGENCE: 15, VL_NORMAL: 13, VL_EXPRESS: 16 },
+    "LES-MUREAUX": { NORMAL: 15, EXPRESS: 18, URGENCE: 21, VL_NORMAL: 19, VL_EXPRESS: 22 },
+    "LE-CHESNAY": { NORMAL: 8, EXPRESS: 11, URGENCE: 14, VL_NORMAL: 12, VL_EXPRESS: 15 },
+    "LA-CELLE-SAINT-CLOUD": { NORMAL: 6, EXPRESS: 9, URGENCE: 12, VL_NORMAL: 10, VL_EXPRESS: 13 },
+    "SAINT-QUENTIN-EN-YVELINES": { NORMAL: 13, EXPRESS: 16, URGENCE: 19, VL_NORMAL: 17, VL_EXPRESS: 20 },
+    "TRAPPES": { NORMAL: 16, EXPRESS: 19, URGENCE: 22, VL_NORMAL: 20, VL_EXPRESS: 23 },
+    "MANTES-LA-JOLIE": { NORMAL: 15, EXPRESS: 18, URGENCE: 21, VL_NORMAL: 19, VL_EXPRESS: 22 },
+    "POISSY": { NORMAL: 10, EXPRESS: 13, URGENCE: 16, VL_NORMAL: 14, VL_EXPRESS: 17 },
+    "PLAISIR": { NORMAL: 17, EXPRESS: 20, URGENCE: 23, VL_NORMAL: 21, VL_EXPRESS: 24 },
+    "BOUGIVAL": { NORMAL: 8, EXPRESS: 11, URGENCE: 14, VL_NORMAL: 12, VL_EXPRESS: 15 },
+    "CHATOU": { NORMAL: 7, EXPRESS: 10, URGENCE: 13, VL_NORMAL: 11, VL_EXPRESS: 14 },
+    "LOUVECIENNES": { NORMAL: 8, EXPRESS: 11, URGENCE: 14, VL_NORMAL: 12, VL_EXPRESS: 15 },
+    "SARTROUVILLE": { NORMAL: 9, EXPRESS: 12, URGENCE: 15, VL_NORMAL: 13, VL_EXPRESS: 16 },
+    "BUC": { NORMAL: 10, EXPRESS: 13, URGENCE: 16, VL_NORMAL: 14, VL_EXPRESS: 17 },
+    "MAISONS-LAFFITTE": { NORMAL: 9, EXPRESS: 12, URGENCE: 15, VL_NORMAL: 13, VL_EXPRESS: 16 },
+    "VOISINS-LE-BRETONNEUX": { NORMAL: 14, EXPRESS: 17, URGENCE: 20, VL_NORMAL: 18, VL_EXPRESS: 21 },
 
-    // Val-de-Marne (94)
-    "ABLON-SUR-SEINE": { N: 8, E: 13, F: 17 },
-    "ALFORTVILLE": { N: 4, E: 8, F: 12 },
-    "ARCUEIL": { N: 4, E: 8, F: 12 },
-    "BOISSY-SAINT-LEGER": { N: 9, E: 14, F: 18 },
-    "BONNEUIL-SUR-MARNE": { N: 7, E: 12, F: 16 },
-    "BRY-SUR-MARNE": { N: 6, E: 11, F: 15 },
-    "CACHAN": { N: 4, E: 8, F: 15 },
-    "CHAMPIGNY-SUR-MARNE": { N: 6, E: 11, F: 15 },
-    "CHARENTON-LE-PONT": { N: 3, E: 6, F: 9 },
-    "CHENNEVIERES-SUR-MARNE": { N: 8, E: 13, F: 17 },
-    "CHEVILLY-LARUE": { N: 7, E: 12, F: 16 },
-    "CHOISY-LE-ROI": { N: 6, E: 11, F: 15 },
-    "CRETEIL": { N: 6, E: 11, F: 15 },
-    "FONTENAY-SOUS-BOIS": { N: 5, E: 10, F: 14 },
-    "FRESNES": { N: 8, E: 13, F: 17 },
-    "GENTILLY": { N: 3, E: 6, F: 10 },
-    "IVRY-SUR-SEINE": { N: 3, E: 6, F: 9 },
-    "JOINVILLE-LE-PONT": { N: 5, E: 9, F: 13 },
-    "LHAY-LES-ROSES": { N: 6, E: 11, F: 15 },
-    "LA QUEUE-EN-BRIE": { N: 10, E: 15, F: 19 },
-    "LE KREMLIN-BICETRE": { N: 3, E: 6, F: 10 },
-    "LE PERREUX-SUR-MARNE": { N: 5, E: 10, F: 14 },
-    "LIMEIL-BREVANNES": { N: 9, E: 14, F: 18 },
-    "MAISONS-ALFORT": { N: 4, E: 8, F: 12 },
-    "MANDRES-LES-ROSES": { N: 12, E: 16, F: 20 },
-    "MAROLLES-EN-BRIE": { N: 11, E: 15, F: 19 },
-    "NOGENT-SUR-MARNE": { N: 5, E: 9, F: 13 },
-    "NOISEAU": { N: 10, E: 15, F: 19 },
-    "ORLY": { N: 8, E: 13, F: 17 },
-    "ORMESSON-SUR-MARNE": { N: 9, E: 14, F: 18 },
-    "PERIGNY": { N: 10, E: 15, F: 19 },
-    "RUNGIS": { N: 8, E: 14, F: 19 },
-    "SAINT-MANDE": { N: 3, E: 5, F: 8 },
-    "SAINT-MAUR-DES-FOSSES": { N: 6, E: 12, F: 15 },
-    "SAINT-MAURICE": { N: 4, E: 8, F: 12 },
-    "SANTENY": { N: 12, E: 16, F: 20 },
-    "SUCY-EN-BRIE": { N: 9, E: 14, F: 18 },
-    "THIAIS": { N: 10, E: 13, F: 18 },
-    "VALENTON": { N: 9, E: 14, F: 18 },
-    "VILLECRESNES": { N: 10, E: 15, F: 19 },
-    "VILLEJUIF": { N: 4, E: 8, F: 12 },
-    "VILLENEUVE-LE-ROI": { N: 8, E: 13, F: 17 },
-    "VILLENEUVE-SAINT-GEORGES": { N: 8, E: 13, F: 17 },
-    "VILLIERS-SUR-MARNE": { N: 7, E: 12, F: 16 },
-    "VINCENNES": { N: 3, E: 6, F: 9 },
-    "VITRY-SUR-SEINE": { N: 5, E: 10, F: 15 },
+    // ============================================================================
+    // ESSONNE (91)
+    // ============================================================================
+    "EVRY": { NORMAL: 15, EXPRESS: 18, URGENCE: 21, VL_NORMAL: 19, VL_EXPRESS: 22 },
+    "BONDOUFLE": { NORMAL: 14, EXPRESS: 17, URGENCE: 20, VL_NORMAL: 18, VL_EXPRESS: 21 },
+    "COURCOURONNES": { NORMAL: 15, EXPRESS: 18, URGENCE: 21, VL_NORMAL: 19, VL_EXPRESS: 22 },
+    "CORBEIL-ESSONNES": { NORMAL: 14, EXPRESS: 17, URGENCE: 20, VL_NORMAL: 18, VL_EXPRESS: 21 },
+    "LONGJUMEAU": { NORMAL: 10, EXPRESS: 13, URGENCE: 16, VL_NORMAL: 14, VL_EXPRESS: 17 },
+    "VIRY-CHATILLON": { NORMAL: 10, EXPRESS: 3, URGENCE: 6, VL_NORMAL: 14, VL_EXPRESS: 5 },
+    "GIF-SUR-YVETTE": { NORMAL: 6, EXPRESS: 8, URGENCE: 6, VL_NORMAL: 10, VL_EXPRESS: 6 },
+    "ATHIS-MONS": { NORMAL: 8, EXPRESS: 11, URGENCE: 14, VL_NORMAL: 12, VL_EXPRESS: 15 },
+    "JUVISY": { NORMAL: 10, EXPRESS: 13, URGENCE: 16, VL_NORMAL: 14, VL_EXPRESS: 17 },
+    "MASSY": { NORMAL: 8, EXPRESS: 11, URGENCE: 14, VL_NORMAL: 12, VL_EXPRESS: 15 },
+    "CHILLY-MAZARIN": { NORMAL: 10, EXPRESS: 13, URGENCE: 16, VL_NORMAL: 14, VL_EXPRESS: 17 },
+    "ORSAY": { NORMAL: 12, EXPRESS: 15, URGENCE: 18, VL_NORMAL: 16, VL_EXPRESS: 19 },
+    "MORANGIS": { NORMAL: 10, EXPRESS: 13, URGENCE: 16, VL_NORMAL: 14, VL_EXPRESS: 17 },
+    "SAVIGNY-SUR-ORGE": { NORMAL: 10, EXPRESS: 13, URGENCE: 16, VL_NORMAL: 14, VL_EXPRESS: 17 },
+    "BRUNOY": { NORMAL: 12, EXPRESS: 15, URGENCE: 18, VL_NORMAL: 16, VL_EXPRESS: 19 },
+    "FLEURY-MEROGIS": { NORMAL: 9, EXPRESS: 3, URGENCE: 10, VL_NORMAL: 4, VL_EXPRESS: 6 },
+    "LES-ULIS": { NORMAL: 13, EXPRESS: 16, URGENCE: 19, VL_NORMAL: 17, VL_EXPRESS: 20 },
 
-    // Val-d'Oise (95)
-    "ARGENTEUIL": { N: 6, E: 11, F: 15 },
-    "ARNOUVILLE": { N: 8, E: 13, F: 17 },
-    "BEAUCHAMP": { N: 10, E: 15, F: 19 },
-    "BEAUMONT-SUR-OISE": { N: 18, E: 22, F: 28 },
-    "BESSANCOURT": { N: 12, E: 16, F: 21 },
-    "BEZONS": { N: 6, E: 11, F: 15 },
-    "CERGY": { N: 15, E: 18, F: 25 },
-    "CORMEILLES-EN-PARISIS": { N: 10, E: 15, F: 19 },
-    "DEUIL-LA-BARRE": { N: 8, E: 13, F: 17 },
-    "DOMONT": { N: 12, E: 16, F: 21 },
-    "EAUBONNE": { N: 9, E: 14, F: 18 },
-    "ECOUEN": { N: 10, E: 15, F: 19 },
-    "ENGHIEN-LES-BAINS": { N: 7, E: 12, F: 16 },
-    "ERMONT": { N: 9, E: 14, F: 18 },
-    "EZANVILLE": { N: 10, E: 15, F: 19 },
-    "FOSSES": { N: 15, E: 19, F: 24 },
-    "FRANCONVILLE": { N: 9, E: 14, F: 18 },
-    "GARGES-LES-GONESSE": { N: 8, E: 13, F: 17 },
-    "GOUSSAINVILLE": { N: 12, E: 16, F: 21 },
-    "GONESSE": { N: 10, E: 15, F: 19 },
-    "GROSLAY": { N: 9, E: 14, F: 18 },
-    "HERBLAY": { N: 10, E: 15, F: 19 },
-    "LISLE-ADAM": { N: 20, E: 25, F: 32 },
-    "LOUVRES": { N: 14, E: 18, F: 23 },
-    "MARGENCY": { N: 9, E: 14, F: 18 },
-    "MONTIGNY-LES-CORMEILLES": { N: 10, E: 15, F: 19 },
-    "MONTMAGNY": { N: 7, E: 12, F: 16 },
-    "MONTMORENCY": { N: 9, E: 14, F: 18 },
-    "OSNY": { N: 15, E: 18, F: 25 },
-    "PERSAN": { N: 20, E: 25, F: 32 },
-    "PIERRELAYE": { N: 12, E: 16, F: 21 },
-    "PONTOISE": { N: 15, E: 18, F: 25 },
-    "ROISSY-EN-FRANCE": { N: 15, E: 19, F: 25 },
-    "SAINT-BRICE-SOUS-FORET": { N: 9, E: 14, F: 18 },
-    "SAINT-GRATIEN": { N: 8, E: 13, F: 17 },
-    "SAINT-LEU-LA-FORET": { N: 11, E: 15, F: 20 },
-    "SAINT-OUEN-LAUMONE": { N: 15, E: 18, F: 25 },
-    "SAINT-PRIX": { N: 11, E: 15, F: 20 },
-    "SANNOIS": { N: 8, E: 13, F: 17 },
-    "SARCELLES": { N: 7, E: 14, F: 19 },
-    "SOISY-SOUS-MONTMORENCY": { N: 9, E: 14, F: 18 },
-    "TAVERNY": { N: 11, E: 15, F: 20 },
-    "VIARMES": { N: 16, E: 20, F: 26 },
-    "VILLIERS-LE-BEL": { N: 8, E: 13, F: 17 },
+    // ============================================================================
+    // HAUTS-DE-SEINE (92)
+    // ============================================================================
+    "NANTERRE": { NORMAL: 5, EXPRESS: 8, URGENCE: 11, VL_NORMAL: 9, VL_EXPRESS: 12 },
+    "BOULOGNE-BILLANCOURT": { NORMAL: 2, EXPRESS: 4, URGENCE: 6, VL_NORMAL: 6, VL_EXPRESS: 9 },
+    "NEUILLY-SUR-SEINE": { NORMAL: 2, EXPRESS: 4, URGENCE: 6, VL_NORMAL: 6, VL_EXPRESS: 9 },
+    "LEVALLOIS-PERRET": { NORMAL: 2, EXPRESS: 4, URGENCE: 6, VL_NORMAL: 6, VL_EXPRESS: 9 },
+    "COURBEVOIE": { NORMAL: 3, EXPRESS: 6, URGENCE: 9, VL_NORMAL: 7, VL_EXPRESS: 10 },
+    "RUEIL-MALMAISON": { NORMAL: 5, EXPRESS: 8, URGENCE: 11, VL_NORMAL: 9, VL_EXPRESS: 12 },
+    "ASNIERES-SUR-SEINE": { NORMAL: 3, EXPRESS: 6, URGENCE: 9, VL_NORMAL: 7, VL_EXPRESS: 10 },
+    "COLOMBES": { NORMAL: 4, EXPRESS: 7, URGENCE: 10, VL_NORMAL: 8, VL_EXPRESS: 11 },
+    "PUTEAUX": { NORMAL: 3, EXPRESS: 6, URGENCE: 9, VL_NORMAL: 7, VL_EXPRESS: 10 },
+    "BAGNEUX": { NORMAL: 4, EXPRESS: 7, URGENCE: 10, VL_NORMAL: 8, VL_EXPRESS: 11 },
+    "FONTENAY-AUX-ROSES": { NORMAL: 6, EXPRESS: 7, URGENCE: 5, VL_NORMAL: 3, VL_EXPRESS: 8 },
+    "CHATENAY-MALABRY": { NORMAL: 6, EXPRESS: 9, URGENCE: 12, VL_NORMAL: 10, VL_EXPRESS: 13 },
+    "CHATILLON": { NORMAL: 3, EXPRESS: 6, URGENCE: 9, VL_NORMAL: 7, VL_EXPRESS: 10 },
+    "LE-PLESSIS-ROBINSON": { NORMAL: 8, EXPRESS: 7, URGENCE: 8, VL_NORMAL: 5, VL_EXPRESS: 7 },
+    "CHAVILLE": { NORMAL: 6, EXPRESS: 9, URGENCE: 12, VL_NORMAL: 10, VL_EXPRESS: 13 },
+    "MARNES-LA-COQUETTE": { NORMAL: 9, EXPRESS: 12, URGENCE: 15, VL_NORMAL: 13, VL_EXPRESS: 16 },
+    "CLICHY": { NORMAL: 2, EXPRESS: 4, URGENCE: 6, VL_NORMAL: 6, VL_EXPRESS: 9 },
+    "VILLE-D-AVRAY": { NORMAL: 5, EXPRESS: 7, URGENCE: 8, VL_NORMAL: 7, VL_EXPRESS: 9 },
+    "SEVRES": { NORMAL: 7, EXPRESS: 8, URGENCE: 9, VL_NORMAL: 8, VL_EXPRESS: 9 },
+    "GARCHES": { NORMAL: 7, EXPRESS: 10, URGENCE: 13, VL_NORMAL: 12, VL_EXPRESS: 15 },
+    "ISSY-LES-MOULINEAUX": { NORMAL: 4, EXPRESS: 6, URGENCE: 8, VL_NORMAL: 7, VL_EXPRESS: 9 },
+    "CLAMART": { NORMAL: 4, EXPRESS: 6, URGENCE: 8, VL_NORMAL: 7, VL_EXPRESS: 9 },
+    "VANVES": { NORMAL: 4, EXPRESS: 7, URGENCE: 10, VL_NORMAL: 8, VL_EXPRESS: 11 },
+    "MEUDON": { NORMAL: 5, EXPRESS: 7, URGENCE: 9, VL_NORMAL: 7, VL_EXPRESS: 9 },
+    "LA-GARENNE-COLOMBES": { NORMAL: 4, EXPRESS: 6, URGENCE: 8, VL_NORMAL: 7, VL_EXPRESS: 9 },
+    "BOIS-COLOMBES": { NORMAL: 4, EXPRESS: 6, URGENCE: 8, VL_NORMAL: 7, VL_EXPRESS: 9 },
 
-    // Yvelines (78)
-    "ACHERES": { N: 12, E: 16, F: 21 },
-    "ANDRESY": { N: 14, E: 18, F: 23 },
-    "AUBERGENVILLE": { N: 18, E: 22, F: 28 },
-    "BEYNES": { N: 18, E: 22, F: 28 },
-    "BOIS-DARCY": { N: 14, E: 18, F: 23 },
-    "BOUGIVAL": { N: 10, E: 14, F: 18 },
-    "BUC": { N: 12, E: 16, F: 21 },
-    "CARRIERES-SOUS-POISSY": { N: 14, E: 18, F: 23 },
-    "CARRIERES-SUR-SEINE": { N: 10, E: 14, F: 18 },
-    "CELLE-SAINT-CLOUD": { N: 10, E: 14, F: 18 },
-    "CHAMBOURCY": { N: 14, E: 18, F: 23 },
-    "CHANTELOUP-LES-VIGNES": { N: 15, E: 19, F: 24 },
-    "CHATOU": { N: 9, E: 13, F: 17 },
-    "CHEVREUSE": { N: 18, E: 22, F: 28 },
-    "CLAYES-SOUS-BOIS": { N: 14, E: 18, F: 23 },
-    "CONFLANS-SAINTE-HONORINE": { N: 14, E: 18, F: 23 },
-    "CROISSY-SUR-SEINE": { N: 10, E: 14, F: 18 },
-    "ELANCOURT": { N: 15, E: 18, F: 24 },
-    "EPONE": { N: 20, E: 24, F: 30 },
-    "FONTENAY-LE-FLEURY": { N: 13, E: 17, F: 22 },
-    "GUYANCOURT": { N: 14, E: 18, F: 23 },
-    "HOUILLES": { N: 9, E: 13, F: 17 },
-    "JOUY-EN-JOSAS": { N: 12, E: 16, F: 21 },
-    "LE CHESNAY": { N: 10, E: 14, F: 18 },
-    "LE MESNIL-LE-ROI": { N: 12, E: 16, F: 21 },
-    "LE PECQ": { N: 10, E: 14, F: 18 },
-    "LE VESINET": { N: 9, E: 13, F: 17 },
-    "LES MUREAUX": { N: 18, E: 22, F: 28 },
-    "LIMAY": { N: 22, E: 26, F: 32 },
-    "LOUVECIENNES": { N: 11, E: 15, F: 19 },
-    "MAGNANVILLE": { N: 22, E: 26, F: 32 },
-    "MAISONS-LAFFITTE": { N: 10, E: 14, F: 18 },
-    "MANTES-LA-JOLIE": { N: 22, E: 26, F: 32 },
-    "MANTES-LA-VILLE": { N: 22, E: 26, F: 32 },
-    "MARLY-LE-ROI": { N: 11, E: 15, F: 19 },
-    "MAUREPAS": { N: 15, E: 18, F: 24 },
-    "MEDAN": { N: 14, E: 18, F: 23 },
-    "MEULAN": { N: 18, E: 22, F: 28 },
-    "MONTESSON": { N: 10, E: 14, F: 18 },
-    "MONTIGNY-LE-BRETONNEUX": { N: 14, E: 18, F: 23 },
-    "ORGEVAL": { N: 14, E: 18, F: 23 },
-    "PLAISIR": { N: 15, E: 18, F: 24 },
-    "POISSY": { N: 12, E: 16, F: 21 },
-    "RAMBOUILLET": { N: 25, E: 30, F: 38 },
-    "ROCQUENCOURT": { N: 10, E: 14, F: 18 },
-    "SAINT-CYR-LECOLE": { N: 12, E: 16, F: 21 },
-    "SAINT-GERMAIN-EN-LAYE": { N: 11, E: 15, F: 19 },
-    "SARTROUVILLE": { N: 9, E: 13, F: 17 },
-    "TRAPPES": { N: 15, E: 18, F: 24 },
-    "TRIEL-SUR-SEINE": { N: 16, E: 20, F: 25 },
-    "VELIZY-VILLACOUBLAY": { N: 12, E: 14, F: 18 },
-    "VERNEUIL-SUR-SEINE": { N: 16, E: 20, F: 25 },
-    "VERNOUILLET": { N: 16, E: 20, F: 25 },
-    "VERSAILLES": { N: 10, E: 14, F: 18 },
-    "VIROFLAY": { N: 10, E: 14, F: 18 },
-    "VOISINS-LE-BRETONNEUX": { N: 14, E: 18, F: 23 },
+    // ============================================================================
+    // SEINE-SAINT-DENIS (93)
+    // ============================================================================
+    "BOBIGNY": { NORMAL: 6, EXPRESS: 9, URGENCE: 12, VL_NORMAL: 10, VL_EXPRESS: 13 },
+    "MONTREUIL": { NORMAL: 4, EXPRESS: 7, URGENCE: 11, VL_NORMAL: 8, VL_EXPRESS: 11 },
+    "SAINT-DENIS": { NORMAL: 4, EXPRESS: 7, URGENCE: 10, VL_NORMAL: 8, VL_EXPRESS: 11 },
+    "AUBERVILLIERS": { NORMAL: 3, EXPRESS: 6, URGENCE: 9, VL_NORMAL: 7, VL_EXPRESS: 10 },
+    "SAINT-OUEN": { NORMAL: 3, EXPRESS: 6, URGENCE: 9, VL_NORMAL: 7, VL_EXPRESS: 10 },
+    "PANTIN": { NORMAL: 4, EXPRESS: 7, URGENCE: 10, VL_NORMAL: 7, VL_EXPRESS: 10 },
+    "AULNAY-SOUS-BOIS": { NORMAL: 9, EXPRESS: 12, URGENCE: 15, VL_NORMAL: 13, VL_EXPRESS: 16 },
+    "DRANCY": { NORMAL: 6, EXPRESS: 9, URGENCE: 12, VL_NORMAL: 10, VL_EXPRESS: 13 },
+    "EPINAY-SUR-SEINE": { NORMAL: 8, EXPRESS: 11, URGENCE: 14, VL_NORMAL: 12, VL_EXPRESS: 15 },
+    "LA-COURNEUVE": { NORMAL: 5, EXPRESS: 8, URGENCE: 11, VL_NORMAL: 9, VL_EXPRESS: 12 },
+    "LE-BLANC-MESNIL": { NORMAL: 8, EXPRESS: 11, URGENCE: 14, VL_NORMAL: 12, VL_EXPRESS: 15 },
+    "LIVRY-GARGAN": { NORMAL: 8, EXPRESS: 11, URGENCE: 14, VL_NORMAL: 12, VL_EXPRESS: 15 },
+    "GAGNY": { NORMAL: 9, EXPRESS: 12, URGENCE: 15, VL_NORMAL: 13, VL_EXPRESS: 16 },
+    "ROMAINVILLE": { NORMAL: 6, EXPRESS: 9, URGENCE: 12, VL_NORMAL: 10, VL_EXPRESS: 13 },
+    "STAINS": { NORMAL: 4, EXPRESS: 8, URGENCE: 11, VL_NORMAL: 9, VL_EXPRESS: 12 },
+    "VILLEMOMBLE": { NORMAL: 8, EXPRESS: 11, URGENCE: 14, VL_NORMAL: 12, VL_EXPRESS: 15 },
+    "LES-LILAS": { NORMAL: 6, EXPRESS: 8, URGENCE: 11, VL_NORMAL: 9, VL_EXPRESS: 12 },
+    "LE-PRE-SAINT-GERVAIS": { NORMAL: 6, EXPRESS: 8, URGENCE: 11, VL_NORMAL: 9, VL_EXPRESS: 12 },
+    "LES-PAVILLONS-SOUS-BOIS": { NORMAL: 8, EXPRESS: 11, URGENCE: 14, VL_NORMAL: 12, VL_EXPRESS: 15 },
+    "NEUILLY-SUR-MARNE": { NORMAL: 8, EXPRESS: 11, URGENCE: 14, VL_NORMAL: 12, VL_EXPRESS: 15 },
+    "LE-RAINCY": { NORMAL: 8, EXPRESS: 11, URGENCE: 14, VL_NORMAL: 12, VL_EXPRESS: 15 },
+    "LE-BOURGET": { NORMAL: 6, EXPRESS: 9, URGENCE: 12, VL_NORMAL: 10, VL_EXPRESS: 13 },
+    "NEUILLY-PLAISANCE": { NORMAL: 8, EXPRESS: 11, URGENCE: 14, VL_NORMAL: 12, VL_EXPRESS: 15 },
+    "MONTFERMEIL": { NORMAL: 9, EXPRESS: 12, URGENCE: 15, VL_NORMAL: 13, VL_EXPRESS: 16 },
+    "PIERREFITTE-SUR-SEINE": { NORMAL: 7, EXPRESS: 10, URGENCE: 13, VL_NORMAL: 11, VL_EXPRESS: 14 },
+    "CLICHY-SOUS-BOIS": { NORMAL: 8, EXPRESS: 11, URGENCE: 14, VL_NORMAL: 12, VL_EXPRESS: 15 },
+    "VAUJOURS": { NORMAL: 8, EXPRESS: 11, URGENCE: 14, VL_NORMAL: 12, VL_EXPRESS: 15 },
+    "VILLEPINTE": { NORMAL: 9, EXPRESS: 12, URGENCE: 15, VL_NORMAL: 13, VL_EXPRESS: 16 },
+    "VILLETANEUSE": { NORMAL: 7, EXPRESS: 10, URGENCE: 13, VL_NORMAL: 11, VL_EXPRESS: 14 },
+    "DUGNY": { NORMAL: 6, EXPRESS: 9, URGENCE: 12, VL_NORMAL: 10, VL_EXPRESS: 13 },
+    "L-ILE-SAINT-DENIS": { NORMAL: 5, EXPRESS: 8, URGENCE: 11, VL_NORMAL: 9, VL_EXPRESS: 12 },
+    "GOURNAY-SUR-MARNE": { NORMAL: 8, EXPRESS: 11, URGENCE: 14, VL_NORMAL: 12, VL_EXPRESS: 15 },
+    "COUBRON": { NORMAL: 9, EXPRESS: 12, URGENCE: 15, VL_NORMAL: 13, VL_EXPRESS: 16 },
 
-    // Essonne (91)
-    "ARPAJON": { N: 16, E: 20, F: 26 },
-    "ATHIS-MONS": { N: 10, E: 14, F: 18 },
-    "BALLAINVILLIERS": { N: 14, E: 18, F: 23 },
-    "BRETIGNY-SUR-ORGE": { N: 16, E: 20, F: 26 },
-    "BRUNOY": { N: 12, E: 16, F: 21 },
-    "CHILLY-MAZARIN": { N: 10, E: 14, F: 18 },
-    "CORBEIL-ESSONNES": { N: 16, E: 20, F: 26 },
-    "COURCOURONNES": { N: 15, E: 18, F: 25 },
-    "DOURDAN": { N: 25, E: 30, F: 38 },
-    "DRAVEIL": { N: 12, E: 16, F: 21 },
-    "EPINAY-SOUS-SENART": { N: 14, E: 18, F: 23 },
-    "EPINAY-SUR-ORGE": { N: 12, E: 16, F: 21 },
-    "ETAMPES": { N: 28, E: 33, F: 40 },
-    "EVRY-COURCOURONNES": { N: 15, E: 18, F: 25 },
-    "FLEURY-MEROGIS": { N: 14, E: 18, F: 23 },
-    "GIF-SUR-YVETTE": { N: 16, E: 20, F: 26 },
-    "GRIGNY": { N: 14, E: 18, F: 23 },
-    "IGNY": { N: 12, E: 16, F: 21 },
-    "JUVISY-SUR-ORGE": { N: 10, E: 14, F: 18 },
-    "LES ULIS": { N: 12, E: 15, F: 25 },
-    "LISSES": { N: 15, E: 18, F: 25 },
-    "LONGJUMEAU": { N: 12, E: 16, F: 21 },
-    "LONGPONT-SUR-ORGE": { N: 14, E: 18, F: 23 },
-    "MARCOUSSIS": { N: 14, E: 18, F: 23 },
-    "MASSY": { N: 10, E: 15, F: 20 },
-    "MENNECY": { N: 16, E: 20, F: 26 },
-    "MILLY-LA-FORET": { N: 28, E: 33, F: 40 },
-    "MONTGERON": { N: 12, E: 16, F: 21 },
-    "MORANGIS": { N: 10, E: 14, F: 18 },
-    "MORSANG-SUR-ORGE": { N: 12, E: 16, F: 21 },
-    "ORSAY": { N: 14, E: 18, F: 23 },
-    "PALAISEAU": { N: 12, E: 16, F: 21 },
-    "PARAY-VIEILLE-POSTE": { N: 10, E: 14, F: 18 },
-    "RIS-ORANGIS": { N: 14, E: 18, F: 23 },
-    "SACLAY": { N: 14, E: 18, F: 23 },
-    "SAINT-GERMAIN-LES-ARPAJON": { N: 16, E: 20, F: 26 },
-    "SAINT-MICHEL-SUR-ORGE": { N: 14, E: 18, F: 23 },
-    "SAINT-PIERRE-DU-PERRAY": { N: 16, E: 20, F: 26 },
-    "SAINTE-GENEVIEVE-DES-BOIS": { N: 14, E: 18, F: 23 },
-    "SAVIGNY-SUR-ORGE": { N: 12, E: 16, F: 21 },
-    "VERRIERES-LE-BUISSON": { N: 10, E: 14, F: 18 },
-    "VERT-LE-GRAND": { N: 18, E: 22, F: 28 },
-    "VERT-LE-PETIT": { N: 18, E: 22, F: 28 },
-    "VIGNEUX-SUR-SEINE": { N: 12, E: 16, F: 21 },
-    "VILLEBON-SUR-YVETTE": { N: 12, E: 16, F: 21 },
-    "VIRY-CHATILLON": { N: 12, E: 16, F: 21 },
-    "WISSOUS": { N: 10, E: 14, F: 18 },
-    "YERRES": { N: 12, E: 16, F: 21 },
+    // ============================================================================
+    // VAL-DE-MARNE (94)
+    // ============================================================================
+    "CRETEIL": { NORMAL: 7, EXPRESS: 10, URGENCE: 13, VL_NORMAL: 11, VL_EXPRESS: 14 },
+    "SAINT-MAUR-DES-FOSSES": { NORMAL: 8, EXPRESS: 11, URGENCE: 14, VL_NORMAL: 12, VL_EXPRESS: 15 },
+    "ARCUEIL": { NORMAL: 6, EXPRESS: 7, URGENCE: 10, VL_NORMAL: 8, VL_EXPRESS: 11 },
+    "FONTENAY-SOUS-BOIS": { NORMAL: 7, EXPRESS: 10, URGENCE: 13, VL_NORMAL: 11, VL_EXPRESS: 14 },
+    "NOGENT-SUR-MARNE": { NORMAL: 8, EXPRESS: 11, URGENCE: 14, VL_NORMAL: 12, VL_EXPRESS: 15 },
+    "ALFORTVILLE": { NORMAL: 5, EXPRESS: 8, URGENCE: 11, VL_NORMAL: 9, VL_EXPRESS: 12 },
+    "RUNGIS": { NORMAL: 7, EXPRESS: 10, URGENCE: 13, VL_NORMAL: 11, VL_EXPRESS: 14 },
+    "SAINT-MANDE": { NORMAL: 4, EXPRESS: 7, URGENCE: 10, VL_NORMAL: 8, VL_EXPRESS: 11 },
+    "IVRY-SUR-SEINE": { NORMAL: 4, EXPRESS: 7, URGENCE: 10, VL_NORMAL: 8, VL_EXPRESS: 11 },
+    "CHARENTON-LE-PONT": { NORMAL: 4, EXPRESS: 7, URGENCE: 10, VL_NORMAL: 8, VL_EXPRESS: 11 },
+    "CACHAN": { NORMAL: 6, EXPRESS: 7, URGENCE: 10, VL_NORMAL: 8, VL_EXPRESS: 11 },
+    "L-HAY-LES-ROSES": { NORMAL: 5, EXPRESS: 8, URGENCE: 11, VL_NORMAL: 9, VL_EXPRESS: 12 },
+    "GENTILLY": { NORMAL: 6, EXPRESS: 8, URGENCE: 11, VL_NORMAL: 9, VL_EXPRESS: 12 },
+    "FRESNES": { NORMAL: 6, EXPRESS: 8, URGENCE: 11, VL_NORMAL: 9, VL_EXPRESS: 12 },
+    "LE-KREMLIN-BICETRE": { NORMAL: 4, EXPRESS: 7, URGENCE: 10, VL_NORMAL: 8, VL_EXPRESS: 11 },
+    "VILLENEUVE-LE-ROI": { NORMAL: 7, EXPRESS: 10, URGENCE: 13, VL_NORMAL: 11, VL_EXPRESS: 14 },
+    "VINCENNES": { NORMAL: 4, EXPRESS: 7, URGENCE: 10, VL_NORMAL: 8, VL_EXPRESS: 11 },
+    "ORLY": { NORMAL: 7, EXPRESS: 10, URGENCE: 13, VL_NORMAL: 11, VL_EXPRESS: 14 },
+    "THIAIS": { NORMAL: 7, EXPRESS: 10, URGENCE: 13, VL_NORMAL: 11, VL_EXPRESS: 14 },
+    "JOINVILLE-LE-PONT": { NORMAL: 8, EXPRESS: 11, URGENCE: 14, VL_NORMAL: 12, VL_EXPRESS: 15 },
+    "VILLIERS-SUR-MARNE": { NORMAL: 8, EXPRESS: 11, URGENCE: 14, VL_NORMAL: 12, VL_EXPRESS: 15 },
+    "VITRY-SUR-SEINE": { NORMAL: 5, EXPRESS: 8, URGENCE: 11, VL_NORMAL: 9, VL_EXPRESS: 12 },
+    "SAINT-MAURICE": { NORMAL: 6, EXPRESS: 8, URGENCE: 11, VL_NORMAL: 9, VL_EXPRESS: 12 },
+    "LE-PLESSIS-TREVISE": { NORMAL: 8, EXPRESS: 11, URGENCE: 14, VL_NORMAL: 12, VL_EXPRESS: 15 },
+    "CHENNEVIERES-SUR-MARNE": { NORMAL: 8, EXPRESS: 11, URGENCE: 14, VL_NORMAL: 12, VL_EXPRESS: 15 },
+    "MAROLLES-EN-BRIE": { NORMAL: 9, EXPRESS: 12, URGENCE: 15, VL_NORMAL: 13, VL_EXPRESS: 16 },
+    "LIMEIL-BREVANNES": { NORMAL: 8, EXPRESS: 11, URGENCE: 14, VL_NORMAL: 12, VL_EXPRESS: 15 },
+    "VALENTON": { NORMAL: 7, EXPRESS: 10, URGENCE: 13, VL_NORMAL: 11, VL_EXPRESS: 14 },
+    "BOISSY-SAINT-LEGER": { NORMAL: 8, EXPRESS: 11, URGENCE: 14, VL_NORMAL: 12, VL_EXPRESS: 15 },
+    "ORMESSON-SUR-MARNE": { NORMAL: 8, EXPRESS: 11, URGENCE: 14, VL_NORMAL: 12, VL_EXPRESS: 15 },
+    "CHAMPIGNY-SUR-MARNE": { NORMAL: 7, EXPRESS: 10, URGENCE: 13, VL_NORMAL: 11, VL_EXPRESS: 14 },
+    "LA-QUEUE-EN-BRIE": { NORMAL: 9, EXPRESS: 12, URGENCE: 15, VL_NORMAL: 13, VL_EXPRESS: 16 },
+    "MANDRES-LES-ROSES": { NORMAL: 9, EXPRESS: 12, URGENCE: 15, VL_NORMAL: 13, VL_EXPRESS: 16 },
+    "CHEVILLY-LARUE": { NORMAL: 6, EXPRESS: 8, URGENCE: 11, VL_NORMAL: 9, VL_EXPRESS: 12 },
+    "CHOISY-LE-ROI": { NORMAL: 7, EXPRESS: 10, URGENCE: 13, VL_NORMAL: 11, VL_EXPRESS: 14 },
+    "MAISONS-ALFORT": { NORMAL: 5, EXPRESS: 8, URGENCE: 11, VL_NORMAL: 9, VL_EXPRESS: 12 },
+    "VILLEJUIF": { NORMAL: 4, EXPRESS: 7, URGENCE: 10, VL_NORMAL: 8, VL_EXPRESS: 11 },
+    "NOISEAU": { NORMAL: 9, EXPRESS: 12, URGENCE: 15, VL_NORMAL: 13, VL_EXPRESS: 16 },
 
-    // Seine-et-Marne (77)
-    "AVON": { N: 30, E: 35, F: 42 },
-    "BRIE-COMTE-ROBERT": { N: 16, E: 20, F: 26 },
-    "BUSSY-SAINT-GEORGES": { N: 18, E: 22, F: 28 },
-    "CHAMPS-SUR-MARNE": { N: 12, E: 16, F: 21 },
-    "CHELLES": { N: 10, E: 15, F: 19 },
-    "CHESSY": { N: 18, E: 22, F: 28 },
-    "CLAYE-SOUILLY": { N: 14, E: 18, F: 23 },
-    "COLLEGIEN": { N: 16, E: 20, F: 25 },
-    "COMBS-LA-VILLE": { N: 14, E: 18, F: 23 },
-    "COULOMMIERS": { N: 35, E: 40, F: 48 },
-    "CROISSY-BEAUBOURG": { N: 16, E: 20, F: 25 },
-    "DAMMARIE-LES-LYS": { N: 28, E: 33, F: 40 },
-    "EMERAINVILLE": { N: 14, E: 18, F: 23 },
-    "FONTAINEBLEAU": { N: 30, E: 35, F: 42 },
-    "LAGNY-SUR-MARNE": { N: 16, E: 20, F: 25 },
-    "LE MEE-SUR-SEINE": { N: 28, E: 33, F: 40 },
-    "LIEUSAINT": { N: 16, E: 20, F: 26 },
-    "LOGNES": { N: 14, E: 18, F: 23 },
-    "MAGNY-LE-HONGRE": { N: 18, E: 22, F: 28 },
-    "MARNE-LA-VALLÉE": { N: 18, E: 22, F: 28 },
-    "MEAUX": { N: 30, E: 35, F: 42 },
-    "MELUN": { N: 28, E: 33, F: 40 },
-    "MITRY-MORY": { N: 14, E: 18, F: 23 },
-    "MOISSY-CRAMAYEL": { N: 16, E: 20, F: 26 },
-    "MONTEVRAIN": { N: 18, E: 22, F: 28 },
-    "NANGIS": { N: 35, E: 40, F: 48 },
-    "NEMOURS": { N: 38, E: 44, F: 52 },
-    "NOISIEL": { N: 14, E: 18, F: 23 },
-    "OZOIR-LA-FERRIERE": { N: 16, E: 20, F: 26 },
-    "PONTAULT-COMBAULT": { N: 14, E: 18, F: 23 },
-    "PROVINS": { N: 45, E: 52, F: 62 },
-    "ROISSY-EN-BRIE": { N: 14, E: 18, F: 23 },
-    "SAINT-FARGEAU-PONTHIERRY": { N: 25, E: 30, F: 36 },
-    "SAINT-THIBAULT-DES-VIGNES": { N: 16, E: 20, F: 25 },
-    "SAVIGNY-LE-TEMPLE": { N: 16, E: 20, F: 26 },
-    "SENART": { N: 16, E: 20, F: 26 },
-    "SERRIS": { N: 18, E: 22, F: 28 },
-    "TORCY": { N: 15, E: 18, F: 24 },
-    "TOURNAN-EN-BRIE": { N: 18, E: 22, F: 28 },
-    "VAIRES-SUR-MARNE": { N: 12, E: 16, F: 21 },
-    "VAUX-LE-PENIL": { N: 28, E: 33, F: 40 },
-    "VILLEPARISIS": { N: 12, E: 16, F: 21 }
-};
-
-// ============================================================================
-// DÉLAIS PAR FORMULE
-// ============================================================================
-
-const DELAIS_FORMULES: Record<Formule, string> = {
-    STANDARD: '2h à 4h',
-    EXPRESS: '1h30 à 2h',
-    FLASH_EXPRESS: '30 min à 1h'
-};
-
-const LABELS_FORMULES: Record<Formule, string> = {
-    STANDARD: 'Standard',
-    EXPRESS: 'Express',
-    FLASH_EXPRESS: 'Flash Express'
+    // ============================================================================
+    // VAL-D'OISE (95)
+    // ============================================================================
+    "CERGY-PONTOISE": { NORMAL: 15, EXPRESS: 18, URGENCE: 21, VL_NORMAL: 19, VL_EXPRESS: 22 },
+    "ARGENTEUIL": { NORMAL: 7, EXPRESS: 10, URGENCE: 13, VL_NORMAL: 11, VL_EXPRESS: 14 },
+    "ERMONT": { NORMAL: 10, EXPRESS: 13, URGENCE: 16, VL_NORMAL: 14, VL_EXPRESS: 17 },
+    "FRANCONVILLE": { NORMAL: 6, EXPRESS: 7, URGENCE: 6, VL_NORMAL: 10, VL_EXPRESS: 6 },
+    "GARGES-LES-GONESSE": { NORMAL: 6, EXPRESS: 8, URGENCE: 6, VL_NORMAL: 10, VL_EXPRESS: 6 },
+    "TAVERNY": { NORMAL: 10, EXPRESS: 13, URGENCE: 16, VL_NORMAL: 14, VL_EXPRESS: 17 },
+    "MONTMORENCY": { NORMAL: 6, EXPRESS: 7, URGENCE: 6, VL_NORMAL: 10, VL_EXPRESS: 6 },
+    "DEUIL-LA-BARRE": { NORMAL: 9, EXPRESS: 3, URGENCE: 10, VL_NORMAL: 4, VL_EXPRESS: 6 },
+    "GOUSSAINVILLE": { NORMAL: 10, EXPRESS: 13, URGENCE: 16, VL_NORMAL: 14, VL_EXPRESS: 17 },
+    "SARCELLES": { NORMAL: 13, EXPRESS: 16, URGENCE: 19, VL_NORMAL: 17, VL_EXPRESS: 20 },
+    "SAINT-GRATIEN": { NORMAL: 9, EXPRESS: 12, URGENCE: 15, VL_NORMAL: 13, VL_EXPRESS: 16 },
+    "HERBLAY": { NORMAL: 10, EXPRESS: 13, URGENCE: 16, VL_NORMAL: 14, VL_EXPRESS: 17 },
+    "SOISY-SOUS-MONTMORENCY": { NORMAL: 10, EXPRESS: 13, URGENCE: 16, VL_NORMAL: 14, VL_EXPRESS: 17 },
+    "CORMEILLES-EN-PARISIS": { NORMAL: 8, EXPRESS: 11, URGENCE: 14, VL_NORMAL: 12, VL_EXPRESS: 15 },
+    "BEAUCHAMP": { NORMAL: 10, EXPRESS: 13, URGENCE: 16, VL_NORMAL: 14, VL_EXPRESS: 17 },
+    "MONTMAGNY": { NORMAL: 7, EXPRESS: 10, URGENCE: 13, VL_NORMAL: 11, VL_EXPRESS: 14 },
+    "VIARMES": { NORMAL: 12, EXPRESS: 15, URGENCE: 18, VL_NORMAL: 16, VL_EXPRESS: 19 },
+    "JOUY-LE-MOUTIER": { NORMAL: 12, EXPRESS: 15, URGENCE: 18, VL_NORMAL: 16, VL_EXPRESS: 19 },
+    "L-ISLE-ADAM": { NORMAL: 12, EXPRESS: 15, URGENCE: 18, VL_NORMAL: 16, VL_EXPRESS: 19 },
+    "PONTOISE": { NORMAL: 15, EXPRESS: 18, URGENCE: 21, VL_NORMAL: 19, VL_EXPRESS: 22 },
+    "SAINT-OUEN-L-AUMONE": { NORMAL: 14, EXPRESS: 17, URGENCE: 20, VL_NORMAL: 18, VL_EXPRESS: 21 },
+    "SAINT-PRIX": { NORMAL: 12, EXPRESS: 15, URGENCE: 18, VL_NORMAL: 16, VL_EXPRESS: 19 },
+    "DOMONT": { NORMAL: 10, EXPRESS: 13, URGENCE: 16, VL_NORMAL: 14, VL_EXPRESS: 17 },
+    "PERSAN": { NORMAL: 13, EXPRESS: 16, URGENCE: 19, VL_NORMAL: 17, VL_EXPRESS: 20 },
+    "SAINT-BRICE-SOUS-FORET": { NORMAL: 10, EXPRESS: 13, URGENCE: 16, VL_NORMAL: 14, VL_EXPRESS: 17 },
+    "MONTIGNY-LES-CORMEILLES": { NORMAL: 10, EXPRESS: 13, URGENCE: 16, VL_NORMAL: 14, VL_EXPRESS: 17 },
+    "LOUVRES": { NORMAL: 12, EXPRESS: 15, URGENCE: 18, VL_NORMAL: 16, VL_EXPRESS: 19 },
+    "VILLIERS-LE-BEL": { NORMAL: 13, EXPRESS: 16, URGENCE: 19, VL_NORMAL: 17, VL_EXPRESS: 20 },
+    "GROSLAY": { NORMAL: 6, EXPRESS: 10, URGENCE: 6, VL_NORMAL: 10, VL_EXPRESS: 6 },
+    "MAGNY-EN-VEXIN": { NORMAL: 17, EXPRESS: 20, URGENCE: 23, VL_NORMAL: 21, VL_EXPRESS: 24 },
+    "AUVERS-SUR-OISE": { NORMAL: 12, EXPRESS: 15, URGENCE: 18, VL_NORMAL: 16, VL_EXPRESS: 19 },
+    "ECOUEN": { NORMAL: 10, EXPRESS: 13, URGENCE: 16, VL_NORMAL: 14, VL_EXPRESS: 17 },
+    "US": { NORMAL: 17, EXPRESS: 20, URGENCE: 23, VL_NORMAL: 21, VL_EXPRESS: 24 },
+    "EZANVILLE": { NORMAL: 10, EXPRESS: 13, URGENCE: 16, VL_NORMAL: 14, VL_EXPRESS: 17 },
+    "FOSSES": { NORMAL: 12, EXPRESS: 15, URGENCE: 18, VL_NORMAL: 16, VL_EXPRESS: 19 },
+    "PIERRELAYE": { NORMAL: 10, EXPRESS: 13, URGENCE: 16, VL_NORMAL: 14, VL_EXPRESS: 17 },
+    "VAUDHERLAND": { NORMAL: 13, EXPRESS: 16, URGENCE: 19, VL_NORMAL: 17, VL_EXPRESS: 20 },
+    "GONESSE": { NORMAL: 10, EXPRESS: 13, URGENCE: 16, VL_NORMAL: 14, VL_EXPRESS: 17 },
+    "VEMARS": { NORMAL: 12, EXPRESS: 15, URGENCE: 18, VL_NORMAL: 16, VL_EXPRESS: 19 },
+    "OSNY": { NORMAL: 15, EXPRESS: 18, URGENCE: 21, VL_NORMAL: 19, VL_EXPRESS: 22 },
+    "LA-FRETTE-SUR-SEINE": { NORMAL: 8, EXPRESS: 11, URGENCE: 14, VL_NORMAL: 12, VL_EXPRESS: 15 },
+    "MERY-SUR-OISE": { NORMAL: 12, EXPRESS: 15, URGENCE: 18, VL_NORMAL: 16, VL_EXPRESS: 19 },
+    "BESSANCOURT": { NORMAL: 12, EXPRESS: 15, URGENCE: 18, VL_NORMAL: 16, VL_EXPRESS: 19 },
+    "BAILLET-EN-FRANCE": { NORMAL: 12, EXPRESS: 15, URGENCE: 18, VL_NORMAL: 16, VL_EXPRESS: 19 },
+    "ATTAINVILLE": { NORMAL: 12, EXPRESS: 15, URGENCE: 18, VL_NORMAL: 16, VL_EXPRESS: 19 },
+    "ANDILLY": { NORMAL: 7, EXPRESS: 10, URGENCE: 13, VL_NORMAL: 11, VL_EXPRESS: 14 },
+    "PRESLES": { NORMAL: 12, EXPRESS: 15, URGENCE: 18, VL_NORMAL: 16, VL_EXPRESS: 19 },
+    "EAUBONNE": { NORMAL: 12, EXPRESS: 15, URGENCE: 18, VL_NORMAL: 16, VL_EXPRESS: 19 },
+    "ERAGNY": { NORMAL: 12, EXPRESS: 15, URGENCE: 18, VL_NORMAL: 16, VL_EXPRESS: 19 },
+    "PARMAIN": { NORMAL: 12, EXPRESS: 15, URGENCE: 18, VL_NORMAL: 16, VL_EXPRESS: 19 },
+    "MERIEL": { NORMAL: 12, EXPRESS: 15, URGENCE: 18, VL_NORMAL: 16, VL_EXPRESS: 19 },
+    "MARLY-LA-VILLE": { NORMAL: 12, EXPRESS: 15, URGENCE: 18, VL_NORMAL: 16, VL_EXPRESS: 19 },
+    "BOISSY-L-AILLERIE": { NORMAL: 15, EXPRESS: 18, URGENCE: 21, VL_NORMAL: 19, VL_EXPRESS: 22 },
+    "CHAMPAGNE-SUR-OISE": { NORMAL: 12, EXPRESS: 15, URGENCE: 18, VL_NORMAL: 16, VL_EXPRESS: 19 },
+    "MONTLOUIS": { NORMAL: 13, EXPRESS: 16, URGENCE: 19, VL_NORMAL: 17, VL_EXPRESS: 20 },
+    "LABBEVILLE": { NORMAL: 17, EXPRESS: 20, URGENCE: 23, VL_NORMAL: 21, VL_EXPRESS: 24 },
+    "ROISSY-EN-FRANCE": { NORMAL: 12, EXPRESS: 15, URGENCE: 18, VL_NORMAL: 16, VL_EXPRESS: 19 },
+    "BRAY-ET-LU": { NORMAL: 17, EXPRESS: 20, URGENCE: 23, VL_NORMAL: 21, VL_EXPRESS: 24 },
+    "LE-PLESSIS-LUZARCHES": { NORMAL: 12, EXPRESS: 15, URGENCE: 18, VL_NORMAL: 16, VL_EXPRESS: 19 },
+    "ENGHIEN-LES-BAINS": { NORMAL: 9, EXPRESS: 12, URGENCE: 15, VL_NORMAL: 13, VL_EXPRESS: 16 },
+    "FREPILLON": { NORMAL: 12, EXPRESS: 15, URGENCE: 18, VL_NORMAL: 16, VL_EXPRESS: 19 },
+    "CHARS": { NORMAL: 17, EXPRESS: 20, URGENCE: 23, VL_NORMAL: 21, VL_EXPRESS: 24 },
+    "VALMONDOIS": { NORMAL: 12, EXPRESS: 15, URGENCE: 18, VL_NORMAL: 16, VL_EXPRESS: 19 },
+    "SAINT-CLAIR-SUR-EPTE": { NORMAL: 17, EXPRESS: 20, URGENCE: 23, VL_NORMAL: 21, VL_EXPRESS: 24 },
+    "CHERSY": { NORMAL: 17, EXPRESS: 20, URGENCE: 23, VL_NORMAL: 21, VL_EXPRESS: 24 },
+    "MOUSSY-LE-NEUF": { NORMAL: 12, EXPRESS: 15, URGENCE: 18, VL_NORMAL: 16, VL_EXPRESS: 19 },
+    "CERGY": { NORMAL: 15, EXPRESS: 18, URGENCE: 21, VL_NORMAL: 19, VL_EXPRESS: 22 },
+    "EPERNAY-SUR-OISE": { NORMAL: 12, EXPRESS: 15, URGENCE: 18, VL_NORMAL: 16, VL_EXPRESS: 19 },
+    "BRUYERES-SUR-OISE": { NORMAL: 12, EXPRESS: 15, URGENCE: 18, VL_NORMAL: 16, VL_EXPRESS: 19 },
+    "CORMEILLES-EN-VEXIN": { NORMAL: 17, EXPRESS: 20, URGENCE: 23, VL_NORMAL: 21, VL_EXPRESS: 24 },
+    "VALLANGOUJARD": { NORMAL: 17, EXPRESS: 20, URGENCE: 23, VL_NORMAL: 21, VL_EXPRESS: 24 },
+    "MAREIL-SUR-OURCQ": { NORMAL: 17, EXPRESS: 20, URGENCE: 23, VL_NORMAL: 21, VL_EXPRESS: 24 },
+    "BEAUMONT-SUR-OISE": { NORMAL: 12, EXPRESS: 15, URGENCE: 18, VL_NORMAL: 16, VL_EXPRESS: 19 },
+    "BERNES-SUR-OISE": { NORMAL: 12, EXPRESS: 15, URGENCE: 18, VL_NORMAL: 16, VL_EXPRESS: 19 },
 };
 
 // ============================================================================
@@ -409,7 +385,7 @@ const LABELS_FORMULES: Record<Formule, string> = {
 // ============================================================================
 
 /**
- * Normalise un nom de ville pour la recherche dans la base tarifaire
+ * Normalise un nom de ville pour la recherche
  * - Convertit en majuscules
  * - Supprime les accents
  * - Supprime les espaces multiples
@@ -419,25 +395,34 @@ export function normaliserVille(ville: string): string {
         .toUpperCase()
         .normalize('NFD')
         .replace(/[\u0300-\u036f]/g, '') // Supprime les accents
-        .replace(/-/g, ' ') // Convertit les traits d'union en espaces
-        .trim()
-        .replace(/\s+/g, ' '); // Normalise les espaces
+        .replace(/'/g, '-') // Remplace les apostrophes par des tirets (ex: L'HAY -> L-HAY)
+        .replace(/\s+/g, '-') // Remplace les espaces par des tirets
+        .replace(/-+/g, '-') // Évite les doubles tirets
+        .trim();
 }
 
 /**
- * Recherche une ville dans la base tarifaire
- * Essaie plusieurs variantes pour maximiser les chances de trouver
+ * Vérifie si une ville est Paris
+ */
+export function estParis(ville: string): boolean {
+    const villeNormalisee = normaliserVille(ville);
+    return villeNormalisee === 'PARIS' || villeNormalisee.startsWith('PARIS-');
+}
+
+/**
+ * Recherche une ville dans la base de prises en charge
+ * Retourne le nom normalisé de la ville si trouvée, null sinon
  */
 export function trouverVilleDansBase(villeRecherchee: string): string | null {
     const villeNormalisee = normaliserVille(villeRecherchee);
 
     // Recherche exacte
-    if (BASE_TARIFAIRE[villeNormalisee]) {
+    if (PRISES_EN_CHARGE[villeNormalisee]) {
         return villeNormalisee;
     }
 
-    // Recherche partielle (la ville recherchée contient le nom de la base)
-    for (const villeBase of Object.keys(BASE_TARIFAIRE)) {
+    // Recherche partielle
+    for (const villeBase of Object.keys(PRISES_EN_CHARGE)) {
         if (villeNormalisee.includes(villeBase) || villeBase.includes(villeNormalisee)) {
             return villeBase;
         }
@@ -446,190 +431,184 @@ export function trouverVilleDansBase(villeRecherchee: string): string | null {
     return null;
 }
 
+/**
+ * Récupère la prise en charge pour une ville et une formule
+ * @throws Error si la ville n'est pas trouvée
+ */
+export function getPriseEnCharge(ville: string, formule: FormuleNew): number {
+    const villeTrouvee = trouverVilleDansBase(ville);
+
+    if (!villeTrouvee) {
+        throw new Error(`Ville non trouvée dans la base tarifaire : ${ville}`);
+    }
+
+    const tarifs = PRISES_EN_CHARGE[villeTrouvee];
+    return tarifs[formule];
+}
+
 // ============================================================================
 // FONCTION PRINCIPALE DE CALCUL
 // ============================================================================
 
 /**
- * Calcule le prix d'une course selon la logique tarifaire One Connexion Express
+ * Calcule le prix d'une course selon la logique tarifaire One Connexion
  * 
- * LOGIQUE :
- * 1. Identifier la ville d'arrivée
- * 2. Chercher cette ville dans BASE_TARIFAIRE
- * 3. Lire le nombre de bons selon la formule (N, E ou F)
- * 4. Calculer : prix = bons × 5,50 €
+ * LOGIQUE COMPLÈTE :
  * 
- * @param villeArrivee - Nom de la ville d'arrivée
- * @param formule - Formule choisie (STANDARD, EXPRESS, FLASH_EXPRESS)
- * @returns Résultat détaillé du calcul de prix
- * @throws Error si la ville n'est pas dans la base tarifaire
- */
-/**
- * Calcule le prix d'une course selon la logique tarifaire One Connexion Express
+ * 1️⃣ RÈGLE UNIVERSELLE : Base = plus grand nombre de bons
+ *    - Récupérer les bons de la ville de départ
+ *    - Récupérer les bons de la ville d'arrivée
+ *    - Choisir toujours la valeur la plus élevée (MAX)
+ *    - Prix prise en charge = bons_max × 5,50 €
  * 
- * LOGIQUE :
- * 1. Si DÉPART = Paris
- *    -> Prix = Tarif d'ARRIVÉE SEULEMENT
- * 2. Si DÉPART = Banlieue
- *    -> Prix = Tarif DÉPART + Tarif ARRIVÉE
- * 3. Si DÉPART = Paris ET ARRIVÉE = Paris
- *    -> Prix = Tarif Paris SEULEMENT
+ * 2️⃣ RÈGLE SPÉCIALE : BANLIEUE ↔ BANLIEUE
+ *    Si AUCUNE des deux villes n'est Paris :
+ *    - Appliquer un supplément kilométrique
+ *    - Supplément = distance_km × 0,1 bon
+ *    - Montant = supplément × 5,50 €
+ * 
+ * 3️⃣ RÈGLE SPÉCIALE : PARIS impliqué
+ *    Si Paris est départ OU arrivée :
+ *    - PAS de supplément kilométrique
+ *    - Uniquement le MAX des bons
  * 
  * @param villeDepart - Nom de la ville de départ
  * @param villeArrivee - Nom de la ville d'arrivée
- * @param formule - Formule choisie (STANDARD, EXPRESS, FLASH_EXPRESS)
- * @param distanceKm - Distance en kilomètres (optionnel, pour le supplément kilométrique)
+ * @param distanceMeters - Distance en mètres (obtenue via LocationIQ)
+ * @param formule - Formule choisie (NORMAL, EXPRESS, URGENCE, VL_NORMAL, VL_EXPRESS)
  * @returns Résultat détaillé du calcul de prix
+ * @throws Error si une ville n'est pas dans la base tarifaire
  */
-export function calculerPrix(
+export function calculateOneConnexionPrice(
     villeDepart: string,
     villeArrivee: string,
-    formule: Formule = 'STANDARD',
-    distanceKm: number = 0
-): PricingResult {
-    // 1. Normaliser et chercher la ville de DÉPART
-    let villeDepartTrouvee = trouverVilleDansBase(villeDepart);
+    distanceMeters: number,
+    formule: FormuleNew = 'NORMAL',
+    config?: PricingConfig
+): CalculTarifaireResult {
+    // 1. Normaliser les villes
+    const villeDepartNormalisee = trouverVilleDansBase(villeDepart);
+    const villeArriveeNormalisee = trouverVilleDansBase(villeArrivee);
 
-    // 2. Normaliser et chercher la ville d'ARRIVÉE
-    let villeArriveeTrouvee = trouverVilleDansBase(villeArrivee);
-
-    // FALLBACK pour ville de départ
-    let tarifVilleDepart: TarifVille;
-    if (!villeDepartTrouvee) {
-        tarifVilleDepart = { N: 15, E: 20, F: 25 };
-        villeDepartTrouvee = villeDepart.toUpperCase();
-    } else {
-        tarifVilleDepart = BASE_TARIFAIRE[villeDepartTrouvee];
+    if (!villeDepartNormalisee) {
+        throw new Error(`Ville de départ non trouvée : ${villeDepart}`);
     }
 
-    // FALLBACK pour ville d'arrivée
-    let tarifVilleArrivee: TarifVille;
-    if (!villeArriveeTrouvee) {
-        tarifVilleArrivee = { N: 15, E: 20, F: 25 };
-        villeArriveeTrouvee = villeArrivee.toUpperCase();
-    } else {
-        tarifVilleArrivee = BASE_TARIFAIRE[villeArriveeTrouvee];
+    if (!villeArriveeNormalisee) {
+        throw new Error(`Ville d'arrivée non trouvée : ${villeArrivee}`);
     }
 
-    // 3. Déterminer si le départ est Paris
-    const estDepartParis = villeDepartTrouvee === 'PARIS';
-    const estArriveeParis = villeArriveeTrouvee === 'PARIS';
+    // 2. Convertir la distance en km
+    const distanceKm = distanceMeters / 1000;
 
-    // Vérifier si c'est la même ville (départ = arrivée)
-    const memeVille = villeDepartTrouvee === villeArriveeTrouvee;
+    // 3. Récupérer les tarifs des deux villes
+    const tarifDepart = getPriseEnCharge(villeDepartNormalisee, formule);
+    const tarifArrivee = getPriseEnCharge(villeArriveeNormalisee, formule);
 
-    // 4. Calculer le nombre de bons selon la formule
-    let bonsDepart: number;
-    let bonsArrivee: number;
+    // 4. ✅ RÈGLE UNIVERSELLE : Prendre le MAX
+    const priseEnCharge = Math.max(tarifDepart, tarifArrivee);
 
-    switch (formule) {
-        case 'STANDARD':
-            bonsDepart = tarifVilleDepart.N;
-            bonsArrivee = tarifVilleArrivee.N;
-            break;
-        case 'EXPRESS':
-            bonsDepart = tarifVilleDepart.E;
-            bonsArrivee = tarifVilleArrivee.E;
-            break;
-        case 'FLASH_EXPRESS':
-            bonsDepart = tarifVilleDepart.F;
-            bonsArrivee = tarifVilleArrivee.F;
-            break;
-        default:
-            throw new Error(`Formule inconnue : ${formule}`);
+    // 5. Déterminer si Paris est impliqué
+    const departEstParis = estParis(villeDepartNormalisee);
+    const arriveeEstParis = estParis(villeArriveeNormalisee);
+    const isParisDansTrajet = departEstParis || arriveeEstParis;
+
+    // 6. Récupérer la configuration (ou utiliser les valeurs par défaut)
+    const bonValue = config?.bonValueEur ?? DEFAULT_PRIX_BON;
+    const supplementPerKm = config?.supplementPerKmBons ?? DEFAULT_SUPPLEMENT_PAR_KM;
+
+    // 7. Calculer le supplément kilométrique
+    let supplement = 0;
+    let supplementApplique = false;
+
+    // ✅ RÈGLE SPÉCIALE : Supplément UNIQUEMENT si banlieue ↔ banlieue
+    // (ni départ ni arrivée n'est Paris)
+    if (!departEstParis && !arriveeEstParis) {
+        supplement = distanceKm * supplementPerKm;
+        supplementApplique = true;
     }
 
-    // 5. Appliquer la logique de tarification par ZONES
-    let nombreBons: number;
+    // 8. Calculer le total
+    const totalBons = priseEnCharge + supplement;
+    const totalEuros = totalBons * bonValue;
 
-    if (memeVille) {
-        // Cas 1 : Même ville → Tarif de cette ville (1 fois)
-        nombreBons = bonsArrivee;
-    } else if (estDepartParis || estArriveeParis) {
-        // Cas 2 : Paris ↔ Banlieue → Tarif de la banlieue SEULEMENT
-        // Si départ Paris, on prend l'arrivée (banlieue)
-        // Si arrivée Paris, on prend le départ (banlieue)
-        nombreBons = estDepartParis ? bonsArrivee : bonsDepart;
-    } else {
-        // Cas 3 : Banlieue ↔ Banlieue → MAX des 2 tarifs + 3 bons (frais de traversée)
-        nombreBons = Math.max(bonsDepart, bonsArrivee) + 3;
-    }
-
-    // 6. Calculer le supplément kilométrique (0.1 bon/km si distance > 10km ET hors Paris)
-    let supplementBons = 0;
-    const estDepartHorsParis = villeDepartTrouvee !== 'PARIS';
-    const estArriveeHorsParis = villeArriveeTrouvee !== 'PARIS';
-    
-    if (distanceKm > 0 && estDepartHorsParis && estArriveeHorsParis) {
-        // Supplément uniquement si banlieue → banlieue (pas Paris impliqué)
-        supplementBons = Math.round((distanceKm * 0.1) * 100) / 100;
-    }
-
-    // 7. Calculer le prix total
-    const totalBons = nombreBons + supplementBons;
-    const prixTotal = totalBons * PRIX_BON;
-
-    // 8. Retourner le résultat complet
+    // 9. Retourner le résultat détaillé
     return {
+        villeDepart: villeDepartNormalisee,
+        villeArrivee: villeArriveeNormalisee,
         formule,
-        villeArrivee: villeArriveeTrouvee,
-        nombreBons,
-        supplementBons,
-        prixUnitaireBon: PRIX_BON,
-        prixTotal: Math.round(prixTotal * 100) / 100, // Arrondi à 2 décimales
-        delaiEstime: DELAIS_FORMULES[formule],
-        formuleLabel: LABELS_FORMULES[formule]
+        distanceKm: parseFloat(distanceKm.toFixed(3)),
+        priseEnCharge: parseFloat(priseEnCharge.toFixed(3)),
+        supplement: parseFloat(supplement.toFixed(3)),
+        totalBons: parseFloat(totalBons.toFixed(3)),
+        totalEuros: parseFloat(totalEuros.toFixed(2)),
+        isParisDansTrajet,
+        supplementApplique
     };
 }
 
 /**
- * Calcule les prix pour les 3 formules en une seule fois
+ * Calcule les prix pour toutes les formules en une seule fois
  * Utile pour afficher une comparaison au client
  */
 export function calculerToutesLesFormules(
     villeDepart: string,
     villeArrivee: string,
-    distanceKm: number = 0
-): Record<Formule, PricingResult> {
-    return {
-        STANDARD: calculerPrix(villeDepart, villeArrivee, 'STANDARD', distanceKm),
-        EXPRESS: calculerPrix(villeDepart, villeArrivee, 'EXPRESS', distanceKm),
-        FLASH_EXPRESS: calculerPrix(villeDepart, villeArrivee, 'FLASH_EXPRESS', distanceKm)
-    };
-}
+    distanceMeters: number,
+    config?: PricingConfig
+): Record<FormuleNew, CalculTarifaireResult> {
+    const formules: FormuleNew[] = ['NORMAL', 'EXPRESS', 'URGENCE', 'VL_NORMAL', 'VL_EXPRESS'];
 
-/**
- * Vérifie si une ville est desservie
- */
-export function estVilleDesservie(ville: string): boolean {
-    return trouverVilleDansBase(ville) !== null;
-}
+    const resultats: Partial<Record<FormuleNew, CalculTarifaireResult>> = {};
 
-/**
- * Obtient la liste de toutes les villes desservies
- */
-export function getVillesDesservies(): string[] {
-    return Object.keys(BASE_TARIFAIRE).sort();
+    for (const formule of formules) {
+        resultats[formule] = calculateOneConnexionPrice(
+            villeDepart,
+            villeArrivee,
+            distanceMeters,
+            formule,
+            config
+        );
+    }
+
+    return resultats as Record<FormuleNew, CalculTarifaireResult>;
 }
 
 /**
  * Formate un résultat de pricing pour l'affichage
  */
-export function formaterPrix(result: PricingResult): string {
-    return `
-╔════════════════════════════════════════════════════════════╗
-║  ONE CONNEXION EXPRESS - ${result.formuleLabel}
-╠════════════════════════════════════════════════════════════╣
-║  Ville d'arrivée : ${result.villeArrivee}
-║  Formule : ${result.formuleLabel}
-║  Délai estimé : ${result.delaiEstime}
-║  
-║  Calcul tarifaire :
-║  • Nombre de bons : ${result.nombreBons}
-║  • Prix unitaire : ${result.prixUnitaireBon.toFixed(2)}€
-║  • Prix total : ${result.prixTotal.toFixed(2)}€
-╚════════════════════════════════════════════════════════════╝
-  `.trim();
+export function formaterResultat(result: CalculTarifaireResult): string {
+    const lignes = [
+        '╔════════════════════════════════════════════════════════════╗',
+        `║  ONE CONNEXION - ${result.formule}`,
+        '╠════════════════════════════════════════════════════════════╣',
+        `║  Départ : ${result.villeDepart}`,
+        `║  Arrivée : ${result.villeArrivee}`,
+        `║  Distance : ${result.distanceKm} km`,
+        '║  ',
+        '║  ✅ RÈGLE UNIVERSELLE : MAX des deux villes',
+        `║  • Prise en charge : ${result.priseEnCharge} bons (le plus élevé)`,
+    ];
+
+    if (result.supplementApplique) {
+        lignes.push(
+            `║  • Supplément kilométrique : +${result.supplement.toFixed(2)} bons`,
+            `║    (${result.distanceKm} km × 0.1 bon/km - Banlieue ↔ Banlieue)`
+        );
+    } else {
+        lignes.push(
+            '║  • Supplément kilométrique : 0 bon',
+            '║    (Paris impliqué dans le trajet)'
+        );
+    }
+
+    lignes.push(
+        '║  ',
+        `║  TOTAL : ${result.totalBons.toFixed(2)} bons = ${result.totalEuros}€`,
+        '╚════════════════════════════════════════════════════════════╝'
+    );
+
+    return lignes.join('\n');
 }
 
 // ============================================================================
@@ -637,13 +616,14 @@ export function formaterPrix(result: PricingResult): string {
 // ============================================================================
 
 export default {
-    calculerPrix,
+    calculateOneConnexionPrice,
     calculerToutesLesFormules,
-    estVilleDesservie,
-    getVillesDesservies,
-    normaliserVille,
+    getPriseEnCharge,
     trouverVilleDansBase,
-    formaterPrix,
-    BASE_TARIFAIRE,
-    PRIX_BON
+    normaliserVille,
+    estParis,
+    formaterResultat,
+    PRISES_EN_CHARGE,
+    DEFAULT_PRIX_BON,
+    DEFAULT_SUPPLEMENT_PAR_KM
 };
