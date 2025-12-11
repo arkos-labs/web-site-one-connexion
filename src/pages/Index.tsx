@@ -19,9 +19,7 @@ import MentionsLegales from "./MentionsLegales";
 import Cookies from "./Cookies";
 import PolitiqueConfidentialite from "./PolitiqueConfidentialite";
 import CookiesPolicy from "./CookiesPolicy";
-import Placeholder from "./Placeholder";
 import NotFound from "./NotFound";
-import TestPricing from "./TestPricing";
 import HowItWorks from "./HowItWorks";
 import Reviews from "./Reviews";
 import DashboardLayout from "@/layouts/DashboardLayout";
@@ -76,7 +74,7 @@ const Index = () => {
       <Route path="/cookies" element={<Cookies />} />
       <Route path="/politique-confidentialite" element={<PolitiqueConfidentialite />} />
       <Route path="/privacy" element={<PolitiqueConfidentialite />} />
-      <Route path="/test-pricing" element={<TestPricing />} />
+
 
       {/* Client Dashboard Routes */}
       <Route path="/client" element={
