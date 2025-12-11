@@ -27,7 +27,8 @@
 
 ## 🚧 EN COURS
 
-- [ ] Vérification des routes et du Routing
+- [x] Vérification des routes et du Routing
+- [ ] Test de connexion Auth
 - [ ] Tests de build production
 - [ ] Optimisation des performances
 
