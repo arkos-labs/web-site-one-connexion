@@ -86,6 +86,32 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        status: {
+          pending: {
+            DEFAULT: "hsl(var(--status-pending))",
+            foreground: "hsl(var(--status-pending-foreground))",
+          },
+          accepted: {
+            DEFAULT: "hsl(var(--status-accepted))",
+            foreground: "hsl(var(--status-accepted-foreground))",
+          },
+          dispatched: {
+            DEFAULT: "hsl(var(--status-dispatched))",
+            foreground: "hsl(var(--status-dispatched-foreground))",
+          },
+          in_progress: {
+            DEFAULT: "hsl(var(--status-in_progress))",
+            foreground: "hsl(var(--status-in_progress-foreground))",
+          },
+          delivered: {
+            DEFAULT: "hsl(var(--status-delivered))",
+            foreground: "hsl(var(--status-delivered-foreground))",
+          },
+          cancelled: {
+            DEFAULT: "hsl(var(--status-cancelled))",
+            foreground: "hsl(var(--status-cancelled-foreground))",
+          },
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

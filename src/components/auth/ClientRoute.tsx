@@ -7,33 +7,36 @@ interface ClientRouteProps {
 }
 
 export const ClientRoute = ({ children }: ClientRouteProps) => {
-    const { user, loading, isClient } = useAuth();
+    const { user, isLoading, role } = useAuth();
     const navigate = useNavigate();
     const [checking, setChecking] = useState(true);
 
+    const isClient = role === 'client';
+
     useEffect(() => {
-        if (!loading) {
+        if (!isLoading) {
             if (!user) {
                 // Pas connecté, rediriger vers la page de connexion
                 navigate('/login');
             } else if (!isClient) {
                 // Connecté mais pas client
-                if (user.role === 'admin' || user.role === 'super_admin' || user.role === 'dispatcher') {
+                if (role === 'admin' || role === 'super_admin' || role === 'dispatcher') {
                     navigate('/dashboard-admin');
                 } else {
                     // Ni client ni admin (profil manquant ou en cours de création)
                     console.warn("Profil utilisateur introuvable ou incomplet");
-                    // On pourrait rediriger vers une page "Compléter mon profil" ou rester ici avec un message
-                    // Pour éviter la boucle, on ne redirige PAS vers l'admin
+                    setChecking(false); // Arrêter le chargement pour afficher quelque chose (ou rediriger)
+                    // Optionnel : Rediriger vers login pour forcer un refresh ou afficher une erreur
+                    // navigate('/login'); 
                 }
             } else {
                 // Client authentifié
                 setChecking(false);
             }
         }
-    }, [user, loading, isClient, navigate]);
+    }, [user, isLoading, isClient, role, navigate]);
 
-    if (loading || checking) {
+    if (isLoading || checking) {
         return (
             <div className="flex items-center justify-center min-h-screen">
                 <div className="text-center">

@@ -4,7 +4,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Driver } from '@/services/adminSupabaseQueries';
-import { User, Truck, CheckCircle, Mail, Phone, MapPin, Lock, FileText } from "lucide-react";
+import { User, Truck, CheckCircle, Mail, Phone, MapPin, Lock } from "lucide-react";
+import { toast } from "sonner";
+import { supabase } from "@/lib/supabase";
 
 interface CreateDriverModalProps {
     isOpen: boolean;
@@ -15,14 +17,17 @@ interface CreateDriverModalProps {
 type DriverStepId = 'personal' | 'vehicle' | 'confirmation';
 
 interface DriverFormData {
-    user_id: string;
+    username: string; // Nouvel identifiant
+    password: string; // Nouveau mot de passe
     first_name: string;
     last_name: string;
-    email: string;
+    email: string; // On garde l'email pour le contact, mais ce n'est plus le login
     phone: string;
     address: string;
+    siret: string;
     vehicle_type: string;
     vehicle_registration: string;
+    vehicle_capacity: string;
     license_number: string;
     insurance_document: string;
 }
@@ -30,16 +35,20 @@ interface DriverFormData {
 const CreateDriverModal = ({ isOpen, onClose, onSubmit }: CreateDriverModalProps) => {
     const [currentStep, setCurrentStep] = useState<DriverStepId>('personal');
     const [completedSteps, setCompletedSteps] = useState<DriverStepId[]>([]);
+    const [isLoading, setIsLoading] = useState(false); // État de chargement
 
     const [formData, setFormData] = useState<DriverFormData>({
-        user_id: '',
+        username: '',
+        password: '',
         first_name: '',
         last_name: '',
         email: '',
         phone: '',
         address: '',
+        siret: '',
         vehicle_type: '',
         vehicle_registration: '',
+        vehicle_capacity: '',
         license_number: '',
         insurance_document: '',
     });
@@ -50,7 +59,29 @@ const CreateDriverModal = ({ isOpen, onClose, onSubmit }: CreateDriverModalProps
         { id: 'confirmation' as DriverStepId, label: 'Confirmation', icon: CheckCircle }
     ];
 
+    const validateStep = (stepId: DriverStepId): boolean => {
+        if (stepId === 'personal') {
+            if (!formData.username || !formData.password || !formData.first_name || !formData.last_name || !formData.phone) {
+                toast.error("Veuillez remplir les champs obligatoires (Identifiant, Mot de passe, Nom, Prénom, Téléphone)");
+                return false;
+            }
+            if (formData.password.length < 6) {
+                toast.error("Le mot de passe doit faire au moins 6 caractères");
+                return false;
+            }
+        }
+        if (stepId === 'vehicle') {
+            if (!formData.vehicle_type || !formData.vehicle_registration) {
+                toast.error("Veuillez remplir les informations du véhicule (Type, Plaque)");
+                return false;
+            }
+        }
+        return true;
+    };
+
     const handleStepComplete = (stepId: DriverStepId) => {
+        if (!validateStep(stepId)) return;
+
         if (!completedSteps.includes(stepId)) {
             setCompletedSteps([...completedSteps, stepId]);
         }
@@ -75,28 +106,35 @@ const CreateDriverModal = ({ isOpen, onClose, onSubmit }: CreateDriverModalProps
         }
     };
 
-    const handleSubmit = () => {
-        onSubmit({
-            ...formData,
-            is_online: false,
-            status: 'pending',
-        } as Omit<Driver, 'id' | 'created_at' | 'updated_at'>);
+    const handleSubmit = async () => {
+        setIsLoading(true);
+        try {
+            // Appel de la fonction RPC 'create_driver_user'
+            const { data, error } = await supabase.rpc('create_driver_user', {
+                username: formData.username,
+                password: formData.password,
+                first_name: formData.first_name,
+                last_name: formData.last_name,
+                phone: formData.phone,
+                address: formData.address,
+                siret: formData.siret,
+                vehicle_type: formData.vehicle_type,
+                vehicle_registration: formData.vehicle_registration,
+                vehicle_capacity: formData.vehicle_capacity
+            });
 
-        // Reset form
-        setFormData({
-            user_id: '',
-            first_name: '',
-            last_name: '',
-            email: '',
-            phone: '',
-            address: '',
-            vehicle_type: '',
-            vehicle_registration: '',
-            license_number: '',
-            insurance_document: '',
-        });
-        setCurrentStep('personal');
-        setCompletedSteps([]);
+            if (error) throw error;
+
+            toast.success("Chauffeur créé avec succès !");
+            onClose(); // Fermer le modal
+            // Note: On pourrait rafraîchir la liste ici via un callback plus complet
+
+        } catch (error: any) {
+            console.error("Erreur création chauffeur:", error);
+            toast.error(error.message || "Erreur lors de la création du chauffeur");
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const renderStepContent = () => {
@@ -105,8 +143,38 @@ const CreateDriverModal = ({ isOpen, onClose, onSubmit }: CreateDriverModalProps
                 return (
                     <div className="space-y-6">
                         <div>
+                            <h3 className="text-lg font-semibold text-gray-900 mb-1">Informations de connexion</h3>
+                            <p className="text-sm text-gray-500">Définissez les identifiants pour l'application chauffeur.</p>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4 bg-blue-50 p-4 rounded-xl border border-blue-100">
+                            <div className="space-y-2">
+                                <Label htmlFor="username">Identifiant (Login) *</Label>
+                                <Input
+                                    id="username"
+                                    value={formData.username}
+                                    onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                                    placeholder="ex: chauffeur1"
+                                    className="bg-white"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="password">Mot de passe *</Label>
+                                <Input
+                                    id="password"
+                                    type="text" // Visible pour l'admin
+                                    value={formData.password}
+                                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                                    placeholder="ex: 123456"
+                                    className="bg-white"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="border-t border-gray-100 my-4" />
+
+                        <div>
                             <h3 className="text-lg font-semibold text-gray-900 mb-1">Informations personnelles</h3>
-                            <p className="text-sm text-gray-500">Renseignez les coordonnées du chauffeur.</p>
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
@@ -130,17 +198,6 @@ const CreateDriverModal = ({ isOpen, onClose, onSubmit }: CreateDriverModalProps
                             </div>
                         </div>
 
-                        <div className="space-y-2">
-                            <Label htmlFor="email">Email *</Label>
-                            <Input
-                                id="email"
-                                type="email"
-                                value={formData.email}
-                                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                placeholder="jean.dupont@example.com"
-                            />
-                        </div>
-
                         <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-2">
                                 <Label htmlFor="phone">Téléphone *</Label>
@@ -148,18 +205,39 @@ const CreateDriverModal = ({ isOpen, onClose, onSubmit }: CreateDriverModalProps
                                     id="phone"
                                     value={formData.phone}
                                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                                    placeholder="+33 6 12 34 56 78"
+                                    placeholder="06 12 34 56 78"
                                 />
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="address">Adresse *</Label>
+                                <Label htmlFor="email">Email (Contact)</Label>
                                 <Input
-                                    id="address"
-                                    value={formData.address}
-                                    onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                                    placeholder="123 Rue de Paris, 75001 Paris"
+                                    id="email"
+                                    type="email"
+                                    value={formData.email}
+                                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                    placeholder="jean@gmail.com"
                                 />
                             </div>
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label htmlFor="address">Adresse</Label>
+                            <Input
+                                id="address"
+                                value={formData.address}
+                                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                                placeholder="123 Rue de Paris"
+                            />
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label htmlFor="siret">Numéro SIRET</Label>
+                            <Input
+                                id="siret"
+                                value={formData.siret}
+                                onChange={(e) => setFormData({ ...formData, siret: e.target.value })}
+                                placeholder="123 456 789 00012"
+                            />
                         </div>
 
                         <div className="flex justify-end pt-4">
@@ -177,19 +255,19 @@ const CreateDriverModal = ({ isOpen, onClose, onSubmit }: CreateDriverModalProps
                             <p className="text-sm text-gray-500">Détails du véhicule utilisé pour les livraisons.</p>
                         </div>
 
-                        <div className="space-y-4">
+                        <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-2">
                                 <Label htmlFor="vehicle_type">Type de véhicule *</Label>
                                 <Input
                                     id="vehicle_type"
                                     value={formData.vehicle_type}
                                     onChange={(e) => setFormData({ ...formData, vehicle_type: e.target.value })}
-                                    placeholder="Ex: Scooter, Voiture, Vélo"
+                                    placeholder="Ex: Scooter, Voiture"
                                 />
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="vehicle_registration">Immatriculation</Label>
+                                <Label htmlFor="vehicle_registration">Plaque (Immatriculation)</Label>
                                 <Input
                                     id="vehicle_registration"
                                     value={formData.vehicle_registration}
@@ -197,6 +275,16 @@ const CreateDriverModal = ({ isOpen, onClose, onSubmit }: CreateDriverModalProps
                                     placeholder="AB-123-CD"
                                 />
                             </div>
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label htmlFor="vehicle_capacity">Max de quantité (Capacité)</Label>
+                            <Input
+                                id="vehicle_capacity"
+                                value={formData.vehicle_capacity}
+                                onChange={(e) => setFormData({ ...formData, vehicle_capacity: e.target.value })}
+                                placeholder="Ex: 10 colis, 500kg, 3m3"
+                            />
                         </div>
 
                         <div className="flex justify-between pt-4">
@@ -246,20 +334,28 @@ const CreateDriverModal = ({ isOpen, onClose, onSubmit }: CreateDriverModalProps
                                     </div>
                                 </div>
 
-                                <div className="space-y-1.5">
-                                    <Label className="text-gray-500">Email</Label>
-                                    <Input value={formData.email} disabled className="bg-gray-50 border-gray-200 text-gray-700" />
-                                </div>
-
-                                <div className="space-y-1.5">
-                                    <Label className="text-gray-500">Téléphone</Label>
-                                    <Input value={formData.phone} disabled className="bg-gray-50 border-gray-200 text-gray-700" />
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-1.5">
+                                        <Label className="text-gray-500">Email</Label>
+                                        <Input value={formData.email} disabled className="bg-gray-50 border-gray-200 text-gray-700" />
+                                    </div>
+                                    <div className="space-y-1.5">
+                                        <Label className="text-gray-500">Téléphone</Label>
+                                        <Input value={formData.phone} disabled className="bg-gray-50 border-gray-200 text-gray-700" />
+                                    </div>
                                 </div>
 
                                 <div className="space-y-1.5">
                                     <Label className="text-gray-500">Adresse</Label>
                                     <Input value={formData.address} disabled className="bg-gray-50 border-gray-200 text-gray-700" />
                                 </div>
+
+                                {formData.siret && (
+                                    <div className="space-y-1.5">
+                                        <Label className="text-gray-500">SIRET</Label>
+                                        <Input value={formData.siret} disabled className="bg-gray-50 border-gray-200 text-gray-700" />
+                                    </div>
+                                )}
                             </div>
 
                             {/* Véhicule Card */}
@@ -279,15 +375,23 @@ const CreateDriverModal = ({ isOpen, onClose, onSubmit }: CreateDriverModalProps
                                     </Button>
                                 </div>
 
-                                <div className="space-y-1.5">
-                                    <Label className="text-gray-500">Type de véhicule</Label>
-                                    <Input value={formData.vehicle_type} disabled className="bg-gray-50 border-gray-200 text-gray-700" />
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-1.5">
+                                        <Label className="text-gray-500">Type</Label>
+                                        <Input value={formData.vehicle_type} disabled className="bg-gray-50 border-gray-200 text-gray-700" />
+                                    </div>
+                                    <div className="space-y-1.5">
+                                        <Label className="text-gray-500">Plaque</Label>
+                                        <Input value={formData.vehicle_registration} disabled className="bg-gray-50 border-gray-200 text-gray-700" />
+                                    </div>
                                 </div>
 
-                                <div className="space-y-1.5">
-                                    <Label className="text-gray-500">Immatriculation</Label>
-                                    <Input value={formData.vehicle_registration} disabled className="bg-gray-50 border-gray-200 text-gray-700" />
-                                </div>
+                                {formData.vehicle_capacity && (
+                                    <div className="space-y-1.5">
+                                        <Label className="text-gray-500">Capacité Max</Label>
+                                        <Input value={formData.vehicle_capacity} disabled className="bg-gray-50 border-gray-200 text-gray-700" />
+                                    </div>
+                                )}
                             </div>
                         </div>
 
@@ -304,13 +408,15 @@ const CreateDriverModal = ({ isOpen, onClose, onSubmit }: CreateDriverModalProps
         }
     };
 
+    if (!isOpen) return null;
+
     return (
         <UniversalModal
             isOpen={isOpen}
             onClose={onClose}
             title="Nouveau Chauffeur"
             size="xl"
-            className="max-w-6xl"
+            className="max-w-7xl"
             disableScroll={true}
         >
             {/* Left Sidebar - Steps */}
@@ -391,6 +497,9 @@ const CreateDriverModal = ({ isOpen, onClose, onSubmit }: CreateDriverModalProps
                             {formData.email && (
                                 <p className="text-xs text-gray-500 mt-1">{formData.email}</p>
                             )}
+                            {formData.siret && (
+                                <p className="text-xs text-gray-500 mt-1">SIRET: {formData.siret}</p>
+                            )}
                         </div>
 
                         {/* Véhicule */}
@@ -403,7 +512,10 @@ const CreateDriverModal = ({ isOpen, onClose, onSubmit }: CreateDriverModalProps
                                 {formData.vehicle_type || "—"}
                             </p>
                             {formData.vehicle_registration && (
-                                <p className="text-xs text-gray-500 mt-1">{formData.vehicle_registration}</p>
+                                <p className="text-xs text-gray-500 mt-1">Plaque: {formData.vehicle_registration}</p>
+                            )}
+                            {formData.vehicle_capacity && (
+                                <p className="text-xs text-gray-500 mt-1">Capacité: {formData.vehicle_capacity}</p>
                             )}
                         </div>
                     </div>

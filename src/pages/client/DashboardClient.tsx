@@ -150,6 +150,7 @@ const DashboardClient = () => {
         status: 'pending_acceptance',
         notes: data.notes,
         pickup_time: data.pickupDate ? new Date(`${data.pickupDate}T${data.pickupTime || '00:00'}`).toISOString() : null,
+        user_id: profile.user_id, // Ajout pour RLS
       };
 
       const { error } = await supabase
@@ -236,20 +237,20 @@ const DashboardClient = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case ORDER_STATUS.PENDING: return 'bg-warning';
-      case 'pending_acceptance': return 'bg-warning';
-      case ORDER_STATUS.ACCEPTED: return 'bg-info';
-      case ORDER_STATUS.DISPATCHED: return 'bg-info';
-      case 'in_progress': return 'bg-info';
-      case ORDER_STATUS.DELIVERED: return 'bg-success';
-      case 'cancelled': return 'bg-destructive';
-      default: return 'bg-gray-500';
+      case ORDER_STATUS.PENDING_ACCEPTANCE: return 'bg-status-pending text-status-pending-foreground';
+      case 'pending_acceptance': return 'bg-status-pending text-status-pending-foreground';
+      case ORDER_STATUS.ACCEPTED: return 'bg-status-accepted text-status-accepted-foreground';
+      case ORDER_STATUS.DISPATCHED: return 'bg-status-dispatched text-status-dispatched-foreground';
+      case 'in_progress': return 'bg-status-in_progress text-status-in_progress-foreground';
+      case ORDER_STATUS.DELIVERED: return 'bg-status-delivered text-status-delivered-foreground';
+      case 'cancelled': return 'bg-status-cancelled text-status-cancelled-foreground';
+      default: return 'bg-muted text-muted-foreground';
     }
   };
 
   const getStatusLabel = (status: string) => {
     // Try to find in constants first
-    if (status === 'pending_acceptance') return ORDER_STATUS_LABELS[ORDER_STATUS.PENDING];
+    if (status === 'pending_acceptance') return ORDER_STATUS_LABELS[ORDER_STATUS.PENDING_ACCEPTANCE];
     if (status === 'in_progress') return ORDER_STATUS_LABELS[ORDER_STATUS.DISPATCHED];
 
     // @ts-ignore
@@ -377,7 +378,7 @@ const DashboardClient = () => {
                           {new Date(order.created_at).toLocaleDateString()}
                         </p>
                       </div>
-                      <Badge className={`${getStatusColor(order.status)} text-white border-0`}>
+                      <Badge className={`${getStatusColor(order.status)} border-0`}>
                         {getStatusLabel(order.status)}
                       </Badge>
                     </div>

@@ -1,113 +1,166 @@
 import { useEffect, useState } from 'react';
 import { supabase, Client } from '@/lib/supabase';
 import { Admin } from '@/types/admin';
+import { Driver } from '@/types/drivers';
 
-export type UserRole = 'client' | 'admin' | 'super_admin' | 'dispatcher' | null;
+export type UserRole = 'client' | 'admin' | 'super_admin' | 'dispatcher' | 'driver' | 'user' | null;
 
 export interface AuthUser {
     id: string;
     email: string;
     role: UserRole;
-    profile: Client | Admin | null;
+    profile: Client | Admin | Driver | null;
 }
 
 export const useAuth = () => {
     const [user, setUser] = useState<AuthUser | null>(null);
     const [loading, setLoading] = useState(true);
 
+    const signOut = async () => {
+        try {
+            await supabase.auth.signOut();
+        } catch (error) {
+            console.error('Error signing out:', error);
+        } finally {
+            setUser(null);
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
+        let mounted = true;
+
         const fetchUserProfile = async () => {
             try {
+                // Safety Timeout: Force loading false after 4 seconds max to prevent infinite loading
+                const timeoutId = setTimeout(() => {
+                    if (mounted) {
+                        console.warn('⚠️ useAuth: Timeout de sécurité - Force release');
+                        setLoading(false);
+                    }
+                }, 4000);
+
                 const { data: { user: authUser } } = await supabase.auth.getUser();
 
                 if (!authUser) {
-                    console.log('🔐 useAuth: Aucun utilisateur connecté');
-                    setUser(null);
-                    setLoading(false);
+                    if (mounted) {
+                        setUser(null);
+                        setLoading(false);
+                    }
+                    clearTimeout(timeoutId);
                     return;
                 }
 
-                console.log('🔐 useAuth: Utilisateur connecté:', authUser.email, 'ID:', authUser.id);
+                console.log('🔐 useAuth: Utilisateur connecté:', authUser.email);
 
-                // Vérifier d'abord si c'est un admin
-                console.log('🔍 useAuth: Vérification dans table admins...');
-                const { data: adminData, error: adminError } = await supabase
+                // 1. Check Admin
+                const { data: adminData } = await supabase
                     .from('admins')
                     .select('*')
                     .eq('user_id', authUser.id)
                     .eq('status', 'active')
-                    .single();
+                    .maybeSingle();
 
-                console.log('🔍 useAuth: Résultat admins:', { adminData, adminError });
-
-                if (!adminError && adminData) {
-                    console.log('✅ useAuth: ADMIN DÉTECTÉ - Rôle:', adminData.role);
-                    setUser({
-                        id: authUser.id,
-                        email: authUser.email || '',
-                        role: adminData.role as UserRole,
-                        profile: adminData as Admin,
-                    });
-                    setLoading(false);
-                    return;
-                }
-
-                // Sinon, vérifier si c'est un client
-                console.log('🔍 useAuth: Vérification dans table clients...');
-                const { data: clientData, error: clientError } = await supabase
-                    .from('clients')
-                    .select('*')
-                    .eq('user_id', authUser.id)
-                    .single();
-
-                console.log('🔍 useAuth: Résultat clients:', { clientData, clientError });
-
-                if (!clientError && clientData) {
-                    console.log('✅ useAuth: CLIENT DÉTECTÉ');
-                    setUser({
-                        id: authUser.id,
-                        email: authUser.email || '',
-                        role: 'client',
-                        profile: clientData as Client,
-                    });
+                if (adminData) {
+                    if (mounted) {
+                        console.log('✅ useAuth: ADMIN DÉTECTÉ');
+                        setUser({
+                            id: authUser.id,
+                            email: authUser.email || '',
+                            role: adminData.role as UserRole,
+                            profile: adminData as Admin,
+                        });
+                    }
                 } else {
-                    // Utilisateur authentifié mais sans profil
-                    console.log('⚠️ useAuth: Aucun profil trouvé (ni admin ni client)');
-                    setUser({
-                        id: authUser.id,
-                        email: authUser.email || '',
-                        role: null,
-                        profile: null,
-                    });
+                    // 2. Check Client
+                    const { data: clientData } = await supabase
+                        .from('clients')
+                        .select('*')
+                        .eq('user_id', authUser.id)
+                        .maybeSingle();
+
+                    if (clientData) {
+                        if (mounted) {
+                            console.log('✅ useAuth: CLIENT DÉTECTÉ');
+                            setUser({
+                                id: authUser.id,
+                                email: authUser.email || '',
+                                role: 'client',
+                                profile: clientData as Client,
+                            });
+                        }
+                    } else {
+                        // 3. Check Driver
+                        const { data: driverData } = await supabase
+                            .from('drivers')
+                            .select('*')
+                            .eq('user_id', authUser.id)
+                            .maybeSingle();
+
+                        if (driverData) {
+                            if (mounted) {
+                                console.log('✅ useAuth: DRIVER DÉTECTÉ');
+                                setUser({
+                                    id: authUser.id,
+                                    email: authUser.email || '',
+                                    role: 'driver',
+                                    profile: driverData as Driver,
+                                });
+                            }
+                        } else {
+                            // 4. Default User (No profile found)
+                            console.log('ℹ️ useAuth: User authenticated but no profile found. Role set to "user".');
+                            if (mounted) {
+                                setUser({
+                                    id: authUser.id,
+                                    email: authUser.email || '',
+                                    role: 'user',
+                                    profile: null,
+                                });
+                            }
+                        }
+                    }
                 }
+
+                clearTimeout(timeoutId);
+
             } catch (error) {
                 console.error('❌ Error in useAuth:', error);
-                setUser(null);
+                // Even on error, we might want to keep the user as "user" if authUser was found, 
+                // but simpler to just let the finally block handle loading state.
+                if (mounted) setUser(null);
             } finally {
-                setLoading(false);
+                if (mounted) setLoading(false);
             }
         };
 
+        // Initial fetch
         fetchUserProfile();
 
-        // Écouter les changements d'authentification
-        const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
-            fetchUserProfile();
+        // Listen for changes
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+            if (event === 'SIGNED_OUT') {
+                if (mounted) {
+                    setUser(null);
+                    setLoading(false);
+                }
+            } else if (session?.user) {
+                // Re-fetch profile on sign in or other changes
+                fetchUserProfile();
+            }
         });
 
         return () => {
+            mounted = false;
             subscription.unsubscribe();
         };
     }, []);
 
-    const isAdmin = user?.role && ['admin', 'super_admin', 'dispatcher'].includes(user.role);
-    const isClient = user?.role === 'client';
-
     return {
         user,
-        loading,
-        isAdmin: !!isAdmin,
-        isClient: !!isClient,
+        profile: user?.profile || null,
         role: user?.role || null,
+        isLoading: loading,
+        signOut
     };
 };

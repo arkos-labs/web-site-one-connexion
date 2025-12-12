@@ -4,8 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { CreateDriverForm, DriverFormData } from "@/components/admin/drivers/CreateDriverForm";
+import CreateDriverModal from "@/components/admin/drivers/CreateDriverModal";
 import DriversMap from "@/components/admin/drivers/DriversMap";
 import { Eye, Plus, Search, Map } from "lucide-react";
 import {
@@ -19,8 +18,9 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Driver } from "@/types/drivers";
 import { getDriverStatusLabel, getDriverStatusBadgeColor } from "@/types/orders";
-import { mapVehicleToDriverVehicle, mapDocumentToDriverDocument } from "@/types/vehiclesDocuments";
+import { mapVehicleToDriverVehicle } from "@/types/vehiclesDocuments";
 import { toast } from "sonner";
+import { createDriver } from "@/services/adminSupabaseQueries";
 
 import { supabase } from "@/lib/supabase";
 
@@ -100,6 +100,8 @@ const Drivers = () => {
             last_name: d.last_name,
             email: d.email,
             phone: d.phone,
+            username: d.username,        // Nouveau
+            plain_password: d.plain_password, // Nouveau
             status: status,
             vehicle: (() => {
               const driverVehicles = vehiclesData?.filter((v: any) => v.driver_id === d.id) || [];
@@ -142,59 +144,35 @@ const Drivers = () => {
     }
   };
 
-  const handleCreateDriver = async (formData: DriverFormData) => {
+  const handleCreateDriver = async (driverData: any) => {
     try {
-      // Diviser le nom complet en prénom et nom
-      const nameParts = formData.name.trim().split(' ');
-      const firstName = nameParts[0] || '';
-      const lastName = nameParts.slice(1).join(' ') || nameParts[0]; // Si un seul nom, utiliser comme nom de famille aussi
+      // Use the service function or direct supabase call
+      // Since we have specific fields not in the service yet (siret, vehicle_capacity), let's use direct supabase for now or update service
+      // But wait, I updated the service interface in previous step.
+      // However, the createDriver function in service might not handle the new fields if it uses strict typing or if I didn't update the implementation.
+      // Let's check createDriver implementation in adminSupabaseQueries.ts... 
+      // It takes Omit<Driver, ...> and spreads it. So it should work if the interface is updated.
 
-      // Mapper le statut du formulaire vers le statut de la base de données
-      let dbStatus = 'offline';
-      if (formData.status === 'online') {
-        dbStatus = 'available';
-      } else if (formData.status === 'offline') {
-        dbStatus = 'offline';
-      }
+      // But wait, the Driver type in adminSupabaseQueries.ts was updated.
+      // The Driver type in THIS file is imported from "@/types/drivers".
+      // I should probably use the one from adminSupabaseQueries or ensure compatibility.
+      // For now, let's just pass the data to createDriver from adminSupabaseQueries.
 
-      // Insérer le chauffeur dans Supabase
-      const { data, error } = await supabase
-        .from('drivers')
-        .insert([
-          {
-            first_name: firstName,
-            last_name: lastName,
-            email: formData.email,
-            phone: formData.phone,
-            status: dbStatus,
-            vehicle_type: null,
-            vehicle_plate: null,
-            current_lat: null,
-            current_lng: null,
-            last_position_update: null
-          }
-        ])
-        .select()
-        .single();
+      // We need to map the data from the modal to what createDriver expects.
+      // The modal returns data matching the Driver interface in adminSupabaseQueries.
 
-      if (error) {
-        console.error("Erreur lors de la création du chauffeur:", error);
-
-        // Gestion des erreurs spécifiques
-        if (error.code === '23505') { // Violation de contrainte unique
-          toast.error("Un chauffeur avec cet email existe déjà");
-        } else {
-          toast.error("Erreur lors de la création du chauffeur: " + error.message);
-        }
-        return;
-      }
+      await createDriver(driverData);
 
       toast.success("Chauffeur créé avec succès");
       setShowCreateModal(false);
       fetchDrivers();
-    } catch (error) {
-      console.error("Erreur inattendue:", error);
-      toast.error("Une erreur inattendue s'est produite");
+    } catch (error: any) {
+      console.error("Erreur lors de la création du chauffeur:", error);
+      if (error.code === '23505') {
+        toast.error("Un chauffeur avec cet email existe déjà");
+      } else {
+        toast.error("Erreur lors de la création du chauffeur: " + error.message);
+      }
     }
   };
 
@@ -306,6 +284,8 @@ const Drivers = () => {
               <TableHeader>
                 <TableRow>
                   <TableHead>Chauffeur</TableHead>
+                  <TableHead>Identifiant</TableHead>
+                  <TableHead>Mot de passe</TableHead>
                   <TableHead>Contact</TableHead>
                   <TableHead>Véhicule</TableHead>
                   <TableHead>Statut</TableHead>
@@ -319,13 +299,13 @@ const Drivers = () => {
               <TableBody>
                 {isLoading ? (
                   <TableRow>
-                    <TableCell colSpan={9} className="text-center py-8">
+                    <TableCell colSpan={11} className="text-center py-8">
                       Chargement...
                     </TableCell>
                   </TableRow>
                 ) : filteredDrivers.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={9} className="text-center py-8">
+                    <TableCell colSpan={11} className="text-center py-8">
                       Aucun chauffeur trouvé
                     </TableCell>
                   </TableRow>
@@ -338,6 +318,14 @@ const Drivers = () => {
                     >
                       <TableCell className="font-semibold">
                         {driver.first_name} {driver.last_name}
+                      </TableCell>
+                      <TableCell className="font-mono text-xs bg-slate-100 p-1 rounded">
+                        {(driver as any).username || '-'}
+                      </TableCell>
+                      <TableCell className="font-mono text-xs group relative w-32">
+                        <span className="blur-sm group-hover:blur-none transition-all duration-300 select-all">
+                          {(driver as any).plain_password || '********'}
+                        </span>
                       </TableCell>
                       <TableCell>
                         <div className="text-sm">
@@ -396,17 +384,11 @@ const Drivers = () => {
       </Tabs>
 
       {/* Create Driver Modal */}
-      <Dialog open={showCreateModal} onOpenChange={setShowCreateModal}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle>Créer un nouveau chauffeur</DialogTitle>
-          </DialogHeader>
-          <CreateDriverForm
-            onSubmit={handleCreateDriver}
-            onCancel={() => setShowCreateModal(false)}
-          />
-        </DialogContent>
-      </Dialog>
+      <CreateDriverModal
+        isOpen={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        onSubmit={handleCreateDriver}
+      />
     </div>
   );
 };

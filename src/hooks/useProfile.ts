@@ -19,12 +19,14 @@ export const useProfile = () => {
                     .from('clients')
                     .select('*')
                     .eq('user_id', user.id)
-                    .single();
+                    .maybeSingle();
 
                 if (error) {
-                    console.log('Error fetching profile:', error);
-                } else {
+                    console.error('Error fetching profile:', error);
+                } else if (data) {
                     setProfile(data as Client);
+                } else {
+                    console.warn('Profil client introuvable pour cet utilisateur.');
                 }
             } catch (error) {
                 console.error('Error in useProfile:', error);

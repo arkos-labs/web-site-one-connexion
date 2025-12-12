@@ -92,6 +92,7 @@ All colors MUST be HSL.
     --info-light: 196 100% 96%;
 
     /* Status Colors */
+    /* Status Colors */
     --status-pending: 38 92% 50%;
     /* Orange */
     --status-pending-foreground: 0 0% 100%;
@@ -104,10 +105,10 @@ All colors MUST be HSL.
     /* Purple */
     --status-dispatched-foreground: 0 0% 100%;
 
-    --status-in_progress: 43 100% 50%;
-    /* Yellow Energy */
-    --status-in_progress-foreground: 215 80% 22%;
-    /* Navy text */
+    --status-in_progress: 250 90% 60%;
+    /* Indigo/Purple - Active State */
+    --status-in_progress-foreground: 0 0% 100%;
+    /* White text */
 
     --status-delivered: 142 71% 45%;
     /* Green */

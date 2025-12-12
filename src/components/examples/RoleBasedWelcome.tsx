@@ -8,9 +8,11 @@ import { Shield, User, Users, Truck } from 'lucide-react';
  * selon le rôle de l'utilisateur (admin ou client)
  */
 export const RoleBasedWelcome = () => {
-    const { user, loading, isAdmin, isClient, role } = useAuth();
+    const { user, isLoading, role } = useAuth();
+    const isAdmin = role === 'admin' || role === 'super_admin' || role === 'dispatcher';
+    const isClient = role === 'client';
 
-    if (loading) {
+    if (isLoading) {
         return (
             <Card>
                 <CardContent className="pt-6">

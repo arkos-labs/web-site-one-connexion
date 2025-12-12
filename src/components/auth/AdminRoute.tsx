@@ -7,12 +7,14 @@ interface AdminRouteProps {
 }
 
 export const AdminRoute = ({ children }: AdminRouteProps) => {
-    const { user, loading, isAdmin } = useAuth();
+    const { user, isLoading, role } = useAuth();
     const navigate = useNavigate();
     const [checking, setChecking] = useState(true);
 
+    const isAdmin = role === 'admin' || role === 'super_admin' || role === 'dispatcher';
+
     useEffect(() => {
-        if (!loading) {
+        if (!isLoading) {
             if (!user) {
                 // Pas connecté, rediriger vers la page de connexion
                 navigate('/auth');
@@ -24,9 +26,9 @@ export const AdminRoute = ({ children }: AdminRouteProps) => {
                 setChecking(false);
             }
         }
-    }, [user, loading, isAdmin, navigate]);
+    }, [user, isLoading, isAdmin, navigate]);
 
-    if (loading || checking) {
+    if (isLoading || checking) {
         return (
             <div className="flex items-center justify-center min-h-screen">
                 <div className="text-center">

@@ -37,11 +37,23 @@ export interface DocumentFromDB {
 
 // Fonction pour convertir VehicleFromDB vers DriverVehicle
 export function mapVehicleToDriverVehicle(vehicle: VehicleFromDB) {
+    // Map vehicle_type from DB to frontend type
+    let frontendType: 'scooter' | 'moto' | 'voiture' | 'velo' = 'voiture';
+
+    if (vehicle.vehicle_type === 'moto') {
+        frontendType = 'moto';
+    } else if (vehicle.vehicle_type === 'voiture') {
+        frontendType = 'voiture';
+    } else if (vehicle.vehicle_type === 'utilitaire') {
+        // Map 'utilitaire' to 'voiture' as it's the closest match
+        frontendType = 'voiture';
+    }
+
     return {
         brand: vehicle.brand,
         model: vehicle.model,
         plate_number: vehicle.license_plate,
-        type: vehicle.vehicle_type,
+        type: frontendType,
         color: vehicle.color
     };
 }

@@ -126,19 +126,19 @@ const Orders = () => {
   // Obtenir le badge de statut
   const getStatusBadge = (status: OrderWithDriver['status']) => {
     const statusConfig: Record<string, { label: string; className: string }> = {
-      pending: { label: 'En attente', className: 'bg-warning hover:bg-warning/90' },
-      pending_acceptance: { label: 'En attente', className: 'bg-warning hover:bg-warning/90' },
-      accepted: { label: 'Acceptée', className: 'bg-info hover:bg-info/90' },
-      dispatched: { label: 'En cours', className: 'bg-info hover:bg-info/90' },
-      in_progress: { label: 'En cours', className: 'bg-info hover:bg-info/90' },
-      delivered: { label: 'Livrée', className: 'bg-success hover:bg-success/90' },
-      cancelled: { label: 'Annulée', className: 'bg-destructive hover:bg-destructive/90' },
+      pending: { label: 'En attente', className: 'bg-status-pending text-status-pending-foreground hover:bg-status-pending/90' },
+      pending_acceptance: { label: 'En attente', className: 'bg-status-pending text-status-pending-foreground hover:bg-status-pending/90' },
+      accepted: { label: 'Acceptée', className: 'bg-status-accepted text-status-accepted-foreground hover:bg-status-accepted/90' },
+      dispatched: { label: 'En cours', className: 'bg-status-dispatched text-status-dispatched-foreground hover:bg-status-dispatched/90' },
+      in_progress: { label: 'En cours', className: 'bg-status-in_progress text-status-in_progress-foreground hover:bg-status-in_progress/90' },
+      delivered: { label: 'Livrée', className: 'bg-status-delivered text-status-delivered-foreground hover:bg-status-delivered/90' },
+      cancelled: { label: 'Annulée', className: 'bg-status-cancelled text-status-cancelled-foreground hover:bg-status-cancelled/90' },
     };
 
     const config = statusConfig[status] || { label: status, className: 'bg-muted text-muted-foreground' };
 
     return (
-      <Badge className={`${config.className} text-white border-0`}>
+      <Badge className={`${config.className} border-0`}>
         {config.label}
       </Badge>
     );

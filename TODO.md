@@ -37,13 +37,15 @@
 ## ⏳ À FAIRE
 
 ### Corrections Mineures (1-2h)
-1. **Erreur TypeScript dans Drivers.tsx**
-   - Adapter le format du véhicule au type `DriverVehicle`
+1. **Erreur TypeScript dans Drivers.tsx** ✅
+   - [x] Adapter le format du véhicule au type `DriverVehicle`
    - Fichier: `src/pages/admin/Drivers.tsx`
 
-2. **Appliquer les migrations SQL**
-   - `sql/add_tariff_metadata.sql`
-   - `sql/add_vehicles_documents.sql`
+2. **Appliquer les migrations SQL** ⏳
+   - [x] Exécuter `sql/add_tariff_metadata.sql` dans Supabase
+   - [x] Exécuter `sql/add_vehicles_documents.sql` dans Supabase
+   - [x] Base de données synchronisée (supabase_schema.sql généré) ✅
+   - [x] Correction droits création commande (RLS Policy INSERT) ✅
 
 3. **Configurer Supabase Storage**
    - Créer bucket "documents" (privé)

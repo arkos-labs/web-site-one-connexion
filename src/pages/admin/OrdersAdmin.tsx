@@ -454,7 +454,7 @@ const OrdersAdmin = () => {
           </p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" onClick={() => fetchOrders(false)} disabled={isLoading}>
+          <Button variant="outline" onClick={() => fetchOrders(currentPage, false)} disabled={isLoading}>
             <RefreshCw className={`h-4 w-4 mr-2 ${isLoading || isRefreshing ? 'animate-spin' : ''}`} />
             Actualiser
           </Button>
@@ -602,37 +602,47 @@ const OrdersAdmin = () => {
 
                     {/* DISPATCH STATUS */}
                     <TableCell onClick={(e) => e.stopPropagation()}>
-                      {!dispatchStatus.isImmediate && (
+                      {['delivered', 'cancelled'].includes(order.status) ? (
                         <div className="flex items-center gap-1.5">
-                          {dispatchStatus.allowed ? (
-                            <>
+                          <span className="text-xs text-muted-foreground font-medium">
+                            Indisponible
+                          </span>
+                        </div>
+                      ) : (
+                        <>
+                          {!dispatchStatus.isImmediate && (
+                            <div className="flex items-center gap-1.5">
+                              {dispatchStatus.allowed ? (
+                                <>
+                                  <Check className="h-3.5 w-3.5 text-success" />
+                                  <span className="text-xs text-success font-medium">
+                                    Disponible
+                                  </span>
+                                </>
+                              ) : (
+                                <>
+                                  <Lock className="h-3.5 w-3.5 text-muted-foreground" />
+                                  <div className="flex flex-col">
+                                    <span className="text-xs text-muted-foreground font-medium">
+                                      Verrouillé
+                                    </span>
+                                    <span className="text-xs text-muted-foreground/80">
+                                      jusqu'à {dispatchStatus.unlockTime?.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
+                                    </span>
+                                  </div>
+                                </>
+                              )}
+                            </div>
+                          )}
+                          {dispatchStatus.isImmediate && (
+                            <div className="flex items-center gap-1.5">
                               <Check className="h-3.5 w-3.5 text-success" />
                               <span className="text-xs text-success font-medium">
                                 Disponible
                               </span>
-                            </>
-                          ) : (
-                            <>
-                              <Lock className="h-3.5 w-3.5 text-muted-foreground" />
-                              <div className="flex flex-col">
-                                <span className="text-xs text-muted-foreground font-medium">
-                                  Verrouillé
-                                </span>
-                                <span className="text-xs text-muted-foreground/80">
-                                  jusqu'à {dispatchStatus.unlockTime?.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
-                                </span>
-                              </div>
-                            </>
+                            </div>
                           )}
-                        </div>
-                      )}
-                      {dispatchStatus.isImmediate && (
-                        <div className="flex items-center gap-1.5">
-                          <Check className="h-3.5 w-3.5 text-success" />
-                          <span className="text-xs text-success font-medium">
-                            Disponible
-                          </span>
-                        </div>
+                        </>
                       )}
                     </TableCell>
 

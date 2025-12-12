@@ -11,7 +11,8 @@ interface NewOrderNotification {
 }
 
 export const useNewOrderNotifications = (onNewOrder?: (order: NewOrderNotification) => void) => {
-    const { isAdmin, loading } = useAuth();
+    const { role, isLoading } = useAuth();
+    const isAdmin = role === 'admin' || role === 'super_admin' || role === 'dispatcher';
     const lastOrderIdRef = useRef<string | null>(null);
     const notificationSoundRef = useRef<any>(null);
     const activeToastRef = useRef<string | number | null>(null);
@@ -134,7 +135,7 @@ export const useNewOrderNotifications = (onNewOrder?: (order: NewOrderNotificati
     }, [showNotification, isAdmin]);
 
     useEffect(() => {
-        if (loading || !isAdmin) return;
+        if (isLoading || !isAdmin) return;
 
         checkForNewOrders();
 
@@ -171,7 +172,7 @@ export const useNewOrderNotifications = (onNewOrder?: (order: NewOrderNotificati
                 toast.dismiss(activeToastRef.current);
             }
         };
-    }, [checkForNewOrders, showNotification, isAdmin, loading]);
+    }, [checkForNewOrders, showNotification, isAdmin, isLoading]);
 
     return null;
 };

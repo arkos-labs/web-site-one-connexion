@@ -7,7 +7,7 @@ import { sendEmail } from './emailService';
 
 export interface Driver {
     id: string;
-    user_id: string;
+    user_id?: string | null;
     first_name: string;
     last_name: string;
     email: string;
@@ -24,6 +24,8 @@ export interface Driver {
     is_online?: boolean;
     last_location_update?: string;
     status: 'available' | 'busy' | 'offline' | 'suspended';
+    siret?: string;
+    vehicle_capacity?: string;
     created_at: string;
     updated_at?: string;
 }

@@ -1,283 +1,329 @@
--- ===================================================================
--- SCHÉMA SUPABASE POUR LES TARIFS ONE CONNEXION
--- ===================================================================
+-- -----------------------------------------------------------------------------
+-- ONE CONNEXION - SCHEMA DE BASE DE DONNEES (RECONSTRUCTION & SECURITE RLS)
+-- Généré par Antigravity - Expert Supabase
+-- Date: 2025-12-12
+-- -----------------------------------------------------------------------------
 
--- Table: tariffs_cities
-CREATE TABLE IF NOT EXISTS tariffs_cities (
-  id BIGSERIAL PRIMARY KEY,
-  city_name VARCHAR(100) NOT NULL UNIQUE,
-  postal_code VARCHAR(10) NOT NULL,
-  department_code VARCHAR(2) NOT NULL,
-  city_type VARCHAR(20) NOT NULL, -- 'paris_arrondissement' ou 'idf_city'
-  
-  -- Tarifs en bons
-  normal INTEGER NOT NULL,
-  express INTEGER NOT NULL,
-  urgence INTEGER NOT NULL,
-  vl_normal INTEGER NOT NULL,
-  vl_express INTEGER NOT NULL,
-  
-  -- Métadonnées
-  created_at TIMESTAMP DEFAULT NOW(),
-  updated_at TIMESTAMP DEFAULT NOW(),
-  
-  CONSTRAINT valid_postal_code CHECK (postal_code ~ '^\d{5}$')
+-- 1. NETTOYAGE (DROP)
+DROP TRIGGER IF EXISTS handle_new_user ON auth.users;
+DROP FUNCTION IF EXISTS public.handle_new_user();
+
+DROP TABLE IF EXISTS public.order_events CASCADE;
+DROP TABLE IF EXISTS public.messages CASCADE;
+DROP TABLE IF EXISTS public.plaintes CASCADE;
+DROP TABLE IF EXISTS public.contact_messages CASCADE;
+DROP TABLE IF EXISTS public.threads CASCADE;
+DROP TABLE IF EXISTS public.invoices CASCADE;
+DROP TABLE IF EXISTS public.orders CASCADE;
+DROP TABLE IF EXISTS public.driver_documents CASCADE;
+DROP TABLE IF EXISTS public.driver_vehicles CASCADE;
+DROP TABLE IF EXISTS public.drivers CASCADE;
+DROP TABLE IF EXISTS public.clients CASCADE;
+DROP TABLE IF EXISTS public.admins CASCADE;
+DROP TABLE IF EXISTS public.profiles CASCADE;
+
+-- Types
+DROP TYPE IF EXISTS public.order_status CASCADE;
+DROP TYPE IF EXISTS public.driver_status CASCADE;
+DROP TYPE IF EXISTS public.vehicle_type CASCADE;
+DROP TYPE IF EXISTS public.document_type CASCADE;
+DROP TYPE IF EXISTS public.document_status CASCADE;
+DROP TYPE IF EXISTS public.user_role CASCADE;
+DROP TYPE IF EXISTS public.thread_type CASCADE;
+DROP TYPE IF EXISTS public.thread_status CASCADE;
+
+-- 2. EXTENSIONS
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+-- 3. ENUMS
+CREATE TYPE public.user_role AS ENUM ('admin', 'client', 'driver', 'user');
+CREATE TYPE public.order_status AS ENUM ('pending_acceptance', 'accepted', 'dispatched', 'in_progress', 'delivered', 'cancelled');
+CREATE TYPE public.driver_status AS ENUM ('online', 'offline', 'on_delivery', 'on_break', 'on_vacation', 'busy', 'available', 'suspended');
+CREATE TYPE public.vehicle_type AS ENUM ('scooter', 'moto', 'voiture', 'utilitaire', 'velo');
+CREATE TYPE public.document_type AS ENUM ('license', 'registration', 'insurance', 'identity', 'kbis', 'autre');
+CREATE TYPE public.document_status AS ENUM ('valid', 'expired', 'pending', 'rejected');
+CREATE TYPE public.thread_type AS ENUM ('general', 'plainte', 'contact');
+CREATE TYPE public.thread_status AS ENUM ('open', 'in_progress', 'resolved', 'closed', 'new', 'read', 'replied', 'archived');
+
+-- 4. TABLES
+
+-- PROFILES (Base utilisateur)
+CREATE TABLE public.profiles (
+    id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+    email TEXT NOT NULL,
+    role public.user_role DEFAULT 'user',
+    first_name TEXT,
+    last_name TEXT,
+    phone TEXT,
+    avatar_url TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Index pour recherche rapide
-CREATE INDEX idx_tariffs_cities_name ON tariffs_cities(LOWER(city_name));
-CREATE INDEX idx_tariffs_cities_postal ON tariffs_cities(postal_code);
-CREATE INDEX idx_tariffs_cities_dept ON tariffs_cities(department_code);
-CREATE INDEX idx_tariffs_cities_type ON tariffs_cities(city_type);
-
--- ===================================================================
--- Table: tariff_calculations
--- Historique des calculs de tarifs
--- ===================================================================
-
-CREATE TABLE IF NOT EXISTS tariff_calculations (
-  id BIGSERIAL PRIMARY KEY,
-  user_id UUID NOT NULL,
-  
-  -- Détails du calcul
-  city_departure_id BIGINT REFERENCES tariffs_cities(id),
-  city_departure_name VARCHAR(100) NOT NULL,
-  postal_code_departure VARCHAR(10) NOT NULL,
-  
-  city_arrival_id BIGINT REFERENCES tariffs_cities(id),
-  city_arrival_name VARCHAR(100) NOT NULL,
-  postal_code_arrival VARCHAR(10) NOT NULL,
-  
-  formula VARCHAR(50) NOT NULL, -- 'normal', 'express', 'urgence', 'vl_normal', 'vl_express'
-  
-  -- Résultats du calcul
-  distance_meters INTEGER,
-  distance_km DECIMAL(10, 2),
-  
-  prise_en_charge_bons DECIMAL(10, 2) NOT NULL,
-  supplement_bons DECIMAL(10, 2) NOT NULL DEFAULT 0,
-  total_bons DECIMAL(10, 2) NOT NULL,
-  total_euros DECIMAL(10, 2) NOT NULL,
-  
-  is_paris_trip BOOLEAN NOT NULL DEFAULT FALSE,
-  
-  -- Métadonnées
-  created_at TIMESTAMP DEFAULT NOW(),
-  updated_at TIMESTAMP DEFAULT NOW(),
-  
-  CONSTRAINT valid_formula CHECK (formula IN ('normal', 'express', 'urgence', 'vl_normal', 'vl_express'))
+-- CLIENTS (Entités Business)
+CREATE TABLE public.clients (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID REFERENCES public.profiles(id) ON DELETE SET NULL, -- Lien vers le user (propriétaire)
+    company_name TEXT NOT NULL,
+    email TEXT NOT NULL,
+    phone TEXT,
+    address TEXT,
+    siret TEXT,
+    vat_number TEXT,
+    internal_code TEXT,
+    status TEXT DEFAULT 'pending',
+    notes TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Index pour requêtes courantes
-CREATE INDEX idx_calculations_user ON tariff_calculations(user_id, created_at DESC);
-CREATE INDEX idx_calculations_formula ON tariff_calculations(formula);
-CREATE INDEX idx_calculations_paris ON tariff_calculations(is_paris_trip);
-
--- ===================================================================
--- Table: departments
--- Reference des départements IDF
--- ===================================================================
-
-CREATE TABLE IF NOT EXISTS departments (
-  code VARCHAR(2) PRIMARY KEY,
-  name VARCHAR(100) NOT NULL,
-  region VARCHAR(100) NOT NULL
+-- DRIVERS (Chauffeurs)
+CREATE TABLE public.drivers (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE,
+    first_name TEXT NOT NULL,
+    last_name TEXT NOT NULL,
+    email TEXT NOT NULL,
+    phone TEXT,
+    status public.driver_status DEFAULT 'offline',
+    current_location JSONB,
+    stats JSONB DEFAULT '{}',
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-INSERT INTO departments (code, name, region) VALUES
-  ('75', 'Paris', 'Île-de-France'),
-  ('77', 'Seine-et-Marne', 'Île-de-France'),
-  ('78', 'Yvelines', 'Île-de-France'),
-  ('91', 'Essonne', 'Île-de-France'),
-  ('92', 'Hauts-de-Seine', 'Île-de-France'),
-  ('93', 'Seine-Saint-Denis', 'Île-de-France'),
-  ('94', 'Val-de-Marne', 'Île-de-France'),
-  ('95', 'Val-d\'Oise', 'Île-de-France')
-ON CONFLICT (code) DO NOTHING;
-
--- ===================================================================
--- Table: tariff_metadata
--- Constantes et métadonnées
--- ===================================================================
-
-CREATE TABLE IF NOT EXISTS tariff_metadata (
-  id BIGSERIAL PRIMARY KEY,
-  key VARCHAR(100) NOT NULL UNIQUE,
-  value VARCHAR(500) NOT NULL,
-  description TEXT,
-  updated_at TIMESTAMP DEFAULT NOW()
+-- ORDERS (Commandes)
+CREATE TABLE public.orders (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    reference TEXT NOT NULL UNIQUE,
+    
+    -- RELATIONS
+    client_id UUID REFERENCES public.profiles(id) ON DELETE SET NULL, -- LE USER QUI COMMANDE (AUTH.UID)
+    company_id UUID REFERENCES public.clients(id) ON DELETE SET NULL, -- L'ENTREPRISE RATTACHÉE (Optionnel)
+    driver_id UUID REFERENCES public.drivers(id) ON DELETE SET NULL,
+    
+    status public.order_status DEFAULT 'pending_acceptance',
+    
+    -- Adresses
+    pickup_address TEXT NOT NULL,
+    delivery_address TEXT NOT NULL,
+    pickup_lat DOUBLE PRECISION,
+    pickup_lng DOUBLE PRECISION,
+    delivery_lat DOUBLE PRECISION,
+    delivery_lng DOUBLE PRECISION,
+    
+    -- Détails
+    delivery_type TEXT NOT NULL,
+    package_description TEXT,
+    notes TEXT,
+    
+    -- Prix
+    price DECIMAL(10, 2) NOT NULL DEFAULT 0,
+    
+    -- Guest Info (si client_id est null)
+    email_client TEXT,
+    phone_client TEXT,
+    nom_client TEXT,
+    facturation JSONB,
+    
+    -- Dates
+    scheduled_pickup_time TIMESTAMPTZ,
+    accepted_at TIMESTAMPTZ,
+    dispatched_at TIMESTAMPTZ,
+    picked_up_at TIMESTAMPTZ,
+    delivered_at TIMESTAMPTZ,
+    cancelled_at TIMESTAMPTZ,
+    cancellation_reason TEXT,
+    cancellation_fee DECIMAL(10, 2) DEFAULT 0,
+    
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-INSERT INTO tariff_metadata (key, value, description) VALUES
-  ('bon_value_eur', '5.5', 'Valeur d''un bon en EUR'),
-  ('supplement_per_km_bons', '0.1', 'Supplément en bons par km (hors Paris)'),
-  ('company_name', 'One Connexion', 'Nom de l''entreprise'),
-  ('version', '1.0', 'Version du tarif')
-ON CONFLICT (key) DO NOTHING;
+-- DRIVER VEHICLES
+CREATE TABLE public.driver_vehicles (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    driver_id UUID REFERENCES public.drivers(id) ON DELETE CASCADE,
+    brand TEXT NOT NULL,
+    model TEXT NOT NULL,
+    license_plate TEXT NOT NULL,
+    type public.vehicle_type NOT NULL,
+    color TEXT,
+    year INTEGER,
+    status TEXT DEFAULT 'active',
+    is_verified BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
 
--- ===================================================================
--- FONCTIONS SQL
--- ===================================================================
+-- DRIVER DOCUMENTS
+CREATE TABLE public.driver_documents (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    driver_id UUID REFERENCES public.drivers(id) ON DELETE CASCADE,
+    type public.document_type NOT NULL,
+    name TEXT NOT NULL,
+    file_url TEXT,
+    expiry_date DATE,
+    status public.document_status DEFAULT 'pending',
+    rejection_reason TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
 
--- Fonction: Calculer un tarif
-CREATE OR REPLACE FUNCTION calculate_tariff(
-  p_city_departure VARCHAR(100),
-  p_city_arrival VARCHAR(100),
-  p_formula VARCHAR(50),
-  p_distance_meters INTEGER,
-  p_user_id UUID
-)
-RETURNS TABLE (
-  city_departure_name VARCHAR,
-  city_arrival_name VARCHAR,
-  formula VARCHAR,
-  prise_en_charge_bons DECIMAL,
-  distance_km DECIMAL,
-  supplement_bons DECIMAL,
-  total_bons DECIMAL,
-  total_euros DECIMAL,
-  is_paris_trip BOOLEAN
-) AS $$
-DECLARE
-  v_departure_tariff INTEGER;
-  v_distance_km DECIMAL;
-  v_supplement_bons DECIMAL;
-  v_total_bons DECIMAL;
-  v_total_euros DECIMAL;
-  v_is_paris_trip BOOLEAN;
-  v_departure_postal VARCHAR(10);
-  v_arrival_postal VARCHAR(10);
-  v_bon_value DECIMAL;
+-- ORDER EVENTS
+CREATE TABLE public.order_events (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    order_id UUID REFERENCES public.orders(id) ON DELETE CASCADE,
+    event_type TEXT NOT NULL,
+    description TEXT,
+    metadata JSONB,
+    actor_id UUID,
+    actor_type TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- INVOICES
+CREATE TABLE public.invoices (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    reference TEXT NOT NULL UNIQUE,
+    client_id UUID REFERENCES public.clients(id) ON DELETE SET NULL, -- Facture liée à l'entreprise
+    order_id UUID REFERENCES public.orders(id) ON DELETE SET NULL,
+    amount_ht DECIMAL(10, 2) NOT NULL,
+    amount_ttc DECIMAL(10, 2) NOT NULL,
+    vat_rate DECIMAL(5, 2) DEFAULT 20.0,
+    status TEXT DEFAULT 'pending',
+    due_date DATE,
+    paid_at TIMESTAMPTZ,
+    pdf_url TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- MESSAGING
+CREATE TABLE public.threads (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    client_id UUID REFERENCES public.clients(id) ON DELETE SET NULL,
+    subject TEXT NOT NULL,
+    type public.thread_type DEFAULT 'general',
+    status public.thread_status DEFAULT 'open',
+    source TEXT DEFAULT 'app',
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE public.messages (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    thread_id UUID REFERENCES public.threads(id) ON DELETE CASCADE,
+    client_id UUID REFERENCES public.clients(id) ON DELETE SET NULL,
+    sender_type TEXT NOT NULL,
+    content TEXT NOT NULL,
+    is_read BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE public.plaintes (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    client_id UUID REFERENCES public.clients(id) ON DELETE CASCADE,
+    thread_id UUID REFERENCES public.threads(id) ON DELETE CASCADE,
+    sujet TEXT NOT NULL,
+    description TEXT NOT NULL,
+    statut TEXT DEFAULT 'ouvert',
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE public.contact_messages (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name TEXT NOT NULL,
+    email TEXT NOT NULL,
+    phone TEXT,
+    subject TEXT,
+    message TEXT NOT NULL,
+    status TEXT DEFAULT 'new',
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 5. AUTOMATISATION (TRIGGERS)
+
+-- Trigger création profil automatique
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS TRIGGER AS $$
 BEGIN
-  -- Récupérer la valeur d'un bon
-  SELECT value::DECIMAL INTO v_bon_value FROM tariff_metadata WHERE key = 'bon_value_eur';
-  
-  -- Récupérer la prise en charge et codes postaux
-  SELECT normal, postal_code INTO v_departure_tariff, v_departure_postal 
-  FROM tariffs_cities 
-  WHERE LOWER(city_name) = LOWER(p_city_departure) 
-  AND formula = p_formula;
-  
-  IF v_departure_tariff IS NULL THEN
-    RAISE EXCEPTION 'Tarif non trouvé pour %', p_city_departure;
-  END IF;
-  
-  -- Récupérer le code postal d'arrivée
-  SELECT postal_code INTO v_arrival_postal FROM tariffs_cities WHERE LOWER(city_name) = LOWER(p_city_arrival);
-  
-  -- Déterminer si c'est un trajet Paris
-  v_is_paris_trip := (v_departure_postal LIKE '75%' OR v_arrival_postal LIKE '75%');
-  
-  -- Calculer le supplément
-  IF NOT v_is_paris_trip AND p_distance_meters IS NOT NULL THEN
-    v_distance_km := p_distance_meters::DECIMAL / 1000;
-    v_supplement_bons := v_distance_km * 0.1;
-  ELSE
-    v_distance_km := 0;
-    v_supplement_bons := 0;
-  END IF;
-  
-  -- Calculer le total
-  v_total_bons := v_departure_tariff + v_supplement_bons;
-  v_total_euros := v_total_bons * v_bon_value;
-  
-  -- Enregistrer le calcul
-  INSERT INTO tariff_calculations (
-    user_id, city_departure_name, postal_code_departure,
-    city_arrival_name, postal_code_arrival,
-    formula, distance_meters, distance_km,
-    prise_en_charge_bons, supplement_bons, total_bons, total_euros, is_paris_trip
-  ) VALUES (
-    p_user_id, p_city_departure, v_departure_postal,
-    p_city_arrival, COALESCE(v_arrival_postal, ''),
-    p_formula, p_distance_meters, v_distance_km,
-    v_departure_tariff, v_supplement_bons, v_total_bons, v_total_euros, v_is_paris_trip
+  INSERT INTO public.profiles (id, email, role, first_name, last_name)
+  VALUES (
+    new.id,
+    new.email,
+    COALESCE((new.raw_user_meta_data->>'role')::public.user_role, 'user'),
+    new.raw_user_meta_data->>'first_name',
+    new.raw_user_meta_data->>'last_name'
   );
-  
-  RETURN QUERY
-  SELECT 
-    p_city_departure::VARCHAR,
-    p_city_arrival::VARCHAR,
-    p_formula::VARCHAR,
-    v_departure_tariff::DECIMAL,
-    v_distance_km,
-    v_supplement_bons,
-    v_total_bons,
-    v_total_euros,
-    v_is_paris_trip;
+  -- Optionnel : Créer une entrée client si le rôle est client
+  IF (new.raw_user_meta_data->>'role') = 'client' THEN
+      INSERT INTO public.clients (user_id, email, company_name, status)
+      VALUES (new.id, new.email, COALESCE(new.raw_user_meta_data->>'company_name', 'Nouvelle Entreprise'), 'active');
+  END IF;
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE TRIGGER handle_new_user
+AFTER INSERT ON auth.users
+FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
+-- Trigger updated_at
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = NOW();
+    RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
--- ===================================================================
--- ROW LEVEL SECURITY (RLS)
--- ===================================================================
+CREATE TRIGGER update_profiles_updated_at BEFORE UPDATE ON public.profiles FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_orders_updated_at BEFORE UPDATE ON public.orders FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+-- (Ajouter pour les autres tables si nécessaire)
 
-ALTER TABLE tariff_calculations ENABLE ROW LEVEL SECURITY;
+-- 6. SECURITE (RLS)
 
-CREATE POLICY "Users can only see their own calculations" ON tariff_calculations
-  FOR SELECT USING (auth.uid() = user_id);
+ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.orders ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.clients ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.drivers ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.driver_vehicles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.driver_documents ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Users can only insert their own calculations" ON tariff_calculations
-  FOR INSERT WITH CHECK (auth.uid() = user_id);
+-- POLICIES
 
--- ===================================================================
--- MIGRATION DATA (exemple: insérer les tarifs depuis JSON)
--- ===================================================================
+-- PROFILES
+CREATE POLICY "Public profiles are viewable by everyone" ON public.profiles FOR SELECT USING (true);
+CREATE POLICY "Users can insert their own profile" ON public.profiles FOR INSERT WITH CHECK (auth.uid() = id);
+CREATE POLICY "Users can update own profile" ON public.profiles FOR UPDATE USING (auth.uid() = id);
 
--- Insérer les tarifs Paris
-INSERT INTO tariffs_cities (city_name, postal_code, department_code, city_type, normal, express, urgence, vl_normal, vl_express) VALUES
-  ('Paris 01', '75001', '75', 'paris_arrondissement', 2, 4, 7, 7, 14),
-  ('Paris 02', '75002', '75', 'paris_arrondissement', 2, 4, 7, 7, 14),
-  ('Paris 03', '75003', '75', 'paris_arrondissement', 3, 6, 9, 8, 18),
-  -- ... continuer pour les 20 arrondissements
+-- ORDERS (CRITIQUE)
+-- 1. INSERT : Les clients authentifiés peuvent créer des commandes pour eux-mêmes
+CREATE POLICY "Clients can create orders" ON public.orders FOR INSERT TO authenticated WITH CHECK (auth.uid() = client_id);
 
--- Insérer les tarifs IDF
-INSERT INTO tariffs_cities (city_name, postal_code, department_code, city_type, normal, express, urgence, vl_normal, vl_express) VALUES
-  ('MELUN', '77000', '77', 'idf_city', 24, 27, 30, 28, 31),
-  ('COLLEGIEN', '77090', '77', 'idf_city', 15, 18, 21, 19, 22),
-  -- ... continuer pour les 221 villes IDF
+-- 2. SELECT : Voir ses propres commandes (Client ou Chauffeur)
+CREATE POLICY "Users can view own orders" ON public.orders FOR SELECT USING (
+    auth.uid() = client_id OR 
+    auth.uid() = driver_id OR
+    EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin')
+);
 
-ON CONFLICT (city_name) DO NOTHING;
+-- 3. UPDATE : Admin ou Système
+CREATE POLICY "Admins can update orders" ON public.orders FOR UPDATE USING (
+    EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin')
+);
 
--- ===================================================================
--- VIEWS
--- ===================================================================
+-- CLIENTS
+CREATE POLICY "Clients view own data" ON public.clients FOR SELECT USING (user_id = auth.uid());
+CREATE POLICY "Admins view all clients" ON public.clients FOR ALL USING (EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin'));
 
--- Vue: Tarifs actuels
-CREATE OR REPLACE VIEW v_tariffs_current AS
-SELECT 
-  city_name,
-  postal_code,
-  department_code,
-  city_type,
-  normal,
-  express,
-  urgence,
-  vl_normal,
-  vl_express,
-  (normal * 5.5)::DECIMAL(10, 2) as normal_eur,
-  (express * 5.5)::DECIMAL(10, 2) as express_eur,
-  (urgence * 5.5)::DECIMAL(10, 2) as urgence_eur,
-  (vl_normal * 5.5)::DECIMAL(10, 2) as vl_normal_eur,
-  (vl_express * 5.5)::DECIMAL(10, 2) as vl_express_eur
-FROM tariffs_cities
-ORDER BY postal_code, city_name;
+-- DRIVERS
+CREATE POLICY "Drivers view own data" ON public.drivers FOR SELECT USING (user_id = auth.uid());
+CREATE POLICY "Admins view all drivers" ON public.drivers FOR ALL USING (EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin'));
 
--- Vue: Résumé des calculs utilisateur
-CREATE OR REPLACE VIEW v_user_calculations_summary AS
-SELECT 
-  user_id,
-  COUNT(*) as total_calculations,
-  SUM(total_euros)::DECIMAL(15, 2) as total_revenue,
-  AVG(distance_km)::DECIMAL(10, 2) as avg_distance,
-  MAX(created_at) as last_calculation
-FROM tariff_calculations
-GROUP BY user_id;
-
--- ===================================================================
--- PERMISSIONS
--- ===================================================================
-
-GRANT SELECT ON tariffs_cities TO anon;
-GRANT SELECT ON v_tariffs_current TO anon;
-GRANT EXECUTE ON FUNCTION calculate_tariff TO authenticated;
+-- ADMIN BYPASS (Simplifié)
+-- Note: Supabase Admin (service role) bypass toujours RLS.
+-- Ici on donne accès aux users avec role='admin' dans profiles.
