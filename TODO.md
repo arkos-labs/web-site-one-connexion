@@ -1,7 +1,14 @@
 # 📋 TODO - One Connexion
 
-**Date de dernière mise à jour**: 2025-12-11  
-**Statut actuel**: Préparation Production
+**Date de dernière mise à jour**: 2025-12-13
+**Statut actuel**: Audit & Démarrage
+
+---
+
+## 🔥 PRIORITÉS ACTUELLES
+
+- [ ] Vérifier la connexion Supabase (.env) et les migrations SQL
+- [ ] Lancer le serveur de développement et vérifier le Login Admin
 
 ---
 
@@ -15,6 +22,7 @@
 - [x] Pages légales (CGV, Mentions, Cookies)
 - [x] Véhicules & Documents (backend)
 - [x] Authentification admin/client
+- [x] Authentification Multi-rôles
 - [x] Dashboards fonctionnels
 - [x] Audit et Nettoyage Web
 

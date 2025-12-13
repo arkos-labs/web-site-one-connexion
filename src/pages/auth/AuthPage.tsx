@@ -20,7 +20,8 @@ const AuthPage = () => {
         location.pathname === "/register" ? "register" : "login"
     );
 
-    const [loginData, setLoginData] = useState({ email: "", password: "" });
+    const [loginData, setLoginData] = useState({ email: "", password: "", driverId: "" });
+    const [loginType, setLoginType] = useState<"standard" | "driver">("standard");
     const [registerData, setRegisterData] = useState({
         fullName: "",
         companyName: "",
@@ -45,8 +46,13 @@ const AuthPage = () => {
         setIsLoading(true);
 
         try {
+            let email = loginData.email;
+            if (loginType === "driver") {
+                email = `${loginData.driverId}@driver.local`;
+            }
+
             const { data, error } = await supabase.auth.signInWithPassword({
-                email: loginData.email,
+                email: email,
                 password: loginData.password,
             });
 
@@ -60,19 +66,28 @@ const AuthPage = () => {
                 className: "bg-green-50 border-green-200",
             });
 
-            // Vérification du rôle dans la base de données
-            const { data: adminData } = await supabase
-                .from('admins')
+            // Vérification du rôle dans la table profiles
+            const { data: profileData, error: profileError } = await supabase
+                .from('profiles')
                 .select('role')
-                .eq('user_id', data.user.id)
-                .eq('status', 'active')
+                .eq('id', data.user.id)
                 .single();
 
-            if (adminData) {
-                console.log("Redirection vers Admin Dashboard");
+            if (profileError) {
+                console.error("Erreur récupération profil:", profileError);
+                // Fallback ou gestion d'erreur si le profil n'existe pas
+            }
+
+            const role = profileData?.role;
+            console.log("Rôle utilisateur:", role);
+
+            if (role === 'admin') {
                 navigate("/dashboard-admin");
+            } else if (role === 'chauffeur') {
+                // Redirection chauffeur (à définir, pour l'instant console.log)
+                console.log("Redirection vers Espace Chauffeur");
+                // navigate("/driver/dashboard"); // Exemple
             } else {
-                console.log("Redirection vers Client Dashboard");
                 navigate("/client/dashboard");
             }
 
@@ -82,7 +97,7 @@ const AuthPage = () => {
                 variant: "destructive",
                 title: "Erreur de connexion",
                 description: error.message === "Invalid login credentials"
-                    ? "Email ou mot de passe incorrect."
+                    ? "Identifiants incorrects."
                     : error.message,
             });
         } finally {
@@ -332,18 +347,57 @@ const AuthPage = () => {
 
                             {mode === "login" ? (
                                 <form onSubmit={handleLogin} className="space-y-6">
-                                    <div className="space-y-2">
-                                        <Label htmlFor="login-email" className="text-sm font-medium text-primary">Email professionnel</Label>
-                                        <Input
-                                            id="login-email"
-                                            type="email"
-                                            placeholder="nom@entreprise.com"
-                                            value={loginData.email}
-                                            onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
-                                            required
-                                            className="h-12 bg-secondary/30 border-input focus:border-cta focus:ring-cta/20 rounded-lg transition-all duration-300"
-                                        />
+                                    {/* Tabs for Login Type */}
+                                    <div className="flex p-1 bg-secondary/30 rounded-lg mb-6">
+                                        <button
+                                            type="button"
+                                            onClick={() => setLoginType("standard")}
+                                            className={`flex-1 py-2 text-sm font-medium rounded-md transition-all ${loginType === "standard"
+                                                    ? "bg-white text-primary shadow-sm"
+                                                    : "text-muted-foreground hover:text-primary"
+                                                }`}
+                                        >
+                                            Client / Admin
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => setLoginType("driver")}
+                                            className={`flex-1 py-2 text-sm font-medium rounded-md transition-all ${loginType === "driver"
+                                                    ? "bg-white text-primary shadow-sm"
+                                                    : "text-muted-foreground hover:text-primary"
+                                                }`}
+                                        >
+                                            Chauffeur
+                                        </button>
                                     </div>
+
+                                    {loginType === "standard" ? (
+                                        <div className="space-y-2">
+                                            <Label htmlFor="login-email" className="text-sm font-medium text-primary">Email professionnel</Label>
+                                            <Input
+                                                id="login-email"
+                                                type="email"
+                                                placeholder="nom@entreprise.com"
+                                                value={loginData.email}
+                                                onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
+                                                required
+                                                className="h-12 bg-secondary/30 border-input focus:border-cta focus:ring-cta/20 rounded-lg transition-all duration-300"
+                                            />
+                                        </div>
+                                    ) : (
+                                        <div className="space-y-2">
+                                            <Label htmlFor="login-driver-id" className="text-sm font-medium text-primary">Identifiant Chauffeur</Label>
+                                            <Input
+                                                id="login-driver-id"
+                                                type="text"
+                                                placeholder="CHAUFF01"
+                                                value={loginData.driverId}
+                                                onChange={(e) => setLoginData({ ...loginData, driverId: e.target.value })}
+                                                required
+                                                className="h-12 bg-secondary/30 border-input focus:border-cta focus:ring-cta/20 rounded-lg transition-all duration-300"
+                                            />
+                                        </div>
+                                    )}
 
                                     <div className="space-y-2">
                                         <div className="flex justify-between items-center">
