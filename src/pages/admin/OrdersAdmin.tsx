@@ -73,7 +73,7 @@ import { OrderWizardModal } from "@/components/admin/orders/wizard/OrderWizardMo
 import { ConfirmDialog, CancelOrderDialog } from "@/components/admin/orders/ConfirmDialogs";
 
 // Helper function to check if dispatch is allowed
-const getDispatchStatus = (scheduledPickupTime?: string) => {
+const getDispatchStatus = (scheduledPickupTime?: string | null) => {
   if (!scheduledPickupTime) {
     return { allowed: true, unlockTime: null, isImmediate: true };
   }
@@ -82,10 +82,14 @@ const getDispatchStatus = (scheduledPickupTime?: string) => {
   const unlockTime = new Date(pickupTime.getTime() - 45 * 60000); // -45 minutes
   const now = new Date();
 
+  // Check if it's a future date (deferred)
+  const isFuture = pickupTime.getTime() > now.getTime() + 30 * 60000; // Consider deferred if > 30 mins from now (or just rely on the field presence)
+
   return {
     allowed: now >= unlockTime,
     unlockTime,
-    isImmediate: false
+    isImmediate: false, // If scheduled_pickup_time is present, it's deferred
+    pickupTime
   };
 };
 
@@ -107,6 +111,10 @@ const OrdersAdmin = () => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [newCreatedOrderId, setNewCreatedOrderId] = useState<string | null>(null);
+
+  // Creation success modal
+  const [creationSuccessOpen, setCreationSuccessOpen] = useState(false);
+  const [createdOrderRef, setCreatedOrderRef] = useState("");
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -340,6 +348,12 @@ const OrdersAdmin = () => {
       toast.error('Veuillez sélectionner un client');
       return;
     }
+
+    if (!data.formula) {
+      toast.error('Veuillez sélectionner une formule de livraison');
+      return;
+    }
+
     try {
       const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
       const randomSuffix = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
@@ -376,10 +390,8 @@ const OrdersAdmin = () => {
 
       if (error) throw error;
 
-      toast.success(scheduledPickupTime
-        ? `Commande différée créée pour le ${new Date(scheduledPickupTime).toLocaleString('fr-FR')}`
-        : 'Commande immédiate créée avec succès'
-      );
+      setCreatedOrderRef(reference);
+      setCreationSuccessOpen(true);
       setCreateModalOpen(false);
       setSelectedClientId('');
       fetchOrders();
@@ -545,10 +557,11 @@ const OrdersAdmin = () => {
                         </Badge>
                       ) : (
                         <div className="flex flex-col gap-1">
-                          <Badge className="bg-warning/20 text-warning border-0 rounded-full px-3 py-1 text-xs font-semibold whitespace-nowrap">
+                          <Badge className="bg-purple-100 text-purple-700 border-purple-200 rounded-full px-3 py-1 text-xs font-semibold whitespace-nowrap flex items-center gap-1 w-fit">
+                            <Clock className="h-3 w-3" />
                             Différé
                           </Badge>
-                          <span className="text-xs text-muted-foreground">
+                          <span className="text-xs font-medium text-purple-900">
                             {new Date(order.scheduled_pickup_time!).toLocaleString('fr-FR', {
                               day: '2-digit',
                               month: '2-digit',
@@ -556,6 +569,11 @@ const OrdersAdmin = () => {
                               minute: '2-digit'
                             })}
                           </span>
+                          {!dispatchStatus.allowed && (
+                            <span className="text-[10px] text-muted-foreground bg-gray-100 px-1 rounded border border-gray-200 w-fit">
+                              Déblocage: {dispatchStatus.unlockTime?.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
+                            </span>
+                          )}
                         </div>
                       )}
                     </TableCell>
@@ -621,13 +639,14 @@ const OrdersAdmin = () => {
                                 </>
                               ) : (
                                 <>
-                                  <Lock className="h-3.5 w-3.5 text-muted-foreground" />
+                                  <Lock className="h-3.5 w-3.5 text-destructive" />
                                   <div className="flex flex-col">
-                                    <span className="text-xs text-muted-foreground font-medium">
+                                    <span className="text-xs text-destructive font-bold">
                                       Verrouillé
                                     </span>
                                     <span className="text-xs text-muted-foreground/80">
-                                      jusqu'à {dispatchStatus.unlockTime?.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
+                                      {/* < 45 min avant */}
+                                      Attendre {dispatchStatus.unlockTime?.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
                                     </span>
                                   </div>
                                 </>
@@ -801,6 +820,34 @@ const OrdersAdmin = () => {
         onClose={handleCloseCreateClientModal}
         onSuccess={handleClientCreated}
       />
+
+      {/* Creation Success Dialog */}
+      <Dialog open={creationSuccessOpen} onOpenChange={setCreationSuccessOpen}>
+        <DialogContent className="sm:max-w-md text-center">
+          <div className="flex flex-col items-center justify-center py-6 space-y-4">
+            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-2">
+              <CheckCircle className="h-8 w-8 text-green-600" />
+            </div>
+            <DialogHeader>
+              <DialogTitle className="text-2xl font-bold text-center">Commande Créée !</DialogTitle>
+              <DialogDescription className="text-center text-lg">
+                La commande a été enregistrée avec succès.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="p-4 bg-muted/30 rounded-lg w-full">
+              <p className="text-sm text-muted-foreground mb-1">Référence</p>
+              <p className="text-xl font-mono font-bold text-primary">{createdOrderRef}</p>
+            </div>
+            <Button
+              className="w-full bg-green-600 hover:bg-green-700 text-white mt-4"
+              size="lg"
+              onClick={() => setCreationSuccessOpen(false)}
+            >
+              Fermer
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Success Dialog */}
       <Dialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>

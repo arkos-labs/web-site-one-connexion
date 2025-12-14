@@ -71,7 +71,7 @@ const Register = () => {
                     .from('clients')
                     .insert([
                         {
-                            user_id: authData.user.id,
+                            id: authData.user.id,
                             email: formData.email,
                             company_name: formData.fullName,
                             internal_code: internalCode,

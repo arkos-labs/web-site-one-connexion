@@ -30,11 +30,25 @@ export const useUnreadMessages = (userType: 'admin' | 'client', clientId?: strin
                         .eq('sender_type', 'client');
                 }
 
-                const { count, error } = await query;
+                const { count: messagesCount, error } = await query;
 
                 if (error) throw error;
 
-                setUnreadCount(count || 0);
+                let totalCount = messagesCount || 0;
+
+                // If Admin, also count unread contact messages
+                if (userType === 'admin') {
+                    const { count: contactCount, error: contactError } = await supabase
+                        .from('contact_messages')
+                        .select('id', { count: 'exact', head: true })
+                        .eq('status', 'new');
+
+                    if (!contactError) {
+                        totalCount += (contactCount || 0);
+                    }
+                }
+
+                setUnreadCount(totalCount);
             } catch (error) {
                 console.error('Error fetching unread messages count:', error);
                 setUnreadCount(0);
@@ -46,7 +60,7 @@ export const useUnreadMessages = (userType: 'admin' | 'client', clientId?: strin
         fetchUnreadCount();
 
         // S'abonner aux changements
-        const subscription = supabase
+        const channel = supabase
             .channel('unread_messages_changes')
             .on(
                 'postgres_changes',
@@ -58,8 +72,24 @@ export const useUnreadMessages = (userType: 'admin' | 'client', clientId?: strin
                 () => {
                     fetchUnreadCount();
                 }
-            )
-            .subscribe();
+            );
+
+        // Subscribe to contact_messages for admins
+        if (userType === 'admin') {
+            channel.on(
+                'postgres_changes',
+                {
+                    event: '*',
+                    schema: 'public',
+                    table: 'contact_messages',
+                },
+                () => {
+                    fetchUnreadCount();
+                }
+            );
+        }
+
+        const subscription = channel.subscribe();
 
         return () => {
             subscription.unsubscribe();

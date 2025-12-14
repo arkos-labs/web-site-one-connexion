@@ -163,7 +163,7 @@ export const Sidebar = ({ type, onClose }: SidebarProps) => {
                                     {/* Badge pour les messages non lus */}
                                     {(item.label === "Messages" || item.label === "Messagerie") && unreadCount > 0 && (
                                         <Badge
-                                            className="bg-sidebar-primary text-sidebar-primary-foreground text-xs px-2 py-0.5 min-w-[20px] h-5 flex items-center justify-center"
+                                            className="bg-red-600 hover:bg-red-700 text-white text-xs px-2 py-0.5 min-w-[20px] h-5 flex items-center justify-center animate-pulse"
                                         >
                                             {unreadCount}
                                         </Badge>

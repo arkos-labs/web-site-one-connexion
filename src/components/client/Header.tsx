@@ -78,7 +78,7 @@ const Header = () => {
             const { data } = await supabase
                 .from('clients')
                 .select('company_name, first_name, last_name')
-                .eq('user_id', currentUser.id)
+                .eq('id', currentUser.id)
                 .single();
 
             if (data) {

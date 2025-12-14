@@ -62,16 +62,22 @@ export const StepFormula = ({
                                 }}
                                 className={`relative rounded-xl border-2 p-4 transition-all duration-200 flex flex-col items-center justify-center text-center gap-2 group
                                     ${isDisabled
-                                        ? "opacity-50 cursor-not-allowed bg-gray-50 border-gray-200"
+                                        ? "opacity-40 cursor-not-allowed bg-gray-100 border-gray-200 grayscale"
                                         : isSelected
                                             ? "border-blue-600 bg-blue-50/50 shadow-md ring-1 ring-blue-600 cursor-pointer"
                                             : "border-gray-100 hover:border-blue-200 hover:bg-gray-50 cursor-pointer"
                                     }
                                 `}
                             >
+                                {isDisabled && (
+                                    <div className="absolute top-2 right-2">
+                                        <AlertCircle className="h-4 w-4 text-gray-400" />
+                                    </div>
+                                )}
+
                                 <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors
                                     ${isDisabled
-                                        ? "bg-gray-100 text-gray-300"
+                                        ? "bg-gray-200 text-gray-400"
                                         : isSelected
                                             ? "bg-blue-100 text-blue-600"
                                             : "bg-gray-100 text-gray-500 group-hover:bg-white"
@@ -82,7 +88,7 @@ export const StepFormula = ({
 
                                 <div>
                                     <h3 className={`font-bold text-sm ${isDisabled
-                                        ? "text-gray-400"
+                                        ? "text-gray-500"
                                         : isSelected
                                             ? "text-blue-900"
                                             : "text-gray-900"
@@ -102,13 +108,22 @@ export const StepFormula = ({
                                             </p>
                                         </div>
                                     ) : (
-                                        <p className="text-xs text-gray-400 italic">--</p>
+                                        <p className="text-xs text-gray-400 italic">
+                                            {isDisabled ? "Non disponible" : "--"}
+                                        </p>
                                     )}
                                 </div>
                             </div>
                         );
                     })}
                 </div>
+
+                {isStandardDisabled && (
+                    <div className="mt-4 p-3 bg-yellow-50 border border-yellow-100 rounded-lg text-xs text-yellow-700 flex items-center gap-2">
+                        <Clock className="h-3 w-3" />
+                        <p>La formule Standard n'est pas disponible pour les courses immédiates ou urgentes (moins de 1h).</p>
+                    </div>
+                )}
             </div>
 
             <div className="pt-6 mt-auto flex justify-between border-t border-gray-100">
@@ -118,6 +133,7 @@ export const StepFormula = ({
                 </Button>
                 <Button
                     onClick={onNext}
+                    disabled={!formData.formula}
                     className="bg-blue-600 hover:bg-blue-700 text-white px-6"
                 >
                     Suivant

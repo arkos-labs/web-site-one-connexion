@@ -67,11 +67,11 @@ const Settings = () => {
         if (user) {
           setUser(user);
 
-          // Fetch profile from 'clients' table using user_id
+          // Fetch profile from 'clients' table using id (which is the user_id)
           const { data: clientData, error } = await supabase
             .from('clients')
             .select('*')
-            .eq('user_id', user.id)
+            .eq('id', user.id)
             .single();
 
           if (clientData) {

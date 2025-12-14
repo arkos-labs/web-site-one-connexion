@@ -76,7 +76,7 @@ export const useAuth = () => {
                     const { data: clientData } = await supabase
                         .from('clients')
                         .select('*')
-                        .eq('user_id', authUser.id)
+                        .eq('id', authUser.id)
                         .maybeSingle();
 
                     if (clientData) {

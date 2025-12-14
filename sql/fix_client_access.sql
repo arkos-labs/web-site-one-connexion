@@ -1,53 +1,105 @@
--- -----------------------------------------------------------------------------
--- FIX CLIENT ACCESS & RLS (THE "NUCLEAR" FIX)
--- -----------------------------------------------------------------------------
+-- ============================================================================
+-- SCRIPT DE RÉPARATION ROBUSTE : FIX CLIENT ACCESS & SCHEMA
+-- ============================================================================
+-- Ce script corrige d'abord la structure de la table 'profiles' (colonne manquante)
+-- puis répare l'utilisateur bloqué.
+-- ============================================================================
 
--- 1. Ensure RLS is enabled
-ALTER TABLE public.clients ENABLE ROW LEVEL SECURITY;
+-- 1. CORRECTION DU SCHÉMA (Ajout des colonnes manquantes)
+DO $$
+BEGIN
+    -- Ajouter la colonne 'status' si elle manque
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'profiles' AND column_name = 'status') THEN
+        ALTER TABLE public.profiles ADD COLUMN status TEXT DEFAULT 'approved';
+        RAISE NOTICE '✅ Colonne status ajoutée à profiles';
+    END IF;
 
--- 2. RESET Client Policies (Delete old ones to avoid conflicts)
-DROP POLICY IF EXISTS "Clients view own" ON public.clients;
-DROP POLICY IF EXISTS "Clients update own" ON public.clients;
-DROP POLICY IF EXISTS "Users can view their own client profile" ON public.clients;
+    -- Ajouter 'first_name' si elle manque
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'profiles' AND column_name = 'first_name') THEN
+        ALTER TABLE public.profiles ADD COLUMN first_name TEXT;
+        RAISE NOTICE '✅ Colonne first_name ajoutée à profiles';
+    END IF;
 
--- 3. Create "View Own" Policy (CRITICAL)
-CREATE POLICY "Clients view own" ON public.clients
-FOR SELECT
-TO authenticated
-USING (
-    user_id = auth.uid()
-);
+    -- Ajouter 'last_name' si elle manque
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'profiles' AND column_name = 'last_name') THEN
+        ALTER TABLE public.profiles ADD COLUMN last_name TEXT;
+        RAISE NOTICE '✅ Colonne last_name ajoutée à profiles';
+    END IF;
+END $$;
 
--- 4. Create "Update Own" Policy
-CREATE POLICY "Clients update own" ON public.clients
-FOR UPDATE
-TO authenticated
-USING (
-    user_id = auth.uid()
-);
-
--- 5. Grant Permissions
-GRANT SELECT, UPDATE, INSERT ON public.clients TO authenticated;
-
--- 6. SPECIFIC REPAIR FOR KEISHA (Again, to be absolutely sure)
+-- 2. RÉPARATION DES DONNÉES UTILISATEUR
 DO $$
 DECLARE
-    v_email TEXT := 'keisha.khotothinu@gmail.com';
-    v_user_id UUID;
+    target_email TEXT := 'loxeunehelleu-3252@yopmail.com';
+    target_user_id UUID;
+    user_record RECORD;
 BEGIN
-    SELECT id INTO v_user_id FROM auth.users WHERE email = v_email;
-    
-    IF v_user_id IS NOT NULL THEN
-        -- Ensure Profile is Client
-        UPDATE public.profiles SET role = 'client' WHERE id = v_user_id;
+    -- Récupérer l'ID de l'utilisateur cible
+    SELECT id INTO target_user_id FROM auth.users WHERE email = target_email;
+
+    IF target_user_id IS NOT NULL THEN
+        -- S'assurer qu'il est dans PROFILES
+        INSERT INTO public.profiles (id, email, role, status, first_name, last_name)
+        VALUES (
+            target_user_id, 
+            target_email, 
+            'client', 
+            'approved',
+            'Utilisateur', 
+            'Client'
+        )
+        ON CONFLICT (id) DO UPDATE SET
+            role = 'client',
+            status = 'approved';
+            
+        -- S'assurer qu'il est dans CLIENTS
+        -- (On vérifie d'abord que la table clients existe, sinon on la crée)
+        CREATE TABLE IF NOT EXISTS public.clients (
+            id UUID PRIMARY KEY REFERENCES public.profiles(id) ON DELETE CASCADE,
+            company_name TEXT,
+            email TEXT,
+            phone TEXT,
+            status TEXT DEFAULT 'active',
+            internal_code TEXT,
+            created_at TIMESTAMPTZ DEFAULT NOW(),
+            updated_at TIMESTAMPTZ DEFAULT NOW()
+        );
+
+        INSERT INTO public.clients (id, email, status, company_name, internal_code)
+        VALUES (
+            target_user_id, 
+            target_email, 
+            'active',
+            'Mon Entreprise', 
+            'CL-' || UPPER(SUBSTRING(target_user_id::text, 1, 8))
+        )
+        ON CONFLICT (id) DO NOTHING;
         
-        -- Ensure Client Entry Exists
-        IF NOT EXISTS (SELECT 1 FROM public.clients WHERE user_id = v_user_id) THEN
-            INSERT INTO public.clients (user_id, email, company_name, status, phone)
-            VALUES (v_user_id, v_email, 'Keisha Corp', 'active', '0600000000');
-        ELSE
-            -- Ensure it's linked correctly
-            UPDATE public.clients SET status = 'active' WHERE user_id = v_user_id;
-        END IF;
+        RAISE NOTICE '✅ Réparation effectuée pour %', target_email;
     END IF;
+
+    -- Réparation GÉNÉRIQUE pour tous les autres
+    FOR user_record IN 
+        SELECT u.id, u.email, u.raw_user_meta_data 
+        FROM auth.users u
+        WHERE (u.raw_user_meta_data->>'role' = 'client' OR u.raw_user_meta_data->>'role' IS NULL)
+        AND NOT EXISTS (SELECT 1 FROM public.clients c WHERE c.id = u.id)
+    LOOP
+        -- Créer profil si manquant
+        INSERT INTO public.profiles (id, email, role, status)
+        VALUES (user_record.id, user_record.email, 'client', 'approved')
+        ON CONFLICT (id) DO NOTHING;
+
+        -- Créer fiche client
+        INSERT INTO public.clients (id, email, status, company_name, internal_code)
+        VALUES (
+            user_record.id, 
+            user_record.email, 
+            'active',
+            COALESCE(user_record.raw_user_meta_data->>'company_name', 'Client Sans Nom'),
+            'CL-' || UPPER(SUBSTRING(user_record.id::text, 1, 8))
+        )
+        ON CONFLICT (id) DO NOTHING;
+    END LOOP;
+
 END $$;

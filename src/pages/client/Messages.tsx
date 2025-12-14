@@ -194,15 +194,17 @@ const Messages = () => {
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex items-center gap-2 overflow-hidden">
                       {thread.type === 'plainte' ? (
-                        <AlertTriangle className="h-4 w-4 text-red-500 flex-shrink-0" />
+                        <AlertTriangle className="h-4 w-4 text-orange-500 flex-shrink-0" />
                       ) : (
                         <MessageSquare className={`h-4 w-4 flex-shrink-0 ${selectedThreadId === thread.id ? "text-accent-main" : "text-gray-400"}`} />
                       )}
                       <p className="font-semibold text-sm truncate">{thread.subject}</p>
                     </div>
-                    {/* Unread Badge Logic - simplified */}
-                    {/* We need to count unread messages from admin */}
-                    {/* For now, just show a dot if updated recently? No, let's rely on is_read */}
+                    {(thread.unread_count || 0) > 0 && (
+                      <Badge className="text-[10px] px-1 py-0 h-5 bg-red-600 hover:bg-red-700 text-white border-0 animate-pulse">
+                        {thread.unread_count}
+                      </Badge>
+                    )}
                   </div>
                   <p className="text-sm text-muted-foreground truncate mb-2">
                     {thread.last_message ? (
@@ -234,7 +236,7 @@ const Messages = () => {
               <div className="p-4 border-b bg-gray-50 flex justify-between items-center flex-shrink-0">
                 <div>
                   <h2 className="font-semibold text-primary text-lg flex items-center gap-2">
-                    {selectedThread.type === 'plainte' && <AlertTriangle className="h-5 w-5 text-red-500" />}
+                    {selectedThread.type === 'plainte' && <AlertTriangle className="h-5 w-5 text-orange-500" />}
                     {selectedThread.subject}
                   </h2>
                   <p className="text-sm text-muted-foreground">

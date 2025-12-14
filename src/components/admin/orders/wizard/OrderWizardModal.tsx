@@ -42,7 +42,7 @@ export interface OrderFormData {
     packageType: string;
     weight: number;
     dimensions: string;
-    formula: FormuleNew;
+    formula: FormuleNew | null;
     pickupDate: string;
     pickupTime: string;
     notes: string;
@@ -79,7 +79,7 @@ export const OrderWizardModal = ({ isOpen, onClose, onSubmit, mode = 'admin' }: 
         packageType: "standard",
         weight: 1,
         dimensions: "",
-        formula: "NORMAL",
+        formula: null,
         pickupDate: "",
         pickupTime: "",
         notes: "",
@@ -101,8 +101,48 @@ export const OrderWizardModal = ({ isOpen, onClose, onSubmit, mode = 'admin' }: 
     // Load clients if admin
     useEffect(() => {
         if (isOpen) {
+            // Reset state on open
+            setCurrentStep('pickup');
+            setCompletedSteps([]);
+            setPricingResults(null);
+            setPricingError(null);
+            setIsStandardDisabled(false);
+
+            setFormData(prev => ({
+                ...prev,
+                // Reset to default values
+                pickupAddress: "",
+                pickupCity: "",
+                deliveryAddress: "",
+                deliveryCity: "",
+                deliveryContact: "",
+                deliveryPhone: "",
+                packageType: "standard",
+                weight: 1,
+                dimensions: "",
+                formula: null,
+                pickupDate: "",
+                pickupTime: "",
+                notes: "",
+                scheduleType: 'immediate',
+                // Keep client info if needed, or let fetchCurrentClient populate it
+                // For admin mode, we might want to clear client info too if we want a fresh start
+                // But let's keep it safe and let the specific fetchers handle client data
+            }));
+
             if (mode === 'admin') {
                 fetchClients();
+                // Also reset client selection for admin
+                setFormData(prev => ({
+                    ...prev,
+                    clientId: "",
+                    clientName: "",
+                    clientEmail: "",
+                    clientPhone: "",
+                    clientCompany: "",
+                    pickupContact: "",
+                    pickupPhone: ""
+                }));
             } else if (mode === 'client') {
                 fetchCurrentClient();
             }
@@ -208,9 +248,11 @@ export const OrderWizardModal = ({ isOpen, onClose, onSubmit, mode = 'admin' }: 
 
     // Vérifier si la formule Standard doit être grisée
     useEffect(() => {
+        let shouldDisableStandard = false;
+
         if (formData.scheduleType === 'immediate' || formData.scheduleType === 'in1h') {
             // Condition A: "Dès que possible" ou "Dans 1h" sélectionné → griser Standard
-            setIsStandardDisabled(true);
+            shouldDisableStandard = true;
         } else if (formData.scheduleType === 'deferred') {
             // Condition B: Vérifier le délai du créneau choisi
             if (formData.pickupDate && formData.pickupTime) {
@@ -219,16 +261,17 @@ export const OrderWizardModal = ({ isOpen, onClose, onSubmit, mode = 'admin' }: 
                 const delayInMinutes = (selectedDateTime.getTime() - now.getTime()) / (1000 * 60);
 
                 // Si le délai est strictement inférieur à 60 minutes → griser Standard
-                setIsStandardDisabled(delayInMinutes < 60);
-            } else {
-                // Si pas de date/heure sélectionnée, ne pas griser
-                setIsStandardDisabled(false);
+                shouldDisableStandard = delayInMinutes < 60;
             }
-        } else {
-            // Pour tout autre cas, ne pas griser
-            setIsStandardDisabled(false);
         }
-    }, [formData.scheduleType, formData.pickupDate, formData.pickupTime]);
+
+        setIsStandardDisabled(shouldDisableStandard);
+
+        // Si Standard est désactivé mais qu'il est sélectionné, on le désélectionne
+        if (shouldDisableStandard && formData.formula === 'NORMAL') {
+            updateFormData({ formula: null });
+        }
+    }, [formData.scheduleType, formData.pickupDate, formData.pickupTime, formData.formula]);
 
     // Navigation logic
     const steps: { id: WizardStepId; label: string; icon: any }[] = [

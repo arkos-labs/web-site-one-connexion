@@ -7,12 +7,15 @@
 
 ## 🔥 PRIORITÉS ACTUELLES
 
-- [ ] Vérifier la connexion Supabase (.env) et les migrations SQL
-- [ ] Lancer le serveur de développement et vérifier le Login Admin
-
----
-
-## ✅ TÂCHES COMPLÉTÉES
+### ⚠️ URGENT : Déploiement Base de Données
+- [x] Exécuter `00_wipe_everything.sql` (Remplacé par `repair_database_complete.sql`)
+- [x] Exécuter `01_init_drivers_core.sql` (Inclus dans repair)
+- [ ] Tester inscription chauffeur (voir GUIDE_DEPLOIEMENT_DB.md)
+- [ ] Tester connexion chauffeur
+- [x] Réparer compte admin (RLS & Permissions fixés)
+- [x] Fix Bug 406 & Auto-création profil Client
+- [x] Setup Supabase Trigger for User Profile
+- [x] Fix RLS Policies for Orders Table
 
 ### Phase 1: Consolidation & Corrections Critiques
 - [x] Tarification dynamique
@@ -23,6 +26,8 @@
 - [x] Véhicules & Documents (backend)
 - [x] Authentification admin/client
 - [x] Authentification Multi-rôles
+- [x] Inscription Utilisateurs
+- [x] Seed SQL Users
 - [x] Dashboards fonctionnels
 - [x] Audit et Nettoyage Web
 
@@ -30,6 +35,14 @@
 - [x] Suppression code mort (dossiers examples/, pages de test)
 - [x] Nettoyage routes inutilisées
 - [x] Suppression fichiers temporaires
+
+### Phase 3: Gestion Base de Données
+- [x] Création du script de nettoyage total (Wipe DB) - `00_wipe_everything.sql`
+- [x] Architecture DB : Tables Profiles & Drivers créées
+- [x] Architecture DB : Trigger d'inscription Chauffeur actif
+- [x] Architecture DB : Tables Véhicules & Documents créées
+- [ ] Module Client (Tables orders, invoices)
+- [ ] Module Admin (Tables admins, permissions)
 
 ---
 
@@ -52,16 +65,27 @@
 2. **Appliquer les migrations SQL** ⏳
    - [x] Exécuter `sql/add_tariff_metadata.sql` dans Supabase
    - [x] Exécuter `sql/add_vehicles_documents.sql` dans Supabase
-   - [x] Base de données synchronisée (supabase_schema.sql généré) ✅
+   - [x] Base de données synchronisée (repair_database_complete.sql exécuté) ✅
+   - [x] Base de données synchronisée (repair_database_complete.sql exécuté) ✅
    - [x] Correction droits création commande (RLS Policy INSERT) ✅
+   - [x] Fix Création Client CRM (Suppression contrainte FK clients_id_fkey) ✅
+   - [x] Fix Création Chauffeur (RPC Signature & Colonnes manquantes) ✅
+   - [x] Fix Colonne Username manquante dans Drivers ✅
+   - [x] Fix Erreur pgcrypto (Search Path extensions) ✅
+   - [x] Enable Driver Pre-registration (Nullable user_id & Trigger update) ✅
+   - [x] Fix Driver Relationships (FKs for orders, vehicles, documents) ✅
+   - [x] Fix Guest Order Creation (Missing RPC create_guest_order_v2) ✅
 
 3. **Configurer Supabase Storage**
    - Créer bucket "documents" (privé)
    - Configurer RLS policies
 
-4. **Configurer les emails Supabase**
-   - Templates Reset Password & Confirm Email
-   - Site URL & Redirect URLs
+4. **Configurer les emails Supabase** ✅
+   - [x] Templates Reset Password & Confirm Email
+   - [x] Templates HTML modernes et responsive
+   - [x] Versions texte (fallback)
+   - [x] Guide de configuration complet
+   - [ ] Site URL & Redirect URLs (à configurer dans Supabase)
 
 ### Fonctionnalités Manquantes (3-5h)
 5. **Interface de gestion des véhicules (Admin)**
@@ -73,9 +97,11 @@
    - Modal visualisation/approbation
    - Upload drag & drop
 
-7. **Notifications en temps réel**
-   - Supabase Realtime pour nouvelles commandes
-   - Badge compteur
+7. **Notifications en temps réel** ✅
+   - [x] Supabase Realtime pour nouvelles commandes
+   - [x] Mise à jour automatique de toutes les pages
+   - [x] Plus besoin de rafraîchir manuellement
+   - [x] Badge compteur en temps réel
 
 8. **Système de messagerie complet**
    - Conversations groupées

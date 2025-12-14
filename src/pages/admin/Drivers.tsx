@@ -18,7 +18,6 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Driver } from "@/types/drivers";
 import { getDriverStatusLabel, getDriverStatusBadgeColor } from "@/types/orders";
-import { mapVehicleToDriverVehicle } from "@/types/vehiclesDocuments";
 import { toast } from "sonner";
 import { createDriver } from "@/services/adminSupabaseQueries";
 
@@ -34,6 +33,30 @@ const Drivers = () => {
 
   useEffect(() => {
     fetchDrivers();
+
+    // Realtime subscription
+    const channel = supabase
+      .channel('admin-drivers-list')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'drivers' },
+        () => {
+          fetchDrivers();
+        }
+      )
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'orders' },
+        () => {
+          // Orders affect driver stats (deliveries, earnings)
+          fetchDrivers();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const fetchDrivers = async () => {
@@ -53,20 +76,6 @@ const Drivers = () => {
         .select('id, driver_id, status, price');
 
       if (ordersError) throw ordersError;
-
-      // Fetch vehicles for all drivers
-      const { data: vehiclesData, error: vehiclesError } = await supabase
-        .from('vehicles')
-        .select('*');
-
-      if (vehiclesError) console.error('Error fetching vehicles:', vehiclesError);
-
-      // Fetch documents for all drivers
-      const { data: documentsData, error: documentsError } = await supabase
-        .from('driver_documents')
-        .select('*');
-
-      if (documentsError) console.error('Error fetching documents:', documentsError);
 
       if (driversData) {
         const realDrivers: Driver[] = driversData.map((d: any) => {
@@ -103,19 +112,23 @@ const Drivers = () => {
             username: d.username,        // Nouveau
             plain_password: d.plain_password, // Nouveau
             status: status,
-            vehicle: (() => {
-              const driverVehicles = vehiclesData?.filter((v: any) => v.driver_id === d.id) || [];
-              const primaryVehicle = driverVehicles.find((v: any) => v.status === 'active') || driverVehicles[0];
-              return primaryVehicle ? mapVehicleToDriverVehicle(primaryVehicle) : undefined;
-            })(),
-            documents: (() => {
-              const driverDocs = documentsData?.filter((doc: any) => doc.driver_id === d.id) || [];
-              return driverDocs.map((doc: any) => ({
-                type: doc.document_type,
-                status: doc.verification_status,
-                expiry_date: doc.expiry_date
-              }));
-            })(),
+            vehicle: d.vehicle_type ? {
+              id: 'primary',
+              driver_id: d.id,
+              brand: 'Véhicule', // Default since we don't have this col yet
+              model: 'Principal', // Default
+              plate_number: d.vehicle_registration || 'Non renseigné',
+              type: d.vehicle_type,
+              status: 'active',
+              created_at: d.created_at,
+              updated_at: d.updated_at
+            } : undefined,
+            documents: d.license_number ? [{
+              type: 'license',
+              status: 'verified', // Assume verified if present for now
+              expiry_date: null,
+              file_url: null
+            }] : [],
             current_location: d.current_lat && d.current_lng ? {
               latitude: d.current_lat,
               longitude: d.current_lng,
@@ -144,35 +157,14 @@ const Drivers = () => {
     }
   };
 
-  const handleCreateDriver = async (driverData: any) => {
+  const handleCreateDriver = async () => {
     try {
-      // Use the service function or direct supabase call
-      // Since we have specific fields not in the service yet (siret, vehicle_capacity), let's use direct supabase for now or update service
-      // But wait, I updated the service interface in previous step.
-      // However, the createDriver function in service might not handle the new fields if it uses strict typing or if I didn't update the implementation.
-      // Let's check createDriver implementation in adminSupabaseQueries.ts... 
-      // It takes Omit<Driver, ...> and spreads it. So it should work if the interface is updated.
-
-      // But wait, the Driver type in adminSupabaseQueries.ts was updated.
-      // The Driver type in THIS file is imported from "@/types/drivers".
-      // I should probably use the one from adminSupabaseQueries or ensure compatibility.
-      // For now, let's just pass the data to createDriver from adminSupabaseQueries.
-
-      // We need to map the data from the modal to what createDriver expects.
-      // The modal returns data matching the Driver interface in adminSupabaseQueries.
-
-      await createDriver(driverData);
-
-      toast.success("Chauffeur créé avec succès");
+      // Le modal s'occupe déjà de la création via RPC
+      // On a juste besoin de rafraîchir la liste
       setShowCreateModal(false);
       fetchDrivers();
     } catch (error: any) {
-      console.error("Erreur lors de la création du chauffeur:", error);
-      if (error.code === '23505') {
-        toast.error("Un chauffeur avec cet email existe déjà");
-      } else {
-        toast.error("Erreur lors de la création du chauffeur: " + error.message);
-      }
+      console.error("Erreur post-création:", error);
     }
   };
 

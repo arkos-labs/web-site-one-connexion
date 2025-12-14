@@ -6,8 +6,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { MessageSquare, Send, Search, Loader2, Check, CheckCheck, AlertTriangle, Filter, Globe, Mail } from "lucide-react";
 import { toast } from "sonner";
-import { getThreads, getThreadMessages, sendMessage, markMessagesAsRead, updateComplaintStatus, Thread, Message } from "@/services/messaging";
+import { getThreads, getThreadMessages, sendMessage, markMessagesAsRead, updateComplaintStatus, createThread, markContactMessageAsRead, Thread, Message } from "@/services/messaging";
 import { supabase } from "@/lib/supabase";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { PlusCircle } from "lucide-react";
 
 const Messaging = () => {
   const [threads, setThreads] = useState<Thread[]>([]);
@@ -21,6 +25,14 @@ const Messaging = () => {
   const [isLoadingThreads, setIsLoadingThreads] = useState(true);
   const [isLoadingMessages, setIsLoadingMessages] = useState(false);
   const [isSending, setIsSending] = useState(false);
+
+  // Broadcast State
+  const [isBroadcastOpen, setIsBroadcastOpen] = useState(false);
+  const [broadcastSubject, setBroadcastSubject] = useState("");
+  const [broadcastMessage, setBroadcastMessage] = useState("");
+  const [selectedRecipients, setSelectedRecipients] = useState<string[]>([]);
+  const [allClients, setAllClients] = useState<{ id: string, company_name: string, email: string }[]>([]);
+  const [isLoadingClients, setIsLoadingClients] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -41,6 +53,9 @@ const Messaging = () => {
         }
         loadThreads();
       })
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'contact_messages' }, () => {
+        loadThreads();
+      })
       .subscribe();
 
     return () => {
@@ -59,6 +74,29 @@ const Messaging = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  useEffect(() => {
+    if (isBroadcastOpen) {
+      fetchClients();
+    }
+  }, [isBroadcastOpen]);
+
+  const fetchClients = async () => {
+    setIsLoadingClients(true);
+    try {
+      const { data, error } = await supabase
+        .from('clients')
+        .select('id, company_name, email')
+        .order('company_name');
+      if (error) throw error;
+      setAllClients(data || []);
+    } catch (error) {
+      console.error("Error fetching clients:", error);
+      toast.error("Erreur lors du chargement des clients");
+    } finally {
+      setIsLoadingClients(false);
+    }
+  };
 
   useEffect(() => {
     let res = threads;
@@ -95,11 +133,17 @@ const Messaging = () => {
       setMessages(data);
       // Only mark as read if it's a standard message thread
       const thread = threads.find(t => t.id === threadId);
-      if (thread && thread.source !== 'contact_form') {
-        await markMessagesAsRead(threadId, 'admin');
+      if (thread) {
+        if (thread.source === 'contact_form') {
+          // Mark contact message as read if it's new
+          if (thread.status === 'new') {
+            await markContactMessageAsRead(threadId);
+          }
+        } else {
+          await markMessagesAsRead(threadId, 'admin');
+        }
       }
-      // For contact form, we might want to update status to 'read' if it was 'new'
-      // But let's keep it simple for now
+
       loadThreads(); // Refresh to update unread counts/order
     } catch (error) {
       console.error("Error loading messages:", error);
@@ -144,6 +188,53 @@ const Messaging = () => {
     }
   };
 
+  const handleSendBroadcast = async () => {
+    if (!broadcastSubject || !broadcastMessage || selectedRecipients.length === 0) {
+      toast.error("Veuillez remplir tous les champs et sélectionner au moins un destinataire");
+      return;
+    }
+
+    setIsSending(true);
+    try {
+      let successCount = 0;
+      for (const clientId of selectedRecipients) {
+        try {
+          await createThread(clientId, broadcastSubject, 'general', broadcastMessage, 'admin');
+          successCount++;
+        } catch (e) {
+          console.error(`Failed to send to ${clientId}`, e);
+        }
+      }
+      toast.success(`${successCount} messages envoyés avec succès`);
+      setIsBroadcastOpen(false);
+      setBroadcastSubject("");
+      setBroadcastMessage("");
+      setSelectedRecipients([]);
+      loadThreads();
+    } catch (error) {
+      console.error("Error sending broadcast:", error);
+      toast.error("Erreur lors de l'envoi en masse");
+    } finally {
+      setIsSending(false);
+    }
+  };
+
+  const toggleRecipient = (clientId: string) => {
+    setSelectedRecipients(prev =>
+      prev.includes(clientId)
+        ? prev.filter(id => id !== clientId)
+        : [...prev, clientId]
+    );
+  };
+
+  const toggleAllRecipients = () => {
+    if (selectedRecipients.length === allClients.length) {
+      setSelectedRecipients([]);
+    } else {
+      setSelectedRecipients(allClients.map(c => c.id));
+    }
+  };
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -162,6 +253,84 @@ const Messaging = () => {
             Gérez les demandes et réclamations clients
           </p>
         </div>
+        <Dialog open={isBroadcastOpen} onOpenChange={setIsBroadcastOpen}>
+          <DialogTrigger asChild>
+            <Button className="gap-2">
+              <PlusCircle className="h-4 w-4" />
+              Nouveau Message
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[600px] max-h-[90vh] flex flex-col">
+            <DialogHeader>
+              <DialogTitle>Envoyer un message (Diffusion)</DialogTitle>
+            </DialogHeader>
+            <div className="grid gap-4 py-4 overflow-y-auto px-1">
+              <div className="grid gap-2">
+                <Label htmlFor="subject">Sujet</Label>
+                <Input
+                  id="subject"
+                  value={broadcastSubject}
+                  onChange={(e) => setBroadcastSubject(e.target.value)}
+                  placeholder="Ex: Mise à jour des tarifs, Promotion..."
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="message">Message</Label>
+                <Textarea
+                  id="message"
+                  value={broadcastMessage}
+                  onChange={(e) => setBroadcastMessage(e.target.value)}
+                  placeholder="Votre message..."
+                  rows={5}
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label>Destinataires ({selectedRecipients.length})</Label>
+                <div className="border rounded-md p-4 max-h-[200px] overflow-y-auto space-y-2">
+                  <div className="flex items-center space-x-2 pb-2 border-b mb-2 sticky top-0 bg-background z-10">
+                    <Checkbox
+                      id="all"
+                      checked={selectedRecipients.length === allClients.length && allClients.length > 0}
+                      onCheckedChange={toggleAllRecipients}
+                    />
+                    <label
+                      htmlFor="all"
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                    >
+                      Tout sélectionner
+                    </label>
+                  </div>
+                  {isLoadingClients ? (
+                    <div className="flex justify-center p-4"><Loader2 className="animate-spin h-4 w-4" /></div>
+                  ) : (
+                    allClients.map(client => (
+                      <div key={client.id} className="flex items-center space-x-2">
+                        <Checkbox
+                          id={`client-${client.id}`}
+                          checked={selectedRecipients.includes(client.id)}
+                          onCheckedChange={() => toggleRecipient(client.id)}
+                        />
+                        <label
+                          htmlFor={`client-${client.id}`}
+                          className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                        >
+                          {client.company_name} <span className="text-muted-foreground text-xs">({client.email})</span>
+                        </label>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setIsBroadcastOpen(false)}>Annuler</Button>
+              <Button onClick={handleSendBroadcast} disabled={isSending || selectedRecipients.length === 0}>
+                {isSending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Envoyer
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
 
       {/* Messaging Layout */}
@@ -233,10 +402,15 @@ const Messaging = () => {
                     </div>
                     <div className="flex gap-1">
                       {thread.type === 'plainte' && (
-                        <Badge variant="destructive" className="text-[10px] px-1 py-0 h-5">Plainte</Badge>
+                        <Badge className="text-[10px] px-1 py-0 h-5 bg-orange-500 hover:bg-orange-600 text-white border-0">Plainte</Badge>
                       )}
                       {thread.source === 'contact_form' && (
                         <Badge className="text-[10px] px-1 py-0 h-5 bg-blue-500 hover:bg-blue-600">Site Web</Badge>
+                      )}
+                      {(thread.unread_count || 0) > 0 && (
+                        <Badge className="text-[10px] px-1 py-0 h-5 bg-red-600 hover:bg-red-700 text-white border-0 animate-pulse">
+                          {thread.unread_count}
+                        </Badge>
                       )}
                     </div>
                   </div>
@@ -267,7 +441,7 @@ const Messaging = () => {
                 <div>
                   <h2 className="font-semibold text-primary flex items-center gap-2">
                     {selectedThread.client?.company_name}
-                    {selectedThread.type === 'plainte' && <AlertTriangle className="h-4 w-4 text-red-500" />}
+                    {selectedThread.type === 'plainte' && <AlertTriangle className="h-4 w-4 text-orange-500" />}
                     {selectedThread.source === 'contact_form' && <Globe className="h-4 w-4 text-blue-500" />}
                   </h2>
                   <p className="text-sm font-medium text-gray-700">{selectedThread.subject}</p>

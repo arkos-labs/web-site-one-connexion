@@ -27,6 +27,14 @@ import {
   Loader2
 } from "lucide-react";
 
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
 const DashboardClient = () => {
   const navigate = useNavigate();
   const { profile, loading: profileLoading } = useProfile();
@@ -36,6 +44,10 @@ const DashboardClient = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [recentOrders, setRecentOrders] = useState<OrderWithDriver[]>([]);
   const [isLoadingOrders, setIsLoadingOrders] = useState(true);
+
+  // Success Modal State
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [lastOrderRef, setLastOrderRef] = useState("");
 
   const location = useLocation();
 
@@ -159,11 +171,15 @@ const DashboardClient = () => {
 
       if (error) throw error;
 
-      toast.success("Commande créée avec succès !", {
-        description: `Votre commande ${reference} a été enregistrée. Prix: ${price.toFixed(2)}€`,
-      });
+      if (error) throw error;
 
+      // Close wizard first
       handleCloseModal();
+
+      // Show success modal
+      setLastOrderRef(reference);
+      setShowSuccessModal(true);
+
       fetchOrders();
     } catch (error: any) {
       console.error("Error creating order:", error);
@@ -420,6 +436,34 @@ const DashboardClient = () => {
         onSubmit={handleOrderSubmit}
         mode="client"
       />
+
+      {/* Success Modal */}
+      <Dialog open={showSuccessModal} onOpenChange={setShowSuccessModal}>
+        <DialogContent className="sm:max-w-md text-center">
+          <div className="flex flex-col items-center justify-center py-6 space-y-4">
+            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-2">
+              <CheckCircle className="h-8 w-8 text-green-600" />
+            </div>
+            <DialogHeader>
+              <DialogTitle className="text-2xl font-bold text-center">Commande créée !</DialogTitle>
+              <DialogDescription className="text-center text-lg">
+                Votre commande a été enregistrée avec succès.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="p-4 bg-muted/30 rounded-lg w-full">
+              <p className="text-sm text-muted-foreground mb-1">Référence</p>
+              <p className="text-xl font-mono font-bold text-primary">{lastOrderRef}</p>
+            </div>
+            <Button
+              className="w-full bg-green-600 hover:bg-green-700 text-white mt-4"
+              size="lg"
+              onClick={() => setShowSuccessModal(false)}
+            >
+              Fermer
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

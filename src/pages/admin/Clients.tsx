@@ -61,6 +61,32 @@ const Clients = () => {
   // Initial load for global stats
   useEffect(() => {
     fetchGlobalStats();
+
+    // Realtime subscription
+    const channel = supabase
+      .channel('admin-clients-list')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'clients' },
+        () => {
+          fetchClients();
+          fetchGlobalStats();
+        }
+      )
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'orders' },
+        () => {
+          // Orders affect client stats
+          fetchClients();
+          fetchGlobalStats();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const fetchGlobalStats = async () => {

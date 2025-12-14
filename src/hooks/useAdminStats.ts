@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { supabase } from '@/lib/supabase';
 
 export interface TeamMember {
@@ -65,6 +65,9 @@ export const useAdminStats = () => {
         keyPoints: [],
         loading: true
     });
+
+    // Ref for debouncing
+    const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     const fetchStats = useCallback(async (isSilent = false) => {
         try {
@@ -277,16 +280,51 @@ export const useAdminStats = () => {
         }
     }, []);
 
+    // Debounced refresh function
+    const debouncedRefresh = useCallback(() => {
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+        }
+        timeoutRef.current = setTimeout(() => {
+            fetchStats(true);
+        }, 1000); // Wait 1s after last event before fetching
+    }, [fetchStats]);
+
     useEffect(() => {
         fetchStats(false); // Initial load
 
+        // Realtime subscription
+        const channel = supabase
+            .channel('admin-dashboard-stats')
+            .on(
+                'postgres_changes',
+                { event: '*', schema: 'public', table: 'orders' },
+                () => debouncedRefresh()
+            )
+            .on(
+                'postgres_changes',
+                { event: '*', schema: 'public', table: 'clients' },
+                () => debouncedRefresh()
+            )
+            .on(
+                'postgres_changes',
+                { event: '*', schema: 'public', table: 'drivers' },
+                () => debouncedRefresh()
+            )
+            .subscribe();
+
+        // Fallback polling (every 5 minutes)
         const interval = setInterval(() => {
-            fetchStats(true); // Silent refresh
-        }, 30000); // Refresh every 30s (increased from 5s)
+            fetchStats(true);
+        }, 5 * 60 * 1000);
 
-        return () => clearInterval(interval);
+        return () => {
+            clearInterval(interval);
+            supabase.removeChannel(channel);
+            if (timeoutRef.current) clearTimeout(timeoutRef.current);
+        };
 
-    }, [fetchStats]);
+    }, [fetchStats, debouncedRefresh]);
 
     return stats;
 };

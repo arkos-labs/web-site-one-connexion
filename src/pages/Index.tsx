@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import Home from "./Home";
+import CreateDriver from "./CreateDriver";
 import AuthPage from "./auth/AuthPage";
 import Expertises from "./Expertises";
 import Tarifs from "./Tarifs";
@@ -52,6 +53,8 @@ const Index = () => {
       {/* Public Routes */}
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<AuthPage />} />
+      <Route path="/register" element={<AuthPage />} />
+      <Route path="/create-driver" element={<CreateDriver />} />
       <Route path="/auth" element={<Navigate to="/login" replace />} />
       <Route path="/about" element={<About />} />
       <Route path="/a-propos" element={<About />} />
@@ -66,7 +69,6 @@ const Index = () => {
       <Route path="/faq" element={<FAQ />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/commande-sans-compte" element={<CommandeSansCompte />} />
-      <Route path="/register" element={<AuthPage />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/cgv" element={<CGV />} />

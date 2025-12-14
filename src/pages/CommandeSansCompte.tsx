@@ -40,10 +40,10 @@ function RecapCommande({ data, pricingResults, formData }: {
 }) {
     // Déterminer le prix selon la formule sélectionnée
     let selectedPrice = null;
-    if (pricingResults) {
+    if (pricingResults && formData.formula) {
         if (formData.formula === 'express') selectedPrice = pricingResults.EXPRESS;
         else if (formData.formula === 'flash') selectedPrice = pricingResults.URGENCE;
-        else selectedPrice = pricingResults.NORMAL;
+        else if (formData.formula === 'standard') selectedPrice = pricingResults.NORMAL;
     }
 
     return (
@@ -142,7 +142,7 @@ const CommandeSansCompte = () => {
         facturation_societe: "",
         facturation_siret: "",
         type_colis: "",
-        formule: "standard",
+        formule: "",
         prix: 0,
     });
 
@@ -179,7 +179,7 @@ const CommandeSansCompte = () => {
         // Détails
         packageType: "",
         otherPackageType: "",
-        formula: "standard",
+        formula: "",
         schedule: "asap",
         scheduleTime: "",
     });
@@ -329,6 +329,14 @@ const CommandeSansCompte = () => {
         if (!formData.packageType) errors.push("Type de colis requis");
         if (formData.packageType === "autre" && !formData.otherPackageType) errors.push("Précisez le type de colis");
 
+        // Formule
+        if (!formData.formula) errors.push("Veuillez sélectionner une formule de livraison");
+
+        // Horaire
+        if (formData.schedule === 'slot' && !formData.scheduleTime) {
+            errors.push("Veuillez choisir un créneau horaire");
+        }
+
         return errors;
     };
 
@@ -360,9 +368,19 @@ const CommandeSansCompte = () => {
 
         try {
             // Déterminer la clé de formule correcte pour récupérer le prix
-            let pricingKey: FormuleNew = 'NORMAL';
+            let pricingKey: FormuleNew | null = null;
             if (formData.formula === 'express') pricingKey = 'EXPRESS';
-            if (formData.formula === 'flash') pricingKey = 'URGENCE';
+            else if (formData.formula === 'flash') pricingKey = 'URGENCE';
+            else if (formData.formula === 'standard') pricingKey = 'NORMAL';
+
+            if (!pricingKey) {
+                toast({
+                    variant: "destructive",
+                    title: "Erreur",
+                    description: "Veuillez sélectionner une formule valide.",
+                });
+                return;
+            }
 
             const selectedPrice = pricingResults[pricingKey];
 

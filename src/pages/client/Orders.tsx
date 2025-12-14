@@ -24,6 +24,7 @@ import { OrderWithDriver, getUserOrders } from "@/services/supabaseQueries";
 import { generateOrderPDF } from "@/lib/pdf-generator";
 import { toast } from "sonner";
 import { useProfile } from "@/hooks/useProfile";
+import { supabase } from "@/lib/supabase";
 
 type TimeFilter = "all" | "today" | "week" | "month" | "year";
 type StatusFilter = "all" | "pending" | "in_progress" | "delivered" | "cancelled";
@@ -41,6 +42,27 @@ const Orders = () => {
   useEffect(() => {
     if (profile?.id) {
       loadOrders();
+
+      // Realtime subscription
+      const channel = supabase
+        .channel(`client-orders-list-${profile.id}`)
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'orders',
+            filter: `client_id=eq.${profile.id}`
+          },
+          () => {
+            loadOrders();
+          }
+        )
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
     } else if (!profileLoading && !profile) {
       setLoading(false); // Pas de profil, on arrête le chargement
     }

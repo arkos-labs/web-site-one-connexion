@@ -21,6 +21,7 @@ import {
 import { geocoderAdresse, calculerDistance } from "@/services/locationiq";
 import { calculerToutesLesFormules, type FormuleNew, type CalculTarifaireResult } from "@/utils/pricingEngine";
 import { loadPricingConfigCached } from "@/utils/pricingConfigLoader";
+import { useToast } from "@/hooks/use-toast";
 
 interface QuickOrderFormProps {
     isOpen: boolean;
@@ -38,7 +39,7 @@ export interface OrderFormData {
     deliveryContact: string;
     deliveryPhone: string;
     packageType: string;
-    formula: FormuleNew;
+    formula: FormuleNew | null;
     pickupDate: string;
     pickupTime: string;
     notes: string;
@@ -55,7 +56,7 @@ function OrderSummary({
     pricingResults: Record<FormuleNew, CalculTarifaireResult> | null;
     orderType: 'immediate' | 'deferred';
 }) {
-    const selectedPrice = pricingResults ? pricingResults[formData.formula] : null;
+    const selectedPrice = pricingResults && formData.formula ? pricingResults[formData.formula as FormuleNew] : null;
 
     // Déterminer le texte du type de commande
     const getOrderTypeText = () => {
@@ -132,6 +133,7 @@ function OrderSummary({
 }
 
 export const QuickOrderForm = ({ isOpen, onClose, onSubmit }: QuickOrderFormProps) => {
+    const { toast } = useToast();
     // État pour le type de commande: immediate ou deferred
     const [orderType, setOrderType] = useState<'immediate' | 'deferred'>('immediate');
 
@@ -148,7 +150,7 @@ export const QuickOrderForm = ({ isOpen, onClose, onSubmit }: QuickOrderFormProp
         deliveryContact: "",
         deliveryPhone: "",
         packageType: "standard",
-        formula: "NORMAL",
+        formula: null,
         pickupDate: "",
         pickupTime: "",
         notes: "",
@@ -217,9 +219,10 @@ export const QuickOrderForm = ({ isOpen, onClose, onSubmit }: QuickOrderFormProp
 
     // Vérifier si la formule Standard doit être grisée
     useEffect(() => {
+        let shouldDisable = false;
         if (orderType === 'immediate') {
             // Condition A: "Dès que possible" sélectionné → griser Standard
-            setIsStandardDisabled(true);
+            shouldDisable = true;
         } else if (orderType === 'deferred') {
             // Condition B: Vérifier le délai du créneau choisi
             if (formData.pickupDate && formData.pickupTime) {
@@ -228,13 +231,25 @@ export const QuickOrderForm = ({ isOpen, onClose, onSubmit }: QuickOrderFormProp
                 const delayInMinutes = (selectedDateTime.getTime() - now.getTime()) / (1000 * 60);
 
                 // Si le délai est strictement inférieur à 60 minutes → griser Standard
-                setIsStandardDisabled(delayInMinutes < 60);
+                shouldDisable = delayInMinutes < 60;
             } else {
                 // Si pas de date/heure sélectionnée, ne pas griser
-                setIsStandardDisabled(false);
+                shouldDisable = false;
             }
         }
-    }, [orderType, formData.pickupDate, formData.pickupTime]);
+
+        setIsStandardDisabled(shouldDisable);
+
+        // Si Standard est désactivé mais qu'il est sélectionné, on le désélectionne
+        // Note: on cast en any pour permettre null temporairement si le type est strict, 
+        // ou on s'assure que le type accepte null. OrderFormData.formula est FormuleNew (string).
+        // On va supposer qu'on peut laisser la valeur mais empêcher la soumission, 
+        // ou mieux, on force une autre valeur ou null.
+        if (shouldDisable && formData.formula === 'NORMAL') {
+            // @ts-ignore - On force null pour obliger la resélection
+            setFormData(prev => ({ ...prev, formula: null }));
+        }
+    }, [orderType, formData.pickupDate, formData.pickupTime, formData.formula]);
 
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -246,13 +261,31 @@ export const QuickOrderForm = ({ isOpen, onClose, onSubmit }: QuickOrderFormProp
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
+        if (!formData.formula) {
+            toast({
+                title: "Erreur",
+                description: "Veuillez sélectionner une formule de livraison.",
+                variant: "destructive",
+            });
+            return;
+        }
+
+        if (orderType === 'deferred' && (!formData.pickupDate || !formData.pickupTime)) {
+            toast({
+                title: "Erreur",
+                description: "Veuillez choisir une date et une heure pour l'enlèvement.",
+                variant: "destructive",
+            });
+            return;
+        }
+
         // Ajouter le résultat de pricing à la soumission
         const dataToSubmit = {
             ...formData,
             pricingResult: pricingResults ? pricingResults[formData.formula] : undefined
         };
 
-        onSubmit(dataToSubmit);
+        onSubmit(dataToSubmit as OrderFormData);
     };
 
     return (
@@ -266,7 +299,13 @@ export const QuickOrderForm = ({ isOpen, onClose, onSubmit }: QuickOrderFormProp
                     <Button type="button" variant="outline" onClick={onClose}>
                         Annuler
                     </Button>
-                    <Button type="submit" variant="cta" onClick={handleSubmit} className="gap-2">
+                    <Button
+                        type="submit"
+                        variant="cta"
+                        onClick={handleSubmit}
+                        className="gap-2"
+                        disabled={!formData.formula}
+                    >
                         <Package className="h-4 w-4" />
                         Créer la commande
                     </Button>

@@ -78,6 +78,7 @@ export const StepConfirmation = ({ formData, pricingResults, onSubmit, onBack }:
                 </Button>
                 <Button
                     onClick={onSubmit}
+                    disabled={!formData.formula}
                     className="bg-green-600 hover:bg-green-700 text-white px-8 py-6 text-lg shadow-lg shadow-green-600/20"
                 >
                     <Package className="mr-2 h-5 w-5" />

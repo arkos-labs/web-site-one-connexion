@@ -385,10 +385,8 @@ const ClientDetail = () => {
                                         <AlertTriangle className="h-4 w-4" />
                                         Compte suspendu
                                     </p>
-                                    {/* @ts-ignore - property exists in DB but maybe not in type yet */}
                                     {client.suspension_reason && (
                                         <p className="text-xs text-red-600 mt-1">
-                                            {/* @ts-ignore */}
                                             Raison : {client.suspension_reason}
                                         </p>
                                     )}

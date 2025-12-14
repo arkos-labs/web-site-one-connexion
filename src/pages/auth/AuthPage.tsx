@@ -20,8 +20,7 @@ const AuthPage = () => {
         location.pathname === "/register" ? "register" : "login"
     );
 
-    const [loginData, setLoginData] = useState({ email: "", password: "", driverId: "" });
-    const [loginType, setLoginType] = useState<"standard" | "driver">("standard");
+    const [loginData, setLoginData] = useState({ email: "", password: "" });
     const [registerData, setRegisterData] = useState({
         fullName: "",
         companyName: "",
@@ -46,25 +45,14 @@ const AuthPage = () => {
         setIsLoading(true);
 
         try {
-            let email = loginData.email;
-            if (loginType === "driver") {
-                email = `${loginData.driverId}@driver.local`;
-            }
-
             const { data, error } = await supabase.auth.signInWithPassword({
-                email: email,
+                email: loginData.email,
                 password: loginData.password,
             });
 
             if (error) throw error;
 
             if (!data.user) throw new Error("Aucun utilisateur trouvé");
-
-            toast({
-                title: "Connexion réussie",
-                description: "Ravi de vous revoir !",
-                className: "bg-green-50 border-green-200",
-            });
 
             // Vérification du rôle dans la table profiles
             const { data: profileData, error: profileError } = await supabase
@@ -75,18 +63,28 @@ const AuthPage = () => {
 
             if (profileError) {
                 console.error("Erreur récupération profil:", profileError);
-                // Fallback ou gestion d'erreur si le profil n'existe pas
             }
 
             const role = profileData?.role;
-            console.log("Rôle utilisateur:", role);
+
+            if (role === 'chauffeur' || role === 'driver') {
+                await supabase.auth.signOut();
+                toast({
+                    variant: "destructive",
+                    title: "Accès refusé",
+                    description: "Les chauffeurs doivent utiliser l'application mobile dédiée.",
+                });
+                return;
+            }
+
+            toast({
+                title: "Connexion réussie",
+                description: "Ravi de vous revoir !",
+                className: "bg-green-50 border-green-200",
+            });
 
             if (role === 'admin') {
                 navigate("/dashboard-admin");
-            } else if (role === 'chauffeur') {
-                // Redirection chauffeur (à définir, pour l'instant console.log)
-                console.log("Redirection vers Espace Chauffeur");
-                // navigate("/driver/dashboard"); // Exemple
             } else {
                 navigate("/client/dashboard");
             }
@@ -145,19 +143,20 @@ const AuthPage = () => {
             const firstName = nameParts[0] || '';
             const lastName = nameParts.slice(1).join(' ') || '';
 
-            // Créer l'utilisateur dans Auth
-            // Le profil client sera créé automatiquement par le trigger de la base de données
+            const metaData = {
+                full_name: registerData.fullName,
+                first_name: firstName,
+                last_name: lastName,
+                role: 'client',
+                company_name: registerData.companyName,
+                phone: registerData.phone
+            };
+
             const { data: authData, error: authError } = await supabase.auth.signUp({
                 email: registerData.email,
                 password: registerData.password,
                 options: {
-                    data: {
-                        full_name: registerData.fullName,
-                        first_name: firstName,
-                        last_name: lastName,
-                        phone: registerData.phone,
-                        company_name: registerData.companyName,
-                    },
+                    data: metaData,
                     emailRedirectTo: window.location.origin + '/client/dashboard'
                 }
             });
@@ -347,57 +346,18 @@ const AuthPage = () => {
 
                             {mode === "login" ? (
                                 <form onSubmit={handleLogin} className="space-y-6">
-                                    {/* Tabs for Login Type */}
-                                    <div className="flex p-1 bg-secondary/30 rounded-lg mb-6">
-                                        <button
-                                            type="button"
-                                            onClick={() => setLoginType("standard")}
-                                            className={`flex-1 py-2 text-sm font-medium rounded-md transition-all ${loginType === "standard"
-                                                    ? "bg-white text-primary shadow-sm"
-                                                    : "text-muted-foreground hover:text-primary"
-                                                }`}
-                                        >
-                                            Client / Admin
-                                        </button>
-                                        <button
-                                            type="button"
-                                            onClick={() => setLoginType("driver")}
-                                            className={`flex-1 py-2 text-sm font-medium rounded-md transition-all ${loginType === "driver"
-                                                    ? "bg-white text-primary shadow-sm"
-                                                    : "text-muted-foreground hover:text-primary"
-                                                }`}
-                                        >
-                                            Chauffeur
-                                        </button>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="login-email" className="text-sm font-medium text-primary">Email professionnel</Label>
+                                        <Input
+                                            id="login-email"
+                                            type="email"
+                                            placeholder="nom@entreprise.com"
+                                            value={loginData.email}
+                                            onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
+                                            required
+                                            className="h-12 bg-secondary/30 border-input focus:border-cta focus:ring-cta/20 rounded-lg transition-all duration-300"
+                                        />
                                     </div>
-
-                                    {loginType === "standard" ? (
-                                        <div className="space-y-2">
-                                            <Label htmlFor="login-email" className="text-sm font-medium text-primary">Email professionnel</Label>
-                                            <Input
-                                                id="login-email"
-                                                type="email"
-                                                placeholder="nom@entreprise.com"
-                                                value={loginData.email}
-                                                onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
-                                                required
-                                                className="h-12 bg-secondary/30 border-input focus:border-cta focus:ring-cta/20 rounded-lg transition-all duration-300"
-                                            />
-                                        </div>
-                                    ) : (
-                                        <div className="space-y-2">
-                                            <Label htmlFor="login-driver-id" className="text-sm font-medium text-primary">Identifiant Chauffeur</Label>
-                                            <Input
-                                                id="login-driver-id"
-                                                type="text"
-                                                placeholder="CHAUFF01"
-                                                value={loginData.driverId}
-                                                onChange={(e) => setLoginData({ ...loginData, driverId: e.target.value })}
-                                                required
-                                                className="h-12 bg-secondary/30 border-input focus:border-cta focus:ring-cta/20 rounded-lg transition-all duration-300"
-                                            />
-                                        </div>
-                                    )}
 
                                     <div className="space-y-2">
                                         <div className="flex justify-between items-center">

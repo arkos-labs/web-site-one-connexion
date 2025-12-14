@@ -99,6 +99,9 @@ export interface Client {
     status?: 'active' | 'suspended' | 'deleted';
     sector?: string;
     notes?: string;
+    is_suspended?: boolean;
+    suspended_at?: string;
+    suspension_reason?: string;
 }
 
 // Fonction pour récupérer toutes les commandes d'un client

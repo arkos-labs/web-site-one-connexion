@@ -75,10 +75,16 @@ export const getThreads = async (clientId?: string) => {
             );
             const lastMessage = sortedMessages[sortedMessages.length - 1];
 
+            const unreadCount = sortedMessages.filter((m: any) =>
+                !m.is_read &&
+                m.sender_type === (clientId ? 'admin' : 'client')
+            ).length;
+
             return {
                 ...thread,
                 last_message: lastMessage,
                 messages: sortedMessages,
+                unread_count: unreadCount,
                 source: 'app'
             };
         });
@@ -107,6 +113,7 @@ export const getThreads = async (clientId?: string) => {
                     created_at: msg.created_at,
                     updated_at: msg.created_at,
                     source: 'contact_form',
+                    unread_count: msg.status === 'new' ? 1 : 0,
                     phone: msg.phone,
                     client: {
                         company_name: msg.name, // Use name as company name
@@ -312,4 +319,14 @@ export const updateComplaintStatus = async (threadId: string, status: string) =>
         .eq('thread_id', threadId);
 
     if (plainteError) throw plainteError;
+};
+
+export const markContactMessageAsRead = async (id: string) => {
+    const { error } = await supabase
+        .from('contact_messages')
+        .update({ status: 'read' })
+        .eq('id', id)
+        .eq('status', 'new');
+
+    if (error) throw error;
 };
