@@ -1,0 +1,332 @@
+import { supabase } from '@/lib/supabase';
+
+export interface Thread {
+    id: string;
+    client_id?: string; // Optional for contact form
+    subject: string;
+    type: 'general' | 'plainte' | 'contact'; // Added 'contact'
+    status: 'open' | 'in_progress' | 'resolved' | 'closed' | 'new' | 'read' | 'replied' | 'archived';
+    created_at: string;
+    updated_at: string;
+    unread_count?: number; // Calculated field
+    last_message?: Message; // Calculated field
+    client?: {
+        company_name: string;
+        email: string;
+    };
+    source?: 'app' | 'contact_form'; // To distinguish source
+    phone?: string; // For contact form
+}
+
+export interface Message {
+    id: string;
+    thread_id: string;
+    client_id?: string;
+    sender_type: 'client' | 'admin';
+    content: string;
+    is_read: boolean;
+    created_at: string;
+}
+
+export interface Plainte {
+    id: string;
+    client_id: string;
+    thread_id: string;
+    sujet: string;
+    description: string;
+    statut: string;
+    created_at: string;
+}
+
+// ==================== THREADS ====================
+
+export const getThreads = async (clientId?: string) => {
+    // 1. Fetch standard threads
+    let query = supabase
+        .from('threads')
+        .select(`
+            *,
+            client:client_id (company_name, email),
+            messages (
+                id,
+                content,
+                created_at,
+                sender_type,
+                is_read
+            )
+        `)
+        .order('updated_at', { ascending: false });
+
+    if (clientId) {
+        query = query.eq('client_id', clientId);
+    }
+
+    const { data: threadsData, error: threadsError } = await query;
+
+    let formattedThreads: Thread[] = [];
+
+    if (threadsError) {
+        console.error("Error fetching threads:", threadsError);
+        // Don't throw here, we still want to try fetching contact messages if we are admin
+    } else if (threadsData) {
+        formattedThreads = threadsData.map((thread: any) => {
+            const sortedMessages = (thread.messages || []).sort((a: any, b: any) =>
+                new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+            );
+            const lastMessage = sortedMessages[sortedMessages.length - 1];
+
+            const unreadCount = sortedMessages.filter((m: any) =>
+                !m.is_read &&
+                m.sender_type === (clientId ? 'admin' : 'client')
+            ).length;
+
+            return {
+                ...thread,
+                last_message: lastMessage,
+                messages: sortedMessages,
+                unread_count: unreadCount,
+                source: 'app'
+            };
+        });
+    }
+
+    // 2. Fetch contact messages (ONLY if we are Admin - i.e. no clientId provided)
+    let contactThreads: Thread[] = [];
+    if (!clientId) {
+        console.log('Fetching contact messages...');
+        const { data: contactData, error: contactError } = await supabase
+            .from('contact_messages')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        if (contactError) {
+            console.error('Error fetching contact messages:', contactError);
+        } else {
+            console.log('Contact messages fetched:', contactData?.length);
+            if (contactData) {
+                contactThreads = contactData.map((msg: any) => ({
+                    id: msg.id,
+                    client_id: undefined,
+                    subject: msg.subject,
+                    type: 'contact',
+                    status: msg.status,
+                    created_at: msg.created_at,
+                    updated_at: msg.created_at,
+                    source: 'contact_form',
+                    unread_count: msg.status === 'new' ? 1 : 0,
+                    phone: msg.phone,
+                    client: {
+                        company_name: msg.name, // Use name as company name
+                        email: msg.email
+                    },
+                    last_message: {
+                        id: msg.id,
+                        thread_id: msg.id,
+                        sender_type: 'client',
+                        content: msg.message,
+                        is_read: msg.status !== 'new',
+                        created_at: msg.created_at
+                    }
+                }));
+            }
+        }
+    }
+
+    // 3. Merge and sort
+    const allThreads = [...formattedThreads, ...contactThreads].sort((a, b) =>
+        new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
+    );
+
+    return allThreads;
+};
+
+export const getThreadMessages = async (threadId: string) => {
+    // Check if it's a contact message (we can check by UUID or try fetching)
+    // Optimization: We could pass the type to this function, but to keep signature same:
+
+    // Try fetching from messages table first
+    const { data: messagesData, error: messagesError } = await supabase
+        .from('messages')
+        .select('*')
+        .eq('thread_id', threadId)
+        .order('created_at', { ascending: true });
+
+    if (!messagesError && messagesData && messagesData.length > 0) {
+        return messagesData as Message[];
+    }
+
+    // If no messages found, check if it's a contact message
+    const { data: contactData, error: contactError } = await supabase
+        .from('contact_messages')
+        .select('*')
+        .eq('id', threadId)
+        .single();
+
+    if (contactData) {
+        // Return as a single message
+        return [{
+            id: contactData.id,
+            thread_id: contactData.id,
+            sender_type: 'client',
+            content: contactData.message,
+            is_read: contactData.status !== 'new',
+            created_at: contactData.created_at
+        }] as Message[];
+    }
+
+    return [];
+};
+
+// ==================== ACTIONS ====================
+
+export const createThread = async (
+    clientId: string,
+    subject: string,
+    type: 'general' | 'plainte',
+    initialMessage: string,
+    senderType: 'client' | 'admin'
+) => {
+    // 1. Create Thread
+    const { data: thread, error: threadError } = await supabase
+        .from('threads')
+        .insert({
+            client_id: clientId,
+            subject,
+            type,
+            status: 'open'
+        })
+        .select()
+        .single();
+
+    if (threadError) throw threadError;
+
+    // 2. Create Initial Message
+    const { error: messageError } = await supabase
+        .from('messages')
+        .insert({
+            thread_id: thread.id,
+            client_id: clientId,
+            sender_type: senderType,
+            content: initialMessage,
+            is_read: false
+        });
+
+    if (messageError) throw messageError;
+
+    return thread;
+};
+
+export const sendMessage = async (
+    threadId: string,
+    clientId: string,
+    content: string,
+    senderType: 'client' | 'admin'
+) => {
+    const { data, error } = await supabase
+        .from('messages')
+        .insert({
+            thread_id: threadId,
+            client_id: clientId,
+            sender_type: senderType,
+            content,
+            is_read: false
+        })
+        .select()
+        .single();
+
+    if (error) throw error;
+    return data;
+};
+
+export const markMessagesAsRead = async (threadId: string, userType: 'client' | 'admin') => {
+    // If user is client, mark messages FROM admin as read.
+    // If user is admin, mark messages FROM client as read.
+    const senderToMark = userType === 'client' ? 'admin' : 'client';
+
+    const { error } = await supabase
+        .from('messages')
+        .update({ is_read: true })
+        .eq('thread_id', threadId)
+        .eq('sender_type', senderToMark)
+        .eq('is_read', false);
+
+    if (error) throw error;
+};
+
+// ==================== PLAINTES ====================
+
+export const createComplaint = async (
+    clientId: string,
+    subject: string,
+    description: string
+) => {
+    // 1. Create Thread
+    const { data: thread, error: threadError } = await supabase
+        .from('threads')
+        .insert({
+            client_id: clientId,
+            subject: subject,
+            type: 'plainte',
+            status: 'open'
+        })
+        .select()
+        .single();
+
+    if (threadError) throw threadError;
+
+    // 2. Create Complaint Record
+    const { error: plainteError } = await supabase
+        .from('plaintes')
+        .insert({
+            client_id: clientId,
+            thread_id: thread.id,
+            sujet: subject,
+            description: description,
+            statut: 'ouvert'
+        });
+
+    if (plainteError) throw plainteError;
+
+    // 3. Create Initial Message (Description)
+    const { error: messageError } = await supabase
+        .from('messages')
+        .insert({
+            thread_id: thread.id,
+            client_id: clientId,
+            sender_type: 'client',
+            content: description,
+            is_read: false
+        });
+
+    if (messageError) throw messageError;
+
+    return thread;
+};
+
+export const updateComplaintStatus = async (threadId: string, status: string) => {
+    // Update thread status
+    const { error: threadError } = await supabase
+        .from('threads')
+        .update({ status })
+        .eq('id', threadId);
+
+    if (threadError) throw threadError;
+
+    // Update plainte status
+    const { error: plainteError } = await supabase
+        .from('plaintes')
+        .update({ statut: status })
+        .eq('thread_id', threadId);
+
+    if (plainteError) throw plainteError;
+};
+
+export const markContactMessageAsRead = async (id: string) => {
+    const { error } = await supabase
+        .from('contact_messages')
+        .update({ status: 'read' })
+        .eq('id', id)
+        .eq('status', 'new');
+
+    if (error) throw error;
+};

@@ -1,0 +1,371 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&family=Manrope:wght@200;300;400;500;600;700;800&display=swap');
+@import 'leaflet/dist/leaflet.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Brand Colors - Navy, Yellow, Blue Dynamic Palette */
+    --brand-primary: 215 80% 22%;
+    /* #0B2D63 - Navy Corporate - Trust, authority, professionalism */
+    --brand-cta: 43 100% 50%;
+    /* #FFB800 - Yellow Energy - Action, energy, urgency */
+    --brand-accent: 196 100% 44%;
+    /* #00A3E0 - Blue Dynamic - Innovation, dynamism, modernity */
+
+    /* Primary & Variants */
+    --primary: 215 80% 22%;
+    /* Navy Corporate */
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 215 80% 18%;
+    /* Darker navy on hover */
+    --primary-active: 215 80% 14%;
+    /* Even darker on active */
+
+    /* CTA (Call to Action) - Yellow Energy */
+    --cta: 43 100% 50%;
+    /* Yellow Energy */
+    --cta-foreground: 215 80% 22%;
+    /* Navy text on yellow */
+    --cta-hover: 43 100% 45%;
+    /* Darker yellow on hover */
+    --cta-active: 43 100% 40%;
+    /* Even darker on active */
+
+    /* Accent - Blue Dynamic */
+    --accent-main: 196 100% 44%;
+    /* Blue Dynamic */
+    --accent-foreground: 0 0% 100%;
+    --accent-light: 196 100% 96%;
+
+    /* Base Colors - Clean & Professional */
+    --background: 0 0% 100%;
+    /* Pure white background */
+    --foreground: 215 25% 15%;
+    /* Dark navy-gray text */
+
+    --card: 0 0% 100%;
+    --card-foreground: 215 25% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 25% 15%;
+
+    --secondary: 215 20% 97%;
+    /* Very light gray with navy tint */
+    --secondary-foreground: 215 80% 22%;
+    /* Navy text */
+
+    --muted: 215 20% 95%;
+    /* Soft gray with navy tint */
+    --muted-foreground: 215 16% 45%;
+    /* Medium gray text */
+
+    --accent: 196 100% 96%;
+    /* Light blue background */
+    --accent-foreground: 196 100% 44%;
+    /* Blue Dynamic */
+
+    --destructive: 0 84% 60%;
+    /* #EF4444 - Red for errors */
+    --destructive-foreground: 0 0% 100%;
+
+    /* Semantic Colors */
+    --success: 142 71% 45%;
+    /* #22C55E - Green */
+    --success-foreground: 0 0% 100%;
+    --success-light: 142 71% 96%;
+
+    --warning: 38 92% 50%;
+    /* #F59E0B - Orange */
+    --warning-foreground: 0 0% 100%;
+    --warning-light: 38 92% 96%;
+
+    --info: 196 100% 44%;
+    /* #00A3E0 - Blue Dynamic for info */
+    --info-foreground: 0 0% 100%;
+    --info-light: 196 100% 96%;
+
+    /* Status Colors */
+    /* Status Colors */
+    --status-pending: 38 92% 50%;
+    /* Orange */
+    --status-pending-foreground: 0 0% 100%;
+
+    --status-accepted: 196 100% 44%;
+    /* Blue Dynamic */
+    --status-accepted-foreground: 0 0% 100%;
+
+    --status-dispatched: 262 52% 47%;
+    /* Purple */
+    --status-dispatched-foreground: 0 0% 100%;
+
+    --status-in_progress: 250 90% 60%;
+    /* Indigo/Purple - Active State */
+    --status-in_progress-foreground: 0 0% 100%;
+    /* White text */
+
+    --status-delivered: 142 71% 45%;
+    /* Green */
+    --status-delivered-foreground: 0 0% 100%;
+
+    --status-cancelled: 0 84% 60%;
+    /* Red */
+    --status-cancelled-foreground: 0 0% 100%;
+
+    /* Borders & Inputs */
+    --border: 215 25% 88%;
+    /* Soft navy-gray border */
+    --input: 215 25% 88%;
+    --ring: 43 100% 50%;
+    /* Yellow Energy focus ring */
+
+    --radius: 0.5rem;
+    /* Clean, modern radius */
+
+    /* Typography Scale */
+    --text-hero: 3.5rem;
+    /* 56px - Hero sections */
+    --text-title-lg: 2rem;
+    /* 32px - Section titles */
+    --text-title-md: 1.5rem;
+    /* 24px - Card titles */
+    --text-title-sm: 1.125rem;
+    /* 18px - Subsections */
+    --text-body-lg: 1.125rem;
+    /* 18px - Lead paragraphs */
+    --text-body: 1rem;
+    /* 16px - Body */
+    --text-small: 0.875rem;
+    /* 14px - Secondary */
+    --text-micro: 0.75rem;
+    /* 12px - Labels, badges */
+
+    /* Spacing Scale (8px base) */
+    --space-1: 0.25rem;
+    /* 4px */
+    --space-2: 0.5rem;
+    /* 8px */
+    --space-3: 0.75rem;
+    /* 12px */
+    --space-4: 1rem;
+    /* 16px */
+    --space-5: 1.25rem;
+    /* 20px */
+    --space-6: 1.5rem;
+    /* 24px */
+    --space-8: 2rem;
+    /* 32px */
+    --space-10: 2.5rem;
+    /* 40px */
+    --space-12: 3rem;
+    /* 48px */
+    --space-16: 4rem;
+    /* 64px */
+    --space-20: 5rem;
+    /* 80px */
+
+    /* Gradients - Dynamic and energetic */
+    --gradient-hero: linear-gradient(135deg, hsl(215 80% 22%) 0%, hsl(196 100% 44%) 100%);
+    /* Navy → Blue Dynamic */
+    --gradient-cta: linear-gradient(135deg, hsl(43 100% 50%) 0%, hsl(33 100% 50%) 100%);
+    /* Yellow → Orange */
+    --gradient-accent: linear-gradient(135deg, hsl(196 100% 44%) 0%, hsl(215 80% 22%) 100%);
+    /* Blue Dynamic → Navy */
+    --gradient-subtle: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(215 20% 97%) 100%);
+    /* White → Light Gray */
+
+    /* Shadows - Professional and modern */
+    --shadow-soft: 0 1px 3px hsl(215 80% 22% / 0.08);
+    --shadow-medium: 0 4px 12px hsl(215 80% 22% / 0.12);
+    --shadow-strong: 0 8px 24px hsl(215 80% 22% / 0.16);
+    --shadow-cta: 0 4px 16px hsl(43 100% 50% / 0.35);
+    /* Yellow glow for CTAs */
+
+    /* Transitions */
+    --transition-base: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Sidebar */
+    --sidebar-background: 215 80% 22%;
+    /* Deep dark blue */
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 0 0% 100%;
+    /* White active background */
+    --sidebar-primary-foreground: 262 83% 58%;
+    /* Purple active text */
+    --sidebar-accent: 217 33% 17%;
+    /* Hover background */
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 217 33% 17%;
+    --sidebar-ring: 262 83% 58%;
+  }
+
+  .dark {
+    --background: 215 80% 8%;
+    /* Dark navy background */
+    --foreground: 215 20% 98%;
+
+    --card: 215 80% 12%;
+    --card-foreground: 215 20% 98%;
+
+    --popover: 215 80% 12%;
+    --popover-foreground: 215 20% 98%;
+
+    --primary: 43 100% 50%;
+    /* Yellow Energy in dark mode */
+    --primary-foreground: 215 80% 22%;
+
+    --secondary: 215 80% 16%;
+    --secondary-foreground: 215 20% 98%;
+
+    --muted: 215 80% 16%;
+    --muted-foreground: 215 16% 65%;
+
+    --accent: 196 100% 44%;
+    /* Blue Dynamic in dark mode */
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 215 20% 98%;
+
+    --border: 215 80% 20%;
+    --input: 215 80% 20%;
+    --ring: 43 100% 50%;
+    /* Yellow focus ring */
+
+    --sidebar-background: 215 80% 10%;
+    --sidebar-foreground: 215 20% 98%;
+    --sidebar-primary: 43 100% 50%;
+    /* Yellow Energy */
+    --sidebar-primary-foreground: 215 80% 22%;
+    --sidebar-accent: 215 80% 16%;
+    --sidebar-accent-foreground: 215 20% 98%;
+    --sidebar-border: 215 80% 20%;
+    --sidebar-ring: 43 100% 50%;
+  }
+}
+
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-feature-settings: 'cv11', 'ss01';
+    font-variant-numeric: tabular-nums;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+}
+
+@layer utilities {
+  .text-gradient-hero {
+    background: var(--gradient-hero);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-cta {
+    background: var(--gradient-cta);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .animate-fade-in-up {
+    animation: fade-in-up 0.6s ease-out;
+  }
+
+  .animate-scale-in {
+    animation: scale-in 0.4s ease-out;
+  }
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+  }
+
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes scale-in {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+}
+
+/* Leaflet Custom Styles */
+.custom-driver-icon,
+.custom-delivery-icon {
+  background: transparent !important;
+  border: none !important;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 16px hsl(215 80% 22% / 0.12);
+}
+
+.leaflet-popup-tip {
+  background: white;
+}
+
+/* Animation pour le marqueur du chauffeur */
+@keyframes pulse-driver {
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.1);
+    opacity: 0.9;
+  }
+}
+
+.custom-driver-icon {
+  animation: pulse-driver 2s ease-in-out infinite;
+}
