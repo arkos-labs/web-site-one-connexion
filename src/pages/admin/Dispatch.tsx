@@ -49,6 +49,8 @@ interface Order {
     created_at: string;
     scheduled_pickup_time?: string;
     driver_id?: string;
+    refusal_count?: number;
+    last_refused_by?: string;
 }
 
 interface Driver {
@@ -63,7 +65,7 @@ interface Driver {
 }
 
 // Types pour les colonnes Kanban
-type DispatchColumn = 'accepted' | 'dispatched' | 'driver_accepted' | 'in_progress';
+type DispatchColumn = 'accepted' | 'assigned' | 'driver_accepted' | 'in_progress';
 
 export default function Dispatch() {
     // État des colonnes Kanban
@@ -87,7 +89,7 @@ export default function Dispatch() {
 
     /**
      * Handler pour les événements Realtime de mise à jour des commandes
-     * Filtre sur les statuts: dispatched, driver_accepted, in_progress
+     * Filtre sur les statuts: assigned, driver_accepted, in_progress
      */
     const handleOrderUpdate = useCallback((payload: any) => {
         const updatedOrder = payload.new as Order;
@@ -165,7 +167,7 @@ export default function Dispatch() {
                 }
             );
 
-            // Retirer de accepted et ajouter à dispatched
+            // Retirer de accepted et ajouter à assigned
             setAcceptedOrders(prev => prev.filter(o => o.id !== updatedOrder.id));
             setDispatchedOrders(prev => {
                 const exists = prev.find(o => o.id === updatedOrder.id);
@@ -274,7 +276,7 @@ export default function Dispatch() {
         }
 
         // Mise à jour des livraisons actives pour l'affichage des chauffeurs
-        if (['dispatched', 'driver_accepted', 'in_progress'].includes(updatedOrder.status)) {
+        if (['assigned', 'driver_accepted', 'in_progress'].includes(updatedOrder.status)) {
             if (updatedOrder.driver_id) {
                 setActiveDeliveries(prev => ({
                     ...prev,
@@ -531,7 +533,7 @@ export default function Dispatch() {
         const { data, error } = await supabase
             .from('orders')
             .select('*')
-            .in('status', ['accepted', 'dispatched', 'driver_accepted', 'in_progress', 'driver_refused'])
+            .in('status', ['accepted', 'assigned', 'driver_accepted', 'in_progress', 'driver_refused'])
             .order('created_at', { ascending: true });
 
         if (error) {

@@ -13,7 +13,7 @@ export async function acceptOrderByDriver(orderId: string, driverId: string) {
                 updated_at: new Date().toISOString()
             })
             .eq('id', orderId)
-            .eq('driver_id', driverId) // Sécurité: vérifier que c'est bien le chauffeur assigné
+            .eq('driver_id', driverId) // ✅ driver_id contient maintenant l'ID Auth (user_id)
             .select()
             .single();
 
@@ -23,16 +23,29 @@ export async function acceptOrderByDriver(orderId: string, driverId: string) {
         }
 
         // 2. Mettre à jour le statut du chauffeur à 'busy'
-        const { error: driverError } = await supabase
+        // Essayer d'abord par user_id (ID Auth), puis par id (UUID) en fallback
+        let { error: driverError } = await supabase
             .from('drivers')
             .update({
                 status: 'busy',
                 updated_at: new Date().toISOString()
             })
-            .eq('id', driverId); // ✅ Utiliser l'ID de la table drivers
+            .eq('user_id', driverId); // ✅ Utiliser user_id (ID Auth) pour correspondre à driver_id
 
+        // Fallback: si l'update par user_id échoue, essayer par id (compatibilité anciennes données)
         if (driverError) {
-            console.warn('Erreur mise à jour statut chauffeur:', driverError);
+            console.warn('Update par user_id échoué, tentative par id...');
+            const { error: retryError } = await supabase
+                .from('drivers')
+                .update({
+                    status: 'busy',
+                    updated_at: new Date().toISOString()
+                })
+                .eq('id', driverId);
+
+            if (retryError) {
+                console.warn('Erreur mise à jour statut chauffeur:', retryError);
+            }
         }
 
         // 3. Créer un événement dans l'historique
@@ -71,11 +84,26 @@ export async function declineOrder(orderId: string, driverId: string) {
         console.log('🔄 Début declineOrder:', { orderId, driverId });
 
         // 0. D'abord récupérer le nom du chauffeur
-        const { data: driverInfo, error: driverInfoError } = await supabase
+        // Essayer d'abord par user_id, puis par id en fallback
+        let { data: driverInfo, error: driverInfoError } = await supabase
             .from('drivers')
-            .select('first_name, last_name')
-            .eq('id', driverId)
+            .select('first_name, last_name, id, user_id')
+            .eq('user_id', driverId)
             .single();
+
+        // Fallback: essayer par id si user_id échoue
+        if (driverInfoError) {
+            const { data: fallbackDriver, error: fallbackError } = await supabase
+                .from('drivers')
+                .select('first_name, last_name, id, user_id')
+                .eq('id', driverId)
+                .single();
+
+            if (!fallbackError) {
+                driverInfo = fallbackDriver;
+                driverInfoError = null;
+            }
+        }
 
         if (driverInfoError) {
             console.error('❌ Erreur récupération chauffeur:', driverInfoError);
@@ -115,7 +143,7 @@ export async function declineOrder(orderId: string, driverId: string) {
                 updated_at: new Date().toISOString()
             })
             .eq('id', orderId)
-            .eq('driver_id', driverId)
+            .eq('driver_id', driverId) // ✅ driver_id contient l'ID Auth (user_id)
             .select()
             .single();
 
@@ -128,16 +156,29 @@ export async function declineOrder(orderId: string, driverId: string) {
         console.log('📝 Commande après mise à jour:', order);
 
         // 2. Remettre le chauffeur en ligne
-        const { error: driverError } = await supabase
+        // Essayer d'abord par user_id, puis par id en fallback
+        let { error: driverError } = await supabase
             .from('drivers')
             .update({
                 status: 'online',
                 updated_at: new Date().toISOString()
             })
-            .eq('id', driverId);
+            .eq('user_id', driverId); // ✅ Utiliser user_id (ID Auth)
 
+        // Fallback: si l'update par user_id échoue, essayer par id
         if (driverError) {
-            console.warn('Erreur mise à jour statut chauffeur:', driverError);
+            console.warn('Update par user_id échoué, tentative par id...');
+            const { error: retryError } = await supabase
+                .from('drivers')
+                .update({
+                    status: 'online',
+                    updated_at: new Date().toISOString()
+                })
+                .eq('id', driverId);
+
+            if (retryError) {
+                console.warn('Erreur mise à jour statut chauffeur:', retryError);
+            }
         }
 
         // 3. Créer un événement
@@ -255,13 +296,25 @@ export async function completeDelivery(orderId: string, driverId: string) {
         }
 
         // Remettre le chauffeur en ligne
-        await supabase
+        // Essayer d'abord par user_id, puis par id en fallback
+        let { error: driverUpdateError } = await supabase
             .from('drivers')
             .update({
                 status: 'online',
                 updated_at: new Date().toISOString()
             })
-            .eq('id', driverId); // ✅ Utiliser l'ID de la table drivers
+            .eq('user_id', driverId); // ✅ Utiliser user_id (ID Auth)
+
+        // Fallback: si l'update par user_id échoue, essayer par id
+        if (driverUpdateError) {
+            await supabase
+                .from('drivers')
+                .update({
+                    status: 'online',
+                    updated_at: new Date().toISOString()
+                })
+                .eq('id', driverId);
+        }
 
         // Créer un événement
         try {
@@ -295,11 +348,12 @@ export async function completeDelivery(orderId: string, driverId: string) {
  */
 export async function getDriverOrders(driverId: string) {
     try {
+        // ✅ driver_id dans orders contient maintenant l'ID Auth (user_id)
         const { data, error } = await supabase
             .from('orders')
             .select('*')
-            .eq('driver_id', driverId)
-            .in('status', ['dispatched', 'driver_accepted', 'in_progress'])
+            .eq('driver_id', driverId) // driverId est l'ID Auth (user_id)
+            .in('status', ['assigned', 'driver_accepted', 'in_progress']) // ✅ Utiliser 'assigned' au lieu de 'dispatched'
             .order('created_at', { ascending: false });
 
         if (error) {

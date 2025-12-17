@@ -126,6 +126,12 @@
    - [x] DriverStatus unifié : 'online' | 'busy' | 'offline' | 'suspended'
    - [x] driver_id dans orders stocke l'ID Auth (user_id) pour correspondre à l'App Chauffeur
    - [x] Statut 'assigned' au lieu de 'dispatched' lors de l'assignation
+   - [x] Services driverOrderActions.ts mis à jour (acceptOrderByDriver, declineOrder, etc.)
+   - [x] Script SQL créé : sql/align_with_driver_app.sql
+   - [x] Documentation complète : ALIGNEMENT_APP_CHAUFFEUR.md
+   - [ ] **MANUEL** : Exécuter sql/align_with_driver_app.sql dans Supabase
+   - [ ] **MANUEL** : Modifier Dispatch.tsx lignes ~158, ~322, ~558 ('dispatched' → 'assigned')
+   - [ ] **MANUEL** : Tester l'assignation, l'acceptation et le refus de courses
 
 9. **Système de messagerie complet**
    - Conversations groupées
