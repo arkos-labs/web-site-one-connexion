@@ -154,8 +154,8 @@ WITH CHECK (user_id = auth.uid());
 -- 5. REALTIME POUR LES CHAUFFEURS
 -- ============================================
 
--- Activer Realtime sur la table orders
-ALTER PUBLICATION supabase_realtime ADD TABLE orders;
+-- Activer Realtime sur la table orders (déjà activé, ligne commentée pour éviter l'erreur 42718)
+-- ALTER PUBLICATION supabase_realtime ADD TABLE orders;
 
 -- Les chauffeurs ne reçoivent que les updates de LEURS commandes
 -- Ceci est géré automatiquement par les RLS policies ci-dessus
