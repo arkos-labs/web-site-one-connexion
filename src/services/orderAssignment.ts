@@ -16,12 +16,12 @@ export async function assignOrderToDriver(params: AssignOrderParams) {
     try {
         // 1. Mettre à jour la commande
         // Tentative standard avec retour de données
-        // IMPORTANT: driver_id doit être l'ID de la table drivers (UUID) pour la FK, pas le user_id (Auth)
+        // IMPORTANT: driver_id reçoit l'ID Auth du chauffeur (user_id) pour correspondre à l'App Chauffeur
         let { data: order, error: orderError } = await supabase
             .from('orders')
             .update({
-                driver_id: driverId, // ✅ UUID de la table drivers pour respecter la FK
-                status: 'dispatched',
+                driver_id: driverUserId, // ✅ ID Auth (user_id) pour correspondre à l'App Chauffeur
+                status: 'assigned',
                 dispatched_at: new Date().toISOString(),
                 updated_at: new Date().toISOString()
             })
@@ -35,8 +35,8 @@ export async function assignOrderToDriver(params: AssignOrderParams) {
             const { error: retryError } = await supabase
                 .from('orders')
                 .update({
-                    driver_id: driverId, // ✅ UUID de la table drivers pour respecter la FK
-                    status: 'dispatched',
+                    driver_id: driverUserId, // ✅ ID Auth (user_id) pour correspondre à l'App Chauffeur
+                    status: 'assigned',
                     dispatched_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
                 })
@@ -235,7 +235,7 @@ export async function unassignOrder(orderId: string, reason?: string) {
                 .from('orders')
                 .select('id')
                 .eq('driver_id', order.driver_id)
-                .in('status', ['assigned', 'dispatched', 'driver_accepted', 'in_progress'])
+                .in('status', ['assigned', 'driver_accepted', 'in_progress'])
                 .limit(1);
 
             if (!otherOrders || otherOrders.length === 0) {

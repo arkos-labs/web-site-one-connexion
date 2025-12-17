@@ -3,18 +3,18 @@
 export type OrderStatus =
     | 'pending_acceptance'    // En attente d'acceptation
     | 'accepted'              // Acceptée
-    | 'dispatched'            // Dispatchée
+    | 'assigned'              // Assignée à un chauffeur
     | 'driver_accepted'       // Chauffeur a accepté
     | 'driver_refused'        // Chauffeur a refusé
-    | 'cancelled'             // Annulée
-    | 'delivered';            // Livrée
+    | 'in_progress'           // En cours de livraison
+    | 'delivered'             // Livrée
+    | 'cancelled';            // Annulée
 
 export type DriverStatus =
-    | 'online'                // En ligne
+    | 'online'                // En ligne (disponible)
+    | 'busy'                  // Occupé (en course)
     | 'offline'               // Hors ligne
-    | 'on_delivery'           // En déplacement
-    | 'on_break'              // En pause
-    | 'on_vacation';          // En vacances
+    | 'suspended';            // Suspendu
 
 export interface OrderDriver {
     id: string;
@@ -102,11 +102,12 @@ export const getStatusLabel = (status: OrderStatus): string => {
     const labels: Record<OrderStatus, string> = {
         pending_acceptance: 'En attente d\'acceptation',
         accepted: 'Acceptée',
-        dispatched: 'Dispatchée',
+        assigned: 'Assignée',
         driver_accepted: 'Chauffeur a accepté',
         driver_refused: 'Chauffeur a refusé',
-        cancelled: 'Annulée',
-        delivered: 'Livrée'
+        in_progress: 'En cours',
+        delivered: 'Livrée',
+        cancelled: 'Annulée'
     };
     return labels[status];
 };
@@ -115,10 +116,9 @@ export const getStatusLabel = (status: OrderStatus): string => {
 export const getDriverStatusLabel = (status: DriverStatus): string => {
     const labels: Record<DriverStatus, string> = {
         online: 'En ligne',
+        busy: 'Occupé',
         offline: 'Hors ligne',
-        on_delivery: 'En déplacement',
-        on_break: 'En pause',
-        on_vacation: 'En vacances'
+        suspended: 'Suspendu'
     };
     return labels[status];
 };
@@ -128,11 +128,12 @@ export const getStatusBadgeColor = (status: OrderStatus): string => {
     const colors: Record<OrderStatus, string> = {
         pending_acceptance: 'bg-warning',
         accepted: 'bg-info',
-        dispatched: 'bg-blue-500',
+        assigned: 'bg-blue-500',
         driver_accepted: 'bg-teal-500',
         driver_refused: 'bg-red-500',
-        cancelled: 'bg-destructive',
-        delivered: 'bg-success'
+        in_progress: 'bg-purple-500',
+        delivered: 'bg-success',
+        cancelled: 'bg-destructive'
     };
     return colors[status];
 };
@@ -141,10 +142,9 @@ export const getStatusBadgeColor = (status: OrderStatus): string => {
 export const getDriverStatusBadgeColor = (status: DriverStatus): string => {
     const colors: Record<DriverStatus, string> = {
         online: 'bg-success',
+        busy: 'bg-blue-500',
         offline: 'bg-gray-500',
-        on_delivery: 'bg-blue-500',
-        on_break: 'bg-warning',
-        on_vacation: 'bg-purple-500'
+        suspended: 'bg-red-500'
     };
     return colors[status];
 };

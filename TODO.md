@@ -1,6 +1,6 @@
 # 📋 TODO - One Connexion
 
-**Date de dernière mise à jour**: 2025-12-14
+**Date de dernière mise à jour**: 2025-12-17
 **Statut actuel**: Production-Ready
 
 ---
@@ -121,7 +121,13 @@
    - [x] Dispatch Realtime avec Toast de confirmation (driver_accepted, in_progress)
    - [x] Gestion désassignation Realtime (driver_refused → colonne "En Attribution" + Badge REFUSÉE + bouton Réattribuer)
 
-8. **Système de messagerie complet**
+8. **Alignement avec l'App Chauffeur** ✅
+   - [x] OrderStatus unifié : 'pending_acceptance' | 'accepted' | 'assigned' | 'driver_accepted' | 'driver_refused' | 'in_progress' | 'delivered' | 'cancelled'
+   - [x] DriverStatus unifié : 'online' | 'busy' | 'offline' | 'suspended'
+   - [x] driver_id dans orders stocke l'ID Auth (user_id) pour correspondre à l'App Chauffeur
+   - [x] Statut 'assigned' au lieu de 'dispatched' lors de l'assignation
+
+9. **Système de messagerie complet**
    - Conversations groupées
    - Marquage lu/non lu
    - Pièces jointes
