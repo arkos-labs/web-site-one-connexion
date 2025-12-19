@@ -20,7 +20,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Search, Download, Eye, Calendar, Package, Loader2 } from "lucide-react";
-import { OrderWithDriver, getUserOrders } from "@/services/supabaseQueries";
+import { OrderWithDriver, getUserOrdersLegacy as getUserOrders } from "@/services/supabaseQueries";
 import { generateOrderPDF } from "@/lib/pdf-generator";
 import { toast } from "sonner";
 import { useProfile } from "@/hooks/useProfile";

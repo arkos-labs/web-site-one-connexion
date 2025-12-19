@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/dialog";
 import { Download, FileText, TrendingUp, Clock, Calendar, CreditCard } from "lucide-react";
 import { filterByDate, TimeRange } from "@/lib/date-utils";
-import { getInvoicesByUser } from "@/services/supabaseQueries";
+import { getInvoicesByUserLegacy as getInvoicesByUser } from "@/services/supabaseQueries";
 import { Invoice, supabase } from "@/lib/supabase";
 import { generateInvoicePDF } from "@/lib/pdf-generator";
 import { toast } from "sonner";

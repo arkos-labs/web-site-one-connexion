@@ -12,33 +12,39 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import {
-    calculerToutesLesFormules,
-    PRISES_EN_CHARGE,
-    DEFAULT_PRIX_BON,
+    DEFAULT_PRIX_BON_CENTS,
     type FormuleNew,
     type CalculTarifaireResult
 } from "@/utils/pricingEngine";
+import { calculerToutesLesFormulesAsync, getAllCities } from "@/utils/pricingEngineDb";
 import { MapPin, ArrowRight, Calculator, Info } from "lucide-react";
 
 const PricingSimulator = () => {
-    // Get list of cities from the pricing engine
-    const cities = Object.keys(PRISES_EN_CHARGE).sort();
-
+    const [cities, setCities] = useState<string[]>([]);
     const [villeDepart, setVilleDepart] = useState<string>("");
     const [villeArrivee, setVilleArrivee] = useState<string>("");
     const [distance, setDistance] = useState([10]); // Default 10km
     const [results, setResults] = useState<Record<FormuleNew, CalculTarifaireResult> | null>(null);
 
-    const handleCalculate = () => {
+    // Charger les villes au démarrage
+    useEffect(() => {
+        const loadCities = async () => {
+            const allCities = await getAllCities();
+            setCities(allCities);
+        };
+        loadCities();
+    }, []);
+
+    const handleCalculate = async () => {
         if (!villeDepart || !villeArrivee) return;
 
         try {
-            const res = calculerToutesLesFormules(
+            const res = await calculerToutesLesFormulesAsync(
                 villeDepart,
                 villeArrivee,
                 distance[0] * 1000 // Convert km to meters
             );
-            setResults(res);
+            setResults(res as Record<FormuleNew, CalculTarifaireResult>);
         } catch (error) {
             console.error("Erreur de calcul:", error);
         }
@@ -150,7 +156,7 @@ const PricingSimulator = () => {
                                         ) : (
                                             <li>Supplément distance : <strong>0 Bon</strong> (Paris inclus ✅)</li>
                                         )}
-                                        <li>Valeur du Bon : <strong>{DEFAULT_PRIX_BON}€</strong></li>
+                                        <li>Valeur du Bon : <strong>{(DEFAULT_PRIX_BON_CENTS / 100).toFixed(2)}€</strong></li>
                                     </ul>
                                 </div>
                             </div>

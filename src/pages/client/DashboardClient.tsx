@@ -9,7 +9,7 @@ import { useProfile } from "@/hooks/useProfile";
 import { useClientStats } from "@/hooks/useClientStats";
 import { useUnreadMessages } from "@/hooks/useUnreadMessages";
 import { supabase } from "@/lib/supabase";
-import { getUserOrders, OrderWithDriver } from "@/services/supabaseQueries";
+import { getUserOrdersLegacy as getUserOrders, OrderWithDriver } from "@/services/supabaseQueries";
 import { ORDER_STATUS, ORDER_STATUS_LABELS } from "@/constants/orderStatus";
 
 import { toast } from "sonner";

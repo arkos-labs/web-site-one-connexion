@@ -17,7 +17,8 @@ import Header from "@/components/client/Header";
 import Footer from "@/components/client/Footer";
 import { Package, Truck, Clock, AlertCircle, Zap, Loader2 } from "lucide-react";
 import { geocoderAdresse, calculerDistance } from "@/services/locationiq";
-import { calculerToutesLesFormules, type FormuleNew, type CalculTarifaireResult } from "@/utils/pricingEngine";
+import { type FormuleNew, type CalculTarifaireResult } from "@/utils/pricingEngine";
+import { calculerToutesLesFormulesAsync } from "@/utils/pricingEngineDb";
 import { loadPricingConfigCached } from "@/utils/pricingConfigLoader";
 import { OrderSummary } from "@/components/orders/OrderSummary";
 import { AddressAutocomplete } from "@/components/ui/AddressAutocomplete";
@@ -225,8 +226,8 @@ const CommandeSansCompte = () => {
                 const config = await loadPricingConfigCached();
 
                 // Calculer les tarifs avec la distance en MÈTRES (nouveau moteur)
-                const results = calculerToutesLesFormules(formData.pickupCity, deliveryGeocode.ville, distanceKm * 1000, config);
-                setPricingResults(results);
+                const results = await calculerToutesLesFormulesAsync(formData.pickupCity, deliveryGeocode.ville, distanceKm * 1000, config);
+                setPricingResults(results as Record<FormuleNew, CalculTarifaireResult>);
             } catch (error) {
                 if (error instanceof Error) {
                     setPricingError(error.message);
@@ -747,8 +748,8 @@ const CommandeSansCompte = () => {
                                                             // Charger la configuration de pricing
                                                             const config = await loadPricingConfigCached();
                                                             // Distance par défaut de 0 si pas encore calculée
-                                                            const results = calculerToutesLesFormules(formData.pickupCity, suggestion.city, 0, config);
-                                                            setPricingResults(results);
+                                                            const results = await calculerToutesLesFormulesAsync(formData.pickupCity, suggestion.city, 0, config);
+                                                            setPricingResults(results as Record<FormuleNew, CalculTarifaireResult>);
                                                         } catch (error) {
                                                             if (error instanceof Error) {
                                                                 setPricingError(error.message);

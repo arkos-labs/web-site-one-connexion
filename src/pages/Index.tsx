@@ -48,10 +48,19 @@ import LiveMap from "./admin/LiveMap";
 import Dispatch from "./admin/Dispatch";
 import { AdminRoute } from "@/components/auth/AdminRoute";
 import { ClientRoute } from "@/components/auth/ClientRoute";
+import { preloadCityPricingCache } from "@/utils/pricingEngineDb";
+
+import { useEffect } from "react";
 
 const Index = () => {
+  // Précharger le cache de tarification au démarrage de l'application
+  useEffect(() => {
+    preloadCityPricingCache().catch(console.error);
+  }, []);
+
   return (
     <Routes>
+
       {/* Public Routes */}
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<AuthPage />} />

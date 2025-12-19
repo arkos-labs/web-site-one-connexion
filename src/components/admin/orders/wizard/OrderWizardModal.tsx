@@ -16,7 +16,8 @@ import { StepFormula } from "./steps/StepFormula";
 import { StepConfirmation } from "./steps/StepConfirmation";
 import { supabase } from "@/lib/supabase";
 import { geocoderAdresse, calculerDistance } from "@/services/locationiq";
-import { calculerToutesLesFormules, type FormuleNew, type CalculTarifaireResult } from "@/utils/pricingEngine";
+import { type FormuleNew, type CalculTarifaireResult } from "@/utils/pricingEngine";
+import { calculerToutesLesFormulesAsync } from "@/utils/pricingEngineDb";
 import { UniversalModal } from "@/components/ui/UniversalModal";
 
 // Types
@@ -227,12 +228,12 @@ export const OrderWizardModal = ({ isOpen, onClose, onSubmit, mode = 'admin' }: 
                     parseFloat(deliveryGeocode.longitude.toString())
                 );
 
-                const results = calculerToutesLesFormules(
+                const results = await calculerToutesLesFormulesAsync(
                     formData.pickupCity,
                     deliveryGeocode.ville,
                     distanceKm * 1000
                 );
-                setPricingResults(results);
+                setPricingResults(results as Record<FormuleNew, CalculTarifaireResult>);
             } catch (error) {
                 console.error(error);
                 setPricingError("Impossible de calculer le tarif");

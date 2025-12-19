@@ -19,7 +19,8 @@ import {
     CheckCircle2
 } from "lucide-react";
 import { geocoderAdresse } from "@/services/locationiq";
-import { calculerToutesLesFormules, type FormuleNew, type CalculTarifaireResult } from "@/utils/pricingEngine";
+import { type FormuleNew, type CalculTarifaireResult } from "@/utils/pricingEngine";
+import { calculerToutesLesFormulesAsync } from "@/utils/pricingEngineDb";
 import { loadPricingConfigCached } from "@/utils/pricingConfigLoader";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { OrderSummary } from "@/components/orders/OrderSummary";
@@ -70,8 +71,8 @@ export function PriceSimulator() {
                 setVilleArrivee(villeDest);
                 // Charger la configuration de pricing depuis la base de données
                 const config = await loadPricingConfigCached();
-                const results = calculerToutesLesFormules(pickupCity, villeDest, 0, config);
-                setPricingResults(results);
+                const results = await calculerToutesLesFormulesAsync(pickupCity, villeDest, 0, config);
+                setPricingResults(results as Record<FormuleNew, CalculTarifaireResult>);
             } catch (err) {
                 if (err instanceof Error) {
                     setError(err.message);
@@ -149,8 +150,8 @@ export function PriceSimulator() {
                                         setVilleArrivee(suggestion.city);
                                         // Charger la configuration de pricing depuis la base de données
                                         const config = await loadPricingConfigCached();
-                                        const results = calculerToutesLesFormules(pickupCity, suggestion.city, 0, config);
-                                        setPricingResults(results);
+                                        const results = await calculerToutesLesFormulesAsync(pickupCity, suggestion.city, 0, config);
+                                        setPricingResults(results as Record<FormuleNew, CalculTarifaireResult>);
                                     } catch (err) {
                                         if (err instanceof Error) {
                                             setError(err.message);

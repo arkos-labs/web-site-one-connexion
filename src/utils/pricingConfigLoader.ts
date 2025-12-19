@@ -10,7 +10,7 @@ export async function loadPricingConfig(): Promise<PricingConfig> {
         const settings = await getTariffMetadata();
 
         return {
-            bonValueEur: parseFloat(settings.bon_value_eur) || 5.5,
+            bonValueCents: Math.round((parseFloat(settings.bon_value_eur) || 5.5) * 100),
             supplementPerKmBons: parseFloat(settings.supplement_per_km_bons) || 0.1
         };
     } catch (error) {
@@ -18,7 +18,7 @@ export async function loadPricingConfig(): Promise<PricingConfig> {
 
         // Retourner les valeurs par défaut en cas d'erreur
         return {
-            bonValueEur: 5.5,
+            bonValueCents: 550,
             supplementPerKmBons: 0.1
         };
     }

@@ -24,7 +24,8 @@ import {
     X
 } from "lucide-react";
 import { geocoderAdresse, calculerDistance } from "@/services/locationiq";
-import { calculerToutesLesFormules, type FormuleNew, type CalculTarifaireResult } from "@/utils/pricingEngine";
+import { type FormuleNew, type CalculTarifaireResult } from "@/utils/pricingEngine";
+import { calculerToutesLesFormulesAsync } from "@/utils/pricingEngineDb";
 import { loadPricingConfigCached } from "@/utils/pricingConfigLoader";
 import { supabase } from "@/lib/supabase";
 
@@ -301,13 +302,13 @@ const CreateOrderModal = ({ isOpen, onClose, onSubmit }: CreateOrderModalProps) 
                 const config = await loadPricingConfigCached();
 
                 // Calculer les tarifs (distance en mètres)
-                const results = calculerToutesLesFormules(
+                const results = await calculerToutesLesFormulesAsync(
                     formData.pickupCity,
                     deliveryGeocode.ville,
                     distanceKm * 1000,
                     config
                 );
-                setPricingResults(results);
+                setPricingResults(results as Record<FormuleNew, CalculTarifaireResult>);
             } catch (error) {
                 if (error instanceof Error) {
                     setPricingError(error.message);

@@ -2,6 +2,16 @@ import { supabase } from '@/lib/supabase';
 import { Order, Invoice, Client } from '@/lib/supabase';
 import { RealtimeChannel } from '@supabase/supabase-js';
 
+export interface Driver {
+    id: string;
+    first_name: string | null;
+    last_name: string | null;
+    phone: string | null;
+    lat: number | null;
+    lng: number | null;
+    status: string;
+}
+
 // Extended Order type to include driver location and other fields
 export interface OrderWithDriver extends Order {
     driver_lat?: number;
@@ -14,7 +24,38 @@ export interface OrderWithDriver extends Order {
     estimated_delivery?: string;
     pickup_time?: string;
     delivery_time?: string;
-    drivers?: any; // For joined data
+    drivers?: Driver | null; // For joined data
+}
+
+// Type pour les commandes paginées (champs essentiels uniquement)
+export interface OrderSummary {
+    id: string;
+    status: string;
+    total_amount: number;
+    created_at: string;
+    pickup_address: string;
+    delivery_address: string;
+    pickup_lat?: number;
+    pickup_lng?: number;
+    delivery_lat?: number;
+    delivery_lng?: number;
+    estimated_delivery?: string;
+    pickup_time?: string;
+    delivery_time?: string;
+    driver_id?: string;
+}
+
+// Type pour les factures paginées (champs essentiels uniquement)
+export interface InvoiceSummary {
+    id: string;
+    invoice_number: string;
+    order_id: string;
+    client_id: string;
+    amount: number;
+    status: string;
+    created_at: string;
+    due_date?: string;
+    paid_at?: string;
 }
 
 export const getClientProfile = async (userId: string): Promise<Client | null> => {
@@ -31,7 +72,50 @@ export const getClientProfile = async (userId: string): Promise<Client | null> =
     return data as Client;
 };
 
-export const getUserOrders = async (clientId: string): Promise<OrderWithDriver[]> => {
+export interface PaginatedResult<T> {
+    data: T[];
+    count: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+}
+
+export const getUserOrders = async (
+    clientId: string,
+    page: number = 1,
+    limit: number = 10
+): Promise<PaginatedResult<OrderSummary>> => {
+    // Calculer l'offset pour la pagination
+    const from = (page - 1) * limit;
+    const to = from + limit - 1;
+
+    // Récupérer les commandes avec count total
+    const { data, error, count } = await supabase
+        .from('orders')
+        .select(
+            'id, status, total_amount, created_at, pickup_address, delivery_address, pickup_lat, pickup_lng, delivery_lat, delivery_lng, estimated_delivery, pickup_time, delivery_time, driver_id',
+            { count: 'exact' }
+        )
+        .eq('client_id', clientId)
+        .order('created_at', { ascending: false })
+        .range(from, to);
+
+    if (error) throw error;
+
+    const totalPages = count ? Math.ceil(count / limit) : 0;
+
+    return {
+        data: data as OrderSummary[],
+        count: count || 0,
+        page,
+        limit,
+        totalPages,
+    };
+};
+
+// Version legacy pour rétrocompatibilité - retourne toutes les commandes
+// TODO: Migrer les composants vers la version paginée
+export const getUserOrdersLegacy = async (clientId: string): Promise<OrderWithDriver[]> => {
     const { data, error } = await supabase
         .from('orders')
         .select('*')
@@ -53,7 +137,42 @@ export const getOrderById = async (orderId: string): Promise<OrderWithDriver | n
     return data as OrderWithDriver;
 };
 
-export const getInvoicesByUser = async (clientId: string): Promise<Invoice[]> => {
+export const getInvoicesByUser = async (
+    clientId: string,
+    page: number = 1,
+    limit: number = 10
+): Promise<PaginatedResult<InvoiceSummary>> => {
+    // Calculer l'offset pour la pagination
+    const from = (page - 1) * limit;
+    const to = from + limit - 1;
+
+    // Récupérer les factures avec count total
+    const { data, error, count } = await supabase
+        .from('invoices')
+        .select(
+            'id, invoice_number, order_id, client_id, amount, status, created_at, due_date, paid_at',
+            { count: 'exact' }
+        )
+        .eq('client_id', clientId)
+        .order('created_at', { ascending: false })
+        .range(from, to);
+
+    if (error) throw error;
+
+    const totalPages = count ? Math.ceil(count / limit) : 0;
+
+    return {
+        data: data as InvoiceSummary[],
+        count: count || 0,
+        page,
+        limit,
+        totalPages,
+    };
+};
+
+// Version legacy pour rétrocompatibilité - retourne toutes les factures
+// TODO: Migrer les composants vers la version paginée
+export const getInvoicesByUserLegacy = async (clientId: string): Promise<Invoice[]> => {
     const { data, error } = await supabase
         .from('invoices')
         .select('*')
