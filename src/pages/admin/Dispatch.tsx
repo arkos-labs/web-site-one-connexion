@@ -122,7 +122,7 @@ export default function Dispatch() {
     // --- DERIVED STATE ---
     const pendingOrders = orders.filter(o => o.status === 'pending_acceptance');
     const assignedOrders = orders.filter(o => o.status === 'assigned');
-    const acceptedOrders = orders.filter(o => ['accepted', 'driver_accepted', 'in_progress'].includes(o.status));
+    const acceptedOrders = orders.filter(o => ['accepted', 'driver_accepted', 'arrived_pickup', 'in_progress'].includes(o.status));
 
     const getDriverActiveOrder = (driverId: string) => {
         return acceptedOrders.find(o => o.assigned_driver_id === driverId || o.driver_id === driverId);
@@ -252,16 +252,24 @@ export default function Dispatch() {
                                 // Calculs LIVE
                                 let distance = 0;
                                 let targetLabel = "";
+                                let badgeColor = 'bg-blue-500';
                                 
                                 if (driver && driver.current_lat && driver.current_lng) {
                                     if (order.status === 'driver_accepted' || order.status === 'accepted') {
                                         // Vers retrait
                                         distance = calculateDistance(driver.current_lat, driver.current_lng, order.pickup_lat || 0, order.pickup_lng || 0);
                                         targetLabel = "Vers Retrait";
+                                        badgeColor = 'bg-blue-500';
+                                    } else if (order.status === 'arrived_pickup') {
+                                        // SUR PLACE
+                                        distance = 0;
+                                        targetLabel = "📍 Est arrivé au retrait";
+                                        badgeColor = 'bg-orange-500';
                                     } else if (order.status === 'in_progress') {
                                         // Vers livraison
                                         distance = calculateDistance(driver.current_lat, driver.current_lng, order.delivery_lat || 0, order.delivery_lng || 0);
                                         targetLabel = "Vers Livraison";
+                                        badgeColor = 'bg-purple-500';
                                     }
                                 }
 
@@ -269,8 +277,8 @@ export default function Dispatch() {
                                     <Card key={order.id} className="p-3 border-green-200 bg-white">
                                         <div className="flex justify-between items-start mb-2">
                                             <span className="font-bold text-sm">{order.reference}</span>
-                                            <Badge className={order.status === 'in_progress' ? 'bg-purple-500' : 'bg-blue-500'}>
-                                                {order.status === 'in_progress' ? 'En Livraison' : 'Approche'}
+                                            <Badge className={badgeColor}>
+                                                {order.status === 'in_progress' ? 'En Livraison' : (order.status === 'arrived_pickup' ? 'Sur Place' : 'Approche')}
                                             </Badge>
                                         </div>
                                         
@@ -286,11 +294,15 @@ export default function Dispatch() {
                                                 <div className="grid grid-cols-2 gap-2 text-xs">
                                                     <div>
                                                         <p className="text-slate-500">Distance</p>
-                                                        <p className="font-mono font-bold text-slate-800">{formatDistance(distance)}</p>
+                                                        <p className="font-mono font-bold text-slate-800">
+                                                            {order.status === 'arrived_pickup' ? '0 m' : formatDistance(distance)}
+                                                        </p>
                                                     </div>
                                                     <div>
                                                         <p className="text-slate-500">ETA estimé</p>
-                                                        <p className="font-mono font-bold text-green-600">{estimateTime(distance)}</p>
+                                                        <p className="font-mono font-bold text-green-600">
+                                                            {order.status === 'arrived_pickup' ? 'Sur place' : estimateTime(distance)}
+                                                        </p>
                                                     </div>
                                                 </div>
                                             ) : (
