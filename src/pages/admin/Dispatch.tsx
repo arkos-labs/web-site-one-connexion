@@ -122,7 +122,8 @@ export default function Dispatch() {
     // --- DERIVED STATE ---
     const pendingOrders = orders.filter(o => o.status === 'pending_acceptance');
     const assignedOrders = orders.filter(o => o.status === 'assigned');
-    const acceptedOrders = orders.filter(o => ['accepted', 'driver_accepted', 'arrived_pickup', 'in_progress'].includes(o.status));
+    // Ajout de 'completed' pour que l'admin voie l'état "Livré"
+    const acceptedOrders = orders.filter(o => ['accepted', 'driver_accepted', 'arrived_pickup', 'in_progress', 'completed'].includes(o.status));
 
     const getDriverActiveOrder = (driverId: string) => {
         return acceptedOrders.find(o => o.assigned_driver_id === driverId || o.driver_id === driverId);
@@ -270,6 +271,11 @@ export default function Dispatch() {
                                         distance = calculateDistance(driver.current_lat, driver.current_lng, order.delivery_lat || 0, order.delivery_lng || 0);
                                         targetLabel = "Vers Livraison";
                                         badgeColor = 'bg-purple-500';
+                                    } else if (order.status === 'completed') {
+                                        // LIVRÉ
+                                        distance = 0;
+                                        targetLabel = "✅ Course Terminée";
+                                        badgeColor = 'bg-green-600';
                                     }
                                 }
 
@@ -278,7 +284,7 @@ export default function Dispatch() {
                                         <div className="flex justify-between items-start mb-2">
                                             <span className="font-bold text-sm">{order.reference}</span>
                                             <Badge className={badgeColor}>
-                                                {order.status === 'in_progress' ? 'En Livraison' : (order.status === 'arrived_pickup' ? 'Sur Place' : 'Approche')}
+                                                {order.status === 'in_progress' ? 'En Livraison' : (order.status === 'arrived_pickup' ? 'Sur Place' : (order.status === 'completed' ? 'Livré' : 'Approche'))}
                                             </Badge>
                                         </div>
                                         
