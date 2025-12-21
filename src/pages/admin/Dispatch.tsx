@@ -1,1287 +1,321 @@
-import { useState, useEffect, useCallback } from "react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { useEffect, useState, useMemo } from 'react';
+import { supabase } from '@/lib/supabase';
+import { Order, DriverStatus, OrderDriver } from '@/types';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { supabase } from "@/lib/supabase";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { MapPin, Navigation, Clock, User, Phone, Car } from "lucide-react";
 import { toast } from "sonner";
-import { assignOrderToDriver, unassignOrder } from "@/services/orderAssignment";
-import { getMultipleOrderRefusals, OrderRefusalInfo } from "@/services/orderRefusals";
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from "@/components/ui/dialog";
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-} from "@/components/ui/tooltip";
-import {
-    Truck,
-    User,
-    Package,
-    ArrowRight,
-    Clock,
-    CheckCircle,
-    Calendar,
-    Lock,
-    Timer,
-    MapPin,
-    X,
-    AlertCircle,
-    Send,
-    UserCheck,
-    Play
-} from "lucide-react";
 
-interface Order {
-    id: string;
-    reference: string;
-    pickup_address: string;
-    delivery_address: string;
-    price: number;
-    distance_km: number;
-    status: string;
-    created_at: string;
-    scheduled_pickup_time?: string;
-    driver_id?: string;
-    refusal_count?: number;
-    last_refused_by?: string;
-}
-
-interface Driver {
-    id: string;
-    first_name: string;
-    last_name: string;
-    status: string;
-    vehicle_type: string;
+// --- TYPES ---
+interface DriverWithLocation extends OrderDriver {
     current_lat?: number;
     current_lng?: number;
-    user_id?: string;
+    vehicle_type?: string;
+    last_location_update?: string;
 }
 
-// Types pour les colonnes Kanban
-type DispatchColumn = 'accepted' | 'assigned' | 'driver_accepted' | 'in_progress';
+// --- UTILS ---
+const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+    if (!lat1 || !lon1 || !lat2 || !lon2) return 0;
+    const R = 6371; // km
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+};
+
+const formatDistance = (km: number) => {
+    if (km < 1) return `${Math.round(km * 1000)} m`;
+    return `${km.toFixed(1)} km`;
+};
+
+const estimateTime = (km: number) => {
+    // Supposons une vitesse moyenne de 25km/h en ville
+    const speed = 25;
+    const hours = km / speed;
+    const minutes = Math.round(hours * 60);
+    if (minutes < 1) return '< 1 min';
+    return `${minutes} min`;
+};
 
 export default function Dispatch() {
-    // État des colonnes Kanban
-    const [acceptedOrders, setAcceptedOrders] = useState<Order[]>([]); // Commandes validées (prêtes à dispatcher)
-    const [dispatchedOrders, setDispatchedOrders] = useState<Order[]>([]); // En cours d'attribution
-    const [driverAcceptedOrders, setDriverAcceptedOrders] = useState<Order[]>([]); // Acceptées par chauffeur
-    const [inProgressOrders, setInProgressOrders] = useState<Order[]>([]); // En cours de livraison
+    const [orders, setOrders] = useState<Order[]>([]);
+    const [drivers, setDrivers] = useState<DriverWithLocation[]>([]);
+    const [loading, setLoading] = useState(true);
 
-    const [availableDrivers, setAvailableDrivers] = useState<Driver[]>([]);
-    const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
-    const [isAssignDialogOpen, setIsAssignDialogOpen] = useState(false);
-    const [isProcessing, setIsProcessing] = useState(false);
-    const [currentTime, setCurrentTime] = useState(new Date());
-    const [isRealtimeConnected, setIsRealtimeConnected] = useState(false);
-    const [activeDeliveries, setActiveDeliveries] = useState<Record<string, Order>>({});
-    const [orderRefusals, setOrderRefusals] = useState<Map<string, OrderRefusalInfo>>(new Map());
+    // --- DATA FETCHING & SUBSCRIPTION ---
+    useEffect(() => {
+        const fetchData = async () => {
+            const { data: ordersData } = await supabase
+                .from('orders')
+                .select('*')
+                .order('created_at', { ascending: false });
 
-    // ============================================
-    // REALTIME - Gestion des mises à jour en temps réel
-    // ============================================
+            const { data: driversData } = await supabase
+                .from('drivers')
+                .select('*')
+                .eq('status', 'online') // On ne veut que les actifs
+                .order('updated_at', { ascending: false });
 
-    /**
-     * Handler pour les événements Realtime de mise à jour des commandes
-     * Filtre sur les statuts: assigned, driver_accepted, in_progress
-     */
-    const handleOrderUpdate = useCallback((payload: any) => {
-        const updatedOrder = payload.new as Order;
-        const oldOrder = payload.old as Order;
+            if (ordersData) setOrders(ordersData as Order[]);
+            if (driversData) setDrivers(driversData as DriverWithLocation[]);
+            setLoading(false);
+        };
 
-        console.log('[Dispatch Realtime] Order UPDATE received:', {
-            orderId: updatedOrder.id,
-            reference: updatedOrder.reference,
-            oldStatus: oldOrder?.status,
-            newStatus: updatedOrder.status
-        });
+        fetchData();
 
-        // === TOAST DE NOTIFICATION SELON LE CHANGEMENT DE STATUT ===
-
-        // Cas 1: Un chauffeur a ACCEPTÉ la commande
-        if (updatedOrder.status === 'driver_accepted') {
-            toast.success(
-                `🚗 COMMANDE ${updatedOrder.reference} ACCEPTÉE PAR LE CHAUFFEUR!`,
-                {
-                    duration: 6000,
-                    style: {
-                        background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
-                        color: 'white',
-                        border: '2px solid white',
-                        boxShadow: '0 10px 40px rgba(16, 185, 129, 0.5)',
-                        fontWeight: 'bold',
-                    },
-                    icon: '✓'
+        // Realtime Subscription
+        const channel = supabase
+            .channel('dispatch_dashboard')
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, (payload) => {
+                if (payload.eventType === 'INSERT') {
+                    setOrders(prev => [payload.new as Order, ...prev]);
+                    toast.info("Nouvelle commande reçue !");
+                } else if (payload.eventType === 'UPDATE') {
+                    setOrders(prev => prev.map(o => o.id === payload.new.id ? payload.new as Order : o));
                 }
-            );
-
-            // Déplacer la commande de "dispatched" vers "driver_accepted"
-            setDispatchedOrders(prev => prev.filter(o => o.id !== updatedOrder.id));
-            setDriverAcceptedOrders(prev => {
-                const exists = prev.find(o => o.id === updatedOrder.id);
-                if (exists) return prev.map(o => o.id === updatedOrder.id ? updatedOrder : o);
-                return [...prev, updatedOrder];
-            });
-        }
-
-        // Cas 2: La commande passe en cours (in_progress)
-        if (updatedOrder.status === 'in_progress') {
-            toast.info(
-                `🚚 COMMANDE ${updatedOrder.reference} EN COURS DE LIVRAISON`,
-                {
-                    duration: 5000,
-                    style: {
-                        background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
-                        color: 'white',
-                        fontWeight: 'bold',
-                    },
-                    icon: '→'
-                }
-            );
-
-            // Déplacer de driver_accepted vers in_progress
-            setDriverAcceptedOrders(prev => prev.filter(o => o.id !== updatedOrder.id));
-            setInProgressOrders(prev => {
-                const exists = prev.find(o => o.id === updatedOrder.id);
-                if (exists) return prev.map(o => o.id === updatedOrder.id ? updatedOrder : o);
-                return [...prev, updatedOrder];
-            });
-        }
-
-        // Cas 3: Commande dispatchée (envoyée au chauffeur)
-        if (updatedOrder.status === 'dispatched' && oldOrder?.status === 'accepted') {
-            toast(
-                `📤 Commande ${updatedOrder.reference} envoyée au chauffeur`,
-                {
-                    duration: 4000,
-                    style: {
-                        background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
-                        color: 'white',
-                    }
-                }
-            );
-
-            // Retirer de accepted et ajouter à assigned
-            setAcceptedOrders(prev => prev.filter(o => o.id !== updatedOrder.id));
-            setDispatchedOrders(prev => {
-                const exists = prev.find(o => o.id === updatedOrder.id);
-                if (exists) return prev.map(o => o.id === updatedOrder.id ? updatedOrder : o);
-                return [...prev, updatedOrder];
-            });
-        }
-
-        // Cas 4: Commande livrée/complétée - la retirer de toutes les colonnes
-        if (['delivered', 'completed', 'cancelled'].includes(updatedOrder.status)) {
-            toast.success(
-                `✅ Commande ${updatedOrder.reference} terminée`,
-                { duration: 3000 }
-            );
-
-            setDispatchedOrders(prev => prev.filter(o => o.id !== updatedOrder.id));
-            setDriverAcceptedOrders(prev => prev.filter(o => o.id !== updatedOrder.id));
-            setInProgressOrders(prev => prev.filter(o => o.id !== updatedOrder.id));
-        }
-
-
-        // Cas 5: Chauffeur REFUSE la course - désassignation
-        if (updatedOrder.status === 'driver_refused' && !updatedOrder.driver_id) {
-            // Récupérer l'ancien driver_id depuis oldOrder pour mettre à jour son statut
-            const previousDriverId = oldOrder?.driver_id;
-
-            toast.warning(
-                `⚠️ COURSE ${updatedOrder.reference} REFUSÉE PAR LE CHAUFFEUR, REMISE EN ATTENTE D'ATTRIBUTION.`,
-                {
-                    duration: 8000,
-                    style: {
-                        background: 'linear-gradient(135deg, #f59e0b 0%, #dc2626 100%)',
-                        color: 'white',
-                        border: '2px solid white',
-                        boxShadow: '0 10px 40px rgba(245, 158, 11, 0.5)',
-                        fontWeight: 'bold',
-                    },
-                    icon: '🚫'
-                }
-            );
-
-            // Retirer la commande des colonnes "Acceptées par chauffeur" et "En Cours"
-            // Ne PAS retirer de dispatchedOrders car on va la remettre dedans
-            setAcceptedOrders(prev => prev.filter(o => o.id !== updatedOrder.id));
-            setDriverAcceptedOrders(prev => prev.filter(o => o.id !== updatedOrder.id));
-            setInProgressOrders(prev => prev.filter(o => o.id !== updatedOrder.id));
-
-            // Remettre la commande dans "En Attribution" avec statut driver_refused
-            // Cela permet à l'admin de voir clairement que cette course a été refusée et doit être réattribuée
-            const revertedOrder: Order = {
-                ...updatedOrder,
-                // On garde le statut driver_refused pour l'affichage
-                status: 'driver_refused',
-                driver_id: undefined
-            };
-
-            // Ajouter à la colonne "En Attribution" pour réassignation
-            setDispatchedOrders(prev => {
-                // D'abord retirer si existe déjà (éviter doublons)
-                const filtered = prev.filter(o => o.id !== revertedOrder.id);
-                return [...filtered, revertedOrder];
-            });
-
-            // Nettoyer les livraisons actives liées à cette commande
-            setActiveDeliveries(prev => {
-                const next = { ...prev };
-                Object.keys(next).forEach(key => {
-                    if (next[key].id === updatedOrder.id) delete next[key];
-                });
-                return next;
-            });
-
-            // ✅ MISE À JOUR OPTIMISTE : Remettre le chauffeur en ligne immédiatement
-            // Cela évite que l'admin doive cliquer sur "Libérer"
-            if (previousDriverId) {
-                setAvailableDrivers(prev => prev.map(d =>
-                    d.id === previousDriverId
-                        ? { ...d, status: 'online' as const }
-                        : d
-                ));
-            }
-
-            // ✅ RECHARGER L'HISTORIQUE DES REFUS pour cette commande
-            // Cela permet d'afficher immédiatement le compteur de refus
-            (async () => {
-                try {
-                    const refusals = await getMultipleOrderRefusals([updatedOrder.id]);
-                    setOrderRefusals(prev => {
-                        const updated = new Map(prev);
-                        refusals.forEach((value, key) => updated.set(key, value));
-                        return updated;
+            })
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'drivers' }, (payload) => {
+                if (payload.eventType === 'UPDATE') {
+                    setDrivers(prev => {
+                        const exists = prev.find(d => d.id === payload.new.id);
+                        if (!exists && payload.new.status === 'online') return [...prev, payload.new as DriverWithLocation];
+                        if (exists && payload.new.status === 'offline') return prev.filter(d => d.id !== payload.new.id);
+                        return prev.map(d => d.id === payload.new.id ? payload.new as DriverWithLocation : d);
                     });
-                    console.log('✅ Historique des refus rechargé pour', updatedOrder.reference);
-                } catch (error) {
-                    console.error('Erreur rechargement refus:', error);
                 }
-            })();
+            })
+            .subscribe();
 
-            console.log('[Dispatch Realtime] Course refusée et remise en attente d\'attribution:', {
-                orderId: updatedOrder.id,
-                reference: updatedOrder.reference,
-                previousDriverId,
-                newLocalStatus: 'driver_refused',
-                targetColumn: 'En Attribution'
-            });
-        }
-
-        // Mise à jour des livraisons actives pour l'affichage des chauffeurs
-        if (['assigned', 'driver_accepted', 'in_progress'].includes(updatedOrder.status)) {
-            if (updatedOrder.driver_id) {
-                setActiveDeliveries(prev => ({
-                    ...prev,
-                    [updatedOrder.driver_id!]: updatedOrder
-                }));
-            }
-        }
+        return () => { supabase.removeChannel(channel); };
     }, []);
 
-    // ============================================
-    // EFFET PRINCIPAL - Initialisation et abonnements
-    // ============================================
+    // --- DERIVED STATE ---
+    const pendingOrders = orders.filter(o => o.status === 'pending_acceptance');
+    const assignedOrders = orders.filter(o => o.status === 'assigned');
+    const acceptedOrders = orders.filter(o => ['accepted', 'driver_accepted', 'in_progress'].includes(o.status));
 
-    useEffect(() => {
-        fetchAllOrders();
-        fetchDrivers();
-
-        // ============================================
-        // POLLING DE SECOURS POUR LES CHAUFFEURS
-        // Toutes les 10 secondes si le WebSocket échoue
-        // ============================================
-        const driversPollingInterval = setInterval(() => {
-            fetchDrivers();
-        }, 10000); // 10 secondes = équilibre fiabilité/performance
-
-        // Polling silencieux pour la mise à jour du temps (déverrouillage commandes différées)
-        const timeInterval = setInterval(() => {
-            setCurrentTime(new Date());
-        }, 30000); // Toutes les 30 secondes suffit pour le timer
-
-        // ============================================
-        // CANAL REALTIME POUR LES COMMANDES
-        // Filtre sur les statuts critiques du dispatch
-        // ============================================
-        const ordersChannel = supabase
-            .channel('dispatch-orders')
-            .on(
-                'postgres_changes',
-                {
-                    event: 'UPDATE',
-                    schema: 'public',
-                    table: 'orders',
-                    filter: "status=in.(dispatched,driver_accepted,in_progress,driver_refused)"
-                },
-                handleOrderUpdate
-            )
-            // Également écouter les INSERT pour les nouvelles commandes acceptées
-            .on(
-                'postgres_changes',
-                {
-                    event: 'INSERT',
-                    schema: 'public',
-                    table: 'orders'
-                },
-                (payload) => {
-                    const newOrder = payload.new as Order;
-                    if (newOrder.status === 'accepted') {
-                        toast(`📥 Nouvelle commande ${newOrder.reference}`, { duration: 4000 });
-                        setAcceptedOrders(prev => [...prev, newOrder]);
-                    }
-                }
-            )
-            // Écouter aussi les updates qui reviennent à 'accepted' (unassign)
-            .on(
-                'postgres_changes',
-                {
-                    event: 'UPDATE',
-                    schema: 'public',
-                    table: 'orders',
-                    filter: "status=eq.accepted"
-                },
-                (payload) => {
-                    const updatedOrder = payload.new as Order;
-                    const oldOrder = payload.old as Order;
-
-                    // Une commande revient à 'accepted' (probablement unassign)
-                    if (oldOrder?.status !== 'accepted' && updatedOrder.status === 'accepted') {
-                        toast.info(`↩️ Commande ${updatedOrder.reference} retournée au dispatch`);
-
-                        // La retirer des autres colonnes
-                        setDispatchedOrders(prev => prev.filter(o => o.id !== updatedOrder.id));
-                        setDriverAcceptedOrders(prev => prev.filter(o => o.id !== updatedOrder.id));
-                        setInProgressOrders(prev => prev.filter(o => o.id !== updatedOrder.id));
-
-                        // L'ajouter à accepted
-                        setAcceptedOrders(prev => {
-                            const exists = prev.find(o => o.id === updatedOrder.id);
-                            if (exists) return prev.map(o => o.id === updatedOrder.id ? updatedOrder : o);
-                            return [...prev, updatedOrder];
-                        });
-                    }
-                }
-            )
-            .subscribe((status) => {
-                console.log('[Dispatch] Realtime subscription status:', status);
-                if (status === 'SUBSCRIBED') {
-                    setIsRealtimeConnected(true);
-                    console.log('[Dispatch] ✅ Realtime connecté - Canal dispatch-orders');
-                }
-            });
-
-        // ============================================
-        // CANAL REALTIME POUR LES CHAUFFEURS
-        // Notifications en temps réel quand un chauffeur se connecte/déconnecte
-        // ============================================
-        const driversChannel = supabase
-            .channel('dispatch-drivers')
-            .on(
-                'postgres_changes',
-                { event: 'UPDATE', schema: 'public', table: 'drivers' },
-                (payload) => {
-                    const newDriver = payload.new as Driver;
-                    const oldDriver = payload.old as Driver;
-
-                    console.log('[Dispatch Realtime] Driver UPDATE:', {
-                        driverId: newDriver.id,
-                        name: `${newDriver.first_name} ${newDriver.last_name}`,
-                        oldStatus: oldDriver?.status,
-                        newStatus: newDriver.status
-                    });
-
-                    // ========== CHAUFFEUR PASSE EN LIGNE ==========
-                    if ((newDriver.status === 'available' || newDriver.status === 'online') &&
-                        oldDriver?.status !== 'available' && oldDriver?.status !== 'online') {
-
-                        // Toast de notification - chauffeur connecté
-                        toast.success(
-                            `🟢 ${newDriver.first_name} ${newDriver.last_name} est EN LIGNE`,
-                            {
-                                duration: 5000,
-                                style: {
-                                    background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-                                    color: 'white',
-                                    fontWeight: 'bold',
-                                },
-                                icon: '🚗'
-                            }
-                        );
-
-                        // Ajouter ou mettre à jour dans la liste
-                        setAvailableDrivers(prev => {
-                            const exists = prev.find(d => d.id === newDriver.id);
-                            if (exists) {
-                                return prev.map(d => d.id === newDriver.id
-                                    ? { ...d, ...newDriver, status: 'online' }
-                                    : d
-                                );
-                            }
-                            // Nouveau chauffeur - l'ajouter avec statut normalisé
-                            return [...prev, { ...newDriver, status: 'online' }];
-                        });
-                    }
-                    // ========== CHAUFFEUR PASSE HORS LIGNE ==========
-                    else if (newDriver.status === 'offline' &&
-                        (oldDriver?.status === 'available' || oldDriver?.status === 'online')) {
-
-                        // Toast de notification - chauffeur déconnecté
-                        toast(
-                            `🔴 ${newDriver.first_name} ${newDriver.last_name} s'est DÉCONNECTÉ`,
-                            {
-                                duration: 4000,
-                                style: {
-                                    background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
-                                    color: 'white',
-                                    fontWeight: 'bold',
-                                },
-                                icon: '👋'
-                            }
-                        );
-
-                        // Retirer de la liste
-                        setAvailableDrivers(prev => prev.filter(d => d.id !== newDriver.id));
-                    }
-                    // ========== CHAUFFEUR PASSE OCCUPÉ ==========
-                    else if (newDriver.status === 'busy' || newDriver.status === 'on_delivery') {
-
-                        // Toast discret - chauffeur occupé
-                        if (oldDriver?.status === 'available' || oldDriver?.status === 'online') {
-                            toast(
-                                `🟡 ${newDriver.first_name} ${newDriver.last_name} est maintenant OCCUPÉ`,
-                                {
-                                    duration: 3000,
-                                    style: {
-                                        background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
-                                        color: 'white',
-                                    }
-                                }
-                            );
-                        }
-
-                        // Mettre à jour le statut
-                        setAvailableDrivers(prev => prev.map(d =>
-                            d.id === newDriver.id ? { ...d, ...newDriver, status: 'busy' } : d
-                        ));
-                    }
-                    // ========== CHAUFFEUR REDEVIENT DISPONIBLE (après course) ==========
-                    else if ((newDriver.status === 'available' || newDriver.status === 'online') &&
-                        (oldDriver?.status === 'busy' || oldDriver?.status === 'on_delivery')) {
-
-                        // Toast - chauffeur de retour disponible
-                        toast.success(
-                            `✅ ${newDriver.first_name} ${newDriver.last_name} est de nouveau DISPONIBLE`,
-                            {
-                                duration: 4000,
-                                style: {
-                                    background: 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)',
-                                    color: 'white',
-                                }
-                            }
-                        );
-
-                        // Mettre à jour le statut
-                        setAvailableDrivers(prev => prev.map(d =>
-                            d.id === newDriver.id ? { ...d, ...newDriver, status: 'online' } : d
-                        ));
-                    }
-                    // ========== MISE À JOUR GÉNÉRIQUE (position GPS, etc.) ==========
-                    else {
-                        // Mettre à jour silencieusement les données du chauffeur
-                        setAvailableDrivers(prev => prev.map(d =>
-                            d.id === newDriver.id ? { ...d, ...newDriver } : d
-                        ));
-                    }
-                }
-            )
-            .subscribe((status) => {
-                console.log('[Dispatch] Drivers Realtime status:', status);
-                if (status === 'SUBSCRIBED') {
-                    console.log('[Dispatch] ✅ Realtime chauffeurs connecté');
-                }
-            });
-
-        // ============================================
-        // CLEANUP - Désouscription lors du démontage
-        // ============================================
-        return () => {
-            console.log('[Dispatch] 🔌 Déconnexion des canaux Realtime');
-            supabase.removeChannel(ordersChannel);
-            supabase.removeChannel(driversChannel);
-            clearInterval(timeInterval);
-            clearInterval(driversPollingInterval);
-        };
-    }, [handleOrderUpdate]);
-
-    // ============================================
-    // FONCTIONS DE RÉCUPÉRATION DES DONNÉES
-    // ============================================
-
-    /**
-     * Récupère toutes les commandes et les distribue dans les colonnes appropriées
-     */
-    const fetchAllOrders = async () => {
-        // Récupérer toutes les commandes pertinentes pour le dispatch
-        const { data, error } = await supabase
-            .from('orders')
-            .select('*')
-            .in('status', ['accepted', 'assigned', 'driver_accepted', 'in_progress', 'driver_refused'])
-            .order('created_at', { ascending: true });
-
-        if (error) {
-            console.error('[Dispatch] Error fetching orders:', error);
-            return;
-        }
-
-        const orders = data || [];
-
-        // Distribuer les commandes dans les colonnes appropriées
-        const accepted: Order[] = [];
-        const dispatched: Order[] = [];
-        const driverAccepted: Order[] = [];
-        const inProgress: Order[] = [];
-        const deliveriesMap: Record<string, Order> = {};
-
-        orders.forEach((order: Order) => {
-            switch (order.status) {
-                case 'accepted':
-                    accepted.push(order);
-                    break;
-                case 'dispatched':
-                    dispatched.push(order);
-                    if (order.driver_id) deliveriesMap[order.driver_id] = order;
-                    break;
-                case 'driver_refused':
-                    // Les commandes refusées vont aussi dans la colonne "En Attribution"
-                    // mais avec un indicateur visuel (géré au rendu)
-                    dispatched.push(order);
-                    break;
-                case 'driver_accepted':
-                    driverAccepted.push(order);
-                    if (order.driver_id) deliveriesMap[order.driver_id] = order;
-                    break;
-                case 'in_progress':
-                    inProgress.push(order);
-                    if (order.driver_id) deliveriesMap[order.driver_id] = order;
-                    break;
-            }
-        });
-
-        // Trier les commandes acceptées par heure de pickup prévue
-        accepted.sort((a, b) => {
-            if (a.scheduled_pickup_time && b.scheduled_pickup_time) {
-                return new Date(a.scheduled_pickup_time).getTime() - new Date(b.scheduled_pickup_time).getTime();
-            }
-            if (a.scheduled_pickup_time) return 1;
-            if (b.scheduled_pickup_time) return -1;
-            return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
-        });
-
-        setAcceptedOrders(accepted);
-        setDispatchedOrders(dispatched);
-        setDriverAcceptedOrders(driverAccepted);
-        setInProgressOrders(inProgress);
-        setActiveDeliveries(deliveriesMap);
-
-        // Charger l'historique des refus pour toutes les commandes
-        const allOrderIds = orders.map(o => o.id);
-        if (allOrderIds.length > 0) {
-            const refusals = await getMultipleOrderRefusals(allOrderIds);
-            setOrderRefusals(refusals);
-        }
+    const getDriverActiveOrder = (driverId: string) => {
+        return acceptedOrders.find(o => o.assigned_driver_id === driverId || o.driver_id === driverId);
     };
 
-    const fetchDrivers = async () => {
-        const { data, error } = await supabase
-            .from('drivers')
-            .select('*')
-            .in('status', ['online', 'available', 'busy', 'on_delivery'])
-            .order('first_name', { ascending: true });
-
-        if (error) {
-            console.error('[Dispatch] Error fetching drivers:', error);
-            return;
-        }
-
-        // Normaliser et trier les chauffeurs
-        const normalizedDrivers = (data || []).map((d: any) => ({
-            ...d,
-            status: d.status === 'available' ? 'online' : d.status
-        }));
-
-        // Tri: En ligne d'abord, puis Occupé
-        normalizedDrivers.sort((a: any, b: any) => {
-            if (a.status === 'online' && b.status !== 'online') return -1;
-            if (a.status !== 'online' && b.status === 'online') return 1;
-            return 0;
-        });
-
-        setAvailableDrivers(normalizedDrivers);
-    };
-
-    const handleForceAvailable = async (driverId: string) => {
-        if (!confirm("Ce chauffeur semble bloqué en statut 'Occupé' sans course active. Voulez-vous forcer son statut à 'Disponible' ?")) return;
-
+    const handleAssign = async (orderId: string, driverId: string) => {
         const { error } = await supabase
-            .from('drivers')
-            .update({ status: 'online', updated_at: new Date().toISOString() })
-            .eq('id', driverId);
+            .from('orders')
+            .update({
+                status: 'assigned',
+                assigned_driver_id: driverId,
+                dispatched_at: new Date().toISOString()
+            })
+            .eq('id', orderId);
 
-        if (error) {
-            console.error('Error forcing availability:', error);
-            toast.error("Impossible de libérer le chauffeur");
-        } else {
-            toast.success("Statut du chauffeur corrigé");
-            // Optimistic update
-            setAvailableDrivers(prev => prev.map(d => d.id === driverId ? { ...d, status: 'online' } : d));
-        }
-    };
-
-    const handleAssignDriver = async (driverId: string) => {
-        if (!selectedOrder) return;
-
-        try {
-            setIsProcessing(true);
-
-            // Récupérer l'ID de l'admin connecté
-            const { data: { user } } = await supabase.auth.getUser();
-            if (!user) {
-                toast.error('Vous devez être connecté');
-                setIsProcessing(false);
-                return;
-            }
-
-            // Récupérer le user_id du chauffeur (important: utiliser user_id, pas id)
-            const { data: drivers, error: driverFetchError } = await supabase
-                .from('drivers')
-                .select('id, user_id, first_name, last_name')
-                .eq('id', driverId)
-                .limit(1);
-
-            const driver = drivers?.[0];
-
-            if (driverFetchError || !driver?.user_id) {
-                console.error('Erreur récupération chauffeur:', driverFetchError);
-                toast.error('Chauffeur introuvable ou incomplet');
-                setIsProcessing(false);
-                return;
-            }
-
-            // Utiliser le service d'assignation
-            // FIX: L'erreur FK (foreign key) indique que la table orders attend l'ID de la table drivers (UUID),
-            // et non le user_id (Auth ID).
-            const result = await assignOrderToDriver({
-                orderId: selectedOrder.id,
-                driverId: driver.id, // ✅ Utiliser l'ID de la table drivers (UUID) pour la FK
-                driverUserId: driver.user_id, // ✅ Utiliser le user_id pour les notifications
-                adminId: user.id
-            });
-
-            if (result.success) {
-                // Optimistic UI Update: Passer le statut à 'busy' et associer l'ordre
-                setAvailableDrivers(prev => prev.map(d =>
-                    d.id === driverId
-                        ? { ...d, status: 'busy' }
-                        : d
-                ));
-
-                // On ajoute l'ordre aux activeDeliveries pour l'affichage immédiat
-                // Note: driver.user_id est la clé utilisée dans activeDeliveries map
-                // Mais fetchDrivers retourne des objets avec `id` (uuid PK) et `user_id` (auth id).
-                // Il faut s'assurer d'utiliser la bonne clé.
-                // Dans fetchActiveDeliveries on utilise o.driver_id.
-                // o.driver_id correspond généralement au user_id du driver dans la table orders.
-                if (driver.user_id) {
-                    setActiveDeliveries(prev => ({
-                        ...prev,
-                        [driver.user_id]: selectedOrder, // Auth ID key
-                        [driver.id]: selectedOrder       // UUID key (Critical for consistency)
-                    }));
-                }
-
-                toast.success(
-                    `✅ Course ${selectedOrder.reference} assignée à ${driver.first_name} ${driver.last_name}`,
-                    {
-                        duration: 5000,
-                        style: {
-                            background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-                            color: 'white',
-                            border: '2px solid white',
-                            boxShadow: '0 10px 40px rgba(16, 185, 129, 0.4)',
-                        }
-                    }
-                );
-                setIsAssignDialogOpen(false);
-                setSelectedOrder(null);
-            } else {
-                toast.error('Erreur lors de l\'attribution de la course');
-            }
-
-        } catch (error: any) {
-            console.error('Error assigning driver:', error);
-            toast.error('Erreur lors de l\'attribution de la course');
-        } finally {
-            setIsProcessing(false);
-        }
-    };
-
-    const handleUnassign = async (driverId: string, orderId: string) => {
-        if (!confirm('Êtes-vous sûr de vouloir retirer cette course au chauffeur ?')) return;
-
-        setIsProcessing(true);
-        const result = await unassignOrder(orderId, 'Annulation par le dispatch');
-        setIsProcessing(false);
-
-        if (result.success) {
-            toast.success('Course retirée au chauffeur');
-
-            // Optimistic Update
-            // 1. Remettre le chauffeur en ligne
-            setAvailableDrivers(prev => prev.map(d =>
-                d.id === driverId ? { ...d, status: 'online' } : d
-            ));
-
-            // 2. Retirer la course de la map des livraisons actives
-            setActiveDeliveries(prev => {
-                const next = { ...prev };
-                // On essaie de nettoyer toutes les clés possibles liée à ce driver
-                Object.keys(next).forEach(key => {
-                    if (next[key].id === orderId) delete next[key];
-                });
-                return next;
-            });
-
-            // 3. Remettre la commande dans la liste des acceptées (si on a l'objet complet sous la main, sinon fetchOrders le fera)
-            // On fait un fetch pour être sûr d'avoir les données à jour
-            fetchAllOrders();
-        } else {
-            toast.error('Erreur lors du retrait de la course');
-        }
-    };
-
-    const formatPickupTime = (dateString?: string) => {
-        if (!dateString) return null;
-        const date = new Date(dateString);
-        return {
-            date: date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' }),
-            time: date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
-        };
-    };
-
-    // Logic to check if dispatch is allowed (45 mins before pickup)
-    const getDispatchStatus = (scheduledTime?: string) => {
-        if (!scheduledTime) return { allowed: true, message: null }; // Immediate order
-
-        const pickupDate = new Date(scheduledTime);
-        const unlockDate = new Date(pickupDate.getTime() - 45 * 60000); // -45 minutes
-        const now = new Date();
-
-        if (now >= unlockDate) {
-            return { allowed: true, message: null };
-        } else {
-            // Calculate remaining time
-            const diffMs = unlockDate.getTime() - now.getTime();
-            const diffMins = Math.ceil(diffMs / 60000);
-            const hours = Math.floor(diffMins / 60);
-            const mins = diffMins % 60;
-
-            let timeString = "";
-            if (hours > 0) timeString += `${hours}h `;
-            timeString += `${mins}min`;
-
-            return {
-                allowed: false,
-                message: `Déblocage dans ${timeString}`,
-                unlockTime: unlockDate.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
-            };
-        }
+        if (error) toast.error("Erreur lors de l'attribution");
+        else toast.success("Course attribuée au chauffeur");
     };
 
     return (
-        <div className="container mx-auto p-6 max-w-[1800px] h-[calc(100vh-4rem)] flex flex-col">
-            {/* Header avec compteurs */}
-            <div className="flex items-center justify-between mb-6">
+        <div className="p-6 space-y-6 bg-slate-50 min-h-screen">
+            <div className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-3xl font-bold">Dispatch</h1>
-                    <p className="text-muted-foreground">Tableau de bord de répartition des commandes en temps réel</p>
+                    <h1 className="text-3xl font-bold text-slate-900">Dispatch</h1>
+                    <p className="text-slate-500">Supervision en temps réel de la flotte</p>
                 </div>
-                <div className="flex gap-2 items-center flex-wrap">
-                    {/* Indicateur temps réel */}
-                    {isRealtimeConnected && (
-                        <Badge variant="outline" className="text-sm py-1 px-3 border-green-200 bg-green-50 text-green-700 animate-pulse">
-                            🟢 LIVE - Temps réel actif
-                        </Badge>
-                    )}
-                    <Badge variant="outline" className="text-sm py-1 px-3 border-blue-200 bg-blue-50 text-blue-700">
-                        <Package className="h-3 w-3 mr-1" />
-                        {acceptedOrders.length} à dispatcher
-                    </Badge>
-                    <Badge variant="outline" className="text-sm py-1 px-3 border-amber-200 bg-amber-50 text-amber-700">
-                        <Send className="h-3 w-3 mr-1" />
-                        {dispatchedOrders.length} en attente
-                    </Badge>
-                    <Badge variant="outline" className="text-sm py-1 px-3 border-teal-200 bg-teal-50 text-teal-700">
-                        <UserCheck className="h-3 w-3 mr-1" />
-                        {driverAcceptedOrders.length} acceptées
-                    </Badge>
-                    <Badge variant="outline" className="text-sm py-1 px-3 border-indigo-200 bg-indigo-50 text-indigo-700">
-                        <Play className="h-3 w-3 mr-1" />
-                        {inProgressOrders.length} en cours
-                    </Badge>
-                    <Badge variant="secondary" className="text-sm py-1 px-3 bg-green-100 text-green-800">
-                        <Truck className="h-3 w-3 mr-1" />
-                        {availableDrivers.filter(d => d.status === 'online').length} chauffeurs dispo
-                    </Badge>
-                </div>
+                <Badge variant="outline" className="px-4 py-1">
+                    {drivers.length} Chauffeurs en ligne
+                </Badge>
             </div>
 
-            {/* Grille Kanban - 4 colonnes sur grand écran */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-4 flex-1 overflow-hidden">
-
-                {/* ============================================ */}
-                {/* COLONNE 1: Commandes Validées (À dispatcher) */}
-                {/* ============================================ */}
-                <Card className="flex flex-col h-full overflow-hidden border-l-4 border-l-blue-500 shadow-md">
-                    <div className="p-3 border-b bg-blue-50/50 flex justify-between items-center">
-                        <h2 className="font-semibold flex items-center gap-2 text-sm">
-                            <CheckCircle className="h-4 w-4 text-blue-600" />
-                            À Dispatcher
-                            <Badge className="ml-1 bg-blue-100 text-blue-700 text-xs">{acceptedOrders.length}</Badge>
-                        </h2>
-                    </div>
-                    <div className="flex-1 overflow-y-auto p-3 space-y-3 bg-slate-50/50">
-                        {acceptedOrders.length === 0 ? (
-                            <div className="text-center py-8 text-muted-foreground">
-                                <Package className="h-12 w-12 mx-auto mb-3 opacity-20" />
-                                <p className="text-sm font-medium">Tout est assigné !</p>
-                                <p className="text-xs">Aucune commande en attente.</p>
-                            </div>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 h-[calc(100vh-150px)]">
+                
+                {/* COLONNE 1 : À DISPATCHER */}
+                <Card className="md:col-span-1 shadow-sm border-l-4 border-l-yellow-500 flex flex-col">
+                    <CardHeader className="pb-3 bg-yellow-50/50">
+                        <CardTitle className="text-sm font-bold uppercase text-yellow-700 flex justify-between">
+                            À Dispatcher <Badge variant="secondary">{pendingOrders.length}</Badge>
+                        </CardTitle>
+                    </CardHeader>
+                    <ScrollArea className="flex-1 p-4 pt-0">
+                        {pendingOrders.length === 0 ? (
+                            <div className="text-center py-10 text-slate-400 text-sm">Aucune commande en attente</div>
                         ) : (
-                            acceptedOrders.map((order) => {
-                                const pickupTime = formatPickupTime(order.scheduled_pickup_time);
-                                const isDeferred = !!pickupTime;
-                                const dispatchStatus = getDispatchStatus(order.scheduled_pickup_time);
+                            <div className="space-y-3 mt-4">
+                                {pendingOrders.map(order => (
+                                    <Card key={order.id} className="p-3 border-yellow-200 bg-white">
+                                        <div className="flex justify-between items-start mb-2">
+                                            <Badge variant="outline">{order.reference}</Badge>
+                                            <span className="font-bold">{order.price}€</span>
+                                        </div>
+                                        <div className="space-y-2 text-sm">
+                                            <div className="flex items-start gap-2">
+                                                <MapPin className="w-4 h-4 text-blue-500 shrink-0 mt-0.5" />
+                                                <span className="line-clamp-2">{order.pickup_address}</span>
+                                            </div>
+                                            <div className="flex items-start gap-2">
+                                                <Navigation className="w-4 h-4 text-green-500 shrink-0 mt-0.5" />
+                                                <span className="line-clamp-2">{order.delivery_address}</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div className="mt-3 pt-3 border-t">
+                                            <p className="text-xs font-semibold mb-2 text-slate-500">Assigner à :</p>
+                                            <div className="space-y-1">
+                                                {drivers.map(driver => (
+                                                    <button
+                                                        key={driver.id}
+                                                        onClick={() => handleAssign(order.id, driver.id)}
+                                                        className="w-full text-left text-xs p-2 hover:bg-slate-100 rounded flex items-center justify-between group"
+                                                    >
+                                                        <span className="font-medium">{driver.first_name} {driver.last_name}</span>
+                                                        <Badge className="opacity-0 group-hover:opacity-100 transition-opacity">Choisir</Badge>
+                                                    </button>
+                                                ))}
+                                                {drivers.length === 0 && <span className="text-xs text-red-400">Aucun chauffeur dispo</span>}
+                                            </div>
+                                        </div>
+                                    </Card>
+                                ))}
+                            </div>
+                        )}
+                    </ScrollArea>
+                </Card>
 
+                {/* COLONNE 2 : EN ATTRIBUTION */}
+                <Card className="md:col-span-1 shadow-sm border-l-4 border-l-blue-500 flex flex-col">
+                    <CardHeader className="pb-3 bg-blue-50/50">
+                        <CardTitle className="text-sm font-bold uppercase text-blue-700 flex justify-between">
+                            En cours d'acceptation <Badge variant="secondary">{assignedOrders.length}</Badge>
+                        </CardTitle>
+                    </CardHeader>
+                    <ScrollArea className="flex-1 p-4 pt-0">
+                         <div className="space-y-3 mt-4">
+                            {assignedOrders.map(order => {
+                                const driver = drivers.find(d => d.id === order.assigned_driver_id);
                                 return (
-                                    <div
-                                        key={order.id}
-                                        className={`border rounded-lg p-3 hover:shadow-md transition-all bg-white group relative overflow-hidden ${isDeferred ? 'border-l-4 border-l-orange-400' : 'border-l-4 border-l-blue-400'}`}
-                                    >
-                                        {/* Badge Type */}
-                                        <div className="absolute top-0 right-0">
-                                            {isDeferred ? (
-                                                <div className="bg-orange-100 text-orange-700 text-[10px] font-bold px-2 py-0.5 rounded-bl-md flex items-center gap-1">
-                                                    <Calendar className="h-2.5 w-2.5" />
-                                                    DIFFÉRÉ
-                                                </div>
-                                            ) : (
-                                                <div className="bg-blue-100 text-blue-700 text-[10px] font-bold px-2 py-0.5 rounded-bl-md flex items-center gap-1">
-                                                    <Clock className="h-2.5 w-2.5" />
-                                                    IMMÉDIAT
-                                                </div>
-                                            )}
-                                        </div>
-
-                                        <div className="mb-2 pr-14">
-                                            <h3 className="font-bold text-sm text-slate-800">{order.reference}</h3>
-                                            {isDeferred && (
-                                                <div className="mt-1 flex items-center gap-1 text-orange-600 text-xs">
-                                                    <Clock className="h-3 w-3" />
-                                                    {pickupTime?.date} à {pickupTime?.time}
-                                                </div>
-                                            )}
-                                        </div>
-
-                                        <div className="space-y-2 mb-3 text-xs">
-                                            <div className="flex items-start gap-2">
-                                                <div className="h-2 w-2 rounded-full bg-green-500 mt-1 shrink-0" />
-                                                <span className="text-slate-600 truncate">{order.pickup_address}</span>
-                                            </div>
-                                            <div className="flex items-start gap-2">
-                                                <div className="h-2 w-2 rounded-full bg-red-500 mt-1 shrink-0" />
-                                                <span className="text-slate-600 truncate">{order.delivery_address}</span>
+                                    <Card key={order.id} className="p-3 border-blue-100 bg-white opacity-80">
+                                        <div className="flex justify-between items-center mb-2">
+                                            <Badge variant="secondary">{order.reference}</Badge>
+                                            <div className="flex items-center gap-1 text-xs text-blue-600 animate-pulse">
+                                                <Clock className="w-3 h-3" /> En attente
                                             </div>
                                         </div>
-
-                                        <div className="flex items-center justify-between pt-2 border-t border-slate-100">
-                                            <Badge className="bg-slate-100 text-slate-700 text-xs px-2">{order.price} €</Badge>
-                                            {dispatchStatus.allowed ? (
-                                                <Button
-                                                    size="sm"
-                                                    onClick={() => {
-                                                        setSelectedOrder(order);
-                                                        setIsAssignDialogOpen(true);
-                                                    }}
-                                                    className="h-7 text-xs bg-slate-900 hover:bg-slate-700"
-                                                >
-                                                    Attribuer
-                                                    <ArrowRight className="h-3 w-3 ml-1" />
-                                                </Button>
-                                            ) : (
-                                                <div className="flex items-center gap-1 text-xs text-orange-600">
-                                                    <Timer className="h-3 w-3" />
-                                                    {dispatchStatus.message}
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
+                                        <p className="text-sm font-medium">
+                                            Chauffeur : {driver ? `${driver.first_name} ${driver.last_name}` : 'Inconnu'}
+                                        </p>
+                                    </Card>
                                 );
-                            })
-                        )}
-                    </div>
+                            })}
+                         </div>
+                    </ScrollArea>
                 </Card>
 
-                {/* ============================================ */}
-                {/* COLONNE 2: En cours d'attribution (Dispatched) */}
-                {/* ============================================ */}
-                <Card className="flex flex-col h-full overflow-hidden border-l-4 border-l-amber-500 shadow-md">
-                    <div className="p-3 border-b bg-amber-50/50 flex justify-between items-center">
-                        <h2 className="font-semibold flex items-center gap-2 text-sm">
-                            <Send className="h-4 w-4 text-amber-600" />
-                            En Attribution
-                            <Badge className="ml-1 bg-amber-100 text-amber-700 text-xs">{dispatchedOrders.length}</Badge>
-                        </h2>
-                    </div>
-                    <div className="flex-1 overflow-y-auto p-3 space-y-3 bg-amber-50/30">
-                        {dispatchedOrders.length === 0 ? (
-                            <div className="text-center py-8 text-muted-foreground">
-                                <Send className="h-12 w-12 mx-auto mb-3 opacity-20" />
-                                <p className="text-sm font-medium">Aucune attribution en attente</p>
-                                <p className="text-xs">Les chauffeurs recevront les courses ici.</p>
-                            </div>
-                        ) : (
-                            dispatchedOrders.map((order) => {
-                                // Détecter si c'est une commande refusée
-                                const isRefused = order.status === 'driver_refused' || order.status === 'pending_acceptance';
+                {/* COLONNE 3 : COURSES ACTIVES (AVEC DISTANCE & ETA) */}
+                <Card className="md:col-span-1 shadow-sm border-l-4 border-l-green-500 flex flex-col">
+                    <CardHeader className="pb-3 bg-green-50/50">
+                        <CardTitle className="text-sm font-bold uppercase text-green-700 flex justify-between">
+                            En Cours (Live) <Badge variant="secondary">{acceptedOrders.length}</Badge>
+                        </CardTitle>
+                    </CardHeader>
+                    <ScrollArea className="flex-1 p-4 pt-0">
+                        <div className="space-y-4 mt-4">
+                            {acceptedOrders.map(order => {
+                                const driver = drivers.find(d => d.id === (order.driver_id || order.assigned_driver_id));
+                                
+                                // Calculs LIVE
+                                let distance = 0;
+                                let targetLabel = "";
+                                
+                                if (driver && driver.current_lat && driver.current_lng) {
+                                    if (order.status === 'driver_accepted' || order.status === 'accepted') {
+                                        // Vers retrait
+                                        distance = calculateDistance(driver.current_lat, driver.current_lng, order.pickup_location?.latitude || 0, order.pickup_location?.longitude || 0);
+                                        targetLabel = "Vers Retrait";
+                                    } else if (order.status === 'in_progress') {
+                                        // Vers livraison
+                                        distance = calculateDistance(driver.current_lat, driver.current_lng, order.delivery_location?.latitude || 0, order.delivery_location?.longitude || 0);
+                                        targetLabel = "Vers Livraison";
+                                    }
+                                }
 
                                 return (
-                                    <div
-                                        key={order.id}
-                                        className={`border rounded-lg p-3 bg-white hover:shadow-md transition-all ${isRefused
-                                            ? 'border-l-4 border-l-red-500 ring-2 ring-red-200'
-                                            : 'border-l-4 border-l-amber-400 animate-pulse-slow'
-                                            }`}
-                                    >
-                                        <div className="flex items-center justify-between mb-2">
-                                            <h3 className="font-bold text-sm text-slate-800">{order.reference}</h3>
-                                            {isRefused ? (
-                                                <Badge className="bg-red-100 text-red-700 text-xs font-bold">
-                                                    🚫 REFUSÉE
-                                                </Badge>
-                                            ) : (
-                                                <Badge className="bg-amber-100 text-amber-700 text-xs animate-pulse">
-                                                    ⏳ En attente
-                                                </Badge>
-                                            )}
-                                        </div>
-                                        <div className="text-xs text-slate-600 space-y-1">
-                                            <div className="flex items-start gap-2">
-                                                <div className="h-2 w-2 rounded-full bg-green-500 mt-1 shrink-0" />
-                                                <span className="truncate">{order.pickup_address}</span>
-                                            </div>
-                                            <div className="flex items-start gap-2">
-                                                <MapPin className="h-3 w-3 mt-0.5 shrink-0 text-red-500" />
-                                                <span className="truncate">{order.delivery_address}</span>
-                                            </div>
-                                        </div>
-
-                                        {/* Historique des refus - utilise les champs de la commande */}
-                                        {isRefused && (
-                                            <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded text-xs">
-                                                <div className="flex items-center gap-2">
-                                                    <AlertCircle className="h-3 w-3 text-red-600" />
-                                                    <span className="text-red-700 font-semibold">
-                                                        Refusée {order.refusal_count || 1} fois
-                                                    </span>
-                                                </div>
-                                                {order.last_refused_by && (
-                                                    <div className="mt-1 text-red-600 text-xs">
-                                                        Dernier refus: <span className="font-medium">{order.last_refused_by}</span>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        )}
-
-                                        <div className="flex items-center justify-between mt-2 pt-2 border-t">
-                                            <Badge className="bg-slate-100 text-slate-700 text-xs">{order.price} €</Badge>
-                                            {isRefused ? (
-                                                <Button
-                                                    size="sm"
-                                                    onClick={() => {
-                                                        setSelectedOrder(order);
-                                                        setIsAssignDialogOpen(true);
-                                                    }}
-                                                    className="h-7 text-xs bg-red-600 hover:bg-red-700 text-white"
-                                                >
-                                                    Réattribuer
-                                                    <ArrowRight className="h-3 w-3 ml-1" />
-                                                </Button>
-                                            ) : (
-                                                <span className="text-xs text-amber-600 font-medium">Chauffeur notifié...</span>
-                                            )}
-                                        </div>
-                                    </div>
-                                );
-                            })
-                        )}
-                    </div>
-                </Card>
-
-                {/* ============================================ */}
-                {/* COLONNE 3: Acceptées par les Chauffeurs */}
-                {/* ============================================ */}
-                <Card className="flex flex-col h-full overflow-hidden border-l-4 border-l-teal-500 shadow-md">
-                    <div className="p-3 border-b bg-teal-50/50 flex justify-between items-center">
-                        <h2 className="font-semibold flex items-center gap-2 text-sm">
-                            <UserCheck className="h-4 w-4 text-teal-600" />
-                            Acceptées
-                            <Badge className="ml-1 bg-teal-100 text-teal-700 text-xs">{driverAcceptedOrders.length}</Badge>
-                        </h2>
-                    </div>
-                    <div className="flex-1 overflow-y-auto p-3 space-y-3 bg-teal-50/30">
-                        {driverAcceptedOrders.length === 0 ? (
-                            <div className="text-center py-8 text-muted-foreground">
-                                <UserCheck className="h-12 w-12 mx-auto mb-3 opacity-20" />
-                                <p className="text-sm font-medium">Aucune acceptation</p>
-                                <p className="text-xs">Les courses acceptées apparaîtront ici.</p>
-                            </div>
-                        ) : (
-                            driverAcceptedOrders.map((order) => (
-                                <div
-                                    key={order.id}
-                                    className="border rounded-lg p-3 bg-white border-l-4 border-l-teal-400 hover:shadow-md transition-all"
-                                >
-                                    <div className="flex items-center justify-between mb-2">
-                                        <h3 className="font-bold text-sm text-slate-800">{order.reference}</h3>
-                                        <Badge className="bg-teal-100 text-teal-700 text-xs">
-                                            ✓ Acceptée
-                                        </Badge>
-                                    </div>
-                                    <div className="text-xs text-slate-600 space-y-1">
-                                        <div className="flex items-start gap-2">
-                                            <MapPin className="h-3 w-3 mt-0.5 shrink-0 text-red-500" />
-                                            <span className="truncate">{order.delivery_address}</span>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center justify-between mt-2 pt-2 border-t">
-                                        <Badge className="bg-slate-100 text-slate-700 text-xs">{order.price} €</Badge>
-                                        <span className="text-xs text-teal-600 font-medium flex items-center gap-1">
-                                            <Truck className="h-3 w-3" />
-                                            Chauffeur prêt
-                                        </span>
-                                    </div>
-                                </div>
-                            ))
-                        )}
-                    </div>
-                </Card>
-
-                {/* ============================================ */}
-                {/* COLONNE 4: Chauffeurs disponibles */}
-                {/* ============================================ */}
-                <Card className="flex flex-col h-full overflow-hidden border-l-4 border-l-green-500 shadow-md">
-                    <div className="p-3 border-b bg-green-50/50 flex justify-between items-center">
-                        <h2 className="font-semibold flex items-center gap-2 text-sm">
-                            <Truck className="h-4 w-4 text-green-600" />
-                            Chauffeurs
-                            <Badge className="ml-1 bg-green-100 text-green-700 text-xs">{availableDrivers.length}</Badge>
-                        </h2>
-                    </div>
-                    <div className="flex-1 overflow-y-auto p-3 space-y-3 bg-slate-50/50">
-                        {availableDrivers.length === 0 ? (
-                            <div className="text-center py-8 text-muted-foreground">
-                                <User className="h-12 w-12 mx-auto mb-3 opacity-20" />
-                                <p className="text-sm font-medium">Aucun chauffeur actif</p>
-                                <p className="text-xs">En attente de connexion...</p>
-                            </div>
-                        ) : (
-                            availableDrivers.map((driver) => {
-                                const activeOrder = activeDeliveries[driver.user_id || ''] || activeDeliveries[driver.id];
-                                // ✅ FIX: Un chauffeur n'est "busy" QUE s'il a une course active
-                                // Cela évite le bouton "Libérer" après un refus de course
-                                const isBusy = (driver.status === 'busy' || driver.status === 'on_delivery') && !!activeOrder;
-                                const isAccepted = activeOrder && activeOrder.status === 'driver_accepted';
-                                const isInProgress = activeOrder && activeOrder.status === 'in_progress';
-
-                                return (
-                                    <div
-                                        key={driver.id}
-                                        className={`border rounded-lg p-3 transition-all ${isInProgress
-                                            ? 'bg-indigo-50/50 border-indigo-200'
-                                            : isAccepted
-                                                ? 'bg-teal-50/50 border-teal-200'
-                                                : isBusy
-                                                    ? 'bg-amber-50/50 border-amber-200'
-                                                    : 'bg-white hover:shadow-md border-green-200'
-                                            }`}
-                                    >
-                                        <div className="flex items-center justify-between mb-2">
-                                            <div className="flex items-center gap-2">
-                                                <div className={`h-8 w-8 rounded-full flex items-center justify-center font-bold text-xs border ${isInProgress
-                                                    ? 'bg-indigo-100 text-indigo-700 border-indigo-300'
-                                                    : isAccepted
-                                                        ? 'bg-teal-100 text-teal-700 border-teal-300'
-                                                        : isBusy
-                                                            ? 'bg-amber-100 text-amber-700 border-amber-300'
-                                                            : 'bg-green-100 text-green-700 border-green-300'
-                                                    }`}>
-                                                    {driver.first_name[0]}{driver.last_name[0]}
-                                                </div>
-                                                <div>
-                                                    <p className="font-medium text-sm text-slate-800">{driver.first_name} {driver.last_name}</p>
-                                                    <p className="text-xs text-slate-500">{driver.vehicle_type || 'Véhicule N/A'}</p>
-                                                </div>
-                                            </div>
-                                            <Badge className={`text-[10px] px-2 ${isInProgress
-                                                ? 'bg-indigo-100 text-indigo-700'
-                                                : isAccepted
-                                                    ? 'bg-teal-100 text-teal-700'
-                                                    : isBusy
-                                                        ? 'bg-amber-100 text-amber-700'
-                                                        : 'bg-green-100 text-green-700'
-                                                }`}>
-                                                {isInProgress ? '🚚 En route' : isAccepted ? '✓ Prêt' : isBusy ? '⏳ En attente' : '🟢 Dispo'}
+                                    <Card key={order.id} className="p-3 border-green-200 bg-white">
+                                        <div className="flex justify-between items-start mb-2">
+                                            <span className="font-bold text-sm">{order.reference}</span>
+                                            <Badge className={order.status === 'in_progress' ? 'bg-purple-500' : 'bg-blue-500'}>
+                                                {order.status === 'in_progress' ? 'En Livraison' : 'Approche'}
                                             </Badge>
                                         </div>
-
-                                        {/* Afficher la course active */}
-                                        {isBusy && activeOrder && (
-                                            <div className={`mt-2 p-2 rounded text-xs border ${isInProgress
-                                                ? 'bg-indigo-50 border-indigo-200'
-                                                : isAccepted
-                                                    ? 'bg-teal-50 border-teal-200'
-                                                    : 'bg-white border-amber-200'
-                                                }`}>
-                                                <div className="flex items-center justify-between">
-                                                    <span className="font-semibold">{activeOrder.reference}</span>
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="icon"
-                                                        className="h-5 w-5 hover:bg-red-100 hover:text-red-600"
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            handleUnassign(driver.id, activeOrder.id);
-                                                        }}
-                                                        title="Retirer la course"
-                                                    >
-                                                        <X className="h-3 w-3" />
-                                                    </Button>
-                                                </div>
-                                                <div className="mt-1 text-slate-500 truncate">
-                                                    → {activeOrder.delivery_address}
-                                                </div>
-                                            </div>
-                                        )}
-
-                                        {/* Alerte si bloqué */}
-                                        {isBusy && !activeOrder && (
-                                            <div className="mt-2 p-2 bg-red-50 rounded border border-red-200 text-xs flex items-center justify-between">
-                                                <span className="text-red-600 flex items-center gap-1">
-                                                    <AlertCircle className="h-3 w-3" />
-                                                    Statut bloqué
+                                        
+                                        {/* INFO CHAUFFEUR LIVE */}
+                                        <div className="bg-slate-50 p-2 rounded mb-2 border">
+                                            <div className="flex items-center gap-2 mb-1">
+                                                <Car className="w-4 h-4 text-slate-600" />
+                                                <span className="text-sm font-semibold">
+                                                    {driver ? `${driver.first_name} ${driver.last_name}` : 'Chauffeur ?'}
                                                 </span>
-                                                <Button
-                                                    variant="outline"
-                                                    size="sm"
-                                                    className="h-5 text-[10px] px-2 border-red-200 text-red-600 hover:bg-red-100"
-                                                    onClick={() => handleForceAvailable(driver.id)}
-                                                >
-                                                    Libérer
-                                                </Button>
                                             </div>
+                                            {driver?.current_lat ? (
+                                                <div className="grid grid-cols-2 gap-2 text-xs">
+                                                    <div>
+                                                        <p className="text-slate-500">Distance</p>
+                                                        <p className="font-mono font-bold text-slate-800">{formatDistance(distance)}</p>
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-slate-500">ETA estimé</p>
+                                                        <p className="font-mono font-bold text-green-600">{estimateTime(distance)}</p>
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <p className="text-xs text-red-400 italic">Position indisponible</p>
+                                            )}
+                                        </div>
+
+                                        <div className="text-xs text-slate-500 flex justify-between items-center">
+                                            <span>{targetLabel}</span>
+                                            <span className="text-[10px]">{new Date(order.updated_at).toLocaleTimeString()}</span>
+                                        </div>
+                                    </Card>
+                                );
+                            })}
+                        </div>
+                    </ScrollArea>
+                </Card>
+
+                {/* COLONNE 4 : CHAUFFEURS */}
+                <Card className="md:col-span-1 shadow-sm flex flex-col">
+                    <CardHeader className="pb-3">
+                        <CardTitle className="text-sm font-bold uppercase text-slate-700">
+                            Chauffeurs ({drivers.length})
+                        </CardTitle>
+                    </CardHeader>
+                    <ScrollArea className="flex-1 p-4 pt-0">
+                        <div className="space-y-3 mt-4">
+                            {drivers.map(driver => {
+                                const activeOrder = getDriverActiveOrder(driver.id);
+                                return (
+                                    <div key={driver.id} className="flex items-center gap-3 p-2 hover:bg-slate-50 rounded border border-transparent hover:border-slate-200 transition-all">
+                                        <div className={`w-2 h-2 rounded-full ${driver.status === 'online' ? 'bg-green-500' : 'bg-slate-300'}`} />
+                                        <div className="flex-1">
+                                            <p className="text-sm font-medium">{driver.first_name} {driver.last_name}</p>
+                                            <p className="text-xs text-slate-500">{driver.vehicle_type || 'Véhicule N/A'}</p>
+                                        </div>
+                                        {activeOrder && (
+                                            <Badge variant="outline" className="text-[10px] border-orange-200 text-orange-600 bg-orange-50">
+                                                En course
+                                            </Badge>
                                         )}
                                     </div>
                                 );
-                            })
-                        )}
-                    </div>
-                </Card>
-            </div>
-
-            {/* Modal d'attribution */}
-            <Dialog open={isAssignDialogOpen} onOpenChange={setIsAssignDialogOpen}>
-                <DialogContent className="sm:max-w-[500px]">
-                    <DialogHeader>
-                        <DialogTitle>Attribuer la course {selectedOrder?.reference}</DialogTitle>
-                        <DialogDescription>
-                            Sélectionnez un chauffeur disponible pour effectuer cette course.
-                        </DialogDescription>
-                    </DialogHeader>
-
-                    <div className="py-4">
-                        <h4 className="text-sm font-medium mb-3 text-muted-foreground">Chauffeurs disponibles ({availableDrivers.length})</h4>
-                        <div className="space-y-2 max-h-[300px] overflow-y-auto">
-                            {availableDrivers.length === 0 ? (
-                                <p className="text-center text-sm text-muted-foreground py-8 bg-slate-50 rounded-lg">
-                                    Aucun chauffeur connecté.
-                                </p>
-                            ) : (
-                                availableDrivers.map((driver) => {
-                                    const activeOrder = activeDeliveries[driver.user_id || ''] || activeDeliveries[driver.id];
-                                    // ✅ FIX: Un chauffeur n'est "busy" QUE s'il a une course active
-                                    const isBusy = (driver.status === 'busy' || driver.status === 'on_delivery') && !!activeOrder;
-
-                                    return (
-                                        <div
-                                            key={driver.id}
-                                            className={`flex items-center justify-between p-3 border rounded-lg transition-colors group ${isBusy ? 'bg-slate-50 opacity-75 cursor-not-allowed' : 'hover:bg-slate-50 cursor-pointer'}`}
-                                            onClick={() => !isBusy && handleAssignDriver(driver.id)}
-                                        >
-                                            <div className="flex items-center gap-3">
-                                                <div className={`h-10 w-10 rounded-full flex items-center justify-center text-sm font-bold ${isBusy ? 'bg-slate-200 text-slate-500' : 'bg-green-100 text-green-700 group-hover:bg-green-200'}`}>
-                                                    {driver.first_name[0]}{driver.last_name[0]}
-                                                </div>
-                                                <div className="flex-1 min-w-0">
-                                                    <div className="flex items-center gap-2">
-                                                        <p className="font-medium text-sm truncate">
-                                                            {driver.first_name} {driver.last_name}
-                                                        </p>
-                                                        {isBusy && (
-                                                            <Badge variant="outline" className="text-[10px] h-5 px-1 bg-blue-50 text-blue-600 border-blue-200">
-                                                                Occupé
-                                                            </Badge>
-                                                        )}
-                                                    </div>
-                                                    <p className="text-xs text-muted-foreground truncate">
-                                                        {isBusy && activeOrder
-                                                            ? `Course ${activeOrder.reference}`
-                                                            : (driver.vehicle_type || 'Véhicule non spécifié')
-                                                        }
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            {!isBusy ? (
-                                                <Button size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">
-                                                    Choisir
-                                                    <ArrowRight className="h-4 w-4 ml-2" />
-                                                </Button>
-                                            ) : (
-                                                <div className="px-3" title="Ce chauffeur est déjà en course">
-                                                    <Lock className="h-4 w-4 text-slate-300" />
-                                                </div>
-                                            )}
-                                        </div>
-                                    )
-                                })
-                            )}
+                            })}
                         </div>
-                    </div>
+                    </ScrollArea>
+                </Card>
 
-                    <DialogFooter>
-                        <Button variant="outline" onClick={() => setIsAssignDialogOpen(false)}>
-                            Annuler
-                        </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
+            </div>
         </div>
     );
 }
