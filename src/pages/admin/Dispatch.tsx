@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from 'react';
 import { supabase } from '@/lib/supabase';
-import { Order, DriverStatus, OrderDriver } from '@/types';
+// import { Order, DriverStatus, OrderDriver } from '@/types'; // We define local types to match DB
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -8,12 +8,34 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { MapPin, Navigation, Clock, User, Phone, Car } from "lucide-react";
 import { toast } from "sonner";
 
-// --- TYPES ---
-interface DriverWithLocation extends OrderDriver {
+// --- TYPES (Matching DB Schema) ---
+interface Order {
+    id: string;
+    reference: string;
+    status: string;
+    pickup_address: string;
+    delivery_address: string;
+    pickup_lat?: number;
+    pickup_lng?: number;
+    delivery_lat?: number;
+    delivery_lng?: number;
+    price: number;
+    assigned_driver_id?: string;
+    driver_id?: string;
+    created_at: string;
+    updated_at: string;
+}
+
+interface Driver {
+    id: string;
+    first_name: string;
+    last_name: string;
+    status: string;
     current_lat?: number;
     current_lng?: number;
     vehicle_type?: string;
     last_location_update?: string;
+    is_online?: boolean; 
 }
 
 // --- UTILS ---
@@ -45,7 +67,7 @@ const estimateTime = (km: number) => {
 
 export default function Dispatch() {
     const [orders, setOrders] = useState<Order[]>([]);
-    const [drivers, setDrivers] = useState<DriverWithLocation[]>([]);
+    const [drivers, setDrivers] = useState<Driver[]>([]);
     const [loading, setLoading] = useState(true);
 
     // --- DATA FETCHING & SUBSCRIPTION ---
@@ -59,11 +81,11 @@ export default function Dispatch() {
             const { data: driversData } = await supabase
                 .from('drivers')
                 .select('*')
-                .eq('status', 'online') // On ne veut que les actifs
+                // .eq('status', 'online') // fetch all initially
                 .order('updated_at', { ascending: false });
 
             if (ordersData) setOrders(ordersData as Order[]);
-            if (driversData) setDrivers(driversData as DriverWithLocation[]);
+            if (driversData) setDrivers(driversData as Driver[]);
             setLoading(false);
         };
 
@@ -81,12 +103,11 @@ export default function Dispatch() {
                 }
             })
             .on('postgres_changes', { event: '*', schema: 'public', table: 'drivers' }, (payload) => {
-                if (payload.eventType === 'UPDATE') {
+                if (payload.eventType === 'UPDATE' || payload.eventType === 'INSERT') {
                     setDrivers(prev => {
                         const exists = prev.find(d => d.id === payload.new.id);
-                        if (!exists && payload.new.status === 'online') return [...prev, payload.new as DriverWithLocation];
-                        if (exists && payload.new.status === 'offline') return prev.filter(d => d.id !== payload.new.id);
-                        return prev.map(d => d.id === payload.new.id ? payload.new as DriverWithLocation : d);
+                        if (!exists) return [...prev, payload.new as Driver];
+                        return prev.map(d => d.id === payload.new.id ? payload.new as Driver : d);
                     });
                 }
             })
@@ -94,6 +115,9 @@ export default function Dispatch() {
 
         return () => { supabase.removeChannel(channel); };
     }, []);
+
+    // Filter Drivers for Display (e.g. only online or busy)
+    const activeDrivers = drivers.filter(d => d.is_online || d.status === 'busy');
 
     // --- DERIVED STATE ---
     const pendingOrders = orders.filter(o => o.status === 'pending_acceptance');
@@ -126,7 +150,7 @@ export default function Dispatch() {
                     <p className="text-slate-500">Supervision en temps réel de la flotte</p>
                 </div>
                 <Badge variant="outline" className="px-4 py-1">
-                    {drivers.length} Chauffeurs en ligne
+                    {activeDrivers.length} Chauffeurs actifs
                 </Badge>
             </div>
 
@@ -164,7 +188,7 @@ export default function Dispatch() {
                                         <div className="mt-3 pt-3 border-t">
                                             <p className="text-xs font-semibold mb-2 text-slate-500">Assigner à :</p>
                                             <div className="space-y-1">
-                                                {drivers.map(driver => (
+                                                {activeDrivers.map(driver => (
                                                     <button
                                                         key={driver.id}
                                                         onClick={() => handleAssign(order.id, driver.id)}
@@ -174,7 +198,7 @@ export default function Dispatch() {
                                                         <Badge className="opacity-0 group-hover:opacity-100 transition-opacity">Choisir</Badge>
                                                     </button>
                                                 ))}
-                                                {drivers.length === 0 && <span className="text-xs text-red-400">Aucun chauffeur dispo</span>}
+                                                {activeDrivers.length === 0 && <span className="text-xs text-red-400">Aucun chauffeur dispo</span>}
                                             </div>
                                         </div>
                                     </Card>
@@ -232,11 +256,11 @@ export default function Dispatch() {
                                 if (driver && driver.current_lat && driver.current_lng) {
                                     if (order.status === 'driver_accepted' || order.status === 'accepted') {
                                         // Vers retrait
-                                        distance = calculateDistance(driver.current_lat, driver.current_lng, order.pickup_location?.latitude || 0, order.pickup_location?.longitude || 0);
+                                        distance = calculateDistance(driver.current_lat, driver.current_lng, order.pickup_lat || 0, order.pickup_lng || 0);
                                         targetLabel = "Vers Retrait";
                                     } else if (order.status === 'in_progress') {
                                         // Vers livraison
-                                        distance = calculateDistance(driver.current_lat, driver.current_lng, order.delivery_location?.latitude || 0, order.delivery_location?.longitude || 0);
+                                        distance = calculateDistance(driver.current_lat, driver.current_lng, order.delivery_lat || 0, order.delivery_lng || 0);
                                         targetLabel = "Vers Livraison";
                                     }
                                 }
@@ -289,16 +313,16 @@ export default function Dispatch() {
                 <Card className="md:col-span-1 shadow-sm flex flex-col">
                     <CardHeader className="pb-3">
                         <CardTitle className="text-sm font-bold uppercase text-slate-700">
-                            Chauffeurs ({drivers.length})
+                            Chauffeurs ({activeDrivers.length})
                         </CardTitle>
                     </CardHeader>
                     <ScrollArea className="flex-1 p-4 pt-0">
                         <div className="space-y-3 mt-4">
-                            {drivers.map(driver => {
+                            {activeDrivers.map(driver => {
                                 const activeOrder = getDriverActiveOrder(driver.id);
                                 return (
                                     <div key={driver.id} className="flex items-center gap-3 p-2 hover:bg-slate-50 rounded border border-transparent hover:border-slate-200 transition-all">
-                                        <div className={`w-2 h-2 rounded-full ${driver.status === 'online' ? 'bg-green-500' : 'bg-slate-300'}`} />
+                                        <div className={`w-2 h-2 rounded-full ${driver.is_online ? 'bg-green-500' : 'bg-slate-300'}`} />
                                         <div className="flex-1">
                                             <p className="text-sm font-medium">{driver.first_name} {driver.last_name}</p>
                                             <p className="text-xs text-slate-500">{driver.vehicle_type || 'Véhicule N/A'}</p>
