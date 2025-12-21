@@ -133,7 +133,7 @@ export default function Dispatch() {
             .from('orders')
             .update({
                 status: 'assigned',
-                assigned_driver_id: driverId,
+                driver_id: driverId, // Correction : usage de driver_id pour compatibilité avec l'app chauffeur
                 dispatched_at: new Date().toISOString()
             })
             .eq('id', orderId);
