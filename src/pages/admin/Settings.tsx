@@ -61,8 +61,11 @@ const Settings = () => {
           ...settings
         }));
 
-        // Fetch Notifications (Mocked for now as schema doesn't have it explicitly for admins yet)
-        // TODO: Add notification preferences to admins table
+        // Fetch Notifications (Local Storage Fallback)
+        const savedNotifs = localStorage.getItem('admin_notifications');
+        if (savedNotifs) {
+          setNotifications(JSON.parse(savedNotifs));
+        }
       } catch (error) {
         console.error("Error fetching settings:", error);
         toast.error("Erreur lors du chargement des paramètres");
@@ -75,17 +78,31 @@ const Settings = () => {
   const handleSaveProfile = async () => {
     setIsLoading(true);
     try {
-      // Update Admin Profile in DB
-      if (user?.profile?.id) {
-        const { error } = await supabase
-          .from('admins')
-          .update({
-            full_name: profileData.full_name,
-            // email is handled via auth.updateUser usually, but let's keep it simple for now
-          })
-          .eq('id', user.profile.id);
+      // Update Admin Profile in DB (profiles table)
+      if (user?.id) {
+        const nameParts = profileData.full_name.split(' ');
+        const firstName = nameParts[0];
+        const lastName = nameParts.slice(1).join(' ') || '';
 
-        if (error) throw error;
+        // 1. Update public profile
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .update({
+            first_name: firstName,
+            last_name: lastName
+          })
+          .eq('id', user.id);
+
+        if (profileError) throw profileError;
+
+        // 2. Update Auth Metadata (redundancy)
+        await supabase.auth.updateUser({
+          data: {
+            full_name: profileData.full_name,
+            first_name: firstName,
+            last_name: lastName
+          }
+        });
       }
 
       toast.success("Profil mis à jour avec succès");
@@ -327,14 +344,17 @@ const Settings = () => {
                   onCheckedChange={(checked) => setNotifications({ ...notifications, dailyReport: checked })}
                 />
               </div>
-              <Button disabled={true} variant="outline">
-                Bientôt disponible
+              <Button onClick={() => {
+                localStorage.setItem('admin_notifications', JSON.stringify(notifications));
+                toast.success("Préférences de notification enregistrées (Local)");
+              }}>
+                Enregistrer les préférences
               </Button>
             </CardContent>
           </Card>
         </TabsContent>
       </Tabs>
-    </div>
+    </div >
   );
 };
 

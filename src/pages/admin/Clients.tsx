@@ -110,7 +110,7 @@ const Clients = () => {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, []);
+  }, [currentPage, searchQuery, statusFilter]);
 
   const fetchGlobalStats = async () => {
     try {

@@ -823,13 +823,13 @@ export const getAllInvoices = async (): Promise<Invoice[]> => {
     const { data, error } = await supabase
         .from('invoices')
         .select(`
-      *,
-      clients (
-        id,
-        company_name,
-        email
-      )
-    `)
+            *,
+            clients:client_id (
+                id,
+                company_name,
+                email
+            )
+        `)
         .order('created_at', { ascending: false });
 
     if (error) throw error;
@@ -840,13 +840,13 @@ export const getUnpaidInvoices = async (): Promise<Invoice[]> => {
     const { data, error } = await supabase
         .from('invoices')
         .select(`
-      *,
-      clients (
-        id,
-        company_name,
-        email
-      )
-    `)
+            *,
+            clients:client_id (
+                id,
+                company_name,
+                email
+            )
+        `)
         .eq('status', 'pending')
         .order('created_at', { ascending: false });
 
