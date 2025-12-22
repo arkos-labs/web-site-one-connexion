@@ -20,6 +20,7 @@ export type OrderEventType =
     | 'cancelled'
     | 'driver_assigned'
     | 'driver_accepted'
+    | 'arrived_pickup'
     | 'driver_declined'
     | 'driver_changed'
     | 'status_changed'
@@ -34,6 +35,7 @@ export const ORDER_EVENT_LABELS: Record<OrderEventType, string> = {
     cancelled: 'Commande annulée',
     driver_assigned: 'Chauffeur assigné',
     driver_accepted: 'Course acceptée par le chauffeur',
+    arrived_pickup: 'Chauffeur arrivé au point de retrait',
     driver_declined: 'Course refusée par le chauffeur',
     driver_changed: 'Chauffeur modifié',
     status_changed: 'Statut modifié',
@@ -49,6 +51,7 @@ export const ORDER_EVENT_ICONS: Record<OrderEventType, string> = {
     cancelled: '❌',
     driver_assigned: '👤',
     driver_accepted: '🤝',
+    arrived_pickup: '📍',
     driver_declined: '🚫',
     driver_changed: '🔄',
     status_changed: '🔔',
