@@ -34,6 +34,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const DashboardClient = () => {
   const navigate = useNavigate();
@@ -279,6 +280,45 @@ const DashboardClient = () => {
 
   return (
     <div className="space-y-8">
+      {/* Account Status Alerts */}
+      {profile?.status === 'suspended' && (
+        <Alert variant="destructive" className="bg-red-50 border-red-200 text-red-900 mb-6">
+          <div className="flex items-start gap-4">
+            <div className="p-2 bg-white rounded-full shadow-sm">
+              <Loader2 className="h-6 w-6 text-red-600 animate-pulse" />
+            </div>
+            <div className="flex-1">
+              <AlertTitle className="text-xl font-bold flex items-center gap-2">
+                Compte Temporairement Suspendu
+              </AlertTitle>
+              <AlertDescription className="mt-2 text-base">
+                <p className="font-medium">Votre accès aux nouvelles commandes est restreint.</p>
+                <p className="mt-1 text-red-700/80">
+                  Raison : {profile.suspension_reason || "Non spécifiée. Veuillez contacter le support."}
+                </p>
+                <div className="mt-4 flex gap-3">
+                  <Button variant="outline" className="bg-white border-red-200 text-red-700 hover:bg-red-50" size="sm">
+                    Contacter le support
+                  </Button>
+                  <Button variant="outline" className="bg-white border-red-200 text-red-700 hover:bg-red-50" size="sm">
+                    Voir mes factures
+                  </Button>
+                </div>
+              </AlertDescription>
+            </div>
+          </div>
+        </Alert>
+      )}
+
+      {profile?.status === 'deleted' && (
+        <Alert variant="destructive" className="bg-gray-100 border-gray-300 text-gray-900 mb-6">
+          <AlertTitle className="font-bold text-lg">Compte Désactivé</AlertTitle>
+          <AlertDescription>
+            Ce compte a été désactivé. Veuillez contacter l'administrateur pour plus d'informations.
+          </AlertDescription>
+        </Alert>
+      )}
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>

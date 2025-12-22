@@ -184,6 +184,52 @@ export const CreateClientModal = ({ isOpen, onClose, onSuccess }: CreateClientMo
         }
     };
 
+    const handleSiretChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { value } = e.target;
+        // Only allow numbers and limit to 14 chars
+        const cleanValue = value.replace(/\D/g, '').slice(0, 14);
+
+        setFormData(prev => ({ ...prev, siret: cleanValue }));
+
+        if (cleanValue.length === 14) {
+            await fetchEnterpriseInfo(cleanValue);
+        }
+    };
+
+    const fetchEnterpriseInfo = async (siret: string) => {
+        try {
+            setIsLoading(true);
+            const response = await fetch(`https://recherche-entreprises.api.gouv.fr/search?q=${siret}`);
+
+            if (!response.ok) throw new Error("Erreur API");
+
+            const data = await response.json();
+
+            if (data.results && data.results.length > 0) {
+                const company = data.results[0];
+                const siege = company.siege;
+
+                setFormData(prev => ({
+                    ...prev,
+                    company_name: company.nom_complet || prev.company_name,
+                    billing_address: siege.adresse || prev.billing_address,
+                    postal_code: siege.code_postal || prev.postal_code,
+                    city: siege.libelle_commune || prev.city,
+                    // Try to map generic sector or leave empty (NAF codes are too specific usually)
+                }));
+
+                toast.success("Entreprise trouvée : " + company.nom_complet);
+            } else {
+                toast.error("Aucune entreprise trouvée pour ce SIRET");
+            }
+        } catch (error) {
+            console.error("Erreur recherche SIRET:", error);
+            // Don't block user, just log
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     const renderStepContent = () => {
         switch (currentStep) {
             case 'info':
@@ -196,6 +242,26 @@ export const CreateClientModal = ({ isOpen, onClose, onSuccess }: CreateClientMo
 
                         <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-2">
+                                <Label htmlFor="siret">SIRET *</Label>
+                                <div className="relative">
+                                    <Input
+                                        id="siret"
+                                        name="siret"
+                                        value={formData.siret}
+                                        onChange={handleSiretChange}
+                                        placeholder="14 chiffres"
+                                        className={errors.siret ? "border-red-500" : ""}
+                                    />
+                                    {isLoading && formData.siret.length === 14 && (
+                                        <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                                            <div className="animate-spin h-4 w-4 border-2 border-primary border-t-transparent rounded-full"></div>
+                                        </div>
+                                    )}
+                                </div>
+                                {errors.siret && <p className="text-xs text-red-500">{errors.siret}</p>}
+                            </div>
+
+                            <div className="space-y-2">
                                 <Label htmlFor="company_name">Nom de l'entreprise *</Label>
                                 <Input
                                     id="company_name"
@@ -206,6 +272,8 @@ export const CreateClientModal = ({ isOpen, onClose, onSuccess }: CreateClientMo
                                 />
                                 {errors.company_name && <p className="text-xs text-red-500">{errors.company_name}</p>}
                             </div>
+
+
                             <div className="space-y-2">
                                 <Label htmlFor="sector">Secteur *</Label>
                                 <Select value={formData.sector} onValueChange={(value) => handleSelectChange("sector", value)}>
@@ -220,22 +288,20 @@ export const CreateClientModal = ({ isOpen, onClose, onSuccess }: CreateClientMo
                                 </Select>
                                 {errors.sector && <p className="text-xs text-red-500">{errors.sector}</p>}
                             </div>
-                        </div>
 
-                        <div className="space-y-2">
-                            <Label htmlFor="email">Email professionnel *</Label>
-                            <Input
-                                id="email"
-                                name="email"
-                                type="email"
-                                value={formData.email}
-                                onChange={handleChange}
-                                className={errors.email ? "border-red-500" : ""}
-                            />
-                            {errors.email && <p className="text-xs text-red-500">{errors.email}</p>}
-                        </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="email">Email professionnel *</Label>
+                                <Input
+                                    id="email"
+                                    name="email"
+                                    type="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    className={errors.email ? "border-red-500" : ""}
+                                />
+                                {errors.email && <p className="text-xs text-red-500">{errors.email}</p>}
+                            </div>
 
-                        <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-2">
                                 <Label htmlFor="phone">Téléphone *</Label>
                                 <Input
@@ -246,17 +312,6 @@ export const CreateClientModal = ({ isOpen, onClose, onSuccess }: CreateClientMo
                                     className={errors.phone ? "border-red-500" : ""}
                                 />
                                 {errors.phone && <p className="text-xs text-red-500">{errors.phone}</p>}
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="siret">SIRET *</Label>
-                                <Input
-                                    id="siret"
-                                    name="siret"
-                                    value={formData.siret}
-                                    onChange={handleChange}
-                                    className={errors.siret ? "border-red-500" : ""}
-                                />
-                                {errors.siret && <p className="text-xs text-red-500">{errors.siret}</p>}
                             </div>
                         </div>
 

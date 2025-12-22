@@ -104,13 +104,13 @@ export const useNewOrderNotifications = (onNewOrder?: (order: NewOrderNotificati
         try {
             const { data: latestOrder, error } = await supabase
                 .from('orders')
-                .select('id, reference, pickup_address, delivery_address, created_at')
+                .select('*')
                 .eq('status', 'pending_acceptance')
                 .order('created_at', { ascending: false })
                 .limit(1)
-                .single();
+                .maybeSingle();
 
-            if (error && error.code !== 'PGRST116') {
+            if (error) {
                 throw error;
             }
 

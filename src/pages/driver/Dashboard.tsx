@@ -30,7 +30,7 @@ interface Order {
     price: number;
     status: string;
     created_at: string;
-    scheduled_pickup_time?: string;
+    pickup_time?: string;
 }
 
 export default function DriverDashboard() {
@@ -270,10 +270,10 @@ export default function DriverDashboard() {
                             <div className="flex justify-between items-start mb-4">
                                 <div>
                                     <h3 className="font-bold text-lg">{order.reference}</h3>
-                                    {order.scheduled_pickup_time && (
+                                    {order.pickup_time && (
                                         <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
                                             <Clock className="h-4 w-4" />
-                                            {new Date(order.scheduled_pickup_time).toLocaleString('fr-FR')}
+                                            {new Date(order.pickup_time).toLocaleString('fr-FR')}
                                         </div>
                                     )}
                                 </div>

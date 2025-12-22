@@ -2,13 +2,10 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { OrderWizardModal } from "@/components/admin/orders/wizard/OrderWizardModal";
-
 import { AdminActivityTimeline } from "@/components/admin/AdminActivityTimeline";
-
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import {
   Package,
   Users,
@@ -24,28 +21,75 @@ import {
   MapPin,
   BarChart3,
   Loader2,
+  Calendar,
 } from "lucide-react";
 
-import { useAdminStats } from "@/hooks/useAdminStats";
+import { useAdminStats, StatsFilter } from "@/hooks/useAdminStats";
 import { supabase } from "@/lib/supabase";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 
 const DashboardAdmin = () => {
   const navigate = useNavigate();
+
+  // Filter State
+  const [filterPeriod, setFilterPeriod] = useState<StatsFilter['period']>('day');
+  const [startDate, setStartDate] = useState(new Date(new Date().setDate(new Date().getDate() - 30)).toISOString().split('T')[0]);
+  const [endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);
+
   const {
-    ordersToday,
+    ordersToday, // Now acts as "Orders in selected period"
     ordersTodayChange,
-    newClientsMonth,
+    newClientsMonth, // Now acts as "New Clients in selected period"
     newClientsMonthChange,
     activeDrivers,
     totalDrivers,
-    revenueToday,
+    revenueToday, // Now acts as "Revenue in selected period"
     revenueTodayChange,
     ordersByStatus,
     teamMembers,
     alerts,
     keyPoints,
     loading
-  } = useAdminStats();
+  } = useAdminStats({
+    period: filterPeriod,
+    startDate: filterPeriod === 'custom' ? startDate : undefined,
+    endDate: filterPeriod === 'custom' ? endDate : undefined
+  });
+
+  // Dynamic Labels
+  const getPeriodLabel = () => {
+    const labels: Record<string, string> = {
+      day: "aujourd'hui",
+      week: "cette semaine",
+      month: "ce mois",
+      year: "cette année",
+      all: "total",
+      custom: "période",
+    };
+    return labels[filterPeriod] || "période";
+  };
+
+  const getComparisonLabel = () => {
+    const labels: Record<string, string> = {
+      day: "vs hier",
+      week: "vs sem. dern.",
+      month: "vs mois dern.",
+      year: "vs an. dern.",
+      all: "vs -",
+      custom: "vs préc.",
+    };
+    return labels[filterPeriod] || "vs préc.";
+  };
+
+  const periodLabel = getPeriodLabel();
+  const comparisonLabel = getComparisonLabel();
 
   // ---------- Modal & Order Logic ----------
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -84,20 +128,20 @@ const DashboardAdmin = () => {
 
   const mainMetrics = [
     {
-      title: "Commandes aujourd'hui",
+      title: `Commandes ${periodLabel}`,
       value: loading ? "-" : ordersToday.toString(),
       change: loading ? "-" : `${ordersTodayChange > 0 ? '+' : ''}${ordersTodayChange}%`,
-      delta: "vs hier",
+      delta: comparisonLabel,
       icon: Package,
       color: "text-accent-main",
       bgColor: "bg-accent-light",
       path: "/dashboard-admin/commandes",
     },
     {
-      title: "Nouveaux clients",
+      title: `Nouveaux clients ${periodLabel}`,
       value: loading ? "-" : newClientsMonth.toString(),
       change: loading ? "-" : `${newClientsMonthChange > 0 ? '+' : ''}${newClientsMonthChange}%`,
-      delta: "ce mois",
+      delta: comparisonLabel,
       icon: Users,
       color: "text-success",
       bgColor: "bg-success-light",
@@ -107,17 +151,17 @@ const DashboardAdmin = () => {
       title: "Chauffeurs actifs",
       value: loading ? "-" : `${activeDrivers}/${totalDrivers}`,
       change: loading ? "-" : `${totalDrivers > 0 ? Math.round((activeDrivers / totalDrivers) * 100) : 0}%`,
-      delta: "disponibilité",
+      delta: "temps réel",
       icon: Truck,
       color: "text-warning",
       bgColor: "bg-warning-light",
       path: "/dashboard-admin/chauffeurs",
     },
     {
-      title: "Revenus du jour",
+      title: `Revenus ${periodLabel}`,
       value: loading ? "-" : `${revenueToday.toLocaleString('fr-FR')}€`,
       change: loading ? "-" : `${revenueTodayChange > 0 ? '+' : ''}${revenueTodayChange}%`,
-      delta: "vs hier",
+      delta: comparisonLabel,
       icon: TrendingUp,
       color: "text-primary",
       bgColor: "bg-primary/10",
@@ -190,7 +234,7 @@ const DashboardAdmin = () => {
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold text-primary mb-2">
             Tableau de bord Admin
@@ -199,9 +243,44 @@ const DashboardAdmin = () => {
             Vue d'ensemble des opérations - Temps réel
           </p>
         </div>
-        <div className="flex items-center gap-3">
 
-          <Button variant="cta" size="lg" className="gap-2" onClick={handleOpenModal}>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+          {/* Filters */}
+          <div className="flex items-center gap-2 bg-white p-1 rounded-lg border shadow-sm">
+            <Select value={filterPeriod} onValueChange={(v: any) => setFilterPeriod(v)}>
+              <SelectTrigger className="w-[140px] border-0 focus:ring-0 h-9">
+                <SelectValue placeholder="Période" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="day">Aujourd'hui</SelectItem>
+                <SelectItem value="week">Cette semaine</SelectItem>
+                <SelectItem value="month">Ce mois</SelectItem>
+                <SelectItem value="year">Cette année</SelectItem>
+                <SelectItem value="all">Tout</SelectItem>
+                <SelectItem value="custom">Personnalisé</SelectItem>
+              </SelectContent>
+            </Select>
+
+            {filterPeriod === 'custom' && (
+              <div className="flex items-center gap-2 px-2 border-l">
+                <Input
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  className="h-8 w-32 text-xs"
+                />
+                <span className="text-muted-foreground text-xs">-</span>
+                <Input
+                  type="date"
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                  className="h-8 w-32 text-xs"
+                />
+              </div>
+            )}
+          </div>
+
+          <Button variant="cta" size="lg" className="gap-2 h-11" onClick={handleOpenModal}>
             <Plus className="h-5 w-5" />
             Créer une commande
           </Button>

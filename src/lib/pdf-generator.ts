@@ -168,8 +168,8 @@ export const generateOrderPDF = (order: Order, clientInfo: ClientInfo) => {
         yPos += 5;
     }
 
-    if (order.scheduled_pickup_time) {
-        const pickupDate = new Date(order.scheduled_pickup_time);
+    if (order.pickup_time) {
+        const pickupDate = new Date(order.pickup_time);
         const formattedPickupTime = pickupDate.toLocaleDateString('fr-FR', {
             day: '2-digit',
             month: '2-digit',

@@ -12,9 +12,9 @@
 import { supabase } from '../lib/supabase';
 import {
     type FormuleNew,
-    type PriseEnChargeVille,
     type PricingConfig,
     calculatePriceInternal,
+    normaliserVille,
     DEFAULT_PRIX_BON_CENTS,
     DEFAULT_SUPPLEMENT_PAR_KM_BONS
 } from './pricingEngine';
@@ -40,6 +40,17 @@ export interface CityPricingRow {
 }
 
 /**
+ * Structure des tarifs de prise en charge pour une ville (en BONS)
+ */
+export interface PriseEnChargeVille {
+    NORMAL: number;      // Prise en charge en bons
+    EXPRESS: number;
+    URGENCE: number;
+    VL_NORMAL: number;
+    VL_EXPRESS: number;
+}
+
+/**
  * Cache en mémoire pour éviter trop de requêtes à Supabase
  * Clé : nom de ville normalisé
  * Valeur : tarifs de prise en charge
@@ -62,29 +73,14 @@ let lastCacheUpdate = 0;
 // ============================================================================
 
 /**
- * Normalise un nom de ville pour la recherche
- * - Convertit en majuscules
- * - Supprime les accents
- * - Supprime les espaces multiples
- */
-export function normaliserVille(ville: string): string {
-    return ville
-        .toUpperCase()
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '') // Supprime les accents
-        .replace(/'/g, '-') // Remplace les apostrophes par des tirets (ex: L'HAY -> L-HAY)
-        .replace(/\s+/g, '-') // Remplace les espaces par des tirets
-        .replace(/-+/g, '-') // Évite les doubles tirets
-        .trim();
-}
-
-/**
  * Vérifie si une ville est Paris
  */
 export function estParis(ville: string): boolean {
     const villeNormalisee = normaliserVille(ville);
     return villeNormalisee === 'PARIS' || villeNormalisee.startsWith('PARIS-');
 }
+
+// La fonction normaliserVille est maintenant importée depuis pricingEngine.ts
 
 /**
  * Convertit une ligne de la base de données en objet PriseEnChargeVille

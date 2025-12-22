@@ -25,6 +25,11 @@ export interface OrderWithDriver extends Order {
     pickup_time?: string;
     delivery_time?: string;
     drivers?: Driver | null; // For joined data
+    driver?: {
+        name: string;
+        location: { lat: number; lng: number };
+        phone: string;
+    } | null; // For compatibility with OrderDetail.tsx
 }
 
 // Type pour les commandes paginées (champs essentiels uniquement)

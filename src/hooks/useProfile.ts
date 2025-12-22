@@ -30,7 +30,7 @@ export const useProfile = () => {
                 const { data: newData } = await supabase
                     .from('clients')
                     .select('*')
-                    .eq('id', user.id)
+                    .eq('user_id', user.id)
                     .maybeSingle();
 
                 if (newData) {
@@ -58,7 +58,7 @@ export const useProfile = () => {
                 const { data, error } = await supabase
                     .from('clients')
                     .select('*')
-                    .eq('id', user.id)
+                    .eq('user_id', user.id)
                     .maybeSingle();
 
                 if (data) {

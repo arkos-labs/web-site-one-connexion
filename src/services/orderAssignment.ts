@@ -1,3 +1,19 @@
+/**
+ * ========================================
+ * SERVICE D'ASSIGNATION DE COURSES
+ * ========================================
+ * 
+ * RÈGLE MÉTIER CRITIQUE : 40% pour le chauffeur
+ * - Le prix stocké dans `orders.price` est le prix TOTAL payé par le client (100%)
+ * - Le chauffeur reçoit UNIQUEMENT 40% de ce montant
+ * - Le calcul est effectué côté App Chauffeur (orderSlice.ts)
+ * 
+ * GESTION DES IDENTIFIANTS :
+ * - driverId : UUID de la table `drivers` (pour les relations FK internes)
+ * - driverUserId : Auth ID (user_id) du chauffeur (pour Realtime et notifications)
+ * - orders.driver_id stocke le driverUserId (Auth ID) pour la synchronisation Realtime
+ */
+
 import { supabase } from '@/lib/supabase';
 
 export interface AssignOrderParams {
@@ -14,119 +30,83 @@ export async function assignOrderToDriver(params: AssignOrderParams) {
     const { orderId, driverId, driverUserId, adminId } = params;
 
     try {
+        let order = null;
+        let orderError = null;
+
         // 1. Mettre à jour la commande
-        // Tentative standard avec retour de données
-        // IMPORTANT: driver_id reçoit l'ID Auth du chauffeur (user_id) pour correspondre à l'App Chauffeur
-        let { data: order, error: orderError } = await supabase
+        const updateData = {
+            driver_id: driverUserId,
+            status: 'dispatched',
+            dispatched_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+        };
+
+        const { data, error } = await supabase
             .from('orders')
-            .update({
-                driver_id: driverUserId, // ✅ ID Auth (user_id) pour correspondre à l'App Chauffeur
-                status: 'assigned',
-                dispatched_at: new Date().toISOString(),
-                updated_at: new Date().toISOString()
-            })
+            .update(updateData)
             .eq('id', orderId)
             .select()
             .single();
 
-        // Workaround: Si erreur 406 (RLS policy often blocks 'select' return on update), on réessaie SANS le .select()
+        order = data;
+        orderError = error;
+
+        // RLS Fallback (Error 406)
         if (orderError && (orderError.code === '406' || orderError.message?.includes('406'))) {
-            console.warn('⚠️ Erreur 406 détectée, tentative de mise à jour sans retour de données...');
+            console.warn('⚠️ Erreur 406 (RLS), tentative sans select...');
             const { error: retryError } = await supabase
                 .from('orders')
-                .update({
-                    driver_id: driverUserId, // ✅ ID Auth (user_id) pour correspondre à l'App Chauffeur
-                    status: 'assigned',
-                    dispatched_at: new Date().toISOString(),
-                    updated_at: new Date().toISOString()
-                })
+                .update(updateData)
                 .eq('id', orderId);
 
             if (retryError) {
-                orderError = retryError; // L'erreur persiste
-            } else {
-                orderError = null; // Succès !
-                // On récupère l'ordre manuellement après coup pour l'interface
-                const { data: refetchedOrders } = await supabase.from('orders').select('*').eq('id', orderId).limit(1);
-                order = refetchedOrders?.[0] || null;
+                console.error('❌ Erreur critique au retry:', retryError);
+                return { success: false, error: retryError };
             }
+
+            // Re-fetch manual
+            const { data: refetched } = await supabase.from('orders').select('*').eq('id', orderId).single();
+            order = refetched;
+            orderError = null;
         }
 
         if (orderError) {
-            console.error('Erreur assignation commande:', orderError);
+            console.error('❌ Erreur assignation:', orderError);
             return { success: false, error: orderError };
         }
 
-        // 2. Mettre à jour le statut du chauffeur à 'busy'
-        // On essaie d'abord par id (UUID de la table drivers), puis par user_id si nécessaire
-        let { error: driverError } = await supabase
+        // 2. Mettre à jour le statut du chauffeur
+        await supabase
             .from('drivers')
-            .update({
-                status: 'busy',
-                updated_at: new Date().toISOString()
-            })
-            .eq('id', driverId); // ✅ Utiliser l'ID de la table drivers
+            .update({ status: 'busy', updated_at: new Date().toISOString() })
+            .eq('user_id', driverUserId);
 
-        // Fallback: si l'update par id échoue, essayer par user_id
-        if (driverError) {
-            console.warn('Update par id échoué, tentative par user_id...');
-            const { error: retryDriverError } = await supabase
-                .from('drivers')
-                .update({
-                    status: 'busy',
-                    updated_at: new Date().toISOString()
-                })
-                .eq('user_id', driverUserId);
-
-            if (retryDriverError) {
-                console.warn('Erreur mise à jour statut chauffeur:', retryDriverError);
-            }
-        }
-
-        // 3. Créer une notification pour le chauffeur (si la table existe)
+        // 3. Notification
         try {
-            const { error: notifError } = await supabase
-                .from('notifications')
-                .insert({
-                    user_id: driverUserId, // ✅ Utiliser user_id (Auth ID)
-                    title: '🚚 Nouvelle course assignée',
-                    message: `Une nouvelle course vous a été assignée. Référence: ${order?.reference || orderId}`,
-                    type: 'info',
-                    link: `/order/${orderId}`,
-                    is_read: false
-                });
-
-            if (notifError) {
-                console.warn('Erreur création notification:', notifError);
-            }
-        } catch (notifError) {
-            console.warn('Impossible de créer la notification:', notifError);
+            await supabase.from('notifications').insert({
+                user_id: driverUserId,
+                title: '🚚 Nouvelle course',
+                message: `Référence: ${order?.reference || 'Nouveau'}`,
+                type: 'new_order',
+                data: { orderId }
+            });
+        } catch (e) {
+            console.warn('Erreur notification ignorée:', e);
         }
 
-        // 4. Créer un événement dans l'historique de la commande
-        try {
-            await supabase
-                .from('order_events')
-                .insert({
-                    order_id: orderId,
-                    event_type: 'assigned',
-                    description: `Course assignée au chauffeur`,
-                    actor_type: 'admin',
-                    metadata: {
-                        driver_id: driverId,
-                        admin_id: adminId,
-                        assigned_at: new Date().toISOString()
-                    }
-                });
-        } catch (eventError) {
-            console.warn('Erreur création événement:', eventError);
-        }
+        // 4. Événement
+        await supabase.from('order_events').insert({
+            order_id: orderId,
+            event_type: 'dispatched',
+            description: `Assignée par admin`,
+            actor_type: 'admin',
+            actor_id: adminId,
+            metadata: { driver_id: driverUserId }
+        });
 
-        console.log('✅ Commande assignée avec succès:', order);
-        return { success: true, data: order };
-
+        return { success: true, order };
     } catch (error) {
-        console.error('Erreur inattendue:', error);
+        console.error('❌ Erreur fatale assignation:', error);
         return { success: false, error };
     }
 }
@@ -140,67 +120,18 @@ export async function getPendingOrders() {
             .from('orders')
             .select('*')
             .eq('status', 'accepted')
-            .order('scheduled_pickup_time', { ascending: true, nullsFirst: true })
-            .order('created_at', { ascending: true });
+            .order('created_at', { ascending: false });
 
-        if (error) {
-            console.error('Erreur récupération commandes:', error);
-            return { success: false, error, data: [] };
-        }
-
-        return { success: true, data };
+        if (error) throw error;
+        return data || [];
     } catch (error) {
-        console.error('Erreur inattendue:', error);
-        return { success: false, error, data: [] };
+        console.error('Erreur récupération commandes en attente:', error);
+        return [];
     }
 }
 
 /**
- * Récupère les chauffeurs en ligne (status = 'online')
- */
-export async function getOnlineDrivers() {
-    try {
-        const { data, error } = await supabase
-            .from('drivers')
-            .select('*')
-            .eq('status', 'online');
-
-        if (error) {
-            console.error('Erreur récupération chauffeurs:', error);
-            return { success: false, error, data: [] };
-        }
-
-        return { success: true, data };
-    } catch (error) {
-        console.error('Erreur inattendue:', error);
-        return { success: false, error, data: [] };
-    }
-}
-
-/**
- * Récupère les chauffeurs disponibles (online ou available)
- */
-export async function getAvailableDrivers() {
-    try {
-        const { data, error } = await supabase
-            .from('drivers')
-            .select('*')
-            .in('status', ['online', 'available']);
-
-        if (error) {
-            console.error('Erreur récupération chauffeurs disponibles:', error);
-            return { success: false, error, data: [] };
-        }
-
-        return { success: true, data };
-    } catch (error) {
-        console.error('Erreur inattendue:', error);
-        return { success: false, error, data: [] };
-    }
-}
-
-/**
- * Annule l'assignation d'une commande
+ * Désassigne une commande
  */
 export async function unassignOrder(orderId: string, reason?: string) {
     try {
@@ -212,78 +143,50 @@ export async function unassignOrder(orderId: string, reason?: string) {
             .limit(1);
 
         const order = orders?.[0];
+        const driverUserId = order?.driver_id;
 
         // Mettre à jour la commande
         const { error: orderError } = await supabase
             .from('orders')
             .update({
                 driver_id: null,
-                status: 'accepted',
+                status: 'accepted', // Retourne dans la pile "À Dispatcher" pour l'admin
                 dispatched_at: null,
                 updated_at: new Date().toISOString()
             })
             .eq('id', orderId);
 
-        if (orderError) {
-            console.error('Erreur désassignation commande:', orderError);
-            return { success: false, error: orderError };
-        }
+        if (orderError) throw orderError;
 
-        // Remettre le chauffeur en ligne si c'était le seul ordre assigné
-        if (order?.driver_id) {
-            const { data: otherOrders } = await supabase
+        // Si on avait un chauffeur, essayer de le remettre en ligne s'il n'a pas d'autre course
+        if (driverUserId) {
+            // Vérifier s'il a d'autres missions en cours
+            const { count } = await supabase
                 .from('orders')
-                .select('id')
-                .eq('driver_id', order.driver_id)
-                .in('status', ['assigned', 'driver_accepted', 'in_progress'])
-                .limit(1);
+                .select('*', { count: 'exact', head: true })
+                .eq('driver_id', driverUserId)
+                .in('status', ['driver_accepted', 'in_progress']);
 
-            if (!otherOrders || otherOrders.length === 0) {
-                // Essayer de mettre à jour par id (UUID de drivers)
-                const { error: updateError } = await supabase
+            if (count === 0) {
+                await supabase
                     .from('drivers')
-                    .update({
-                        status: 'online',
-                        updated_at: new Date().toISOString()
-                    })
-                    .eq('id', order.driver_id); // ✅ driver_id est maintenant l'ID de la table drivers
-
-                // Fallback par user_id si nécessaire (anciens enregistrements)
-                if (updateError) {
-                    await supabase
-                        .from('drivers')
-                        .update({
-                            status: 'online',
-                            updated_at: new Date().toISOString()
-                        })
-                        .eq('user_id', order.driver_id);
-                }
+                    .update({ status: 'online' })
+                    .eq('user_id', driverUserId);
             }
         }
 
-        // Créer un événement
-        try {
-            await supabase
-                .from('order_events')
-                .insert({
-                    order_id: orderId,
-                    event_type: 'unassigned',
-                    description: reason || 'Course désassignée',
-                    actor_type: 'admin',
-                    metadata: {
-                        reason,
-                        unassigned_at: new Date().toISOString()
-                    }
-                });
-        } catch (eventError) {
-            console.warn('Erreur création événement:', eventError);
-        }
+        // Journaliser
+        await supabase.from('order_events').insert({
+            order_id: orderId,
+            event_type: 'unassigned',
+            description: reason || 'Course désassignée par l\'administrateur',
+            actor_type: 'admin',
+            metadata: { previous_driver_id: driverUserId }
+        });
 
-        console.log('✅ Commande désassignée avec succès');
         return { success: true };
-
     } catch (error) {
-        console.error('Erreur inattendue:', error);
+        console.error('Erreur lors de la désassignation:', error);
         return { success: false, error };
     }
 }

@@ -72,8 +72,8 @@ export const createGuestOrder = async (orderData: GuestOrderData): Promise<Guest
     try {
         console.log('🚀 Création commande invitée pour:', orderData.senderEmail);
 
-        // Calculer scheduled_pickup_time si scheduleTime fourni
-        let scheduledPickupTime: string | null = null;
+        // Calculer pickup_time si scheduleTime fourni
+        let pickupTime: string | null = null;
         if (orderData.scheduleTime) {
             const scheduledDateTime = new Date(orderData.scheduleTime);
             const now = new Date();
@@ -83,7 +83,7 @@ export const createGuestOrder = async (orderData: GuestOrderData): Promise<Guest
 
             // Si c'est dans plus de 45 minutes, c'est une commande différée
             if (diffMinutes > 45) {
-                scheduledPickupTime = scheduledDateTime.toISOString();
+                pickupTime = scheduledDateTime.toISOString();
             }
         }
 
@@ -158,7 +158,7 @@ export const createGuestOrder = async (orderData: GuestOrderData): Promise<Guest
             p_delivery_lng: orderData.deliveryLng || null,
 
             // Horaire planifié
-            p_scheduled_pickup_time: scheduledPickupTime,
+            p_pickup_time: pickupTime,
         });
 
         if (error) {

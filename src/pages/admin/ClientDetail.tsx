@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
     Table,
     TableBody,
@@ -38,21 +39,25 @@ import {
     XCircle,
     Calendar,
     CreditCard,
-    Clock,
     AlertTriangle,
     Shield,
     Search,
-    Truck,
-    Plus
+    FileText,
+    Receipt,
+    Euro,
+    Download,
+    Plus,
+    AlertCircle
 } from "lucide-react";
 import { toast } from "sonner";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 // Services
 import {
     getClientDetails,
     updateClientStatus,
-    getAllOrders,
-    getAllInvoices,
+    getClientOrders,
+    getClientInvoices,
     suspendClient,
     unsuspendClient,
     assignDriverToOrder,
@@ -61,6 +66,12 @@ import {
     Driver
 } from "@/services/adminSupabaseQueries";
 import { Client, Invoice } from "@/lib/supabase";
+import {
+    getClientStatusLabel,
+    getClientStatusColor,
+    getInvoiceStatusLabel,
+    getInvoiceStatusColor as getInvoiceStatusColorHelper
+} from "@/types/clients";
 import { Textarea } from "@/components/ui/textarea";
 import EditClientModal from "@/components/admin/clients/EditClientModal";
 
@@ -86,6 +97,14 @@ const ClientDetail = () => {
     const [selectedOrderForDispatch, setSelectedOrderForDispatch] = useState<string | null>(null);
     const [selectedDriver, setSelectedDriver] = useState<string>("");
     const [showEditModal, setShowEditModal] = useState(false);
+
+    // Stats
+    const [stats, setStats] = useState({
+        totalOrders: 0,
+        totalSpent: 0,
+        activeOrders: 0,
+        totalInvoiced: 0
+    });
 
     // Filtered orders
     const getFilteredOrders = () => {
@@ -126,30 +145,55 @@ const ClientDetail = () => {
     const filteredOrders = getFilteredOrders();
 
     // Fetch client data
-    const fetchClientData = async () => {
+    const fetchClientData = async (background = false) => {
         if (!id) return;
 
         try {
-            setIsLoading(true);
-            const [clientData, allOrders, allInvoices, allDrivers] = await Promise.all([
-                getClientDetails(id),
-                getAllOrders(),
-                getAllInvoices(),
-                getAllDrivers()
+            if (!background) setIsLoading(true);
+            const clientData = await getClientDetails(id);
+            if (!clientData) {
+                toast.error("Client introuvable");
+                navigate('/dashboard-admin/clients');
+                return;
+            }
+            setClient(clientData);
+
+            // Fetch related data in parallel
+            // On utilise des fonctions spécifiques qui ne font pas de jointures superflues qui pourraient casser
+            const [clientOrders, clientInvoicesData, allDrivers] = await Promise.all([
+                getClientOrders(id).catch(e => { console.error("Err Orders", e); return []; }),
+                getClientInvoices(id).catch(e => { console.error("Err Invoices", e); return []; }),
+                getAllDrivers().catch(e => { console.error("Err Drivers", e); return []; })
             ]);
 
-            setClient(clientData);
-            // Filter orders for this client
-            setOrders(allOrders.filter(o => o.client_id === id));
-            // Filter invoices for this client
-            setInvoices(allInvoices.filter((i: any) => i.client_id === id));
-            // Filter available drivers (only by status)
+            setOrders(clientOrders);
+            setInvoices(clientInvoicesData);
             setDrivers(allDrivers.filter(d => d.status === 'available'));
+
+            // Calculate Stats
+            const totalSpent = clientOrders
+                .filter(o => ['delivered', 'completed'].includes(o.status))
+                .reduce((sum, o) => sum + (o.price || 0), 0);
+
+            const totalInvoicedAmount = clientInvoicesData
+                .reduce<number>((sum, i) => sum + (i.amount_ttc || 0), 0);
+
+            const activeOrdersCount = clientOrders
+                .filter(o => ['pending_acceptance', 'assigned', 'in_progress', 'dispatched'].includes(o.status))
+                .length;
+
+            setStats({
+                totalOrders: clientOrders.length,
+                totalSpent,
+                activeOrders: activeOrdersCount,
+                totalInvoiced: totalInvoicedAmount
+            });
+
         } catch (error: any) {
             console.error("Error fetching client:", error);
-            toast.error("Erreur lors du chargement du client");
+            toast.error("Erreur lors du chargement des données");
         } finally {
-            setIsLoading(false);
+            if (!background) setIsLoading(false);
         }
     };
 
@@ -162,6 +206,7 @@ const ClientDetail = () => {
         if (!id) return;
 
         if (newStatus === 'suspended') {
+            setSuspensionReason("");
             setShowSuspendDialog(true);
             return;
         }
@@ -170,14 +215,29 @@ const ClientDetail = () => {
             setIsUpdatingStatus(true);
             if (newStatus === 'active' && client?.status === 'suspended') {
                 await unsuspendClient(id);
+                // Optimistic update
+                if (client) {
+                    setClient({
+                        ...client,
+                        status: 'active',
+                        is_suspended: false,
+                        suspended_at: undefined,
+                        suspension_reason: undefined
+                    });
+                }
             } else {
                 await updateClientStatus(id, newStatus);
+                // Optimistic update
+                if (client) {
+                    setClient({ ...client, status: newStatus });
+                }
             }
             toast.success(`Statut mis à jour : ${newStatus === 'active' ? 'Actif' : 'En attente'}`);
-            await fetchClientData();
+            // No background fetch to avoid race condition - we trust our optimistic update
         } catch (error: any) {
             console.error(error);
             toast.error("Erreur lors de la mise à jour du statut");
+            fetchClientData(true);
         } finally {
             setIsUpdatingStatus(false);
         }
@@ -188,12 +248,25 @@ const ClientDetail = () => {
         try {
             setIsUpdatingStatus(true);
             await suspendClient(id, suspensionReason);
+
+            // Optimistic update to ensure immediate feedback
+            if (client) {
+                setClient({
+                    ...client,
+                    status: 'suspended',
+                    is_suspended: true,
+                    suspended_at: new Date().toISOString(),
+                    suspension_reason: suspensionReason
+                });
+            }
+
             toast.success("Client suspendu avec succès");
             setShowSuspendDialog(false);
-            await fetchClientData();
+            // No background fetch to avoid race condition - we trust our optimistic update
         } catch (error) {
             console.error("Error suspending client:", error);
             toast.error("Erreur lors de la suspension");
+            fetchClientData(true);
         } finally {
             setIsUpdatingStatus(false);
         }
@@ -220,17 +293,12 @@ const ClientDetail = () => {
 
     // Get status badge
     const getStatusBadge = (status: string) => {
-        switch (status) {
-            case 'active':
-                return <Badge className="bg-green-500 text-white border-0 px-3 py-1">Actif</Badge>;
-            case 'suspended':
-            case 'inactive':
-                return <Badge className="bg-red-500 text-white border-0 px-3 py-1">Suspendu</Badge>;
-            case 'pending':
-                return <Badge className="bg-orange-500 text-white border-0 px-3 py-1">En attente</Badge>;
-            default:
-                return <Badge variant="outline">{status}</Badge>;
-        }
+        // @ts-ignore
+        const label = getClientStatusLabel(status) || status;
+        // @ts-ignore
+        const color = getClientStatusColor(status) || 'bg-gray-500';
+
+        return <Badge className={`${color} text-white border-0 px-3 py-1`}>{label}</Badge>;
     };
 
     // Get order status badge color
@@ -244,6 +312,11 @@ const ClientDetail = () => {
             cancelled: 'bg-red-500',
         };
         return colors[status] || 'bg-gray-500';
+    };
+
+    const getInvoiceStatusColor = (status: string) => {
+        // @ts-ignore
+        return getInvoiceStatusColorHelper(status) || 'bg-orange-500';
     };
 
     if (isLoading) {
@@ -266,7 +339,28 @@ const ClientDetail = () => {
     }
 
     return (
-        <div className="space-y-6 animate-fade-in">
+        <div className="space-y-6 animate-fade-in pb-10">
+            {/* Suspended Account Banner */}
+            {client.status === 'suspended' && (
+                <Alert variant="destructive" className="bg-red-50 border-red-200 text-red-800">
+                    <AlertCircle className="h-5 w-5" />
+                    <AlertTitle className="ml-2 text-lg font-bold">Compte Suspendu</AlertTitle>
+                    <AlertDescription className="ml-2 mt-1 text-red-700">
+                        Ce compte client est actuellement suspendu. Le client ne peut plus passer de commandes.
+                        {client.suspended_at && (
+                            <div className="mt-2 text-sm font-medium">
+                                Suspendu le : {new Date(client.suspended_at).toLocaleDateString('fr-FR')}
+                            </div>
+                        )}
+                        {client.suspension_reason && (
+                            <div className="mt-1 text-sm">
+                                Raison : {client.suspension_reason}
+                            </div>
+                        )}
+                    </AlertDescription>
+                </Alert>
+            )}
+
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="flex items-center gap-4">
@@ -290,18 +384,7 @@ const ClientDetail = () => {
                 </div>
 
                 <div className="flex gap-2">
-                    {/* Actions rapides */}
-                    {client.status === 'active' ? (
-                        <Button
-                            variant="destructive"
-                            size="sm"
-                            onClick={() => handleStatusChange('suspended')}
-                            disabled={isUpdatingStatus}
-                        >
-                            {isUpdatingStatus ? <Loader2 className="h-4 w-4 animate-spin" /> : <XCircle className="h-4 w-4 mr-2" />}
-                            Suspendre le compte
-                        </Button>
-                    ) : (
+                    {client.status === 'suspended' || client.is_suspended ? (
                         <Button
                             variant="default"
                             className="bg-green-600 hover:bg-green-700 text-white"
@@ -312,114 +395,189 @@ const ClientDetail = () => {
                             {isUpdatingStatus ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle className="h-4 w-4 mr-2" />}
                             Activer le compte
                         </Button>
+                    ) : (
+                        <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => handleStatusChange('suspended')}
+                            disabled={isUpdatingStatus}
+                        >
+                            {isUpdatingStatus ? <Loader2 className="h-4 w-4 animate-spin" /> : <XCircle className="h-4 w-4 mr-2" />}
+                            Suspendre le compte
+                        </Button>
                     )}
                 </div>
             </div>
 
-            <div className="grid lg:grid-cols-3 gap-6">
-                {/* Colonne Gauche : Infos & Compte */}
-                <div className="space-y-6">
-                    {/* Bloc 1 : Informations personnelles */}
-                    <Card className="p-6 shadow-sm border-0 h-fit">
-                        <h2 className="text-lg font-semibold text-primary flex items-center gap-2 mb-6 pb-2 border-b">
-                            <Building className="h-5 w-5 text-accent-main" />
-                            Coordonnées
-                        </h2>
-
-                        <div className="space-y-4">
-                            <div className="flex items-start gap-3">
-                                <Mail className="h-5 w-5 text-muted-foreground mt-0.5" />
-                                <div>
-                                    <p className="text-sm text-muted-foreground">Email professionnel</p>
-                                    <p className="font-medium break-all">{client.email}</p>
-                                </div>
-                            </div>
-
-                            <div className="flex items-start gap-3">
-                                <Phone className="h-5 w-5 text-muted-foreground mt-0.5" />
-                                <div>
-                                    <p className="text-sm text-muted-foreground">Téléphone</p>
-                                    <p className="font-medium">{client.phone}</p>
-                                </div>
-                            </div>
-
-                            <div className="flex items-start gap-3">
-                                <MapPin className="h-5 w-5 text-muted-foreground mt-0.5" />
-                                <div>
-                                    <p className="text-sm text-muted-foreground">Adresse principale</p>
-                                    <p className="font-medium">{client.address || 'Non renseignée'}</p>
-                                </div>
-                            </div>
+            {/* Stats Row - Traceability Summary */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <Card>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardTitle className="text-sm font-medium">Total Commandes</CardTitle>
+                        <FileText className="h-4 w-4 text-muted-foreground" />
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-2xl font-bold">{stats.totalOrders}</div>
+                        <p className="text-xs text-muted-foreground">
+                            {stats.activeOrders} en cours
+                        </p>
+                    </CardContent>
+                </Card>
+                <Card>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardTitle className="text-sm font-medium">Total Dépensé</CardTitle>
+                        <Euro className="h-4 w-4 text-muted-foreground" />
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-2xl font-bold">{stats.totalSpent.toFixed(2)} €</div>
+                        <p className="text-xs text-muted-foreground">
+                            Sur commandes livrées
+                        </p>
+                    </CardContent>
+                </Card>
+                <Card>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardTitle className="text-sm font-medium">Facturation</CardTitle>
+                        <Receipt className="h-4 w-4 text-muted-foreground" />
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-2xl font-bold">{stats.totalInvoiced.toFixed(2)} €</div>
+                        <p className="text-xs text-muted-foreground">
+                            {invoices.length} factures générées
+                        </p>
+                    </CardContent>
+                </Card>
+                <Card>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardTitle className="text-sm font-medium">Factures Impayées</CardTitle>
+                        <AlertTriangle className="h-4 w-4 text-orange-500" />
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-2xl font-bold text-orange-600">
+                            {invoices.filter(i => i.status !== 'paid').reduce((acc, curr) => acc + curr.amount_ttc, 0).toFixed(2)} €
                         </div>
-                    </Card>
+                        <p className="text-xs text-muted-foreground">
+                            {invoices.filter(i => i.status !== 'paid').length} à régler
+                        </p>
+                    </CardContent>
+                </Card>
+            </div>
 
-                    {/* Bloc 3 : Informations de compte */}
-                    <Card className="p-6 shadow-sm border-0 h-fit">
-                        <h2 className="text-lg font-semibold text-primary flex items-center gap-2 mb-6 pb-2 border-b">
-                            <Shield className="h-5 w-5 text-accent-main" />
-                            Informations du compte
-                        </h2>
+            {/* Main Content Tabs */}
+            <Tabs defaultValue="overview" className="space-y-4">
+                <TabsList>
+                    <TabsTrigger value="overview">Fiche Client</TabsTrigger>
+                    <TabsTrigger value="orders">Bons de Commande & Courses</TabsTrigger>
+                    <TabsTrigger value="invoices">Factures</TabsTrigger>
+                </TabsList>
 
-                        <div className="space-y-4">
-                            <div className="flex justify-between items-center">
-                                <span className="text-sm text-muted-foreground flex items-center gap-2">
-                                    <Calendar className="h-4 w-4" /> Création
-                                </span>
-                                <span className="font-medium text-sm">
-                                    {new Date(client.created_at).toLocaleDateString('fr-FR')}
-                                </span>
+                {/* TAB 1: FICHE CLIENT (OVERVIEW) */}
+                <TabsContent value="overview" className="space-y-4">
+                    <div className="grid lg:grid-cols-2 gap-6">
+                        {/* Coordonnées */}
+                        <Card className="p-6 shadow-sm border-0 h-fit">
+                            <h2 className="text-lg font-semibold text-primary flex items-center gap-2 mb-6 pb-2 border-b">
+                                <Building className="h-5 w-5 text-accent-main" />
+                                Coordonnées
+                            </h2>
+                            <div className="space-y-4">
+                                <div className="flex items-start gap-3">
+                                    <Mail className="h-5 w-5 text-muted-foreground mt-0.5" />
+                                    <div>
+                                        <p className="text-sm text-muted-foreground">Email professionnel</p>
+                                        <p className="font-medium break-all">{client.email}</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-start gap-3">
+                                    <Phone className="h-5 w-5 text-muted-foreground mt-0.5" />
+                                    <div>
+                                        <p className="text-sm text-muted-foreground">Téléphone</p>
+                                        <p className="font-medium">{client.phone || 'Non renseigné'}</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-start gap-3">
+                                    <MapPin className="h-5 w-5 text-muted-foreground mt-0.5" />
+                                    <div>
+                                        <p className="text-sm text-muted-foreground">Adresse principale</p>
+                                        <p className="font-medium">{client.address || 'Non renseignée'}</p>
+                                    </div>
+                                </div>
                             </div>
+                        </Card>
 
-                            <div className="flex justify-between items-center">
-                                <span className="text-sm text-muted-foreground flex items-center gap-2">
-                                    <CreditCard className="h-4 w-4" /> Factures
-                                </span>
-                                <span className="font-medium text-sm">
-                                    {invoices.length} ({invoices.filter(i => i.status === 'paid').length} payées)
-                                </span>
-                            </div>
-
-                            {client.status === 'suspended' && (
-                                <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md">
-                                    <p className="text-sm font-medium text-red-800 flex items-center gap-2">
-                                        <AlertTriangle className="h-4 w-4" />
-                                        Compte suspendu
-                                    </p>
-                                    {client.suspension_reason && (
-                                        <p className="text-xs text-red-600 mt-1">
-                                            Raison : {client.suspension_reason}
-                                        </p>
+                        {/* Informations Compte & Admin */}
+                        <div className="space-y-6">
+                            <Card className="p-6 shadow-sm border-0 h-fit">
+                                <h2 className="text-lg font-semibold text-primary flex items-center gap-2 mb-6 pb-2 border-b">
+                                    <Shield className="h-5 w-5 text-accent-main" />
+                                    Informations du compte
+                                </h2>
+                                <div className="space-y-4">
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-sm text-muted-foreground flex items-center gap-2">
+                                            <Calendar className="h-4 w-4" /> Création
+                                        </span>
+                                        <span className="font-medium text-sm">
+                                            {new Date(client.created_at).toLocaleDateString('fr-FR')}
+                                        </span>
+                                    </div>
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-sm text-muted-foreground flex items-center gap-2">
+                                            <CreditCard className="h-4 w-4" /> Mode Facturation
+                                        </span>
+                                        <span className="font-medium text-sm">
+                                            {client.auto_invoice ? 'Automatique' : 'Manuel'}
+                                        </span>
+                                    </div>
+                                    {client.status === 'suspended' && (
+                                        <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md">
+                                            <p className="text-sm font-medium text-red-800 flex items-center gap-2">
+                                                <AlertTriangle className="h-4 w-4" />
+                                                Compte suspendu
+                                            </p>
+                                            {client.suspension_reason && (
+                                                <p className="text-xs text-red-600 mt-1">
+                                                    Raison : {client.suspension_reason}
+                                                </p>
+                                            )}
+                                        </div>
                                     )}
                                 </div>
-                            )}
-                        </div>
-                    </Card>
+                            </Card>
 
-                    {/* Bloc 4 : Actions Admin (supplémentaire) */}
-                    <Card className="p-6 shadow-sm border-0 bg-muted/30">
-                        <h2 className="text-lg font-semibold text-primary flex items-center gap-2 mb-4">
-                            <AlertTriangle className="h-5 w-5 text-orange-500" />
-                            Zone administrative
-                        </h2>
-                        <div className="space-y-3">
-                            <Button variant="outline" className="w-full justify-start" onClick={() => setShowEditModal(true)}>
-                                Modifier les informations
-                            </Button>
-                            <Button variant="outline" className="w-full justify-start" onClick={() => toast.info("Fonctionnalité à venir")}>
-                                Réinitialiser le mot de passe
-                            </Button>
+                            <Card className="p-6 shadow-sm border-0 bg-muted/30">
+                                <h2 className="text-lg font-semibold text-primary flex items-center gap-2 mb-4">
+                                    <AlertTriangle className="h-5 w-5 text-orange-500" />
+                                    Zone administrative
+                                </h2>
+                                <div className="space-y-3">
+                                    <Button variant="outline" className="w-full justify-start" onClick={() => setShowEditModal(true)}>
+                                        Modifier les informations
+                                    </Button>
+                                    <Button variant="outline" className="w-full justify-start" onClick={() => toast.info("Fonctionnalité à venir")}>
+                                        Réinitialiser le mot de passe
+                                    </Button>
+                                    <Button variant="outline" className="w-full justify-start" onClick={() => toast.info("Fonctionnalité à venir")}>
+                                        Gérer les utilisateurs associés
+                                    </Button>
+                                </div>
+                            </Card>
                         </div>
-                    </Card>
-                </div>
+                    </div>
+                </TabsContent>
 
-                {/* Colonne Droite : Historique Commandes */}
-                <div className="lg:col-span-2 space-y-6">
-                    {/* Bloc 2 : Historique commandes */}
+                {/* TAB 2: COMMANDES (REQUESTS & PO) */}
+                <TabsContent value="orders" className="space-y-4">
                     <Card className="p-6 shadow-sm border-0 h-full">
-                        <div className="flex items-center justify-between mb-6">
-                            <h2 className="text-xl font-semibold text-primary">
-                                Historique des commandes
-                            </h2>
+                        <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+                            <div>
+                                <h2 className="text-xl font-semibold text-primary">
+                                    Bons de Commande & Courses
+                                </h2>
+                                <p className="text-sm text-muted-foreground">
+                                    Historique complet des demandes et bons de commande associés.
+                                </p>
+                            </div>
                             <div className="flex items-center gap-2">
                                 <Select value={dateFilter} onValueChange={setDateFilter}>
                                     <SelectTrigger className="w-[180px]">
@@ -433,16 +591,13 @@ const ClientDetail = () => {
                                         <SelectItem value="year">Cette année</SelectItem>
                                     </SelectContent>
                                 </Select>
-                                <Badge variant="secondary" className="text-sm h-10 px-3 flex items-center">
-                                    {filteredOrders.length} commandes
-                                </Badge>
                             </div>
                         </div>
 
                         <div className="mb-4 relative">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                             <Input
-                                placeholder="Rechercher une commande (référence, adresse, statut...)"
+                                placeholder="Rechercher (référence, adresse, bon de commande...)"
                                 className="pl-10"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -453,8 +608,9 @@ const ClientDetail = () => {
                             <Table>
                                 <TableHeader>
                                     <TableRow className="bg-muted/50">
-                                        <TableHead>Référence</TableHead>
+                                        <TableHead>Référence / Bon</TableHead>
                                         <TableHead>Trajet</TableHead>
+                                        <TableHead>Prix HT</TableHead>
                                         <TableHead>Statut</TableHead>
                                         <TableHead className="text-right">Date</TableHead>
                                         <TableHead className="w-[50px]"></TableHead>
@@ -463,7 +619,7 @@ const ClientDetail = () => {
                                 <TableBody>
                                     {filteredOrders.length === 0 ? (
                                         <TableRow>
-                                            <TableCell colSpan={5} className="text-center py-12 text-muted-foreground">
+                                            <TableCell colSpan={6} className="text-center py-12 text-muted-foreground">
                                                 Aucune commande trouvée.
                                             </TableCell>
                                         </TableRow>
@@ -475,7 +631,12 @@ const ClientDetail = () => {
                                                 onClick={() => navigate(`/dashboard-admin/commandes/${order.id}`)}
                                             >
                                                 <TableCell className="font-medium text-primary">
-                                                    {order.reference}
+                                                    <div className="flex flex-col">
+                                                        <span>{order.reference}</span>
+                                                        <span className="text-xs text-muted-foreground flex items-center gap-1">
+                                                            <FileText className="h-3 w-3" /> Bon de commande
+                                                        </span>
+                                                    </div>
                                                 </TableCell>
                                                 <TableCell className="max-w-[250px]">
                                                     <div className="flex flex-col gap-1 text-xs">
@@ -490,6 +651,9 @@ const ClientDetail = () => {
                                                     </div>
                                                 </TableCell>
                                                 <TableCell>
+                                                    {order.price ? `${order.price.toFixed(2)} €` : '-'}
+                                                </TableCell>
+                                                <TableCell>
                                                     <div className="flex items-center gap-2">
                                                         <Badge className={`${getOrderStatusColor(order.status)} text-white border-0 shadow-sm`}>
                                                             {order.status}
@@ -501,7 +665,7 @@ const ClientDetail = () => {
                                                 </TableCell>
                                                 <TableCell>
                                                     <Button variant="ghost" size="icon" className="h-8 w-8">
-                                                        <ArrowLeft className="h-4 w-4 rotate-180" />
+                                                        <Download className="h-4 w-4" />
                                                     </Button>
                                                 </TableCell>
                                             </TableRow>
@@ -511,8 +675,77 @@ const ClientDetail = () => {
                             </Table>
                         </div>
                     </Card>
-                </div>
-            </div>
+                </TabsContent>
+
+                {/* TAB 3: FACTURES (INVOICES) */}
+                <TabsContent value="invoices" className="space-y-4">
+                    <Card className="p-6 shadow-sm border-0 h-full">
+                        <div className="flex items-center justify-between mb-6">
+                            <div>
+                                <h2 className="text-xl font-semibold text-primary">
+                                    Factures
+                                </h2>
+                                <p className="text-sm text-muted-foreground">
+                                    Liste des factures générées pour ce client.
+                                </p>
+                            </div>
+                            <Button onClick={() => toast.info("Génération de facture manuelle à venir")}>
+                                <Plus className="h-4 w-4 mr-2" />
+                                Créer une facture
+                            </Button>
+                        </div>
+
+                        <div className="rounded-md border">
+                            <Table>
+                                <TableHeader>
+                                    <TableRow className="bg-muted/50">
+                                        <TableHead>Numéro</TableHead>
+                                        <TableHead>Date d'émission</TableHead>
+                                        <TableHead>Montant TTC</TableHead>
+                                        <TableHead>Statut</TableHead>
+                                        <TableHead className="text-right">Action</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {invoices.length === 0 ? (
+                                        <TableRow>
+                                            <TableCell colSpan={5} className="text-center py-12 text-muted-foreground">
+                                                Aucune facture disponible.
+                                            </TableCell>
+                                        </TableRow>
+                                    ) : (
+                                        invoices.map((invoice) => (
+                                            <TableRow key={invoice.id}>
+                                                <TableCell className="font-medium">
+                                                    {invoice.reference || `FAC-${invoice.id.slice(0, 8)}`}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {new Date(invoice.created_at).toLocaleDateString('fr-FR')}
+                                                </TableCell>
+                                                <TableCell>
+                                                    <span className="font-bold">{invoice.amount_ttc?.toFixed(2) || '0.00'} €</span>
+                                                </TableCell>
+                                                <TableCell>
+                                                    <Badge className={`${getInvoiceStatusColor(invoice.status)} text-white`}>
+                                                        {invoice.status === 'paid' ? 'Payée' :
+                                                            invoice.status === 'overdue' ? 'En retard' : 'En attente'}
+                                                    </Badge>
+                                                </TableCell>
+                                                <TableCell className="text-right">
+                                                    <Button variant="outline" size="sm" onClick={() => window.open(invoice.pdf_url, '_blank')} disabled={!invoice.pdf_url}>
+                                                        <Download className="h-4 w-4 mr-2" />
+                                                        PDF
+                                                    </Button>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))
+                                    )}
+                                </TableBody>
+                            </Table>
+                        </div>
+                    </Card>
+                </TabsContent>
+            </Tabs>
 
             {/* Dialog Suspension */}
             <Dialog open={showSuspendDialog} onOpenChange={setShowSuspendDialog}>

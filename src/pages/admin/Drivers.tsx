@@ -111,11 +111,12 @@ const Drivers = () => {
       if (ordersError) throw ordersError;
 
       // Fetch documents for each driver
-      const { data: documentsData, error: documentsError } = await supabase
-        .from('driver_documents')
-        .select('driver_id, status');
+      // const { data: documentsData, error: documentsError } = await supabase
+      //   .from('driver_documents')
+      //   .select('driver_id, status');
 
-      if (documentsError) console.error('Error fetching documents:', documentsError);
+      // if (documentsError) console.error('Error fetching documents:', documentsError);
+      const documentsData: any[] = [];
 
       if (driversData) {
         const realDrivers: Driver[] = driversData.map((d: any) => {
@@ -184,11 +185,14 @@ const Drivers = () => {
               updated_at: d.updated_at
             } : undefined,
             documents: d.license_number ? [{
+              id: 'temp-license-id', // Placeholder until real docs are fetched
               type: 'license',
-              status: 'verified', // Assume verified if present for now
-              expiry_date: null,
-              file_url: null
-            }] : [],
+              name: 'Permis de conduire',
+              status: 'valid', // Assume valid if license number exists for now
+              uploaded_at: d.created_at || new Date().toISOString(),
+              expiry_date: undefined,
+              file_url: undefined
+            } as any] : [],
             current_location: d.current_lat && d.current_lng ? {
               latitude: d.current_lat,
               longitude: d.current_lng,

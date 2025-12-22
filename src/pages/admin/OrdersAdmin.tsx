@@ -73,23 +73,21 @@ import { OrderWizardModal } from "@/components/admin/orders/wizard/OrderWizardMo
 import { ConfirmDialog, CancelOrderDialog } from "@/components/admin/orders/ConfirmDialogs";
 
 // Helper function to check if dispatch is allowed
-const getDispatchStatus = (scheduledPickupTime?: string | null) => {
-  if (!scheduledPickupTime) {
+const getDispatchStatus = (pickupTime?: string | null) => {
+  if (!pickupTime) {
     return { allowed: true, unlockTime: null, isImmediate: true };
   }
 
-  const pickupTime = new Date(scheduledPickupTime);
-  const unlockTime = new Date(pickupTime.getTime() - 45 * 60000); // -45 minutes
+  const pickupDate = new Date(pickupTime);
+  const unlockTime = new Date(pickupDate.getTime() - 45 * 60000); // -45 minutes
   const now = new Date();
 
   // Check if it's a future date (deferred)
-  const isFuture = pickupTime.getTime() > now.getTime() + 30 * 60000; // Consider deferred if > 30 mins from now (or just rely on the field presence)
-
   return {
     allowed: now >= unlockTime,
     unlockTime,
-    isImmediate: false, // If scheduled_pickup_time is present, it's deferred
-    pickupTime
+    isImmediate: false, // If pickup_time is present, it's deferred
+    pickupTime: pickupDate
   };
 };
 
@@ -337,8 +335,8 @@ const OrdersAdmin = () => {
       // DEBUG: Voir ce qui est reçu
       console.log('📋 Données reçues:', { pickupDate: data.pickupDate, pickupTime: data.pickupTime });
 
-      // Calculer scheduled_pickup_time si date/heure fournies
-      let scheduledPickupTime: string | null = null;
+      // Calculer pickup_time si date/heure fournies
+      let pickupTime: string | null = null;
       if (data.pickupDate && data.pickupTime) {
         const scheduledDateTime = new Date(`${data.pickupDate}T${data.pickupTime}`);
         const now = new Date();
@@ -346,7 +344,7 @@ const OrdersAdmin = () => {
 
         // Si c'est dans plus de 45 minutes, c'est une commande différée
         if (diffMinutes > 45) {
-          scheduledPickupTime = scheduledDateTime.toISOString();
+          pickupTime = scheduledDateTime.toISOString();
         }
       }
 
@@ -360,7 +358,7 @@ const OrdersAdmin = () => {
           delivery_type: data.packageType,
           status: 'pending_acceptance',
           price: data.pricingResult?.totalEuros || 0,
-          scheduled_pickup_time: scheduledPickupTime,
+          pickup_time: pickupTime,
         });
 
       if (error) throw error;
@@ -389,6 +387,7 @@ const OrdersAdmin = () => {
       accepted: 'accepted',
       dispatched: 'dispatched',
       driver_accepted: 'driver_accepted',
+      arrived_pickup: 'driver_accepted',
       in_progress: 'in_progress',
       delivered: 'delivered',
       cancelled: 'cancelled',
@@ -402,7 +401,8 @@ const OrdersAdmin = () => {
       accepted: 'Acceptée',
       dispatched: 'Dispatchée',
       driver_accepted: 'Chauffeur a accepté',
-      in_progress: 'En cours',
+      arrived_pickup: 'Arrivé sur place',
+      in_progress: 'En route vers livraison',
       delivered: 'Livrée',
       cancelled: 'Annulée',
     };
@@ -515,7 +515,7 @@ const OrdersAdmin = () => {
               </TableRow>
             ) : (
               orders.map((order) => {
-                const dispatchStatus = getDispatchStatus(order.scheduled_pickup_time);
+                const dispatchStatus = getDispatchStatus(order.pickup_time);
 
                 return (
                   <TableRow
@@ -540,7 +540,7 @@ const OrdersAdmin = () => {
                             Différé
                           </Badge>
                           <span className="text-xs font-medium text-purple-900">
-                            {new Date(order.scheduled_pickup_time!).toLocaleString('fr-FR', {
+                            {new Date(order.pickup_time!).toLocaleString('fr-FR', {
                               day: '2-digit',
                               month: '2-digit',
                               hour: '2-digit',

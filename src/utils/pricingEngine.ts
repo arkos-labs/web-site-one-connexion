@@ -49,17 +49,6 @@ export const DEFAULT_SUPPLEMENT_PAR_KM_BONS = 0.1;
 export type FormuleNew = 'NORMAL' | 'EXPRESS' | 'URGENCE' | 'VL_NORMAL' | 'VL_EXPRESS';
 
 /**
- * Structure des tarifs de prise en charge pour une ville (en BONS)
- */
-export interface PriseEnChargeVille {
-    NORMAL: number;      // Prise en charge en bons
-    EXPRESS: number;
-    URGENCE: number;
-    VL_NORMAL: number;
-    VL_EXPRESS: number;
-}
-
-/**
  * Configuration dynamique du moteur de pricing
  */
 export interface PricingConfig {
@@ -146,17 +135,8 @@ export function normaliserVille(ville: string): string {
         .trim();
 }
 
-/**
- * Vérifie si une ville est Paris
- */
-export function estParis(ville: string): boolean {
-    const villeNormalisee = normaliserVille(ville);
-    return villeNormalisee === 'PARIS' || villeNormalisee.startsWith('PARIS-');
-}
-
 export default {
     normaliserVille,
-    estParis,
     calculatePriceInternal,
     DEFAULT_PRIX_BON_CENTS,
     DEFAULT_SUPPLEMENT_PAR_KM_BONS

@@ -371,10 +371,10 @@ const OrderDetail = () => {
                             </div>
                         )}
 
-                        {order.scheduled_pickup_time && (
+                        {order.pickup_time && (
                             <div>
                                 <p className="text-xs text-muted-foreground mb-1">HEURE D'ENLÈVEMENT</p>
-                                <p className="text-foreground">{formatDate(order.scheduled_pickup_time)}</p>
+                                <p className="text-foreground">{formatDate(order.pickup_time)}</p>
                             </div>
                         )}
                     </div>

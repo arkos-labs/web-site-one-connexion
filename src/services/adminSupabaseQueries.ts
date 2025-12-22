@@ -45,6 +45,7 @@ export interface OrderWithDetails extends Order {
         email?: string;
         telephone?: string;
     };
+    distance_km?: number;
 }
 
 export interface MessageData {
@@ -64,7 +65,7 @@ export const getAllOrders = async (): Promise<OrderWithDetails[]> => {
         .from('orders')
         .select(`
       *,
-      clients:client_id (
+      clients!orders_client_id_fkey_clients (
         id,
         company_name,
         email,
@@ -108,7 +109,7 @@ export const getOrderById = async (orderId: string): Promise<OrderWithDetails | 
         .from('orders')
         .select(`
       *,
-      clients:client_id (
+      clients!orders_client_id_fkey_clients (
         id,
         company_name,
         email,
@@ -129,7 +130,7 @@ export const getOrderById = async (orderId: string): Promise<OrderWithDetails | 
             .select('id, user_id, first_name, last_name, phone, email, vehicle_type, status')
             .or(`id.eq.${data.driver_id},user_id.eq.${data.driver_id}`)
             .limit(1)
-            .single();
+            .maybeSingle();
         orderWithDriver = { ...data, drivers: driver || null };
     } else {
         orderWithDriver = { ...data, drivers: null };
@@ -738,7 +739,7 @@ export const getOrdersPaginated = async (
         .from('orders')
         .select(`
       *,
-      clients:client_id (
+      clients!orders_client_id_fkey_clients (
         id,
         company_name,
         email,
@@ -823,7 +824,7 @@ export const getAllInvoices = async (): Promise<Invoice[]> => {
         .from('invoices')
         .select(`
       *,
-      clients:client_id (
+      clients (
         id,
         company_name,
         email
@@ -840,7 +841,7 @@ export const getUnpaidInvoices = async (): Promise<Invoice[]> => {
         .from('invoices')
         .select(`
       *,
-      clients:client_id (
+      clients (
         id,
         company_name,
         email
@@ -876,7 +877,7 @@ export const sendPaymentReminder = async (clientId: string, invoiceId: string) =
     const invoice = await getInvoiceById(invoiceId);
     if (!invoice) throw new Error("Facture introuvable");
 
-    const clientEmail = (invoice.clients as any)?.email;
+    const clientEmail = (invoice as any).clients?.email;
     const invoiceRef = invoice.reference;
 
     // 2. Message interne
@@ -1180,16 +1181,10 @@ export const getClientOrders = async (
         .from('orders')
         .select(`
             *,
-            clients:client_id (
+            clients (
                 id,
                 company_name,
                 email,
-                phone
-            ),
-            drivers:driver_id (
-                id,
-                first_name,
-                last_name,
                 phone
             )
         `)
@@ -1208,7 +1203,29 @@ export const getClientOrders = async (
     const { data, error } = await query.order('created_at', { ascending: false });
 
     if (error) throw error;
-    return data as OrderWithDetails[];
+
+    // Manually join drivers to avoid relationship errors
+    const orders = data as any[];
+    const driverIds = [...new Set(orders.filter(o => o.driver_id).map(o => o.driver_id))];
+
+    let driversMap: Record<string, any> = {};
+    if (driverIds.length > 0) {
+        const { data: driversData } = await supabase
+            .from('drivers')
+            .select('id, first_name, last_name, phone')
+            .in('id', driverIds);
+
+        if (driversData) {
+            driversData.forEach(d => {
+                driversMap[d.id] = d;
+            });
+        }
+    }
+
+    return orders.map(order => ({
+        ...order,
+        drivers: order.driver_id ? driversMap[order.driver_id] : null
+    })) as OrderWithDetails[];
 };
 
 // Obtenir les statistiques avec filtres de date
@@ -1433,7 +1450,7 @@ export const sendInvoiceByEmail = async (invoiceId: string) => {
     const invoice = await getInvoiceById(invoiceId);
     if (!invoice) throw new Error("Facture introuvable");
 
-    const clientEmail = (invoice.clients as any)?.email;
+    const clientEmail = (invoice as any).clients?.email;
     const invoiceRef = invoice.reference;
 
     if (clientEmail) {

@@ -11,6 +11,7 @@ import { calculerToutesLesFormulesAsync } from "@/utils/pricingEngineDb";
 import { loadPricingConfigCached } from "@/utils/pricingConfigLoader";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { OrderSummary } from "@/components/orders/OrderSummary";
+import { supabase } from "@/lib/supabase";
 
 const OrderWithoutAccount = () => {
   const { toast } = useToast();
@@ -108,6 +109,26 @@ const OrderWithoutAccount = () => {
     }
 
     const selectedPrice = pricingResults[orderData.formula];
+
+    // Vérifier si l'email correspond à un client suspendu
+    try {
+      const { data: existingClient } = await supabase
+        .from('clients')
+        .select('id, status, is_suspended, suspension_reason')
+        .eq('email', orderData.senderEmail)
+        .single();
+
+      if (existingClient && (existingClient.status === 'suspended' || existingClient.is_suspended)) {
+        toast({
+          title: "Impossible de créer la commande",
+          description: `Ce compte client est suspendu. Raison : ${existingClient.suspension_reason || 'Non spécifiée'}.`,
+          variant: "destructive",
+        });
+        return;
+      }
+    } catch (e) {
+      // Ignore error if client not found
+    }
 
     // Afficher un loader
     toast({

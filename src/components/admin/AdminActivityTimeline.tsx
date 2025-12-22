@@ -38,28 +38,48 @@ export const AdminActivityTimeline = ({ limit = 10 }: AdminActivityTimelineProps
                 setLoading(true);
                 const events: ActivityEvent[] = [];
 
-                // Execute all queries in parallel
+                // Execute all queries in parallel (without joins to avoid 400/404 errors)
                 const [
                     { data: orders },
-                    { data: clients },
+                    { data: clients }, // New clients
                     { data: drivers },
                     { data: invoices }
                 ] = await Promise.all([
-                    supabase.from('orders').select('*, clients(company_name)').order('created_at', { ascending: false }).limit(8),
+                    supabase.from('orders').select('*').order('created_at', { ascending: false }).limit(8),
                     supabase.from('clients').select('*').order('created_at', { ascending: false }).limit(5),
                     supabase.from('drivers').select('*').order('created_at', { ascending: false }).limit(3),
-                    supabase.from('invoices').select('*, clients(company_name)').order('created_at', { ascending: false }).limit(3)
+                    supabase.from('invoices').select('*').order('created_at', { ascending: false }).limit(3)
                 ]);
+
+                // Collect Client IDs to fetch names manually
+                const clientIds = new Set<string>();
+                orders?.forEach((o: any) => o.client_id && clientIds.add(o.client_id));
+                invoices?.forEach((i: any) => i.client_id && clientIds.add(i.client_id));
+
+                let clientsMap: Record<string, string> = {};
+                if (clientIds.size > 0) {
+                    const { data: clientsNames } = await supabase
+                        .from('clients')
+                        .select('id, company_name')
+                        .in('id', Array.from(clientIds));
+
+                    if (clientsNames) {
+                        clientsNames.forEach((c: any) => {
+                            clientsMap[c.id] = c.company_name;
+                        });
+                    }
+                }
 
                 // 1. Commandes récentes
                 if (orders) {
                     orders.forEach((order) => {
+                        const clientName = clientsMap[order.client_id] || 'Client inconnu';
                         // Création
                         events.push({
                             id: `order-created-${order.id}`,
                             type: 'order',
                             title: 'Nouvelle commande',
-                            description: `${order.reference} - ${order.clients?.company_name || 'Client inconnu'}`,
+                            description: `${order.reference} - ${clientName}`,
                             timestamp: order.created_at,
                             icon: Package,
                             color: 'text-accent-main',
@@ -145,11 +165,12 @@ export const AdminActivityTimeline = ({ limit = 10 }: AdminActivityTimelineProps
                 // 4. Factures récentes
                 if (invoices) {
                     invoices.forEach((invoice) => {
+                        const clientName = clientsMap[invoice.client_id] || 'Client';
                         events.push({
                             id: `invoice-${invoice.id}`,
                             type: 'invoice',
                             title: 'Nouvelle facture',
-                            description: `${invoice.reference} - ${invoice.clients?.company_name || 'Client'} - ${invoice.amount_ttc}€`,
+                            description: `${invoice.reference} - ${clientName} - ${invoice.amount_ttc}€`,
                             timestamp: invoice.created_at,
                             icon: FileText,
                             color: 'text-cta',

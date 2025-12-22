@@ -41,7 +41,8 @@ export interface Order {
     pickup_lng?: number;
     delivery_lat?: number;
     delivery_lng?: number;
-    scheduled_pickup_time?: string;
+    pickup_time?: string;
+    user_id?: string;
 
     // Informations d'enlèvement
     pickup_contact_name?: string;
@@ -96,7 +97,7 @@ export interface Client {
     email_notif?: boolean;
     sms_notif?: boolean;
     auto_invoice?: boolean;
-    status?: 'active' | 'suspended' | 'deleted';
+    status?: 'active' | 'suspended' | 'deleted' | 'pending';
     sector?: string;
     notes?: string;
     is_suspended?: boolean;

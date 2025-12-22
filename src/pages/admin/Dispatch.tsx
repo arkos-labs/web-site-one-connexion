@@ -47,7 +47,7 @@ interface Order {
     distance_km: number;
     status: string;
     created_at: string;
-    scheduled_pickup_time?: string;
+    pickup_time?: string;
     driver_id?: string;
     refusal_count?: number;
     last_refused_by?: string;
@@ -130,7 +130,30 @@ export default function Dispatch() {
             });
         }
 
-        // Cas 2: La commande passe en cours (in_progress)
+        // Cas 1.5: Chauffeur ARRIVÉ au point de retrait
+        if (updatedOrder.status === 'arrived_pickup') {
+            toast.info(
+                `📍 CHAUFFEUR ARRIVÉ AU RETRAIT (${updatedOrder.reference})`,
+                {
+                    duration: 5000,
+                    style: {
+                        background: 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)',
+                        color: 'white',
+                        fontWeight: 'bold',
+                    },
+                    icon: '📍'
+                }
+            );
+
+            // Mettre à jour dans la liste des acceptées
+            setDriverAcceptedOrders(prev => {
+                const exists = prev.find(o => o.id === updatedOrder.id);
+                if (exists) return prev.map(o => o.id === updatedOrder.id ? updatedOrder : o);
+                return [...prev, updatedOrder];
+            });
+        }
+
+        // Cas 2: La commande passe en cours (in_progress) - RESTE dans "Acceptées"
         if (updatedOrder.status === 'in_progress') {
             toast.info(
                 `🚚 COMMANDE ${updatedOrder.reference} EN COURS DE LIVRAISON`,
@@ -145,9 +168,18 @@ export default function Dispatch() {
                 }
             );
 
-            // Déplacer de driver_accepted vers in_progress
-            setDriverAcceptedOrders(prev => prev.filter(o => o.id !== updatedOrder.id));
-            setInProgressOrders(prev => {
+            // Mettre à jour dans driverAcceptedOrders (ne pas déplacer)
+            setDriverAcceptedOrders(prev => {
+                const exists = prev.find(o => o.id === updatedOrder.id);
+                if (exists) return prev.map(o => o.id === updatedOrder.id ? updatedOrder : o);
+                return [...prev, updatedOrder];
+            });
+        }
+
+        // Cas 2.5: Le chauffeur arrive sur place (arrived_pickup) - RESTE dans "Acceptées"
+        if (updatedOrder.status === 'arrived_pickup') {
+            // Mettre à jour dans driverAcceptedOrders
+            setDriverAcceptedOrders(prev => {
                 const exists = prev.find(o => o.id === updatedOrder.id);
                 if (exists) return prev.map(o => o.id === updatedOrder.id ? updatedOrder : o);
                 return [...prev, updatedOrder];
@@ -174,6 +206,39 @@ export default function Dispatch() {
                 if (exists) return prev.map(o => o.id === updatedOrder.id ? updatedOrder : o);
                 return [...prev, updatedOrder];
             });
+        }
+
+        // Cas 3.5: Chauffeur ACCEPTE la course - passe dans "Acceptées"
+        if (updatedOrder.status === 'driver_accepted' && oldOrder?.status === 'dispatched') {
+            toast.success(
+                `✅ Commande ${updatedOrder.reference} ACCEPTÉE par le chauffeur`,
+                {
+                    duration: 5000,
+                    style: {
+                        background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                        color: 'white',
+                        fontWeight: 'bold',
+                    },
+                    icon: '🚗'
+                }
+            );
+
+            // Retirer de "En Attribution" et ajouter à "Acceptées"
+            setDispatchedOrders(prev => prev.filter(o => o.id !== updatedOrder.id));
+            setDriverAcceptedOrders(prev => {
+                const exists = prev.find(o => o.id === updatedOrder.id);
+                if (exists) return prev.map(o => o.id === updatedOrder.id ? updatedOrder : o);
+                return [...prev, updatedOrder];
+            });
+
+            // Mettre à jour le statut du chauffeur à 'busy'
+            if (updatedOrder.driver_id) {
+                setAvailableDrivers(prev => prev.map(d =>
+                    d.id === updatedOrder.driver_id
+                        ? { ...d, status: 'busy' as const }
+                        : d
+                ));
+            }
         }
 
         // Cas 4: Commande livrée/complétée - la retirer de toutes les colonnes
@@ -319,7 +384,7 @@ export default function Dispatch() {
                     event: 'UPDATE',
                     schema: 'public',
                     table: 'orders',
-                    filter: "status=in.(dispatched,driver_accepted,in_progress,driver_refused)"
+                    filter: "status=in.(accepted,dispatched,driver_accepted,arrived_pickup,in_progress,driver_refused,delivered,completed,cancelled)"
                 },
                 handleOrderUpdate
             )
@@ -339,7 +404,7 @@ export default function Dispatch() {
                     }
                 }
             )
-            // Écouter aussi les updates qui reviennent à 'accepted' (unassign)
+            // Écouter aussi les updates qui reviennent à 'accepted' (unassign ou refus)
             .on(
                 'postgres_changes',
                 {
@@ -352,9 +417,26 @@ export default function Dispatch() {
                     const updatedOrder = payload.new as Order;
                     const oldOrder = payload.old as Order;
 
-                    // Une commande revient à 'accepted' (probablement unassign)
-                    if (oldOrder?.status !== 'accepted' && updatedOrder.status === 'accepted') {
-                        toast.info(`↩️ Commande ${updatedOrder.reference} retournée au dispatch`);
+                    console.log('[Dispatch Realtime] Order revient à ACCEPTED:', {
+                        orderId: updatedOrder.id,
+                        reference: updatedOrder.reference,
+                        oldStatus: oldOrder?.status,
+                        newStatus: updatedOrder.status,
+                        oldDriverId: oldOrder?.driver_id,
+                        newDriverId: updatedOrder.driver_id
+                    });
+
+                    // Une commande revient à 'accepted' (unassign ou refus chauffeur)
+                    // Condition: soit le statut change, soit le driver_id devient null
+                    if ((oldOrder?.status !== 'accepted' && updatedOrder.status === 'accepted') ||
+                        (oldOrder?.driver_id && !updatedOrder.driver_id && updatedOrder.status === 'accepted')) {
+
+                        const wasRefused = oldOrder?.driver_id && !updatedOrder.driver_id;
+                        const message = wasRefused
+                            ? `🚫 Commande ${updatedOrder.reference} REFUSÉE par le chauffeur`
+                            : `↩️ Commande ${updatedOrder.reference} retournée au dispatch`;
+
+                        toast.warning(message, { duration: 5000 });
 
                         // La retirer des autres colonnes
                         setDispatchedOrders(prev => prev.filter(o => o.id !== updatedOrder.id));
@@ -367,6 +449,8 @@ export default function Dispatch() {
                             if (exists) return prev.map(o => o.id === updatedOrder.id ? updatedOrder : o);
                             return [...prev, updatedOrder];
                         });
+
+                        console.log(`✅ [Dispatch] Commande ${updatedOrder.reference} replacée dans "À Dispatcher"`);
                     }
                 }
             )
@@ -402,19 +486,8 @@ export default function Dispatch() {
                     if ((newDriver.status === 'available' || newDriver.status === 'online') &&
                         oldDriver?.status !== 'available' && oldDriver?.status !== 'online') {
 
-                        // Toast de notification - chauffeur connecté
-                        toast.success(
-                            `🟢 ${newDriver.first_name} ${newDriver.last_name} est EN LIGNE`,
-                            {
-                                duration: 5000,
-                                style: {
-                                    background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-                                    color: 'white',
-                                    fontWeight: 'bold',
-                                },
-                                icon: '🚗'
-                            }
-                        );
+                        // Toast supprimé pour éviter le spam
+                        // toast.success(...) 
 
                         // Ajouter ou mettre à jour dans la liste
                         setAvailableDrivers(prev => {
@@ -433,19 +506,8 @@ export default function Dispatch() {
                     else if (newDriver.status === 'offline' &&
                         (oldDriver?.status === 'available' || oldDriver?.status === 'online')) {
 
-                        // Toast de notification - chauffeur déconnecté
-                        toast(
-                            `🔴 ${newDriver.first_name} ${newDriver.last_name} s'est DÉCONNECTÉ`,
-                            {
-                                duration: 4000,
-                                style: {
-                                    background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
-                                    color: 'white',
-                                    fontWeight: 'bold',
-                                },
-                                icon: '👋'
-                            }
-                        );
+                        // Toast supprimé pour éviter le spam
+                        // toast(...)
 
                         // Retirer de la liste
                         setAvailableDrivers(prev => prev.filter(d => d.id !== newDriver.id));
@@ -533,7 +595,7 @@ export default function Dispatch() {
         const { data, error } = await supabase
             .from('orders')
             .select('*')
-            .in('status', ['accepted', 'assigned', 'driver_accepted', 'in_progress', 'driver_refused'])
+            .in('status', ['accepted', 'dispatched', 'driver_accepted', 'arrived_pickup', 'in_progress', 'driver_refused'])
             .order('created_at', { ascending: true });
 
         if (error) {
@@ -564,12 +626,11 @@ export default function Dispatch() {
                     // mais avec un indicateur visuel (géré au rendu)
                     dispatched.push(order);
                     break;
-                case 'driver_accepted':
-                    driverAccepted.push(order);
-                    if (order.driver_id) deliveriesMap[order.driver_id] = order;
                     break;
-                case 'in_progress':
-                    inProgress.push(order);
+                case 'driver_accepted':
+                case 'arrived_pickup': // Chauffeur arrivé au point de retrait
+                case 'in_progress': // Colis récupéré, en route vers livraison
+                    driverAccepted.push(order);
                     if (order.driver_id) deliveriesMap[order.driver_id] = order;
                     break;
             }
@@ -577,11 +638,11 @@ export default function Dispatch() {
 
         // Trier les commandes acceptées par heure de pickup prévue
         accepted.sort((a, b) => {
-            if (a.scheduled_pickup_time && b.scheduled_pickup_time) {
-                return new Date(a.scheduled_pickup_time).getTime() - new Date(b.scheduled_pickup_time).getTime();
+            if (a.pickup_time && b.pickup_time) {
+                return new Date(a.pickup_time).getTime() - new Date(b.pickup_time).getTime();
             }
-            if (a.scheduled_pickup_time) return 1;
-            if (b.scheduled_pickup_time) return -1;
+            if (a.pickup_time) return 1;
+            if (b.pickup_time) return -1;
             return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
         });
 
@@ -603,7 +664,7 @@ export default function Dispatch() {
         const { data, error } = await supabase
             .from('drivers')
             .select('*')
-            .in('status', ['online', 'available', 'busy', 'on_delivery'])
+            .in('status', ['online', 'available', 'busy', 'on_delivery']) // STRICT FILTER: No 'offline' drivers
             .order('first_name', { ascending: true });
 
         if (error) {
@@ -645,89 +706,68 @@ export default function Dispatch() {
         }
     };
 
-    const handleAssignDriver = async (driverId: string) => {
-        if (!selectedOrder) return;
+    // Remplacement pour la fonction d'assignation
+    const handleAssignDriver = async (orderId: string, driverId: string) => {
+        if (!orderId || !driverId) return;
 
+        const driver = availableDrivers.find(d => d.id === driverId);
+        if (!driver) {
+            toast.error("Chauffeur introuvable");
+            return;
+        }
+
+        if (!driver.user_id) {
+            console.error("❌ [Dispatch] Driver missing user_id:", driver);
+            toast.error("Erreur critique: Ce chauffeur n'a pas de compte utilisateur lié (user_id manquant). Impossible d'assigner.");
+            return;
+        }
+
+        setIsProcessing(true);
         try {
-            setIsProcessing(true);
+            console.log(`📡 [Dispatch] Attribution de la commande ${orderId} au chauffeur ${driver.first_name}...`);
 
-            // Récupérer l'ID de l'admin connecté
-            const { data: { user } } = await supabase.auth.getUser();
-            if (!user) {
-                toast.error('Vous devez être connecté');
-                setIsProcessing(false);
-                return;
-            }
+            // Obtenir l'ID de l'admin actuel (si possible, sinon fallback)
+            const { data: { user: adminUser } } = await supabase.auth.getUser();
 
-            // Récupérer le user_id du chauffeur (important: utiliser user_id, pas id)
-            const { data: drivers, error: driverFetchError } = await supabase
-                .from('drivers')
-                .select('id, user_id, first_name, last_name')
-                .eq('id', driverId)
-                .limit(1);
+            console.log(`🔍 [Dispatch] Driver ID Details:`, {
+                driver_PK: driver.id,
+                driver_AuthID: driver.user_id,
+                willUpdateWith: driver.user_id || driver.id
+            });
 
-            const driver = drivers?.[0];
-
-            if (driverFetchError || !driver?.user_id) {
-                console.error('Erreur récupération chauffeur:', driverFetchError);
-                toast.error('Chauffeur introuvable ou incomplet');
-                setIsProcessing(false);
-                return;
-            }
-
-            // Utiliser le service d'assignation
-            // FIX: L'erreur FK (foreign key) indique que la table orders attend l'ID de la table drivers (UUID),
-            // et non le user_id (Auth ID).
+            // Utiliser le service d'assignation qui gère tout (Statut commande, Statut chauffeur, Notifications, Événements)
             const result = await assignOrderToDriver({
-                orderId: selectedOrder.id,
-                driverId: driver.id, // ✅ Utiliser l'ID de la table drivers (UUID) pour la FK
-                driverUserId: driver.user_id, // ✅ Utiliser le user_id pour les notifications
-                adminId: user.id
+                orderId: orderId,
+                driverId: driverId,           // ID table drivers (UUID)
+                driverUserId: driver.user_id || driverId, // Auth ID (user_id)
+                adminId: adminUser?.id || 'admin'
             });
 
             if (result.success) {
-                // Optimistic UI Update: Passer le statut à 'busy' et associer l'ordre
+                toast.success(`✅ Course ${selectedOrder?.reference || ''} dispatchée avec succès !`);
+
+                // Mises à jour optimistes de l'UI
+                setAcceptedOrders(prev => prev.filter(o => o.id !== orderId));
+                setDispatchedOrders(prev => {
+                    const exists = prev.find(o => o.id === orderId);
+                    if (exists) return prev;
+                    const orderToMove = acceptedOrders.find(o => o.id === orderId) || { ...selectedOrder, status: 'assigned' };
+                    return [...prev, orderToMove as Order];
+                });
+
+                // Mettre le chauffeur en busy localement
                 setAvailableDrivers(prev => prev.map(d =>
-                    d.id === driverId
-                        ? { ...d, status: 'busy' }
-                        : d
+                    d.id === driverId ? { ...d, status: 'busy' } : d
                 ));
 
-                // On ajoute l'ordre aux activeDeliveries pour l'affichage immédiat
-                // Note: driver.user_id est la clé utilisée dans activeDeliveries map
-                // Mais fetchDrivers retourne des objets avec `id` (uuid PK) et `user_id` (auth id).
-                // Il faut s'assurer d'utiliser la bonne clé.
-                // Dans fetchActiveDeliveries on utilise o.driver_id.
-                // o.driver_id correspond généralement au user_id du driver dans la table orders.
-                if (driver.user_id) {
-                    setActiveDeliveries(prev => ({
-                        ...prev,
-                        [driver.user_id]: selectedOrder, // Auth ID key
-                        [driver.id]: selectedOrder       // UUID key (Critical for consistency)
-                    }));
-                }
-
-                toast.success(
-                    `✅ Course ${selectedOrder.reference} assignée à ${driver.first_name} ${driver.last_name}`,
-                    {
-                        duration: 5000,
-                        style: {
-                            background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-                            color: 'white',
-                            border: '2px solid white',
-                            boxShadow: '0 10px 40px rgba(16, 185, 129, 0.4)',
-                        }
-                    }
-                );
                 setIsAssignDialogOpen(false);
                 setSelectedOrder(null);
             } else {
-                toast.error('Erreur lors de l\'attribution de la course');
+                throw result.error;
             }
-
-        } catch (error: any) {
-            console.error('Error assigning driver:', error);
-            toast.error('Erreur lors de l\'attribution de la course');
+        } catch (err: any) {
+            console.error("❌ [Dispatch] Erreur lors de l'attribution:", err);
+            toast.error(`Erreur: ${err.message || 'Impossible d\'attribuer la course'}`);
         } finally {
             setIsProcessing(false);
         }
@@ -866,9 +906,9 @@ export default function Dispatch() {
                             </div>
                         ) : (
                             acceptedOrders.map((order) => {
-                                const pickupTime = formatPickupTime(order.scheduled_pickup_time);
+                                const pickupTime = formatPickupTime(order.pickup_time);
                                 const isDeferred = !!pickupTime;
-                                const dispatchStatus = getDispatchStatus(order.scheduled_pickup_time);
+                                const dispatchStatus = getDispatchStatus(order.pickup_time);
 
                                 return (
                                     <div
@@ -1012,21 +1052,33 @@ export default function Dispatch() {
 
                                         <div className="flex items-center justify-between mt-2 pt-2 border-t">
                                             <Badge className="bg-slate-100 text-slate-700 text-xs">{order.price} €</Badge>
-                                            {isRefused ? (
-                                                <Button
-                                                    size="sm"
-                                                    onClick={() => {
-                                                        setSelectedOrder(order);
-                                                        setIsAssignDialogOpen(true);
-                                                    }}
-                                                    className="h-7 text-xs bg-red-600 hover:bg-red-700 text-white"
-                                                >
-                                                    Réattribuer
-                                                    <ArrowRight className="h-3 w-3 ml-1" />
-                                                </Button>
-                                            ) : (
-                                                <span className="text-xs text-amber-600 font-medium">Chauffeur notifié...</span>
-                                            )}
+                                            <div className="flex gap-2">
+                                                {isRefused ? (
+                                                    <Button
+                                                        size="sm"
+                                                        onClick={() => {
+                                                            setSelectedOrder(order);
+                                                            setIsAssignDialogOpen(true);
+                                                        }}
+                                                        className="h-7 text-xs bg-red-600 hover:bg-red-700 text-white"
+                                                    >
+                                                        Réattribuer
+                                                        <ArrowRight className="h-3 w-3 ml-1" />
+                                                    </Button>
+                                                ) : (
+                                                    <>
+                                                        <span className="text-xs text-amber-600 font-medium mr-1 my-auto">Chauffeur notifié...</span>
+                                                        <Button
+                                                            size="sm"
+                                                            variant="outline"
+                                                            onClick={() => handleUnassign(order.driver_id!, order.id)}
+                                                            className="h-7 text-[10px] text-red-500 border-red-200 hover:bg-red-50"
+                                                        >
+                                                            Annuler
+                                                        </Button>
+                                                    </>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
                                 );
@@ -1054,32 +1106,53 @@ export default function Dispatch() {
                                 <p className="text-xs">Les courses acceptées apparaîtront ici.</p>
                             </div>
                         ) : (
-                            driverAcceptedOrders.map((order) => (
-                                <div
-                                    key={order.id}
-                                    className="border rounded-lg p-3 bg-white border-l-4 border-l-teal-400 hover:shadow-md transition-all"
-                                >
-                                    <div className="flex items-center justify-between mb-2">
-                                        <h3 className="font-bold text-sm text-slate-800">{order.reference}</h3>
-                                        <Badge className="bg-teal-100 text-teal-700 text-xs">
-                                            ✓ Acceptée
-                                        </Badge>
-                                    </div>
-                                    <div className="text-xs text-slate-600 space-y-1">
-                                        <div className="flex items-start gap-2">
-                                            <MapPin className="h-3 w-3 mt-0.5 shrink-0 text-red-500" />
-                                            <span className="truncate">{order.delivery_address}</span>
+                            driverAcceptedOrders.map((order) => {
+                                // Trouver le chauffeur assigné
+                                const assignedDriver = availableDrivers.find(d => d.id === order.driver_id || d.user_id === order.driver_id);
+
+                                return (
+                                    <div
+                                        key={order.id}
+                                        className="border rounded-lg p-3 bg-white border-l-4 border-l-teal-400 hover:shadow-md transition-all"
+                                    >
+                                        <div className="flex items-center justify-between mb-2">
+                                            <h3 className="font-bold text-sm text-slate-800">{order.reference}</h3>
+                                            <Badge className={`text-xs ${order.status === 'in_progress'
+                                                ? 'bg-blue-100 text-blue-700'
+                                                : order.status === 'arrived_pickup'
+                                                    ? 'bg-orange-100 text-orange-700'
+                                                    : 'bg-teal-100 text-teal-700'
+                                                }`}>
+                                                {order.status === 'in_progress'
+                                                    ? '🚚 En Route'
+                                                    : order.status === 'arrived_pickup'
+                                                        ? '📍 Sur Place'
+                                                        : '✓ Acceptée'}
+                                            </Badge>
+                                        </div>
+                                        <div className="text-xs text-slate-600 space-y-1">
+                                            <div className="flex items-start gap-2">
+                                                <MapPin className="h-3 w-3 mt-0.5 shrink-0 text-red-500" />
+                                                <span className="truncate">{order.delivery_address}</span>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center justify-between mt-2 pt-2 border-t">
+                                            <Badge className="bg-slate-100 text-slate-700 text-xs">{order.price} €</Badge>
+                                            {assignedDriver ? (
+                                                <span className="text-xs text-teal-600 font-medium flex items-center gap-1">
+                                                    <Truck className="h-3 w-3" />
+                                                    {assignedDriver.first_name} {assignedDriver.last_name}
+                                                </span>
+                                            ) : (
+                                                <span className="text-xs text-slate-500 font-medium flex items-center gap-1">
+                                                    <Truck className="h-3 w-3" />
+                                                    Chauffeur N/A
+                                                </span>
+                                            )}
                                         </div>
                                     </div>
-                                    <div className="flex items-center justify-between mt-2 pt-2 border-t">
-                                        <Badge className="bg-slate-100 text-slate-700 text-xs">{order.price} €</Badge>
-                                        <span className="text-xs text-teal-600 font-medium flex items-center gap-1">
-                                            <Truck className="h-3 w-3" />
-                                            Chauffeur prêt
-                                        </span>
-                                    </div>
-                                </div>
-                            ))
+                                );
+                            })
                         )}
                     </div>
                 </Card>
@@ -1233,7 +1306,7 @@ export default function Dispatch() {
                                         <div
                                             key={driver.id}
                                             className={`flex items-center justify-between p-3 border rounded-lg transition-colors group ${isBusy ? 'bg-slate-50 opacity-75 cursor-not-allowed' : 'hover:bg-slate-50 cursor-pointer'}`}
-                                            onClick={() => !isBusy && handleAssignDriver(driver.id)}
+                                            onClick={() => !isBusy && selectedOrder && handleAssignDriver(selectedOrder.id, driver.id)}
                                         >
                                             <div className="flex items-center gap-3">
                                                 <div className={`h-10 w-10 rounded-full flex items-center justify-center text-sm font-bold ${isBusy ? 'bg-slate-200 text-slate-500' : 'bg-green-100 text-green-700 group-hover:bg-green-200'}`}>

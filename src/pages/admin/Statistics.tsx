@@ -141,16 +141,7 @@ const Statistics = () => {
 
       setChartData(sortedChartData);
 
-      // Prepare Sector Data (Mocked for now as sector is not in Client interface)
-      // In a real scenario, we would group by client sector.
-      const mockSectors = [
-        { name: "Médical", value: 35 },
-        { name: "Juridique", value: 25 },
-        { name: "Automobile", value: 20 },
-        { name: "Événementiel", value: 15 },
-        { name: "Autre", value: 5 },
-      ];
-      setSectorData(mockSectors);
+      setSectorData([]);
 
     } catch (error) {
       console.error("Error fetching stats:", error);
@@ -326,21 +317,27 @@ const Statistics = () => {
         <Card className="p-6">
           <h2 className="font-semibold mb-4">Distribution par secteur (Estimation)</h2>
           <ResponsiveContainer width="100%" height={300}>
-            <PieChart>
-              <Pie
-                data={sectorData}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                outerRadius={80}
-                fill="#8884d8"
-                dataKey="value"
-              >
-                {sectorData.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)}
-              </Pie>
-              <Tooltip />
-            </PieChart>
+            {sectorData.length > 0 ? (
+              <PieChart>
+                <Pie
+                  data={sectorData}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                  outerRadius={80}
+                  fill="#8884d8"
+                  dataKey="value"
+                >
+                  {sectorData.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)}
+                </Pie>
+                <Tooltip />
+              </PieChart>
+            ) : (
+              <div className="flex h-full items-center justify-center text-muted-foreground">
+                Données de secteur non disponibles
+              </div>
+            )}
           </ResponsiveContainer>
         </Card>
 

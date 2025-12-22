@@ -14,6 +14,9 @@ export type DriverStatus =
     | 'online'                // En ligne (disponible)
     | 'busy'                  // Occupé (en course)
     | 'offline'               // Hors ligne
+    | 'on_break'              // En pause
+    | 'on_vacation'           // En vacances
+    | 'on_delivery'           // En livraison (synonyme de busy pour l'UI)
     | 'suspended';            // Suspendu
 
 export interface OrderDriver {
@@ -118,7 +121,10 @@ export const getDriverStatusLabel = (status: DriverStatus): string => {
         online: 'En ligne',
         busy: 'Occupé',
         offline: 'Hors ligne',
-        suspended: 'Suspendu'
+        suspended: 'Suspendu',
+        on_break: 'En pause',
+        on_vacation: 'En vacances',
+        on_delivery: 'En livraison'
     };
     return labels[status];
 };
@@ -144,7 +150,10 @@ export const getDriverStatusBadgeColor = (status: DriverStatus): string => {
         online: 'bg-success',
         busy: 'bg-blue-500',
         offline: 'bg-gray-500',
-        suspended: 'bg-red-500'
+        suspended: 'bg-red-500',
+        on_break: 'bg-orange-400',
+        on_vacation: 'bg-purple-400',
+        on_delivery: 'bg-blue-600'
     };
     return colors[status];
 };

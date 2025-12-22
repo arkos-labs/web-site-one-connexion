@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Eye, Plus, Search } from "lucide-react";
+import { Eye, Plus, Search, MoreHorizontal, Ban, CheckCircle, AlertTriangle } from "lucide-react";
 import { CreateClientModal } from "@/components/admin/clients/CreateClientModal";
 import { toast } from "sonner";
 import {
@@ -17,7 +17,24 @@ import {
 import { Input } from "@/components/ui/input";
 import { Client, getClientStatusLabel, getClientStatusColor } from "@/types/clients";
 import { supabase } from "@/lib/supabase";
-import { getClientsPaginated, getClientStatsBatch } from "@/services/adminSupabaseQueries";
+import { getClientsPaginated, getClientStatsBatch, suspendClient, unsuspendClient } from "@/services/adminSupabaseQueries";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Pagination,
   PaginationContent,
@@ -48,6 +65,12 @@ const Clients = () => {
     totalRevenue: 0,
     totalUnpaid: 0
   });
+
+  // Suspension state
+  const [clientToSuspend, setClientToSuspend] = useState<Client | null>(null);
+  const [showSuspendDialog, setShowSuspendDialog] = useState(false);
+  const [suspensionReason, setSuspensionReason] = useState("");
+  const [isProcessingAction, setIsProcessingAction] = useState(false);
 
   // Debounce search
   useEffect(() => {
@@ -163,6 +186,78 @@ const Clients = () => {
 
   const handleViewDetails = (clientId: string) => {
     navigate(`/dashboard-admin/clients/${clientId}`);
+  };
+
+  const handleUnsuspendClient = async (client: Client) => {
+    try {
+      setIsProcessingAction(true);
+      await unsuspendClient(client.id);
+      toast.success("Client réactivé avec succès");
+
+      // Update local state
+      setClients(prev => prev.map(c =>
+        c.id === client.id
+          ? { ...c, status: 'active', is_suspended: false, suspended_at: undefined, suspension_reason: undefined }
+          : c
+      ));
+
+      // Update global stats slightly (optimistic)
+      setGlobalStats(prev => ({
+        ...prev,
+        activeClients: prev.activeClients + 1,
+        suspendedClients: Math.max(0, prev.suspendedClients - 1)
+      }));
+
+    } catch (error) {
+      console.error("Error unsuspending client:", error);
+      toast.error("Erreur lors de la réactivation");
+    } finally {
+      setIsProcessingAction(false);
+    }
+  };
+
+  const handleOpenSuspendDialog = (client: Client) => {
+    setClientToSuspend(client);
+    setSuspensionReason("");
+    setShowSuspendDialog(true);
+  };
+
+  const confirmSuspendClient = async () => {
+    if (!clientToSuspend) return;
+
+    try {
+      setIsProcessingAction(true);
+      await suspendClient(clientToSuspend.id, suspensionReason);
+      toast.success("Client suspendu avec succès");
+
+      // Update local state
+      setClients(prev => prev.map(c =>
+        c.id === clientToSuspend.id
+          ? {
+            ...c,
+            status: 'suspended',
+            is_suspended: true,
+            suspended_at: new Date().toISOString(),
+            suspension_reason: suspensionReason
+          }
+          : c
+      ));
+
+      // Update global stats slightly (optimistic)
+      setGlobalStats(prev => ({
+        ...prev,
+        activeClients: Math.max(0, prev.activeClients - 1),
+        suspendedClients: prev.suspendedClients + 1
+      }));
+
+      setShowSuspendDialog(false);
+      setClientToSuspend(null);
+    } catch (error) {
+      console.error("Error suspending client:", error);
+      toast.error("Erreur lors de la suspension");
+    } finally {
+      setIsProcessingAction(false);
+    }
   };
 
   // Stats from global state
@@ -299,15 +394,33 @@ const Clients = () => {
                     {client.billing.total_unpaid > 0 ? `${client.billing.total_unpaid.toLocaleString()}€` : "-"}
                   </TableCell>
                   <TableCell onClick={(e) => e.stopPropagation()}>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleViewDetails(client.id)}
-                      className="gap-2"
-                    >
-                      <Eye size={16} />
-                      Détails
-                    </Button>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="h-8 w-8 p-0">
+                          <span className="sr-only">Menu</span>
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        <DropdownMenuItem onClick={() => handleViewDetails(client.id)}>
+                          <Eye className="mr-2 h-4 w-4" />
+                          Détails
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        {client.status === 'suspended' ? (
+                          <DropdownMenuItem onClick={() => handleUnsuspendClient(client)} className="text-green-600">
+                            <CheckCircle className="mr-2 h-4 w-4" />
+                            Réactiver
+                          </DropdownMenuItem>
+                        ) : (
+                          <DropdownMenuItem onClick={() => handleOpenSuspendDialog(client)} className="text-red-600">
+                            <Ban className="mr-2 h-4 w-4" />
+                            Suspendre
+                          </DropdownMenuItem>
+                        )}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </TableCell>
                 </TableRow>
               ))
@@ -357,7 +470,40 @@ const Clients = () => {
           fetchClients();
         }}
       />
-    </div>
+
+
+      {/* Suspend Client Modal */}
+      <Dialog open={showSuspendDialog} onOpenChange={setShowSuspendDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Suspendre le client</DialogTitle>
+            <DialogDescription>
+              Êtes-vous sûr de vouloir suspendre ce client ? Il ne pourra plus passer de commandes jusqu'à sa réactivation.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="py-4">
+            <label className="text-sm font-medium mb-2 block">Raison de la suspension (optionnel)</label>
+            <Textarea
+              placeholder="Ex: Factures impayées, comportement inapproprié..."
+              value={suspensionReason}
+              onChange={(e) => setSuspensionReason(e.target.value)}
+              className="resize-none"
+              rows={3}
+            />
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowSuspendDialog(false)} disabled={isProcessingAction}>
+              Annuler
+            </Button>
+            <Button variant="destructive" onClick={confirmSuspendClient} disabled={isProcessingAction}>
+              {isProcessingAction ? "Suspension..." : "Confirmer la suspension"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div >
   );
 };
 

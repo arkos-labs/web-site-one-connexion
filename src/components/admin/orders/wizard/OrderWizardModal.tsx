@@ -99,6 +99,10 @@ export const OrderWizardModal = ({ isOpen, onClose, onSubmit, mode = 'admin' }: 
     const [clients, setClients] = useState<any[]>([]);
     const [isLoadingClients, setIsLoadingClients] = useState(false);
 
+    // Suspension state (for client mode)
+    const [isClientSuspended, setIsClientSuspended] = useState(false);
+    const [clientSuspensionReason, setClientSuspensionReason] = useState<string | null>(null);
+
     // Load clients if admin
     useEffect(() => {
         if (isOpen) {
@@ -108,6 +112,8 @@ export const OrderWizardModal = ({ isOpen, onClose, onSubmit, mode = 'admin' }: 
             setPricingResults(null);
             setPricingError(null);
             setIsStandardDisabled(false);
+            setIsClientSuspended(false);
+            setClientSuspensionReason(null);
 
             setFormData(prev => ({
                 ...prev,
@@ -155,7 +161,7 @@ export const OrderWizardModal = ({ isOpen, onClose, onSubmit, mode = 'admin' }: 
         try {
             const { data } = await supabase
                 .from('clients')
-                .select('id, first_name, last_name, email, phone, company_name')
+                .select('id, first_name, last_name, email, phone, company_name, status, is_suspended, suspended_at, suspension_reason')
                 .order('last_name');
             if (data) setClients(data);
         } catch (error) {
@@ -177,7 +183,7 @@ export const OrderWizardModal = ({ isOpen, onClose, onSubmit, mode = 'admin' }: 
             let { data: client, error } = await supabase
                 .from('clients')
                 .select('*')
-                .eq('id', user.id)
+                .eq('user_id', user.id)
                 .single();
 
             if (error || !client) {
@@ -191,6 +197,17 @@ export const OrderWizardModal = ({ isOpen, onClose, onSubmit, mode = 'admin' }: 
             }
 
             if (client) {
+                // Check for suspension
+                if (client.status === 'suspended' || client.is_suspended) {
+                    setIsClientSuspended(true);
+                    setClientSuspensionReason(client.suspension_reason);
+
+                    // Show immediate error toast
+                    // toast.error("Votre compte est suspendu. Impossible de créer une commande.");
+                    // We don't return here to allow form data to be populated just in case, 
+                    // but the UI will be blocked by the 'isClientSuspended' check in render
+                }
+
                 updateFormData({
                     clientId: client.id,
                     clientName: client.company_name || `${client.first_name} ${client.last_name}`,
@@ -370,6 +387,9 @@ export const OrderWizardModal = ({ isOpen, onClose, onSubmit, mode = 'admin' }: 
                     isStandardDisabled={isStandardDisabled}
                     onNext={() => handleStepComplete('formula')}
                     onBack={() => setCurrentStep('package')}
+                    onPricesCalculated={setPricingResults}
+                    onCalculatingStateChange={setIsCalculatingPrice}
+                    onError={setPricingError}
                 />;
             case 'confirmation':
                 return <StepConfirmation
@@ -387,6 +407,42 @@ export const OrderWizardModal = ({ isOpen, onClose, onSubmit, mode = 'admin' }: 
     };
 
     if (!isOpen) return null;
+
+    if (isClientSuspended && mode === 'client') {
+        return (
+            <UniversalModal
+                isOpen={isOpen}
+                onClose={onClose}
+                title="Compte Suspendu"
+                size="md"
+            >
+                <div className="flex flex-col items-center justify-center p-8 text-center space-y-4">
+                    <div className="h-16 w-16 bg-red-100 rounded-full flex items-center justify-center">
+                        {/* We need to import AlertTriangle if not already imported, currently Clock etc are imported from lucide-react */}
+                        {/* Looking at imports, I need to add AlertTriangle or use existing icon. Imports are: MapPin, Package, Clock, Truck, CheckCircle */}
+                        <svg className="h-8 w-8 text-red-600" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><path d="M12 9v4" /><path d="M12 17h.01" /></svg>
+                    </div>
+                    <h2 className="text-xl font-bold text-gray-900">Action Impossible</h2>
+                    <p className="text-gray-600">
+                        Votre compte a été suspendu par l'administrateur. Vous ne pouvez plus passer de commandes pour le moment.
+                    </p>
+                    {clientSuspensionReason && (
+                        <div className="bg-red-50 border border-red-100 rounded-md p-3 w-full text-sm text-red-800">
+                            <strong>Raison :</strong> {clientSuspensionReason}
+                        </div>
+                    )}
+                    <div className="pt-4">
+                        <button
+                            onClick={onClose}
+                            className="bg-gray-900 hover:bg-gray-800 text-white px-6 py-2 rounded-md transition-colors"
+                        >
+                            Fermer
+                        </button>
+                    </div>
+                </div>
+            </UniversalModal>
+        );
+    }
 
     return (
         <UniversalModal
@@ -426,3 +482,4 @@ export const OrderWizardModal = ({ isOpen, onClose, onSubmit, mode = 'admin' }: 
         </UniversalModal>
     );
 };
+

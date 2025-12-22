@@ -1,5 +1,7 @@
+import { useState, useEffect } from "react";
 import { OrderFormData } from "../OrderWizardModal";
 import { CalculTarifaireResult, FormuleNew } from "@/utils/pricingEngine";
+import { calculateOneConnexionPriceAsync } from "@/utils/pricingEngineDb";
 import { Button } from "@/components/ui/button";
 import { Truck, Clock, Zap, Loader2, AlertCircle, ArrowRight, ArrowLeft } from "lucide-react";
 
@@ -12,6 +14,10 @@ interface StepFormulaProps {
     isStandardDisabled: boolean;
     onNext: () => void;
     onBack: () => void;
+    // Callback to pass results back to parent for summary/confirmation
+    onPricesCalculated?: (results: Record<FormuleNew, CalculTarifaireResult>) => void;
+    onCalculatingStateChange?: (isCalculating: boolean) => void;
+    onError?: (error: string | null) => void;
 }
 
 export const StepFormula = ({
@@ -22,8 +28,57 @@ export const StepFormula = ({
     error,
     isStandardDisabled,
     onNext,
-    onBack
+    onBack,
+    onPricesCalculated,
+    onCalculatingStateChange,
+    onError
 }: StepFormulaProps) => {
+
+    // Point 1: useEffect triggered when form data (addresses) changes
+    useEffect(() => {
+        const fetchAllPrices = async () => {
+            // Only calculate if we have basic info
+            if (!formData.pickupCity || !formData.deliveryAddress || formData.deliveryAddress.length < 5) {
+                return;
+            }
+
+            if (onCalculatingStateChange) onCalculatingStateChange(true);
+            if (onError) onError(null);
+
+            try {
+                // Point 3: Use Promise.all to calculate 3 formulas in parallel
+                const formulasToCalculate: FormuleNew[] = ["NORMAL", "EXPRESS", "URGENCE"];
+
+                const resultsArray = await Promise.all(
+                    formulasToCalculate.map(formula =>
+                        calculateOneConnexionPriceAsync(
+                            formData.pickupCity,
+                            formData.deliveryCity || "Paris", // Fallback city
+                            0, // Distance will be handled internally by the async function if needed or matrix
+                            formula
+                        )
+                    )
+                );
+
+                // Reconstruct the record
+                const resultsRecord = {} as Record<FormuleNew, CalculTarifaireResult>;
+                resultsArray.forEach((res, index) => {
+                    resultsRecord[formulasToCalculate[index]] = res;
+                });
+
+                if (onPricesCalculated) onPricesCalculated(resultsRecord);
+            } catch (err) {
+                console.error("Error in StepFormula pricing:", err);
+                if (onError) onError("Erreur lors du calcul des tarifs");
+            } finally {
+                if (onCalculatingStateChange) onCalculatingStateChange(false);
+            }
+        };
+
+        // Optionally add a small debounce here if not handled by parent
+        const timer = setTimeout(fetchAllPrices, 500);
+        return () => clearTimeout(timer);
+    }, [formData.pickupAddress, formData.deliveryAddress, formData.pickupCity, formData.deliveryCity]);
 
     const formulas = [
         { id: "NORMAL", label: "Standard", icon: Truck, desc: "Économique" },
@@ -133,11 +188,20 @@ export const StepFormula = ({
                 </Button>
                 <Button
                     onClick={onNext}
-                    disabled={!formData.formula}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-6"
+                    disabled={!formData.formula || isCalculating}
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 min-w-[120px]"
                 >
-                    Suivant
-                    <ArrowRight className="ml-2 h-4 w-4" />
+                    {isCalculating ? (
+                        <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Calcul...
+                        </>
+                    ) : (
+                        <>
+                            Suivant
+                            <ArrowRight className="ml-2 h-4 w-4" />
+                        </>
+                    )}
                 </Button>
             </div>
         </div>

@@ -53,26 +53,63 @@ export const useAuth = () => {
 
                 console.log('🔐 useAuth: Utilisateur connecté:', authUser.email);
 
-                // 1. Check Admin
-                const { data: adminData } = await supabase
-                    .from('admins')
+                // 1. Fetch Profile from 'profiles' (Central Identity)
+                const { data: profileData } = await supabase
+                    .from('profiles')
                     .select('*')
-                    .eq('user_id', authUser.id)
-                    .eq('status', 'active')
+                    .eq('id', authUser.id)
                     .maybeSingle();
 
-                if (adminData) {
-                    if (mounted) {
-                        console.log('✅ useAuth: ADMIN DÉTECTÉ');
+                console.log('👤 useAuth: Profil récupéré:', profileData);
+
+                if (profileData) {
+                    const role = profileData.role as UserRole;
+                    console.log(`✅ useAuth: Rôle détecté: ${role}`);
+
+                    // ADMIN
+                    if (role === 'admin') {
                         setUser({
                             id: authUser.id,
                             email: authUser.email || '',
-                            role: adminData.role as UserRole,
-                            profile: adminData as Admin,
+                            role: 'admin',
+                            profile: profileData as Admin, // Cast temporaire, le profil admin est basique pour l'instant
+                        });
+                    }
+                    // DRIVER
+                    else if (role === 'driver') {
+                        const { data: driverData } = await supabase
+                            .from('drivers')
+                            .select('*')
+                            .eq('user_id', authUser.id)
+                            .maybeSingle();
+
+                        setUser({
+                            id: authUser.id,
+                            email: authUser.email || '',
+                            role: 'driver',
+                            profile: (driverData || profileData) as Driver,
+                        });
+                    }
+                    // CLIENT / DEFAULT
+                    else {
+                        // Pour les clients, on check la table clients pour les infos business (company_name, etc.)
+                        const { data: clientData } = await supabase
+                            .from('clients')
+                            .select('*')
+                            .eq('id', authUser.id)
+                            .maybeSingle();
+
+                        setUser({
+                            id: authUser.id,
+                            email: authUser.email || '',
+                            role: 'client',
+                            profile: (clientData || profileData) as Client,
                         });
                     }
                 } else {
-                    // 2. Check Client
+                    console.log('ℹ️ useAuth: User authenticated but no profile found in "profiles". Checking tables fallback...');
+
+                    // Fallback: Check 'clients' table directly (legacy or specialized)
                     const { data: clientData } = await supabase
                         .from('clients')
                         .select('*')
@@ -80,45 +117,20 @@ export const useAuth = () => {
                         .maybeSingle();
 
                     if (clientData) {
-                        if (mounted) {
-                            console.log('✅ useAuth: CLIENT DÉTECTÉ');
-                            setUser({
-                                id: authUser.id,
-                                email: authUser.email || '',
-                                role: 'client',
-                                profile: clientData as Client,
-                            });
-                        }
+                        setUser({
+                            id: authUser.id,
+                            email: authUser.email || '',
+                            role: 'client',
+                            profile: clientData as Client,
+                        });
                     } else {
-                        // 3. Check Driver
-                        const { data: driverData } = await supabase
-                            .from('drivers')
-                            .select('*')
-                            .eq('user_id', authUser.id)
-                            .maybeSingle();
-
-                        if (driverData) {
-                            if (mounted) {
-                                console.log('✅ useAuth: DRIVER DÉTECTÉ');
-                                setUser({
-                                    id: authUser.id,
-                                    email: authUser.email || '',
-                                    role: 'driver',
-                                    profile: driverData as Driver,
-                                });
-                            }
-                        } else {
-                            // 4. Default User (No profile found)
-                            console.log('ℹ️ useAuth: User authenticated but no profile found. Role set to "user".');
-                            if (mounted) {
-                                setUser({
-                                    id: authUser.id,
-                                    email: authUser.email || '',
-                                    role: 'user',
-                                    profile: null,
-                                });
-                            }
-                        }
+                        // Fallback User
+                        setUser({
+                            id: authUser.id,
+                            email: authUser.email || '',
+                            role: 'user',
+                            profile: null,
+                        });
                     }
                 }
 

@@ -82,6 +82,7 @@ export interface Client {
     updated_at: string;
     suspended_at?: string;
     suspension_reason?: string;
+    is_suspended?: boolean;
     notes?: string;
 }
 

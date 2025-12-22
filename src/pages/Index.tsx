@@ -46,6 +46,7 @@ import Messaging from "./admin/Messaging";
 import InvoicesAdmin from "./admin/InvoicesAdmin";
 import LiveMap from "./admin/LiveMap";
 import Dispatch from "./admin/Dispatch";
+import DriverDashboard from "./driver/Dashboard";
 import { AdminRoute } from "@/components/auth/AdminRoute";
 import { ClientRoute } from "@/components/auth/ClientRoute";
 import { preloadCityPricingCache } from "@/utils/pricingEngineDb";
@@ -83,6 +84,8 @@ const Index = () => {
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/driver/set-password" element={<SetDriverPassword />} />
+      <Route path="/driver/dashboard" element={<DriverDashboard />} />
+      <Route path="/app" element={<Navigate to="/driver/dashboard" replace />} />
       <Route path="/cgv" element={<CGV />} />
       <Route path="/mentions-legales" element={<MentionsLegales />} />
       <Route path="/cookies" element={<Cookies />} />

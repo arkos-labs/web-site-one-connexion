@@ -34,10 +34,9 @@ import {
     assignDriverToOrder,
     cancelOrder,
     duplicateOrder,
-    getOrderEvents,
 } from "@/services/adminSupabaseQueries";
+import { supabase } from "@/lib/supabase";
 import { geocoderAdresse, calculateDrivingDistance } from "@/services/locationiq";
-import { OrderEvent, ORDER_EVENT_LABELS, ORDER_EVENT_ICONS } from "@/types/order_events";
 import { ORDER_STATUS_LABELS, ORDER_STATUS_COLORS } from "@/constants/orderStatus";
 import {
     Select,
@@ -61,21 +60,51 @@ export default function OrderDetailAdmin() {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
     const [order, setOrder] = useState<OrderWithDetails | null>(null);
-    const [events, setEvents] = useState<OrderEvent[]>([]);
     const [loading, setLoading] = useState(true);
     const [actionLoading, setActionLoading] = useState(false);
     const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
-    // Distance Calculation State
+    // Dialog states
+    const [showCancelDialog, setShowCancelDialog] = useState(false);
+    const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+    const [cancellationReason, setCancellationReason] = useState('');
+    const [newCreatedOrderId, setNewCreatedOrderId] = useState<string | null>(null);
 
     // Distance Calculation State
     const [calculatedDistance, setCalculatedDistance] = useState<string | null>(null);
 
+    // Initial fetch
     useEffect(() => {
         if (id) {
             fetchData();
-            fetchData();
         }
+    }, [id]);
+
+    // Realtime subscription for order updates
+    useEffect(() => {
+        if (!id) return;
+
+        const channel = supabase
+            .channel(`order-${id}`)
+            .on(
+                'postgres_changes',
+                {
+                    event: '*',
+                    schema: 'public',
+                    table: 'orders',
+                    filter: `id=eq.${id}`
+                },
+                (payload) => {
+                    console.log('📡 [OrderDetail] Mise à jour en temps réel:', payload);
+                    // Refresh data when order changes
+                    fetchData();
+                }
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
     }, [id]);
 
     // Check for deferred departure logic whenever order changes
@@ -113,14 +142,10 @@ export default function OrderDetailAdmin() {
     const fetchData = async () => {
         try {
             setLoading(true);
-            const [orderData, eventsData] = await Promise.all([
-                getOrderById(id!),
-                getOrderEvents(id!),
-            ]);
+            const orderData = await getOrderById(id!);
 
             if (orderData) {
                 setOrder(orderData);
-                setEvents(eventsData);
             } else {
                 toast.error("Commande introuvable");
                 navigate("/dashboard-admin/commandes");
@@ -208,87 +233,350 @@ export default function OrderDetailAdmin() {
         try {
             const doc = new jsPDF();
             const pageWidth = doc.internal.pageSize.getWidth();
+            const pageHeight = doc.internal.pageSize.getHeight();
+            const margin = 15;
+            let y = 20; // Position verticale courante
 
-            // Header
-            doc.setFontSize(22);
-            doc.setTextColor(40, 40, 40);
-            doc.text("BON DE COMMANDE", pageWidth / 2, 20, { align: "center" });
+            // --- FONTS & COLORS CONSTANTS ---
+            const colorDark = "#333333";
+            const colorGray = "#555555";
+            const colorLightGray = "#aaaaaa";
+            const colorBorder = "#dddddd";
+            const colorBackgroundSection = "#f0f0f0";
+            const colorGreen = "#2ecc71";
+            const colorRed = "#e74c3c";
+            const colorBlueBox = "#fcffff";
+            const colorBlueBorder = "#b3e5fc";
+            const colorBlueText = "#0277bd";
 
-            doc.setFontSize(12);
-            doc.setTextColor(100, 100, 100);
-            doc.text(`Référence : ${order.reference}`, pageWidth / 2, 30, { align: "center" });
-
-            // Company Info
-            doc.setFontSize(10);
-            doc.setTextColor(0, 0, 0);
-            doc.text("ONE CONNEXION", 15, 50);
-            doc.text("Service Logistique", 15, 55);
-            doc.text("contact@oneconnexion.fr", 15, 60);
-
-            // Client Info
-            doc.text("CLIENT :", 120, 50);
-            const clientName = order.clients?.company_name || order.facturation?.societe || order.nom_client || "Client Inconnu";
+            // --- 1. HEADER ---
+            // Logo (Texte pour l'instant)
+            doc.setFontSize(24);
             doc.setFont("helvetica", "bold");
-            doc.text(clientName, 120, 55);
-            doc.setFont("helvetica", "normal");
-            if (order.clients?.email || order.email_client) {
-                doc.text(order.clients?.email || order.email_client || "", 120, 60);
-            }
-            if (order.clients?.phone || order.facturation?.telephone) {
-                doc.text(order.clients?.phone || order.facturation?.telephone || "", 120, 65);
-            }
+            doc.setTextColor("#000000");
+            doc.text("ONE CONNEXION", margin, y + 8);
 
-            // Order Details
-            doc.setDrawColor(200, 200, 200);
-            doc.rect(15, 80, pageWidth - 30, 35);
+            // Titre Document (à droite)
+            doc.setFontSize(20);
+            doc.setTextColor(colorDark);
+            doc.text("BON DE COMMANDE", pageWidth - margin, y + 6, { align: "right" });
+
+            y += 20;
+
+            // Info Entreprise (sous le logo)
+            doc.setFontSize(9);
+            doc.setFont("helvetica", "normal");
+            doc.setTextColor(colorGray);
+            doc.text([
+                "123 Avenue de la Logistique",
+                "75000 Paris, France",
+                "SIRET: 123 456 789 00012",
+                "contact@oneconnexion.com | 01 23 45 67 89"
+            ], margin, y);
+
+            // Info Commande (sous le titre, à droite)
+            doc.setFontSize(10);
+            doc.setTextColor(colorDark);
+            doc.text(`N° ${order.reference}`, pageWidth - margin, y, { align: "right" });
+            doc.setFontSize(9);
+            doc.setTextColor("#777777");
+            doc.text(`Date d'émission : ${new Date().toLocaleDateString('fr-FR')}`, pageWidth - margin, y + 5, { align: "right" });
+
+            y += 25;
+
+            // Ligne de séparation header
+            doc.setDrawColor(colorBorder);
+            doc.setLineWidth(0.5);
+            doc.line(margin, y, pageWidth - margin, y);
+            y += 10;
+
+            // --- 2. BOXES INFO (Client & Chauffeur) ---
+            const colWidth = (pageWidth - (margin * 2) - 10) / 2;
+            const boxHeight = 35;
+
+            // Box Client
+            // Titre section (Fond gris)
+            doc.setFillColor(colorBackgroundSection);
+            doc.rect(margin, y, colWidth, 8, 'F');
+            doc.setFillColor("#000000"); // Bordure noire gauche
+            doc.rect(margin, y, 1, 8, 'F');
+
+            doc.setFontSize(10);
+            doc.setTextColor(colorDark);
+            doc.setFont("helvetica", "bold");
+            doc.text("CLIENT / DONNEUR D'ORDRE", margin + 5, y + 5.5);
+
+            // Contenu Client Box (Simulation de bordure grise)
+            doc.setDrawColor(colorBorder);
+            doc.setLineWidth(0.1);
+            doc.rect(margin, y + 8, colWidth, boxHeight - 8);
 
             doc.setFontSize(11);
-            doc.text(`Date de création : ${new Date(order.created_at).toLocaleDateString('fr-FR')} à ${new Date(order.created_at).toLocaleTimeString('fr-FR')}`, 20, 90);
-            doc.text(`Type de livraison : ${order.delivery_type}`, 20, 100);
-            if (order.price) {
-                doc.text(`Montant HT : ${order.price} €`, 120, 90);
-            }
-            doc.text(`Statut actuel : ${ORDER_STATUS_LABELS[order.status] || order.status}`, 120, 100);
+            doc.setFont("helvetica", "bold");
+            doc.setTextColor(colorDark);
+            const clientName = order.clients?.company_name || order.facturation?.societe || order.nom_client || "Client Inconnu (Invité)";
+            doc.text(clientName, margin + 5, y + 18);
 
-            // Addresses
+            doc.setFontSize(9);
+            doc.setFont("helvetica", "normal");
+            doc.setTextColor("#777777");
+            doc.text("Référence client : #INV-992", margin + 5, y + 24); // Placeholder ref client
+            if (order.clients?.phone || order.facturation?.telephone) {
+                doc.text(`Tél : ${order.clients?.phone || order.facturation?.telephone}`, margin + 5, y + 29);
+            }
+
+
+            // Box Chauffeur (Droite)
+            const xRight = margin + colWidth + 10;
+
+            // Fond bleuté
+            doc.setFillColor(colorBlueBox);
+            doc.setDrawColor(colorBlueBorder);
+            doc.rect(xRight, y, colWidth, boxHeight, 'FD'); // Fill and Draw
+
+            // Titre Chauffeur
+            doc.setFontSize(10);
+            doc.setTextColor(colorBlueText);
+            doc.setFont("helvetica", "bold");
+            doc.text("CHAUFFEUR ASSIGNÉ", xRight + 5, y + 6);
+
+            // Nom Chauffeur
             doc.setFontSize(14);
-            doc.text("Détails du trajet", 15, 130);
+            doc.setTextColor(colorDark);
+            const driverName = order.drivers ? `${order.drivers.first_name || ''} ${order.drivers.last_name || ''}` : "Non assigné";
+            doc.text(driverName, xRight + 5, y + 18);
 
-            doc.setFontSize(12);
-            doc.setTextColor(0, 100, 0);
-            doc.text("DÉPART (Enlèvement)", 15, 140);
-            doc.setTextColor(0, 0, 0);
+            // Info Véhicule
+            doc.setFontSize(9);
+            doc.setTextColor("#777777");
+            doc.setFont("helvetica", "normal");
+            const vehicle = order.drivers?.vehicle_type || "Type non spécifié";
+            doc.text(`Véhicule : ${vehicle}`, xRight + 5, y + 24);
+
+            y += boxHeight + 15;
+
+
+            // --- 3. ITINÉRAIRE ---
+            // Titre Section
+            doc.setFillColor(colorBackgroundSection);
+            doc.rect(margin, y, pageWidth - (margin * 2), 8, 'F');
+            doc.setFillColor("#000000");
+            doc.rect(margin, y, 1, 8, 'F'); // Barre noire
+
             doc.setFontSize(10);
-            const pickupLines = doc.splitTextToSize(order.pickup_address, 80);
-            doc.text(pickupLines, 15, 148);
+            doc.setTextColor(colorDark);
+            doc.setFont("helvetica", "bold");
+            doc.text("ITINÉRAIRE & INSTRUCTIONS", margin + 5, y + 5.5);
 
-            doc.setFontSize(12);
-            doc.setTextColor(200, 0, 0);
-            doc.text("ARRIVÉE (Livraison)", 110, 140);
-            doc.setTextColor(0, 0, 0);
+            y += 15;
+
+            // Départ (Gauche)
+            doc.setDrawColor(colorGreen);
+            doc.setLineWidth(1.5); // Bordure plus épaisse
+            doc.line(margin, y, margin, y + 40); // Ligne verticale verte
+
+            doc.setFontSize(9);
+            doc.setTextColor("#777777");
+            doc.setFont("helvetica", "normal");
+            doc.text("DÉPART (Enlèvement)", margin + 5, y);
+
+            doc.setFontSize(11);
+            doc.setTextColor(colorDark);
+            doc.setFont("helvetica", "bold");
+            const timePickup = order.pickup_time ? new Date(order.pickup_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "Immédiat";
+            doc.text(`${timePickup} - ${order.delivery_type === 'immediate' ? 'Immédiat' : 'Programmé'}`, margin + 5, y + 6);
+
             doc.setFontSize(10);
-            const deliveryLines = doc.splitTextToSize(order.delivery_address, 80);
-            doc.text(deliveryLines, 110, 148);
+            doc.setFont("helvetica", "normal");
+            const pickupAddrLines = doc.splitTextToSize(order.pickup_address, colWidth - 10);
+            doc.text(pickupAddrLines, margin + 5, y + 13);
 
-            // Driver
-            if (order.drivers) {
-                doc.setFontSize(14);
-                doc.text("Chauffeur assigné", 15, 180);
-                doc.setFontSize(10);
-                doc.text(`Nom : ${order.drivers.first_name} ${order.drivers.last_name}`, 15, 190);
-                doc.text(`Téléphone : ${order.drivers.phone}`, 15, 195);
-                if (order.drivers.vehicle_type) {
-                    doc.text(`Véhicule : ${order.drivers.vehicle_type}`, 15, 200);
-                }
+            let currentYLeft = y + 13 + (pickupAddrLines.length * 5);
+            if (order.pickup_contact_name || order.pickup_contact_phone) {
+                doc.setFont("helvetica", "bold");
+                doc.text("Contact :", margin + 5, currentYLeft);
+                doc.setFont("helvetica", "normal");
+                const contactInfo = [order.pickup_contact_name, order.pickup_contact_phone].filter(Boolean).join(" - ");
+                doc.text(contactInfo, margin + 25, currentYLeft);
+                currentYLeft += 5;
+            }
+            // Note
+            doc.setFontSize(9);
+            doc.setTextColor("#666666");
+            doc.setFont("helvetica", "italic");
+            doc.text("Note : Voir instructions chauffeur", margin + 5, currentYLeft + 3);
+
+
+            // Arrivée (Droite)
+            doc.setDrawColor(colorRed);
+            doc.setLineWidth(1.5);
+            doc.line(xRight, y, xRight, y + 40); // Ligne verticale rouge
+
+            doc.setFontSize(9);
+            doc.setTextColor("#777777");
+            doc.setFont("helvetica", "normal");
+            doc.text("ARRIVÉE (Livraison)", xRight + 5, y);
+
+            doc.setFontSize(11);
+            doc.setTextColor(colorDark);
+            doc.setFont("helvetica", "bold");
+            doc.text("Prévision : --:--", xRight + 5, y + 6);
+
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "normal");
+            const deliveryAddrLines = doc.splitTextToSize(order.delivery_address, colWidth - 10);
+            doc.text(deliveryAddrLines, xRight + 5, y + 13);
+
+            let currentYRight = y + 13 + (deliveryAddrLines.length * 5);
+            if (order.delivery_contact_name || order.delivery_contact_phone) {
+                doc.setFont("helvetica", "bold");
+                doc.text("Contact :", xRight + 5, currentYRight);
+                doc.setFont("helvetica", "normal");
+                const contactInfo = [order.delivery_contact_name, order.delivery_contact_phone].filter(Boolean).join(" - ");
+                doc.text(contactInfo, xRight + 25, currentYRight);
+                currentYRight += 5;
             }
 
-            // Footer
-            doc.setFontSize(8);
-            doc.setTextColor(150, 150, 150);
-            doc.text("Ce document est un bon de commande et ne fait pas office de facture.", pageWidth / 2, 280, { align: "center" });
-            doc.text(`Généré le ${new Date().toLocaleDateString('fr-FR')}`, pageWidth / 2, 285, { align: "center" });
+            y += 55;
 
-            doc.save(`Bon_de_commande_${order.reference}.pdf`);
+
+            // --- 4. TABLEAU FACTURATION ---
+            // Titre Section
+            doc.setFillColor(colorBackgroundSection);
+            doc.rect(margin, y, pageWidth - (margin * 2), 8, 'F');
+            doc.setFillColor("#000000");
+            doc.rect(margin, y, 1, 8, 'F');
+
+            doc.setFontSize(10);
+            doc.setTextColor(colorDark);
+            doc.setFont("helvetica", "bold");
+            doc.text("DÉTAILS DE LA FACTURATION", margin + 5, y + 5.5);
+            y += 15;
+
+            // En-têtes Tableau
+            doc.setFillColor("#fafafa");
+            doc.setDrawColor(colorBorder);
+            doc.setLineWidth(0.1);
+            doc.rect(margin, y, pageWidth - (margin * 2), 8, 'FD');
+
+            doc.setFontSize(9);
+            doc.setTextColor(colorDark);
+            doc.setFont("helvetica", "bold");
+            doc.text("DESCRIPTION", margin + 5, y + 5.5);
+            doc.text("TYPE", margin + 100, y + 5.5);
+            doc.text("DISTANCE", margin + 130, y + 5.5);
+            doc.text("TOTAL HT", pageWidth - margin - 5, y + 5.5, { align: "right" });
+            y += 8;
+
+            // Ligne Tableau
+            doc.rect(margin, y, pageWidth - (margin * 2), 15); // Hauteur ligne
+
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "bold");
+            doc.text(`Transport ${order.delivery_type || 'Standard'}`, margin + 5, y + 6);
+            doc.setFontSize(9);
+            doc.setFont("helvetica", "normal");
+            doc.setTextColor("#666666");
+
+            doc.text("Trajet course simple", margin + 5, y + 11);
+
+            doc.setTextColor(colorDark);
+            doc.text(order.drivers?.vehicle_type || "Standard", margin + 100, y + 9);
+            doc.text(`${order.distance_km || 0} km`, margin + 130, y + 9);
+            doc.setFont("helvetica", "bold");
+            const formattedPrice = order.price ? Number(order.price).toFixed(2) + " €" : "0.00 €";
+            doc.text(formattedPrice, pageWidth - margin - 5, y + 9, { align: "right" });
+
+            y += 20;
+
+            // Totaux (à droite)
+            const totalX = pageWidth - margin - 60;
+            const amountX = pageWidth - margin - 5;
+
+            // Total HT
+            doc.setFont("helvetica", "bold");
+            doc.text("Total HT :", totalX, y);
+            doc.text(formattedPrice, amountX, y, { align: "right" });
+            y += 6;
+
+            // TVA
+            doc.setFont("helvetica", "bold");
+            doc.text("TVA (20%) :", totalX, y);
+            const tva = order.price ? (order.price * 0.20).toFixed(2) : "0.00";
+            doc.text(`${tva} €`, amountX, y, { align: "right" });
+            y += 8; // Espace avant total net
+
+            // Net à payer
+            doc.setFillColor(colorBackgroundSection); // Gris
+            doc.rect(totalX - 5, y - 5, 65, 10, 'F');
+            doc.setFontSize(11);
+            doc.setTextColor(colorDark);
+            doc.text("Net à payer :", totalX, y + 1.5);
+            const totalTTC = order.price ? (order.price * 1.20).toFixed(2) : "0.00";
+            doc.text(`${totalTTC} €`, amountX, y + 1.5, { align: "right" });
+
+            y += 25;
+
+
+            // --- 5. SIGNATURES ---
+            // Ligne séparation
+            doc.setDrawColor(colorBorder);
+            doc.setLineWidth(0.5);
+            doc.line(margin, y, pageWidth - margin, y);
+            y += 10;
+
+            const signBoxHeight = 40;
+
+            // Signature Enlèvement
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "bold");
+            doc.text("Signature Enlèvement", margin, y);
+            doc.setFontSize(9);
+            doc.setFont("helvetica", "normal");
+            doc.setTextColor(colorGray);
+            doc.text("Heure réelle : _________", margin + 50, y);
+
+            // Box
+            doc.setDrawColor(colorLightGray);
+            doc.setLineDash([2, 2], 0); // Pointillé
+            doc.setFillColor("#fafafa");
+            doc.roundedRect(margin, y + 5, colWidth, signBoxHeight, 2, 2, 'FD');
+            doc.setLineDash([], 0); // Reset
+
+            doc.setFontSize(9);
+            doc.setTextColor(colorLightGray);
+            doc.text("(Signature Chauffeur / Expéditeur)", margin + (colWidth / 2), y + (signBoxHeight / 2) + 5, { align: "center" });
+
+
+            // Signature Livraison
+            doc.setFontSize(10);
+            doc.setTextColor(colorDark);
+            doc.setFont("helvetica", "bold");
+            doc.text("Signature Livraison", xRight, y);
+            doc.setFontSize(9);
+            doc.setFont("helvetica", "normal");
+            doc.setTextColor(colorGray);
+            doc.text("Heure réelle : _________", xRight + 50, y);
+
+            // Box
+            doc.setDrawColor(colorLightGray);
+            doc.setLineDash([2, 2], 0);
+            doc.setFillColor("#fafafa");
+            doc.roundedRect(xRight, y + 5, colWidth, signBoxHeight, 2, 2, 'FD');
+            doc.setLineDash([], 0);
+
+            doc.setFontSize(9);
+            doc.setTextColor(colorLightGray);
+            doc.text("(Signature Destinataire)", xRight + (colWidth / 2), y + (signBoxHeight / 2) + 5, { align: "center" });
+
+
+            // --- FOOTER page ---
+            doc.setFontSize(8);
+            doc.setTextColor("#999999");
+            doc.text(`Document généré automatiquement par One Connexion le ${new Date().toLocaleString('fr-FR')}`, pageWidth / 2, pageHeight - 15, { align: "center" });
+            doc.text("Merci de conserver ce document pour toute réclamation.", pageWidth / 2, pageHeight - 10, { align: "center" });
+
+            doc.save(`Bon_Commande_${order.reference}.pdf`);
             toast.success("Bon de commande téléchargé");
         } catch (error) {
             console.error("PDF Generation Error:", error);
@@ -307,6 +595,104 @@ export default function OrderDetailAdmin() {
             hour: "2-digit",
             minute: "2-digit",
         });
+    };
+
+    const getStatusLabel = (status: string) => {
+        const labels: Record<string, string> = {
+            pending_acceptance: 'En attente',
+            accepted: 'Acceptée',
+            dispatched: 'Dispatchée',
+            driver_accepted: 'Chauffeur a accepté',
+            arrived_pickup: 'Arrivé sur place',
+            in_progress: 'En route vers livraison',
+            delivered: 'Livrée',
+            cancelled: 'Annulée',
+        };
+        return labels[status] || status;
+    };
+
+    // Generate timeline from order timestamps
+    const getOrderTimeline = () => {
+        if (!order) return [];
+
+        const timeline: Array<{ label: string; timestamp: string; icon: string }> = [];
+
+        // Commande créée
+        if (order.created_at) {
+            timeline.push({
+                label: 'Commande créée',
+                timestamp: order.created_at,
+                icon: '📝'
+            });
+        }
+
+        // Commande acceptée par l'admin
+        if ((order as any).accepted_at) {
+            timeline.push({
+                label: 'Acceptée par l\'admin',
+                timestamp: (order as any).accepted_at,
+                icon: '✅'
+            });
+        }
+
+        // Dispatchée au chauffeur
+        if ((order as any).dispatched_at) {
+            timeline.push({
+                label: 'Dispatchée au chauffeur',
+                timestamp: (order as any).dispatched_at,
+                icon: '📤'
+            });
+        }
+
+        // Chauffeur a accepté
+        if ((order as any).driver_accepted_at) {
+            timeline.push({
+                label: 'Chauffeur a accepté',
+                timestamp: (order as any).driver_accepted_at,
+                icon: '✓'
+            });
+        }
+
+        // Arrivé au point de retrait
+        if ((order as any).arrived_pickup_at) {
+            timeline.push({
+                label: 'Arrivé au point de retrait',
+                timestamp: (order as any).arrived_pickup_at,
+                icon: '📍'
+            });
+        }
+
+        // Colis récupéré
+        if ((order as any).picked_up_at) {
+            timeline.push({
+                label: 'Colis récupéré - En route',
+                timestamp: (order as any).picked_up_at,
+                icon: '🚚'
+            });
+        }
+
+        // Livré
+        if ((order as any).delivered_at) {
+            timeline.push({
+                label: 'Livré',
+                timestamp: (order as any).delivered_at,
+                icon: '✅'
+            });
+        }
+
+        // Annulée
+        if (order.status === 'cancelled' && (order as any).cancelled_at) {
+            timeline.push({
+                label: 'Annulée',
+                timestamp: (order as any).cancelled_at,
+                icon: '❌'
+            });
+        }
+
+        // Trier par date
+        return timeline.sort((a, b) =>
+            new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+        );
     };
 
     if (loading) {
@@ -331,11 +717,11 @@ export default function OrderDetailAdmin() {
                         <h1 className="text-3xl font-bold flex flex-wrap items-center gap-3">
                             {order.reference}
                             <Badge className={`${ORDER_STATUS_COLORS[order.status] || 'bg-gray-500'} text-white border-0`}>
-                                {ORDER_STATUS_LABELS[order.status] || order.status}
+                                {getStatusLabel(order.status)}
                             </Badge>
 
                             {/* TYPE DE COMMANDE - Indicateur Principal */}
-                            {order.scheduled_pickup_time ? (
+                            {order.pickup_time ? (
                                 <Badge className="bg-blue-600 text-white border-0 text-sm py-1.5 px-4 shadow-md font-semibold">
                                     📅 COMMANDE DIFFÉRÉE
                                 </Badge>
@@ -346,10 +732,10 @@ export default function OrderDetailAdmin() {
                             )}
 
                             {/* Détail de l'horaire */}
-                            {order.scheduled_pickup_time ? (
+                            {order.pickup_time ? (
                                 <Badge variant="outline" className="border-blue-500 text-blue-700 bg-blue-50 text-sm py-1 px-3 shadow-sm">
                                     <Clock className="h-4 w-4 mr-2" />
-                                    POUR LE : {new Date(order.scheduled_pickup_time).toLocaleString('fr-FR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}
+                                    POUR LE : {new Date(order.pickup_time).toLocaleString('fr-FR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}
                                 </Badge>
                             ) : (
                                 <Badge variant="outline" className="border-orange-500 text-orange-700 bg-orange-50 text-sm py-1 px-3 shadow-sm">
@@ -479,10 +865,10 @@ export default function OrderDetailAdmin() {
                                 <span className="text-sm text-gray-500">Prix</span>
                                 <span className="font-bold text-lg">{order.price} €</span>
                             </div>
-                            {order.scheduled_pickup_time && (
+                            {order.pickup_time && (
                                 <div className="bg-blue-50 p-2 rounded text-xs text-blue-700 flex items-center gap-2">
                                     <Clock className="h-3 w-3" />
-                                    Prise en charge prévue : {formatDate(order.scheduled_pickup_time)}
+                                    Prise en charge prévue : {formatDate(order.pickup_time)}
                                 </div>
                             )}
                         </CardContent>
@@ -505,12 +891,12 @@ export default function OrderDetailAdmin() {
                                 </div>
                                 <p className="text-xs font-bold text-green-600 mb-1 uppercase">Départ</p>
                                 <p className="text-sm font-medium leading-snug">{order.pickup_address}</p>
-                                {order.scheduled_pickup_time ? (
+                                {order.pickup_time ? (
                                     <p className="text-sm font-bold text-blue-600 mt-1 flex items-center gap-1">
                                         <Clock className="h-4 w-4" />
-                                        {new Date(order.scheduled_pickup_time).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
+                                        {new Date(order.pickup_time).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
                                         <span className="text-xs font-normal text-gray-500 ml-1">
-                                            ({new Date(order.scheduled_pickup_time).toLocaleDateString('fr-FR')})
+                                            ({new Date(order.pickup_time).toLocaleDateString('fr-FR')})
                                         </span>
                                     </p>
                                 ) : (
@@ -564,7 +950,7 @@ export default function OrderDetailAdmin() {
                                 <div className="space-y-3">
                                     <div className="flex items-center gap-3">
                                         <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
-                                            {order.drivers.first_name[0]}{order.drivers.last_name[0]}
+                                            {order.drivers.first_name?.[0]}{(order.drivers.last_name && order.drivers.last_name.length > 0) ? order.drivers.last_name[0] : ''}
                                         </div>
                                         <div>
                                             <p className="font-medium">{order.drivers.first_name} {order.drivers.last_name}</p>
@@ -589,25 +975,29 @@ export default function OrderDetailAdmin() {
                     <Card className="shadow-sm border-gray-200 flex-1">
                         <CardHeader className="pb-3 bg-gray-50/50">
                             <CardTitle className="text-sm font-medium uppercase text-muted-foreground flex items-center gap-2">
-                                <History className="h-4 w-4" /> Historique
+                                <History className="h-4 w-4" /> Historique des étapes
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="pt-4">
-                            <div className="space-y-4 max-h-[300px] overflow-y-auto pr-2">
-                                {events.length === 0 ? (
+                            <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2">
+                                {getOrderTimeline().length === 0 ? (
                                     <p className="text-sm text-gray-400 italic text-center">Aucun historique disponible</p>
                                 ) : (
-                                    events.map((event) => (
-                                        <div key={event.id} className="flex gap-3 relative">
-                                            <div className="mt-0.5 text-lg">
-                                                {ORDER_EVENT_ICONS[event.event_type] || '•'}
+                                    getOrderTimeline().map((step, index) => (
+                                        <div key={index} className="flex gap-3 relative pb-4 border-l-2 border-gray-200 last:border-l-0 pl-4">
+                                            <div className="absolute -left-[9px] top-0 bg-white">
+                                                <div className="h-4 w-4 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs font-bold">
+                                                    {index + 1}
+                                                </div>
                                             </div>
-                                            <div>
-                                                <p className="text-sm font-medium">{ORDER_EVENT_LABELS[event.event_type] || event.event_type}</p>
-                                                <p className="text-xs text-gray-500">{formatDate(event.created_at)}</p>
-                                                {event.description && (
-                                                    <p className="text-xs text-gray-600 mt-0.5">{event.description}</p>
-                                                )}
+                                            <div className="flex-1">
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <span className="text-lg">{step.icon}</span>
+                                                    <p className="text-sm font-semibold text-gray-800">{step.label}</p>
+                                                </div>
+                                                <p className="text-xs text-gray-500 font-medium">
+                                                    {formatDate(step.timestamp)}
+                                                </p>
                                             </div>
                                         </div>
                                     ))

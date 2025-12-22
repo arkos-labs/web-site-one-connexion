@@ -160,19 +160,46 @@ const LiveMap = () => {
             if (driver.current_lat && driver.current_lng) {
                 const marker = L.marker([driver.current_lat, driver.current_lng], {
                     icon: L.divIcon({
-                        html: `<div style="background-color: #10b981; width: 32px; height: 32px; border-radius: 50%; border: 2px solid white; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2); font-size: 16px;">🛵</div>`,
-                        className: 'custom-div-icon',
-                        iconSize: [32, 32],
-                        iconAnchor: [16, 16],
+                        html: `
+                            <div class="relative">
+                                <div class="absolute -inset-2 bg-emerald-500/20 rounded-full animate-ping"></div>
+                                <div class="relative bg-emerald-500 w-10 h-10 rounded-full border-2 border-white shadow-xl flex items-center justify-center text-lg z-10 transition-transform hover:scale-110">
+                                    🛵
+                                </div>
+                            </div>
+                        `,
+                        className: 'driver-marker',
+                        iconSize: [40, 40],
+                        iconAnchor: [20, 20],
                     })
-                }).addTo(mapRef.current);
+                }).addTo(mapRef.current!);
 
                 marker.bindPopup(`
-                    <div style="padding: 8px;">
-                        <strong>${driver.first_name} ${driver.last_name}</strong><br/>
-                        <span style="color: #666; font-size: 12px;">Chauffeur ${driver.is_online ? 'en ligne' : 'hors ligne'}</span>
+                    <div class="p-4 min-w-[200px] border-none shadow-none font-sans">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold">
+                                ${driver.first_name[0]}${driver.last_name[0]}
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-900 m-0">${driver.first_name} ${driver.last_name}</h3>
+                                <div class="flex items-center gap-1.5 mt-0.5">
+                                    <span class="w-2 h-2 rounded-full ${driver.is_online ? 'bg-emerald-500' : 'bg-slate-400'}"></span>
+                                    <span class="text-[10px] uppercase tracking-wider font-bold text-slate-500">
+                                        ${driver.is_online ? 'En ligne' : 'Hors ligne'}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-slate-50 rounded-lg p-2 flex flex-col gap-1 text-xs">
+                            <div class="flex justify-between">
+                                <span class="text-slate-500">Statut:</span>
+                                <span class="font-medium text-slate-700 uppercase">${driver.status}</span>
+                            </div>
+                        </div>
                     </div>
-                `);
+                `, {
+                    className: 'premium-popup'
+                });
 
                 markersRef.current.push(marker);
             }
@@ -180,42 +207,52 @@ const LiveMap = () => {
 
         // Add order markers
         orders.forEach(order => {
+            // Pickup Marker
             if (order.pickup_lat && order.pickup_lng) {
                 const pickupMarker = L.marker([order.pickup_lat, order.pickup_lng], {
                     icon: L.divIcon({
-                        html: `<div style="background-color: #3b82f6; width: 28px; height: 28px; border-radius: 50%; border: 2px solid white; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2); font-size: 14px;">📦</div>`,
-                        className: 'custom-div-icon',
-                        iconSize: [28, 28],
-                        iconAnchor: [14, 14],
+                        html: `
+                            <div class="bg-blue-600 w-8 h-8 rounded-full border-2 border-white shadow-lg flex items-center justify-center text-xs z-10">
+                                📦
+                            </div>
+                        `,
+                        className: 'pickup-marker',
+                        iconSize: [32, 32],
+                        iconAnchor: [16, 16],
                     })
-                }).addTo(mapRef.current);
+                }).addTo(mapRef.current!);
 
                 pickupMarker.bindPopup(`
-                    <div style="padding: 8px;">
-                        <strong>Enlèvement</strong><br/>
-                        <span style="font-size: 12px;">${order.reference}</span><br/>
-                        <span style="color: #666; font-size: 11px;">${order.pickup_address}</span>
+                    <div class="p-2 text-xs font-sans">
+                        <strong class="text-blue-600">POINT DE RETRAIT</strong><br/>
+                        <span class="font-bold text-slate-800">${order.reference}</span><br/>
+                        <p class="text-slate-500 mt-1">${order.pickup_address}</p>
                     </div>
                 `);
 
                 markersRef.current.push(pickupMarker);
             }
 
+            // Delivery Marker
             if (order.delivery_lat && order.delivery_lng) {
                 const deliveryMarker = L.marker([order.delivery_lat, order.delivery_lng], {
                     icon: L.divIcon({
-                        html: `<div style="background-color: #f59e0b; width: 28px; height: 28px; border-radius: 50%; border: 2px solid white; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2); font-size: 14px;">📍</div>`,
-                        className: 'custom-div-icon',
-                        iconSize: [28, 28],
-                        iconAnchor: [14, 14],
+                        html: `
+                            <div class="bg-orange-500 w-8 h-8 rounded-full border-2 border-white shadow-lg flex items-center justify-center text-xs z-10">
+                                🎯
+                            </div>
+                        `,
+                        className: 'delivery-marker',
+                        iconSize: [32, 32],
+                        iconAnchor: [16, 16],
                     })
-                }).addTo(mapRef.current);
+                }).addTo(mapRef.current!);
 
                 deliveryMarker.bindPopup(`
-                    <div style="padding: 8px;">
-                        <strong>Livraison</strong><br/>
-                        <span style="font-size: 12px;">${order.reference}</span><br/>
-                        <span style="color: #666; font-size: 11px;">${order.delivery_address}</span>
+                    <div class="p-2 text-xs font-sans">
+                        <strong class="text-orange-500">DESTINATION</strong><br/>
+                        <span class="font-bold text-slate-800">${order.reference}</span><br/>
+                        <p class="text-slate-500 mt-1">${order.delivery_address}</p>
                     </div>
                 `);
 
