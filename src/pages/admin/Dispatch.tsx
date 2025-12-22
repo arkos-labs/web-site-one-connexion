@@ -7,8 +7,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { MapPin, Navigation, Clock, User, Phone, Car, AlertCircle, ArrowRight, Truck, UserCheck, Lock } from "lucide-react";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { assignOrderToDriver, unassignOrder } from '@/services/orderAssignmentService';
-import { getMultipleOrderRefusals } from '@/services/orderRefusalService';
+import { assignOrderToDriver, unassignOrder } from '@/services/orderAssignment';
+import { getMultipleOrderRefusals, OrderRefusalInfo } from '@/services/orderRefusals';
 
 // --- TYPES (Matching DB Schema) ---
 interface Order {
@@ -87,7 +87,7 @@ export default function Dispatch() {
     const [availableDrivers, setAvailableDrivers] = useState<Driver[]>([]);
 
     const [activeDeliveries, setActiveDeliveries] = useState<Record<string, Order>>({});
-    const [orderRefusals, setOrderRefusals] = useState<Map<string, number>>(new Map());
+    const [orderRefusals, setOrderRefusals] = useState<Map<string, OrderRefusalInfo>>(new Map());
 
     const [loading, setLoading] = useState(true);
     const [isRealtimeConnected, setIsRealtimeConnected] = useState(false);
@@ -613,6 +613,8 @@ export default function Dispatch() {
         }
     };
 
+    const activeDrivers = availableDrivers.filter(d => d.status === 'busy' || d.status === 'on_delivery');
+
     return (
         <div className="p-6 space-y-6 bg-slate-50 min-h-screen">
             <div className="flex justify-between items-center">
@@ -703,7 +705,7 @@ export default function Dispatch() {
                             {dispatchedOrders.map(order => {
                                 const driver = availableDrivers.find(d => d.id === order.driver_id || d.id === order.assigned_driver_id);
                                 const isRefused = order.status === 'driver_refused';
-                                const refusalCount = orderRefusals.get(order.id) || 0;
+                                const refusalCount = orderRefusals.get(order.id)?.refusalCount || 0;
 
                                 return (
                                     <Card key={order.id} className={`p-3 bg-white border ${isRefused ? 'border-red-400 bg-red-50' : 'border-blue-100'}`}>
