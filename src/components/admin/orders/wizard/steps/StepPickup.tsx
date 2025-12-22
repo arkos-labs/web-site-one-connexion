@@ -215,7 +215,7 @@ export const StepPickup = ({ formData, updateFormData, onNext, clients, mode, on
         }
     };
 
-    const isValid = formData.pickupAddress && formData.pickupCity;
+    const isValid = formData.pickupAddress;
 
     return (
         <div className="flex flex-col h-full overflow-hidden">

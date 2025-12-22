@@ -13,7 +13,7 @@ interface StepDeliveryProps {
 }
 
 export const StepDelivery = ({ formData, updateFormData, onNext, onBack }: StepDeliveryProps) => {
-    const isValid = formData.deliveryAddress && formData.deliveryCity;
+    const isValid = formData.deliveryAddress;
 
     return (
         <div className="flex flex-col h-full">
