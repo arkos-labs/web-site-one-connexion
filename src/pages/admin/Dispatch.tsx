@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { MapPin, Navigation, Clock, User, Phone, Car, AlertCircle, ArrowRight, Truck, UserCheck, Lock } from "lucide-react";
+import { MapPin, Navigation, Clock, User, Phone, Car, AlertCircle, ArrowRight, Truck, UserCheck, Lock, Users } from "lucide-react";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { assignOrderToDriver, unassignOrder } from '@/services/orderAssignment';
@@ -616,264 +616,278 @@ export default function Dispatch() {
     const activeDrivers = availableDrivers.filter(d => d.status === 'busy' || d.status === 'on_delivery');
 
     return (
-        <div className="p-6 space-y-6 bg-slate-50 min-h-screen">
-            <div className="flex justify-between items-center">
+        <div className="h-screen flex flex-col bg-slate-50/50">
+            {/* HEADER */}
+            <div className="flex justify-between items-center px-6 py-4 bg-white border-b">
                 <div>
-                    <h1 className="text-3xl font-bold text-slate-900">Dispatch</h1>
-                    <p className="text-slate-500">Supervision en temps réel de la flotte</p>
+                    <h1 className="text-2xl font-bold tracking-tight text-slate-900">Dispatch</h1>
+                    <p className="text-slate-500 text-sm">Gestion des courses en temps réel</p>
                 </div>
-                <Badge variant="outline" className="px-4 py-1">
-                    {activeDrivers.length} Chauffeurs actifs / {availableDrivers.length} connectés
-                </Badge>
+                <div className="flex items-center gap-3">
+                    <Badge variant={isRealtimeConnected ? "outline" : "destructive"} className="gap-1.5">
+                        <div className={`w-2 h-2 rounded-full ${isRealtimeConnected ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`} />
+                        {isRealtimeConnected ? "Live" : "Déconnecté"}
+                    </Badge>
+                    <Badge variant="secondary" className="px-3">
+                        {activeDrivers.length} Actifs / {availableDrivers.length} Connectés
+                    </Badge>
+                </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 h-[calc(100vh-150px)]">
+            {/* KANBAN BOARD */}
+            <div className="flex-1 p-6 overflow-hidden">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 h-full">
 
-                {/* COLONNE 1 : À DISPATCHER (Commandes Acceptées par Admin) */}
-                <Card className="md:col-span-1 shadow-sm border-l-4 border-l-yellow-500 flex flex-col">
-                    <CardHeader className="pb-3 bg-yellow-50/50">
-                        <CardTitle className="text-sm font-bold uppercase text-yellow-700 flex justify-between">
-                            À Dispatcher <Badge variant="secondary">{acceptedOrders.length}</Badge>
-                        </CardTitle>
-                    </CardHeader>
-                    <ScrollArea className="flex-1 p-4 pt-0">
-                        {acceptedOrders.length === 0 ? (
-                            <div className="text-center py-10 text-slate-400 text-sm">Aucune commande à dispatcher</div>
-                        ) : (
-                            acceptedOrders.map((order) => {
-                                const pickupTime = formatPickupTime(order.pickup_time);
-                                const isDeferred = !!pickupTime;
-                                const dispatchStatus = getDispatchStatus(order.pickup_time);
-                                // Afficher comme "verrouillé" si différé et pas encore l'heure
-                                const isLocked = isDeferred && !dispatchStatus.allowed;
+                    {/* COLONNE 1 : À TRAITER */}
+                    <div className="flex flex-col h-full bg-slate-100/50 rounded-xl border border-slate-200">
+                        <div className="p-3 border-b bg-white rounded-t-xl flex justify-between items-center sticky top-0">
+                            <h3 className="font-semibold text-slate-700 flex items-center gap-2">
+                                <div className="w-2 h-2 rounded-full bg-yellow-500" />
+                                À Traiter
+                            </h3>
+                            <Badge variant="secondary" className="bg-slate-100">{acceptedOrders.length}</Badge>
+                        </div>
 
-                                return (
-                                    <div key={order.id} className={`bg-white p-3 rounded-md border shadow-sm mb-3 ${isLocked ? 'opacity-70 grayscale-[0.5]' : ''}`}>
-                                        <div className="flex justify-between items-start mb-2">
-                                            <Badge variant="outline">{order.reference}</Badge>
-                                            <span className="font-bold">{order.price}€</span>
-                                        </div>
-                                        <div className="space-y-2 text-sm">
-                                            {isDeferred && (
-                                                <div className="flex items-center gap-2 text-xs font-semibold text-purple-600 bg-purple-50 p-1 rounded">
-                                                    <Clock className="w-3 h-3" />
-                                                    {pickupTime?.date} à {pickupTime?.time}
+                        <ScrollArea className="flex-1 p-3">
+                            <div className="space-y-3">
+                                {acceptedOrders.length === 0 && (
+                                    <div className="text-center py-12 text-slate-400 text-sm">Rien à signaler</div>
+                                )}
+                                {acceptedOrders.map((order) => {
+                                    const pickupTime = formatPickupTime(order.pickup_time);
+                                    const isDeferred = !!pickupTime;
+                                    const dispatchStatus = getDispatchStatus(order.pickup_time);
+                                    const isLocked = isDeferred && !dispatchStatus.allowed;
+
+                                    return (
+                                        <Card key={order.id} className={`p-3 hover:shadow-md transition-shadow ${isLocked ? 'opacity-60 bg-slate-50' : 'bg-white'}`}>
+                                            <div className="flex justify-between items-start mb-3">
+                                                <Badge variant="outline" className="font-mono">{order.reference}</Badge>
+                                                <span className="font-bold text-slate-700">{order.price}€</span>
+                                            </div>
+
+                                            <div className="space-y-2 text-sm mb-4">
+                                                {isDeferred && (
+                                                    <div className="flex items-center gap-2 text-xs font-medium text-purple-600 bg-purple-50 p-1.5 rounded">
+                                                        <Clock className="w-3 h-3" />
+                                                        {pickupTime?.date} à {pickupTime?.time}
+                                                    </div>
+                                                )}
+                                                <div className="flex items-start gap-2 text-slate-600">
+                                                    <MapPin className="w-3.5 h-3.5 mt-0.5 shrink-0" />
+                                                    <span className="line-clamp-1">{order.pickup_address}</span>
                                                 </div>
-                                            )}
-                                            <div className="flex items-start gap-2">
-                                                <MapPin className="w-4 h-4 text-blue-500 shrink-0 mt-0.5" />
-                                                <span className="line-clamp-2">{order.pickup_address}</span>
+                                                <div className="flex items-start gap-2 text-slate-600">
+                                                    <Navigation className="w-3.5 h-3.5 mt-0.5 shrink-0" />
+                                                    <span className="line-clamp-1">{order.delivery_address}</span>
+                                                </div>
                                             </div>
-                                            <div className="flex items-start gap-2">
-                                                <Navigation className="w-4 h-4 text-green-500 shrink-0 mt-0.5" />
-                                                <span className="line-clamp-2">{order.delivery_address}</span>
-                                            </div>
-                                        </div>
 
-                                        <div className="mt-3 pt-3 border-t">
                                             {!isLocked ? (
-                                                <Button size="sm" className="w-full bg-yellow-600 hover:bg-yellow-700 text-white"
+                                                <Button size="sm" className="w-full bg-slate-900 hover:bg-slate-800 text-white h-8 text-xs"
                                                     onClick={() => { setSelectedOrder(order); setIsAssignDialogOpen(true); }}>
-                                                    Attribuer un chauffeur
-                                                    <ArrowRight className="w-4 h-4 ml-1" />
+                                                    Attribuer
+                                                    <ArrowRight className="w-3 h-3 ml-2" />
                                                 </Button>
                                             ) : (
-                                                <div className="text-center">
-                                                    <Badge variant="secondary" className="bg-slate-100 text-slate-500 w-full justify-center py-1">
-                                                        <Lock className="w-3 h-3 mr-1" />
-                                                        {dispatchStatus.message}
-                                                    </Badge>
+                                                <div className="text-center text-xs text-slate-400 bg-slate-100 py-1.5 rounded flex items-center justify-center gap-2">
+                                                    <Lock className="w-3 h-3" />
+                                                    {dispatchStatus.message}
                                                 </div>
                                             )}
-                                        </div>
-                                    </div>
-                                );
-                            })
-                        )}
-                    </ScrollArea>
-                </Card>
+                                        </Card>
+                                    );
+                                })}
+                            </div>
+                        </ScrollArea>
+                    </div>
 
-                {/* COLONNE 2 : EN ATTRIBUTION (Assignées mais pas encore acceptées) */}
-                <Card className="md:col-span-1 shadow-sm border-l-4 border-l-blue-500 flex flex-col">
-                    <CardHeader className="pb-3 bg-blue-50/50">
-                        <CardTitle className="text-sm font-bold uppercase text-blue-700 flex justify-between">
-                            En Attribution <Badge variant="secondary">{dispatchedOrders.length}</Badge>
-                        </CardTitle>
-                    </CardHeader>
-                    <ScrollArea className="flex-1 p-4 pt-0">
-                        <div className="space-y-3 mt-4">
-                            {dispatchedOrders.map(order => {
-                                const driver = availableDrivers.find(d => d.id === order.driver_id || d.id === order.assigned_driver_id);
-                                const isRefused = order.status === 'driver_refused';
-                                const refusalCount = orderRefusals.get(order.id)?.refusalCount || 0;
-
-                                return (
-                                    <Card key={order.id} className={`p-3 bg-white border ${isRefused ? 'border-red-400 bg-red-50' : 'border-blue-100'}`}>
-                                        <div className="flex justify-between items-center mb-2">
-                                            <Badge variant={isRefused ? "destructive" : "secondary"}>{order.reference}</Badge>
-                                            {isRefused ? (
-                                                <span className="text-xs font-bold text-red-600 flex items-center gap-1">
-                                                    <AlertCircle className="w-3 h-3" /> Refusé ({refusalCount})
-                                                </span>
-                                            ) : (
-                                                <div className="flex items-center gap-1 text-xs text-blue-600 animate-pulse">
-                                                    <Clock className="w-3 h-3" /> Attente réponse...
-                                                </div>
-                                            )}
-                                        </div>
-                                        <div className="text-sm mb-2">
-                                            <p className="flex items-center gap-2">
-                                                <Truck className="w-4 h-4 text-slate-500" />
-                                                <span className="font-medium text-slate-700">
-                                                    {driver ? `${driver.first_name} ${driver.last_name}` : 'Chauffeur inconnu'}
-                                                </span>
-                                            </p>
-                                        </div>
-                                        {isRefused && (
-                                            <Button size="sm" variant="destructive" className="w-full text-xs h-8"
-                                                onClick={() => { setSelectedOrder(order); setIsAssignDialogOpen(true); }}>
-                                                Réassigner
-                                            </Button>
-                                        )}
-                                        {!isRefused && order.driver_id && (
-                                            <Button size="sm" variant="ghost" className="w-full text-xs h-7 text-slate-400 hover:text-red-500"
-                                                onClick={() => handleUnassign(order.driver_id!, order.id)}>
-                                                Annuler attribution
-                                            </Button>
-                                        )}
-                                    </Card>
-                                );
-                            })}
+                    {/* COLONNE 2 : EN ATTENTE REPONSE */}
+                    <div className="flex flex-col h-full bg-slate-100/50 rounded-xl border border-slate-200">
+                        <div className="p-3 border-b bg-white rounded-t-xl flex justify-between items-center sticky top-0">
+                            <h3 className="font-semibold text-slate-700 flex items-center gap-2">
+                                <div className="w-2 h-2 rounded-full bg-blue-500" />
+                                En Attente
+                            </h3>
+                            <Badge variant="secondary" className="bg-slate-100">{dispatchedOrders.length}</Badge>
                         </div>
-                    </ScrollArea>
-                </Card>
 
-                {/* COLONNE 3 : COURSES ACTIVES (AVEC DISTANCE & ETA) */}
-                <Card className="md:col-span-1 shadow-sm border-l-4 border-l-green-500 flex flex-col">
-                    <CardHeader className="pb-3 bg-green-50/50">
-                        <CardTitle className="text-sm font-bold uppercase text-green-700 flex justify-between">
-                            En Cours (Live) <Badge variant="secondary">{driverAcceptedOrders.length}</Badge>
-                        </CardTitle>
-                    </CardHeader>
-                    <ScrollArea className="flex-1 p-4 pt-0">
-                        <div className="space-y-4 mt-4">
-                            {driverAcceptedOrders.map(order => {
-                                const driver = availableDrivers.find(d => d.id === (order.driver_id || order.assigned_driver_id));
+                        <ScrollArea className="flex-1 p-3">
+                            <div className="space-y-3">
+                                {dispatchedOrders.length === 0 && (
+                                    <div className="text-center py-12 text-slate-400 text-sm">Aucune attente</div>
+                                )}
+                                {dispatchedOrders.map(order => {
+                                    const driver = availableDrivers.find(d => d.id === order.driver_id || d.id === order.assigned_driver_id);
+                                    const isRefused = order.status === 'driver_refused';
+                                    const refusalCount = orderRefusals.get(order.id)?.refusalCount || 0;
 
-                                // Calculs LIVE
-                                let distance = 0;
-                                let targetLabel = "";
-                                let badgeColor = 'bg-teal-500';
-
-                                if (driver && driver.current_lat && driver.current_lng) {
-                                    if (order.status === 'driver_accepted' || order.status === 'accepted') {
-                                        // Vers retrait
-                                        distance = calculateDistance(driver.current_lat, driver.current_lng, order.pickup_lat || 0, order.pickup_lng || 0);
-                                        targetLabel = "Vers Retrait";
-                                        badgeColor = 'bg-blue-500';
-                                    } else if (order.status === 'arrived_pickup') {
-                                        // SUR PLACE
-                                        distance = 0;
-                                        targetLabel = "📍 Est arrivé au retrait";
-                                        badgeColor = 'bg-orange-500';
-                                    } else if (order.status === 'in_progress') {
-                                        // Vers livraison
-                                        distance = calculateDistance(driver.current_lat, driver.current_lng, order.delivery_lat || 0, order.delivery_lng || 0);
-                                        targetLabel = "Vers Livraison";
-                                        badgeColor = 'bg-purple-500';
-                                    } else if (order.status === 'completed') {
-                                        distance = 0;
-                                        targetLabel = "✅ Course Terminée";
-                                        badgeColor = 'bg-green-600';
-                                    }
-                                }
-
-                                return (
-                                    <Card key={order.id} className="p-3 border-green-200 bg-white">
-                                        <div className="flex justify-between items-start mb-2">
-                                            <span className="font-bold text-sm">{order.reference}</span>
-                                            <Badge className={`${badgeColor} text-white hover:${badgeColor}`}>
-                                                {order.status === 'in_progress' ? 'En Livraison' : (order.status === 'arrived_pickup' ? 'Sur Place' : (order.status === 'completed' ? 'Livré' : 'En approche'))}
-                                            </Badge>
-                                        </div>
-
-                                        {/* INFO CHAUFFEUR LIVE */}
-                                        <div className="bg-slate-50 p-2 rounded mb-2 border">
-                                            <div className="flex items-center gap-2 mb-1">
-                                                <Car className="w-4 h-4 text-slate-600" />
-                                                <span className="text-sm font-semibold">
-                                                    {driver ? `${driver.first_name} ${driver.last_name}` : 'Chauffeur ?'}
-                                                </span>
+                                    return (
+                                        <Card key={order.id} className={`p-3 border-l-4 ${isRefused ? 'border-l-red-500 bg-red-50/50' : 'border-l-blue-500 bg-white'}`}>
+                                            <div className="flex justify-between items-center mb-3">
+                                                <span className="font-mono text-xs font-medium text-slate-500">{order.reference}</span>
+                                                {isRefused ? (
+                                                    <Badge variant="destructive" className="h-5 text-[10px]">Refusé ({refusalCount})</Badge>
+                                                ) : (
+                                                    <span className="text-[10px] text-blue-600 font-medium animate-pulse flex items-center gap-1">
+                                                        <Clock className="w-3 h-3" />
+                                                        Réponse...
+                                                    </span>
+                                                )}
                                             </div>
-                                            {driver?.current_lat ? (
-                                                <div className="grid grid-cols-2 gap-2 text-xs">
-                                                    <div>
-                                                        <p className="text-slate-500">Distance</p>
-                                                        <p className="font-mono font-bold text-slate-800">
-                                                            {order.status === 'arrived_pickup' ? '0 m' : formatDistance(distance)}
-                                                        </p>
-                                                    </div>
-                                                    <div>
-                                                        <p className="text-slate-500">ETA estimé</p>
-                                                        <p className="font-mono font-bold text-green-600">
-                                                            {order.status === 'arrived_pickup' ? 'Sur place' : estimateTime(distance)}
-                                                        </p>
-                                                    </div>
+
+                                            <div className="flex items-center gap-3 mb-3">
+                                                <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-600">
+                                                    {driver ? `${driver.first_name[0]}${driver.last_name[0]}` : "?"}
                                                 </div>
+                                                <div className="min-w-0">
+                                                    <p className="text-sm font-medium truncate">
+                                                        {driver ? `${driver.first_name} ${driver.last_name}` : 'Chauffeur inconnu'}
+                                                    </p>
+                                                    <p className="text-xs text-slate-500">
+                                                        {isRefused ? "A refusé la course" : "Doit accepter"}
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            {isRefused ? (
+                                                <Button size="sm" variant="destructive" className="w-full h-7 text-xs"
+                                                    onClick={() => { setSelectedOrder(order); setIsAssignDialogOpen(true); }}>
+                                                    Réassigner
+                                                </Button>
                                             ) : (
-                                                <p className="text-xs text-red-400 italic">Position indisponible</p>
+                                                <Button size="sm" variant="ghost" className="w-full h-7 text-xs text-slate-400 hover:text-red-600 hover:bg-red-50"
+                                                    onClick={() => order.driver_id && handleUnassign(order.driver_id, order.id)}>
+                                                    Annuler
+                                                </Button>
                                             )}
-                                        </div>
+                                        </Card>
+                                    );
+                                })}
+                            </div>
+                        </ScrollArea>
+                    </div>
 
-                                        <div className="text-xs text-slate-500 flex justify-between items-center">
-                                            <span>{targetLabel}</span>
-                                            <span className="text-[10px]">{new Date(order.updated_at).toLocaleTimeString()}</span>
-                                        </div>
-                                    </Card>
-                                );
-                            })}
+                    {/* COLONNE 3 : EN COURS */}
+                    <div className="flex flex-col h-full bg-slate-100/50 rounded-xl border border-slate-200">
+                        <div className="p-3 border-b bg-white rounded-t-xl flex justify-between items-center sticky top-0">
+                            <h3 className="font-semibold text-slate-700 flex items-center gap-2">
+                                <div className="w-2 h-2 rounded-full bg-green-500" />
+                                En Cours
+                            </h3>
+                            <Badge variant="secondary" className="bg-slate-100">{driverAcceptedOrders.length}</Badge>
                         </div>
-                    </ScrollArea>
-                </Card>
 
-                {/* COLONNE 4 : CHAUFFEURS DISPONIBLES */}
-                <Card className="md:col-span-1 shadow-sm flex flex-col h-full border-l-4 border-l-slate-400">
-                    <CardHeader className="pb-3 bg-slate-50/50">
-                        <CardTitle className="text-sm font-bold uppercase text-slate-700">
-                            Chauffeurs ({availableDrivers.length})
-                        </CardTitle>
-                    </CardHeader>
-                    <ScrollArea className="flex-1 p-4 pt-0">
-                        <div className="space-y-2 mt-4">
-                            {availableDrivers.length === 0 ? (
-                                <p className="text-center text-xs text-slate-400 py-4">Aucun chauffeur connecté</p>
-                            ) : (
-                                availableDrivers.map(driver => {
+                        <ScrollArea className="flex-1 p-3">
+                            <div className="space-y-3">
+                                {driverAcceptedOrders.length === 0 && (
+                                    <div className="text-center py-12 text-slate-400 text-sm">Aucune course active</div>
+                                )}
+                                {driverAcceptedOrders.map(order => {
+                                    const driver = availableDrivers.find(d => d.id === (order.driver_id || order.assigned_driver_id));
+
+                                    // Calcul simplifié pour UI
+                                    let statusLabel = "En route";
+                                    let statusColor = "text-blue-600 bg-blue-50";
+                                    let distance = 0;
+
+                                    if (driver?.current_lat && driver?.current_lng) {
+                                        if (order.status === 'accepted' || order.status === 'driver_accepted') {
+                                            statusLabel = "Vers Retrait";
+                                            statusColor = "text-orange-600 bg-orange-50";
+                                            distance = calculateDistance(driver.current_lat, driver.current_lng, order.pickup_lat || 0, order.pickup_lng || 0);
+                                        } else if (order.status === 'arrived_pickup') {
+                                            statusLabel = "Sur Place";
+                                            statusColor = "text-purple-600 bg-purple-50";
+                                        } else if (order.status === 'in_progress') {
+                                            statusLabel = "Vers Livraison";
+                                            statusColor = "text-green-600 bg-green-50";
+                                            distance = calculateDistance(driver.current_lat, driver.current_lng, order.delivery_lat || 0, order.delivery_lng || 0);
+                                        }
+                                    }
+
+                                    return (
+                                        <Card key={order.id} className="p-3 bg-white border border-slate-200 hover:border-slate-300">
+                                            <div className="flex justify-between items-center mb-3">
+                                                <Badge variant="outline" className="font-mono">{order.reference}</Badge>
+                                                <Badge variant="secondary" className={`${statusColor} border-0`}>
+                                                    {statusLabel}
+                                                </Badge>
+                                            </div>
+
+                                            <div className="flex items-center gap-3 mb-3 p-2 bg-slate-50 rounded-lg">
+                                                <div className="w-8 h-8 rounded-full bg-white border flex items-center justify-center text-xs font-bold text-slate-700 shadow-sm">
+                                                    {driver ? `${driver.first_name[0]}${driver.last_name[0]}` : "?"}
+                                                </div>
+                                                <div className="min-w-0 flex-1">
+                                                    <p className="text-sm font-medium truncate">
+                                                        {driver ? `${driver.first_name} ${driver.last_name}` : '...'}
+                                                    </p>
+                                                    {driver?.current_lat && order.status !== 'arrived_pickup' && (
+                                                        <div className="flex items-center gap-2 text-xs text-slate-500">
+                                                            <span>🚀 {formatDistance(distance)}</span>
+                                                            <span>⏱ {estimateTime(distance)}</span>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+
+                                            <div className="text-[10px] text-right text-slate-400">
+                                                Maj: {new Date(order.updated_at).toLocaleTimeString()}
+                                            </div>
+                                        </Card>
+                                    );
+                                })}
+                            </div>
+                        </ScrollArea>
+                    </div>
+
+                    {/* COLONNE 4 : FLOTTE */}
+                    <div className="flex flex-col h-full bg-slate-50 rounded-xl border border-dashed border-slate-300">
+                        <div className="p-3 border-b border-dashed border-slate-300 rounded-t-xl flex justify-between items-center sticky top-0 bg-slate-50">
+                            <h3 className="font-semibold text-slate-600 flex items-center gap-2">
+                                <Users className="w-4 h-4" />
+                                Flotte
+                            </h3>
+                            <Badge variant="outline" className="bg-white">{availableDrivers.length}</Badge>
+                        </div>
+
+                        <ScrollArea className="flex-1 p-2">
+                            <div className="space-y-2">
+                                {availableDrivers.map(driver => {
                                     const activeOrder = activeDeliveries[driver.user_id || ''] || activeDeliveries[driver.id];
                                     const isBusy = (driver.status === 'busy' || driver.status === 'on_delivery') && !!activeOrder;
 
                                     return (
-                                        <div key={driver.id} className="flex items-center gap-3 p-2 hover:bg-slate-50 rounded border border-transparent hover:border-slate-200 transition-all">
-                                            <div className={`w-3 h-3 rounded-full flex-shrink-0 ${driver.status === 'online' ? 'bg-green-500' : 'bg-orange-400'}`} />
-                                            <div className="flex-1 min-w-0">
-                                                <p className="text-sm font-medium truncate">{driver.first_name} {driver.last_name}</p>
-                                                <p className="text-xs text-slate-500 truncate">{driver.vehicle_type || 'Véhicule N/A'}</p>
+                                        <div key={driver.id} className="flex items-center gap-3 p-2 bg-white rounded-lg border border-slate-200 shadow-sm">
+                                            <div className="relative">
+                                                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white ${driver.status === 'online' ? 'bg-green-500' : 'bg-orange-400'}`}>
+                                                    {driver.first_name[0]}
+                                                </div>
+                                                <div className={`absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-white ${driver.status === 'online' ? 'bg-green-500' : 'bg-orange-400'}`} />
                                             </div>
-                                            {isBusy && (
-                                                <Badge variant="outline" className="text-[9px] border-orange-200 text-orange-600 bg-orange-50 px-1 py-0 h-5">
-                                                    En course
-                                                </Badge>
-                                            )}
+
+                                            <div className="flex-1 min-w-0">
+                                                <div className="flex justify-between items-center">
+                                                    <p className="text-sm font-medium truncate">{driver.first_name} {driver.last_name}</p>
+                                                    {isBusy && <Badge variant="secondary" className="text-[10px] h-4 px-1 bg-slate-100">Occupé</Badge>}
+                                                </div>
+                                                <p className="text-xs text-slate-400 truncate flex items-center gap-1">
+                                                    <Car className="w-3 h-3" />
+                                                    {driver.vehicle_type || 'NC'}
+                                                </p>
+                                            </div>
                                         </div>
                                     );
-                                })
-                            )}
-                        </div>
-                    </ScrollArea>
-                </Card>
+                                })}
+                            </div>
+                        </ScrollArea>
+                    </div>
+
+                </div>
             </div>
 
-            {/* Modal d'attribution */}
+            {/* Modal d'attribution (Keep existing logic) */}
             <Dialog open={isAssignDialogOpen} onOpenChange={setIsAssignDialogOpen}>
                 <DialogContent className="sm:max-w-[500px]">
                     <DialogHeader>
@@ -893,7 +907,6 @@ export default function Dispatch() {
                             ) : (
                                 availableDrivers.map((driver) => {
                                     const activeOrder = activeDeliveries[driver.user_id || ''] || activeDeliveries[driver.id];
-                                    // FIX: Un chauffeur n'est "busy" QUE s'il a une course active
                                     const isBusy = (driver.status === 'busy' || driver.status === 'on_delivery') && !!activeOrder;
 
                                     return (
