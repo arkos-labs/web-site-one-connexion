@@ -30,7 +30,9 @@ export const StepDelivery = ({ formData, updateFormData, onNext, onBack }: StepD
                         const fullAddress = `${suggestion.street}, ${suggestion.postcode} ${suggestion.city}`;
                         updateFormData({
                             deliveryAddress: fullAddress,
-                            deliveryCity: suggestion.city
+                            deliveryCity: suggestion.city,
+                            deliveryLat: suggestion.lat ? parseFloat(suggestion.lat) : undefined,
+                            deliveryLng: suggestion.lon ? parseFloat(suggestion.lon) : undefined
                         });
                     }}
                     label="Adresse de livraison *"

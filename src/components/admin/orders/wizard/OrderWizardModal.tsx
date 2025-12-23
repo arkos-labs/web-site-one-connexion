@@ -36,10 +36,16 @@ export interface OrderFormData {
     pickupCity: string;
     pickupContact: string;
     pickupPhone: string;
+    pickupLat?: number;
+    pickupLng?: number;
+
     deliveryAddress: string;
     deliveryCity: string;
     deliveryContact: string;
     deliveryPhone: string;
+    deliveryLat?: number;
+    deliveryLng?: number;
+
     packageType: string;
     weight: number;
     dimensions: string;
@@ -47,8 +53,6 @@ export interface OrderFormData {
     pickupDate: string;
     pickupTime: string;
     notes: string;
-
-    // Schedule type
     scheduleType: 'immediate' | 'in1h' | 'deferred';
 }
 
@@ -73,10 +77,14 @@ export const OrderWizardModal = ({ isOpen, onClose, onSubmit, mode = 'admin' }: 
         pickupCity: "",
         pickupContact: "",
         pickupPhone: "",
+        pickupLat: undefined,
+        pickupLng: undefined,
         deliveryAddress: "",
         deliveryCity: "",
         deliveryContact: "",
         deliveryPhone: "",
+        deliveryLat: undefined,
+        deliveryLng: undefined,
         packageType: "standard",
         weight: 1,
         dimensions: "",
@@ -226,7 +234,7 @@ export const OrderWizardModal = ({ isOpen, onClose, onSubmit, mode = 'admin' }: 
     // Calculate price effect
     useEffect(() => {
         const calculatePrice = async () => {
-            if (!formData.deliveryAddress || formData.deliveryAddress.length < 10 || !formData.pickupAddress || !formData.pickupCity) {
+            if (!formData.deliveryAddress || !formData.pickupAddress || !formData.pickupCity) {
                 setPricingResults(null);
                 return;
             }
@@ -235,19 +243,38 @@ export const OrderWizardModal = ({ isOpen, onClose, onSubmit, mode = 'admin' }: 
             setPricingError(null);
 
             try {
-                const pickupGeocode = await geocoderAdresse(formData.pickupAddress);
-                const deliveryGeocode = await geocoderAdresse(formData.deliveryAddress);
+                let pickupLat = formData.pickupLat;
+                let pickupLng = formData.pickupLng;
+                let deliveryLat = formData.deliveryLat;
+                let deliveryLng = formData.deliveryLng;
+
+                // Fallback: Geocode if we don't have coords (e.g. manual entry or legacy)
+                if (!pickupLat || !pickupLng) {
+                    const pickupGeocode = await geocoderAdresse(formData.pickupAddress);
+                    pickupLat = parseFloat(pickupGeocode.latitude.toString());
+                    pickupLng = parseFloat(pickupGeocode.longitude.toString());
+                    // Optimistically update formData ? No, dangerous in useEffect loop
+                }
+
+                if (!deliveryLat || !deliveryLng) {
+                    const deliveryGeocode = await geocoderAdresse(formData.deliveryAddress);
+                    deliveryLat = parseFloat(deliveryGeocode.latitude.toString());
+                    deliveryLng = parseFloat(deliveryGeocode.longitude.toString());
+                }
 
                 const distanceKm = calculerDistance(
-                    parseFloat(pickupGeocode.latitude.toString()),
-                    parseFloat(pickupGeocode.longitude.toString()),
-                    parseFloat(deliveryGeocode.latitude.toString()),
-                    parseFloat(deliveryGeocode.longitude.toString())
+                    pickupLat!,
+                    pickupLng!,
+                    deliveryLat!,
+                    deliveryLng!
                 );
+
+                // Use the city from formData, or fallback to geocode result if we had to geocode
+                const deliveryCity = formData.deliveryCity;
 
                 const results = await calculerToutesLesFormulesAsync(
                     formData.pickupCity,
-                    deliveryGeocode.ville,
+                    deliveryCity,
                     distanceKm * 1000
                 );
                 setPricingResults(results as Record<FormuleNew, CalculTarifaireResult>);
@@ -262,7 +289,16 @@ export const OrderWizardModal = ({ isOpen, onClose, onSubmit, mode = 'admin' }: 
 
         const timeoutId = setTimeout(calculatePrice, 1000);
         return () => clearTimeout(timeoutId);
-    }, [formData.deliveryAddress, formData.deliveryCity, formData.pickupCity, formData.pickupAddress]);
+    }, [
+        formData.deliveryAddress,
+        formData.deliveryCity,
+        formData.pickupCity,
+        formData.pickupAddress,
+        formData.pickupLat,
+        formData.pickupLng,
+        formData.deliveryLat,
+        formData.deliveryLng
+    ]);
 
     // Vérifier si la formule Standard doit être grisée
     useEffect(() => {

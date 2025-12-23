@@ -164,6 +164,10 @@ const DashboardClient = () => {
         notes: data.notes,
         pickup_time: data.pickupDate ? new Date(`${data.pickupDate}T${data.pickupTime || '00:00'}`).toISOString() : null,
         user_id: profile.user_id, // Ajout pour RLS
+        pickup_lat: data.pickupLat,
+        pickup_lng: data.pickupLng,
+        delivery_lat: data.deliveryLat,
+        delivery_lng: data.deliveryLng,
       };
 
       const { error } = await supabase

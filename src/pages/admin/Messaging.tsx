@@ -47,8 +47,12 @@ const Messaging = () => {
         const newMsg = payload.new as Message;
 
         if (selectedThreadId && newMsg.thread_id === selectedThreadId) {
-          setMessages(prev => [...prev, newMsg]);
-          if (newMsg.sender_type === 'client') {
+          setMessages(prev => {
+            // Prevent duplicates (e.g. from optimistic update replacement)
+            if (prev.some(m => m.id === newMsg.id)) return prev;
+            return [...prev, newMsg];
+          });
+          if (newMsg.sender_type === 'client' || newMsg.sender_type === 'driver') {
             markMessagesAsRead(selectedThreadId, 'admin');
           }
         }
@@ -186,19 +190,41 @@ const Messaging = () => {
       return;
     }
 
+    const tempId = 'temp-' + Date.now();
+    const messageContent = newMessage.trim();
+
+    // Optimistic Update
+    const optimisticMsg: Message = {
+      id: tempId,
+      thread_id: selectedThreadId,
+      content: messageContent,
+      sender_type: 'admin',
+      is_read: false,
+      created_at: new Date().toISOString()
+    };
+
+    setMessages(prev => [...prev, optimisticMsg]);
+    setNewMessage("");
+
     try {
       setIsSending(true);
-      await sendMessage(
+      const realMessage = await sendMessage(
         selectedThreadId,
         thread.client_id,
-        newMessage.trim(),
+        messageContent,
         'admin',
         thread.driver_id
       );
-      setNewMessage("");
+
+      // Replace optimistic message with real one
+      setMessages(prev => prev.map(m => m.id === tempId ? realMessage : m));
+
     } catch (error) {
       console.error("Error sending message:", error);
       toast.error("Erreur lors de l'envoi du message");
+      // Revert optimistic update
+      setMessages(prev => prev.filter(m => m.id !== tempId));
+      setNewMessage(messageContent); // Restore text
     } finally {
       setIsSending(false);
     }

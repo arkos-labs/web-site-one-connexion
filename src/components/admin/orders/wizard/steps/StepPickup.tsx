@@ -409,7 +409,9 @@ export const StepPickup = ({ formData, updateFormData, onNext, clients, mode, on
                             const fullAddress = `${suggestion.street}, ${suggestion.postcode} ${suggestion.city}`;
                             updateFormData({
                                 pickupAddress: fullAddress,
-                                pickupCity: suggestion.city
+                                pickupCity: suggestion.city,
+                                pickupLat: suggestion.lat ? parseFloat(suggestion.lat) : undefined,
+                                pickupLng: suggestion.lon ? parseFloat(suggestion.lon) : undefined
                             });
                         }}
                         label="Adresse d'enlèvement *"

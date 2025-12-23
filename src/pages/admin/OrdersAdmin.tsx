@@ -355,6 +355,12 @@ const OrdersAdmin = () => {
           client_id: clientIdToUse,
           pickup_address: data.pickupAddress,
           delivery_address: data.deliveryAddress,
+
+          pickup_lat: data.pickupLat,
+          pickup_lng: data.pickupLng,
+          delivery_lat: data.deliveryLat,
+          delivery_lng: data.deliveryLng,
+
           delivery_type: data.packageType,
           status: 'pending_acceptance',
           price: data.pricingResult?.totalEuros || 0,
