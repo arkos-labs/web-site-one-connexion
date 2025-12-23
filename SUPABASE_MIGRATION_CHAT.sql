@@ -1,10 +1,12 @@
--- AJOUT DU SUPPORT CHAT CHAUFFEURS
+-- MODIFICATION OBLIGATOIRE : Rendre client_id NULLABLE pour les conversations chauffeurs
+ALTER TABLE threads ALTER COLUMN client_id DROP NOT NULL;
+ALTER TABLE messages ALTER COLUMN client_id DROP NOT NULL;
 
--- 1. Ajouter la colonne driver_id à la table threads
+-- 1. Ajouter la colonne driver_id à la table threads (si pas déjà fait)
 ALTER TABLE threads 
 ADD COLUMN IF NOT EXISTS driver_id UUID REFERENCES auth.users(id);
 
--- 2. Ajouter la colonne driver_id à la table messages
+-- 2. Ajouter la colonne driver_id à la table messages (si pas déjà fait)
 ALTER TABLE messages 
 ADD COLUMN IF NOT EXISTS driver_id UUID REFERENCES auth.users(id);
 
@@ -24,7 +26,7 @@ ALTER TABLE threads
 ADD CONSTRAINT threads_type_check 
 CHECK (type IN ('general', 'plainte', 'contact', 'driver_support'));
 
--- 5. Politique RLS (Sécurité)
+-- 5. Politique RLS (Sécurité) - Nettoyage et Refonte
 DROP POLICY IF EXISTS "Drivers can view their own threads" ON threads;
 CREATE POLICY "Drivers can view their own threads" 
 ON threads 
@@ -62,9 +64,24 @@ FOR INSERT
 TO authenticated 
 WITH CHECK (auth.uid() = driver_id);
 
--- 6. TRIGGER AUTO-ALERTE (Nouveau)
--- Envoie un message automatique de bienvenue si c'est le prmier message
+-- 6. Correction RLS pour driver_locations (Pour stopper les erreurs 403)
+ALTER TABLE driver_locations ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Drivers can insert their own locations" ON driver_locations;
+CREATE POLICY "Drivers can insert their own locations"
+ON driver_locations
+FOR INSERT
+TO authenticated
+WITH CHECK (auth.uid() = driver_id);
+
+DROP POLICY IF EXISTS "Drivers can update their own locations" ON driver_locations;
+CREATE POLICY "Drivers can update their own locations"
+ON driver_locations
+FOR UPDATE
+TO authenticated
+USING (auth.uid() = driver_id);
+
+-- 7. TRIGGER AUTO-ALERTE
 CREATE OR REPLACE FUNCTION public.handle_new_driver_message()
 RETURNS TRIGGER AS $$
 BEGIN
