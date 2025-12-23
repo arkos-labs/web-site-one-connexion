@@ -26,62 +26,96 @@ ALTER TABLE threads
 ADD CONSTRAINT threads_type_check 
 CHECK (type IN ('general', 'plainte', 'contact', 'driver_support'));
 
--- 5. Politique RLS (Sécurité) - Nettoyage et Refonte
+-- ==============================================================================
+-- 5. POLITIQUES RLS (Sécurité) - CHAUFFEURS
+-- ==============================================================================
+
+-- THREADS (Chauffeurs)
 DROP POLICY IF EXISTS "Drivers can view their own threads" ON threads;
 CREATE POLICY "Drivers can view their own threads" 
-ON threads 
-FOR SELECT 
-TO authenticated 
+ON threads FOR SELECT TO authenticated 
 USING (auth.uid() = driver_id);
 
 DROP POLICY IF EXISTS "Drivers can insert their own threads" ON threads;
 CREATE POLICY "Drivers can insert their own threads" 
-ON threads 
-FOR INSERT 
-TO authenticated 
+ON threads FOR INSERT TO authenticated 
 WITH CHECK (auth.uid() = driver_id);
 
 DROP POLICY IF EXISTS "Drivers can update their own threads" ON threads;
 CREATE POLICY "Drivers can update their own threads" 
-ON threads 
-FOR UPDATE 
-TO authenticated 
+ON threads FOR UPDATE TO authenticated 
 USING (auth.uid() = driver_id);
 
+-- MESSAGES (Chauffeurs)
 DROP POLICY IF EXISTS "Drivers can view their own messages" ON messages;
 CREATE POLICY "Drivers can view their own messages" 
-ON messages 
-FOR SELECT 
-TO authenticated 
+ON messages FOR SELECT TO authenticated 
 USING (auth.uid() = driver_id OR EXISTS (
     SELECT 1 FROM threads WHERE threads.id = messages.thread_id AND threads.driver_id = auth.uid()
 ));
 
 DROP POLICY IF EXISTS "Drivers can insert messages" ON messages;
 CREATE POLICY "Drivers can insert messages" 
-ON messages 
-FOR INSERT 
-TO authenticated 
+ON messages FOR INSERT TO authenticated 
 WITH CHECK (auth.uid() = driver_id);
 
--- 6. Correction RLS pour driver_locations (Pour stopper les erreurs 403)
+-- ==============================================================================
+-- 6. POLITIQUES RLS (Sécurité) - ADMINS
+-- ==============================================================================
+-- On suppose que l'admin a un enregistrement dans 'profiles' avec role = 'admin'
+
+-- THREADS (Admins)
+DROP POLICY IF EXISTS "Admins can view all threads" ON threads;
+CREATE POLICY "Admins can view all threads" 
+ON threads FOR SELECT TO authenticated 
+USING (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
+
+DROP POLICY IF EXISTS "Admins can insert threads" ON threads;
+CREATE POLICY "Admins can insert threads" 
+ON threads FOR INSERT TO authenticated 
+WITH CHECK (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
+
+DROP POLICY IF EXISTS "Admins can update threads" ON threads;
+CREATE POLICY "Admins can update threads" 
+ON threads FOR UPDATE TO authenticated 
+USING (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
+
+-- MESSAGES (Admins)
+DROP POLICY IF EXISTS "Admins can view all messages" ON messages;
+CREATE POLICY "Admins can view all messages" 
+ON messages FOR SELECT TO authenticated 
+USING (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
+
+DROP POLICY IF EXISTS "Admins can insert messages" ON messages;
+CREATE POLICY "Admins can insert messages" 
+ON messages FOR INSERT TO authenticated 
+WITH CHECK (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
+
+-- DRIVER LOCATIONS (Admins)
+DROP POLICY IF EXISTS "Admins can view all locations" ON driver_locations;
+CREATE POLICY "Admins can view all locations" 
+ON driver_locations FOR SELECT TO authenticated 
+USING (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
+
+
+-- ==============================================================================
+-- 7. Correction RLS pour driver_locations (Erreurs 403)
+-- ==============================================================================
 ALTER TABLE driver_locations ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "Drivers can insert their own locations" ON driver_locations;
 CREATE POLICY "Drivers can insert their own locations"
-ON driver_locations
-FOR INSERT
-TO authenticated
+ON driver_locations FOR INSERT TO authenticated
 WITH CHECK (auth.uid() = driver_id);
 
 DROP POLICY IF EXISTS "Drivers can update their own locations" ON driver_locations;
 CREATE POLICY "Drivers can update their own locations"
-ON driver_locations
-FOR UPDATE
-TO authenticated
+ON driver_locations FOR UPDATE TO authenticated
 USING (auth.uid() = driver_id);
 
--- 7. TRIGGER AUTO-ALERTE
+-- ==============================================================================
+-- 8. TRIGGER AUTO-ALERTE
+-- ==============================================================================
 CREATE OR REPLACE FUNCTION public.handle_new_driver_message()
 RETURNS TRIGGER AS $$
 BEGIN
