@@ -197,8 +197,32 @@ const LiveMap = () => {
                             </div>
                         </div>
                     </div>
+                        <div class="mt-2 pt-2 border-t border-slate-200 flex items-start gap-2">
+                             <span class="text-lg">📍</span>
+                             <span class="address-placeholder text-slate-400 italic text-xs leading-tight">Cliquez pour voir l'adresse...</span>
+                        </div>
+                    </div>
                 `, {
-                    className: 'premium-popup'
+                    className: 'premium-popup',
+                    minWidth: 220
+                });
+
+                // Add click listener for address fetching
+                marker.on('click', () => {
+                    const popup = marker.getPopup();
+                    if (popup) {
+                        // Reset content to loading state if needed, or just trigger fetch
+                        const currentContent = popup.getContent();
+                        if (typeof currentContent === 'string') {
+                            // Set temporary loading message
+                            const loadingHtml = currentContent.replace(
+                                'Cliquez pour voir l\'adresse...',
+                                'Chargement adresse...'
+                            );
+                            popup.setContent(loadingHtml);
+                            handleMarkerClick(driver.current_lat!, driver.current_lng!, popup);
+                        }
+                    }
                 });
 
                 markersRef.current.push(marker);
@@ -260,12 +284,52 @@ const LiveMap = () => {
             }
         });
 
-        // Fit bounds if there are markers
-        if (markersRef.current.length > 0) {
-            const group = L.featureGroup(markersRef.current);
-            mapRef.current.fitBounds(group.getBounds().pad(0.1));
-        }
+        // Fit bounds ONLY if it's the first load or explicit refresh
+        // We removed the auto-fit to prevent map jumping when drivers move
     }, [drivers, orders]);
+
+    // Initial fit (once)
+    useEffect(() => {
+        if (!mapRef.current || drivers.length === 0) return;
+
+        // Only fit bounds once to avoid annoying resets
+        const hasMarkers = markersRef.current.length > 0;
+        if (hasMarkers && !mapRef.current.dashboardInitialFitDone) {
+            const group = L.featureGroup(markersRef.current);
+            if (group.getLayers().length > 0) {
+                mapRef.current.fitBounds(group.getBounds().pad(0.1));
+                (mapRef.current as any).dashboardInitialFitDone = true;
+            }
+        }
+    }, [loading]); // Only on loading state change (initial fetch)
+
+
+    // Helper to get address for popup
+    const handleMarkerClick = async (lat: number, lng: number, popup: L.Popup) => {
+        const content = popup.getContent();
+        if (typeof content === 'string' && content.includes('Chargement adresse...')) {
+            try {
+                // Import dynamically to avoid circular deps if needed, or use the imported one
+                const { reverseGeocode } = await import("@/services/locationiq");
+                const address = await reverseGeocode(lat, lng);
+
+                // Update popup content with address
+                const newContent = content.replace(
+                    '<span class="address-placeholder text-slate-400 italic">Chargement adresse...</span>',
+                    `<span class="text-slate-700 font-medium">${address}</span>`
+                );
+                popup.setContent(newContent);
+                popup.update();
+            } catch (err) {
+                console.error("Failed to reverse geocode", err);
+                const newContent = content.replace(
+                    'Chargement adresse...',
+                    'Adresse non disponible'
+                );
+                popup.setContent(newContent);
+            }
+        }
+    };
 
     if (loading) {
         return (
