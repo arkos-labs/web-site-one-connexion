@@ -43,16 +43,11 @@ export async function autocompleteAddress(query: string): Promise<AddressSuggest
 
         const data = await response.json();
 
-        // Filtrer uniquement les adresses d'Île-de-France (départements 75, 77, 78, 91, 92, 93, 94, 95)
-        const ILE_DE_FRANCE_POSTCODES = ['75', '77', '78', '91', '92', '93', '94', '95'];
+        // COMMENTÉ POUR DÉBOGAGE : Le filtre strict empêchait certaines adresses valides d'apparaître
+        // si LocationIQ ne retournait pas un code postal formaté exactement comme prévu.
+        // On retourne toutes les suggestions pertinentes de LocationIQ pour la France.
 
-        const filteredData = data.filter((item: any) => {
-            const postcode = item.address?.postcode;
-            if (!postcode) return false;
-
-            // Vérifier si le code postal commence par un des départements d'Île-de-France
-            return ILE_DE_FRANCE_POSTCODES.some(dept => postcode.startsWith(dept));
-        });
+        const filteredData = data;
 
         return filteredData.map((item: any) => {
             // Extraire la rue + numéro
