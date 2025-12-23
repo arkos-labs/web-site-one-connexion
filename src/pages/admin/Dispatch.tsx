@@ -718,7 +718,12 @@ export default function Dispatch() {
                                     <div className="text-center py-12 text-slate-400 text-sm">Aucune attente</div>
                                 )}
                                 {dispatchedOrders.map(order => {
-                                    const driver = availableDrivers.find(d => d.id === order.driver_id || d.id === order.assigned_driver_id);
+                                    // Robust driver lookup
+                                    const driver = availableDrivers.find(d =>
+                                        d.id === order.driver_id ||
+                                        d.user_id === order.driver_id ||
+                                        d.id === order.assigned_driver_id
+                                    );
                                     const isRefused = order.status === 'driver_refused';
                                     const refusalCount = orderRefusals.get(order.id)?.refusalCount || 0;
 
@@ -736,13 +741,25 @@ export default function Dispatch() {
                                                 )}
                                             </div>
 
+                                            <div className="space-y-1.5 mb-3 text-xs border-b pb-2 border-slate-100">
+                                                <div className="flex items-start gap-2 text-slate-700">
+                                                    <div className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-1.5 shrink-0" />
+                                                    <span className="line-clamp-2">{order.pickup_address}</span>
+                                                </div>
+                                                <div className="pl-0.5 ml-[3px] border-l border-slate-200 h-2" />
+                                                <div className="flex items-start gap-2 text-slate-700">
+                                                    <div className="w-1.5 h-1.5 rounded-full bg-slate-900 mt-1.5 shrink-0" />
+                                                    <span className="line-clamp-2">{order.delivery_address}</span>
+                                                </div>
+                                            </div>
+
                                             <div className="flex items-center gap-3 mb-3">
                                                 <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-600">
-                                                    {driver ? `${driver.first_name[0]}${driver.last_name[0]}` : "?"}
+                                                    {driver ? `${driver.first_name?.[0] || ''}${(driver.last_name?.[0]) || ''}`.toUpperCase() : "?"}
                                                 </div>
                                                 <div className="min-w-0">
                                                     <p className="text-sm font-medium truncate">
-                                                        {driver ? `${driver.first_name} ${driver.last_name}` : 'Chauffeur inconnu'}
+                                                        {driver ? `${driver.first_name} ${driver.last_name || ''}`.trim() : 'Chauffeur inconnu'}
                                                     </p>
                                                     <p className="text-xs text-slate-500">
                                                         {isRefused ? "A refusé la course" : "Doit accepter"}
@@ -784,7 +801,12 @@ export default function Dispatch() {
                                     <div className="text-center py-12 text-slate-400 text-sm">Aucune course active</div>
                                 )}
                                 {driverAcceptedOrders.map(order => {
-                                    const driver = availableDrivers.find(d => d.id === (order.driver_id || order.assigned_driver_id));
+                                    // Robust driver lookup: check ID and UserID to ensure matching
+                                    const driver = availableDrivers.find(d =>
+                                        d.id === order.driver_id ||
+                                        d.user_id === order.driver_id ||
+                                        d.id === order.assigned_driver_id
+                                    );
 
                                     // Calcul simplifié pour UI
                                     let statusLabel = "En route";
@@ -815,13 +837,25 @@ export default function Dispatch() {
                                                 </Badge>
                                             </div>
 
+                                            <div className="space-y-1.5 mb-3 text-xs border-b pb-2 border-slate-100">
+                                                <div className="flex items-start gap-2 text-slate-700">
+                                                    <div className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-1.5 shrink-0" />
+                                                    <span className="line-clamp-2">{order.pickup_address}</span>
+                                                </div>
+                                                <div className="pl-0.5 ml-[3px] border-l border-slate-200 h-2" />
+                                                <div className="flex items-start gap-2 text-slate-700">
+                                                    <div className="w-1.5 h-1.5 rounded-full bg-slate-900 mt-1.5 shrink-0" />
+                                                    <span className="line-clamp-2">{order.delivery_address}</span>
+                                                </div>
+                                            </div>
+
                                             <div className="flex items-center gap-3 mb-3 p-2 bg-slate-50 rounded-lg">
                                                 <div className="w-8 h-8 rounded-full bg-white border flex items-center justify-center text-xs font-bold text-slate-700 shadow-sm">
-                                                    {driver ? `${driver.first_name[0]}${driver.last_name[0]}` : "?"}
+                                                    {driver ? `${driver.first_name?.[0] || ''}${(driver.last_name?.[0]) || ''}`.toUpperCase() : "?"}
                                                 </div>
                                                 <div className="min-w-0 flex-1">
                                                     <p className="text-sm font-medium truncate">
-                                                        {driver ? `${driver.first_name} ${driver.last_name}` : '...'}
+                                                        {driver ? `${driver.first_name} ${driver.last_name || ''}`.trim() : '...'}
                                                     </p>
                                                     {driver?.current_lat && order.status !== 'arrived_pickup' && (
                                                         <div className="flex items-center gap-2 text-xs text-slate-500">

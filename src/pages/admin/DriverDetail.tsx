@@ -79,8 +79,8 @@ export default function DriverDetail() {
                     status: data.status || "offline"
                 });
 
-                // Fetch orders
-                const ordersData = await getDriverOrders(id!);
+                // Fetch orders using USER_ID (Auth ID) because orders are linked to auth id
+                const ordersData = await getDriverOrders(data.user_id || data.id);
                 setOrders(ordersData);
             } else {
                 toast.error("Chauffeur introuvable");

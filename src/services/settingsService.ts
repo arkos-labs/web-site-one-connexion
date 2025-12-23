@@ -15,7 +15,7 @@ export const getTariffMetadata = async (): Promise<Record<string, string>> => {
 
   // Convert array to object for easier access
   const settings: Record<string, string> = {};
-  data.forEach((item: TariffMetadata) => {
+  (data || []).forEach((item: TariffMetadata) => {
     settings[item.key] = item.value;
   });
 

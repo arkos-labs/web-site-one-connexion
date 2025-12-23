@@ -87,11 +87,12 @@ const Settings = () => {
         // 1. Update public profile
         const { error: profileError } = await supabase
           .from('profiles')
-          .update({
+          .upsert({
+            id: user.id,
             first_name: firstName,
-            last_name: lastName
-          })
-          .eq('id', user.id);
+            last_name: lastName,
+            updated_at: new Date().toISOString()
+          });
 
         if (profileError) throw profileError;
 

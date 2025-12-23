@@ -141,7 +141,30 @@ const Statistics = () => {
 
       setChartData(sortedChartData);
 
-      setSectorData([]);
+      // Sector Data (Simulation based on client names or fallback)
+      const sectorDistribution: Record<string, number> = {};
+
+      filteredOrders.forEach((order: any) => {
+        // En l'absence de champ 'sector', on peut catégoriser par mots clés dans le nom de société
+        const company = (order.clients?.company_name || "").toLowerCase();
+        let sector = "Autre";
+
+        if (company.includes('cabinet') || company.includes('avocats') || company.includes('notaire')) sector = "Juridique";
+        else if (company.includes('garage') || company.includes('auto') || company.includes('bmw') || company.includes('audi')) sector = "Automobile";
+        else if (company.includes('clinique') || company.includes('hopital') || company.includes('med') || company.includes('pharma')) sector = "Médical";
+        else if (company.includes('event') || company.includes('traiteur')) sector = "Événementiel";
+        else sector = "Général"; // Default
+
+        if (!sectorDistribution[sector]) sectorDistribution[sector] = 0;
+        sectorDistribution[sector] += 1;
+      });
+
+      const processedSectorData = Object.keys(sectorDistribution).map(key => ({
+        name: key,
+        value: sectorDistribution[key]
+      }));
+
+      setSectorData(processedSectorData.length > 0 ? processedSectorData : [{ name: "Général", value: 100 }]);
 
     } catch (error) {
       console.error("Error fetching stats:", error);

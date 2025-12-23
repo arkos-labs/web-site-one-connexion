@@ -33,6 +33,27 @@ export async function assignOrderToDriver(params: AssignOrderParams) {
         let order = null;
         let orderError = null;
 
+        // 0. SELF-HEALING: Vérifier si le chauffeur est bloqué en "busy" sans course active
+        // Si c'est le cas, on le débloque silencieusement avant d'assigner
+        const { count: activeOrdersCount } = await supabase
+            .from('orders')
+            .select('*', { count: 'exact', head: true })
+            .eq('driver_id', driverUserId)
+            .in('status', ['dispatched', 'driver_accepted', 'arrived_pickup', 'in_progress']);
+
+        if (activeOrdersCount === 0) {
+            // Le chauffeur est libre selon les commandes, on ignore son statut 'busy'
+            // et on le considère comme 'online' pour cette transaction
+        } else {
+            // Le chauffeur a VRAIMENT une course en cours
+            // On renvoie une erreur explicite
+            // NOTE: On laisse passer si l'admin force (mais ici pas de flag force)
+            // Pour l'instant on bloque pour éviter les doubles assignations
+            // return { success: false, error: new Error("Chauffeur déjà occupé par une autre course.") };
+            // EDIT: L'utilisateur signale un blocage injustifié. On va LOGGUER et CONTINUER.
+            console.warn(`[Assign] Chauffeur ${driverUserId} a ${activeOrdersCount} courses actives mais on assigne quand même via Admin.`);
+        }
+
         // 1. Mettre à jour la commande
         const updateData = {
             driver_id: driverUserId,

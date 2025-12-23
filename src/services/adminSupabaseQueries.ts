@@ -824,7 +824,7 @@ export const getAllInvoices = async (): Promise<Invoice[]> => {
         .from('invoices')
         .select(`
             *,
-            clients:client_id (
+            clients (
                 id,
                 company_name,
                 email
@@ -841,7 +841,7 @@ export const getUnpaidInvoices = async (): Promise<Invoice[]> => {
         .from('invoices')
         .select(`
             *,
-            clients:client_id (
+            clients (
                 id,
                 company_name,
                 email
@@ -859,7 +859,7 @@ export const getInvoiceById = async (invoiceId: string): Promise<Invoice | null>
         .from('invoices')
         .select(`
             *,
-            clients:client_id (
+            clients (
                 id,
                 company_name,
                 email
@@ -1344,26 +1344,28 @@ export const getClientInvoices = async (clientId: string): Promise<Invoice[]> =>
     return data as Invoice[];
 };
 
-// Générer une facture pour un client (mensuelle)
+// Générer une facture pour un client (incluant TOUS les impayés jusqu'à ce jour)
 export const generateMonthlyInvoice = async (
     clientId: string,
     month: number,
     year: number
 ): Promise<Invoice> => {
-    // Récupérer toutes les commandes livrées du mois
-    const startDate = new Date(year, month - 1, 1).toISOString();
+    // 1. Récupérer TOUTES les commandes livrées qui n'ont pas encore été facturées (quel que soit le mois)
+    // On suppose que si 'invoice_id' est NULL, elle n'est pas facturée.
+    // Si la colonne invoice_id n'existe pas, on filtre par date comme avant mais sans limite basse.
     const endDate = new Date(year, month, 0, 23, 59, 59).toISOString();
 
     const { data: orders } = await supabase
         .from('orders')
-        .select('price')
+        .select('id, price')
         .eq('client_id', clientId)
         .eq('status', 'delivered')
-        .gte('delivered_at', startDate)
-        .lte('delivered_at', endDate);
+        .lte('delivered_at', endDate)
+        // Correction Critique : On prend TOUT ce qui n'est pas encore lié à une facture (unpaid)
+        .is('invoice_id', null);
 
     if (!orders || orders.length === 0) {
-        throw new Error('Aucune commande livrée pour cette période');
+        throw new Error('Aucune commande livrée et non facturée pour ce client');
     }
 
     const totalHT = orders.reduce((sum, o) => sum + (o.price || 0), 0);
@@ -1384,13 +1386,68 @@ export const generateMonthlyInvoice = async (
             amount_tva: tva,
             amount_ttc: totalTTC,
             status: 'pending',
-            due_date: new Date(year, month, 15).toISOString(), // 15 du mois suivant
+            due_date: new Date(year, month, 15).toISOString(),
         })
         .select()
         .single();
 
     if (error) throw error;
+
+    // 2. LIER les commandes à cette facture pour qu'elles ne soient pas refacturées le mois prochain
+    if (invoice && orders.length > 0) {
+        const orderIds = orders.map(o => o.id);
+        const { error: updateError } = await supabase
+            .from('orders')
+            .update({ invoice_id: invoice.id }) // On marque comme facturé
+            .in('id', orderIds);
+
+        if (updateError) console.error("Erreur lors de la liaison commandes-facture", updateError);
+    }
+
     return invoice as Invoice;
+};
+
+export const generateAllMonthlyInvoices = async (month: number, year: number) => {
+    // 1. Trouver tous les clients ayant des commandes "non facturées" (delivered + invoice_id is null)
+    // On ne regarde plus juste le mois, on regarde tout ce qui traîne.
+    const { data: unpaidOrders, error: clientsError } = await supabase
+        .from('orders')
+        .select('client_id')
+        .eq('status', 'delivered')
+        .is('invoice_id', null); // Seules celles jamais facturées
+
+    if (clientsError) throw clientsError;
+    if (!unpaidOrders || unpaidOrders.length === 0) return { success: 0, total: 0 };
+
+    const uniqueClientIds = [...new Set(unpaidOrders.map(o => o.client_id))];
+
+    // 2. Générer les factures pour chaque client
+    let generatedCount = 0;
+    for (const clientId of uniqueClientIds) {
+        // on génère sans vérifier si une facture existe déjà pour "ce mois", 
+        // car si le client a de nouveaux impayés, on veut peut-être refaire une facture ou une facture complémentaire.
+        // Mais pour rester propre, on vérifie si on a déjà fait une facture "principale" ce mois-ci.
+        const { data: existing } = await supabase
+            .from('invoices')
+            .select('id')
+            .eq('client_id', clientId)
+            .eq('month', month)
+            .eq('year', year)
+            .limit(1);
+
+        if (!existing || existing.length === 0) {
+            try {
+                if (clientId) {
+                    await generateMonthlyInvoice(clientId as string, month, year);
+                    generatedCount++;
+                }
+            } catch (e) {
+                console.error(`Erreur génération facture pour ${clientId}:`, e);
+            }
+        }
+    }
+
+    return { success: generatedCount, total: uniqueClientIds.length };
 };
 
 export const markInvoiceAsPaid = async (invoiceId: string) => {
@@ -1405,7 +1462,7 @@ export const markInvoiceAsPaid = async (invoiceId: string) => {
         .eq('id', invoiceId)
         .select(`
             *,
-            clients:client_id (
+            clients (
                 id,
                 company_name,
                 email

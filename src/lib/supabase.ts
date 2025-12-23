@@ -74,11 +74,22 @@ export interface Invoice {
     id: string;
     reference: string;
     created_at: string;
+    amount_ht: number;
+    amount_tva: number;
     amount_ttc: number;
     status: 'paid' | 'pending' | 'overdue';
+    month: number;
+    year: number;
     pdf_url?: string;
     stripe_payment_link?: string;
     client_id: string;
+    due_date?: string;
+    paid_date?: string;
+    clients?: {
+        id: string;
+        company_name: string;
+        email: string;
+    };
 }
 
 export interface Client {

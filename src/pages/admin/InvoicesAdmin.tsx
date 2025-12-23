@@ -19,16 +19,20 @@ import {
   getAllInvoices,
   sendBulkPaymentReminders,
   markInvoiceAsPaid,
-  sendInvoiceByEmail
+  sendInvoiceByEmail,
+  generateAllMonthlyInvoices,
+  getInvoiceById
 } from "@/services/adminSupabaseQueries";
 
-import { supabase } from "@/lib/supabase";
+import { supabase, Invoice } from "@/lib/supabase";
+import { generateInvoicePDF } from "@/lib/pdf-generator";
 
 const InvoicesAdmin = () => {
   const [invoices, setInvoices] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [isSendingReminders, setIsSendingReminders] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   // Fetch invoices
   const fetchInvoices = async () => {
@@ -96,11 +100,61 @@ const InvoicesAdmin = () => {
     }
   };
 
-  const handleDownloadPDF = (url?: string) => {
-    if (url) {
-      window.open(url, '_blank');
+  const handleGenerateInvoices = async () => {
+    const now = new Date();
+    const month = now.getMonth() + 1; // 1-indexed
+    const year = now.getFullYear();
+
+    if (!confirm(`Générer les factures pour tous les clients ayant des livraisons en ${month}/${year} ?`)) {
+      return;
+    }
+
+    try {
+      setIsGenerating(true);
+      const result = await generateAllMonthlyInvoices(month, year);
+      if (result.success > 0) {
+        toast.success(`${result.success} facture(s) générée(s) sur ${result.total} client(s) éligible(s).`);
+        fetchInvoices();
+      } else if (result.total > 0) {
+        toast.info("Toutes les factures pour ce mois ont déjà été générées.");
+      } else {
+        toast.warning("Aucune commande livrée ce mois-ci pour générer des factures.");
+      }
+    } catch (error: any) {
+      console.error(error);
+      toast.error("Erreur durant la génération des factures");
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const handleDownloadPDF = async (invoice: any) => {
+    if (invoice.pdf_url) {
+      window.open(invoice.pdf_url, '_blank');
     } else {
-      toast.error("PDF non disponible pour cette facture");
+      // Générer à la volée
+      try {
+        const clientInfo = {
+          name: invoice.clients?.company_name || invoice.clients?.full_name || invoice.facturation?.nom_complet || invoice.billing_name || "Client",
+          email: invoice.clients?.email || invoice.facturation?.email || invoice.sender_email || "",
+          phone: invoice.clients?.phone || invoice.facturation?.telephone || invoice.billing_phone || "",
+          company: invoice.clients?.company_name || invoice.facturation?.societe || invoice.billing_company || undefined
+        };
+
+        // S'assurer que les montants sont des nombres
+        const invoiceData: Invoice = {
+          ...invoice,
+          amount_ht: Number(invoice.amount_ht || 0),
+          amount_tva: Number(invoice.amount_tva || 0),
+          amount_ttc: Number(invoice.amount_ttc || 0)
+        };
+
+        generateInvoicePDF(invoiceData, clientInfo);
+        toast.success("PDF généré localement");
+      } catch (error) {
+        console.error("Erreur génération PDF:", error);
+        toast.error("Impossible de générer le PDF");
+      }
     }
   };
 
@@ -166,6 +220,15 @@ const InvoicesAdmin = () => {
           >
             <Bell className={`h-4 w-4 mr-2 ${isSendingReminders ? 'animate-pulse' : ''}`} />
             {isSendingReminders ? 'Envoi en cours...' : `Relancer les impayés (${unpaidCount})`}
+          </Button>
+          <Button
+            variant="cta"
+            onClick={handleGenerateInvoices}
+            disabled={isGenerating}
+            className="gap-2"
+          >
+            {isGenerating ? <Loader2 className="h-4 w-4 animate-spin" /> : <FileText className="h-4 w-4" />}
+            Générer les factures
           </Button>
         </div>
       </div>
@@ -327,9 +390,9 @@ const InvoicesAdmin = () => {
                       </Button>
                       <Button
                         variant="ghost"
-                        size="sm"
-                        onClick={() => handleDownloadPDF(invoice.pdf_url)}
-                        title="Télécharger PDF"
+                        size="icon"
+                        onClick={() => handleDownloadPDF(invoice)}
+                        title="Télécharger"
                       >
                         <Download className="h-4 w-4" />
                       </Button>

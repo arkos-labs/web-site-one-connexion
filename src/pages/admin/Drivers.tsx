@@ -111,12 +111,12 @@ const Drivers = () => {
       if (ordersError) throw ordersError;
 
       // Fetch documents for each driver
-      // const { data: documentsData, error: documentsError } = await supabase
-      //   .from('driver_documents')
-      //   .select('driver_id, status');
+      const { data: documentsData, error: documentsError } = await supabase
+        .from('driver_documents')
+        .select('driver_id, status');
 
-      // if (documentsError) console.error('Error fetching documents:', documentsError);
-      const documentsData: any[] = [];
+      if (documentsError) console.error('Error fetching documents:', documentsError);
+      // const documentsData: any[] = [];
 
       if (driversData) {
         const realDrivers: Driver[] = driversData.map((d: any) => {
@@ -126,10 +126,11 @@ const Drivers = () => {
           const totalDeliveries = driverOrders.filter((o: any) => o.status === 'delivered').length;
           const cancelledDeliveries = driverOrders.filter((o: any) => o.status === 'cancelled').length;
           // Active orders: dispatched (assigned) or in_progress (picked up)
-          const pendingDeliveries = driverOrders.filter((o: any) => ['dispatched', 'in_progress'].includes(o.status)).length;
+          const pendingDeliveries = driverOrders.filter((o: any) => ['dispatched', 'in_progress', 'driver_accepted', 'arrived_pickup'].includes(o.status)).length;
           const totalEarnings = driverOrders
             .filter((o: any) => o.status === 'delivered')
             .reduce((sum: number, o: any) => sum + (o.price || 0), 0);
+
 
           // Map status
           let status: any = 'offline';
@@ -143,6 +144,29 @@ const Drivers = () => {
           if (['online', 'offline', 'on_delivery', 'on_break', 'on_vacation'].includes(d.status)) {
             status = d.status;
           }
+
+          // Handle vehicle info (JSON priority or Flat fallback)
+          const vehicleInfo = d.vehicle ? {
+            id: 'primary',
+            driver_id: d.id,
+            brand: d.vehicle.brand || 'Véhicule',
+            model: d.vehicle.model || 'Principal',
+            plate_number: d.vehicle.plate_number || d.vehicle_registration || 'Non renseigné',
+            type: d.vehicle.type || d.vehicle_type,
+            status: 'active',
+            created_at: d.created_at,
+            updated_at: d.updated_at
+          } : d.vehicle_type ? {
+            id: 'primary',
+            driver_id: d.id,
+            brand: 'Véhicule',
+            model: 'Principal',
+            plate_number: d.vehicle_registration || 'Non renseigné',
+            type: d.vehicle_type,
+            status: 'active',
+            created_at: d.created_at,
+            updated_at: d.updated_at
+          } : undefined;
 
           // Calculate documents status
           const driverDocs = documentsData?.filter((doc: any) => doc.driver_id === d.user_id) || [];
@@ -173,17 +197,7 @@ const Drivers = () => {
             documents_status: documentsStatus, // Statut calculé des documents
             documents_submitted_at: d.documents_submitted_at, // Date de soumission
             status: status,
-            vehicle: d.vehicle_type ? {
-              id: 'primary',
-              driver_id: d.id,
-              brand: 'Véhicule', // Default since we don't have this col yet
-              model: 'Principal', // Default
-              plate_number: d.vehicle_registration || 'Non renseigné',
-              type: d.vehicle_type,
-              status: 'active',
-              created_at: d.created_at,
-              updated_at: d.updated_at
-            } : undefined,
+            vehicle: vehicleInfo,
             documents: d.license_number ? [{
               id: 'temp-license-id', // Placeholder until real docs are fetched
               type: 'license',
@@ -241,7 +255,8 @@ const Drivers = () => {
   };
 
   // Stats
-  const onlineCount = drivers.filter((d) => d.status === "online").length;
+  // FIXED: User wants 'En ligne' to include drivers on delivery
+  const onlineCount = drivers.filter((d) => d.status === "online" || d.status === "on_delivery").length;
   const onDeliveryCount = drivers.filter((d) => d.status === "on_delivery").length;
   const totalDeliveries = drivers.reduce((sum, d) => sum + d.stats.total_deliveries, 0);
   const totalEarnings = drivers.reduce((sum, d) => sum + d.stats.total_earnings, 0);
@@ -386,7 +401,12 @@ const Drivers = () => {
                             <p className="font-medium">
                               {driver.vehicle.brand} {driver.vehicle.model}
                             </p>
-                            <p className="text-muted-foreground">{driver.vehicle.plate_number}</p>
+                            <div className="flex items-center gap-2 text-muted-foreground text-xs">
+                              <span>{driver.vehicle.plate_number}</span>
+                              <span className="px-1.5 py-0.5 bg-slate-100 rounded text-[10px] uppercase font-bold border">
+                                {driver.vehicle.type || 'Standard'}
+                              </span>
+                            </div>
                           </div>
                         ) : (
                           <span className="text-muted-foreground text-sm">-</span>

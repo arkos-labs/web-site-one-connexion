@@ -197,23 +197,33 @@ const Messaging = () => {
     setIsSending(true);
     try {
       let successCount = 0;
+      let lastError: any = null;
       for (const clientId of selectedRecipients) {
         try {
           await createThread(clientId, broadcastSubject, 'general', broadcastMessage, 'admin');
           successCount++;
         } catch (e) {
           console.error(`Failed to send to ${clientId}`, e);
+          lastError = e;
         }
       }
-      toast.success(`${successCount} messages envoyés avec succès`);
-      setIsBroadcastOpen(false);
-      setBroadcastSubject("");
-      setBroadcastMessage("");
-      setSelectedRecipients([]);
-      loadThreads();
+
+      if (successCount === 0 && selectedRecipients.length > 0) {
+        toast.error(`Échec de l'envoi. Détail: ${lastError?.message || lastError?.code || 'Erreur inconnue'}`);
+      } else {
+        toast.success(`${successCount} messages envoyés avec succès`);
+        if (successCount < selectedRecipients.length) {
+          toast.warning(`${selectedRecipients.length - successCount} échecs.`);
+        }
+        setIsBroadcastOpen(false);
+        setBroadcastSubject("");
+        setBroadcastMessage("");
+        setSelectedRecipients([]);
+        loadThreads();
+      }
     } catch (error) {
       console.error("Error sending broadcast:", error);
-      toast.error("Erreur lors de l'envoi en masse");
+      toast.error("Erreur critique lors de l'envoi en masse");
     } finally {
       setIsSending(false);
     }
