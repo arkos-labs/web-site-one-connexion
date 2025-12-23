@@ -289,11 +289,11 @@ const Messaging = () => {
     }
   };
 
-  const toggleRecipient = (clientId: string) => {
+  const toggleRecipient = (recipientId: string) => {
     setSelectedRecipients(prev =>
-      prev.includes(clientId)
-        ? prev.filter(id => id !== clientId)
-        : [...prev, clientId]
+      prev.includes(recipientId)
+        ? prev.filter(id => id !== recipientId)
+        : [...prev, recipientId]
     );
   };
 
@@ -403,27 +403,28 @@ const Messaging = () => {
                     <div className="flex justify-center p-4"><Loader2 className="animate-spin h-4 w-4" /></div>
                   ) : (
                     (filterType === 'driver_support' ? allDrivers : allClients).map(recipient => {
-                      // For drivers, we use user_id. For clients, we use id.
-                      // @ts-ignore
-                      const recipientId = filterType === 'driver_support' ? recipient.user_id : recipient.id;
+                      // For drivers, we use user_id as the unique key for chat. For clients, we use id.
+                      const recipientId = filterType === 'driver_support' ? (recipient as any).user_id : (recipient as any).id;
+
+                      // Safety check for drivers without attached user_id
+                      if (!recipientId) return null;
+
+                      const displayName = filterType === 'driver_support'
+                        ? `${(recipient as any).first_name} ${(recipient as any).last_name}`
+                        : (recipient as any).company_name;
 
                       return (
-                        <div key={recipient.id} className="flex items-center space-x-2">
+                        <div key={recipientId} className="flex items-center space-x-2">
                           <Checkbox
-                            id={`recipient-${recipient.id}`}
+                            id={`recipient-${recipientId}`}
                             checked={selectedRecipients.includes(recipientId)}
                             onCheckedChange={() => toggleRecipient(recipientId)}
                           />
                           <label
-                            htmlFor={`recipient-${recipient.id}`}
+                            htmlFor={`recipient-${recipientId}`}
                             className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
                           >
-                            {filterType === 'driver_support'
-                              // @ts-ignore
-                              ? `${recipient.first_name} ${recipient.last_name}`
-                              // @ts-ignore
-                              : recipient.company_name
-                            }
+                            {displayName}
                             <span className="text-muted-foreground text-xs ml-1">({recipient.email})</span>
                           </label>
                         </div>

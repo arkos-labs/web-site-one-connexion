@@ -378,3 +378,39 @@ export const markContactMessageAsRead = async (id: string) => {
 
     if (error) throw error;
 };
+
+export const createDriverThread = async (
+    driverId: string,
+    subject: string,
+    initialMessage: string,
+    senderType: 'admin'
+) => {
+    // 1. Create Thread
+    const { data: thread, error: threadError } = await supabase
+        .from('threads')
+        .insert({
+            driver_id: driverId,
+            subject,
+            type: 'driver_support',
+            status: 'open'
+        })
+        .select()
+        .single();
+
+    if (threadError) throw threadError;
+
+    // 2. Create Initial Message
+    const { error: messageError } = await supabase
+        .from('messages')
+        .insert({
+            thread_id: thread.id,
+            driver_id: driverId,
+            sender_type: senderType,
+            content: initialMessage,
+            is_read: false
+        });
+
+    if (messageError) throw messageError;
+
+    return thread;
+};
