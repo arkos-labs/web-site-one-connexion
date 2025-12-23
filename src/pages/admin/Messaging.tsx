@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { MessageSquare, Send, Search, Loader2, Check, CheckCheck, AlertTriangle, Filter, Globe, Mail } from "lucide-react";
+import { MessageSquare, Send, Search, Loader2, Check, CheckCheck, AlertTriangle, Filter, Globe, Mail, Truck } from "lucide-react";
 import { toast } from "sonner";
 import { getThreads, getThreadMessages, sendMessage, markMessagesAsRead, updateComplaintStatus, createThread, markContactMessageAsRead, Thread, Message } from "@/services/messaging";
 import { supabase } from "@/lib/supabase";
@@ -20,7 +20,7 @@ const Messaging = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
-  const [filterType, setFilterType] = useState<'all' | 'plainte' | 'general' | 'contact'>('all');
+  const [filterType, setFilterType] = useState<'all' | 'plainte' | 'general' | 'contact' | 'driver_support'>('all');
 
   const [isLoadingThreads, setIsLoadingThreads] = useState(true);
   const [isLoadingMessages, setIsLoadingMessages] = useState(false);
@@ -32,6 +32,7 @@ const Messaging = () => {
   const [broadcastMessage, setBroadcastMessage] = useState("");
   const [selectedRecipients, setSelectedRecipients] = useState<string[]>([]);
   const [allClients, setAllClients] = useState<{ id: string, company_name: string, email: string }[]>([]);
+  const [allDrivers, setAllDrivers] = useState<{ id: string, user_id: string, first_name: string, last_name: string, email: string }[]>([]);
   const [isLoadingClients, setIsLoadingClients] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -98,6 +99,25 @@ const Messaging = () => {
     }
   };
 
+  const fetchDrivers = async () => {
+    setIsLoadingClients(true);
+    try {
+      // Fetch drivers who have a user_id (registered users)
+      const { data, error } = await supabase
+        .from('drivers')
+        .select('id, user_id, first_name, last_name, email')
+        .not('user_id', 'is', null)
+        .order('last_name');
+      if (error) throw error;
+      setAllDrivers(data || []);
+    } catch (error) {
+      console.error("Error fetching drivers:", error);
+      toast.error("Erreur lors du chargement des chauffeurs");
+    } finally {
+      setIsLoadingClients(false);
+    }
+  };
+
   useEffect(() => {
     let res = threads;
     if (searchQuery) {
@@ -105,7 +125,9 @@ const Messaging = () => {
       res = res.filter(t =>
         t.subject.toLowerCase().includes(lowerQ) ||
         t.client?.company_name.toLowerCase().includes(lowerQ) ||
-        t.client?.email.toLowerCase().includes(lowerQ)
+        t.client?.email.toLowerCase().includes(lowerQ) ||
+        t.driver?.email.toLowerCase().includes(lowerQ) ||
+        t.driver?.last_name.toLowerCase().includes(lowerQ)
       );
     }
     if (filterType !== 'all') {
@@ -166,7 +188,13 @@ const Messaging = () => {
 
     try {
       setIsSending(true);
-      await sendMessage(selectedThreadId, thread.client_id!, newMessage.trim(), 'admin');
+      await sendMessage(
+        selectedThreadId,
+        thread.client_id,
+        newMessage.trim(),
+        'admin',
+        thread.driver_id
+      );
       setNewMessage("");
     } catch (error) {
       console.error("Error sending message:", error);
@@ -198,12 +226,44 @@ const Messaging = () => {
     try {
       let successCount = 0;
       let lastError: any = null;
-      for (const clientId of selectedRecipients) {
+      for (const recipientId of selectedRecipients) {
         try {
-          await createThread(clientId, broadcastSubject, 'general', broadcastMessage, 'admin');
+          if (filterType === 'driver_support') {
+            // For drivers, we need the user_id, which is what we store in threads
+            // But selectedRecipients stores whatever we listed. 
+            // Let's assume selectedRecipients stores the ID we want to use.
+            // Wait, for drivers we need to target their user_id to link properly with Auth?
+            // Or the threads table uses driver_id which references auth.users(id).
+            // Let's verify what `fetchDrivers` returns: `user_id`.
+            // So we should use user_id as the key in checkbox? 
+            // Yes, let's make sure toggleRecipient uses the correct ID.
+            // Actually, `createThread` expects clientId as first arg for client threads.
+            // For driver threads, we need to pass driverId.
+            // Let's update createThread signature or logic? 
+            // No, let's execute SQL manually here or use a specific service function if createThread is too rigid.
+
+            // Let's use `createThread` but we need to update it in `messaging.ts` to handle driver creation properly
+            // OR we just assume the backend trigger handles it? No, we insert manually.
+
+            // Quick fix: Update createThread usage here manually for drivers
+            const driver = allDrivers.find(d => d.id === recipientId || d.user_id === recipientId);
+            if (driver && driver.user_id) {
+              await supabase.from('threads').insert({
+                driver_id: driver.user_id,
+                subject: broadcastSubject,
+                type: 'driver_support',
+                status: 'open'
+              }).select().single().then(async ({ data: thread, error }) => {
+                if (error) throw error;
+                await sendMessage(thread.id, null, broadcastMessage, 'admin', driver.user_id);
+              });
+            }
+          } else {
+            await createThread(recipientId, broadcastSubject, 'general', broadcastMessage, 'admin');
+          }
           successCount++;
         } catch (e) {
-          console.error(`Failed to send to ${clientId}`, e);
+          console.error(`Failed to send to ${recipientId}`, e);
           lastError = e;
         }
       }
@@ -238,10 +298,19 @@ const Messaging = () => {
   };
 
   const toggleAllRecipients = () => {
-    if (selectedRecipients.length === allClients.length) {
-      setSelectedRecipients([]);
+    if (filterType === 'driver_support') {
+      if (selectedRecipients.length === allDrivers.length) {
+        setSelectedRecipients([]);
+      } else {
+        // We use user_id for drivers because that's what threads use
+        setSelectedRecipients(allDrivers.map(d => d.user_id));
+      }
     } else {
-      setSelectedRecipients(allClients.map(c => c.id));
+      if (selectedRecipients.length === allClients.length) {
+        setSelectedRecipients([]);
+      } else {
+        setSelectedRecipients(allClients.map(c => c.id));
+      }
     }
   };
 
@@ -272,16 +341,36 @@ const Messaging = () => {
           </DialogTrigger>
           <DialogContent className="sm:max-w-[600px] max-h-[90vh] flex flex-col">
             <DialogHeader>
-              <DialogTitle>Envoyer un message (Diffusion)</DialogTitle>
+              <DialogTitle>Envoyer un message</DialogTitle>
             </DialogHeader>
             <div className="grid gap-4 py-4 overflow-y-auto px-1">
+              {/* Tabs for Client/Driver selection could be added here or just mixed list */}
+              <div className="flex gap-2">
+                <Button
+                  variant={filterType === 'driver_support' ? 'outline' : 'default'}
+                  size="sm"
+                  onClick={() => { setFilterType('all'); fetchClients(); }}
+                  className="flex-1"
+                >
+                  Clients
+                </Button>
+                <Button
+                  variant={filterType === 'driver_support' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => { setFilterType('driver_support'); fetchDrivers(); }}
+                  className="flex-1"
+                >
+                  Chauffeurs
+                </Button>
+              </div>
+
               <div className="grid gap-2">
                 <Label htmlFor="subject">Sujet</Label>
                 <Input
                   id="subject"
                   value={broadcastSubject}
                   onChange={(e) => setBroadcastSubject(e.target.value)}
-                  placeholder="Ex: Mise à jour des tarifs, Promotion..."
+                  placeholder="Ex: Information, Support..."
                 />
               </div>
               <div className="grid gap-2">
@@ -300,7 +389,7 @@ const Messaging = () => {
                   <div className="flex items-center space-x-2 pb-2 border-b mb-2 sticky top-0 bg-background z-10">
                     <Checkbox
                       id="all"
-                      checked={selectedRecipients.length === allClients.length && allClients.length > 0}
+                      checked={selectedRecipients.length === (filterType === 'driver_support' ? allDrivers.length : allClients.length) && (filterType === 'driver_support' ? allDrivers.length > 0 : allClients.length > 0)}
                       onCheckedChange={toggleAllRecipients}
                     />
                     <label
@@ -313,21 +402,33 @@ const Messaging = () => {
                   {isLoadingClients ? (
                     <div className="flex justify-center p-4"><Loader2 className="animate-spin h-4 w-4" /></div>
                   ) : (
-                    allClients.map(client => (
-                      <div key={client.id} className="flex items-center space-x-2">
-                        <Checkbox
-                          id={`client-${client.id}`}
-                          checked={selectedRecipients.includes(client.id)}
-                          onCheckedChange={() => toggleRecipient(client.id)}
-                        />
-                        <label
-                          htmlFor={`client-${client.id}`}
-                          className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
-                        >
-                          {client.company_name} <span className="text-muted-foreground text-xs">({client.email})</span>
-                        </label>
-                      </div>
-                    ))
+                    (filterType === 'driver_support' ? allDrivers : allClients).map(recipient => {
+                      // For drivers, we use user_id. For clients, we use id.
+                      // @ts-ignore
+                      const recipientId = filterType === 'driver_support' ? recipient.user_id : recipient.id;
+
+                      return (
+                        <div key={recipient.id} className="flex items-center space-x-2">
+                          <Checkbox
+                            id={`recipient-${recipient.id}`}
+                            checked={selectedRecipients.includes(recipientId)}
+                            onCheckedChange={() => toggleRecipient(recipientId)}
+                          />
+                          <label
+                            htmlFor={`recipient-${recipient.id}`}
+                            className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                          >
+                            {filterType === 'driver_support'
+                              // @ts-ignore
+                              ? `${recipient.first_name} ${recipient.last_name}`
+                              // @ts-ignore
+                              : recipient.company_name
+                            }
+                            <span className="text-muted-foreground text-xs ml-1">({recipient.email})</span>
+                          </label>
+                        </div>
+                      )
+                    })
                   )}
                 </div>
               </div>
@@ -390,6 +491,14 @@ const Messaging = () => {
               >
                 Site Web
               </Button>
+              <Button
+                variant={filterType === 'driver_support' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setFilterType('driver_support')}
+                className="text-xs bg-slate-800 text-white hover:bg-slate-700"
+              >
+                Chauffeurs
+              </Button>
             </div>
           </div>
           <div className="divide-y overflow-y-auto flex-1">
@@ -407,10 +516,15 @@ const Messaging = () => {
                 >
                   <div className="flex items-start justify-between mb-1">
                     <div className="flex flex-col overflow-hidden">
-                      <p className="font-semibold text-sm truncate">{thread.client?.company_name || "Client Inconnu"}</p>
+                      <p className="font-semibold text-sm truncate">
+                        {thread.driver ? `${thread.driver.first_name} ${thread.driver.last_name}` : (thread.client?.company_name || "Client Inconnu")}
+                      </p>
                       <p className="text-xs text-muted-foreground truncate">{thread.subject}</p>
                     </div>
                     <div className="flex gap-1">
+                      {thread.type === 'driver_support' && (
+                        <Badge className="text-[10px] px-1 py-0 h-5 bg-slate-800 text-white border-0">Chauffeur</Badge>
+                      )}
                       {thread.type === 'plainte' && (
                         <Badge className="text-[10px] px-1 py-0 h-5 bg-orange-500 hover:bg-orange-600 text-white border-0">Plainte</Badge>
                       )}
@@ -450,13 +564,14 @@ const Messaging = () => {
               <div className="p-4 border-b flex-shrink-0 bg-white z-10 flex justify-between items-start">
                 <div>
                   <h2 className="font-semibold text-primary flex items-center gap-2">
-                    {selectedThread.client?.company_name}
+                    {selectedThread.driver ? `${selectedThread.driver.first_name} ${selectedThread.driver.last_name}` : selectedThread.client?.company_name}
+                    {selectedThread.type === 'driver_support' && <Truck className="h-4 w-4 text-slate-500" />}
                     {selectedThread.type === 'plainte' && <AlertTriangle className="h-4 w-4 text-orange-500" />}
-                    {selectedThread.source === 'contact_form' && <Globe className="h-4 w-4 text-blue-500" />}
+                    {selectedThread.type === 'contact' && <Globe className="h-4 w-4 text-blue-500" />}
                   </h2>
                   <p className="text-sm font-medium text-gray-700">{selectedThread.subject}</p>
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <span>{selectedThread.client?.email}</span>
+                    <span>{selectedThread.driver ? selectedThread.driver.email : selectedThread.client?.email}</span>
                     {selectedThread.phone && (
                       <>
                         <span>•</span>
@@ -521,7 +636,7 @@ const Messaging = () => {
                           }`}
                       >
                         <p className="text-xs font-bold mb-1 opacity-80">
-                          {message.sender_type === 'admin' ? "Vous" : selectedThread.client?.company_name || "Client"}
+                          {message.sender_type === 'admin' ? "Vous" : (selectedThread.driver ? `${selectedThread.driver.first_name}` : selectedThread.client?.company_name || "Client")}
                         </p>
                         <p className="text-sm whitespace-pre-wrap">{message.content}</p>
                         <div className={`flex items-center justify-end gap-1 mt-1 ${message.sender_type === 'admin' ? "text-white/70" : "text-gray-400"}`}>

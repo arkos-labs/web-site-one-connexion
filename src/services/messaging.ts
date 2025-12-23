@@ -2,9 +2,10 @@ import { supabase } from '@/lib/supabase';
 
 export interface Thread {
     id: string;
-    client_id?: string; // Optional for contact form
+    client_id?: string; // Optional for contact form and driver chat
+    driver_id?: string; // NEW: For driver support
     subject: string;
-    type: 'general' | 'plainte' | 'contact'; // Added 'contact'
+    type: 'general' | 'plainte' | 'contact' | 'driver_support'; // Added 'driver_support'
     status: 'open' | 'in_progress' | 'resolved' | 'closed' | 'new' | 'read' | 'replied' | 'archived';
     created_at: string;
     updated_at: string;
@@ -14,6 +15,12 @@ export interface Thread {
         company_name: string;
         email: string;
     };
+    driver?: {
+        first_name: string;
+        last_name: string;
+        email: string;
+        phone: string;
+    };
     source?: 'app' | 'contact_form'; // To distinguish source
     phone?: string; // For contact form
 }
@@ -22,7 +29,8 @@ export interface Message {
     id: string;
     thread_id: string;
     client_id?: string;
-    sender_type: 'client' | 'admin';
+    driver_id?: string; // NEW
+    sender_type: 'client' | 'admin' | 'driver'; // Added 'driver'
     content: string;
     is_read: boolean;
     created_at: string;
@@ -41,7 +49,7 @@ export interface Plainte {
 // ==================== THREADS ====================
 
 export const getThreads = async (clientId?: string) => {
-    // 1. Fetch standard threads
+    // 1. Fetch standard threads (Clients & Drivers)
     let query = supabase
         .from('threads')
         .select(`
@@ -67,17 +75,37 @@ export const getThreads = async (clientId?: string) => {
 
     if (threadsError) {
         console.error("Error fetching threads:", threadsError);
-        // Don't throw here, we still want to try fetching contact messages if we are admin
     } else if (threadsData) {
+        // Prepare to fetch drivers manually
+        const driverUserIds = threadsData
+            .filter((t: any) => t.driver_id)
+            .map((t: any) => t.driver_id);
+
+        // Fetch drivers details if needed
+        let driversMap: Record<string, any> = {};
+        if (driverUserIds.length > 0) {
+            const { data: drivers } = await supabase
+                .from('drivers')
+                .select('user_id, first_name, last_name, email, phone')
+                .in('user_id', driverUserIds);
+
+            drivers?.forEach(d => {
+                driversMap[d.user_id] = d;
+            });
+        }
+
         formattedThreads = threadsData.map((thread: any) => {
             const sortedMessages = (thread.messages || []).sort((a: any, b: any) =>
                 new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
             );
             const lastMessage = sortedMessages[sortedMessages.length - 1];
 
+            // Determine sender type to check for unread
+            // If clientId prop is present => we are looking as client (not implemented for drivers usually)
+            // If No clientId => we are admin
             const unreadCount = sortedMessages.filter((m: any) =>
                 !m.is_read &&
-                m.sender_type === (clientId ? 'admin' : 'client')
+                m.sender_type !== 'admin' // Count messages NOT from admin as unread
             ).length;
 
             return {
@@ -85,7 +113,8 @@ export const getThreads = async (clientId?: string) => {
                 last_message: lastMessage,
                 messages: sortedMessages,
                 unread_count: unreadCount,
-                source: 'app'
+                source: 'app',
+                driver: thread.driver_id ? driversMap[thread.driver_id] : undefined
             };
         });
     }
@@ -93,42 +122,36 @@ export const getThreads = async (clientId?: string) => {
     // 2. Fetch contact messages (ONLY if we are Admin - i.e. no clientId provided)
     let contactThreads: Thread[] = [];
     if (!clientId) {
-        console.log('Fetching contact messages...');
         const { data: contactData, error: contactError } = await supabase
             .from('contact_messages')
             .select('*')
             .order('created_at', { ascending: false });
 
-        if (contactError) {
-            console.error('Error fetching contact messages:', contactError);
-        } else {
-            console.log('Contact messages fetched:', contactData?.length);
-            if (contactData) {
-                contactThreads = contactData.map((msg: any) => ({
+        if (!contactError && contactData) {
+            contactThreads = contactData.map((msg: any) => ({
+                id: msg.id,
+                client_id: undefined,
+                subject: msg.subject,
+                type: 'contact',
+                status: msg.status,
+                created_at: msg.created_at,
+                updated_at: msg.created_at,
+                source: 'contact_form',
+                unread_count: msg.status === 'new' ? 1 : 0,
+                phone: msg.phone,
+                client: {
+                    company_name: msg.name, // Use name as company name
+                    email: msg.email
+                },
+                last_message: {
                     id: msg.id,
-                    client_id: undefined,
-                    subject: msg.subject,
-                    type: 'contact',
-                    status: msg.status,
-                    created_at: msg.created_at,
-                    updated_at: msg.created_at,
-                    source: 'contact_form',
-                    unread_count: msg.status === 'new' ? 1 : 0,
-                    phone: msg.phone,
-                    client: {
-                        company_name: msg.name, // Use name as company name
-                        email: msg.email
-                    },
-                    last_message: {
-                        id: msg.id,
-                        thread_id: msg.id,
-                        sender_type: 'client',
-                        content: msg.message,
-                        is_read: msg.status !== 'new',
-                        created_at: msg.created_at
-                    }
-                }));
-            }
+                    thread_id: msg.id,
+                    sender_type: 'client',
+                    content: msg.message,
+                    is_read: msg.status !== 'new',
+                    created_at: msg.created_at
+                }
+            }));
         }
     }
 
@@ -218,36 +241,61 @@ export const createThread = async (
 
 export const sendMessage = async (
     threadId: string,
-    clientId: string,
+    clientId: string | undefined | null,
     content: string,
-    senderType: 'client' | 'admin'
+    senderType: 'client' | 'admin' | 'driver',
+    driverId?: string // Optional driverId for driver chats
 ) => {
+    const payload: any = {
+        thread_id: threadId,
+        sender_type: senderType,
+        content,
+        is_read: false
+    };
+
+    if (clientId) payload.client_id = clientId;
+    if (driverId) payload.driver_id = driverId;
+
     const { data, error } = await supabase
         .from('messages')
-        .insert({
-            thread_id: threadId,
-            client_id: clientId,
-            sender_type: senderType,
-            content,
-            is_read: false
-        })
+        .insert(payload)
         .select()
         .single();
 
     if (error) throw error;
+
+    // Update thread updated_at
+    await supabase.from('threads').update({ updated_at: new Date().toISOString() }).eq('id', threadId);
+
     return data;
 };
 
-export const markMessagesAsRead = async (threadId: string, userType: 'client' | 'admin') => {
+export const markMessagesAsRead = async (threadId: string, userType: 'client' | 'admin' | 'driver') => {
     // If user is client, mark messages FROM admin as read.
-    // If user is admin, mark messages FROM client as read.
-    const senderToMark = userType === 'client' ? 'admin' : 'client';
+    // If user is driver, mark messages FROM admin as read.
+    // If user is admin, mark messages FROM (client OR driver) as read.
 
+    let senderToMark = 'admin'; // Default if user is client/driver
+
+    if (userType === 'admin') {
+        // We want to mark everything NOT from admin as read
+        const { error } = await supabase
+            .from('messages')
+            .update({ is_read: true })
+            .eq('thread_id', threadId)
+            .neq('sender_type', 'admin') // Read everything incoming
+            .eq('is_read', false);
+
+        if (error) throw error;
+        return;
+    }
+
+    // Standard case for client/driver reading admin messages
     const { error } = await supabase
         .from('messages')
         .update({ is_read: true })
         .eq('thread_id', threadId)
-        .eq('sender_type', senderToMark)
+        .eq('sender_type', 'admin')
         .eq('is_read', false);
 
     if (error) throw error;
