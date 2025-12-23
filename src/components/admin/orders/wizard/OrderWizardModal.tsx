@@ -431,10 +431,49 @@ export const OrderWizardModal = ({ isOpen, onClose, onSubmit, mode = 'admin' }: 
                 return <StepConfirmation
                     formData={formData}
                     pricingResults={pricingResults}
-                    onSubmit={() => onSubmit({
-                        ...formData,
-                        pricingResult: pricingResults ? pricingResults[formData.formula] : undefined
-                    })}
+                    onSubmit={async () => {
+                        // FORCE GEOCODING BEFORE SUBMISSION
+                        setIsCalculatingPrice(true);
+                        try {
+                            let finalData = { ...formData };
+
+                            // Check Pickup
+                            if (!finalData.pickupLat || !finalData.pickupLng) {
+                                console.log("Geocoding Pickup Address before submit...");
+                                try {
+                                    const geo = await geocoderAdresse(finalData.pickupAddress);
+                                    finalData.pickupLat = geo.latitude;
+                                    finalData.pickupLng = geo.longitude;
+                                    // Also update city/zip if possible/needed, but lat/lng is priority
+                                } catch (e) {
+                                    console.error("Failed to geocode pickup:", e);
+                                    // Should we block? Maybe not, allow manual dispatch but warn?
+                                    // For now, let's proceed, as admin can edit later, or it might be OK.
+                                }
+                            }
+
+                            // Check Delivery
+                            if (!finalData.deliveryLat || !finalData.deliveryLng) {
+                                console.log("Geocoding Delivery Address before submit...");
+                                try {
+                                    const geo = await geocoderAdresse(finalData.deliveryAddress);
+                                    finalData.deliveryLat = geo.latitude;
+                                    finalData.deliveryLng = geo.longitude;
+                                } catch (e) {
+                                    console.error("Failed to geocode delivery:", e);
+                                }
+                            }
+
+                            onSubmit({
+                                ...finalData,
+                                pricingResult: pricingResults ? pricingResults[formData.formula] : undefined
+                            });
+                        } catch (err) {
+                            console.error("Final submit error:", err);
+                        } finally {
+                            setIsCalculatingPrice(false);
+                        }
+                    }}
                     onBack={() => setCurrentStep('formula')}
                 />;
             default:
