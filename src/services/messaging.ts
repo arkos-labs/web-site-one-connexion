@@ -49,12 +49,11 @@ export interface Plainte {
 // ==================== THREADS ====================
 
 export const getThreads = async (clientId?: string) => {
-    // 1. Fetch standard threads (Clients & Drivers)
+    // 1. Fetch threads without inner joining client immediately to avoid filtering NULLs
     let query = supabase
         .from('threads')
         .select(`
             *,
-            client:client_id (company_name, email),
             messages (
                 id,
                 content,
@@ -76,21 +75,33 @@ export const getThreads = async (clientId?: string) => {
     if (threadsError) {
         console.error("Error fetching threads:", threadsError);
     } else if (threadsData) {
-        // Prepare to fetch drivers manually
-        const driverUserIds = threadsData
-            .filter((t: any) => t.driver_id)
-            .map((t: any) => t.driver_id);
+        // Collect IDs
+        const driverIds = Array.from(new Set(threadsData.filter((t: any) => t.driver_id).map((t: any) => t.driver_id)));
+        const clientIds = Array.from(new Set(threadsData.filter((t: any) => t.client_id).map((t: any) => t.client_id)));
 
-        // Fetch drivers details if needed
+        // Fetch Drivers
         let driversMap: Record<string, any> = {};
-        if (driverUserIds.length > 0) {
+        if (driverIds.length > 0) {
             const { data: drivers } = await supabase
                 .from('drivers')
                 .select('user_id, first_name, last_name, email, phone')
-                .in('user_id', driverUserIds);
+                .in('user_id', driverIds);
 
             drivers?.forEach(d => {
                 driversMap[d.user_id] = d;
+            });
+        }
+
+        // Fetch Clients
+        let clientsMap: Record<string, any> = {};
+        if (clientIds.length > 0) {
+            const { data: clients } = await supabase
+                .from('clients')
+                .select('id, company_name, email')
+                .in('id', clientIds);
+
+            clients?.forEach(c => {
+                clientsMap[c.id] = c;
             });
         }
 
@@ -100,12 +111,9 @@ export const getThreads = async (clientId?: string) => {
             );
             const lastMessage = sortedMessages[sortedMessages.length - 1];
 
-            // Determine sender type to check for unread
-            // If clientId prop is present => we are looking as client (not implemented for drivers usually)
-            // If No clientId => we are admin
             const unreadCount = sortedMessages.filter((m: any) =>
                 !m.is_read &&
-                m.sender_type !== 'admin' // Count messages NOT from admin as unread
+                m.sender_type !== 'admin'
             ).length;
 
             return {
@@ -114,7 +122,8 @@ export const getThreads = async (clientId?: string) => {
                 messages: sortedMessages,
                 unread_count: unreadCount,
                 source: 'app',
-                driver: thread.driver_id ? driversMap[thread.driver_id] : undefined
+                driver: thread.driver_id ? driversMap[thread.driver_id] : undefined,
+                client: thread.client_id ? clientsMap[thread.client_id] : undefined
             };
         });
     }
