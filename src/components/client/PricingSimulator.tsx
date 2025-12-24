@@ -341,3 +341,5 @@ const PricingCard = ({
         </Card>
     );
 };
+e x p o r t   d e f a u l t   P r i c i n g S i m u l a t o r ;  
+ 
