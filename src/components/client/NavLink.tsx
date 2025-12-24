@@ -14,15 +14,13 @@ const NavLink = ({ to, label, isScrolled }: NavLinkProps) => {
     <Link
       to={to}
       className={`relative text-sm font-medium transition-colors duration-300 group ${isActive
-          ? "text-[#FFCC00]"
-          : isScrolled
-            ? "text-[#002147] hover:text-[#FFCC00]"
-            : "text-white hover:text-[#FFCC00]"
+        ? "text-[#D4AF37]"
+        : "text-gray-700 hover:text-[#D4AF37]"
         }`}
     >
       {label}
       <span
-        className={`absolute -bottom-1 left-0 h-0.5 bg-[#FFCC00] transition-all duration-300 ${isActive ? "w-full" : "w-0 group-hover:w-full"
+        className={`absolute -bottom-1 left-0 h-0.5 bg-[#D4AF37] transition-all duration-300 ${isActive ? "w-full" : "w-0 group-hover:w-full"
           }`}
       />
     </Link>

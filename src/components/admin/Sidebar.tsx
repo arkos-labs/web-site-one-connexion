@@ -194,7 +194,7 @@ export const Sidebar = ({ type, onClose }: SidebarProps) => {
                                 : "Administrateur"}
                         </p>
                         <p className="text-xs text-sidebar-foreground/70 truncate">
-                            {type === "client" ? (profile?.email || "client@test.fr") : "admin@test.fr"}
+                            {type === "client" ? (profile?.email) : "admin@test.fr"}
                         </p>
                     </div>
                 </div>

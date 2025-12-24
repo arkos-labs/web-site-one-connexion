@@ -122,11 +122,11 @@ const Header = () => {
 
     return (
         <>
-            <header className="fixed top-0 left-0 right-0 z-50 py-0.5 shadow-md bg-gradient-to-r from-primary via-primary to-primary/95 transition-all duration-300">
+            <header className="fixed top-0 left-0 right-0 z-50 py-0 shadow-sm bg-white/95 backdrop-blur-sm border-b border-gray-100 transition-all duration-300">
                 <div className="container mx-auto px-4 md:px-6">
                     <div className="flex items-center justify-between">
                         {/* Logo */}
-                        <Logo variant="light" size="sm" />
+                        <Logo variant="default" size="sm" />
 
                         {/* Desktop Navigation (Visible uniquement sur Grand Écran LG) */}
                         <nav className="hidden lg:flex items-center gap-6">
@@ -146,7 +146,7 @@ const Header = () => {
                                 <div className="relative" ref={userMenuRef}>
                                     <button
                                         onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                                        className="flex items-center gap-2 px-2 py-1.5 rounded-full transition-all duration-300 bg-white/10 hover:bg-white/20 text-white backdrop-blur-sm border border-white/10"
+                                        className="flex items-center gap-2 px-2 py-1.5 rounded-full transition-all duration-300 bg-gray-100 hover:bg-gray-200 text-gray-800 border border-gray-200"
                                     >
                                         <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs ${userRole === 'admin' ? "bg-red-500" : "bg-cta"} text-white shadow-sm`}>
                                             {getInitials(userName)}
@@ -198,7 +198,7 @@ const Header = () => {
                             ) : (
                                 <div className="flex items-center gap-3">
                                     <Link to="/login">
-                                        <Button variant="ghost" size="sm" className="text-white hover:text-white/80 hover:bg-white/10 font-medium h-8 px-3 text-xs">
+                                        <Button variant="ghost" size="sm" className="text-gray-600 hover:text-primary hover:bg-gray-100 font-medium h-8 px-3 text-xs">
                                             Connexion
                                         </Button>
                                     </Link>
@@ -212,7 +212,7 @@ const Header = () => {
                         </div>
 
                         {/* Mobile Menu Button (Visible en dessous de LG) */}
-                        <button className="lg:hidden p-2 text-white hover:bg-white/10 rounded-lg transition-colors" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+                        <button className="lg:hidden p-2 text-gray-800 hover:bg-gray-100 rounded-lg transition-colors" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
                             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
                         </button>
                     </div>
@@ -256,7 +256,7 @@ const Header = () => {
                     </div>
                 )}
             </header>
-            <div className="h-[44px]" aria-hidden="true" />
+            <div className="h-[50px]" aria-hidden="true" />
         </>
     );
 };

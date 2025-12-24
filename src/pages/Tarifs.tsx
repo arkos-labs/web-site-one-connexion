@@ -5,68 +5,69 @@ import Footer from "@/components/client/Footer";
 
 const Tarifs = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background font-sans">
       <Header />
 
       {/* Hero Section */}
-      <section className="relative py-24 bg-primary text-primary-foreground overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10"></div>
+      <section className="relative py-24 bg-[#0B1525] text-white overflow-hidden">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-gradient-radial from-blue-900/20 to-transparent opacity-50 pointer-events-none" />
         <div className="container mx-auto px-4 relative z-10 text-center">
-          <h1 className="text-5xl md:text-6xl font-display font-bold mb-6 animate-fade-in-up">
-            Des tarifs <span className="text-cta">clairs</span> et transparents
+          <h1 className="text-4xl md:text-6xl font-serif mb-6 animate-fade-in-up">
+            Des tarifs <span className="text-[#D4AF37] italic">clairs</span> et transparents
           </h1>
-          <p className="text-xl text-white/90 max-w-2xl mx-auto mb-10 animate-fade-in-up delay-100">
-            Choisissez la formule adaptée à vos besoins. Pas de frais cachés, vous savez exactement ce que vous payez avant de commander.
+          <p className="text-xl text-gray-400 max-w-2xl mx-auto mb-10 font-light leading-relaxed animate-fade-in-up delay-100">
+            Choisissez la formule qui correspond à votre urgence. Pas de frais cachés, vous maîtrisez votre budget avant chaque commande.
           </p>
         </div>
       </section>
 
-      <div className="container mx-auto px-4 py-16 -mt-10">
+      <div className="bg-gray-50 min-h-screen">
+        <div className="container mx-auto px-4 py-16 -mt-10 relative z-20">
+          {/* Simulator Section */}
+          <div className="max-w-6xl mx-auto mb-24">
+            <div className="text-center mb-12">
+              <span className="text-[#D4AF37] text-sm font-bold uppercase tracking-widest mb-2 block">Estimation Immédiate</span>
+              <h2 className="text-3xl font-serif text-[#0B1525] mb-4">Simulateur de coût</h2>
+              <p className="text-gray-500 max-w-2xl mx-auto font-light">
+                Notre tarification fonctionne par système de <strong>Bons</strong> pour une transparence totale.
+                <br />
+                <span className="inline-block mt-4 bg-white px-4 py-2 rounded-full text-sm font-medium border border-[#D4AF37]/30 text-[#0B1525] shadow-sm">
+                  1 Bon = 5.50€ HT
+                </span>
+              </p>
+            </div>
 
-
-        {/* Simulator Section */}
-        <div className="max-w-6xl mx-auto mb-24">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-display font-bold text-primary mb-4">Simulateur de coût</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Notre tarification est basée sur un système de <strong>Bons</strong> transparent.
-              <br />
-              <span className="inline-block mt-2 bg-primary/5 text-primary px-3 py-1 rounded-full text-sm font-medium border border-primary/10">
-                1 Bon = 5.50€ HT
-              </span>
-            </p>
+            <PricingSimulator />
           </div>
 
-          <PricingSimulator />
-        </div>
-
-        {/* FAQ Section */}
-        <div className="max-w-3xl mx-auto">
-          <h2 className="text-3xl font-display font-bold text-primary mb-8 text-center">Questions fréquentes sur la facturation</h2>
-          <div className="grid gap-6">
-            {[
-              {
-                q: "Comment sont calculés les kilomètres ?",
-                a: "Nous utilisons l'API Google Maps pour calculer la distance réelle la plus rapide entre le point d'enlèvement et le point de livraison au moment de la commande."
-              },
-              {
-                q: "Puis-je payer sur facture ?",
-                a: "Oui, les comptes professionnels bénéficient de la facturation mensuelle avec un délai de paiement à 30 jours. Pour les particuliers, le paiement se fait à la commande."
-              },
-              {
-                q: "Y a-t-il des frais d'attente ?",
-                a: "Les 10 premières minutes d'attente au point d'enlèvement ou de livraison sont gratuites. Au-delà, nous facturons 0,50€ par minute supplémentaire."
-              },
-              {
-                q: "La TVA est-elle récupérable ?",
-                a: "Absolument. Toutes nos courses sont soumises à la TVA (20%) et vous recevez une facture détaillée pour chaque prestation permettant la récupération de la TVA."
-              }
-            ].map((item, i) => (
-              <Card key={i} className="p-6 border-0 shadow-sm hover:shadow-md transition-shadow">
-                <h3 className="font-bold text-lg text-primary mb-2">{item.q}</h3>
-                <p className="text-muted-foreground">{item.a}</p>
-              </Card>
-            ))}
+          {/* FAQ Section */}
+          <div className="max-w-3xl mx-auto">
+            <h2 className="text-3xl font-serif text-[#0B1525] mb-12 text-center">Questions Fréquentes</h2>
+            <div className="grid gap-6">
+              {[
+                {
+                  q: "Comment sont calculés les kilomètres ?",
+                  a: "Nous utilisons l'API Google Maps pour calculer la distance réelle optimale (temps/trafic) entre l'enlèvement et la livraison au moment précis de votre commande."
+                },
+                {
+                  q: "Puis-je payer sur facture ?",
+                  a: "Oui, tous nos comptes professionnels bénéficient automatiquement de la facturation mensuelle récapitulative (fin de mois) avec un délai de paiement à 30 jours."
+                },
+                {
+                  q: "Y a-t-il des frais d'attente ?",
+                  a: "Les 10 premières minutes d'attente sont offertes. Au-delà, une facturation de 0,50€/min s'applique pour rémunérer le temps du chauffeur immobilisé."
+                },
+                {
+                  q: "La TVA est-elle récupérable ?",
+                  a: "Absolument. Toutes nos prestations sont soumises à la TVA (20%). Vous recevez une facture acquittée détaillée pour vos déclarations."
+                }
+              ].map((item, i) => (
+                <Card key={i} className="p-8 border border-gray-100 bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.1),0_10px_10px_-5px_rgba(0,0,0,0.04)] transition-all duration-300 rounded-xl">
+                  <h3 className="font-serif text-lg text-[#0B1525] mb-3">{item.q}</h3>
+                  <p className="text-gray-500 font-light leading-relaxed text-sm">{item.a}</p>
+                </Card>
+              ))}
+            </div>
           </div>
         </div>
       </div>
