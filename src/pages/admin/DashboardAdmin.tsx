@@ -15,7 +15,7 @@ import {
   CheckCircle,
   Clock,
   XCircle,
-  ArrowUpRight,
+  ArrowRight,
   Plus,
   MessageSquare,
   MapPin,
@@ -44,13 +44,13 @@ const DashboardAdmin = () => {
   const [endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);
 
   const {
-    ordersToday, // Now acts as "Orders in selected period"
+    ordersToday,
     ordersTodayChange,
-    newClientsMonth, // Now acts as "New Clients in selected period"
+    newClientsMonth,
     newClientsMonthChange,
     activeDrivers,
     totalDrivers,
-    revenueToday, // Now acts as "Revenue in selected period"
+    revenueToday,
     revenueTodayChange,
     ordersByStatus,
     teamMembers,
@@ -109,7 +109,7 @@ const DashboardAdmin = () => {
           client_id: data.clientId,
           pickup_address: data.pickupAddress,
           delivery_address: data.deliveryAddress,
-          delivery_type: data.formula, // Using formula as delivery_type based on new logic
+          delivery_type: data.formula,
           status: 'pending_acceptance',
           price: data.pricingResult?.totalEuros || 0,
           pickup_time: data.pickupDate ? new Date(`${data.pickupDate}T${data.pickupTime || '00:00'}`).toISOString() : null,
@@ -128,23 +128,23 @@ const DashboardAdmin = () => {
 
   const mainMetrics = [
     {
-      title: `Commandes ${periodLabel}`,
+      title: `Commandes (${periodLabel})`,
       value: loading ? "-" : ordersToday.toString(),
       change: loading ? "-" : `${ordersTodayChange > 0 ? '+' : ''}${ordersTodayChange}%`,
       delta: comparisonLabel,
       icon: Package,
-      color: "text-accent-main",
-      bgColor: "bg-accent-light",
+      color: "text-[#D4AF37]",
+      bgColor: "bg-[#D4AF37]/10",
       path: "/dashboard-admin/commandes",
     },
     {
-      title: `Nouveaux clients ${periodLabel}`,
+      title: `Clients (${periodLabel})`,
       value: loading ? "-" : newClientsMonth.toString(),
       change: loading ? "-" : `${newClientsMonthChange > 0 ? '+' : ''}${newClientsMonthChange}%`,
       delta: comparisonLabel,
       icon: Users,
-      color: "text-success",
-      bgColor: "bg-success-light",
+      color: "text-blue-600",
+      bgColor: "bg-blue-50",
       path: "/dashboard-admin/clients",
     },
     {
@@ -153,18 +153,18 @@ const DashboardAdmin = () => {
       change: loading ? "-" : `${totalDrivers > 0 ? Math.round((activeDrivers / totalDrivers) * 100) : 0}%`,
       delta: "temps réel",
       icon: Truck,
-      color: "text-warning",
-      bgColor: "bg-warning-light",
+      color: "text-indigo-600",
+      bgColor: "bg-indigo-50",
       path: "/dashboard-admin/chauffeurs",
     },
     {
-      title: `Revenus ${periodLabel}`,
+      title: `Revenus (${periodLabel})`,
       value: loading ? "-" : `${revenueToday.toLocaleString('fr-FR')}€`,
       change: loading ? "-" : `${revenueTodayChange > 0 ? '+' : ''}${revenueTodayChange}%`,
       delta: comparisonLabel,
       icon: TrendingUp,
-      color: "text-primary",
-      bgColor: "bg-primary/10",
+      color: "text-emerald-600",
+      bgColor: "bg-emerald-50",
       path: "/dashboard-admin/statistiques",
     },
   ];
@@ -174,24 +174,24 @@ const DashboardAdmin = () => {
       title: "Carte en direct",
       description: "Voir les chauffeurs",
       icon: MapPin,
-      color: "text-accent-main",
-      bgColor: "bg-accent-light",
+      color: "text-blue-600",
+      bgColor: "bg-blue-50",
       path: "/dashboard-admin/carte-live",
     },
     {
       title: "Statistiques",
       description: "Rapports détaillés",
       icon: BarChart3,
-      color: "text-primary",
-      bgColor: "bg-primary/10",
+      color: "text-purple-600",
+      bgColor: "bg-purple-50",
       path: "/dashboard-admin/statistiques",
     },
     {
       title: "Messagerie",
       description: "Support client",
       icon: MessageSquare,
-      color: "text-cta",
-      bgColor: "bg-cta/10",
+      color: "text-[#D4AF37]",
+      bgColor: "bg-[#D4AF37]/10",
       path: "/dashboard-admin/messagerie",
     },
   ];
@@ -225,30 +225,30 @@ const DashboardAdmin = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="flex justify-center items-center h-screen bg-gray-50">
+        <Loader2 className="h-10 w-10 animate-spin text-[#D4AF37]" />
       </div>
     );
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 pb-12 font-sans">
       {/* Header */}
-      <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4">
+      <div className="flex flex-col xl:flex-row xl:items-end xl:justify-between gap-6 border-b border-gray-200 pb-6">
         <div>
-          <h1 className="text-2xl font-semibold text-primary mb-2">
-            Tableau de bord Admin
+          <h1 className="text-4xl font-serif font-bold text-[#0B1525] mb-2 tracking-tight">
+            Administration
           </h1>
-          <p className="text-muted-foreground">
-            Vue d'ensemble des opérations - Temps réel
+          <p className="text-gray-500">
+            Vue d'ensemble des opérations et performances
           </p>
         </div>
 
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+        <div className="flex flex-col sm:flex-row items-center gap-3">
           {/* Filters */}
-          <div className="flex items-center gap-2 bg-white p-1 rounded-lg border shadow-sm">
+          <div className="flex items-center gap-2 bg-white p-1 rounded-xl border border-gray-200 shadow-sm">
             <Select value={filterPeriod} onValueChange={(v: any) => setFilterPeriod(v)}>
-              <SelectTrigger className="w-[140px] border-0 focus:ring-0 h-9">
+              <SelectTrigger className="w-[140px] border-0 focus:ring-0 h-9 font-medium text-gray-700">
                 <SelectValue placeholder="Période" />
               </SelectTrigger>
               <SelectContent>
@@ -262,26 +262,29 @@ const DashboardAdmin = () => {
             </Select>
 
             {filterPeriod === 'custom' && (
-              <div className="flex items-center gap-2 px-2 border-l">
+              <div className="flex items-center gap-2 px-2 border-l border-gray-100">
                 <Input
                   type="date"
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
-                  className="h-8 w-32 text-xs"
+                  className="h-8 w-32 text-xs border-0 focus-visible:ring-0"
                 />
-                <span className="text-muted-foreground text-xs">-</span>
+                <span className="text-gray-400 text-xs">-</span>
                 <Input
                   type="date"
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
-                  className="h-8 w-32 text-xs"
+                  className="h-8 w-32 text-xs border-0 focus-visible:ring-0"
                 />
               </div>
             )}
           </div>
 
-          <Button variant="cta" size="lg" className="gap-2 h-11" onClick={handleOpenModal}>
-            <Plus className="h-5 w-5" />
+          <Button
+            className="bg-[#D4AF37] hover:bg-[#b5952f] text-white font-medium px-4 h-11 shadow-md hover:shadow-lg transition-all rounded-xl"
+            onClick={handleOpenModal}
+          >
+            <Plus className="h-5 w-5 mr-2" />
             Créer une commande
           </Button>
         </div>
@@ -292,259 +295,210 @@ const DashboardAdmin = () => {
         {mainMetrics.map((metric, index) => (
           <Card
             key={index}
-            className="p-6 shadow-soft border-0 hover:shadow-medium transition-all duration-300 animate-fade-in-up cursor-pointer"
-            style={{ animationDelay: `${index * 50}ms` }}
+            className="p-6 border-0 shadow-sm hover:shadow-md transition-all duration-300 bg-white group cursor-pointer"
             onClick={() => navigate(metric.path)}
           >
-            <div className="flex items-start justify-between mb-4">
-              <div className={`w-12 h-12 rounded-lg ${metric.bgColor} flex items-center justify-center`}>
+            <div className="flex justify-between items-start mb-4">
+              <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${metric.bgColor} group-hover:scale-110 transition-transform duration-300`}>
                 <metric.icon className={`h-6 w-6 ${metric.color}`} />
               </div>
+              {metric.change && (
+                <div className={`flex items-center text-xs font-medium px-2 py-1 rounded-full ${metric.change.includes('+') ? 'bg-green-100 text-green-700' : metric.change.includes('-') ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-600'}`}>
+                  {metric.change.includes('+') ? <TrendingUp className="w-3 h-3 mr-1" /> : null}
+                  {metric.change}
+                </div>
+              )}
             </div>
             <div>
-              <p className="text-sm text-muted-foreground mb-1">{metric.title}</p>
-              <p className="text-2xl font-semibold text-primary mb-2">
-                {metric.value}
-              </p>
-              <div className="flex items-center gap-2 text-xs font-medium">
-                <Badge
-                  variant="outline"
-                  className={`${metric.change.startsWith("+")
-                    ? "text-success border-success"
-                    : metric.change.startsWith("-")
-                      ? "text-destructive border-destructive"
-                      : "text-primary border-primary"
-                    }`}
-                >
-                  {metric.change}
-                </Badge>
-                <span className="text-muted-foreground">{metric.delta}</span>
-              </div>
+              <h3 className="text-gray-500 text-sm font-medium mb-1">{metric.title}</h3>
+              <p className="text-3xl font-bold text-[#0B1525]">{metric.value}</p>
+              <p className="text-xs text-gray-400 mt-1">{metric.delta}</p>
             </div>
           </Card>
         ))}
       </div>
 
-      {/* Quick Actions */}
-      <div className="grid md:grid-cols-3 gap-6">
-        {quickActions.map((action, index) => (
-          <Card
-            key={index}
-            className="p-6 shadow-soft border-0 hover:shadow-strong cursor-pointer transition-all duration-300 group"
-            onClick={() => navigate(action.path)}
-          >
-            <div className="flex items-start gap-4">
-              <div className={`w-12 h-12 rounded-lg ${action.bgColor} flex items-center justify-center flex-shrink-0`}>
-                <action.icon className={`h-6 w-6 ${action.color}`} />
-              </div>
-              <div className="flex-1">
-                <h3 className="font-semibold text-primary mb-1 group-hover:text-accent-main transition-colors">
-                  {action.title}
-                </h3>
-                <p className="text-sm text-muted-foreground">{action.description}</p>
-              </div>
-              <ArrowUpRight className="h-5 w-5 text-muted-foreground group-hover:text-accent-main group-hover:translate-x-1 group-hover:-translate-y-1 transition-all" />
-            </div>
-          </Card>
-        ))}
-      </div>
-
-      {/* Operational Flow */}
-      <Card className="p-6 shadow-soft border-0">
-        <h2 className="text-lg font-semibold text-primary mb-6">
-          Flux opérationnel
-        </h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {operationalFlow.map((item, index) => (
-            <div
-              key={index}
-              className={`p-4 rounded-lg border-2 transition-all hover:shadow-medium cursor-pointer ${item.status === "warning"
-                ? "border-warning bg-warning-light"
-                : item.status === "info"
-                  ? "border-info bg-info-light"
-                  : item.status === "success"
-                    ? "border-success bg-success-light"
-                    : "border-destructive bg-destructive/10"
-                }`}
-            >
-              <div className="flex items-center justify-between mb-2">
-                <item.icon
-                  className={`h-5 w-5 ${item.status === "warning"
-                    ? "text-warning"
+      <div className="grid lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2 space-y-8">
+          {/* Operational Flow */}
+          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+            <h2 className="text-lg font-serif font-bold text-[#0B1525] mb-6">Flux opérationnel</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {operationalFlow.map((item, index) => (
+                <div
+                  key={index}
+                  className={`p-4 rounded-xl border transition-all hover:shadow-md cursor-pointer group flex flex-col items-center text-center ${item.status === "warning"
+                    ? "border-yellow-100 bg-yellow-50/50 hover:bg-yellow-50"
                     : item.status === "info"
-                      ? "text-info"
+                      ? "border-blue-100 bg-blue-50/50 hover:bg-blue-50"
                       : item.status === "success"
-                        ? "text-success"
-                        : "text-destructive"
+                        ? "border-green-100 bg-green-50/50 hover:bg-green-50"
+                        : "border-red-100 bg-red-50/50 hover:bg-red-50"
                     }`}
-                />
-                <span className="text-2xl font-display font-bold text-primary">
-                  {item.count}
-                </span>
-              </div>
-              <p className="text-sm font-semibold text-primary">{item.label}</p>
+                >
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-3 ${item.status === "warning" ? "bg-yellow-100 text-yellow-600" :
+                      item.status === "info" ? "bg-blue-100 text-blue-600" :
+                        item.status === "success" ? "bg-green-100 text-green-600" :
+                          "bg-red-100 text-red-600"
+                    }`}>
+                    <item.icon className="h-5 w-5" />
+                  </div>
+                  <span className="text-3xl font-bold text-[#0B1525] mb-1">
+                    {item.count}
+                  </span>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">{item.label}</p>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-      </Card>
-
-      {/* 2 Column Layout */}
-      <div className="grid lg:grid-cols-2 gap-6">
-        {/* Team Status */}
-        <Card className="p-6 shadow-soft border-0">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-semibold text-primary">
-              État de l'équipe
-            </h2>
-            <Button variant="outline" size="sm" onClick={() => navigate('/dashboard-admin/chauffeurs')}>
-              Voir tout
-            </Button>
           </div>
-          <div className="space-y-3">
-            {teamMembers.length === 0 ? (
-              <div className="text-center py-8 text-muted-foreground">
-                <Truck className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                <p>Aucun chauffeur actif</p>
-              </div>
-            ) : (
-              teamMembers.map((member, index) => (
-                <div
-                  key={index}
-                  className="flex items-center justify-between p-4 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-gradient-hero flex items-center justify-center">
-                      <span className="text-white font-semibold text-sm">
+
+          {/* Team Status */}
+          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-lg font-serif font-bold text-[#0B1525]">
+                État de l'équipe
+              </h2>
+              <Button variant="ghost" size="sm" className="text-[#D4AF37] hover:bg-[#D4AF37]/10" onClick={() => navigate('/dashboard-admin/chauffeurs')}>
+                Voir tout <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
+            <div className="space-y-3">
+              {teamMembers.length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  <Truck className="h-12 w-12 mx-auto mb-3 opacity-50" />
+                  <p>Aucun chauffeur actif</p>
+                </div>
+              ) : (
+                teamMembers.map((member, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center justify-between p-4 rounded-xl border border-gray-100 hover:border-[#D4AF37]/20 transition-all group bg-gray-50/50 hover:bg-white hover:shadow-sm"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="w-10 h-10 rounded-full bg-[#0B1525] flex items-center justify-center text-white font-serif font-bold text-sm">
                         {member.name.split(" ").map((n) => n[0]).join("")}
-                      </span>
+                      </div>
+                      <div>
+                        <p className="font-semibold text-[#0B1525] group-hover:text-[#D4AF37] transition-colors">{member.name}</p>
+                        <p className="text-xs text-gray-500 uppercase tracking-wider">{member.status}</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="font-semibold text-primary">{member.name}</p>
-                      <p className="text-sm text-muted-foreground">{member.status}</p>
+                    <div className="flex items-center gap-3">
+                      <Badge
+                        variant="outline"
+                        className={`border-0 ${member.available
+                            ? "bg-green-100 text-green-700"
+                            : "bg-yellow-100 text-yellow-700"
+                          }`}
+                      >
+                        {member.deliveries} livraison{member.deliveries > 1 ? 's' : ''}
+                      </Badge>
+                      <div
+                        className={`w-2.5 h-2.5 rounded-full ring-2 ring-white ${member.available ? "bg-green-500" : "bg-yellow-500"
+                          }`}
+                      />
                     </div>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <Badge
-                      variant="outline"
-                      className={
-                        member.available
-                          ? "text-success border-success"
-                          : "text-warning border-warning"
-                      }
-                    >
-                      {member.deliveries} livraison{member.deliveries > 1 ? 's' : ''}
-                    </Badge>
-                    <div
-                      className={`w-3 h-3 rounded-full ${member.available ? "bg-success" : "bg-warning"
-                        }`}
-                    />
-                  </div>
-                </div>
-              ))
-            )}
+                ))
+              )}
+            </div>
           </div>
-        </Card>
+        </div>
 
-        {/* System Alerts */}
-        <Card className="p-6 shadow-soft border-0">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-semibold text-primary">
-              Alertes système
-            </h2>
-            {alerts.length > 0 && (
-              <Badge variant="outline" className="text-warning border-warning">
-                {alerts.length} alerte{alerts.length > 1 ? 's' : ''}
-              </Badge>
-            )}
-          </div>
-          <div className="space-y-3">
-            {alerts.length === 0 ? (
-              <div className="text-center py-8 text-muted-foreground">
-                <CheckCircle className="h-12 w-12 mx-auto mb-3 opacity-50 text-success" />
-                <p>Aucune alerte - Tout va bien !</p>
-              </div>
-            ) : (
-              alerts.map((alert, index) => (
+        <div className="space-y-8">
+          {/* Quick Actions */}
+          <div className="space-y-4">
+            <h2 className="text-lg font-serif font-bold text-[#0B1525]">Accès rapide</h2>
+            <div className="grid gap-4">
+              {quickActions.map((action, index) => (
                 <div
                   key={index}
-                  className={`p-4 rounded-lg border-l-4 ${alert.type === "warning"
-                    ? "border-warning bg-warning-light"
-                    : alert.type === "info"
-                      ? "border-info bg-info-light"
-                      : "border-success bg-success-light"
-                    }`}
+                  className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:border-[#D4AF37]/30 transition-all cursor-pointer group flex items-center gap-4"
+                  onClick={() => navigate(action.path)}
                 >
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex-1">
-                      <p className="font-semibold text-primary mb-1">{alert.title}</p>
-                      <p className="text-sm text-muted-foreground mb-2">
-                        {alert.message}
-                      </p>
-                      <p className="text-xs text-muted-foreground">{alert.time}</p>
-                    </div>
-                    <AlertTriangle
-                      className={`h-5 w-5 flex-shrink-0 ${alert.type === "warning"
-                        ? "text-warning"
-                        : alert.type === "info"
-                          ? "text-info"
-                          : "text-success"
-                        }`}
-                    />
+                  <div className={`w-10 h-10 rounded-lg ${action.bgColor} flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform`}>
+                    <action.icon className={`h-5 w-5 ${action.color}`} />
                   </div>
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-gray-900 text-sm group-hover:text-[#D4AF37] transition-colors">
+                      {action.title}
+                    </h3>
+                    <p className="text-xs text-gray-500">{action.description}</p>
+                  </div>
+                  <ArrowRight className="h-4 w-4 text-gray-300 group-hover:text-[#D4AF37] group-hover:translate-x-1 transition-all" />
                 </div>
-              ))
-            )}
+              ))}
+            </div>
           </div>
-        </Card>
+
+          {/* System Alerts */}
+          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-lg font-serif font-bold text-[#0B1525]">
+                Alertes système
+              </h2>
+              {alerts.length > 0 && (
+                <Badge className="bg-red-100 text-red-600 hover:bg-red-200 border-0">
+                  {alerts.length}
+                </Badge>
+              )}
+            </div>
+            <div className="space-y-3">
+              {alerts.length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  <CheckCircle className="h-10 w-10 mx-auto mb-3 opacity-50 text-green-500" />
+                  <p className="text-sm">Aucune alerte - Tout est stable</p>
+                </div>
+              ) : (
+                alerts.map((alert, index) => (
+                  <div
+                    key={index}
+                    className={`p-4 rounded-xl border border-l-4 ${alert.type === "warning"
+                      ? "border-l-yellow-400 border-gray-100 bg-yellow-50/30"
+                      : alert.type === "info"
+                        ? "border-l-blue-400 border-gray-100 bg-blue-50/30"
+                        : "border-l-green-400 border-gray-100 bg-green-50/30"
+                      }`}
+                  >
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex-1">
+                        <p className="font-semibold text-[#0B1525] text-sm mb-1">{alert.title}</p>
+                        <p className="text-xs text-gray-500 mb-2">
+                          {alert.message}
+                        </p>
+                        <p className="text-[10px] text-gray-400 uppercase tracking-wide">{alert.time}</p>
+                      </div>
+                      <AlertTriangle
+                        className={`h-4 w-4 flex-shrink-0 ${alert.type === "warning"
+                          ? "text-yellow-500"
+                          : alert.type === "info"
+                            ? "text-blue-500"
+                            : "text-green-500"
+                          }`}
+                      />
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+
+          {/* Activity Timeline */}
+          <Card className="p-6 shadow-sm border-0">
+            <h2 className="text-lg font-serif font-bold text-[#0B1525] mb-6">
+              Activité récente
+            </h2>
+            <AdminActivityTimeline limit={5} />
+          </Card>
+        </div>
       </div>
 
-      {/* Activity Timeline */}
-      <Card className="p-6 shadow-soft border-0">
-        <h2 className="text-lg font-semibold text-primary mb-6">
-          Activité récente
-        </h2>
-        <AdminActivityTimeline limit={5} />
-      </Card>
-
-      {/* Key Points */}
-      <Card className="p-6 shadow-soft border-0">
-        <h2 className="text-lg font-semibold text-primary mb-6">
-          Points d'attention
-        </h2>
-        <div className="grid md:grid-cols-3 gap-4">
-          {keyPoints.map((point, index) => (
-            <div
-              key={index}
-              className="p-4 rounded-lg border border-border hover:shadow-medium transition-all cursor-pointer group"
-            >
-              <div className="flex items-start justify-between mb-3">
-                <Badge
-                  variant="outline"
-                  className={`${point.color} border-current`}
-                >
-                  {point.impact}
-                </Badge>
-                <ArrowUpRight className="h-4 w-4 text-muted-foreground group-hover:text-accent-main group-hover:translate-x-1 group-hover:-translate-y-1 transition-all" />
-              </div>
-              <h3 className="font-semibold text-primary mb-2">{point.title}</h3>
-              <p className="text-sm text-muted-foreground">
-                <Clock className="h-3 w-3 inline mr-1" />
-                {point.time}
-              </p>
-            </div>
-          ))}
-        </div>
-      </Card>
-
-      {/* Admin Order Creation Modal */}
       <OrderWizardModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         onSubmit={handleOrderSubmit}
         mode="admin"
       />
-
-
     </div>
   );
 };

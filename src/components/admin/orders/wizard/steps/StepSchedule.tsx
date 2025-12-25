@@ -31,7 +31,7 @@ export const StepSchedule = ({ formData, updateFormData, onNext, onBack }: StepS
     return (
         <div className="space-y-8">
             <div className="space-y-2">
-                <h2 className="text-2xl font-bold text-gray-900">Horaires</h2>
+                <h2 className="text-2xl font-bold text-[#0B1525] font-serif">Horaires</h2>
                 <p className="text-gray-500">Quand devons-nous effectuer l'enlèvement ?</p>
             </div>
 
@@ -41,52 +41,60 @@ export const StepSchedule = ({ formData, updateFormData, onNext, onBack }: StepS
                         type="button"
                         onClick={() => handleScheduleTypeChange('immediate')}
                         className={`p-4 rounded-xl border-2 text-left transition-all ${formData.scheduleType === 'immediate'
-                            ? 'border-[#FFCC00] bg-[#FFCC00]/10 ring-1 ring-[#FFCC00]'
-                            : 'border-gray-100 hover:border-gray-200 hover:bg-gray-50'
+                            ? 'border-[#D4AF37] bg-[#0B1525] ring-1 ring-[#D4AF37] shadow-lg'
+                            : 'border-gray-100 hover:border-[#D4AF37]/50 hover:bg-gray-50'
                             }`}
                     >
-                        <Zap className={`h-6 w-6 mb-3 ${formData.scheduleType === 'immediate' ? 'text-[#0B2D55]' : 'text-gray-400'
+                        <Zap className={`h-6 w-6 mb-3 ${formData.scheduleType === 'immediate' ? 'text-[#D4AF37]' : 'text-gray-400'
                             }`} />
-                        <div className="font-semibold text-gray-900">Dès que possible</div>
-                        <div className="text-xs text-gray-500 mt-1">Coursier assigné immédiatement</div>
+                        <div className={`font-semibold ${formData.scheduleType === 'immediate' ? 'text-white' : 'text-[#0B1525]'}`}>
+                            Dès que possible
+                        </div>
+                        <div className={`text-xs mt-1 ${formData.scheduleType === 'immediate' ? 'text-gray-300' : 'text-gray-500'}`}>
+                            Coursier assigné immédiatement
+                        </div>
                     </button>
-
-
 
                     <button
                         type="button"
                         onClick={() => handleScheduleTypeChange('deferred')}
                         className={`p-4 rounded-xl border-2 text-left transition-all ${formData.scheduleType === 'deferred'
-                            ? 'border-[#FFCC00] bg-[#FFCC00]/10 ring-1 ring-[#FFCC00]'
-                            : 'border-gray-100 hover:border-gray-200 hover:bg-gray-50'
+                            ? 'border-[#D4AF37] bg-[#0B1525] ring-1 ring-[#D4AF37] shadow-lg'
+                            : 'border-gray-100 hover:border-[#D4AF37]/50 hover:bg-gray-50'
                             }`}
                     >
-                        <Calendar className={`h-6 w-6 mb-3 ${formData.scheduleType === 'deferred' ? 'text-[#0B2D55]' : 'text-gray-400'
+                        <Calendar className={`h-6 w-6 mb-3 ${formData.scheduleType === 'deferred' ? 'text-[#D4AF37]' : 'text-gray-400'
                             }`} />
-                        <div className="font-semibold text-gray-900">Choisir un créneau</div>
-                        <div className="text-xs text-gray-500 mt-1">Date et heure spécifiques</div>
+                        <div className={`font-semibold ${formData.scheduleType === 'deferred' ? 'text-white' : 'text-[#0B1525]'}`}>
+                            Choisir un créneau
+                        </div>
+                        <div className={`text-xs mt-1 ${formData.scheduleType === 'deferred' ? 'text-gray-300' : 'text-gray-500'}`}>
+                            Date et heure spécifiques
+                        </div>
                     </button>
                 </div>
 
                 {formData.scheduleType === 'deferred' && (
                     <div className="grid grid-cols-2 gap-4 p-6 bg-gray-50 rounded-xl border border-gray-100 animate-in fade-in slide-in-from-top-2">
                         <div>
-                            <Label htmlFor="pickupDate" className="mb-2 block">Date</Label>
+                            <Label htmlFor="pickupDate" className="mb-2 block text-gray-700">Date</Label>
                             <Input
                                 id="pickupDate"
                                 type="date"
                                 value={formData.pickupDate}
                                 onChange={(e) => updateFormData({ pickupDate: e.target.value })}
                                 min={new Date().toISOString().split('T')[0]}
+                                className="focus-visible:ring-[#0B1525]"
                             />
                         </div>
                         <div>
-                            <Label htmlFor="pickupTime" className="mb-2 block">Heure</Label>
+                            <Label htmlFor="pickupTime" className="mb-2 block text-gray-700">Heure</Label>
                             <Input
                                 id="pickupTime"
                                 type="time"
                                 value={formData.pickupTime}
                                 onChange={(e) => updateFormData({ pickupTime: e.target.value })}
+                                className="focus-visible:ring-[#0B1525]"
                             />
                         </div>
                     </div>
@@ -94,14 +102,14 @@ export const StepSchedule = ({ formData, updateFormData, onNext, onBack }: StepS
             </div>
 
             <div className="pt-6 flex justify-between">
-                <Button variant="outline" onClick={onBack}>
+                <Button variant="outline" onClick={onBack} className="hover:bg-gray-50 text-gray-600">
                     <ArrowLeft className="mr-2 h-4 w-4" />
                     Retour
                 </Button>
                 <Button
                     onClick={onNext}
                     disabled={!isValid}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-8"
+                    className="bg-[#D4AF37] hover:bg-[#b5952f] text-white px-8 shadow-md hover:shadow-lg transition-all"
                 >
                     Suivant
                     <ArrowRight className="ml-2 h-4 w-4" />

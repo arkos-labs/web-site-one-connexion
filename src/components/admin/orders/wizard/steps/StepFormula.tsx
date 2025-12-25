@@ -89,7 +89,7 @@ export const StepFormula = ({
     return (
         <div className="flex flex-col h-full">
             <div className="mb-6">
-                <h2 className="text-xl font-bold text-gray-900">Formule</h2>
+                <h2 className="text-xl font-bold text-[#0B1525] font-serif">Formule</h2>
                 <p className="text-sm text-gray-500">Choisissez la rapidité</p>
             </div>
 
@@ -119,8 +119,8 @@ export const StepFormula = ({
                                     ${isDisabled
                                         ? "opacity-40 cursor-not-allowed bg-gray-100 border-gray-200 grayscale"
                                         : isSelected
-                                            ? "border-blue-600 bg-blue-50/50 shadow-md ring-1 ring-blue-600 cursor-pointer"
-                                            : "border-gray-100 hover:border-blue-200 hover:bg-gray-50 cursor-pointer"
+                                            ? "border-[#D4AF37] bg-[#0B1525] shadow-lg ring-1 ring-[#D4AF37] cursor-pointer"
+                                            : "border-gray-100 hover:border-[#D4AF37]/50 hover:bg-gray-50 cursor-pointer"
                                     }
                                 `}
                             >
@@ -134,8 +134,8 @@ export const StepFormula = ({
                                     ${isDisabled
                                         ? "bg-gray-200 text-gray-400"
                                         : isSelected
-                                            ? "bg-blue-100 text-blue-600"
-                                            : "bg-gray-100 text-gray-500 group-hover:bg-white"
+                                            ? "bg-[#D4AF37] text-[#0B1525]"
+                                            : "bg-[#0B1525]/5 text-[#0B1525] group-hover:bg-[#D4AF37]/20 group-hover:text-[#0B1525]"
                                     }
                                 `}>
                                     <f.icon className="h-5 w-5" />
@@ -145,20 +145,20 @@ export const StepFormula = ({
                                     <h3 className={`font-bold text-sm ${isDisabled
                                         ? "text-gray-500"
                                         : isSelected
-                                            ? "text-blue-900"
-                                            : "text-gray-900"
+                                            ? "text-white"
+                                            : "text-[#0B1525]"
                                         }`}>
                                         {f.label}
                                     </h3>
-                                    <p className="text-xs text-gray-500">{f.desc}</p>
+                                    <p className={`text-xs ${isSelected ? "text-gray-300" : "text-gray-500"}`}>{f.desc}</p>
                                 </div>
 
                                 <div className="mt-1">
                                     {isCalculating ? (
-                                        <Loader2 className="h-4 w-4 animate-spin text-blue-600" />
+                                        <Loader2 className={`h-4 w-4 animate-spin ${isSelected ? "text-[#D4AF37]" : "text-[#0B1525]"}`} />
                                     ) : price && !isDisabled ? (
                                         <div>
-                                            <p className={`text-lg font-bold ${isSelected ? "text-blue-900" : "text-gray-900"}`}>
+                                            <p className={`text-lg font-bold ${isSelected ? "text-[#D4AF37]" : "text-[#0B1525]"}`}>
                                                 {price.totalEuros.toFixed(2)}€
                                             </p>
                                         </div>
@@ -182,14 +182,14 @@ export const StepFormula = ({
             </div>
 
             <div className="pt-6 mt-auto flex justify-between border-t border-gray-100">
-                <Button variant="outline" onClick={onBack} size="sm">
+                <Button variant="outline" onClick={onBack} size="sm" className="hover:bg-gray-50 text-gray-600">
                     <ArrowLeft className="mr-2 h-4 w-4" />
                     Retour
                 </Button>
                 <Button
                     onClick={onNext}
                     disabled={!formData.formula || isCalculating}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 min-w-[120px]"
+                    className="bg-[#D4AF37] hover:bg-[#b5952f] text-white px-6 min-w-[120px] shadow-md hover:shadow-lg transition-all"
                 >
                     {isCalculating ? (
                         <>

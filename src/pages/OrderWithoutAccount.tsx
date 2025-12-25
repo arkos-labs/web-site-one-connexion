@@ -206,8 +206,8 @@ const OrderWithoutAccount = () => {
 
         {/* EN-TÊTE (Header) */}
         <div className="border-b border-gray-100 p-6 bg-white">
-          <h1 className="text-2xl font-bold text-gray-900">Commande Express</h1>
-          <p className="text-sm text-muted-foreground mt-1">Commandez sans créer de compte en 2 minutes</p>
+          <h1 className="text-2xl font-bold text-slate-900 font-serif">Commande Express</h1>
+          <p className="text-sm text-slate-500 mt-1">Commandez sans créer de compte en 2 minutes</p>
         </div>
 
         {/* Progress Steps */}
@@ -221,17 +221,17 @@ const OrderWithoutAccount = () => {
               <div key={s.num} className="flex items-center gap-2">
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center font-semibold text-xs transition-colors ${step >= s.num
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-gray-200 text-gray-500"
+                    ? "bg-[#D4AF37] text-white"
+                    : "bg-gray-100 text-gray-400"
                     }`}
                 >
                   <s.icon className="h-4 w-4" />
                 </div>
-                <span className={`text-sm ${step >= s.num ? "font-medium text-gray-900" : "text-gray-500"}`}>
+                <span className={`text-sm ${step >= s.num ? "font-bold text-slate-900" : "text-gray-500"}`}>
                   {s.label}
                 </span>
                 {s.num < 3 && (
-                  <div className={`w-8 h-0.5 ${step > s.num ? "bg-primary" : "bg-gray-200"}`} />
+                  <div className={`w-8 h-0.5 ${step > s.num ? "bg-[#D4AF37]" : "bg-gray-200"}`} />
                 )}
               </div>
             ))}
@@ -245,8 +245,8 @@ const OrderWithoutAccount = () => {
             {/* Step 1: Sender Info */}
             {step === 1 && (
               <div className="space-y-6 animate-fade-in">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <User className="h-5 w-5 text-primary" />
+                <h2 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2 font-serif">
+                  <User className="h-5 w-5 text-[#D4AF37]" />
                   Informations expéditeur
                 </h2>
                 <div className="grid md:grid-cols-2 gap-4">
@@ -322,8 +322,8 @@ const OrderWithoutAccount = () => {
             {/* Step 2: Recipient Info */}
             {step === 2 && (
               <div className="space-y-6 animate-fade-in">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <MapPin className="h-5 w-5 text-primary" />
+                <h2 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2 font-serif">
+                  <MapPin className="h-5 w-5 text-[#D4AF37]" />
                   Informations destinataire
                 </h2>
                 <div className="grid md:grid-cols-2 gap-4">
@@ -386,8 +386,8 @@ const OrderWithoutAccount = () => {
             {/* Step 3: Package Info */}
             {step === 3 && (
               <div className="space-y-6 animate-fade-in">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <Package className="h-5 w-5 text-primary" />
+                <h2 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2 font-serif">
+                  <Package className="h-5 w-5 text-[#D4AF37]" />
                   Informations colis
                 </h2>
                 <div>
@@ -428,7 +428,7 @@ const OrderWithoutAccount = () => {
                       Quand souhaitez-vous l'enlèvement ? *
                     </label>
                     <div className="flex flex-col sm:flex-row gap-4">
-                      <label className={`flex-1 cursor-pointer p-3 border rounded-md transition-all flex items-center gap-3 ${orderData.scheduleType === 'immediate' ? 'border-primary bg-primary/5 ring-1 ring-primary' : 'border-gray-200 bg-white hover:border-gray-300'}`}>
+                      <label className={`flex-1 cursor-pointer p-3 border rounded-xl transition-all flex items-center gap-3 ${orderData.scheduleType === 'immediate' ? 'border-[#D4AF37] bg-[#D4AF37]/5 ring-1 ring-[#D4AF37]' : 'border-gray-200 bg-white hover:border-gray-300'}`}>
                         <input
                           type="radio"
                           name="scheduleType"
@@ -448,7 +448,7 @@ const OrderWithoutAccount = () => {
                         </div>
                       </label>
 
-                      <label className={`flex-1 cursor-pointer p-3 border rounded-md transition-all flex items-center gap-3 ${orderData.scheduleType === 'scheduled' ? 'border-primary bg-primary/5 ring-1 ring-primary' : 'border-gray-200 bg-white hover:border-gray-300'}`}>
+                      <label className={`flex-1 cursor-pointer p-3 border rounded-xl transition-all flex items-center gap-3 ${orderData.scheduleType === 'scheduled' ? 'border-[#D4AF37] bg-[#D4AF37]/5 ring-1 ring-[#D4AF37]' : 'border-gray-200 bg-white hover:border-gray-300'}`}>
                         <input
                           type="radio"
                           name="scheduleType"
@@ -657,14 +657,14 @@ const OrderWithoutAccount = () => {
                 <Button
                   type="button"
                   onClick={() => setStep(step + 1)}
-                  className="bg-primary hover:bg-primary/90 text-white px-8"
+                  className="bg-[#D4AF37] hover:bg-[#b5952f] text-white px-8 shadow-md hover:shadow-lg transition-all"
                 >
                   Suivant
                 </Button>
               ) : (
                 <Button
                   type="submit"
-                  className="bg-green-600 hover:bg-green-700 text-white px-8 font-semibold shadow-lg shadow-green-600/20"
+                  className="bg-[#D4AF37] hover:bg-[#b5952f] text-white px-8 font-semibold shadow-lg hover:shadow-xl transition-all"
                   disabled={!orderData.formula}
                 >
                   Valider et Payer
@@ -673,8 +673,8 @@ const OrderWithoutAccount = () => {
             </div>
           </form>
         </div>
-      </div>
-    </div>
+      </div >
+    </div >
   );
 };
 

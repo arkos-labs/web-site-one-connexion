@@ -50,8 +50,8 @@ export const ActivityTimeline = ({ clientId, limit = 10 }: ActivityTimelineProps
                             description: `Commande ${order.reference} - ${order.delivery_type}`,
                             timestamp: order.created_at,
                             icon: Package,
-                            color: 'text-accent-main',
-                            bgColor: 'bg-accent-light',
+                            color: 'text-[#D4AF37]',
+                            bgColor: 'bg-[#D4AF37]/10',
                         });
 
                         // Événement de livraison
@@ -63,8 +63,8 @@ export const ActivityTimeline = ({ clientId, limit = 10 }: ActivityTimelineProps
                                 description: `Commande ${order.reference} livrée avec succès`,
                                 timestamp: order.delivered_at,
                                 icon: CheckCircle,
-                                color: 'text-success',
-                                bgColor: 'bg-success-light',
+                                color: 'text-green-600',
+                                bgColor: 'bg-green-50',
                             });
                         }
 
@@ -77,8 +77,8 @@ export const ActivityTimeline = ({ clientId, limit = 10 }: ActivityTimelineProps
                                 description: `Commande ${order.reference} - ${order.cancellation_reason || 'Raison non spécifiée'}`,
                                 timestamp: order.cancelled_at,
                                 icon: XCircle,
-                                color: 'text-destructive',
-                                bgColor: 'bg-destructive/10',
+                                color: 'text-red-600',
+                                bgColor: 'bg-red-50',
                             });
                         }
 
@@ -91,8 +91,8 @@ export const ActivityTimeline = ({ clientId, limit = 10 }: ActivityTimelineProps
                                 description: `Commande ${order.reference} prise en charge`,
                                 timestamp: order.dispatched_at,
                                 icon: Truck,
-                                color: 'text-info',
-                                bgColor: 'bg-info/10',
+                                color: 'text-indigo-600',
+                                bgColor: 'bg-indigo-50',
                             });
                         }
                     });
@@ -115,8 +115,8 @@ export const ActivityTimeline = ({ clientId, limit = 10 }: ActivityTimelineProps
                             description: `Facture ${invoice.reference} - ${invoice.amount_ttc}€`,
                             timestamp: invoice.created_at,
                             icon: FileText,
-                            color: 'text-primary',
-                            bgColor: 'bg-primary/10',
+                            color: 'text-emerald-600',
+                            bgColor: 'bg-emerald-50',
                         });
 
                         // Événement de paiement
@@ -128,8 +128,8 @@ export const ActivityTimeline = ({ clientId, limit = 10 }: ActivityTimelineProps
                                 description: `Facture ${invoice.reference} réglée`,
                                 timestamp: invoice.paid_date,
                                 icon: CheckCircle,
-                                color: 'text-success',
-                                bgColor: 'bg-success-light',
+                                color: 'text-emerald-600',
+                                bgColor: 'bg-emerald-100',
                             });
                         }
                     });
@@ -160,8 +160,8 @@ export const ActivityTimeline = ({ clientId, limit = 10 }: ActivityTimelineProps
                                 description: message.content.substring(0, 60) + (message.content.length > 60 ? '...' : ''),
                                 timestamp: message.created_at,
                                 icon: MessageSquare,
-                                color: 'text-cta',
-                                bgColor: 'bg-cta/10',
+                                color: 'text-blue-600',
+                                bgColor: 'bg-blue-50',
                             });
                         });
                     }
@@ -193,10 +193,10 @@ export const ActivityTimeline = ({ clientId, limit = 10 }: ActivityTimelineProps
             <div className="space-y-4">
                 {[1, 2, 3].map((i) => (
                     <div key={i} className="flex gap-4 animate-pulse">
-                        <div className="w-10 h-10 bg-gray-200 rounded-lg" />
+                        <div className="w-10 h-10 bg-gray-100 rounded-xl" />
                         <div className="flex-1 space-y-2">
-                            <div className="h-4 bg-gray-200 rounded w-1/3" />
-                            <div className="h-3 bg-gray-200 rounded w-2/3" />
+                            <div className="h-4 bg-gray-100 rounded w-1/3" />
+                            <div className="h-3 bg-gray-100 rounded w-2/3" />
                         </div>
                     </div>
                 ))}
@@ -206,7 +206,7 @@ export const ActivityTimeline = ({ clientId, limit = 10 }: ActivityTimelineProps
 
     if (activities.length === 0) {
         return (
-            <div className="text-center py-8 text-muted-foreground">
+            <div className="text-center py-8 text-gray-400">
                 <Clock className="h-12 w-12 mx-auto mb-3 opacity-50" />
                 <p>Aucune activité récente</p>
             </div>
@@ -222,7 +222,7 @@ export const ActivityTimeline = ({ clientId, limit = 10 }: ActivityTimelineProps
                     style={{ animationDelay: `${index * 50}ms` }}
                 >
                     {/* Icône */}
-                    <div className={`w-10 h-10 rounded-lg ${activity.bgColor} flex items-center justify-center flex-shrink-0`}>
+                    <div className={`w-10 h-10 rounded-xl ${activity.bgColor} flex items-center justify-center flex-shrink-0`}>
                         <activity.icon className={`h-5 w-5 ${activity.color}`} />
                     </div>
 
@@ -230,14 +230,14 @@ export const ActivityTimeline = ({ clientId, limit = 10 }: ActivityTimelineProps
                     <div className="flex-1 min-w-0">
                         <div className="flex items-start justify-between gap-2">
                             <div className="flex-1 min-w-0">
-                                <p className="font-semibold text-primary text-sm">
+                                <p className="font-semibold text-[#0B1525] text-sm">
                                     {activity.title}
                                 </p>
-                                <p className="text-sm text-muted-foreground truncate">
+                                <p className="text-sm text-gray-500 truncate mt-0.5">
                                     {activity.description}
                                 </p>
                             </div>
-                            <span className="text-xs text-muted-foreground whitespace-nowrap">
+                            <span className="text-xs text-gray-400 whitespace-nowrap">
                                 {formatDistanceToNow(new Date(activity.timestamp), {
                                     addSuffix: true,
                                     locale: fr,

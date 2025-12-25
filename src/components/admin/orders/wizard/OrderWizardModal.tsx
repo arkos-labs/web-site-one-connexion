@@ -529,7 +529,7 @@ export const OrderWizardModal = ({ isOpen, onClose, onSubmit, mode = 'admin' }: 
             disableScroll={true}
         >
             {/* Left Sidebar - Steps */}
-            <div className="w-64 bg-white border-r border-gray-100 overflow-y-auto hide-scrollbar hidden md:block shrink-0">
+            <div className="w-64 bg-white border-r border-gray-100 overflow-hidden hidden md:block shrink-0">
                 <WizardSidebar
                     steps={steps}
                     currentStep={currentStep}

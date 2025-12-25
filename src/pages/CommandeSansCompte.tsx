@@ -48,14 +48,14 @@ function RecapCommande({ data, pricingResults, formData }: {
     }
 
     return (
-        <div className="bg-white p-6 shadow-lg rounded-xl border-2 border-[#0B2D55]/10">
-            <h2 className="text-xl font-bold text-[#0B2D55] mb-4 font-poppins">📋 Récapitulatif</h2>
+        <div className="bg-white p-6 shadow-lg rounded-xl border border-gray-100 sticky top-4">
+            <h2 className="text-xl font-bold text-slate-900 mb-4 font-sans">📋 Récapitulatif</h2>
 
             <div className="space-y-3 text-sm">
                 {/* Expéditeur */}
                 <div className="pb-3 border-b">
                     <p className="text-xs text-gray-500 mb-1">EXPÉDITEUR</p>
-                    <p className="font-semibold text-[#0B2D55]">{data.expediteur_nom || "—"}</p>
+                    <p className="font-semibold text-slate-900">{data.expediteur_nom || "—"}</p>
                     <p className="text-gray-600">{data.expediteur_telephone || "—"}</p>
                     <p className="text-gray-600 text-xs">{data.expediteur_email || "—"}</p>
                 </div>
@@ -63,7 +63,7 @@ function RecapCommande({ data, pricingResults, formData }: {
                 {/* Destinataire */}
                 <div className="pb-3 border-b">
                     <p className="text-xs text-gray-500 mb-1">DESTINATAIRE</p>
-                    <p className="font-semibold text-[#0B2D55]">{data.destinataire_nom || "—"}</p>
+                    <p className="font-semibold text-slate-900">{data.destinataire_nom || "—"}</p>
                     <p className="text-gray-600">{data.destinataire_telephone || "—"}</p>
                 </div>
 
@@ -82,7 +82,7 @@ function RecapCommande({ data, pricingResults, formData }: {
                 {data.facturation_societe && (
                     <div className="pb-3 border-b">
                         <p className="text-xs text-gray-500 mb-1">🏢 FACTURATION</p>
-                        <p className="font-semibold text-[#0B2D55]">{data.facturation_societe}</p>
+                        <p className="font-semibold text-slate-900">{data.facturation_societe}</p>
                         {data.facturation_siret && (
                             <p className="text-xs text-gray-600">SIRET: {data.facturation_siret}</p>
                         )}
@@ -100,15 +100,15 @@ function RecapCommande({ data, pricingResults, formData }: {
                 {/* Formule et Prix */}
                 <div className="pt-2">
                     <p className="text-xs text-gray-500 mb-1">⚡ FORMULE</p>
-                    <p className="font-bold text-[#0B2D55] text-lg">
+                    <p className="font-bold text-slate-900 text-lg">
                         {data.formule ? data.formule.toUpperCase() : "—"}
                     </p>
                 </div>
 
                 {selectedPrice && (
-                    <div className="bg-[#FFCC00]/10 p-4 rounded-lg mt-4">
+                    <div className="bg-[#D4AF37]/10 p-4 rounded-lg mt-4">
                         <p className="text-xs text-gray-600 mb-1">PRIX TOTAL</p>
-                        <p className="text-3xl font-bold text-[#0B2D55]">
+                        <p className="text-3xl font-bold text-[#D4AF37]">
                             {selectedPrice.totalEuros.toFixed(2)}€
                         </p>
                         <p className="text-xs text-gray-500 mt-1">
@@ -454,17 +454,18 @@ const CommandeSansCompte = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#F2F6FA] font-sans">
+        <div className="min-h-screen bg-slate-50 font-sans">
             <Header />
 
             {/* Hero Section */}
-            <section className="bg-[#0B2D55] text-white py-16">
-                <div className="container mx-auto px-4 text-center">
-                    <h1 className="text-3xl md:text-4xl font-bold mb-4 font-poppins">
+            <section className="bg-slate-900 text-white py-20 relative overflow-hidden">
+                <div className="absolute inset-0 bg-[#D4AF37]/5 pattern-grid-lg opacity-10"></div>
+                <div className="container mx-auto px-4 text-center relative z-10">
+                    <h1 className="text-4xl md:text-5xl font-bold mb-6 font-serif tracking-tight">
                         Commander une course sans compte
                     </h1>
-                    <p className="text-lg text-white/80 font-poppins">
-                        Rapide, sécurisé, sans inscription.
+                    <p className="text-xl text-slate-300 font-light max-w-2xl mx-auto">
+                        Rapide, sécurisé et sans inscription. La qualité One Connexion pour vos urgences.
                     </p>
                 </div>
             </section>
@@ -478,12 +479,12 @@ const CommandeSansCompte = () => {
                         <form onSubmit={handleSubmit} className="space-y-8">
 
                             {/* A. Expéditeur */}
-                            <Card className="p-6 md:p-8 bg-white border-none shadow-sm">
-                                <div className="flex items-center gap-3 mb-6">
-                                    <div className="w-10 h-10 rounded-full bg-[#F2F6FA] flex items-center justify-center">
-                                        <Package className="h-5 w-5 text-[#0B2D55]" />
+                            <Card className="p-8 bg-white border-none shadow-md rounded-xl">
+                                <div className="flex items-center gap-4 mb-8">
+                                    <div className="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center border border-slate-100">
+                                        <Package className="h-6 w-6 text-slate-900" />
                                     </div>
-                                    <h2 className="text-xl font-bold text-[#0B2D55] font-poppins">Expéditeur</h2>
+                                    <h2 className="text-2xl font-bold text-slate-900 font-serif">Expéditeur</h2>
                                 </div>
                                 <div className="grid md:grid-cols-2 gap-6">
                                     <div className="space-y-2">
@@ -530,12 +531,12 @@ const CommandeSansCompte = () => {
                             </Card>
 
                             {/* B. Destinataire */}
-                            <Card className="p-6 md:p-8 bg-white border-none shadow-sm">
-                                <div className="flex items-center gap-3 mb-6">
-                                    <div className="w-10 h-10 rounded-full bg-[#F2F6FA] flex items-center justify-center">
-                                        <Package className="h-5 w-5 text-[#0B2D55]" />
+                            <Card className="p-8 bg-white border-none shadow-md rounded-xl">
+                                <div className="flex items-center gap-4 mb-8">
+                                    <div className="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center border border-slate-100">
+                                        <Package className="h-6 w-6 text-slate-900" />
                                     </div>
-                                    <h2 className="text-xl font-bold text-[#0B2D55] font-poppins">Destinataire</h2>
+                                    <h2 className="text-2xl font-bold text-slate-900 font-serif">Destinataire</h2>
                                 </div>
                                 <div className="grid md:grid-cols-2 gap-6">
                                     <div className="space-y-2">
@@ -567,9 +568,9 @@ const CommandeSansCompte = () => {
                             </Card>
 
                             {/* C. Facturation */}
-                            <Card className="p-6 md:p-8 bg-white border-none shadow-sm">
-                                <div className="flex items-center justify-between mb-6">
-                                    <h2 className="text-xl font-bold text-[#0B2D55] font-poppins">Facturation</h2>
+                            <Card className="p-8 bg-white border-none shadow-md rounded-xl">
+                                <div className="flex items-center justify-between mb-8">
+                                    <h2 className="text-2xl font-bold text-slate-900 font-serif">Facturation</h2>
                                 </div>
 
                                 <div className="grid md:grid-cols-2 gap-6">
@@ -648,9 +649,9 @@ const CommandeSansCompte = () => {
                             {/* D & E. Adresses Retrait / Livraison */}
                             <div className="grid md:grid-cols-2 gap-6">
                                 {/* Retrait */}
-                                <Card className="p-6 bg-white border-none shadow-sm">
-                                    <h2 className="text-xl font-bold text-[#0B2D55] font-poppins mb-6 flex items-center gap-2">
-                                        <span className="w-6 h-6 rounded-full bg-[#0B2D55] text-white text-sm flex items-center justify-center">1</span>
+                                <Card className="p-6 bg-white border-none shadow-md rounded-xl">
+                                    <h2 className="text-xl font-bold text-slate-900 font-serif mb-6 flex items-center gap-3">
+                                        <span className="w-8 h-8 rounded-full bg-slate-900 text-white text-sm flex items-center justify-center font-bold">1</span>
                                         Adresse de retrait
                                     </h2>
                                     <div className="space-y-4">
@@ -716,9 +717,9 @@ const CommandeSansCompte = () => {
                                 </Card>
 
                                 {/* Livraison */}
-                                <Card className="p-6 bg-white border-none shadow-sm">
-                                    <h2 className="text-xl font-bold text-[#0B2D55] font-poppins mb-6 flex items-center gap-2">
-                                        <span className="w-6 h-6 rounded-full bg-[#FFCC00] text-[#0B2D55] text-sm flex items-center justify-center">2</span>
+                                <Card className="p-6 bg-white border-none shadow-md rounded-xl">
+                                    <h2 className="text-xl font-bold text-slate-900 font-serif mb-6 flex items-center gap-3">
+                                        <span className="w-8 h-8 rounded-full bg-[#D4AF37] text-white text-sm flex items-center justify-center font-bold">2</span>
                                         Adresse de livraison
                                     </h2>
                                     <div className="space-y-4">
@@ -808,8 +809,8 @@ const CommandeSansCompte = () => {
                             </div>
 
                             {/* F, G, H. Détails de la course */}
-                            <Card className="p-6 md:p-8 bg-white border-none shadow-sm">
-                                <h2 className="text-xl font-bold text-[#0B2D55] font-poppins mb-6">Détails de la course</h2>
+                            <Card className="p-8 bg-white border-none shadow-md rounded-xl">
+                                <h2 className="text-2xl font-bold text-slate-900 font-serif mb-8">Détails de la course</h2>
 
                                 <div className="grid md:grid-cols-2 gap-6 mb-6">
                                     <div className="space-y-2">
@@ -863,7 +864,7 @@ const CommandeSansCompte = () => {
                                                         className={`rounded-lg border-2 p-3 text-center transition-all ${isDisabled
                                                             ? "opacity-50 cursor-not-allowed bg-gray-50 border-gray-200"
                                                             : formData.formula === f.id
-                                                                ? "border-[#FFCC00] bg-[#FFCC00]/10 cursor-pointer"
+                                                                ? "border-[#D4AF37] bg-[#D4AF37]/10 cursor-pointer"
                                                                 : "border-gray-100 hover:border-gray-200 cursor-pointer"
                                                             }`}
                                                         onClick={() => {
@@ -875,19 +876,19 @@ const CommandeSansCompte = () => {
                                                         <f.icon className={`h-5 w-5 mx-auto mb-1 ${isDisabled
                                                             ? "text-gray-300"
                                                             : formData.formula === f.id
-                                                                ? "text-[#0B2D55]"
+                                                                ? "text-slate-900"
                                                                 : "text-gray-400"
                                                             }`} />
                                                         <span className={`text-xs font-bold block ${isDisabled
                                                             ? "text-gray-400"
                                                             : formData.formula === f.id
-                                                                ? "text-[#0B2D55]"
+                                                                ? "text-slate-900"
                                                                 : "text-gray-500"
                                                             }`}>
                                                             {f.label}
                                                         </span>
                                                         {price && !isDisabled && (
-                                                            <span className="text-xs font-bold text-[#0B2D55] mt-1 block">
+                                                            <span className="text-xs font-bold text-slate-900 mt-1 block">
                                                                 {price.totalEuros.toFixed(2)}€
                                                             </span>
                                                         )}
@@ -954,7 +955,7 @@ const CommandeSansCompte = () => {
 
                             <Button
                                 type="submit"
-                                className="w-full bg-[#FFCC00] hover:bg-[#E6B800] text-[#0B2D55] font-bold py-6 text-lg rounded-lg transition-all shadow-lg hover:shadow-xl"
+                                className="w-full bg-[#D4AF37] hover:bg-[#b5952f] text-white font-bold py-6 text-lg rounded-xl transition-all shadow-lg hover:shadow-xl"
                                 disabled={loading}
                             >
                                 {loading ? "Enregistrement..." : "Commander maintenant"}

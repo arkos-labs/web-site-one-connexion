@@ -220,25 +220,25 @@ export const StepPickup = ({ formData, updateFormData, onNext, clients, mode, on
     return (
         <div className="flex flex-col h-full overflow-hidden">
             <div className="mb-4 shrink-0">
-                <h2 className="text-lg font-semibold text-gray-900">Enlèvement</h2>
+                <h2 className="text-lg font-semibold text-[#0B1525]">Enlèvement</h2>
                 <p className="text-xs text-gray-500">Où devons-nous récupérer le colis ?</p>
             </div>
 
             <div className="flex-1 overflow-y-auto p-2 space-y-3">
                 {/* Client Selection (Admin Only) */}
                 {mode === 'admin' && (
-                    <div className="bg-blue-50/50 p-3 rounded-lg border border-blue-100 transition-all">
+                    <div className="bg-[#0B1525]/5 p-3 rounded-lg border border-[#0B1525]/10 transition-all">
                         {!showNewClientForm ? (
                             <>
                                 <div className="flex items-center justify-between mb-2">
-                                    <Label className="text-blue-900 font-semibold text-xs uppercase tracking-wider flex items-center gap-2">
+                                    <Label className="text-[#0B1525] font-semibold text-xs uppercase tracking-wider flex items-center gap-2">
                                         <User className="h-3 w-3" />
                                         Client
                                     </Label>
                                     <Button
                                         variant="ghost"
                                         size="sm"
-                                        className="text-blue-600 hover:text-blue-800 h-6 text-xs px-2"
+                                        className="text-[#D4AF37] hover:text-[#D4AF37]/80 hover:bg-[#D4AF37]/10 h-6 text-xs px-2"
                                         onClick={() => setShowNewClientForm(true)}
                                     >
                                         <Plus className="h-3 w-3 mr-1" />
@@ -247,7 +247,7 @@ export const StepPickup = ({ formData, updateFormData, onNext, clients, mode, on
                                 </div>
 
                                 <Select onValueChange={handleClientSelect} value={formData.clientId}>
-                                    <SelectTrigger className="bg-white border-blue-200 h-8 text-xs">
+                                    <SelectTrigger className="bg-white border-[#0B1525]/10 h-8 text-xs focus:ring-[#D4AF37]">
                                         <SelectValue placeholder="Rechercher un client..." />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -262,12 +262,12 @@ export const StepPickup = ({ formData, updateFormData, onNext, clients, mode, on
                             </>
                         ) : (
                             <div className="animate-in fade-in slide-in-from-top-2 duration-200">
-                                <div className="flex items-center justify-between border-b border-blue-200 pb-2 mb-2">
-                                    <h3 className="text-xs font-semibold text-blue-900">Nouveau Client</h3>
+                                <div className="flex items-center justify-between border-b border-[#0B1525]/10 pb-2 mb-2">
+                                    <h3 className="text-xs font-semibold text-[#0B1525]">Nouveau Client</h3>
                                     <Button
                                         variant="ghost"
                                         size="sm"
-                                        className="h-5 w-5 p-0 text-blue-400 hover:text-blue-600"
+                                        className="h-5 w-5 p-0 text-gray-400 hover:text-red-500"
                                         onClick={() => setShowNewClientForm(false)}
                                     >
                                         <X className="h-3 w-3" />
@@ -280,13 +280,13 @@ export const StepPickup = ({ formData, updateFormData, onNext, clients, mode, on
                                         <Input
                                             value={newClientData.siret}
                                             onChange={handleSiretChange}
-                                            className="h-7 bg-white text-xs font-medium border-blue-300"
+                                            className="h-7 bg-white text-xs font-medium border-blue-300 focus-visible:ring-[#0B1525]"
                                             placeholder="N° SIRET (14 chiffres) *"
                                             autoFocus
                                         />
                                         {isLoadingEnterprise && (
                                             <div className="absolute right-2 top-1/2 -translate-y-1/2">
-                                                <Loader2 className="h-3 w-3 animate-spin text-blue-600" />
+                                                <Loader2 className="h-3 w-3 animate-spin text-[#0B1525]" />
                                             </div>
                                         )}
                                     </div>
@@ -346,7 +346,7 @@ export const StepPickup = ({ formData, updateFormData, onNext, clients, mode, on
 
                                     {/* Row 5: Address Header */}
                                     <div className="col-span-12 pt-1">
-                                        <div className="text-[10px] font-semibold text-blue-800 uppercase tracking-wider">Adresse</div>
+                                        <div className="text-[10px] font-semibold text-[#0B1525] uppercase tracking-wider">Adresse</div>
                                     </div>
 
                                     {/* Row 6: Billing Address */}
@@ -380,12 +380,12 @@ export const StepPickup = ({ formData, updateFormData, onNext, clients, mode, on
                                     {/* Notes removed from UI as it's not in DB */}
                                 </div>
 
-                                <div className="flex justify-end pt-2 mt-1 border-t border-blue-100">
+                                <div className="flex justify-end pt-2 mt-1 border-t border-[#0B1525]/10">
                                     <Button
                                         size="sm"
                                         onClick={handleCreateClient}
                                         disabled={isCreatingClient}
-                                        className="bg-blue-600 hover:bg-blue-700 text-white h-7 text-xs px-3"
+                                        className="bg-[#D4AF37] hover:bg-[#b5952f] text-white h-7 text-xs px-3 shadow-sm hover:shadow-md transition-all"
                                     >
                                         {isCreatingClient ? (
                                             <Loader2 className="h-3 w-3 animate-spin mr-1" />
@@ -430,7 +430,7 @@ export const StepPickup = ({ formData, updateFormData, onNext, clients, mode, on
                                 value={formData.pickupContact}
                                 onChange={(e) => updateFormData({ pickupContact: e.target.value })}
                                 placeholder="Jean Dupont"
-                                className="h-8 text-sm"
+                                className="h-8 text-sm focus-visible:ring-[#0B1525]"
                             />
                         </div>
                         <div>
@@ -442,7 +442,7 @@ export const StepPickup = ({ formData, updateFormData, onNext, clients, mode, on
                                 value={formData.pickupPhone}
                                 onChange={(e) => updateFormData({ pickupPhone: e.target.value })}
                                 placeholder="06 12 34 56 78"
-                                className="h-8 text-sm"
+                                className="h-8 text-sm focus-visible:ring-[#0B1525]"
                             />
                         </div>
                     </div>
@@ -453,7 +453,7 @@ export const StepPickup = ({ formData, updateFormData, onNext, clients, mode, on
                 <Button
                     onClick={onNext}
                     disabled={!isValid}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 h-9"
+                    className="bg-[#D4AF37] hover:bg-[#b5952f] text-white px-6 h-9 shadow-md hover:shadow-lg transition-all"
                 >
                     Suivant
                     <ArrowRight className="ml-2 h-4 w-4" />

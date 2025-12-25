@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Eye, EyeOff, Loader2, ArrowRight, CheckCircle2, ArrowLeft } from "lucide-react";
+import { Eye, EyeOff, Loader2, ArrowRight, CheckCircle2, ArrowLeft, Building2, Lock, Mail, Phone, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -191,29 +191,30 @@ const AuthPage = () => {
     };
 
     return (
-        <div className="min-h-screen w-full flex bg-white overflow-hidden relative">
-            {/* Left Side - Visual/Branding */}
+        <div className="min-h-screen w-full flex bg-white overflow-hidden relative font-sans">
+            {/* Left Side - Visual/Branding - Premium Dark */}
             <motion.div
                 initial={{ opacity: 0, x: -50 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, ease: "easeOut" }}
-                className="hidden lg:flex w-1/2 relative bg-primary flex-col justify-center items-center p-12 overflow-hidden"
+                className="hidden lg:flex w-1/2 relative bg-[#0B1525] flex-col justify-center items-center p-12 overflow-hidden"
             >
-                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-20 mix-blend-overlay" />
-                <div className="absolute inset-0 bg-gradient-to-b from-primary/90 to-primary/95" />
+                {/* Abstract decorative elements */}
+                <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-[#D4AF37] opacity-5 rounded-full blur-3xl pointer-events-none" />
+                <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 bg-blue-900 opacity-20 rounded-full blur-3xl pointer-events-none" />
 
-                <div className="relative z-10 max-w-md space-y-8 text-center">
+                <div className="relative z-10 max-w-md space-y-10 text-center">
                     <motion.div
                         initial={{ scale: 0.8, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         transition={{ delay: 0.2, duration: 0.5 }}
-                        className="flex items-center justify-center space-x-3 mb-8"
+                        className="flex flex-col items-center justify-center space-y-6"
                     >
-                        <div className="w-12 h-12 bg-cta rounded-lg flex items-center justify-center shadow-lg">
-                            <span className="text-primary text-2xl font-bold">OC</span>
+                        <div className="w-20 h-20 bg-white/5 border border-[#D4AF37]/30 rounded-2xl flex items-center justify-center backdrop-blur-sm shadow-2xl">
+                            <span className="text-[#D4AF37] text-4xl font-serif font-bold">OC</span>
                         </div>
-                        <span className="text-3xl font-bold text-white tracking-tight">
-                            One Connexion <span className="text-cta">Express</span>
+                        <span className="text-4xl font-serif font-bold text-white tracking-wide">
+                            One Connexion
                         </span>
                     </motion.div>
 
@@ -224,39 +225,39 @@ const AuthPage = () => {
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -20 }}
                             transition={{ duration: 0.3 }}
-                            className="space-y-4"
+                            className="space-y-6"
                         >
-                            <h1 className="text-4xl font-bold text-white tracking-tight leading-tight">
+                            <h2 className="text-3xl font-light text-white leading-tight">
                                 {mode === "login" ? (
-                                    <>Vos livraisons urgentes en <span className="text-cta">moins de 2h</span></>
+                                    <>L'excellence de la livraison <br /> <span className="text-[#D4AF37] font-serif italic">Premium</span></>
                                 ) : (
-                                    <>Rejoignez <span className="text-cta">One Connexion Express</span></>
+                                    <>Rejoignez le réseau <br /> <span className="text-[#D4AF37] font-serif italic">Elite</span></>
                                 )}
-                            </h1>
-                            <p className="text-lg text-gray-300 leading-relaxed">
+                            </h2>
+                            <p className="text-gray-400 font-light text-lg">
                                 {mode === "login"
-                                    ? "Connectez-vous pour gérer vos courses, suivre vos chauffeurs en temps réel et accéder à vos factures."
-                                    : "Créez votre compte professionnel et bénéficiez d'un service de coursier express premium."}
+                                    ? "Accédez à votre espace sécurisé et gérez vos courses urgentes en quelques clics."
+                                    : "Créez votre compte professionnel pour bénéficier de nos services exclusifs."}
                             </p>
                         </motion.div>
                     </AnimatePresence>
 
-                    <div className="grid grid-cols-1 gap-4 pt-8 text-left">
+                    <div className="grid grid-cols-1 gap-5 pt-8 text-left pl-8 border-l border-[#D4AF37]/20">
                         {(mode === "login"
-                            ? ["Service disponible 24/7 en Île-de-France", "Suivi GPS en temps réel", "Facturation centralisée"]
-                            : ["Inscription gratuite et rapide", "Gestion simplifiée de vos courses", "Facturation automatisée", "Support client dédié"]
+                            ? ["Disponible 24/7 en Île-de-France", "Suivi GPS temps réel", "Facturation mensuelle détaillée"]
+                            : ["Inscription sans engagement", "Validation immédiate", "Support client privilégié"]
                         ).map((feature, index) => (
                             <motion.div
                                 key={feature}
                                 initial={{ opacity: 0, x: -20 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ delay: 0.4 + index * 0.1 }}
-                                className="flex items-center space-x-3"
+                                className="flex items-center space-x-4 group"
                             >
-                                <div className="flex-shrink-0 w-6 h-6 rounded-full bg-cta/20 flex items-center justify-center">
-                                    <CheckCircle2 className="w-4 h-4 text-cta" />
+                                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#D4AF37]/10 flex items-center justify-center group-hover:bg-[#D4AF37]/20 transition-colors">
+                                    <CheckCircle2 className="w-4 h-4 text-[#D4AF37]" strokeWidth={2} />
                                 </div>
-                                <span className="text-base font-medium text-gray-200">{feature}</span>
+                                <span className="text-base font-light text-gray-300 group-hover:text-white transition-colors">{feature}</span>
                             </motion.div>
                         ))}
                     </div>
@@ -264,65 +265,62 @@ const AuthPage = () => {
             </motion.div>
 
             {/* Right Side - Auth Form */}
-            <div className="w-full lg:w-1/2 flex items-center justify-center p-6 relative z-10 bg-white overflow-y-auto">
+            <div className="w-full lg:w-1/2 flex items-center justify-center p-6 lg:p-12 relative z-10 bg-white overflow-y-auto">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.2 }}
-                    className="w-full max-w-md space-y-6 my-8"
+                    className="w-full max-w-md space-y-8"
                 >
-                    {/* Auth Toggle */}
-                    <div className="flex justify-center mb-6">
-                        <div className="relative bg-gray-100 rounded-full p-1 shadow-md border border-gray-200">
-                            <div className="flex items-center gap-1 relative">
-                                <motion.div
-                                    className="absolute top-1 h-[calc(100%-8px)] bg-cta rounded-full shadow-lg"
-                                    initial={false}
-                                    animate={{
-                                        left: mode === "login" ? "4px" : "50%",
-                                        width: mode === "login" ? "calc(50% - 6px)" : "calc(50% - 6px)",
-                                    }}
-                                    transition={{
-                                        type: "spring",
-                                        stiffness: 400,
-                                        damping: 35,
-                                    }}
-                                />
-
-                                <motion.button
-                                    onClick={() => handleModeSwitch("login")}
-                                    className={`relative z-10 px-8 py-3 rounded-full font-bold text-sm transition-all duration-300 whitespace-nowrap min-w-[140px] ${mode === "login" ? "text-primary" : "text-muted-foreground hover:text-foreground"
-                                        }`}
-                                    whileHover={{ scale: 1.03 }}
-                                    whileTap={{ scale: 0.97 }}
-                                    animate={{ scale: mode === "login" ? 1.05 : 1 }}
-                                    transition={{ scale: { duration: 0.3 } }}
-                                >
-                                    Connexion
-                                </motion.button>
-
-                                <motion.button
-                                    onClick={() => handleModeSwitch("register")}
-                                    className={`relative z-10 px-8 py-3 rounded-full font-bold text-sm transition-all duration-300 whitespace-nowrap min-w-[160px] ${mode === "register" ? "text-primary" : "text-muted-foreground hover:text-foreground"
-                                        }`}
-                                    whileHover={{ scale: 1.03 }}
-                                    whileTap={{ scale: 0.97 }}
-                                    animate={{ scale: mode === "register" ? 1.05 : 1 }}
-                                    transition={{ scale: { duration: 0.3 } }}
-                                >
-                                    Créer un compte
-                                </motion.button>
-                            </div>
-                        </div>
-                    </div>
-
                     {/* Back Button */}
                     <div
-                        className="flex items-center cursor-pointer group w-fit"
+                        className="absolute top-8 left-8 lg:left-12 flex items-center cursor-pointer group opacity-60 hover:opacity-100 transition-opacity"
                         onClick={() => navigate("/")}
                     >
-                        <ArrowLeft className="w-5 h-5 text-primary group-hover:text-cta transition-colors" />
-                        <span className="ml-2 text-primary group-hover:text-cta font-medium text-sm transition-colors">Retour</span>
+                        <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center mr-2 group-hover:bg-[#0B1525] transition-colors">
+                            <ArrowLeft className="w-4 h-4 text-gray-600 group-hover:text-white transition-colors" />
+                        </div>
+                        <span className="text-gray-600 font-medium text-sm">Retour à l'accueil</span>
+                    </div>
+
+                    <div className="text-center space-y-2 pt-10 lg:pt-0">
+                        <h2 className="text-3xl font-serif font-bold text-[#0B1525]">
+                            {mode === "login" ? "Connexion" : "Inscription"}
+                        </h2>
+                        <p className="text-gray-500 font-light">
+                            {mode === "login" ? "Bienvenue sur votre espace client." : "Remplissez le formulaire pour commencer."}
+                        </p>
+                    </div>
+
+                    {/* Auth Toggle - Premium Style */}
+                    <div className="flex justify-center">
+                        <div className="flex p-1 bg-gray-50 border border-gray-100 rounded-full relative">
+                            <motion.div
+                                className="absolute top-1 bottom-1 bg-white rounded-full shadow-sm border border-gray-100"
+                                initial={false}
+                                animate={{
+                                    left: mode === "login" ? "4px" : "50%",
+                                    width: "calc(50% - 6px)",
+                                    x: mode === "login" ? 0 : 2
+                                }}
+                                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                            />
+
+                            <button
+                                onClick={() => handleModeSwitch("login")}
+                                className={`relative z-10 px-8 py-2.5 rounded-full text-sm font-medium transition-colors duration-300 min-w-[120px] ${mode === "login" ? "text-[#0B1525]" : "text-gray-400 hover:text-gray-600"
+                                    }`}
+                            >
+                                Connexion
+                            </button>
+                            <button
+                                onClick={() => handleModeSwitch("register")}
+                                className={`relative z-10 px-8 py-2.5 rounded-full text-sm font-medium transition-colors duration-300 min-w-[120px] ${mode === "register" ? "text-[#0B1525]" : "text-gray-400 hover:text-gray-600"
+                                    }`}
+                            >
+                                Inscription
+                            </button>
+                        </div>
                     </div>
 
                     <AnimatePresence mode="wait">
@@ -332,44 +330,38 @@ const AuthPage = () => {
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: mode === "login" ? 20 : -20 }}
                             transition={{ duration: 0.3 }}
+                            className="bg-white"
                         >
-                            <div className="text-center lg:text-left mb-6">
-                                <h2 className="text-3xl font-bold text-primary">
-                                    {mode === "login" ? "Connexion" : "Inscription"}
-                                </h2>
-                                <p className="text-gray-500 mt-2">
-                                    {mode === "login"
-                                        ? "Bienvenue sur votre espace client One Connexion Express."
-                                        : "Créez votre compte professionnel One Connexion Express."}
-                                </p>
-                            </div>
-
                             {mode === "login" ? (
                                 <form onSubmit={handleLogin} className="space-y-6">
                                     <div className="space-y-2">
-                                        <Label htmlFor="login-email" className="text-sm font-medium text-primary">Email professionnel</Label>
-                                        <Input
-                                            id="login-email"
-                                            type="email"
-                                            placeholder="nom@entreprise.com"
-                                            value={loginData.email}
-                                            onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
-                                            required
-                                            className="h-12 bg-secondary/30 border-input focus:border-cta focus:ring-cta/20 rounded-lg transition-all duration-300"
-                                        />
+                                        <Label htmlFor="login-email" className="text-gray-700 font-medium">Email professionnel</Label>
+                                        <div className="relative group">
+                                            <Mail className="absolute left-3 top-3 h-5 w-5 text-gray-400 group-focus-within:text-[#D4AF37] transition-colors" />
+                                            <Input
+                                                id="login-email"
+                                                type="email"
+                                                placeholder="exemple@societe.com"
+                                                value={loginData.email}
+                                                onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
+                                                required
+                                                className="pl-10 h-12 bg-gray-50 border-gray-200 focus:border-[#D4AF37] focus:ring-[#D4AF37]/20 rounded-xl transition-all"
+                                            />
+                                        </div>
                                     </div>
 
                                     <div className="space-y-2">
                                         <div className="flex justify-between items-center">
-                                            <Label htmlFor="login-password" className="text-sm font-medium text-primary">Mot de passe</Label>
+                                            <Label htmlFor="login-password" className="text-gray-700 font-medium">Mot de passe</Label>
                                             <Link
                                                 to="/forgot-password"
-                                                className="text-sm font-medium text-primary hover:text-cta transition-colors underline decoration-border hover:decoration-cta"
+                                                className="text-xs font-medium text-[#D4AF37] hover:text-[#B08D1F] transition-colors"
                                             >
                                                 Mot de passe oublié ?
                                             </Link>
                                         </div>
-                                        <div className="relative">
+                                        <div className="relative group">
+                                            <Lock className="absolute left-3 top-3 h-5 w-5 text-gray-400 group-focus-within:text-[#D4AF37] transition-colors" />
                                             <Input
                                                 id="login-password"
                                                 type={showPassword ? "text" : "password"}
@@ -377,14 +369,14 @@ const AuthPage = () => {
                                                 value={loginData.password}
                                                 onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
                                                 required
-                                                className="h-12 bg-secondary/30 border-input focus:border-cta focus:ring-cta/20 rounded-lg pr-10 transition-all duration-300"
+                                                className="pl-10 h-12 bg-gray-50 border-gray-200 focus:border-[#D4AF37] focus:ring-[#D4AF37]/20 rounded-xl pr-10 transition-all"
                                             />
                                             <button
                                                 type="button"
                                                 onClick={() => setShowPassword(!showPassword)}
-                                                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors"
+                                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                                             >
-                                                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                                                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                                             </button>
                                         </div>
                                     </div>
@@ -392,14 +384,13 @@ const AuthPage = () => {
                                     <Button
                                         type="submit"
                                         disabled={isLoading}
-                                        className="w-full h-12 bg-cta hover:bg-cta/90 text-cta-foreground font-bold text-base rounded-lg shadow-md hover:shadow-lg transition-all duration-300 group"
+                                        className="w-full h-12 bg-[#D4AF37] hover:bg-[#b5952f] text-white font-medium text-lg rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300"
                                     >
                                         {isLoading ? (
                                             <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                                         ) : (
-                                            <span className="flex items-center justify-center">
-                                                Se connecter
-                                                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                                            <span className="flex items-center justify-center gap-2">
+                                                Me connecter <ArrowRight className="w-5 h-5" />
                                             </span>
                                         )}
                                     </Button>
@@ -407,60 +398,74 @@ const AuthPage = () => {
                             ) : (
                                 <form onSubmit={handleRegister} className="space-y-4">
                                     <div className="space-y-2">
-                                        <Label htmlFor="fullName" className="text-sm font-medium text-primary">Nom complet</Label>
-                                        <Input
-                                            id="fullName"
-                                            type="text"
-                                            placeholder="Jean Dupont"
-                                            value={registerData.fullName}
-                                            onChange={(e) => setRegisterData({ ...registerData, fullName: e.target.value })}
-                                            required
-                                            className="h-11 bg-secondary/30 border-input focus:border-cta focus:ring-cta/20 rounded-lg transition-all duration-300"
-                                        />
+                                        <Label htmlFor="companyName" className="text-gray-700 font-medium">Nom de l'entreprise</Label>
+                                        <div className="relative group">
+                                            <Building2 className="absolute left-3 top-3 h-5 w-5 text-gray-400 group-focus-within:text-[#D4AF37] transition-colors" />
+                                            <Input
+                                                id="companyName"
+                                                type="text"
+                                                placeholder="Votre société"
+                                                value={registerData.companyName}
+                                                onChange={(e) => setRegisterData({ ...registerData, companyName: e.target.value })}
+                                                required
+                                                className="pl-10 h-11 bg-gray-50 border-gray-200 focus:border-[#D4AF37] focus:ring-[#D4AF37]/20 rounded-xl transition-all"
+                                            />
+                                        </div>
                                     </div>
 
                                     <div className="space-y-2">
-                                        <Label htmlFor="companyName" className="text-sm font-medium text-primary">Nom de l'entreprise</Label>
-                                        <Input
-                                            id="companyName"
-                                            type="text"
-                                            placeholder="Mon Entreprise SARL"
-                                            value={registerData.companyName}
-                                            onChange={(e) => setRegisterData({ ...registerData, companyName: e.target.value })}
-                                            required
-                                            className="h-11 bg-secondary/30 border-input focus:border-cta focus:ring-cta/20 rounded-lg transition-all duration-300"
-                                        />
+                                        <Label htmlFor="fullName" className="text-gray-700 font-medium">Nom complet</Label>
+                                        <div className="relative group">
+                                            <User className="absolute left-3 top-3 h-5 w-5 text-gray-400 group-focus-within:text-[#D4AF37] transition-colors" />
+                                            <Input
+                                                id="fullName"
+                                                type="text"
+                                                placeholder="Prénom Nom"
+                                                value={registerData.fullName}
+                                                onChange={(e) => setRegisterData({ ...registerData, fullName: e.target.value })}
+                                                required
+                                                className="pl-10 h-11 bg-gray-50 border-gray-200 focus:border-[#D4AF37] focus:ring-[#D4AF37]/20 rounded-xl transition-all"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="space-y-2">
+                                            <Label htmlFor="register-email" className="text-gray-700 font-medium">Email</Label>
+                                            <div className="relative group">
+                                                <Mail className="absolute left-3 top-3 h-5 w-5 text-gray-400 group-focus-within:text-[#D4AF37] transition-colors" />
+                                                <Input
+                                                    id="register-email"
+                                                    type="email"
+                                                    placeholder="Email pro"
+                                                    value={registerData.email}
+                                                    onChange={(e) => setRegisterData({ ...registerData, email: e.target.value })}
+                                                    required
+                                                    className="pl-10 h-11 bg-gray-50 border-gray-200 focus:border-[#D4AF37] focus:ring-[#D4AF37]/20 rounded-xl transition-all"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Label htmlFor="phone" className="text-gray-700 font-medium">Téléphone</Label>
+                                            <div className="relative group">
+                                                <Phone className="absolute left-3 top-3 h-5 w-5 text-gray-400 group-focus-within:text-[#D4AF37] transition-colors" />
+                                                <Input
+                                                    id="phone"
+                                                    type="tel"
+                                                    placeholder="06..."
+                                                    value={registerData.phone}
+                                                    onChange={(e) => setRegisterData({ ...registerData, phone: e.target.value })}
+                                                    required
+                                                    className="pl-10 h-11 bg-gray-50 border-gray-200 focus:border-[#D4AF37] focus:ring-[#D4AF37]/20 rounded-xl transition-all"
+                                                />
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <div className="space-y-2">
-                                        <Label htmlFor="register-email" className="text-sm font-medium text-primary">Email professionnel</Label>
-                                        <Input
-                                            id="register-email"
-                                            type="email"
-                                            placeholder="nom@entreprise.com"
-                                            value={registerData.email}
-                                            onChange={(e) => setRegisterData({ ...registerData, email: e.target.value })}
-                                            required
-                                            className="h-11 bg-secondary/30 border-input focus:border-cta focus:ring-cta/20 rounded-lg transition-all duration-300"
-                                        />
-                                    </div>
-
-                                    <div className="space-y-2">
-                                        <Label htmlFor="phone" className="text-sm font-medium text-primary">Téléphone</Label>
-                                        <Input
-                                            id="phone"
-                                            type="tel"
-                                            placeholder="+33 6 12 34 56 78"
-                                            value={registerData.phone}
-                                            onChange={(e) => setRegisterData({ ...registerData, phone: e.target.value })}
-                                            required
-                                            className="h-11 bg-secondary/30 border-input focus:border-cta focus:ring-cta/20 rounded-lg transition-all duration-300"
-                                        />
-                                    </div>
-
-                                    <div className="space-y-2">
-                                        <Label htmlFor="register-password" className="text-sm font-medium text-primary">Mot de passe</Label>
-                                        <div className="relative">
+                                        <Label htmlFor="register-password" className="text-gray-700 font-medium">Mot de passe</Label>
+                                        <div className="relative group">
+                                            <Lock className="absolute left-3 top-3 h-5 w-5 text-gray-400 group-focus-within:text-[#D4AF37] transition-colors" />
                                             <Input
                                                 id="register-password"
                                                 type={showPassword ? "text" : "password"}
@@ -468,12 +473,12 @@ const AuthPage = () => {
                                                 value={registerData.password}
                                                 onChange={(e) => setRegisterData({ ...registerData, password: e.target.value })}
                                                 required
-                                                className="h-11 bg-secondary/30 border-input focus:border-cta focus:ring-cta/20 rounded-lg pr-10 transition-all duration-300"
+                                                className="pl-10 h-11 bg-gray-50 border-gray-200 focus:border-[#D4AF37] focus:ring-[#D4AF37]/20 rounded-xl pr-10 transition-all"
                                             />
                                             <button
                                                 type="button"
                                                 onClick={() => setShowPassword(!showPassword)}
-                                                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors"
+                                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                                             >
                                                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                                             </button>
@@ -481,29 +486,31 @@ const AuthPage = () => {
                                     </div>
 
                                     <div className="space-y-2">
-                                        <Label htmlFor="confirmPassword" className="text-sm font-medium text-primary">Confirmer le mot de passe</Label>
-                                        <Input
-                                            id="confirmPassword"
-                                            type="password"
-                                            placeholder="••••••••"
-                                            value={registerData.confirmPassword}
-                                            onChange={(e) => setRegisterData({ ...registerData, confirmPassword: e.target.value })}
-                                            required
-                                            className="h-11 bg-secondary/30 border-input focus:border-cta focus:ring-cta/20 rounded-lg transition-all duration-300"
-                                        />
+                                        <Label htmlFor="confirmPassword" className="text-gray-700 font-medium">Confirmation</Label>
+                                        <div className="relative group">
+                                            <Lock className="absolute left-3 top-3 h-5 w-5 text-gray-400 group-focus-within:text-[#D4AF37] transition-colors" />
+                                            <Input
+                                                id="confirmPassword"
+                                                type="password"
+                                                placeholder="••••••••"
+                                                value={registerData.confirmPassword}
+                                                onChange={(e) => setRegisterData({ ...registerData, confirmPassword: e.target.value })}
+                                                required
+                                                className="pl-10 h-11 bg-gray-50 border-gray-200 focus:border-[#D4AF37] focus:ring-[#D4AF37]/20 rounded-xl transition-all"
+                                            />
+                                        </div>
                                     </div>
 
                                     <Button
                                         type="submit"
                                         disabled={isLoading}
-                                        className="w-full h-12 bg-cta hover:bg-cta/90 text-cta-foreground font-bold text-base rounded-lg shadow-md hover:shadow-lg transition-all duration-300 group mt-2"
+                                        className="w-full h-12 bg-[#D4AF37] hover:bg-[#b5952f] text-white font-medium text-lg rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 mt-2"
                                     >
                                         {isLoading ? (
                                             <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                                         ) : (
-                                            <span className="flex items-center justify-center">
-                                                Créer mon compte
-                                                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                                            <span className="flex items-center justify-center gap-2">
+                                                Créer mon compte <ArrowRight className="w-5 h-5" />
                                             </span>
                                         )}
                                     </Button>

@@ -18,7 +18,7 @@ export const StepDelivery = ({ formData, updateFormData, onNext, onBack }: StepD
     return (
         <div className="flex flex-col h-full">
             <div className="mb-6">
-                <h2 className="text-lg font-semibold text-gray-900">Livraison</h2>
+                <h2 className="text-lg font-semibold text-[#0B1525]">Livraison</h2>
                 <p className="text-sm text-gray-500">Où devons-nous livrer le colis ?</p>
             </div>
 
@@ -51,7 +51,7 @@ export const StepDelivery = ({ formData, updateFormData, onNext, onBack }: StepD
                             value={formData.deliveryContact}
                             onChange={(e) => updateFormData({ deliveryContact: e.target.value })}
                             placeholder="Marie Martin"
-                            className="h-9"
+                            className="h-9 focus-visible:ring-[#0B1525]"
                         />
                     </div>
                     <div>
@@ -63,21 +63,21 @@ export const StepDelivery = ({ formData, updateFormData, onNext, onBack }: StepD
                             value={formData.deliveryPhone}
                             onChange={(e) => updateFormData({ deliveryPhone: e.target.value })}
                             placeholder="06 98 76 54 32"
-                            className="h-9"
+                            className="h-9 focus-visible:ring-[#0B1525]"
                         />
                     </div>
                 </div>
             </div>
 
             <div className="pt-6 mt-auto flex justify-between border-t border-gray-100">
-                <Button variant="outline" onClick={onBack} size="sm">
+                <Button variant="outline" onClick={onBack} size="sm" className="hover:bg-gray-50 text-gray-600">
                     <ArrowLeft className="mr-2 h-4 w-4" />
                     Retour
                 </Button>
                 <Button
                     onClick={onNext}
                     disabled={!isValid}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-6"
+                    className="bg-[#D4AF37] hover:bg-[#b5952f] text-white px-6 shadow-md hover:shadow-lg transition-all"
                 >
                     Suivant
                     <ArrowRight className="ml-2 h-4 w-4" />

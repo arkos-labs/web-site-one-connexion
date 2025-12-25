@@ -452,7 +452,7 @@ const Settings = () => {
                 <Button
                   onClick={handleUpdateProfile}
                   disabled={loading}
-                  className="bg-cta text-cta-foreground hover:bg-cta/90"
+                  className="bg-[#D4AF37] hover:bg-[#b5952f] text-white font-medium shadow-md hover:shadow-lg transition-all rounded-xl"
                 >
                   {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   <Save className="mr-2 h-4 w-4" />
@@ -549,7 +549,7 @@ const Settings = () => {
                 <Button
                   onClick={handleUpdatePassword}
                   disabled={loading || !passwords.new || !passwords.confirm}
-                  className="bg-cta text-cta-foreground hover:bg-cta/90"
+                  className="bg-[#D4AF37] hover:bg-[#b5952f] text-white font-medium shadow-md hover:shadow-lg transition-all rounded-xl"
                 >
                   {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   <Lock className="mr-2 h-4 w-4" />
@@ -670,7 +670,7 @@ const Settings = () => {
             <Button
               onClick={handleEmailChange}
               disabled={loading || !newEmail}
-              className="bg-cta text-cta-foreground hover:bg-cta/90"
+              className="bg-[#D4AF37] hover:bg-[#b5952f] text-white font-medium shadow-md hover:shadow-lg transition-all rounded-xl"
             >
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               <CheckCircle2 className="mr-2 h-4 w-4" />

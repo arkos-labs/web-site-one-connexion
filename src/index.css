@@ -28,15 +28,15 @@ All colors MUST be HSL.
     --primary-active: 215 80% 14%;
     /* Even darker on active */
 
-    /* CTA (Call to Action) - Yellow Energy */
-    --cta: 43 100% 50%;
-    /* Yellow Energy */
-    --cta-foreground: 215 80% 22%;
-    /* Navy text on yellow */
-    --cta-hover: 43 100% 45%;
-    /* Darker yellow on hover */
-    --cta-active: 43 100% 40%;
-    /* Even darker on active */
+    /* CTA (Call to Action) - Premium Gold */
+    --cta: 46 65% 52%;
+    /* #D4AF37 Gold */
+    --cta-foreground: 0 0% 100%;
+    /* White text */
+    --cta-hover: 46 59% 45%;
+    /* #b5952f Darker gold */
+    --cta-active: 46 59% 40%;
+    /* Even darker */
 
     /* Accent - Blue Dynamic */
     --accent-main: 196 100% 44%;
@@ -184,8 +184,8 @@ All colors MUST be HSL.
     --shadow-soft: 0 1px 3px hsl(215 80% 22% / 0.08);
     --shadow-medium: 0 4px 12px hsl(215 80% 22% / 0.12);
     --shadow-strong: 0 8px 24px hsl(215 80% 22% / 0.16);
-    --shadow-cta: 0 4px 16px hsl(43 100% 50% / 0.35);
-    /* Yellow glow for CTAs */
+    --shadow-cta: 0 4px 16px hsl(46 65% 52% / 0.35);
+    /* Gold glow for CTAs */
 
     /* Transitions */
     --transition-base: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);

@@ -82,8 +82,8 @@ export const AdminActivityTimeline = ({ limit = 10 }: AdminActivityTimelineProps
                             description: `${order.reference} - ${clientName}`,
                             timestamp: order.created_at,
                             icon: Package,
-                            color: 'text-accent-main',
-                            bgColor: 'bg-accent-light',
+                            color: 'text-[#D4AF37]',
+                            bgColor: 'bg-[#D4AF37]/10',
                         });
 
                         // Livraison
@@ -95,8 +95,8 @@ export const AdminActivityTimeline = ({ limit = 10 }: AdminActivityTimelineProps
                                 description: `${order.reference} - Livraison réussie`,
                                 timestamp: order.delivered_at,
                                 icon: CheckCircle,
-                                color: 'text-success',
-                                bgColor: 'bg-success-light',
+                                color: 'text-green-600',
+                                bgColor: 'bg-green-100',
                             });
                         }
 
@@ -109,8 +109,8 @@ export const AdminActivityTimeline = ({ limit = 10 }: AdminActivityTimelineProps
                                 description: `${order.reference} - ${order.cancellation_reason || 'Raison non spécifiée'}`,
                                 timestamp: order.cancelled_at,
                                 icon: XCircle,
-                                color: 'text-destructive',
-                                bgColor: 'bg-destructive/10',
+                                color: 'text-red-600',
+                                bgColor: 'bg-red-100',
                             });
                         }
 
@@ -123,8 +123,8 @@ export const AdminActivityTimeline = ({ limit = 10 }: AdminActivityTimelineProps
                                 description: `${order.reference} - Chauffeur assigné`,
                                 timestamp: order.dispatched_at,
                                 icon: Truck,
-                                color: 'text-info',
-                                bgColor: 'bg-info/10',
+                                color: 'text-indigo-600',
+                                bgColor: 'bg-indigo-100',
                             });
                         }
                     });
@@ -140,8 +140,8 @@ export const AdminActivityTimeline = ({ limit = 10 }: AdminActivityTimelineProps
                             description: `${client.company_name} a rejoint la plateforme`,
                             timestamp: client.created_at,
                             icon: UserPlus,
-                            color: 'text-primary',
-                            bgColor: 'bg-primary/10',
+                            color: 'text-blue-600',
+                            bgColor: 'bg-blue-100',
                         });
                     });
                 }
@@ -156,8 +156,8 @@ export const AdminActivityTimeline = ({ limit = 10 }: AdminActivityTimelineProps
                             description: `${driver.first_name} ${driver.last_name} a rejoint l'équipe`,
                             timestamp: driver.created_at,
                             icon: Truck,
-                            color: 'text-warning',
-                            bgColor: 'bg-warning-light',
+                            color: 'text-purple-600',
+                            bgColor: 'bg-purple-100',
                         });
                     });
                 }
@@ -173,8 +173,8 @@ export const AdminActivityTimeline = ({ limit = 10 }: AdminActivityTimelineProps
                             description: `${invoice.reference} - ${clientName} - ${invoice.amount_ttc}€`,
                             timestamp: invoice.created_at,
                             icon: FileText,
-                            color: 'text-cta',
-                            bgColor: 'bg-cta/10',
+                            color: 'text-[#0B1525]',
+                            bgColor: 'bg-gray-100',
                         });
 
                         if (invoice.status === 'paid' && invoice.paid_date) {
@@ -185,8 +185,8 @@ export const AdminActivityTimeline = ({ limit = 10 }: AdminActivityTimelineProps
                                 description: `${invoice.reference} - ${invoice.amount_ttc}€ reçu`,
                                 timestamp: invoice.paid_date,
                                 icon: CheckCircle,
-                                color: 'text-success',
-                                bgColor: 'bg-success-light',
+                                color: 'text-emerald-600',
+                                bgColor: 'bg-emerald-100',
                             });
                         }
                     });
@@ -218,10 +218,10 @@ export const AdminActivityTimeline = ({ limit = 10 }: AdminActivityTimelineProps
             <div className="space-y-4">
                 {[1, 2, 3, 4].map((i) => (
                     <div key={i} className="flex gap-4 animate-pulse">
-                        <div className="w-10 h-10 bg-gray-200 rounded-lg" />
+                        <div className="w-10 h-10 bg-gray-100 rounded-xl" />
                         <div className="flex-1 space-y-2">
-                            <div className="h-4 bg-gray-200 rounded w-1/3" />
-                            <div className="h-3 bg-gray-200 rounded w-2/3" />
+                            <div className="h-4 bg-gray-100 rounded w-1/3" />
+                            <div className="h-3 bg-gray-100 rounded w-2/3" />
                         </div>
                     </div>
                 ))}
@@ -231,7 +231,7 @@ export const AdminActivityTimeline = ({ limit = 10 }: AdminActivityTimelineProps
 
     if (activities.length === 0) {
         return (
-            <div className="text-center py-8 text-muted-foreground">
+            <div className="text-center py-8 text-gray-400">
                 <Clock className="h-12 w-12 mx-auto mb-3 opacity-50" />
                 <p>Aucune activité récente</p>
             </div>
@@ -243,11 +243,10 @@ export const AdminActivityTimeline = ({ limit = 10 }: AdminActivityTimelineProps
             {activities.map((activity, index) => (
                 <div
                     key={activity.id}
-                    className="flex gap-4 p-3 rounded-lg hover:bg-muted/30 transition-colors animate-fade-in-up"
-                    style={{ animationDelay: `${index * 30}ms` }}
+                    className="flex gap-4 p-3 rounded-xl hover:bg-gray-50 transition-colors cursor-default"
                 >
                     {/* Icône */}
-                    <div className={`w-10 h-10 rounded-lg ${activity.bgColor} flex items-center justify-center flex-shrink-0`}>
+                    <div className={`w-10 h-10 rounded-xl ${activity.bgColor} flex items-center justify-center flex-shrink-0 border border-transparent`}>
                         <activity.icon className={`h-5 w-5 ${activity.color}`} />
                     </div>
 
@@ -255,14 +254,14 @@ export const AdminActivityTimeline = ({ limit = 10 }: AdminActivityTimelineProps
                     <div className="flex-1 min-w-0">
                         <div className="flex items-start justify-between gap-2">
                             <div className="flex-1 min-w-0">
-                                <p className="font-semibold text-primary text-sm">
+                                <p className="font-semibold text-[#0B1525] text-sm">
                                     {activity.title}
                                 </p>
-                                <p className="text-sm text-muted-foreground truncate">
+                                <p className="text-sm text-gray-500 truncate mt-0.5">
                                     {activity.description}
                                 </p>
                             </div>
-                            <span className="text-xs text-muted-foreground whitespace-nowrap">
+                            <span className="text-xs text-gray-400 whitespace-nowrap">
                                 {formatDistanceToNow(new Date(activity.timestamp), {
                                     addSuffix: true,
                                     locale: fr,

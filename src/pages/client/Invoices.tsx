@@ -250,7 +250,7 @@ const Invoices = () => {
                       {invoice.status !== 'paid' && (
                         <Button
                           size="sm"
-                          className="bg-cta text-cta-foreground hover:bg-cta/90 font-semibold"
+                          className="bg-[#D4AF37] hover:bg-[#b5952f] text-white font-medium shadow-md hover:shadow-lg transition-all rounded-xl"
                           onClick={() => handlePayClick(invoice)}
                         >
                           Payer ma facture
@@ -309,7 +309,7 @@ const Invoices = () => {
               Annuler
             </Button>
             <Button
-              className="bg-cta text-cta-foreground hover:bg-cta/90 font-semibold w-full sm:w-auto"
+              className="bg-[#D4AF37] hover:bg-[#b5952f] text-white font-medium shadow-md hover:shadow-lg transition-all rounded-xl w-full sm:w-auto"
               onClick={handleProcessPayment}
               disabled={isProcessingPayment}
             >
