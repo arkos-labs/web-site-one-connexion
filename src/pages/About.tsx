@@ -15,6 +15,7 @@ import {
     MapPin,
     ArrowRight
 } from "lucide-react";
+import SEO from "@/components/SEO";
 
 const About = () => {
     const values = [
@@ -75,6 +76,11 @@ const About = () => {
 
     return (
         <div className="min-h-screen font-sans">
+            <SEO
+                title="À Propos - Expert Logistique Flux Tendu"
+                description="Expert logistique flux tendu. Société de transport française indépendante et partenaire logistique B2B premium."
+                keywords="Expert logistique flux tendu, Transporteur agréé, Société de transport française indépendante, Partenaire logistique B2B premium, Flotte chauffeurs qualifiés, Avis fiabilité One Connexion transport, Histoire entreprise One Connexion, Qui est derrière One Connexion"
+            />
             <Header />
 
             {/* Hero Section */}

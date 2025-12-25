@@ -2,10 +2,16 @@ import { Card } from "@/components/ui/card";
 import PricingSimulator from "@/components/client/PricingSimulator";
 import Header from "@/components/client/Header";
 import Footer from "@/components/client/Footer";
+import SEO from "@/components/SEO";
 
 const Tarifs = () => {
   return (
     <div className="min-h-screen bg-background font-sans">
+      <SEO
+        title="Tarifs Transport Express 2025"
+        description="Grille tarifaire transport express 2025. Coût au kilomètre et devis transport sur mesure. Transparence totale."
+        keywords="Grille tarifaire transport express 2025, Coût au kilomètre véhicule léger, Tarif course urgente, Comparatif prix coursier, Devis transport sur mesure, Combien coûte une livraison urgente de 50km ?, Prix moyen transport dédié véhicule utilitaire, Tarifs transparence transporteur"
+      />
       <Header />
 
       {/* Hero Section */}

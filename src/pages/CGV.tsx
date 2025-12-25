@@ -1,10 +1,16 @@
 import PublicLayout from "@/layouts/PublicLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { FileText, Calendar, Shield, CreditCard, AlertCircle } from "lucide-react";
+import SEO from "@/components/SEO";
 
 export default function CGV() {
   return (
     <PublicLayout>
+      <SEO
+        title="Conditions Générales de Vente (CGV)"
+        description="Conditions Générales de Vente de One Connexion. Modalités de commande, tarifs, paiement, assurances et responsabilités pour nos prestations de transport."
+        keywords="Responsabilité contractuelle transporteur, CGV transport routier marchandises, Politique confidentialité RGPD logistique, Conditions annulation course, Assurance marchandise transportée conditions"
+      />
       <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5 py-12">
         <div className="container mx-auto px-4 max-w-4xl">
           {/* Header */}

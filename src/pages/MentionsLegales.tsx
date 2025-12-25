@@ -1,10 +1,16 @@
 import PublicLayout from "@/layouts/PublicLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Building2, User, Globe, Shield, Mail, Phone } from "lucide-react";
+import SEO from "@/components/SEO";
 
 export default function MentionsLegales() {
   return (
     <PublicLayout>
+      <SEO
+        title="Mentions Légales - One Connexion"
+        description="Consultez nos mentions légales. Informations sur l'éditeur du site, l'hébergement, la propriété intellectuelle et la protection des données (RGPD)."
+        keywords="Mentions légales société transport, Informations juridiques One Connexion, Éediteur site logistique, Hébergement données transport, Propriété intellectuelle site web transport"
+      />
       <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5 py-12">
         <div className="container mx-auto px-4 max-w-4xl">
           {/* Header */}

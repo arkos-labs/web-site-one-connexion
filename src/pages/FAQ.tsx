@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import Header from "@/components/client/Header";
 import Footer from "@/components/client/Footer";
+import SEO from "@/components/SEO";
 
 const FAQ = () => {
   const categories = [
@@ -92,6 +93,11 @@ const FAQ = () => {
 
   return (
     <div className="min-h-screen">
+      <SEO
+        title="FAQ - Questions Fréquentes Transport"
+        description="Retrouvez toutes les réponses à vos questions sur nos services de transport : délais, tarifs, assurance, suivi colis et ouverture de compte."
+        keywords="Assurance transport ad valorem, Questions fréquentes livraison express, Aide expédition colis, FAQ transporteur logistique, Comment suivre mon colis One Connexion ?, Délais livraison urgence, Paiement facture transport"
+      />
       <Header />
       {/* Header */}
       <section className="bg-primary text-primary-foreground py-20">

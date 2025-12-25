@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import Header from "@/components/client/Header";
 import Footer from "@/components/client/Footer";
 import { MousePointerClick, Truck, PackageCheck, ArrowRight, Clock, Shield, MapPin } from "lucide-react";
+import SEO from "@/components/SEO";
 
 const HowItWorks = () => {
     const steps = [
@@ -51,6 +52,11 @@ const HowItWorks = () => {
 
     return (
         <div className="min-h-screen font-sans bg-gray-50">
+            <SEO
+                title="Comment ça marche - Traçabilité & Suivi"
+                description="Découvrez notre processus d'expédition sécurisée avec traçabilité GPS en temps réel et preuve de livraison dématérialisée."
+                keywords="Traçabilité GPS colis temps réel, Preuve de livraison dématérialisée (POD), Processus expédition sécurisée, Tracking livraison B2B, Géolocalisation transport, Comment suivre mon colis en temps réel avec One Connexion ?, Garantie de livraison transport express, Sécurité transport colis précieux"
+            />
             <Header />
 
             {/* Hero Section */}

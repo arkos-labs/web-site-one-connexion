@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import heroImage from "@/assets/hero-delivery-paris.jpg";
 import PricingSimulator from "@/components/client/PricingSimulator";
+import SEO from "@/components/SEO";
 
 const Home = () => {
   const expertises = [
@@ -65,6 +66,11 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans">
+      <SEO
+        title="One Connexion - Transport dédié sans rupture de charge"
+        description="Transport dédié sans rupture de charge. Solution logistique dernier kilomètre et coursier express national immédiat pour professionnels."
+        keywords="Transport dédié sans rupture de charge, Société de transport urgent, Coursier express national immédiat, Solution logistique dernier kilomètre, Transporteur colis urgence critique"
+      />
       <Header />
 
       {/* Hero Section */}

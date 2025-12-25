@@ -1,206 +1,221 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
+import { Package, Truck, Clock, AlertCircle, Zap, CheckCircle2, MapPin, Phone, Mail, Building2, FileText, CalendarClock } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import Header from "@/components/client/Header";
+import Footer from "@/components/client/Footer";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
-import { useToast } from "@/hooks/use-toast";
-import Header from "@/components/client/Header";
-import Footer from "@/components/client/Footer";
-import { Package, Truck, Clock, AlertCircle, Zap, Loader2 } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { AddressAutocomplete } from "@/components/ui/AddressAutocomplete";
 import { geocoderAdresse, calculerDistance } from "@/services/locationiq";
 import { type FormuleNew, type CalculTarifaireResult } from "@/utils/pricingEngine";
 import { calculerToutesLesFormulesAsync } from "@/utils/pricingEngineDb";
 import { loadPricingConfigCached } from "@/utils/pricingConfigLoader";
-import { OrderSummary } from "@/components/orders/OrderSummary";
-import { AddressAutocomplete } from "@/components/ui/AddressAutocomplete";
 import type { AddressSuggestion } from "@/lib/autocomplete";
-import { supabase } from "@/lib/supabase";
+import SEO from "@/components/SEO";
 
-/*
-Important :
-- Téléphone expéditeur et destinataire = OBLIGATOIRE (coursier doit appeler)
-- Pas de GPS pour commande sans compte
-- Facture envoyée par email après livraison
-- Historique récupéré automatiquement si le client crée un compte plus tard
-*/
+// --- Types & Interfaces ---
 
-// Composant de récapitulatif dynamique
-function RecapCommande({ data, pricingResults, formData }: {
-    data: any;
+interface GuestOrderFormData {
+    senderName: string;
+    senderPhone: string;
+    senderEmail: string; // Used as billing email mostly
+    recipientName: string;
+    recipientPhone: string;
+    billingName: string;
+    billingEmail: string;
+    billingAddress: string;
+    billingZip: string;
+    billingCity: string;
+    companyName: string;
+    siret: string;
+    pickupAddress: string;
+    pickupZip: string;
+    pickupCity: string;
+    pickupInstructions: string;
+    deliveryAddress: string;
+    deliveryZip: string;
+    deliveryCity: string;
+    deliveryInstructions: string;
+    packageType: string;
+    otherPackageType: string;
+    formula: string;
+    schedule: "asap" | "slot";
+    scheduleTime: string;
+    cgvAccepted: boolean;
+}
+
+const INITIAL_STATE: GuestOrderFormData = {
+    senderName: "", senderPhone: "", senderEmail: "",
+    recipientName: "", recipientPhone: "",
+    billingName: "", billingEmail: "", billingAddress: "", billingZip: "", billingCity: "", companyName: "", siret: "",
+    pickupAddress: "", pickupZip: "", pickupCity: "", pickupInstructions: "",
+    deliveryAddress: "", deliveryZip: "", deliveryCity: "", deliveryInstructions: "",
+    packageType: "", otherPackageType: "", formula: "", schedule: "asap", scheduleTime: "", cgvAccepted: false,
+};
+
+// --- Composants UI Helper ---
+
+const SectionHeader = ({ icon: Icon, title }: { icon: any, title: string }) => (
+    <div className="flex items-center gap-4 mb-6 pb-4 border-b border-gray-100">
+        <div className="w-10 h-10 rounded-lg bg-[#D4AF37]/10 flex items-center justify-center border border-[#D4AF37]/30">
+            <Icon className="h-5 w-5 text-[#D4AF37]" />
+        </div>
+        <h2 className="text-xl font-bold text-[#0B1525] font-serif tracking-wide">{title}</h2>
+    </div>
+);
+
+const FormError = ({ message }: { message?: string }) => {
+    if (!message) return null;
+    return <p className="text-xs text-red-400 mt-1 flex items-center gap-1 animate-in fade-in slide-in-from-top-1"><AlertCircle className="w-3 h-3" /> {message}</p>;
+};
+
+// --- Composant Recapitulatif (Extrait pour propreté) ---
+
+function RecapCommande({ formData, pricingResults, loading, onCgvChange }: {
+    formData: GuestOrderFormData;
     pricingResults: Record<FormuleNew, CalculTarifaireResult> | null;
-    formData: any;
+    loading: boolean;
+    onCgvChange: (checked: boolean) => void;
 }) {
-    // Déterminer le prix selon la formule sélectionnée
-    let selectedPrice = null;
-    if (pricingResults && formData.formula) {
-        if (formData.formula === 'express') selectedPrice = pricingResults.EXPRESS;
-        else if (formData.formula === 'flash') selectedPrice = pricingResults.URGENCE;
-        else if (formData.formula === 'standard') selectedPrice = pricingResults.NORMAL;
-    }
+    // Calcul du prix sélectionné
+    const selectedPrice = useMemo(() => {
+        if (!pricingResults || !formData.formula) return null;
+        const mapping: Record<string, FormuleNew> = { 'express': 'EXPRESS', 'flash': 'URGENCE', 'standard': 'NORMAL' };
+        return pricingResults[mapping[formData.formula]];
+    }, [pricingResults, formData.formula]);
+
+    const RecapItem = ({ label, value, sub }: { label: string, value: string, sub?: string }) => (
+        <div className="pb-3 border-b border-gray-100 last:border-0">
+            <p className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold mb-1">{label}</p>
+            <p className="font-medium text-[#0B1525] text-sm truncate">{value || "—"}</p>
+            {sub && <p className="text-xs text-slate-500 truncate">{sub}</p>}
+        </div>
+    );
 
     return (
-        <div className="bg-white p-6 shadow-lg rounded-xl border border-gray-100 sticky top-4">
-            <h2 className="text-xl font-bold text-slate-900 mb-4 font-sans">📋 Récapitulatif</h2>
-
-            <div className="space-y-3 text-sm">
-                {/* Expéditeur */}
-                <div className="pb-3 border-b">
-                    <p className="text-xs text-gray-500 mb-1">EXPÉDITEUR</p>
-                    <p className="font-semibold text-slate-900">{data.expediteur_nom || "—"}</p>
-                    <p className="text-gray-600">{data.expediteur_telephone || "—"}</p>
-                    <p className="text-gray-600 text-xs">{data.expediteur_email || "—"}</p>
-                </div>
-
-                {/* Destinataire */}
-                <div className="pb-3 border-b">
-                    <p className="text-xs text-gray-500 mb-1">DESTINATAIRE</p>
-                    <p className="font-semibold text-slate-900">{data.destinataire_nom || "—"}</p>
-                    <p className="text-gray-600">{data.destinataire_telephone || "—"}</p>
-                </div>
-
-                {/* Adresses */}
-                <div className="pb-3 border-b">
-                    <p className="text-xs text-gray-500 mb-1">📍 RETRAIT</p>
-                    <p className="text-gray-700">{data.adresse_retrait || "—"}</p>
-                </div>
-
-                <div className="pb-3 border-b">
-                    <p className="text-xs text-gray-500 mb-1">📍 LIVRAISON</p>
-                    <p className="text-gray-700">{data.adresse_livraison || "—"}</p>
-                </div>
-
-                {/* Facturation */}
-                {data.facturation_societe && (
-                    <div className="pb-3 border-b">
-                        <p className="text-xs text-gray-500 mb-1">🏢 FACTURATION</p>
-                        <p className="font-semibold text-slate-900">{data.facturation_societe}</p>
-                        {data.facturation_siret && (
-                            <p className="text-xs text-gray-600">SIRET: {data.facturation_siret}</p>
-                        )}
-                    </div>
+        <div className="bg-white/80 backdrop-blur-md p-6 shadow-xl rounded-2xl border border-white/20 transition-all duration-300">
+            <div className="flex items-center justify-between mb-6">
+                <h2 className="text-lg font-bold text-[#0B1525] font-serif">📋 Récapitulatif</h2>
+                {formData.formula && (
+                    <span className="px-3 py-1 rounded-full bg-gradient-to-r from-[#C5A028] to-[#E5C558] text-[#0B1525] text-xs font-bold uppercase shadow-sm">
+                        {formData.formula}
+                    </span>
                 )}
+            </div>
 
-                {/* Type de colis */}
-                {data.type_colis && (
-                    <div className="pb-3 border-b">
-                        <p className="text-xs text-gray-500 mb-1">📦 TYPE DE COLIS</p>
-                        <p className="text-gray-700">{data.type_colis}</p>
-                    </div>
-                )}
+            <div className="space-y-4">
+                <RecapItem label="Expéditeur" value={formData.senderName} sub={formData.senderPhone} />
+                <RecapItem label="Destinataire" value={formData.recipientName} sub={formData.recipientPhone} />
+                <RecapItem label="Retrait" value={formData.pickupAddress} sub={`${formData.pickupZip} ${formData.pickupCity}`} />
+                <RecapItem label="Livraison" value={formData.deliveryAddress} sub={`${formData.deliveryZip} ${formData.deliveryCity}`} />
 
-                {/* Formule et Prix */}
-                <div className="pt-2">
-                    <p className="text-xs text-gray-500 mb-1">⚡ FORMULE</p>
-                    <p className="font-bold text-slate-900 text-lg">
-                        {data.formule ? data.formule.toUpperCase() : "—"}
-                    </p>
-                </div>
-
-                {selectedPrice && (
-                    <div className="bg-[#D4AF37]/10 p-4 rounded-lg mt-4">
-                        <p className="text-xs text-gray-600 mb-1">PRIX TOTAL</p>
-                        <p className="text-3xl font-bold text-[#D4AF37]">
-                            {selectedPrice.totalEuros.toFixed(2)}€
-                        </p>
-                        <p className="text-xs text-gray-500 mt-1">
+                {selectedPrice ? (
+                    <div className="bg-gradient-to-r from-[#F8F9FA] to-white p-4 rounded-lg mt-6 border border-slate-100 shadow-inner">
+                        <p className="text-xs text-[#0B1525]/70 mb-1 font-semibold uppercase">Total Estimé HT</p>
+                        <div className="flex items-end justify-between">
+                            <p className="text-3xl font-bold text-[#D4AF37]">
+                                {selectedPrice.totalEuros.toFixed(2)}<span className="text-lg text-[#0B1525]">€</span>
+                            </p>
+                        </div>
+                        <p className="text-[10px] text-slate-400 mt-2 text-right">
                             {selectedPrice.totalBons.toFixed(2)} bons × 5.50€
                         </p>
                     </div>
+                ) : (
+                    <div className="mt-6 p-4 rounded-lg bg-slate-50 border border-slate-100 text-center">
+                        <p className="text-xs text-slate-500">Remplissez les adresses et choisissez une formule pour voir le tarif.</p>
+                    </div>
                 )}
+
+
+
+                <div className="flex items-start gap-2 mt-6">
+                    <input
+                        type="checkbox"
+                        id="cgv"
+                        checked={formData.cgvAccepted}
+                        onChange={(e) => onCgvChange(e.target.checked)}
+                        className="mt-1 w-4 h-4 rounded border-gray-300 text-[#D4AF37] focus:ring-[#D4AF37]"
+                    />
+                    <label htmlFor="cgv" className="text-xs text-slate-500 cursor-pointer select-none">
+                        En cliquant, vous acceptez nos <a href="#" className="underline text-[#0B1525]">conditions générales d'utilisation</a>. Une facture sera envoyée par email.
+                    </label>
+                </div>
+
+                <Button
+                    type="submit"
+                    className={`w-full mt-4 font-bold py-6 text-lg rounded-full shadow-lg transition-transform active:scale-[0.98]
+                        ${formData.cgvAccepted ? "bg-gradient-to-r from-[#C5A028] to-[#E5C558] hover:from-[#B08D1F] hover:to-[#D4B346] text-[#0B1525]" : "bg-slate-200 text-slate-400 cursor-not-allowed"}
+                    `}
+                    disabled={loading || !formData.cgvAccepted}
+                >
+                    {loading ? (
+                        <span className="flex items-center gap-2"><div className="w-4 h-4 border-2 border-[#0B1525] border-t-transparent rounded-full animate-spin" /> Traitement...</span>
+                    ) : (
+                        "Commander maintenant"
+                    )}
+                </Button>
             </div>
         </div>
     );
 }
 
+// --- Main Component ---
+
 const CommandeSansCompte = () => {
     const { toast } = useToast();
     const [loading, setLoading] = useState(false);
+    const [formData, setFormData] = useState<GuestOrderFormData>(INITIAL_STATE);
+    const [errors, setErrors] = useState<Partial<Record<keyof GuestOrderFormData, string>>>({});
 
-    // États pour le calcul tarifaire
+    // États Pricing
     const [pricingResults, setPricingResults] = useState<Record<FormuleNew, CalculTarifaireResult> | null>(null);
     const [isCalculatingPrice, setIsCalculatingPrice] = useState(false);
     const [pricingError, setPricingError] = useState<string | null>(null);
     const [villeArrivee, setVilleArrivee] = useState<string>("");
-
-    // ✅ State global pour le récapitulatif dynamique
-    const [orderData, setOrderData] = useState({
-        expediteur_nom: "",
-        expediteur_telephone: "",
-        expediteur_email: "",
-        destinataire_nom: "",
-        destinataire_telephone: "",
-        adresse_retrait: "",
-        adresse_livraison: "",
-        facturation_societe: "",
-        facturation_siret: "",
-        type_colis: "",
-        formule: "",
-        prix: 0,
-    });
-
-    const [formData, setFormData] = useState({
-        // Expéditeur
-        senderName: "",
-        senderPhone: "",
-        senderEmail: "",
-
-        // Destinataire
-        recipientName: "",
-        recipientPhone: "",
-
-        // Facturation
-        billingName: "",
-        billingAddress: "",
-        billingZip: "",
-        billingCity: "",
-        companyName: "",
-        siret: "",
-
-        // Retrait
-        pickupAddress: "",
-        pickupZip: "",
-        pickupCity: "",
-        pickupInstructions: "",
-
-        // Livraison
-        deliveryAddress: "",
-        deliveryZip: "",
-        deliveryCity: "",
-        deliveryInstructions: "",
-
-        // Détails
-        packageType: "",
-        otherPackageType: "",
-        formula: "",
-        schedule: "asap",
-        scheduleTime: "",
-    });
-
-    // État pour savoir si la formule Standard doit être grisée
     const [isStandardDisabled, setIsStandardDisabled] = useState(false);
 
-    // Calculer le prix automatiquement quand l'adresse de livraison change
-    useEffect(() => {
-        const calculerPrix = async () => {
-            if (!formData.deliveryAddress || formData.deliveryAddress.length < 10) {
-                setPricingResults(null);
-                setPricingError(null);
-                setVilleArrivee("");
-                return;
-            }
+    // --- Gestionnaires d'état ---
 
-            // Vérifier si on a une ville de départ
-            if (!formData.pickupCity) {
-                // On ne peut pas calculer sans ville de départ
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+        // Clear error on change
+        if (errors[name as keyof GuestOrderFormData]) {
+            setErrors(prev => ({ ...prev, [name]: undefined }));
+        }
+    };
+
+    const handleSelectChange = (name: keyof GuestOrderFormData, value: string) => {
+        setFormData(prev => ({ ...prev, [name]: value }));
+        if (errors[name]) setErrors(prev => ({ ...prev, [name]: undefined }));
+    };
+
+    const handleAddressSelect = (type: 'pickup' | 'delivery', suggestion: AddressSuggestion) => {
+        const fullAddress = `${suggestion.street}, ${suggestion.postcode} ${suggestion.city}`;
+        const updates = type === 'pickup'
+            ? { pickupAddress: fullAddress, pickupZip: suggestion.postcode, pickupCity: suggestion.city }
+            : { deliveryAddress: fullAddress, deliveryZip: suggestion.postcode, deliveryCity: suggestion.city };
+
+        setFormData(prev => ({ ...prev, ...updates }));
+
+        // Clear errors relative to address
+        const newErrors = { ...errors };
+        if (type === 'pickup') { delete newErrors.pickupAddress; delete newErrors.pickupCity; delete newErrors.pickupZip; }
+        else { delete newErrors.deliveryAddress; delete newErrors.deliveryCity; delete newErrors.deliveryZip; }
+        setErrors(newErrors);
+    };
+
+    // --- Logique Pricing & Validations ---
+
+    useEffect(() => {
+        const calculatePrice = async () => {
+            if (!formData.deliveryAddress || !formData.pickupCity || formData.deliveryAddress.length < 5) {
+                setPricingResults(null);
                 return;
             }
 
@@ -208,216 +223,128 @@ const CommandeSansCompte = () => {
             setPricingError(null);
 
             try {
-                // Géocoder les deux adresses pour obtenir les coordonnées et calculer la distance
                 const pickupGeocode = await geocoderAdresse(formData.pickupAddress);
                 const deliveryGeocode = await geocoderAdresse(formData.deliveryAddress);
 
-                // Calculer la distance entre les deux points (en km)
                 const distanceKm = calculerDistance(
-                    parseFloat(pickupGeocode.latitude.toString()),
-                    parseFloat(pickupGeocode.longitude.toString()),
-                    parseFloat(deliveryGeocode.latitude.toString()),
-                    parseFloat(deliveryGeocode.longitude.toString())
+                    pickupGeocode.latitude, pickupGeocode.longitude,
+                    deliveryGeocode.latitude, deliveryGeocode.longitude
                 );
 
                 setVilleArrivee(deliveryGeocode.ville);
-
-                // Charger la configuration de pricing depuis la base de données
                 const config = await loadPricingConfigCached();
-
-                // Calculer les tarifs avec la distance en MÈTRES (nouveau moteur)
                 const results = await calculerToutesLesFormulesAsync(formData.pickupCity, deliveryGeocode.ville, distanceKm * 1000, config);
+
                 setPricingResults(results as Record<FormuleNew, CalculTarifaireResult>);
-            } catch (error) {
-                if (error instanceof Error) {
-                    setPricingError(error.message);
-                } else {
-                    setPricingError("Erreur lors du calcul du prix");
-                }
+            } catch (err: any) {
+                setPricingError(err.message || "Erreur calcul itinéraire");
                 setPricingResults(null);
-                setVilleArrivee("");
             } finally {
                 setIsCalculatingPrice(false);
             }
         };
 
-        const timeoutId = setTimeout(calculerPrix, 1000);
-        return () => clearTimeout(timeoutId);
-    }, [formData.deliveryAddress, formData.deliveryCity, formData.pickupCity, formData.pickupAddress]);
+        const timer = setTimeout(calculatePrice, 800);
+        return () => clearTimeout(timer);
+    }, [formData.deliveryAddress, formData.pickupCity, formData.pickupAddress]); // Added dependencies for stability
 
-    // Vérifier si la formule Standard doit être grisée
+    // Désactivation formule Standard selon horaire
     useEffect(() => {
+        let disabled = false;
+
         if (formData.schedule === 'asap') {
-            // Condition A: "Dès que possible" sélectionné → griser Standard
-            setIsStandardDisabled(true);
-        } else if (formData.schedule === 'slot') {
-            // Condition B: Vérifier le délai du créneau choisi
-            if (formData.scheduleTime) {
+            disabled = true;
+        } else if (formData.schedule === 'slot' && formData.scheduleTime) {
+            const scheduledTime = new Date(formData.scheduleTime);
+            // Si la date est invalide, ne rien faire pour l'instant
+            if (!isNaN(scheduledTime.getTime())) {
                 const now = new Date();
-                const selectedDateTime = new Date(formData.scheduleTime);
-                const delayInMinutes = (selectedDateTime.getTime() - now.getTime()) / (1000 * 60);
-
-                // Si le délai est strictement inférieur à 60 minutes → griser Standard
-                setIsStandardDisabled(delayInMinutes < 60);
-            } else {
-                // Si pas de date/heure sélectionnée, ne pas griser
-                setIsStandardDisabled(false);
+                const diffMinutes = (scheduledTime.getTime() - now.getTime()) / (1000 * 60);
+                // Moins de 60 minutes = Standard désactivé
+                if (diffMinutes < 60) {
+                    disabled = true;
+                }
             }
-        } else {
-            // Pour tout autre cas, ne pas griser
-            setIsStandardDisabled(false);
-        }
-    }, [formData.schedule, formData.scheduleTime]);
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
-
-        // ✅ Mise à jour du récapitulatif en temps réel
-        if (name === 'senderName') setOrderData(prev => ({ ...prev, expediteur_nom: value }));
-        if (name === 'senderPhone') setOrderData(prev => ({ ...prev, expediteur_telephone: value }));
-        if (name === 'senderEmail') setOrderData(prev => ({ ...prev, expediteur_email: value }));
-        if (name === 'recipientName') setOrderData(prev => ({ ...prev, destinataire_nom: value }));
-        if (name === 'recipientPhone') setOrderData(prev => ({ ...prev, destinataire_telephone: value }));
-        if (name === 'pickupAddress') setOrderData(prev => ({ ...prev, adresse_retrait: value }));
-        if (name === 'deliveryAddress') setOrderData(prev => ({ ...prev, adresse_livraison: value }));
-        if (name === 'companyName') setOrderData(prev => ({ ...prev, facturation_societe: value }));
-        if (name === 'siret') setOrderData(prev => ({ ...prev, facturation_siret: value }));
-        if (name === 'packageType' || name === 'otherPackageType') {
-            setOrderData(prev => ({ ...prev, type_colis: value }));
-        }
-    };
-
-    const handleSelectChange = (name: string, value: string) => {
-        setFormData((prev) => ({ ...prev, [name]: value }));
-
-        // ✅ Mise à jour du récapitulatif pour les selects
-        if (name === 'formula') setOrderData(prev => ({ ...prev, formule: value }));
-        if (name === 'packageType') setOrderData(prev => ({ ...prev, type_colis: value }));
-    };
-
-    const validateForm = () => {
-        const errors = [];
-
-        // Expéditeur
-        if (!formData.senderName) errors.push("Nom expéditeur requis");
-        if (!formData.senderPhone) errors.push("Téléphone expéditeur requis");
-        if (!formData.senderEmail) errors.push("Email expéditeur requis");
-
-        // Destinataire
-        if (!formData.recipientName) errors.push("Nom destinataire requis");
-        if (!formData.recipientPhone) errors.push("Téléphone destinataire requis");
-
-        // Facturation
-        if (!formData.billingName) errors.push("Nom de facturation requis");
-        if (!formData.billingAddress) errors.push("Adresse de facturation requise");
-        if (!formData.billingZip) errors.push("Code postal facturation requis");
-        if (!formData.billingCity) errors.push("Ville facturation requise");
-
-        if (!formData.companyName) errors.push("Nom de l'entreprise requis");
-        if (!formData.siret || formData.siret.length !== 14) errors.push("SIRET valide (14 chiffres) requis");
-
-        // Adresses
-        if (!formData.pickupAddress) errors.push("Adresse de retrait requise");
-        if (!formData.pickupZip) errors.push("Code postal retrait requis");
-        if (!formData.pickupCity) errors.push("Ville retrait requise");
-
-        if (!formData.deliveryAddress) errors.push("Adresse de livraison requise");
-        if (!formData.deliveryZip) errors.push("Code postal livraison requis");
-        if (!formData.deliveryCity) errors.push("Ville livraison requise");
-
-        // Colis
-        if (!formData.packageType) errors.push("Type de colis requis");
-        if (formData.packageType === "autre" && !formData.otherPackageType) errors.push("Précisez le type de colis");
-
-        // Formule
-        if (!formData.formula) errors.push("Veuillez sélectionner une formule de livraison");
-
-        // Horaire
-        if (formData.schedule === 'slot' && !formData.scheduleTime) {
-            errors.push("Veuillez choisir un créneau horaire");
         }
 
-        return errors;
+        setIsStandardDisabled(disabled);
+
+        // Si la formule actuelle est standard et qu'elle devient désactivée, on change
+        if (disabled && formData.formula === 'standard') {
+            setFormData(prev => ({ ...prev, formula: 'express' })); // Basculer sur Express par défaut
+            toast({
+                title: "Formule Standard Indisponible",
+                description: "Le délai étant inférieur à 1h, nous avons basculé sur la formule Express.",
+                variant: "default",
+                className: "bg-slate-900 text-white border-[#D4AF37]"
+            });
+        }
+    }, [formData.schedule, formData.scheduleTime, formData.formula]);
+
+    // --- Validation & Submit ---
+
+    const validate = (): boolean => {
+        const newErrors: Partial<Record<keyof GuestOrderFormData, string>> = {};
+
+        if (!formData.senderName) newErrors.senderName = "Nom requis";
+        if (!formData.senderPhone) newErrors.senderPhone = "Téléphone requis";
+        if (!formData.recipientName) newErrors.recipientName = "Nom requis";
+        if (!formData.recipientPhone) newErrors.recipientPhone = "Téléphone requis";
+
+        if (!formData.billingName) newErrors.billingName = "Nom requis";
+        if (!formData.billingEmail) newErrors.billingEmail = "Email requis";
+        else if (!/\S+@\S+\.\S+/.test(formData.billingEmail)) newErrors.billingEmail = "Email invalide";
+
+        if (!formData.companyName) newErrors.companyName = "Société requise";
+        if (!formData.siret || formData.siret.length !== 14) newErrors.siret = "SIRET 14 chiffres";
+
+        if (!formData.pickupAddress) newErrors.pickupAddress = "Adresse requise";
+        if (!formData.deliveryAddress) newErrors.deliveryAddress = "Adresse requise";
+
+        if (!formData.packageType) newErrors.packageType = "Type requis";
+        if (!formData.formula) newErrors.formula = "Formule requise";
+        if (formData.schedule === 'slot' && !formData.scheduleTime) newErrors.scheduleTime = "Horaire requis";
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
     };
-
-
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const errors = validateForm();
-
-        if (errors.length > 0) {
-            toast({
-                variant: "destructive",
-                title: "Erreur de validation",
-                description: errors[0], // Affiche la première erreur
-            });
+        if (!validate()) {
+            toast({ variant: "destructive", title: "Formulaire incomplet", description: "Veuillez corriger les erreurs indiquées." });
+            // Scroll to top or first error could be implemented here
             return;
         }
 
         if (!pricingResults) {
-            toast({
-                variant: "destructive",
-                title: "Erreur",
-                description: "Impossible de calculer le prix. Veuillez vérifier les adresses.",
-            });
+            toast({ variant: "destructive", title: "Erreur technique", description: "Impossible de calculer le prix. Vérifiez les adresses." });
             return;
         }
 
         setLoading(true);
-
         try {
-            // Déterminer la clé de formule correcte pour récupérer le prix
-            let pricingKey: FormuleNew | null = null;
-            if (formData.formula === 'express') pricingKey = 'EXPRESS';
-            else if (formData.formula === 'flash') pricingKey = 'URGENCE';
-            else if (formData.formula === 'standard') pricingKey = 'NORMAL';
+            const mapping: Record<string, FormuleNew> = { 'express': 'EXPRESS', 'flash': 'URGENCE', 'standard': 'NORMAL' };
+            const pricingKey = mapping[formData.formula];
 
-            if (!pricingKey) {
-                toast({
-                    variant: "destructive",
-                    title: "Erreur",
-                    description: "Veuillez sélectionner une formule valide.",
-                });
-                return;
-            }
-
-            const selectedPrice = pricingResults[pricingKey];
-
-            // DEBUG: Voir ce qui est envoyé
-            console.log('📋 Données formulaire:', {
-                schedule: formData.schedule,
-                scheduleTime: formData.scheduleTime,
-                willSendScheduleTime: formData.schedule === 'custom' ? formData.scheduleTime : undefined
-            });
-
-            // Importer dynamiquement le service
+            // Dynamic import to keep bundle small
             const { createGuestOrder } = await import('@/services/guestOrderService');
 
-            // Appel au service pour créer la commande
             const response = await createGuestOrder({
                 senderName: formData.senderName,
-                senderEmail: formData.senderEmail,
+                senderEmail: formData.billingEmail,
                 senderPhone: formData.senderPhone,
-
                 pickupAddress: formData.pickupAddress,
                 pickupDetails: formData.pickupInstructions,
-
                 recipientName: formData.recipientName,
                 recipientPhone: formData.recipientPhone,
-
                 deliveryAddress: formData.deliveryAddress,
                 deliveryDetails: formData.deliveryInstructions,
-
                 packageDescription: formData.packageType === 'autre' ? formData.otherPackageType : formData.packageType,
                 formula: pricingKey,
-                pricingResult: selectedPrice,
-                villeArrivee: villeArrivee,
-
-                // Horaire planifié (si "Choisir un créneau" sélectionné)
+                pricingResult: pricingResults[pricingKey],
+                villeArrivee,
                 scheduleTime: formData.schedule === 'slot' ? formData.scheduleTime : undefined,
-
                 billingInfo: {
                     name: formData.billingName,
                     address: formData.billingAddress,
@@ -428,560 +355,310 @@ const CommandeSansCompte = () => {
                 }
             });
 
-            if (response.success && response.reference) {
+            if (response.success) {
                 toast({
-                    title: "Commande enregistrée avec succès !",
-                    description: `Votre commande ${response.reference} a bien été transmise. Vous recevrez un email de confirmation.`,
-                    className: "bg-[#0B2D55] text-white border-none",
+                    title: "Commande validée !",
+                    description: `Réf: ${response.reference}. Confirmation envoyée par email.`,
+                    className: "bg-[#0B2D55] text-white border-[#D4AF37]"
                 });
-
-                // Optionnel : rediriger vers une page de succès
-                // navigate('/order-success', { state: { reference: response.reference } });
+                // Redirection logic here...
             } else {
-                throw new Error(response.error || response.message || "Erreur lors de la création de la commande");
+                throw new Error(response.message || "Erreur inconnue");
             }
-
         } catch (error: any) {
-            console.error("Erreur lors de la commande:", error);
-            toast({
-                variant: "destructive",
-                title: "Erreur d'enregistrement",
-                description: error.message || "Une erreur est survenue lors de l'envoi de la commande. Veuillez réessayer ou nous contacter.",
-            });
+            console.error(error);
+            toast({ variant: "destructive", title: "Echec de la commande", description: error.message });
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 font-sans">
+        <div className="min-h-screen bg-slate-50 font-sans text-slate-900">
+            <SEO
+                title="Commander Coursier Immédiat - One Connexion"
+                description="Réserver coursier immédiat en ligne. Devis transport express instantané sans ouverture de compte. Livraison express paiement CB."
+                keywords="Réserver coursier immédiat en ligne, Devis transport express instantané, Prix course taxi colis, Commander transport sans ouverture de compte, Livraison express paiement CB, Comment commander un coursier sans contrat ?, Trouver un chauffeur livreur disponible tout de suite, Estimer prix course livraison immédiate"
+            />
             <Header />
 
-            {/* Hero Section */}
-            <section className="bg-slate-900 text-white py-20 relative overflow-hidden">
-                <div className="absolute inset-0 bg-[#D4AF37]/5 pattern-grid-lg opacity-10"></div>
-                <div className="container mx-auto px-4 text-center relative z-10">
-                    <h1 className="text-4xl md:text-5xl font-bold mb-6 font-serif tracking-tight">
-                        Commander une course sans compte
+            {/* Hero Minimaliste */}
+            <section className="relative pt-24 pb-12 overflow-hidden">
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#1e293b] via-[#0B1525] to-[#0B1525]" />
+                <div className="container relative z-10 px-4 text-center">
+                    <h1 className="text-4xl md:text-6xl font-bold text-white font-serif mb-6 leading-tight">
+                        Commande <span className="text-[#D4AF37] italic">Express</span>
                     </h1>
-                    <p className="text-xl text-slate-300 font-light max-w-2xl mx-auto">
-                        Rapide, sécurisé et sans inscription. La qualité One Connexion pour vos urgences.
-                    </p>
+                    <p className="text-slate-400 font-light max-w-xl mx-auto">Sans compte. Rapide. Sécurisé. Facturation pro immédiate.</p>
                 </div>
             </section>
 
-            <div className="container mx-auto px-4 py-12">
-                {/* ✅ Structure à deux colonnes : formulaire à gauche, récap à droite */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+            <div className="container mx-auto px-4 pb-20">
+                <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-12 gap-8 max-w-7xl mx-auto items-start">
 
-                    {/* Zone formulaire (2/3 de l'espace) */}
-                    <div id="form-zone" className="lg:col-span-2 space-y-8">
-                        <form onSubmit={handleSubmit} className="space-y-8">
+                    {/* Colonne Formulaire (gauche) */}
+                    <div className="lg:col-span-8 space-y-6">
 
-                            {/* A. Expéditeur */}
-                            <Card className="p-8 bg-white border-none shadow-md rounded-xl">
-                                <div className="flex items-center gap-4 mb-8">
-                                    <div className="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center border border-slate-100">
-                                        <Package className="h-6 w-6 text-slate-900" />
-                                    </div>
-                                    <h2 className="text-2xl font-bold text-slate-900 font-serif">Expéditeur</h2>
-                                </div>
-                                <div className="grid md:grid-cols-2 gap-6">
-                                    <div className="space-y-2">
-                                        <Label htmlFor="senderName">Nom complet *</Label>
-                                        <Input
-                                            id="senderName"
-                                            name="senderName"
-                                            value={formData.senderName}
-                                            onChange={handleChange}
-                                            placeholder="Jean Dupont"
-                                            required
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label htmlFor="senderPhone">Téléphone *</Label>
-                                        <Input
-                                            id="senderPhone"
-                                            name="senderPhone"
-                                            value={formData.senderPhone}
-                                            onChange={handleChange}
-                                            placeholder="06 12 34 56 78"
-                                            required
-                                        />
-                                        <p className="text-xs text-muted-foreground flex items-center gap-1">
-                                            <AlertCircle className="h-3 w-3" /> Obligatoire pour le coursier
-                                        </p>
-                                    </div>
-                                    <div className="space-y-2 md:col-span-2">
-                                        <Label htmlFor="senderEmail">Email *</Label>
-                                        <Input
-                                            id="senderEmail"
-                                            name="senderEmail"
-                                            type="email"
-                                            value={formData.senderEmail}
-                                            onChange={handleChange}
-                                            placeholder="jean.dupont@email.com"
-                                            required
-                                        />
-                                        <p className="text-xs text-muted-foreground">
-                                            Pour la confirmation et la facture
-                                        </p>
-                                    </div>
-                                </div>
-                            </Card>
-
-                            {/* B. Destinataire */}
-                            <Card className="p-8 bg-white border-none shadow-md rounded-xl">
-                                <div className="flex items-center gap-4 mb-8">
-                                    <div className="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center border border-slate-100">
-                                        <Package className="h-6 w-6 text-slate-900" />
-                                    </div>
-                                    <h2 className="text-2xl font-bold text-slate-900 font-serif">Destinataire</h2>
-                                </div>
-                                <div className="grid md:grid-cols-2 gap-6">
-                                    <div className="space-y-2">
-                                        <Label htmlFor="recipientName">Nom complet *</Label>
-                                        <Input
-                                            id="recipientName"
-                                            name="recipientName"
-                                            value={formData.recipientName}
-                                            onChange={handleChange}
-                                            placeholder="Marie Martin"
-                                            required
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label htmlFor="recipientPhone">Téléphone *</Label>
-                                        <Input
-                                            id="recipientPhone"
-                                            name="recipientPhone"
-                                            value={formData.recipientPhone}
-                                            onChange={handleChange}
-                                            placeholder="06 98 76 54 32"
-                                            required
-                                        />
-                                        <p className="text-xs text-muted-foreground flex items-center gap-1">
-                                            <AlertCircle className="h-3 w-3" /> Obligatoire pour la remise
-                                        </p>
-                                    </div>
-                                </div>
-                            </Card>
-
-                            {/* C. Facturation */}
-                            <Card className="p-8 bg-white border-none shadow-md rounded-xl">
-                                <div className="flex items-center justify-between mb-8">
-                                    <h2 className="text-2xl font-bold text-slate-900 font-serif">Facturation</h2>
-                                </div>
-
-                                <div className="grid md:grid-cols-2 gap-6">
-                                    <div className="space-y-2">
-                                        <Label htmlFor="companyName">Nom de l'entreprise *</Label>
-                                        <Input
-                                            id="companyName"
-                                            name="companyName"
-                                            value={formData.companyName}
-                                            onChange={handleChange}
-                                            placeholder="Ma Société SAS"
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label htmlFor="siret">SIRET (14 chiffres) *</Label>
-                                        <Input
-                                            id="siret"
-                                            name="siret"
-                                            value={formData.siret}
-                                            onChange={handleChange}
-                                            placeholder="12345678900012"
-                                            maxLength={14}
-                                        />
-                                    </div>
-
-                                    <div className="space-y-2 md:col-span-2">
-                                        <Label htmlFor="billingName">Nom à facturer *</Label>
-                                        <Input
-                                            id="billingName"
-                                            name="billingName"
-                                            value={formData.billingName}
-                                            onChange={handleChange}
-                                            placeholder="Service Comptabilité"
-                                            required
-                                        />
-                                    </div>
-
-                                    <div className="space-y-2 md:col-span-2">
-                                        <Label htmlFor="billingAddress">Adresse *</Label>
-                                        <Input
-                                            id="billingAddress"
-                                            name="billingAddress"
-                                            value={formData.billingAddress}
-                                            onChange={handleChange}
-                                            placeholder="10 rue de la Paix"
-                                            required
-                                        />
-                                    </div>
-
-                                    <div className="space-y-2">
-                                        <Label htmlFor="billingZip">Code postal *</Label>
-                                        <Input
-                                            id="billingZip"
-                                            name="billingZip"
-                                            value={formData.billingZip}
-                                            onChange={handleChange}
-                                            placeholder="75000"
-                                            required
-                                        />
-                                    </div>
-
-                                    <div className="space-y-2">
-                                        <Label htmlFor="billingCity">Ville *</Label>
-                                        <Input
-                                            id="billingCity"
-                                            name="billingCity"
-                                            value={formData.billingCity}
-                                            onChange={handleChange}
-                                            placeholder="Paris"
-                                            required
-                                        />
-                                    </div>
-                                </div>
-                            </Card>
-
-                            {/* D & E. Adresses Retrait / Livraison */}
-                            <div className="grid md:grid-cols-2 gap-6">
-                                {/* Retrait */}
-                                <Card className="p-6 bg-white border-none shadow-md rounded-xl">
-                                    <h2 className="text-xl font-bold text-slate-900 font-serif mb-6 flex items-center gap-3">
-                                        <span className="w-8 h-8 rounded-full bg-slate-900 text-white text-sm flex items-center justify-center font-bold">1</span>
-                                        Adresse de retrait
-                                    </h2>
-                                    <div className="space-y-4">
-                                        <div className="space-y-2">
-                                            <AddressAutocomplete
-                                                value={formData.pickupAddress}
-                                                onChange={(value) => {
-                                                    setFormData({ ...formData, pickupAddress: value });
-                                                    setOrderData(prev => ({ ...prev, adresse_retrait: value }));
-                                                }}
-                                                onAddressSelect={(suggestion) => {
-                                                    const fullAddress = `${suggestion.street}, ${suggestion.postcode} ${suggestion.city}`;
-                                                    setFormData({
-                                                        ...formData,
-                                                        pickupAddress: fullAddress,
-                                                        pickupZip: suggestion.postcode,
-                                                        pickupCity: suggestion.city
-                                                    });
-                                                    setOrderData(prev => ({ ...prev, adresse_retrait: fullAddress }));
-                                                }}
-                                                label="Adresse complète"
-                                                placeholder="123 Avenue des Champs-Élysées"
-                                                required
-                                                name="pickupAddress"
-                                            />
+                        {/* 1. Expéditeur & Destinataire (Groupés pour compacité) */}
+                        <Card className="p-6 md:p-8 bg-white border border-gray-100/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl">
+                            <SectionHeader icon={Package} title="Expédition & Réception" />
+                            <div className="grid md:grid-cols-2 gap-8">
+                                {/* Expéditeur */}
+                                <div className="space-y-4">
+                                    <h3 className="text-sm font-semibold text-[#D4AF37] uppercase tracking-wide">Expéditeur</h3>
+                                    <div className="space-y-3">
+                                        <div>
+                                            <Label htmlFor="senderName">Nom complet <span className="text-red-500">*</span></Label>
+                                            <Input id="senderName" name="senderName" value={formData.senderName} onChange={handleChange} placeholder="Jean Dupont" className={errors.senderName ? "border-red-500" : ""} />
+                                            <FormError message={errors.senderName} />
                                         </div>
-                                        <div className="grid grid-cols-2 gap-4">
-                                            <div className="space-y-2">
-                                                <Label htmlFor="pickupZip">Code postal *</Label>
-                                                <Input
-                                                    id="pickupZip"
-                                                    name="pickupZip"
-                                                    value={formData.pickupZip}
-                                                    onChange={handleChange}
-                                                    placeholder="75008"
-                                                    required
-                                                />
-                                            </div>
-                                            <div className="space-y-2">
-                                                <Label htmlFor="pickupCity">Ville *</Label>
-                                                <Input
-                                                    id="pickupCity"
-                                                    name="pickupCity"
-                                                    value={formData.pickupCity}
-                                                    onChange={handleChange}
-                                                    placeholder="Paris"
-                                                    required
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="space-y-2">
-                                            <Label htmlFor="pickupInstructions">Instructions (digicode, étage...)</Label>
-                                            <Textarea
-                                                id="pickupInstructions"
-                                                name="pickupInstructions"
-                                                value={formData.pickupInstructions}
-                                                onChange={handleChange}
-                                                placeholder="Code A123, 2ème étage..."
-                                                className="resize-none"
-                                            />
+                                        <div>
+                                            <Label htmlFor="senderPhone">Téléphone <span className="text-red-500">*</span></Label>
+                                            <Input id="senderPhone" name="senderPhone" value={formData.senderPhone} onChange={handleChange} placeholder="06..." className={errors.senderPhone ? "border-red-500" : ""} />
+                                            <FormError message={errors.senderPhone} />
                                         </div>
                                     </div>
-                                </Card>
-
-                                {/* Livraison */}
-                                <Card className="p-6 bg-white border-none shadow-md rounded-xl">
-                                    <h2 className="text-xl font-bold text-slate-900 font-serif mb-6 flex items-center gap-3">
-                                        <span className="w-8 h-8 rounded-full bg-[#D4AF37] text-white text-sm flex items-center justify-center font-bold">2</span>
-                                        Adresse de livraison
-                                    </h2>
-                                    <div className="space-y-4">
-                                        <div className="space-y-2">
-                                            <AddressAutocomplete
-                                                value={formData.deliveryAddress}
-                                                onChange={(value) => {
-                                                    setFormData({ ...formData, deliveryAddress: value });
-                                                    setOrderData(prev => ({ ...prev, adresse_livraison: value }));
-                                                }}
-                                                onAddressSelect={async (suggestion) => {
-                                                    const fullAddress = `${suggestion.street}, ${suggestion.postcode} ${suggestion.city}`;
-                                                    setFormData({
-                                                        ...formData,
-                                                        deliveryAddress: fullAddress,
-                                                        deliveryZip: suggestion.postcode,
-                                                        deliveryCity: suggestion.city
-                                                    });
-                                                    setOrderData(prev => ({ ...prev, adresse_livraison: fullAddress }));
-
-                                                    // Calculer automatiquement le prix avec la ville sélectionnée
-                                                    if (suggestion.city && formData.pickupCity) {
-                                                        setIsCalculatingPrice(true);
-                                                        setPricingError(null);
-                                                        try {
-                                                            setVilleArrivee(suggestion.city);
-                                                            // Charger la configuration de pricing
-                                                            const config = await loadPricingConfigCached();
-                                                            // Distance par défaut de 0 si pas encore calculée
-                                                            const results = await calculerToutesLesFormulesAsync(formData.pickupCity, suggestion.city, 0, config);
-                                                            setPricingResults(results as Record<FormuleNew, CalculTarifaireResult>);
-                                                        } catch (error) {
-                                                            if (error instanceof Error) {
-                                                                setPricingError(error.message);
-                                                            } else {
-                                                                setPricingError("Erreur lors du calcul du prix");
-                                                            }
-                                                            setPricingResults(null);
-                                                        } finally {
-                                                            setIsCalculatingPrice(false);
-                                                        }
-                                                    }
-                                                }}
-                                                label="Adresse complète"
-                                                placeholder="456 Rue de Rivoli"
-                                                required
-                                                name="deliveryAddress"
-                                            />
+                                </div>
+                                {/* Destinataire */}
+                                <div className="space-y-4">
+                                    <h3 className="text-sm font-semibold text-[#D4AF37] uppercase tracking-wide">Destinataire</h3>
+                                    <div className="space-y-3">
+                                        <div>
+                                            <Label htmlFor="recipientName">Nom complet <span className="text-red-500">*</span></Label>
+                                            <Input id="recipientName" name="recipientName" value={formData.recipientName} onChange={handleChange} placeholder="Marie Martin" className={errors.recipientName ? "border-red-500" : ""} />
+                                            <FormError message={errors.recipientName} />
                                         </div>
-                                        <div className="grid grid-cols-2 gap-4">
-                                            <div className="space-y-2">
-                                                <Label htmlFor="deliveryZip">Code postal *</Label>
-                                                <Input
-                                                    id="deliveryZip"
-                                                    name="deliveryZip"
-                                                    value={formData.deliveryZip}
-                                                    onChange={handleChange}
-                                                    placeholder="75001"
-                                                    required
-                                                />
-                                            </div>
-                                            <div className="space-y-2">
-                                                <Label htmlFor="deliveryCity">Ville *</Label>
-                                                <Input
-                                                    id="deliveryCity"
-                                                    name="deliveryCity"
-                                                    value={formData.deliveryCity}
-                                                    onChange={handleChange}
-                                                    placeholder="Paris"
-                                                    required
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="space-y-2">
-                                            <Label htmlFor="deliveryInstructions">Instructions (digicode, étage...)</Label>
-                                            <Textarea
-                                                id="deliveryInstructions"
-                                                name="deliveryInstructions"
-                                                value={formData.deliveryInstructions}
-                                                onChange={handleChange}
-                                                placeholder="Interphone B, laisser à l'accueil..."
-                                                className="resize-none"
-                                            />
+                                        <div>
+                                            <Label htmlFor="recipientPhone">Téléphone <span className="text-red-500">*</span></Label>
+                                            <Input id="recipientPhone" name="recipientPhone" value={formData.recipientPhone} onChange={handleChange} placeholder="06..." className={errors.recipientPhone ? "border-red-500" : ""} />
+                                            <FormError message={errors.recipientPhone} />
                                         </div>
                                     </div>
-                                </Card>
+                                </div>
                             </div>
+                        </Card>
 
-                            {/* F, G, H. Détails de la course */}
-                            <Card className="p-8 bg-white border-none shadow-md rounded-xl">
-                                <h2 className="text-2xl font-bold text-slate-900 font-serif mb-8">Détails de la course</h2>
+                        {/* 2. Trajet */}
+                        <Card className="p-6 md:p-8 bg-white border border-gray-100/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl">
+                            <SectionHeader icon={MapPin} title="Itinéraire de la course" />
+                            <div className="space-y-6 relative">
+                                {/* Ligne pointillée connectant A et B */}
+                                <div className="absolute left-[1.35rem] top-10 bottom-10 w-0.5 border-l-2 border-dashed border-slate-700 hidden md:block"></div>
 
-                                <div className="grid md:grid-cols-2 gap-6 mb-6">
-                                    <div className="space-y-2">
-                                        <Label>Type de colis *</Label>
-                                        <Select
-                                            value={formData.packageType}
-                                            onValueChange={(val) => handleSelectChange("packageType", val)}
-                                        >
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Sélectionnez un type" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="document">Document / Pli</SelectItem>
-                                                <SelectItem value="petit_colis">Petit colis</SelectItem>
-                                                <SelectItem value="materiel_sensible">Matériel sensible</SelectItem>
-                                                <SelectItem value="medical">Colis médical</SelectItem>
-                                                <SelectItem value="autre">Autre</SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                        {formData.packageType === "autre" && (
-                                            <Input
-                                                name="otherPackageType"
-                                                value={formData.otherPackageType}
-                                                onChange={handleChange}
-                                                placeholder="Précisez la nature du colis"
-                                                className="mt-2"
-                                            />
-                                        )}
+                                {/* Pickup */}
+                                <div className="grid md:grid-cols-[auto_1fr] gap-4">
+                                    <div className="hidden md:flex flex-col items-center pt-2">
+                                        <div className="w-4 h-4 rounded-full bg-[#D4AF37] ring-4 ring-white z-10 shadow-md"></div>
                                     </div>
-
-                                    <div className="space-y-2">
-                                        {pricingError && (
-                                            <div className="p-3 mb-4 text-sm text-red-500 bg-red-50 border border-red-200 rounded-md flex items-center gap-2">
-                                                <AlertCircle className="h-4 w-4" />
-                                                {pricingError}
-                                            </div>
-                                        )}
-                                        <Label>Formule *</Label>
-                                        <div className="grid grid-cols-3 gap-2">
-                                            {[
-                                                { id: "standard", label: "Standard", icon: Truck, pricingKey: "NORMAL" },
-                                                { id: "express", label: "Express", icon: Clock, pricingKey: "EXPRESS" },
-                                                { id: "flash", label: "Flash", icon: Zap, pricingKey: "URGENCE" },
-                                            ].map((f) => {
-                                                const price = pricingResults ? pricingResults[f.pricingKey as FormuleNew] : null;
-                                                const isDisabled = !pricingResults || !!pricingError || (f.id === "standard" && isStandardDisabled);
-
-                                                return (
-                                                    <div
-                                                        key={f.id}
-                                                        className={`rounded-lg border-2 p-3 text-center transition-all ${isDisabled
-                                                            ? "opacity-50 cursor-not-allowed bg-gray-50 border-gray-200"
-                                                            : formData.formula === f.id
-                                                                ? "border-[#D4AF37] bg-[#D4AF37]/10 cursor-pointer"
-                                                                : "border-gray-100 hover:border-gray-200 cursor-pointer"
-                                                            }`}
-                                                        onClick={() => {
-                                                            if (!isDisabled) {
-                                                                handleSelectChange("formula", f.id);
-                                                            }
-                                                        }}
-                                                    >
-                                                        <f.icon className={`h-5 w-5 mx-auto mb-1 ${isDisabled
-                                                            ? "text-gray-300"
-                                                            : formData.formula === f.id
-                                                                ? "text-slate-900"
-                                                                : "text-gray-400"
-                                                            }`} />
-                                                        <span className={`text-xs font-bold block ${isDisabled
-                                                            ? "text-gray-400"
-                                                            : formData.formula === f.id
-                                                                ? "text-slate-900"
-                                                                : "text-gray-500"
-                                                            }`}>
-                                                            {f.label}
-                                                        </span>
-                                                        {price && !isDisabled && (
-                                                            <span className="text-xs font-bold text-slate-900 mt-1 block">
-                                                                {price.totalEuros.toFixed(2)}€
-                                                            </span>
-                                                        )}
-                                                    </div>
-                                                );
-                                            })}
+                                    <div className="space-y-3">
+                                        <Label className="text-[#D4AF37]">Adresse de retrait (Point A)</Label>
+                                        <AddressAutocomplete
+                                            value={formData.pickupAddress}
+                                            onChange={(val) => handleSelectChange('pickupAddress', val)}
+                                            onAddressSelect={(s) => handleAddressSelect('pickup', s)}
+                                            placeholder="Rechercher une adresse..."
+                                            name="pickupAddress"
+                                            className={errors.pickupAddress ? "border-red-500" : ""}
+                                        />
+                                        <div className="grid grid-cols-2 gap-3">
+                                            <Input name="pickupZip" value={formData.pickupZip} onChange={handleChange} placeholder="Code postal" />
+                                            <Input name="pickupCity" value={formData.pickupCity} onChange={handleChange} placeholder="Ville" />
                                         </div>
+                                        <Input name="pickupInstructions" value={formData.pickupInstructions} onChange={handleChange} placeholder="Instructions (Code, étage, contact sur place...)" className="text-sm" />
                                     </div>
                                 </div>
 
-                                <div className="space-y-2">
-                                    <Label>Horaire de prise en charge *</Label>
-                                    <div className="flex flex-wrap gap-4">
+                                {/* Delivery */}
+                                <div className="grid md:grid-cols-[auto_1fr] gap-4">
+                                    <div className="hidden md:flex flex-col items-center pt-2">
+                                        <div className="w-4 h-4 rounded-full bg-slate-400 ring-4 ring-white z-10 shadow-md"></div>
+                                    </div>
+                                    <div className="space-y-3">
+                                        <Label className="text-slate-600">Adresse de livraison (Point B)</Label>
+                                        <AddressAutocomplete
+                                            value={formData.deliveryAddress}
+                                            onChange={(val) => handleSelectChange('deliveryAddress', val)}
+                                            onAddressSelect={(s) => handleAddressSelect('delivery', s)}
+                                            placeholder="Rechercher une adresse..."
+                                            name="deliveryAddress"
+                                            className={errors.deliveryAddress ? "border-red-500" : ""}
+                                        />
+                                        <div className="grid grid-cols-2 gap-3">
+                                            <Input name="deliveryZip" value={formData.deliveryZip} onChange={handleChange} placeholder="Code postal" />
+                                            <Input name="deliveryCity" value={formData.deliveryCity} onChange={handleChange} placeholder="Ville" />
+                                        </div>
+                                        <Input name="deliveryInstructions" value={formData.deliveryInstructions} onChange={handleChange} placeholder="Instructions (Interphone, accueil...)" className="text-sm" />
+                                    </div>
+                                </div>
+                            </div>
+                        </Card>
+
+                        {/* 3. Détails & Formule */}
+                        <Card className="p-6 md:p-8 bg-white border border-gray-100/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl">
+                            <SectionHeader icon={SettingsIcon} title="Détails de la mission" />
+
+                            <div className="grid md:grid-cols-2 gap-6 mb-8">
+                                <div>
+                                    <Label>Type de colis</Label>
+                                    <Select value={formData.packageType} onValueChange={(v) => handleSelectChange('packageType', v)}>
+                                        <SelectTrigger className={`mt-2 ${errors.packageType ? "border-red-500" : ""}`}>
+                                            <SelectValue placeholder="Sélectionner..." />
+                                        </SelectTrigger>
+                                        <SelectContent className="bg-white border-slate-200 text-slate-900 shadow-lg">
+                                            <SelectItem value="document">Pli / Document</SelectItem>
+                                            <SelectItem value="petit_colis">Petit colis (-10kg)</SelectItem>
+                                            <SelectItem value="materiel_sensible">Matériel sensible</SelectItem>
+                                            <SelectItem value="autre">Autre</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                    {formData.packageType === "autre" && (
+                                        <Input name="otherPackageType" value={formData.otherPackageType} onChange={handleChange} placeholder="Précisez..." className="mt-2" />
+                                    )}
+                                </div>
+
+                                <div>
+                                    <Label>Horaire</Label>
+                                    <div className="flex gap-2 mt-2">
                                         <Button
                                             type="button"
                                             variant={formData.schedule === "asap" ? "cta" : "outline"}
                                             onClick={() => handleSelectChange("schedule", "asap")}
-                                            className={formData.schedule === "asap" ? "text-white" : ""}
+                                            className={`flex-1 rounded-full ${formData.schedule === "asap" ? "bg-gradient-to-r from-[#C5A028] to-[#E5C558] text-[#0B1525]" : "border-slate-200 text-slate-600 hover:bg-slate-50"}`}
                                         >
-                                            Dès que possible
+                                            Immédiat
                                         </Button>
                                         <Button
                                             type="button"
                                             variant={formData.schedule === "slot" ? "cta" : "outline"}
                                             onClick={() => handleSelectChange("schedule", "slot")}
-                                            className={formData.schedule === "slot" ? "text-white" : ""}
+                                            className={`flex-1 rounded-full ${formData.schedule === "slot" ? "bg-gradient-to-r from-[#C5A028] to-[#E5C558] text-[#0B1525]" : "border-slate-200 text-slate-600 hover:bg-slate-50"}`}
                                         >
-                                            Choisir un créneau
+                                            Programmé
                                         </Button>
                                     </div>
                                     {formData.schedule === "slot" && (
-                                        <Input
-                                            type="datetime-local"
-                                            name="scheduleTime"
-                                            value={formData.scheduleTime}
-                                            onChange={handleChange}
-                                            className="mt-2 max-w-xs"
-                                        />
-                                    )}
-                                    {formData.schedule === "slot" && isStandardDisabled && formData.scheduleTime && (
-                                        <p className="text-sm text-amber-600 flex items-center gap-2 mt-2">
-                                            <AlertCircle className="h-4 w-4" />
-                                            La formule Standard n'est pas disponible pour un créneau dans moins d'1 heure
-                                        </p>
+                                        <Input type="datetime-local" name="scheduleTime" value={formData.scheduleTime} onChange={handleChange} className="mt-2" />
                                     )}
                                 </div>
-                            </Card>
+                            </div>
 
-                            {/* Récapitulatif de la commande (mobile uniquement) */}
-                            {pricingResults && (
-                                <div className="lg:hidden animate-fade-in-up">
-                                    <OrderSummary
-                                        pickupAddress={formData.pickupAddress}
-                                        deliveryAddress={formData.deliveryAddress}
-                                        senderName={formData.senderName}
-                                        senderPhone={formData.senderPhone}
-                                        recipientName={formData.recipientName}
-                                        recipientPhone={formData.recipientPhone}
-                                        packageDescription={formData.packageType === 'autre' ? formData.otherPackageType : formData.packageType}
-                                        pricingResult={pricingResults[formData.formula === 'express' ? 'EXPRESS' : formData.formula === 'flash' ? 'URGENCE' : 'NORMAL']}
-                                    />
+                            {/* Sélecteur de Formule */}
+                            <div className="space-y-4">
+                                <Label>Choisissez votre formule {isCalculatingPrice && <span className="text-xs text-[#D4AF37] animate-pulse ml-2">Calcul en cours...</span>}</Label>
+                                {pricingError && <p className="text-red-400 text-sm">{pricingError}</p>}
+
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    {[
+                                        { id: "standard", label: "Standard", icon: Truck, key: "NORMAL", desc: "Eco & Fiable" },
+                                        { id: "express", label: "Express", icon: Clock, key: "EXPRESS", desc: "Prioritaire" },
+                                        { id: "flash", label: "Flash", icon: Zap, key: "URGENCE", desc: "Immédiat" },
+                                    ].map((f) => {
+                                        const price = pricingResults ? pricingResults[f.key as FormuleNew] : null;
+                                        const disabled = !pricingResults || (f.id === "standard" && isStandardDisabled);
+                                        const selected = formData.formula === f.id;
+
+                                        return (
+                                            <div
+                                                key={f.id}
+                                                onClick={() => !disabled && handleSelectChange("formula", f.id)}
+                                                className={`
+                                                    relative border rounded-xl p-4 cursor-pointer transition-all duration-200
+                                                    ${disabled ? "opacity-40 cursor-not-allowed border-slate-100 bg-slate-50" : "hover:border-[#D4AF37]/50 hover:shadow-md"}
+                                                    ${selected ? "border-[#D4AF37] bg-[#D4AF37]/5 ring-1 ring-[#D4AF37]" : "border-slate-200 bg-white"}
+                                                `}
+                                            >
+                                                {selected && <div className="absolute top-2 right-2 text-[#D4AF37]"><CheckCircle2 className="w-5 h-5" /></div>}
+                                                <f.icon className={`w-6 h-6 mb-3 ${selected ? "text-[#D4AF37]" : "text-slate-400"}`} />
+                                                <p className="font-bold text-[#0B1525]">{f.label}</p>
+                                                <p className="text-xs text-slate-500 mb-2">{f.desc}</p>
+                                                {price ? (
+                                                    <p className={`text-xl font-bold ${selected ? "text-[#D4AF37]" : "text-[#0B1525]"}`}>{price.totalEuros.toFixed(2)}€</p>
+                                                ) : (
+                                                    <p className="text-sm text-slate-300">-- €</p>
+                                                )}
+                                            </div>
+                                        )
+                                    })}
                                 </div>
-                            )}
+                                {isStandardDisabled && formData.schedule === 'slot' && (
+                                    <p className="text-xs text-amber-500 flex items-center gap-1 mt-2">
+                                        <AlertCircle className="w-3 h-3" /> Standard indisponible pour départ imminent (-1h)
+                                    </p>
+                                )}
+                            </div>
+                        </Card>
 
-                            <Button
-                                type="submit"
-                                className="w-full bg-[#D4AF37] hover:bg-[#b5952f] text-white font-bold py-6 text-lg rounded-xl transition-all shadow-lg hover:shadow-xl"
-                                disabled={loading}
-                            >
-                                {loading ? "Enregistrement..." : "Commander maintenant"}
-                            </Button>
+                        {/* 4. Facturation */}
+                        <Card className="p-6 md:p-8 bg-white border border-gray-100/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl">
+                            <SectionHeader icon={Building2} title="Facturation" />
+                            <div className="grid md:grid-cols-2 gap-6">
+                                <div className="space-y-3">
+                                    <div>
+                                        <Label htmlFor="companyName">Raison Sociale <span className="text-red-500">*</span></Label>
+                                        <Input id="companyName" name="companyName" value={formData.companyName} onChange={handleChange} placeholder="Ma Société SAS" className={errors.companyName ? "border-red-500" : ""} />
+                                        <FormError message={errors.companyName} />
+                                    </div>
+                                    <div>
+                                        <Label htmlFor="siret">SIRET <span className="text-red-500">*</span></Label>
+                                        <Input id="siret" name="siret" value={formData.siret} onChange={handleChange} maxLength={14} placeholder="14 chiffres" className={errors.siret ? "border-red-500" : ""} />
+                                        <FormError message={errors.siret} />
+                                    </div>
+                                </div>
+                                <div className="space-y-3">
+                                    <div>
+                                        <Label htmlFor="billingEmail">Email Facturation <span className="text-red-500">*</span></Label>
+                                        <Input type="email" id="billingEmail" name="billingEmail" value={formData.billingEmail} onChange={handleChange} placeholder="compta@societe.com" className={errors.billingEmail ? "border-red-500" : ""} />
+                                        <FormError message={errors.billingEmail} />
+                                    </div>
+                                    <div>
+                                        <Label htmlFor="billingName">Nom contact <span className="text-red-500">*</span></Label>
+                                        <Input id="billingName" name="billingName" value={formData.billingName} onChange={handleChange} placeholder="Service Compta" className={errors.billingName ? "border-red-500" : ""} />
+                                        <FormError message={errors.billingName} />
+                                    </div>
+                                </div>
+                                <div className="md:col-span-2 grid md:grid-cols-3 gap-4">
+                                    <div className="md:col-span-2">
+                                        <Label>Adresse de facturation <span className="text-red-500">*</span></Label>
+                                        <Input name="billingAddress" value={formData.billingAddress} onChange={handleChange} placeholder="10 rue de la Paix" />
+                                    </div>
+                                    <div>
+                                        <Label>Code Postal <span className="text-red-500">*</span></Label>
+                                        <Input name="billingZip" value={formData.billingZip} onChange={handleChange} placeholder="75000" />
+                                    </div>
+                                    <div className="hidden">
+                                        {/* Hidden city input maintained for state logic consistency if needed */}
+                                        <Input name="billingCity" value={formData.billingCity} onChange={handleChange} />
+                                    </div>
+                                </div>
+                            </div>
+                        </Card>
 
-                        </form>
+                        {/* Submit Button (Mobile) */}
+
                     </div>
 
-                    {/* ✅ Zone récapitulatif (1/3 de l'espace, sticky à droite) */}
-                    <div id="recap-zone" className="hidden lg:block">
-                        <div className="sticky top-4">
+                    {/* Colonne Récap (Droite - Sticky Desktop) */}
+                    <div className="lg:col-span-4 sticky top-28 z-20 h-fit">
+                        <div className="lg:col-span-4">
                             <RecapCommande
-                                data={orderData}
-                                pricingResults={pricingResults}
                                 formData={formData}
+                                pricingResults={pricingResults}
+                                loading={loading}
+                                onCgvChange={(checked) => setFormData(prev => ({ ...prev, cgvAccepted: checked }))}
                             />
                         </div>
                     </div>
 
-                </div>
+                </form>
             </div>
-
             <Footer />
         </div>
     );
 };
 
-export default CommandeSansCompte;
+// Helper Icon for section 3
+const SettingsIcon = (props: any) => (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" /><polyline points="3.27 6.96 12 12.01 20.73 6.96" /><line x1="12" y1="22.08" x2="12" y2="12" /></svg>
+)
 
+export default CommandeSansCompte;

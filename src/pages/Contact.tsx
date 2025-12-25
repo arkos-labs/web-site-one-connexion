@@ -11,6 +11,7 @@ import { contactFormSchema, ContactFormData } from "@/lib/validations";
 import { toast } from "sonner";
 import Header from "@/components/client/Header";
 import Footer from "@/components/client/Footer";
+import SEO from "@/components/SEO";
 import StaticMap from "@/components/ui/StaticMap";
 import { supabase } from "@/lib/supabase";
 import {
@@ -106,6 +107,11 @@ const Contact = () => {
 
   return (
     <div className="min-h-screen bg-background font-sans">
+      <SEO
+        title="Contactez One Connexion - Support Réactif"
+        description="Besoin d'un transport urgent ou d'une information ? Contactez notre support client disponible 7j/7 pour une prise en charge immédiate."
+        keywords="Service client logistique réactif, Numéro téléphone coursier urgence, Support One Connexion, Devis transport contact, Réclamation livraison colis, Adresse siège One Connexion, Email contact transporteur professionnel"
+      />
       <Header />
 
       {/* Hero Section */}

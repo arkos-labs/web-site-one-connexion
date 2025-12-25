@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Stethoscope, Scale, Calendar, Car } from "lucide-react";
 import Header from "@/components/client/Header";
 import Footer from "@/components/client/Footer";
+import SEO from "@/components/SEO";
 
 const Expertises = () => {
   const expertises = [
@@ -39,6 +40,11 @@ const Expertises = () => {
 
   return (
     <div className="min-h-screen bg-secondary/30 font-sans">
+      <SEO
+        title="Nos Expertises - Solutions Transport Sectorielles"
+        description="Découvrez nos solutions de transport sectorielles et notre logistique spécialisée par métier (Médical, Juridique, Automobile, Événementiel)."
+        keywords="Solutions transport sectorielles, Logistique spécialisée par métier, Transport dédié industries, Expertise livraison critique"
+      />
       <Header />
 
       {/* Hero Section */}

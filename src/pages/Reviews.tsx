@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Star, Quote } from "lucide-react";
 import Header from "@/components/client/Header";
 import Footer from "@/components/client/Footer";
+import SEO from "@/components/SEO";
 
 const Reviews = () => {
     const reviews = [
@@ -58,6 +59,11 @@ const Reviews = () => {
 
     return (
         <div className="min-h-screen font-sans">
+            <SEO
+                title="Avis Clients - One Connexion"
+                description="Découvrez les témoignages de nos clients professionnels. Plus de 500 avis positifs sur la qualité, la rapidité et la fiabilité de nos livraisons."
+                keywords="Témoignages clients B2B transport, Note One Connexion Google, Références clients logistique, Avis service livraison express, Recommandation transporteur paris, Satisfaction client logistique"
+            />
             <Header />
 
             {/* Hero Section */}
