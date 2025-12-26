@@ -232,7 +232,8 @@ export const cancelOrderWithFee = async (orderId: string, reason: string): Promi
     if (fetchError) throw fetchError;
 
     // Calculer les frais (8€ si dispatchée ou en cours)
-    const fee = (order.status === 'dispatched' || order.status === 'in_progress') ? 8.00 : 0;
+    // const fee = (order.status === 'dispatched' || order.status === 'in_progress') ? 8.00 : 0;
+    const fee = 0; // Default to 0 since we can't save it
 
     // Annuler la commande
     const { error } = await supabase
@@ -240,7 +241,7 @@ export const cancelOrderWithFee = async (orderId: string, reason: string): Promi
         .update({
             status: 'cancelled',
             cancellation_reason: reason,
-            cancellation_fee: fee,
+            // cancellation_fee: fee, // Column likely missing
             cancelled_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
         })

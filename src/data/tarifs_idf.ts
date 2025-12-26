@@ -1,25 +1,9 @@
+
 /**
  * GRILLE TARIFAIRE ONE CONNEXION - ILE-DE-FRANCE
  * ===============================================
  * 
- * SYSTÈME DE BONS:
- * - 1 bon = 5,5 €
- * - Aucune estimation par distance
- * - Prix fixe par ville et formule
- * 
- * FORMULES:
- * - NORMAL: Livraison standard
- * - EXPRESS: Livraison rapide  
- * - URGENCE: Livraison en urgence
- * - VL_NORMAL: Véhicule léger normal
- * - VL_EXPRESS: Véhicule léger express
- * 
- * EXEMPLE:
- * - Melun + EXPRESS = 27 bons = 27 × 5,5€ = 148,5€
- * - Cachan + URGENCE = 11 bons = 11 × 5,5€ = 60,5€
- * 
- * @generated
- * @date 2024-12-03
+ * Basée sur la liste fournie par le client (26/12/2025)
  */
 
 export type Formule = "NORMAL" | "EXPRESS" | "URGENCE" | "VL_NORMAL" | "VL_EXPRESS";
@@ -27,677 +11,1250 @@ export type Formule = "NORMAL" | "EXPRESS" | "URGENCE" | "VL_NORMAL" | "VL_EXPRE
 export interface TarifVille {
   cp: string;
   ville: string;
-  formules: Record<Formule, number>; // Nombre de bons (pas d'euros)
+  formules: Record<Formule, number>;
 }
-
-export interface PrixCalcule {
-  cp: string;
-  ville: string;
-  formule: Formule;
-  nb_bons: number;
-  prix_euros: number;
-  calcul: string; // "27 × 5,5€ = 148,5€"
-}
-
-// ===================================================================
-// CONSTANTES
-// ===================================================================
-
-export const PRIX_PAR_BON = 5.5;
-
-export const FORMULES: Formule[] = [
-  "NORMAL",
-  "EXPRESS",
-  "URGENCE",
-  "VL_NORMAL",
-  "VL_EXPRESS"
-];
-
-export const NOMS_FORMULES: Record<Formule, string> = {
-  "NORMAL": "Livraison Normale",
-  "EXPRESS": "Express",
-  "URGENCE": "Urgence",
-  "VL_NORMAL": "Véhicule Léger Normal",
-  "VL_EXPRESS": "Véhicule Léger Express"
-};
-
-export const DESCRIPTIONS_FORMULES: Record<Formule, string> = {
-  "NORMAL": "Livraison standard dans les délais normaux",
-  "EXPRESS": "Livraison rapide et prioritaire",
-  "URGENCE": "Livraison d'urgence au plus vite",
-  "VL_NORMAL": "Livraison en véhicule léger (colis de petite taille)",
-  "VL_EXPRESS": "Livraison express en véhicule léger"
-};
-
-// ===================================================================
-// GRILLE TARIFAIRE - TOUTES LES VILLES D'ILE-DE-FRANCE
-// ===================================================================
-// Source: grille_tarifaire.pdf
-// Format: [CP, Ville, NORMAL, EXPRESS, URGENCE, VL_NORMAL, VL_EXPRESS] (en bons)
-// ===================================================================
 
 export const TARIFS_BONS: TarifVille[] = [
-  // SEINE-ET-MARNE (77)
   {
-    cp: "77000",
-    ville: "Melun",
-    formules: { NORMAL: 25, EXPRESS: 27, URGENCE: 35, VL_NORMAL: 18, VL_EXPRESS: 22 }
+    "ville": "Alfortville",
+    "cp": "94140",
+    base: 6
   },
   {
-    cp: "77100",
-    ville: "Meaux",
-    formules: { NORMAL: 28, EXPRESS: 31, URGENCE: 40, VL_NORMAL: 20, VL_EXPRESS: 25 }
+    "ville": "Antony",
+    "cp": "92160",
+    base: 8
   },
   {
-    cp: "77170",
-    ville: "Brie-Comte-Robert",
-    formules: { NORMAL: 24, EXPRESS: 26, URGENCE: 34, VL_NORMAL: 17, VL_EXPRESS: 21 }
+    "ville": "Arcueil",
+    "cp": "94110",
+    base: 4
   },
   {
-    cp: "77604",
-    ville: "Noisiel",
-    formules: { NORMAL: 22, EXPRESS: 24, URGENCE: 32, VL_NORMAL: 16, VL_EXPRESS: 20 }
+    "ville": "Argenteuil",
+    "cp": "95100",
+    base: 8
   },
   {
-    cp: "77160",
-    ville: "Dammarie-les-Lys",
-    formules: { NORMAL: 26, EXPRESS: 28, URGENCE: 36, VL_NORMAL: 18, VL_EXPRESS: 23 }
+    "ville": "Arpajon",
+    "cp": "91290",
+    base: 15
   },
   {
-    cp: "77200",
-    ville: "Torcy",
-    formules: { NORMAL: 23, EXPRESS: 25, URGENCE: 33, VL_NORMAL: 16, VL_EXPRESS: 21 }
+    "ville": "Asnières sur Seine",
+    "cp": "92600",
+    base: 4
   },
   {
-    cp: "77600",
-    ville: "Mitry-Mory",
-    formules: { NORMAL: 21, EXPRESS: 23, URGENCE: 31, VL_NORMAL: 15, VL_EXPRESS: 19 }
+    "ville": "Athis Mons",
+    "cp": "91200",
+    base: 12
   },
   {
-    cp: "77300",
-    ville: "Fontainebleau",
-    formules: { NORMAL: 30, EXPRESS: 34, URGENCE: 44, VL_NORMAL: 22, VL_EXPRESS: 28 }
+    "ville": "Aubervilliers",
+    "cp": "93300",
+    base: 4
   },
   {
-    cp: "77350",
-    ville: "Le Mée-sur-Seine",
-    formules: { NORMAL: 27, EXPRESS: 29, URGENCE: 38, VL_NORMAL: 19, VL_EXPRESS: 24 }
+    "ville": "Aulnay sous Bois",
+    "cp": "93600",
+    base: 12
   },
   {
-    cp: "77400",
-    ville: "Lagny-sur-Marne",
-    formules: { NORMAL: 20, EXPRESS: 22, URGENCE: 29, VL_NORMAL: 14, VL_EXPRESS: 18 }
+    "ville": "Bagneux",
+    "cp": "92220",
+    base: 4
   },
   {
-    cp: "77420",
-    ville: "Champs-sur-Marne",
-    formules: { NORMAL: 21, EXPRESS: 23, URGENCE: 31, VL_NORMAL: 15, VL_EXPRESS: 19 }
+    "ville": "Bagnolet",
+    "cp": "93170",
+    base: 4
   },
   {
-    cp: "77200",
-    ville: "Marne-la-Vallée",
-    formules: { NORMAL: 22, EXPRESS: 24, URGENCE: 32, VL_NORMAL: 16, VL_EXPRESS: 20 }
+    "ville": "Bezons",
+    "cp": "95870",
+    base: 8
   },
   {
-    cp: "77500",
-    ville: "Chelles",
-    formules: { NORMAL: 19, EXPRESS: 21, URGENCE: 28, VL_NORMAL: 13, VL_EXPRESS: 17 }
+    "ville": "Bièvres",
+    "cp": "91570",
+    base: 12
   },
   {
-    cp: "77600",
-    ville: "Bussy-Saint-Georges",
-    formules: { NORMAL: 23, EXPRESS: 25, URGENCE: 33, VL_NORMAL: 16, VL_EXPRESS: 21 }
+    "ville": "Blanc Mesnil (le)",
+    "cp": "93150",
+    base: 8
   },
   {
-    cp: "77700",
-    ville: "Serris",
-    formules: { NORMAL: 24, EXPRESS: 26, URGENCE: 34, VL_NORMAL: 17, VL_EXPRESS: 22 }
+    "ville": "Bobigny",
+    "cp": "93000",
+    base: 6
   },
   {
-    cp: "77130",
-    ville: "Montereau-Fault-Yonne",
-    formules: { NORMAL: 32, EXPRESS: 37, URGENCE: 48, VL_NORMAL: 24, VL_EXPRESS: 30 }
+    "ville": "Bois Colombes",
+    "cp": "92270",
+    base: 4
   },
-
-  // YVELINES (78)
   {
-    cp: "78000",
-    ville: "Versailles",
-    formules: { NORMAL: 18, EXPRESS: 20, URGENCE: 26, VL_NORMAL: 13, VL_EXPRESS: 16 }
+    "ville": "Bois d'Arcy",
+    "cp": "78390",
+    base: 14
   },
   {
-    cp: "78200",
-    ville: "Les Mureaux",
-    formules: { NORMAL: 25, EXPRESS: 28, URGENCE: 36, VL_NORMAL: 18, VL_EXPRESS: 23 }
+    "ville": "Bondoufle",
+    "cp": "91070",
+    base: 15
   },
   {
-    cp: "78150",
-    ville: "Le Chesnay",
-    formules: { NORMAL: 17, EXPRESS: 19, URGENCE: 25, VL_NORMAL: 12, VL_EXPRESS: 15 }
+    "ville": "Bondy",
+    "cp": "93140",
+    base: 8
   },
   {
-    cp: "78100",
-    ville: "Saint-Germain-en-Laye",
-    formules: { NORMAL: 20, EXPRESS: 22, URGENCE: 29, VL_NORMAL: 14, VL_EXPRESS: 18 }
+    "ville": "Bonneuil sur Marne",
+    "cp": "94380",
+    base: 12
   },
   {
-    cp: "78300",
-    ville: "Poissy",
-    formules: { NORMAL: 22, EXPRESS: 24, URGENCE: 32, VL_NORMAL: 15, VL_EXPRESS: 20 }
+    "ville": "Bougival",
+    "cp": "78380",
+    base: 8
   },
   {
-    cp: "78560",
-    ville: "Conflans-Sainte-Honorine",
-    formules: { NORMAL: 23, EXPRESS: 25, URGENCE: 33, VL_NORMAL: 16, VL_EXPRESS: 21 }
+    "ville": "Boulogne Billancourt",
+    "cp": "92100",
+    base: 3
   },
   {
-    cp: "78400",
-    ville: "Chatou",
-    formules: { NORMAL: 19, EXPRESS: 21, URGENCE: 27, VL_NORMAL: 13, VL_EXPRESS: 17 }
+    "ville": "Bourg la Reine",
+    "cp": "92340",
+    base: 8
   },
   {
-    cp: "78960",
-    ville: "Vaux-sur-Seine",
-    formules: { NORMAL: 24, EXPRESS: 26, URGENCE: 34, VL_NORMAL: 17, VL_EXPRESS: 22 }
+    "ville": "Bourget (le)",
+    "cp": "93350",
+    base: 8
   },
-
-  // ESSONNE (91)
   {
-    cp: "91000",
-    ville: "Évry-Courcouronnes",
-    formules: { NORMAL: 21, EXPRESS: 23, URGENCE: 30, VL_NORMAL: 15, VL_EXPRESS: 19 }
+    "ville": "Brie Comte Robert",
+    "cp": "77170",
+    base: 20
   },
   {
-    cp: "91100",
-    ville: "Corbeil-Essonnes",
-    formules: { NORMAL: 23, EXPRESS: 25, URGENCE: 33, VL_NORMAL: 16, VL_EXPRESS: 21 }
+    "ville": "Bry sur Marne",
+    "cp": "94360",
+    base: 8
   },
   {
-    cp: "91300",
-    ville: "Massy",
-    formules: { NORMAL: 17, EXPRESS: 19, URGENCE: 25, VL_NORMAL: 12, VL_EXPRESS: 15 }
+    "ville": "Buc",
+    "cp": "78530",
+    base: 8
   },
   {
-    cp: "91140",
-    ville: "Savigny-sur-Orge",
-    formules: { NORMAL: 18, EXPRESS: 20, URGENCE: 26, VL_NORMAL: 13, VL_EXPRESS: 16 }
+    "ville": "Bussy Saint Georges",
+    "cp": "77600",
+    base: 14
   },
   {
-    cp: "91700",
-    ville: "Sainte-Geneviève-des-Bois",
-    formules: { NORMAL: 19, EXPRESS: 21, URGENCE: 27, VL_NORMAL: 13, VL_EXPRESS: 17 }
+    "ville": "Cachan",
+    "cp": "94230",
+    base: 4
   },
   {
-    cp: "91170",
-    ville: "Viry-Châtillon",
-    formules: { NORMAL: 20, EXPRESS: 22, URGENCE: 29, VL_NORMAL: 14, VL_EXPRESS: 18 }
+    "ville": "Carrières sur Seine",
+    "cp": "78420",
+    base: 8
   },
   {
-    cp: "91200",
-    ville: "Athis-Mons",
-    formules: { NORMAL: 21, EXPRESS: 23, URGENCE: 30, VL_NORMAL: 15, VL_EXPRESS: 19 }
+    "ville": "Cergy",
+    "cp": "95800",
+    base: 15
   },
   {
-    cp: "91120",
-    ville: "Palaiseau",
-    formules: { NORMAL: 18, EXPRESS: 20, URGENCE: 26, VL_NORMAL: 13, VL_EXPRESS: 16 }
+    "ville": "Champigny sur Marne",
+    "cp": "94500",
+    base: 8
   },
-
-  // HAUTS-DE-SEINE (92)
   {
-    cp: "92100",
-    ville: "Boulogne-Billancourt",
-    formules: { NORMAL: 12, EXPRESS: 14, URGENCE: 18, VL_NORMAL: 8, VL_EXPRESS: 11 }
+    "ville": "Champs sur Marne",
+    "cp": "77420",
+    base: 14
   },
   {
-    cp: "92110",
-    ville: "Clichy",
-    formules: { NORMAL: 13, EXPRESS: 15, URGENCE: 19, VL_NORMAL: 9, VL_EXPRESS: 12 }
+    "ville": "Charenton le Pont",
+    "cp": "94220",
+    base: 4
   },
   {
-    cp: "92200",
-    ville: "Neuilly-sur-Seine",
-    formules: { NORMAL: 11, EXPRESS: 13, URGENCE: 17, VL_NORMAL: 8, VL_EXPRESS: 10 }
+    "ville": "Châtenay Malabry",
+    "cp": "92290",
+    base: 8
   },
   {
-    cp: "92300",
-    ville: "Levallois-Perret",
-    formules: { NORMAL: 13, EXPRESS: 15, URGENCE: 19, VL_NORMAL: 9, VL_EXPRESS: 12 }
+    "ville": "Chatillon",
+    "cp": "92320",
+    base: 4
   },
   {
-    cp: "92400",
-    ville: "Courbevoie",
-    formules: { NORMAL: 14, EXPRESS: 16, URGENCE: 20, VL_NORMAL: 10, VL_EXPRESS: 12 }
+    "ville": "Chatou",
+    "cp": "78400",
+    base: 8
   },
   {
-    cp: "92500",
-    ville: "Rueil-Malmaison",
-    formules: { NORMAL: 15, EXPRESS: 17, URGENCE: 22, VL_NORMAL: 11, VL_EXPRESS: 14 }
+    "ville": "Chaville",
+    "cp": "92370",
+    base: 7
   },
   {
-    cp: "92600",
-    ville: "Asnières-sur-Seine",
-    formules: { NORMAL: 14, EXPRESS: 16, URGENCE: 21, VL_NORMAL: 10, VL_EXPRESS: 13 }
+    "ville": "Chelles",
+    "cp": "77500",
+    base: 14
   },
   {
-    cp: "92700",
-    ville: "La Garenne-Colombes",
-    formules: { NORMAL: 14, EXPRESS: 16, URGENCE: 21, VL_NORMAL: 10, VL_EXPRESS: 13 }
+    "ville": "Chennevières sur Marne",
+    "cp": "94430",
+    base: 12
   },
-
-  // SEINE-SAINT-DENIS (93)
   {
-    cp: "93000",
-    ville: "Bobigny",
-    formules: { NORMAL: 14, EXPRESS: 16, URGENCE: 21, VL_NORMAL: 10, VL_EXPRESS: 13 }
+    "ville": "Chesnay Rocquencourt (le)",
+    "cp": "78150",
+    base: 8
   },
   {
-    cp: "93100",
-    ville: "Montreuil",
-    formules: { NORMAL: 13, EXPRESS: 15, URGENCE: 19, VL_NORMAL: 9, VL_EXPRESS: 12 }
+    "ville": "Chessy",
+    "cp": "77700",
+    base: 20
   },
   {
-    cp: "93200",
-    ville: "Saint-Denis",
-    formules: { NORMAL: 15, EXPRESS: 17, URGENCE: 22, VL_NORMAL: 11, VL_EXPRESS: 14 }
+    "ville": "Chevilly Larue",
+    "cp": "94550",
+    base: 8
   },
   {
-    cp: "93300",
-    ville: "Aubervilliers",
-    formules: { NORMAL: 15, EXPRESS: 17, URGENCE: 22, VL_NORMAL: 11, VL_EXPRESS: 14 }
+    "ville": "Chilly Mazarin",
+    "cp": "91380",
+    base: 12
   },
   {
-    cp: "93400",
-    ville: "Saint-Ouen-sur-Seine",
-    formules: { NORMAL: 14, EXPRESS: 16, URGENCE: 21, VL_NORMAL: 10, VL_EXPRESS: 13 }
+    "ville": "Choisy le Roi",
+    "cp": "94600",
+    base: 8
   },
   {
-    cp: "93500",
-    ville: "Pantin",
-    formules: { NORMAL: 14, EXPRESS: 16, URGENCE: 21, VL_NORMAL: 10, VL_EXPRESS: 13 }
+    "ville": "Clamart",
+    "cp": "92140",
+    base: 4
   },
-
-  // VAL-DE-MARNE (94)
   {
-    cp: "94000",
-    ville: "Créteil",
-    formules: { NORMAL: 13, EXPRESS: 15, URGENCE: 19, VL_NORMAL: 9, VL_EXPRESS: 12 }
+    "ville": "Clichy",
+    "cp": "92110",
+    base: 3
   },
   {
-    cp: "94100",
-    ville: "Saint-Maur-des-Fossés",
-    formules: { NORMAL: 14, EXPRESS: 16, URGENCE: 20, VL_NORMAL: 10, VL_EXPRESS: 12 }
+    "ville": "Clichy sous Bois",
+    "cp": "93390",
+    base: 14
   },
   {
-    cp: "94200",
-    ville: "Ivry-sur-Seine",
-    formules: { NORMAL: 13, EXPRESS: 15, URGENCE: 19, VL_NORMAL: 9, VL_EXPRESS: 12 }
+    "ville": "Colombes",
+    "cp": "92700",
+    base: 4
   },
   {
-    cp: "94230",
-    ville: "Cachan",
-    formules: { NORMAL: 9, EXPRESS: 10, URGENCE: 11, VL_NORMAL: 6, VL_EXPRESS: 8 }
+    "ville": "Combs la Ville",
+    "cp": "77380",
+    base: 18
   },
   {
-    cp: "94300",
-    ville: "Vincennes",
-    formules: { NORMAL: 11, EXPRESS: 13, URGENCE: 17, VL_NORMAL: 8, VL_EXPRESS: 10 }
+    "ville": "Conflans Ste Honorine",
+    "cp": "78700",
+    base: 15
   },
   {
-    cp: "94400",
-    ville: "Vitry-sur-Seine",
-    formules: { NORMAL: 14, EXPRESS: 16, URGENCE: 21, VL_NORMAL: 10, VL_EXPRESS: 13 }
+    "ville": "Coubron",
+    "cp": "93470",
+    base: 14
   },
-
-  // VAL-D'OISE (95)
   {
-    cp: "95000",
-    ville: "Cergy",
-    formules: { NORMAL: 26, EXPRESS: 29, URGENCE: 37, VL_NORMAL: 19, VL_EXPRESS: 24 }
+    "ville": "Coulommiers",
+    "cp": "77120",
+    base: 30
   },
   {
-    cp: "95100",
-    ville: "Argenteuil",
-    formules: { NORMAL: 18, EXPRESS: 20, URGENCE: 26, VL_NORMAL: 13, VL_EXPRESS: 16 }
+    "ville": "Courbevoie",
+    "cp": "92400",
+    base: 3
   },
   {
-    cp: "95200",
-    ville: "Sarcelles",
-    formules: { NORMAL: 17, EXPRESS: 19, URGENCE: 25, VL_NORMAL: 12, VL_EXPRESS: 15 }
+    "ville": "Courcouronnes",
+    "cp": "91080",
+    base: 15
   },
-
-  // PARIS (75)
   {
-    cp: "75001",
-    ville: "Paris 1er",
-    formules: { NORMAL: 8, EXPRESS: 10, URGENCE: 13, VL_NORMAL: 5, VL_EXPRESS: 7 }
+    "ville": "Courneuve (la)",
+    "cp": "93120",
+    base: 6
   },
   {
-    cp: "75002",
-    ville: "Paris 2e",
-    formules: { NORMAL: 8, EXPRESS: 10, URGENCE: 13, VL_NORMAL: 5, VL_EXPRESS: 7 }
+    "ville": "Créteil",
+    "cp": "94000",
+    base: 8
   },
   {
-    cp: "75003",
-    ville: "Paris 3e",
-    formules: { NORMAL: 8, EXPRESS: 10, URGENCE: 13, VL_NORMAL: 5, VL_EXPRESS: 7 }
+    "ville": "Croissy Beaubourg",
+    "cp": "77183",
+    base: 14
   },
   {
-    cp: "75004",
-    ville: "Paris 4e",
-    formules: { NORMAL: 8, EXPRESS: 10, URGENCE: 13, VL_NORMAL: 5, VL_EXPRESS: 7 }
+    "ville": "Défense (la)",
+    "cp": "92060",
+    base: 3
   },
   {
-    cp: "75005",
-    ville: "Paris 5e",
-    formules: { NORMAL: 8, EXPRESS: 10, URGENCE: 13, VL_NORMAL: 5, VL_EXPRESS: 7 }
+    "ville": "Deuil la Barre",
+    "cp": "95170",
+    base: 10
   },
   {
-    cp: "75006",
-    ville: "Paris 6e",
-    formules: { NORMAL: 8, EXPRESS: 10, URGENCE: 13, VL_NORMAL: 5, VL_EXPRESS: 7 }
+    "ville": "Domont",
+    "cp": "95330",
+    base: 14
   },
   {
-    cp: "75007",
-    ville: "Paris 7e",
-    formules: { NORMAL: 8, EXPRESS: 10, URGENCE: 13, VL_NORMAL: 5, VL_EXPRESS: 7 }
+    "ville": "Drancy",
+    "cp": "93700",
+    base: 8
   },
   {
-    cp: "75008",
-    ville: "Paris 8e",
-    formules: { NORMAL: 8, EXPRESS: 10, URGENCE: 13, VL_NORMAL: 5, VL_EXPRESS: 7 }
+    "ville": "Dugny",
+    "cp": "93440",
+    base: 8
   },
   {
-    cp: "75009",
-    ville: "Paris 9e",
-    formules: { NORMAL: 8, EXPRESS: 10, URGENCE: 13, VL_NORMAL: 5, VL_EXPRESS: 7 }
+    "ville": "Elancourt",
+    "cp": "78990",
+    base: 14
   },
   {
-    cp: "75010",
-    ville: "Paris 10e",
-    formules: { NORMAL: 8, EXPRESS: 10, URGENCE: 13, VL_NORMAL: 5, VL_EXPRESS: 7 }
+    "ville": "Emerainville",
+    "cp": "77184",
+    base: 14
   },
   {
-    cp: "75011",
-    ville: "Paris 11e",
-    formules: { NORMAL: 8, EXPRESS: 10, URGENCE: 13, VL_NORMAL: 5, VL_EXPRESS: 7 }
+    "ville": "Enghien les Bains",
+    "cp": "95880",
+    base: 10
   },
   {
-    cp: "75012",
-    ville: "Paris 12e",
-    formules: { NORMAL: 8, EXPRESS: 10, URGENCE: 13, VL_NORMAL: 5, VL_EXPRESS: 7 }
+    "ville": "Epinay sur Seine",
+    "cp": "93800",
+    base: 6
   },
   {
-    cp: "75013",
-    ville: "Paris 13e",
-    formules: { NORMAL: 8, EXPRESS: 10, URGENCE: 13, VL_NORMAL: 5, VL_EXPRESS: 7 }
+    "ville": "Étampes",
+    "cp": "91150",
+    base: 25
   },
   {
-    cp: "75014",
-    ville: "Paris 14e",
-    formules: { NORMAL: 8, EXPRESS: 10, URGENCE: 13, VL_NORMAL: 5, VL_EXPRESS: 7 }
+    "ville": "Evry",
+    "cp": "91000",
+    base: 15
   },
   {
-    cp: "75015",
-    ville: "Paris 15e",
-    formules: { NORMAL: 8, EXPRESS: 10, URGENCE: 13, VL_NORMAL: 5, VL_EXPRESS: 7 }
+    "ville": "Fontainebleau",
+    "cp": "77300",
+    base: 30
   },
   {
-    cp: "75016",
-    ville: "Paris 16e",
-    formules: { NORMAL: 8, EXPRESS: 10, URGENCE: 13, VL_NORMAL: 5, VL_EXPRESS: 7 }
+    "ville": "Fontenay aux Roses",
+    "cp": "92260",
+    base: 4
   },
   {
-    cp: "75017",
-    ville: "Paris 17e",
-    formules: { NORMAL: 8, EXPRESS: 10, URGENCE: 13, VL_NORMAL: 5, VL_EXPRESS: 7 }
+    "ville": "Fontenay sous Bois",
+    "cp": "94120",
+    base: 6
   },
   {
-    cp: "75018",
-    ville: "Paris 18e",
-    formules: { NORMAL: 8, EXPRESS: 10, URGENCE: 13, VL_NORMAL: 5, VL_EXPRESS: 7 }
+    "ville": "Fourqueux",
+    "cp": "78112",
+    base: 10
   },
   {
-    cp: "75019",
-    ville: "Paris 19e",
-    formules: { NORMAL: 8, EXPRESS: 10, URGENCE: 13, VL_NORMAL: 5, VL_EXPRESS: 7 }
+    "ville": "Franconville la Garenne",
+    "cp": "95130",
+    base: 10
   },
   {
-    cp: "75020",
-    ville: "Paris 20e",
-    formules: { NORMAL: 8, EXPRESS: 10, URGENCE: 13, VL_NORMAL: 5, VL_EXPRESS: 7 }
+    "ville": "Fresnes",
+    "cp": "94260",
+    base: 8
+  },
+  {
+    "ville": "Gagny",
+    "cp": "93220",
+    base: 12
+  },
+  {
+    "ville": "Garches",
+    "cp": "92380",
+    base: 4
+  },
+  {
+    "ville": "Garenne Colombes (la)",
+    "cp": "92250",
+    base: 4
+  },
+  {
+    "ville": "Garges les Gonesse",
+    "cp": "95140",
+    base: 10
+  },
+  {
+    "ville": "Gennevilliers",
+    "cp": "92230",
+    base: 4
+  },
+  {
+    "ville": "Gentilly",
+    "cp": "94250",
+    base: 4
+  },
+  {
+    "ville": "Gif sur Yvette",
+    "cp": "91190",
+    base: 15
+  },
+  {
+    "ville": "Gometz le Châtel",
+    "cp": "91940",
+    base: 15
+  },
+  {
+    "ville": "Gonesse",
+    "cp": "95000",
+    base: 10
+  },
+  {
+    "ville": "Gournay sur Marne",
+    "cp": "93460",
+    base: 14
+  },
+  {
+    "ville": "Goussainville",
+    "cp": "95190",
+    base: 14
+  },
+  {
+    "ville": "Guyancourt",
+    "cp": "78280",
+    base: 14
+  },
+  {
+    "ville": "Hay les Roses (l')",
+    "cp": "94240",
+    base: 6
+  },
+  {
+    "ville": "Herblay",
+    "cp": "95220",
+    base: 15
+  },
+  {
+    "ville": "Houilles",
+    "cp": "78800",
+    base: 8
+  },
+  {
+    "ville": "Iles Saint Denis (l')",
+    "cp": "93450",
+    base: 6
+  },
+  {
+    "ville": "Issy les Moulineaux",
+    "cp": "92130",
+    base: 3
+  },
+  {
+    "ville": "Ivry sur Seine",
+    "cp": "94200",
+    base: 4
+  },
+  {
+    "ville": "Joinville le Pont",
+    "cp": "94340",
+    base: 6
+  },
+  {
+    "ville": "Jouy en Josas",
+    "cp": "78350",
+    base: 8
+  },
+  {
+    "ville": "Juvisy sur Orge",
+    "cp": "91260",
+    base: 12
+  },
+  {
+    "ville": "Kremlin Bicêtre (le)",
+    "cp": "94250",
+    base: 4
+  },
+  {
+    "ville": "Le Queue en Brie",
+    "cp": "94510",
+    base: 14
+  },
+  {
+    "ville": "Levallois Perret",
+    "cp": "92300",
+    base: 3
+  },
+  {
+    "ville": "Lieusaint",
+    "cp": "77127",
+    base: 18
+  },
+  {
+    "ville": "Lilas (les)",
+    "cp": "93260",
+    base: 4
+  },
+  {
+    "ville": "Limeil Brevannes",
+    "cp": "94450",
+    base: 12
+  },
+  {
+    "ville": "Lisses",
+    "cp": "91090",
+    base: 15
+  },
+  {
+    "ville": "Livry Gargan",
+    "cp": "93190",
+    base: 14
+  },
+  {
+    "ville": "Lognes",
+    "cp": "77185",
+    base: 14
+  },
+  {
+    "ville": "Longjumeau",
+    "cp": "91160",
+    base: 12
+  },
+  {
+    "ville": "Louveciennes",
+    "cp": "78430",
+    base: 8
+  },
+  {
+    "ville": "Maisons Alfort",
+    "cp": "94700",
+    base: 6
+  },
+  {
+    "ville": "Maisons Laffite",
+    "cp": "78600",
+    base: 10
+  },
+  {
+    "ville": "Malakoff",
+    "cp": "92240",
+    base: 3
+  },
+  {
+    "ville": "Mantes la Jolie",
+    "cp": "78200",
+    base: 25
+  },
+  {
+    "ville": "Marly le Roi",
+    "cp": "78160",
+    base: 8
+  },
+  {
+    "ville": "Marnes la Coquette",
+    "cp": "92430",
+    base: 7
+  },
+  {
+    "ville": "Massy",
+    "cp": "91300",
+    base: 12
+  },
+  {
+    "ville": "Meaux",
+    "cp": "77100",
+    base: 25
+  },
+  {
+    "ville": "Melun",
+    "cp": "77000",
+    base: 25
+  },
+  {
+    "ville": "Meudon",
+    "cp": "92190",
+    base: 4
+  },
+  {
+    "ville": "Meudon La Forêt",
+    "cp": "92390",
+    base: 7
+  },
+  {
+    "ville": "Meulan en Yvelines",
+    "cp": "78250",
+    base: 20
+  },
+  {
+    "ville": "Mitry Mory",
+    "cp": "77290",
+    base: 14
+  },
+  {
+    "ville": "Moissy Cramayel",
+    "cp": "77550",
+    base: 18
+  },
+  {
+    "ville": "Monfermeil",
+    "cp": "93370",
+    base: 14
+  },
+  {
+    "ville": "Montfort l'Amaury",
+    "cp": "78490",
+    base: 20
+  },
+  {
+    "ville": "Montigny le Bretonneux",
+    "cp": "78180",
+    base: 14
+  },
+  {
+    "ville": "Montlhéry",
+    "cp": "91310",
+    base: 15
+  },
+  {
+    "ville": "Montreuil sous Bois",
+    "cp": "93100",
+    base: 4
+  },
+  {
+    "ville": "Montrouge",
+    "cp": "92120",
+    base: 3
+  },
+  {
+    "ville": "Morangis",
+    "cp": "91420",
+    base: 12
+  },
+  {
+    "ville": "Mureaux (les)",
+    "cp": "78130",
+    base: 20
+  },
+  {
+    "ville": "Nanterre",
+    "cp": "92000",
+    base: 4
+  },
+  {
+    "ville": "Neuilly Plaisance",
+    "cp": "93360",
+    base: 12
+  },
+  {
+    "ville": "Neuilly sur Marne",
+    "cp": "93330",
+    base: 12
+  },
+  {
+    "ville": "Neuilly sur Seine",
+    "cp": "92200",
+    base: 3
+  },
+  {
+    "ville": "Nogent sur Marne",
+    "cp": "94130",
+    base: 6
+  },
+  {
+    "ville": "Noiseau",
+    "cp": "94370",
+    base: 12
+  },
+  {
+    "ville": "Noisy le Grand",
+    "cp": "93160",
+    base: 12
+  },
+  {
+    "ville": "Noisy le Sec",
+    "cp": "93130",
+    base: 6
+  },
+  {
+    "ville": "Orly",
+    "cp": "94310",
+    base: 8
+  },
+  {
+    "ville": "Ormesson sur Marne",
+    "cp": "94490",
+    base: 12
+  },
+  {
+    "ville": "Orsay",
+    "cp": "91400",
+    base: 15
+  },
+  {
+    "ville": "Palaiseau",
+    "cp": "91120",
+    base: 12
+  },
+  {
+    "ville": "Pantin",
+    "cp": "93500",
+    base: 4
+  },
+  {
+    "ville": "Pavillons sous Bois (les)",
+    "cp": "93320",
+    base: 12
+  },
+  {
+    "ville": "Perreux sur Marne (le)",
+    "cp": "94170",
+    base: 8
+  },
+  {
+    "ville": "Pierrefitte sur Seine",
+    "cp": "93380",
+    base: 8
+  },
+  {
+    "ville": "Plaisir",
+    "cp": "78370",
+    base: 14
+  },
+  {
+    "ville": "Plessis Robinson (le)",
+    "cp": "92350",
+    base: 8
+  },
+  {
+    "ville": "Plessis Trévise (le)",
+    "cp": "94420",
+    base: 14
+  },
+  {
+    "ville": "Poissy",
+    "cp": "78300",
+    base: 15
+  },
+  {
+    "ville": "Pontoise",
+    "cp": "95300",
+    base: 15
+  },
+  {
+    "ville": "Pré Saint Gervais (le)",
+    "cp": "93310",
+    base: 4
+  },
+  {
+    "ville": "Puteaux",
+    "cp": "92800",
+    base: 3
+  },
+  {
+    "ville": "Raincy (le)",
+    "cp": "93340",
+    base: 12
+  },
+  {
+    "ville": "Rambouillet",
+    "cp": "78120",
+    base: 25
+  },
+  {
+    "ville": "Roissy en France",
+    "cp": "95700",
+    base: 14
+  },
+  {
+    "ville": "Romainville",
+    "cp": "93230",
+    base: 6
+  },
+  {
+    "ville": "Rosny sous Bois",
+    "cp": "93110",
+    base: 6
+  },
+  {
+    "ville": "Rueil Malmaison",
+    "cp": "92500",
+    base: 4
+  },
+  {
+    "ville": "Rungis",
+    "cp": "94150",
+    base: 8
+  },
+  {
+    "ville": "Saclay",
+    "cp": "91400",
+    base: 15
+  },
+  {
+    "ville": "Saint Cloud",
+    "cp": "92210",
+    base: 4
+  },
+  {
+    "ville": "Saint Denis",
+    "cp": "93200",
+    base: 6
+  },
+  {
+    "ville": "Saint Germain en Laye",
+    "cp": "78100",
+    base: 10
+  },
+  {
+    "ville": "Saint Gratien",
+    "cp": "95210",
+    base: 10
+  },
+  {
+    "ville": "Saint Mande",
+    "cp": "94160",
+    base: 4
+  },
+  {
+    "ville": "Saint Maur des Fossés",
+    "cp": "94210",
+    base: 8
+  },
+  {
+    "ville": "Saint Maurice",
+    "cp": "94410",
+    base: 6
+  },
+  {
+    "ville": "Saint Ouen l'Aumône",
+    "cp": "95310",
+    base: 15
+  },
+  {
+    "ville": "Saint Ouen sur Seine",
+    "cp": "93400",
+    base: 4
+  },
+  {
+    "ville": "Saint Thibault des Vignes",
+    "cp": "77400",
+    base: 16
+  },
+  {
+    "ville": "Sarcelles",
+    "cp": "95200",
+    base: 10
+  },
+  {
+    "ville": "Sartrouville",
+    "cp": "78500",
+    base: 8
+  },
+  {
+    "ville": "Sceaux",
+    "cp": "92330",
+    base: 8
+  },
+  {
+    "ville": "Sevran",
+    "cp": "93270",
+    base: 14
+  },
+  {
+    "ville": "Sèvres",
+    "cp": "92310",
+    base: 4
+  },
+  {
+    "ville": "Stains",
+    "cp": "93240",
+    base: 8
+  },
+  {
+    "ville": "Sucy en Brie",
+    "cp": "94370",
+    base: 12
+  },
+  {
+    "ville": "Suresnes",
+    "cp": "92150",
+    base: 3
+  },
+  {
+    "ville": "Thiais",
+    "cp": "94320",
+    base: 8
+  },
+  {
+    "ville": "Torcy",
+    "cp": "77200",
+    base: 14
+  },
+  {
+    "ville": "Trappes",
+    "cp": "78190",
+    base: 14
+  },
+  {
+    "ville": "Tremblay en France",
+    "cp": "93290",
+    base: 14
+  },
+  {
+    "ville": "Ulis (les)",
+    "cp": "91940",
+    base: 15
+  },
+  {
+    "ville": "Valenton",
+    "cp": "94460",
+    base: 12
+  },
+  {
+    "ville": "Vanves",
+    "cp": "92170",
+    base: 3
+  },
+  {
+    "ville": "Vaucresson",
+    "cp": "92420",
+    base: 7
+  },
+  {
+    "ville": "Vaujours",
+    "cp": "93410",
+    base: 14
+  },
+  {
+    "ville": "Vélisy Villacoublay",
+    "cp": "78140",
+    base: 8
+  },
+  {
+    "ville": "Versailles",
+    "cp": "78000",
+    base: 8
+  },
+  {
+    "ville": "Vesinet (le)",
+    "cp": "78110",
+    base: 8
+  },
+  {
+    "ville": "Ville d'Avray",
+    "cp": "92410",
+    base: 7
+  },
+  {
+    "ville": "Villecresnes",
+    "cp": "94440",
+    base: 14
+  },
+  {
+    "ville": "Villejuif",
+    "cp": "94800",
+    base: 6
+  },
+  {
+    "ville": "Villemomble",
+    "cp": "93250",
+    base: 8
+  },
+  {
+    "ville": "Villeneuve la Garenne",
+    "cp": "92390",
+    base: 6
+  },
+  {
+    "ville": "Villeneuve St Georges",
+    "cp": "94190",
+    base: 12
+  },
+  {
+    "ville": "Villepinte",
+    "cp": "93420",
+    base: 14
+  },
+  {
+    "ville": "Villetaneuse",
+    "cp": "93430",
+    base: 8
+  },
+  {
+    "ville": "Villiers sur Marne",
+    "cp": "94350",
+    base: 8
+  },
+  {
+    "ville": "Vincennes",
+    "cp": "94300",
+    base: 4
+  },
+  {
+    "ville": "Viroflay",
+    "cp": "78220",
+    base: 8
+  },
+  {
+    "ville": "Vitry sur Seine",
+    "cp": "94400",
+    base: 6
+  },
+  {
+    "ville": "Voisins le Bretonneux",
+    "cp": "78960",
+    base: 14
+  },
+  {
+    "ville": "Wissous",
+    "cp": "91320",
+    "base": 10
+  },
+  {
+    "ville": "Paris 01",
+    "cp": "75001",
+    base: 3
+  },
+  {
+    "ville": "Paris 02",
+    "cp": "75002",
+    base: 3
+  },
+  {
+    "ville": "Paris 03",
+    "cp": "75003",
+    base: 3
+  },
+  {
+    "ville": "Paris 04",
+    "cp": "75004",
+    base: 3
+  },
+  {
+    "ville": "Paris 05",
+    "cp": "75005",
+    base: 3
+  },
+  {
+    "ville": "Paris 06",
+    "cp": "75006",
+    base: 3
+  },
+  {
+    "ville": "Paris 07",
+    "cp": "75007",
+    base: 3
+  },
+  {
+    "ville": "Paris 08",
+    "cp": "75008",
+    base: 3
+  },
+  {
+    "ville": "Paris 09",
+    "cp": "75009",
+    base: 3
+  },
+  {
+    "ville": "Paris 10",
+    "cp": "75010",
+    base: 3
+  },
+  {
+    "ville": "Paris 11",
+    "cp": "75011",
+    base: 3
+  },
+  {
+    "ville": "Paris 12",
+    "cp": "75012",
+    base: 3
+  },
+  {
+    "ville": "Paris 13",
+    "cp": "75013",
+    base: 3
+  },
+  {
+    "ville": "Paris 14",
+    "cp": "75014",
+    base: 3
+  },
+  {
+    "ville": "Paris 15",
+    "cp": "75015",
+    base: 3
+  },
+  {
+    "ville": "Paris 16",
+    "cp": "75016",
+    base: 3
+  },
+  {
+    "ville": "Paris 17",
+    "cp": "75017",
+    base: 3
+  },
+  {
+    "ville": "Paris 18",
+    "cp": "75018",
+    base: 3
+  },
+  {
+    "ville": "Paris 19",
+    "cp": "75019",
+    base: 3
+  },
+  {
+    "ville": "Paris 20",
+    "cp": "75020",
+    base: 3
   }
-];
-
-// ===================================================================
-// INDEX DE RECHERCHE RAPIDE
-// ===================================================================
-
-export const INDEX_TARIFS = new Map<string, number>();
-export const VILLES_PAR_CP = new Map<string, number[]>();
-export const VILLES_PAR_NOM = new Map<string, number>();
-
-// Initialisation des index au chargement du module
-TARIFS_BONS.forEach((tarif, index) => {
-  const cle = `${tarif.cp}_${tarif.ville}`;
-  INDEX_TARIFS.set(cle, index);
-
-  if (!VILLES_PAR_CP.has(tarif.cp)) {
-    VILLES_PAR_CP.set(tarif.cp, []);
+].map(t => ({
+  cp: t.cp,
+  ville: t.ville,
+  // Calcul automatique des formules : Normal +4, +8 etc.
+  formules: {
+    "NORMAL": t.base,
+    "EXPRESS": t.base + 5,
+    "URGENCE": t.base + 10,
+    "VL_NORMAL": t.base + 5,
+    "VL_EXPRESS": t.base + 10
   }
-  VILLES_PAR_CP.get(tarif.cp)!.push(index);
+}));
 
-  // Index par nom de ville (en minuscules pour recherche insensible à la casse)
-  VILLES_PAR_NOM.set(tarif.ville.toLowerCase(), index);
-});
 
-// ===================================================================
-// FONCTIONS DE CALCUL DE PRIX
-// ===================================================================
+export function getTarifParNom(villeRecherchee: string): TarifVille | undefined {
+  const villeNormalisee = normaliserVilleSafe(villeRecherchee);
 
-/**
- * Récupère le tarif en bons pour une ville et une formule
- * 
- * @param cp - Code postal
- * @param ville - Nom de la ville
- * @param formule - Formule choisie
- * @returns Nombre de bons
- * @throws Erreur si la ville n'existe pas
- */
-export function getTarifBons(cp: string, ville: string, formule: Formule): number {
-  const cle = `${cp}_${ville}`;
-  const index = INDEX_TARIFS.get(cle);
-
-  if (index === undefined) {
-    throw new Error(`Ville non trouvée: ${cp} ${ville}`);
-  }
-
-  return TARIFS_BONS[index].formules[formule];
+  return TARIFS_BONS.find(t => {
+    const tNorm = normaliserVilleSafe(t.ville);
+    return tNorm === villeNormalisee;
+  });
 }
 
 /**
- * Calcule le prix EXACT en euros
- * 
- * Formule: prix_euros = nombre_de_bons × 5.5
- * 
- * @param cp - Code postal
- * @param ville - Nom de la ville
- * @param formule - Formule choisie
- * @returns Résultat du calcul avec détails
- * @throws Erreur si la ville n'existe pas
+ * Normalise une ville pour la recherche (en utilisant la même logique que getTarifParNom)
  */
-export function calculerPrix(cp: string, ville: string, formule: Formule): PrixCalcule {
-  const nb_bons = getTarifBons(cp, ville, formule);
-  const prix_euros = Math.round(nb_bons * PRIX_PAR_BON * 100) / 100;
-  const calcul = `${nb_bons} × 5,5€ = ${prix_euros}€`;
-
-  return {
-    cp,
-    ville,
-    formule,
-    nb_bons,
-    prix_euros,
-    calcul
-  };
+export function normaliserVilleSafe(ville: string): string {
+  if (!ville) return "";
+  return ville
+    .toUpperCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/\b(LE|LA|LES|L')\b/g, '') // Supprime les articles
+    .replace(/[^A-Z0-9]/g, ' ') // Remplace tout ce qui n'est pas alphanum par espace (incluant tirets)
+    .replace(/\s+/g, ' ') // Réduit les espaces multiples
+    .trim();
 }
 
 /**
- * Calcule les prix pour toutes les formules d'une ville
- * 
- * @param cp - Code postal
- * @param ville - Nom de la ville
- * @returns Objet avec tous les prix calculés
+ * Trouve une ville par ZIP ou Nom avec une meilleure robustesse
+ * Priorité : Nom Exact > ZIP Exact > Contient Nom
  */
-export function calculerTousLesPrix(cp: string, ville: string): Record<Formule, PrixCalcule> {
-  const result: Partial<Record<Formule, PrixCalcule>> = {};
+export function findCityByZipAndName(query: string, villeName?: string): TarifVille | undefined {
+  if (!query) return undefined;
 
-  for (const formule of FORMULES) {
-    result[formule] = calculerPrix(cp, ville, formule);
+  // 1. PRIORITÉ ABSOLUE : Essai par Code Postal (si query est un CP valide 5 chiffres)
+  // Cela évite que "75020" + "Paris" match "Paris 01" à cause du nom "Paris"
+  if (/^\d{5}$/.test(query)) {
+    const candidates = TARIFS_BONS.filter(t => t.cp === query);
+
+    // Cas parfait : 1 seul résultat (ex: 75020 -> Paris 20)
+    if (candidates.length === 1) return candidates[0];
+
+    // Cas multiple : On essaie de départager avec le nom de ville
+    if (candidates.length > 1 && villeName) {
+      const vNameNorm = normaliserVilleSafe(villeName);
+      // 1. Essai match exact
+      const exact = candidates.find(t => normaliserVilleSafe(t.ville) === vNameNorm);
+      if (exact) return exact;
+
+      // 2. Essai match partiel
+      const best = candidates.find(t => normaliserVilleSafe(t.ville).includes(vNameNorm) || vNameNorm.includes(normaliserVilleSafe(t.ville)));
+      return best || candidates[0]; // Fallback au premier
+    }
+
+    if (candidates.length > 0) return candidates[0];
   }
 
-  return result as Record<Formule, PrixCalcule>;
-}
+  // 2. Essai direct par nom (héritage)
+  let match = getTarifParNom(query);
+  if (match) return match;
 
-// ===================================================================
-// VALIDATION ET AUTOCOMPLÉTION
-// ===================================================================
+  // 3. Si on a un nom de ville explicite (venant de l'autocomplete)
+  if (villeName) {
+    match = getTarifParNom(villeName);
+    if (match) return match;
 
-/**
- * Vérifie qu'une ville existe
- * 
- * @param cp - Code postal
- * @param ville - Nom de la ville
- * @returns true si la ville existe
- */
-export function validerVille(cp: string, ville: string): boolean {
-  const cle = `${cp}_${ville}`;
-  return INDEX_TARIFS.has(cle);
-}
-
-/**
- * Récupère toutes les villes pour un code postal
- * 
- * @param cp - Code postal
- * @returns Liste des villes avec leurs tarifs
- */
-export function getVillesParCP(cp: string): TarifVille[] {
-  const indices = VILLES_PAR_CP.get(cp) || [];
-  return indices.map(index => TARIFS_BONS[index]);
-}
-
-/**
- * Recherche des villes par pattern (autocomplétion)
- * 
- * @param pattern - Texte à chercher (case-insensitive)
- * @param limit - Nombre maximum de résultats
- * @returns Liste des villes correspondantes
- */
-export function rechercherVilles(pattern: string, limit: number = 10): TarifVille[] {
-  if (!pattern || pattern.length < 2) {
-    return [];
+    // Normalisation pour recherche floue
+    const vNameNorm = normaliserVilleSafe(villeName);
+    // Recherche si le nom contient ou est contenu (ex: Saint Ouen vs Saint Ouen sur Seine)
+    match = TARIFS_BONS.find(t => {
+      const tName = normaliserVilleSafe(t.ville);
+      return tName === vNameNorm || tName.includes(vNameNorm) || vNameNorm.includes(tName);
+    });
+    if (match) return match;
   }
 
-  const lower = pattern.toLowerCase();
-  const resultats = TARIFS_BONS.filter(t =>
-    t.ville.toLowerCase().includes(lower) || t.cp.includes(lower)
-  );
-
-  return resultats.slice(0, limit);
+  return undefined;
 }
 
 /**
- * Récupère une ville par son nom exact
- * 
- * @param nomVille - Nom de la ville
- * @returns Ville avec ses tarifs ou undefined
+ * Vérifie si une ville est desservie
+ * Supporte signature (ville) ou (cp, ville)
  */
-export function getTarifParNom(nomVille: string): TarifVille | undefined {
-  const lower = nomVille.toLowerCase();
-  const index = VILLES_PAR_NOM.get(lower);
-  return index !== undefined ? TARIFS_BONS[index] : undefined;
-}
-
-// ===================================================================
-// FORMATAGE POUR AFFICHAGE
-// ===================================================================
-
-/**
- * Formate un prix pour affichage
- * 
- * @param prix - Prix en euros
- * @param bons - Nombre de bons (optionnel)
- * @returns Chaîne formatée
- */
-export function formaterPrix(prix: number, bons?: number): string {
-  const formatted = prix.toFixed(2).replace(".", ",");
-
-  if (bons !== undefined) {
-    return `${bons} bons = ${formatted}€`;
-  }
-
-  return `${formatted}€`;
+export function estVilleDesservie(query: string, villeName?: string): boolean {
+  return !!findCityByZipAndName(query, villeName);
 }
 
 /**
- * Formate un résultat de calcul pour affichage
- * 
- * @param resultat - Résultat du calcul
- * @returns Chaîne formatée
+ * Récupère le tarif de base pour une ville
  */
-export function formaterResultat(resultat: PrixCalcule): string {
-  return `${resultat.ville} (${resultat.cp}) - ${NOMS_FORMULES[resultat.formule]}
-${resultat.calcul}`;
+export function getTarifBase(ville: string): number | undefined {
+  const tarif = getTarifParNom(ville);
+  return tarif?.formules.NORMAL;
 }
 
 /**
- * Génère un devis formaté
- * 
- * @param cp - Code postal
- * @param ville - Nom de la ville
- * @returns String avec tous les prix
+ * Recherche des villes dans la base locale (pour l'autocomplétion)
+ * @param query Le texte à rechercher (début du nom ou du code postal)
+ * @param limit Nombre maximum de résultats
  */
-export function genererDevis(cp: string, ville: string): string {
-  if (!validerVille(cp, ville)) {
-    return `❌ Ville non trouvée: ${cp} ${ville}`;
-  }
+export function rechercherVilles(query: string, limit: number = 5): TarifVille[] {
+  if (!query || query.length < 2) return [];
 
-  const prixs = calculerTousLesPrix(cp, ville);
-  let devis = `📋 DEVIS - ${ville} (${cp})\n`;
-  devis += `${"=".repeat(50)}\n`;
+  const normalizedQuery = normaliserVilleSafe(query);
 
-  for (const formule of FORMULES) {
-    const p = prixs[formule];
-    devis += `\n${NOMS_FORMULES[formule]}\n`;
-    devis += `  ${p.calcul}\n`;
-  }
-
-  return devis;
+  return TARIFS_BONS.filter(t => {
+    const normalizedVille = normaliserVilleSafe(t.ville);
+    // Match nom (début ou contient) OU Match Code Postal (début)
+    return normalizedVille.includes(normalizedQuery) || t.cp.startsWith(query);
+  }).slice(0, limit);
 }
 
-// ===================================================================
-// EXPORT PAR DÉFAUT
-// ===================================================================
-
-export default {
-  TARIFS_BONS,
-  PRIX_PAR_BON,
-  FORMULES,
-  NOMS_FORMULES,
-  DESCRIPTIONS_FORMULES,
-  INDEX_TARIFS,
-  VILLES_PAR_CP,
-  VILLES_PAR_NOM,
-  // Fonctions de calcul
-  getTarifBons,
-  calculerPrix,
-  calculerTousLesPrix,
-  // Validation et recherche
-  validerVille,
-  rechercherVilles,
-  getTarifParNom,
-  getVillesParCP,
-  // Formatage
-  formaterPrix,
-  formaterResultat,
-  genererDevis
-};

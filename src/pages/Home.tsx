@@ -14,7 +14,7 @@ import {
   Clock,
   ArrowRight
 } from "lucide-react";
-import heroImage from "@/assets/hero-delivery-paris.jpg";
+import heroImage from "@/assets/hero-delivery-paris-v2.jpg";
 import PricingSimulator from "@/components/client/PricingSimulator";
 import SEO from "@/components/SEO";
 
@@ -23,25 +23,25 @@ const Home = () => {
     {
       title: "Médical",
       icon: Stethoscope,
-      description: "Lorem ipsum dolor sit amet, consectetuer or adipiscing elit, sed d...",
+      description: "Transport urgent de prélèvements biologiques, sang et matériel médical sous température dirigée. Respect strict des normes d'hygiène et délais critiques.",
       link: "/expertises/medical"
     },
     {
       title: "Juridique",
       icon: Scale,
-      description: "Lorem ipsum dolor sit amet, consectetuer or adipiscing elit, sed d...",
+      description: "Acheminement sécurisé et confidentiel de dossiers sensibles, actes originaux et plis urgents pour cabinets d'avocats, notaires et tribunaux.",
       link: "/expertises/juridique"
     },
     {
       title: "Événementiel",
       icon: Calendar,
-      description: "Lorem ipsum dolor sit amet, consectetuer or adipiscing elit, sed d...",
+      description: "Logistique express pour vos salons et événements. Livraison 24/7 de matériel, stands et supports de communication avec une fiabilité totale.",
       link: "/expertises/evenementiel"
     },
     {
       title: "Automobile",
       icon: Car,
-      description: "Lorem ipsum dolor sit amet, consectetuer or adipiscing elit, sed d...",
+      description: "Livraison critique de pièces détachées pour garages et concessions. Solution immédiate pour éviter l'immobilisation de véhicules (AOG/VOG).",
       link: "/expertises/automobile"
     },
   ];
@@ -74,14 +74,14 @@ const Home = () => {
       <Header />
 
       {/* Hero Section */}
-      <section className="relative min-h-[85vh] flex items-center overflow-hidden bg-[#0B1525]">
+      <section className="relative min-h-[85vh] flex items-center bg-[#0B1525]">
         {/* Background Image with Overlay */}
         <div className="absolute inset-0 z-0">
           <div
-            className="absolute inset-0 bg-cover bg-center opacity-40 mix-blend-overlay"
+            className="absolute inset-0 bg-cover bg-center"
             style={{ backgroundImage: `url(${heroImage})` }}
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0B1525] via-[#0B1525]/90 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0B1525]/90 via-[#0B1525]/60 to-transparent" />
         </div>
 
         <div className="container mx-auto px-4 relative z-10 pt-20">

@@ -37,6 +37,7 @@ export interface Order {
     delivered_at?: string;
     cancelled_at?: string;
     cancellation_reason?: string;
+    cancellation_fee?: number;
     pickup_lat?: number;
     pickup_lng?: number;
     delivery_lat?: number;

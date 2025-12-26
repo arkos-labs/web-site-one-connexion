@@ -5,6 +5,8 @@
  * Compatible avec la base tarifaire existante du projet
  */
 
+import { rechercherVilles, estVilleDesservie, findCityByZipAndName } from "@/data/tarifs_idf";
+
 export interface AddressSuggestion {
     full: string;        // Adresse complète pour affichage dans les suggestions
     street: string;      // Rue + numéro uniquement
@@ -13,75 +15,109 @@ export interface AddressSuggestion {
     lat: string;         // Latitude
     lon: string;         // Longitude
     raw: any;            // Données brutes LocationIQ
+    isLocal?: boolean;   // Indique si la suggestion vient de la base locale
 }
 
 /**
- * Récupère les suggestions d'adresses depuis LocationIQ
+ * Récupère les suggestions d'adresses
+ * RESTRICTION: Uniquement les villes d'Île-de-France définies dans la grille tarifaire.
+ * 
  * @param query - Texte de recherche (minimum 2 caractères)
- * @returns Liste de suggestions d'adresses
+ * @returns Liste de suggestions d'adresses (Villes IDF uniquement)
  */
 export async function autocompleteAddress(query: string): Promise<AddressSuggestion[]> {
     if (!query || query.length < 2) return [];
 
+    const suggestions: AddressSuggestion[] = [];
+
+    // 1. RECHERCHE LOCALE (Prioritaire - Villes de la grille tarifaire)
+    // On cherche dans notre base de tarifs (villes connues)
+    const villesLocales = rechercherVilles(query, 10); // + de résultats locaux
+
+    villesLocales.forEach(ville => {
+        suggestions.push({
+            full: `${ville.ville} (${ville.cp})`,
+            street: "",
+            postcode: ville.cp,
+            city: ville.ville,
+            lat: "",
+            lon: "",
+            raw: null,
+            isLocal: true
+        });
+    });
+
+    // 2. RECHERCHE API (LocationIQ - Pour les rues et adresses précises)
+    // Permet de trouver "5 square..." 
     const key = import.meta.env.VITE_LOCATIONIQ_API_KEY;
 
-    if (!key) {
-        console.warn("VITE_LOCATIONIQ_API_KEY non définie dans .env");
-        return [];
-    }
+    if (key) {
+        // On cible la France et on limite strictement à l'Île-de-France (Bounding Box)
+        // Bbox IDF approx: 1.40 (Ouest), 49.25 (Nord), 3.60 (Est), 48.10 (Sud)
+        const bbox = "1.40,49.25,3.60,48.10";
+        const url = `https://api.locationiq.com/v1/autocomplete?key=${key}&q=${encodeURIComponent(
+            query
+        )}&limit=10&normalizecity=1&dedupe=1&countrycodes=fr&viewbox=${bbox}&bounded=1`;
 
-    const url = `https://api.locationiq.com/v1/autocomplete?key=${key}&q=${encodeURIComponent(
-        query
-    )}&limit=10&normalizecity=1&dedupe=1&countrycodes=fr`;
+        try {
+            const response = await fetch(url);
+            if (response.ok) {
+                const data = await response.json();
 
-    try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            console.warn("Erreur LocationIQ autocomplete:", response.status);
-            return [];
+                const apiSuggestions = data
+                    .map((item: any) => {
+                        const street = item.address?.road
+                            ? `${item.address.house_number || ""} ${item.address.road}`.trim()
+                            : item.display_name.split(",")[0];
+
+                        // Récupération intelligente de la ville et du CP
+                        const resultCity = item.address?.city ||
+                            item.address?.town ||
+                            item.address?.village ||
+                            item.address?.municipality ||
+                            "";
+
+                        const resultZip = item.address?.postcode || "";
+
+                        // ⚠️ FILTRAGE STRICT & MAPPING CANONIQUE
+                        // On vérifie si la ville est dans notre base ET on récupère son nom officiel
+                        const foundCity = findCityByZipAndName(resultZip, resultCity);
+
+                        // Si la ville n'est pas desservie, on l'ignore
+                        if (!foundCity) {
+                            return null;
+                        }
+
+                        // On utilise les données CANONIQUES pour garantir que le pricing fonctionne
+                        const canonicalCity = foundCity.ville;
+                        const canonicalZip = foundCity.cp;
+
+                        const simplifiedDisplay = canonicalZip && canonicalCity
+                            ? `${street}, ${canonicalZip} ${canonicalCity}`
+                            : item.display_name;
+
+                        return {
+                            full: simplifiedDisplay,
+                            street,
+                            postcode: canonicalZip,
+                            city: canonicalCity, // IMPORTANT: Nom officiel pour le pricing engine
+                            lat: item.lat,
+                            lon: item.lon,
+                            raw: item,
+                            isLocal: false
+                        };
+                    })
+                    .filter((item: any) => item !== null); // Retirer les nuls
+
+                suggestions.push(...apiSuggestions);
+            }
+        } catch (e) {
+            console.error("Autocomplete API error:", e);
         }
-
-        const data = await response.json();
-
-        // COMMENTÉ POUR DÉBOGAGE : Le filtre strict empêchait certaines adresses valides d'apparaître
-        // si LocationIQ ne retournait pas un code postal formaté exactement comme prévu.
-        // On retourne toutes les suggestions pertinentes de LocationIQ pour la France.
-
-        const filteredData = data;
-
-        return filteredData.map((item: any) => {
-            // Extraire la rue + numéro
-            const street = item.address?.road
-                ? `${item.address.house_number || ""} ${item.address.road}`.trim()
-                : item.display_name.split(",")[0]; // fallback
-
-            // Extraire la ville (sans quartier)
-            const city = item.address?.city ||
-                item.address?.town ||
-                item.address?.village ||
-                item.address?.municipality ||
-                "";
-
-            const postcode = item.address?.postcode || "";
-
-            // Format simplifié : Numéro Rue, Code postal Ville
-            // Exemple : "10 Avenue Victor Hugo, 92100 Boulogne-Billancourt"
-            const simplifiedDisplay = postcode && city
-                ? `${street}, ${postcode} ${city}`
-                : item.display_name;
-
-            return {
-                full: simplifiedDisplay,  // Format simplifié pour l'affichage
-                street,                   // Rue + numéro SEULEMENT
-                postcode,
-                city,
-                lat: item.lat,
-                lon: item.lon,
-                raw: item
-            };
-        });
-    } catch (e) {
-        console.error("Autocomplete error:", e);
-        return [];
     }
+
+    // Dédoublonnage final basé sur l'affichage complet
+    const uniqueSuggestions = suggestions.filter((v, i, a) => a.findIndex(v2 => v2.full === v.full) === i);
+
+    return uniqueSuggestions.slice(0, 10);
 }

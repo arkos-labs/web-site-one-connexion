@@ -7,6 +7,7 @@ import { useState, useEffect, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { MapPin, Loader2 } from "lucide-react";
 import { autocompleteAddress, type AddressSuggestion } from "@/lib/autocomplete";
+import { cn } from "@/lib/utils";
 
 interface AddressAutocompleteProps {
     value: string;
@@ -16,6 +17,7 @@ interface AddressAutocompleteProps {
     label?: string;
     required?: boolean;
     className?: string;
+    inputClassName?: string;
     name?: string;
 }
 
@@ -27,6 +29,7 @@ export const AddressAutocomplete = ({
     label,
     required = false,
     className = "",
+    inputClassName = "",
     name
 }: AddressAutocompleteProps) => {
     const [suggestions, setSuggestions] = useState<AddressSuggestion[]>([]);
@@ -95,8 +98,8 @@ export const AddressAutocomplete = ({
                 </label>
             )}
 
-            <div className="relative">
-                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <div className="relative group">
+                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
                 <Input
                     type="text"
                     value={value}
@@ -104,7 +107,7 @@ export const AddressAutocomplete = ({
                     placeholder={placeholder}
                     required={required}
                     name={name}
-                    className="pl-10 pr-10"
+                    className={cn("pl-10 pr-10", inputClassName)}
                 />
                 {isLoading && (
                     <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 animate-spin text-muted-foreground" />

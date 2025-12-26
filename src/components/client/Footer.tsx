@@ -105,8 +105,7 @@ const Footer = () => {
 
 const FooterLink = ({ to, label }: { to: string; label: string }) => (
     <li>
-        <Link to={to} className="text-gray-500 hover:text-[#0B1525] hover:translate-x-1 transition-all duration-300 flex items-center gap-3 text-sm font-light group">
-            <span className="w-1.5 h-1.5 rounded-full bg-gray-300 group-hover:bg-[#D4AF37] transition-colors" />
+        <Link to={to} className="text-gray-500 hover:text-[#0B1525] hover:translate-x-1 transition-all duration-300 flex items-center text-sm font-light group">
             {label}
         </Link>
     </li>

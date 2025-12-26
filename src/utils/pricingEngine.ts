@@ -30,9 +30,9 @@
 // ============================================================================
 
 /**
- * Prix unitaire d'un bon en CENTIMES (5.5€ = 550 cents)
+ * Prix unitaire d'un bon en CENTIMES (5€ = 500 cents)
  */
-export const DEFAULT_PRIX_BON_CENTS = 550;
+export const DEFAULT_PRIX_BON_CENTS = 500;
 
 /**
  * Tarif du supplément kilométrique en BONS par km
@@ -95,17 +95,23 @@ export function calculatePriceInternal(
     // 1. Déterminer si on applique le supplément
     const supplementApplique = !isParisDansTrajet;
 
-    // 2. Calcul du supplément en BONS (peut être un float temporairement)
-    const supplementBons = supplementApplique ? distanceKm * config.supplementPerKmBons : 0;
+    // 2. Calcul du supplément en BONS
+    // RÈGLE : L'arrondissement s'applique sur le supplément.
+    // On arrondit le supplément au bon supérieur (ou entier le plus proche selon les règles, ici Math.ceil pour ne pas perdre d'argent)
+    let supplementBons = supplementApplique ? distanceKm * config.supplementPerKmBons : 0;
+
+    // Application de l'arrondissement demandé (au Bon supérieur ou entier)
+    // "il manque juste l'arrondissement" -> On arrondit le total des bons du supplément
+    supplementBons = Math.ceil(supplementBons);
+
     const totalBons = priseEnChargeBons + supplementBons;
 
     // 3. Calcul en CENTIMES (Conversion finale en entier)
-    // On multiplie les BONS par la valeur en centimes et on arrondit
-    const priseEnChargeCents = Math.round(priseEnChargeBons * config.bonValueCents);
-    const supplementCents = Math.round(supplementBons * config.bonValueCents);
-    const totalCents = priseEnChargeCents + supplementCents;
+    // On multiplie les BONS par la valeur en centimes
+    // Comme totalBons est maintenant un entier (ou proche), le calcul est propre
+    const totalCents = Math.round(totalBons * config.bonValueCents);
 
-    // 4. Conversion finale en EUROS (division par 100 au tout dernier moment)
+    // 4. Conversion finale en EUROS
     const totalEuros = totalCents / 100;
 
     return {
@@ -127,11 +133,13 @@ export function calculatePriceInternal(
 export function normaliserVille(ville: string): string {
     return ville
         .toUpperCase()
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .replace(/'/g, '-')
-        .replace(/\s+/g, '-')
-        .replace(/-+/g, '-')
+        .normalize('NFD') // Sépare les accents (é -> e + ´)
+        .replace(/[\u0300-\u036f]/g, '') // Supprime les accents
+        // Mots vides
+        .replace(/\b(LE|LA|LES|L')\b/g, '')
+        // Nettoyage standard pour comparaison souple
+        .replace(/[^A-Z0-9]/g, ' ') // Remplace tout ce qui n'est pas lettre/chiffre par espace
+        .replace(/\s+/g, ' ') // Réduit les espaces multiples
         .trim();
 }
 

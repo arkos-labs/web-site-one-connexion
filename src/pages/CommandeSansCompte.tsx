@@ -122,7 +122,7 @@ function RecapCommande({ formData, pricingResults, loading, onCgvChange }: {
                             </p>
                         </div>
                         <p className="text-[10px] text-slate-400 mt-2 text-right">
-                            {selectedPrice.totalBons.toFixed(2)} bons × 5.50€
+                            {selectedPrice.totalBons.toFixed(2)} bons × 5.00€
                         </p>
                     </div>
                 ) : (
@@ -572,7 +572,10 @@ const CommandeSansCompte = () => {
                                                 <p className="font-bold text-[#0B1525]">{f.label}</p>
                                                 <p className="text-xs text-slate-500 mb-2">{f.desc}</p>
                                                 {price ? (
-                                                    <p className={`text-xl font-bold ${selected ? "text-[#D4AF37]" : "text-[#0B1525]"}`}>{price.totalEuros.toFixed(2)}€</p>
+                                                    <>
+                                                        <p className={`text-xl font-bold ${selected ? "text-[#D4AF37]" : "text-[#0B1525]"}`}>{price.totalEuros.toFixed(2)}€</p>
+                                                        <p className={`text-xs ${selected ? "text-[#D4AF37]/80" : "text-slate-400"}`}>({price.totalBons.toFixed(2)} bons)</p>
+                                                    </>
                                                 ) : (
                                                     <p className="text-sm text-slate-300">-- €</p>
                                                 )}

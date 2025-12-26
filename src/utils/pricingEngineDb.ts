@@ -18,6 +18,7 @@ import {
     DEFAULT_PRIX_BON_CENTS,
     DEFAULT_SUPPLEMENT_PAR_KM_BONS
 } from './pricingEngine';
+import { findCityByZipAndName } from '@/data/tarifs_idf';
 
 // ============================================================================
 // TYPES
@@ -108,8 +109,10 @@ function shouldRefreshCache(): boolean {
 // ============================================================================
 
 /**
- * Recherche une ville dans la base de données Supabase
- * Retourne les tarifs si trouvés, null sinon
+ * Recherche une ville dans la base locale (tarifs_idf.ts)
+ * 
+ * NOTE: Modifié pour utiliser le fichier local mis à jour par le client.
+ * La base Supabase sera synchronisée plus tard.
  * 
  * @param villeRecherchee - Nom de la ville à rechercher
  * @returns Tarifs de prise en charge ou null
@@ -117,53 +120,76 @@ function shouldRefreshCache(): boolean {
 export async function trouverVilleDansBase(villeRecherchee: string): Promise<PriseEnChargeVille | null> {
     const villeNormalisee = normaliserVille(villeRecherchee);
 
-    // 1. Vérifier le cache d'abord
-    if (cityPricingCache.has(villeNormalisee) && !shouldRefreshCache()) {
-        console.log(`[Cache Hit] Ville trouvée dans le cache : ${villeNormalisee}`);
-        return cityPricingCache.get(villeNormalisee) || null;
+    // 1. Recherche dans le fichier local (SOURCE DE VÉRITÉ ACTUELLE)
+    // Utilisation de la nouvelle fonction robuste (supporte flou et variations)
+    const tarifTrouve = findCityByZipAndName(villeRecherchee);
+
+    if (tarifTrouve) {
+        console.log(`[Source Locale] Ville trouvée : ${tarifTrouve.ville}`);
+        return {
+            NORMAL: tarifTrouve.formules.NORMAL,
+            EXPRESS: tarifTrouve.formules.EXPRESS,
+            URGENCE: tarifTrouve.formules.URGENCE,
+            VL_NORMAL: tarifTrouve.formules.VL_NORMAL,
+            VL_EXPRESS: tarifTrouve.formules.VL_EXPRESS
+        };
     }
 
-    console.log(`[Cache Miss] Recherche de la ville dans Supabase : ${villeNormalisee}`);
-
+    // Fallback Supabase (si non trouvé en local)
     try {
-        // 2. Recherche exacte d'abord
-        let { data, error } = await supabase
+        console.log(`[PricingDb] Recherche Supabase pour : ${villeRecherchee}`);
+
+        // 1. Essai avec le nom normalisé (qui garde les ESPACES maintenant)
+        let result = await supabase
             .from('city_pricing')
             .select('*')
-            .eq('city_name', villeNormalisee)
-            .single();
+            .ilike('city_name', villeNormalisee)
+            .maybeSingle();
 
-        // 3. Si pas trouvé, recherche partielle
-        if (error || !data) {
-            console.log(`[Recherche exacte] Ville non trouvée, tentative de recherche partielle...`);
-
-            const { data: partialData, error: partialError } = await supabase
+        // 2. Si non trouvé, essai avec le nom brut original
+        if (!result.data && !result.error) {
+            console.log(`[PricingDb] Essai nom brut pour : ${villeRecherchee}`);
+            result = await supabase
                 .from('city_pricing')
                 .select('*')
-                .or(`city_name.ilike.%${villeNormalisee}%`)
-                .limit(1)
-                .single();
-
-            if (partialError || !partialData) {
-                console.error(`[Erreur] Ville non trouvée : ${villeRecherchee}`, partialError);
-                return null;
-            }
-
-            data = partialData;
+                .ilike('city_name', villeRecherchee)
+                .maybeSingle();
         }
 
-        // 4. Convertir et mettre en cache
-        const tarifs = rowToPriseEnCharge(data as CityPricingRow);
-        cityPricingCache.set(villeNormalisee, tarifs);
-        lastCacheUpdate = Date.now();
+        // 3. TROISIÈME ESSAI : Remplacer les tirets par des espaces (pour les villes comme "Combs-la-Ville" stockées "Combs la Ville")
+        if (!result.data && !result.error) {
+            const villeAvecEspaces = villeNormalisee.replace(/-/g, ' ');
+            console.log(`[PricingDb] Essai avec espaces pour : ${villeAvecEspaces}`);
+            result = await supabase
+                .from('city_pricing')
+                .select('*')
+                .ilike('city_name', villeAvecEspaces)
+                .maybeSingle();
+        }
 
-        console.log(`[Succès] Ville trouvée et mise en cache : ${villeNormalisee}`);
-        return tarifs;
+        const { data, error } = result;
 
+        if (error) {
+            // On log warning que si on a vraiment rien trouvé et qu'il y avait une erreur
+            if (!data) console.warn(`[Supabase Warning] Erreur ou non-trouvé pour ${villeRecherchee}`, error);
+        }
+
+        if (data) {
+            console.log(`[Supabase Hit] Ville trouvée : ${data.city_name}`);
+            const tarifs = rowToPriseEnCharge(data);
+
+            // Mise en cache
+            cityPricingCache.set(data.city_name, tarifs);
+            cityPricingCache.set(villeNormalisee, tarifs);
+
+            return tarifs;
+        }
     } catch (err) {
-        console.error(`[Erreur critique] Impossible de rechercher la ville : ${villeRecherchee}`, err);
-        return null;
+        console.error("Error fetching city pricing from Supabase", err);
     }
+
+    console.warn(`[Local & Remote Miss] Ville non trouvée nulle part : ${villeRecherchee}`);
+    return null;
 }
 
 /**
@@ -419,7 +445,7 @@ export async function calculerToutesLesFormulesAsync(
 
     const resultats = await Promise.all(promises);
 
-    const resultatMap: Record<FormuleNew, Awaited<ReturnType<typeof calculateOneConnexionPriceAsync>>> = {} as any;
+    const resultatMap = {} as Record<FormuleNew, Awaited<ReturnType<typeof calculateOneConnexionPriceAsync>>>;
     formules.forEach((formule, index) => {
         resultatMap[formule] = resultats[index];
     });

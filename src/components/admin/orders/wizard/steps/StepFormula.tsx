@@ -42,6 +42,39 @@ export const StepFormula = ({
                 return;
             }
 
+
+            // HELPER: Tenter d'extraire la ville si elle n'est pas définie (Saisie manuelle)
+            const extractCity = (address: string | undefined, explicitCity: string | undefined): string => {
+                if (explicitCity && explicitCity.trim().length > 0) return explicitCity;
+                if (!address) return "Paris";
+
+                // Regex pour trouver un Code Postal (5 chiffres)
+                const zipMatch = address.match(/\b\d{5}\b/);
+                if (zipMatch) {
+                    // Cas 1: "75000 Paris" (CP suivi de Ville)
+                    const sub = address.substring(zipMatch.index! + 5).trim();
+                    const firstWord = sub.split(/[ ,]/)[0]; // Prend tout jusqu'à la première virgule ou espace
+                    if (firstWord && firstWord.length > 2) return sub.split(',')[0].trim(); // On prend le reste de la ligne souvent
+
+                    // Cas 2: "Paris 75000" (Ville avant CP)
+                    // On recule depuis le match
+                    const pre = address.substring(0, zipMatch.index).trim();
+                    if (pre.length > 2) {
+                        // On prend le dernier segment après une virgule s'il y en a
+                        const parts = pre.split(',');
+                        return parts[parts.length - 1].trim();
+                    }
+                }
+
+                // Fallback dangereux : Si on ne trouve rien et pas de ville explicite : Paris
+                return "Paris";
+            };
+
+            const pickupCity = extractCity(formData.pickupAddress, formData.pickupCity);
+            const deliveryCity = extractCity(formData.deliveryAddress, formData.deliveryCity);
+
+            console.log(`[Pricing] Calculation for: ${pickupCity} -> ${deliveryCity}`);
+
             if (onCalculatingStateChange) onCalculatingStateChange(true);
             if (onError) onError(null);
 
@@ -52,8 +85,8 @@ export const StepFormula = ({
                 const resultsArray = await Promise.all(
                     formulasToCalculate.map(formula =>
                         calculateOneConnexionPriceAsync(
-                            formData.pickupCity,
-                            formData.deliveryCity || "Paris", // Fallback city
+                            pickupCity,
+                            deliveryCity,
                             0, // Distance will be handled internally by the async function if needed or matrix
                             formula
                         )
@@ -160,6 +193,9 @@ export const StepFormula = ({
                                         <div>
                                             <p className={`text-lg font-bold ${isSelected ? "text-[#D4AF37]" : "text-[#0B1525]"}`}>
                                                 {price.totalEuros.toFixed(2)}€
+                                            </p>
+                                            <p className={`text-xs ${isSelected ? "text-gray-300" : "text-gray-500"}`}>
+                                                ({price.totalBons.toFixed(2)} bons)
                                             </p>
                                         </div>
                                     ) : (

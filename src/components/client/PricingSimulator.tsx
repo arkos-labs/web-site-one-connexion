@@ -1,139 +1,305 @@
-import { useState, useEffect } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Slider } from "@/components/ui/slider";
-import {
-    DEFAULT_PRIX_BON_CENTS,
-    type FormuleNew,
-    type CalculTarifaireResult
-} from "@/utils/pricingEngine";
-import { calculerToutesLesFormulesAsync } from "@/utils/pricingEngineDb";
-import { MapPin, ArrowRight, Calculator, Info, Search } from "lucide-react";
+import { Search, Info, X, ChevronRight, MapPin, Loader2 } from "lucide-react";
+import { TARIFS_BONS, TarifVille } from "@/data/tarifs_idf";
+import { supabase } from "@/lib/supabase";
 
-// Mock function until full Geocoding is implemented
-const mockGeocode = (addr1: string, addr2: string): number => {
-    // Simple determinism for demo: based on length of strings to vary distance
-    if (!addr1 || !addr2) return 10;
-    return Math.max(5, (addr1.length + addr2.length) % 50);
-}
+// Hook personnalisé pour charger les données (Local + DB)
+const usePricingData = () => {
+    const [data, setData] = useState<TarifVille[]>(TARIFS_BONS);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchDbPricing = async () => {
+            try {
+                // 1. Récupérer les tarifs depuis Supabase
+                const { data: dbCities, error } = await supabase
+                    .from('city_pricing')
+                    .select('*');
+
+                if (error) {
+                    console.error("Erreur récupération tarifs DB:", error);
+                    return;
+                }
+
+                if (dbCities && dbCities.length > 0) {
+                    // 2. Convertir le format DB en format TarifVille
+                    const formattedDbCities: TarifVille[] = dbCities
+                        .filter(city => city.zip_code && city.city_name) // BASIC FILTER: Must have CP and Name
+                        .map(city => ({
+                            ville: city.city_name,
+                            cp: city.zip_code || "",
+                            formules: {
+                                "NORMAL": city.price_normal,
+                                "EXPRESS": city.price_express,
+                                "URGENCE": city.price_urgence,
+                                "VL_NORMAL": city.price_vl_normal,
+                                "VL_EXPRESS": city.price_vl_express
+                            }
+                        }));
+
+                    // 3. Fusionner avec les données locales (Priorité au Local maintenant que le fichier est à jour)
+                    setData(currentLocalData => {
+                        const mergedMap = new Map();
+
+                        // D'abord les données DB (pour qu'elles soient écrasées par le local si conflit)
+                        formattedDbCities.forEach(item => {
+                            // Clean name for key: lowercase + trim
+                            const key = `${item.ville.toLowerCase().trim()}-${item.cp}`;
+                            mergedMap.set(key, item);
+                        });
+
+                        // Ensuite les données Locales (écrasent les DB si conflit, car src/data/tarifs_idf.ts est la référence 2025)
+                        currentLocalData.forEach(item => {
+                            const key = `${item.ville.toLowerCase().trim()}-${item.cp}`;
+                            mergedMap.set(key, item);
+                        });
+
+                        return Array.from(mergedMap.values()).sort((a, b) => a.ville.localeCompare(b.ville));
+                    });
+                }
+            } catch (err) {
+                console.error("Erreur chargement prix:", err);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchDbPricing();
+    }, []);
+
+    return { data, isLoading };
+};
+
+const PricingGrid = () => {
+    const [searchTerm, setSearchTerm] = useState("");
+    const { data: pricingData, isLoading } = usePricingData();
+
+    const filteredData = useMemo(() => {
+        if (!searchTerm) return pricingData;
+
+        // Normalisation stricte pour la recherche (supprime espaces et tirets)
+        const normalizeSearch = (str: string) => str.toLowerCase().replace(/[\s-]/g, '');
+        const normalizedQuery = normalizeSearch(searchTerm);
+
+        return pricingData.filter(t =>
+            normalizeSearch(t.ville).includes(normalizedQuery) ||
+            t.cp.includes(searchTerm)
+        );
+    }, [searchTerm, pricingData]);
+
+    return (
+        <div className="space-y-6 animate-in fade-in duration-500">
+            <div className="relative">
+                <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Input
+                    placeholder="Rechercher une ville ou un code postal..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10 h-10 bg-white border-gray-200"
+                />
+            </div>
+
+            <div className="rounded-xl border border-gray-100 overflow-hidden bg-white shadow-sm">
+                <div className="overflow-x-auto max-h-[600px]">
+                    <table className="w-full text-sm text-left">
+                        <thead className="bg-gray-50 text-gray-700 font-serif font-bold sticky top-0 z-10 shadow-sm">
+                            <tr>
+                                <th className="px-6 py-4">Ville</th>
+                                <th className="px-6 py-4 text-center bg-blue-50/50 text-blue-900">Normal<br /><span className="text-[10px] font-normal opacity-70">4h</span></th>
+                                <th className="px-6 py-4 text-center bg-purple-50/50 text-purple-900">Express<br /><span className="text-[10px] font-normal opacity-70">2h</span></th>
+                                <th className="px-6 py-4 text-center bg-red-50/50 text-red-900">Urgence<br /><span className="text-[10px] font-normal opacity-70">45min</span></th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-100">
+                            {isLoading ? (
+                                <tr>
+                                    <td colSpan={4} className="px-6 py-8 text-center text-gray-400">
+                                        <div className="flex items-center justify-center gap-2">
+                                            <Loader2 className="h-4 w-4 animate-spin" />
+                                            Chargement des tarifs...
+                                        </div>
+                                    </td>
+                                </tr>
+                            ) : filteredData.length === 0 ? (
+                                <tr>
+                                    <td colSpan={4} className="px-6 py-8 text-center text-gray-400 italic">
+                                        Aucune ville trouvée pour "{searchTerm}"
+                                    </td>
+                                </tr>
+                            ) : (
+                                filteredData.map((city, idx) => (
+                                    <tr key={`${city.cp}-${city.ville}-${idx}`} className="hover:bg-gray-50/50 transition-colors">
+                                        <td className="px-6 py-4 font-medium text-gray-900">
+                                            {city.ville} <span className="text-gray-400 font-normal ml-1">({city.cp})</span>
+                                        </td>
+                                        <td className="px-6 py-4 text-center font-medium text-blue-700">
+                                            {city.formules.NORMAL} bons
+                                        </td>
+                                        <td className="px-6 py-4 text-center font-medium text-purple-700">
+                                            {city.formules.EXPRESS} bons
+                                        </td>
+                                        <td className="px-6 py-4 text-center font-bold text-red-600">
+                                            {city.formules.URGENCE} bons
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div className="bg-blue-50/50 border border-blue-100/50 rounded-xl p-4 flex gap-3 text-sm text-blue-800">
+                <Info className="w-4 h-4 mt-0.5 shrink-0" />
+                <p>
+                    Ces tarifs correspondent à une prise en charge (trajet <strong>Paris ↔ Ville</strong>).
+                    Pour un trajet <strong>Banlieue ↔ Banlieue</strong>, un supplément kilométrique peut s'appliquer si aucune des deux villes n'est Paris.
+                </p>
+            </div>
+        </div>
+    );
+};
 
 const PricingSimulator = ({ variant = "default" }: { variant?: "default" | "compact" }) => {
-    // Removed 'cities' state as we now use free address input
-    const [adresseDepart, setAdresseDepart] = useState<string>("");
-    const [adresseArrivee, setAdresseArrivee] = useState<string>("");
-    const [distance, setDistance] = useState([10]); // Default 10km
-    const [isCalculating, setIsCalculating] = useState(false);
-    const [results, setResults] = useState<Record<FormuleNew, CalculTarifaireResult> | null>(null);
+    // Shared Data Hook
+    const { data: pricingData } = usePricingData();
 
-    const handleCalculate = async () => {
-        if (!adresseDepart || !adresseArrivee) return;
-        setIsCalculating(true);
-
-        // Simulating API delay for realist feel
-        await new Promise(r => setTimeout(r, 600));
-
-        try {
-            // For now, we trust the Slider distance, or we could update it.
-            // In a real app, we would await getDistance(adresseDepart, adresseArrivee) here.
-            // Let's assume the user adjusts the slider OR we simulate it if they haven't touched it?
-            // For stability, we use the current 'distance' state.
-
-            const res = await calculerToutesLesFormulesAsync(
-                "Paris", // Defaulting to Paris for zoning logic compatibility if addresses aren't exact zones
-                "Paris",
-                distance[0] * 1000 // Convert km to meters
-            );
-            setResults(res as Record<FormuleNew, CalculTarifaireResult>);
-        } catch (error) {
-            console.error("Erreur de calcul:", error);
-        } finally {
-            setIsCalculating(false);
-        }
-    };
-
-    // removed auto-calculate on text change to avoid spamming, prefer "Calculer" button or debounce.
-    // We kept auto-calc on distance change if results are already shown?
-    useEffect(() => {
-        if (results) {
-            handleCalculate();
-        }
-    }, [distance]);
-
+    // Compact variant (Widget for Home/Sidebar)
     if (variant === "compact") {
+        const [query, setQuery] = useState("");
+        const [isOpen, setIsOpen] = useState(false);
+        const [selectedCity, setSelectedCity] = useState<TarifVille | null>(null);
+
+        const filteredCities = useMemo(() => {
+            if (!query || query.length < 2) return [];
+            const lower = query.toLowerCase();
+            return pricingData.filter(t =>
+                t.ville.toLowerCase().includes(lower) ||
+                t.cp.includes(lower)
+            );
+        }, [query, pricingData]);
+
+        const handleSelect = (city: TarifVille) => {
+            setSelectedCity(city);
+            setQuery(city.ville);
+            setIsOpen(false);
+        };
+
+        const clearSearch = () => {
+            setQuery("");
+            setSelectedCity(null);
+            setIsOpen(false);
+        };
+
         return (
             <div className="w-full max-w-sm ml-auto">
-                <Card className="p-6 bg-white/10 backdrop-blur-md border-white/20 shadow-2xl text-white">
-                    <div className="space-y-6">
-                        <div className="space-y-2 border-b border-white/10 pb-4">
-                            <h3 className="text-xl font-serif font-medium text-white">
-                                Simulateur de Tarifs
+                <Card className="p-6 bg-white/10 backdrop-blur-md border-white/20 shadow-2xl text-white overflow-visible transition-all duration-300">
+                    <div className="space-y-4">
+                        <div className="space-y-1">
+                            <h3 className="text-xl font-serif font-medium text-white flex items-center gap-2">
+                                <Search className="w-5 h-5 text-[#D4AF37]" />
+                                Tarif Rapide
                             </h3>
+                            <p className="text-xs text-gray-300 font-light">
+                                Vérifiez le prix d'une ville (Départ/Arrivée Paris)
+                            </p>
                         </div>
 
-                        <div className="space-y-4">
-                            <div className="space-y-2">
-                                <Label className="text-white/80 font-light">Adresse de départ</Label>
-                                <div className="relative">
-                                    <MapPin className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                                    <Input
-                                        placeholder="Ex: 12 Rue de Rivoli, Paris"
-                                        className="pl-9 bg-white/90 border-0 text-slate-800 h-10 placeholder:text-gray-400"
-                                        value={adresseDepart}
-                                        onChange={(e) => setAdresseDepart(e.target.value)}
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="space-y-2">
-                                <Label className="text-white/80 font-light">Adresse d'arrivée</Label>
-                                <div className="relative">
-                                    <MapPin className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                                    <Input
-                                        placeholder="Ex: 1 Place de la Défense"
-                                        className="pl-9 bg-white/90 border-0 text-slate-800 h-10 placeholder:text-gray-400"
-                                        value={adresseArrivee}
-                                        onChange={(e) => setAdresseArrivee(e.target.value)}
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="space-y-4 pt-2">
-                                <div className="flex justify-between text-sm text-white/90">
-                                    <span>Distance estimée</span>
-                                    <span className="font-semibold">{distance[0]} km</span>
-                                </div>
-                                <Slider
-                                    value={distance}
-                                    onValueChange={setDistance}
-                                    max={100}
-                                    min={1}
-                                    step={1}
-                                    className="py-2 [&_.shift-slider-track]:bg-white/30 [&_.shift-slider-thumb]:border-white"
+                        <div className="relative">
+                            <div className="relative z-50">
+                                <Input
+                                    placeholder="Ville ou code postal..."
+                                    value={query}
+                                    onChange={(e) => {
+                                        setQuery(e.target.value);
+                                        setIsOpen(true);
+                                        if (!e.target.value) setSelectedCity(null);
+                                    }}
+                                    onFocus={() => setIsOpen(true)}
+                                    // Handle Blur with timeout to allow clicking suggestions
+                                    onBlur={() => setTimeout(() => setIsOpen(false), 200)}
+                                    className="pl-4 pr-10 h-12 bg-white/10 border-white/10 text-white placeholder:text-gray-400 focus:bg-[#0B1525] focus:border-[#D4AF37] transition-all rounded-lg"
                                 />
+                                {query && (
+                                    <button
+                                        onClick={clearSearch}
+                                        className="absolute right-3 top-3.5 text-gray-400 hover:text-white transition-colors"
+                                    >
+                                        <X className="w-5 h-5" />
+                                    </button>
+                                )}
                             </div>
 
-                            <Button
-                                onClick={handleCalculate}
-                                disabled={isCalculating}
-                                className="w-full bg-gradient-to-r from-[#C5A028] to-[#E5C558] hover:from-[#B08D1F] hover:to-[#D4B346] text-white border-0 font-medium h-11 shadow-lg mt-2 transition-all"
-                            >
-                                {isCalculating ? "Calcul..." : "Estimer"}
-                            </Button>
+                            {/* Dropdown Suggestions */}
+                            {isOpen && filteredCities.length > 0 && !selectedCity && (
+                                <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden z-[60] animate-in fade-in zoom-in-95 duration-200">
+                                    <ul className="divide-y divide-gray-50 max-h-[300px] overflow-y-auto custom-scrollbar">
+                                        {filteredCities.map((city, idx) => (
+                                            <li key={`${city.cp}-${city.ville}-${idx}`}>
+                                                <button
+                                                    onClick={() => handleSelect(city)}
+                                                    className="w-full px-4 py-3 text-left hover:bg-blue-50/50 transition-colors flex items-center justify-between group text-gray-800"
+                                                >
+                                                    <div className="flex items-center gap-3">
+                                                        <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 group-hover:bg-[#D4AF37]/10 group-hover:text-[#D4AF37] transition-colors">
+                                                            <MapPin className="w-4 h-4" />
+                                                        </div>
+                                                        <div>
+                                                            <p className="font-medium text-gray-900">{city.ville}</p>
+                                                            <p className="text-xs text-gray-400">{city.cp}</p>
+                                                        </div>
+                                                    </div>
+                                                    <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-[#D4AF37] transition-colors" />
+                                                </button>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
+                        </div>
 
-                            {results && (
-                                <div className="mt-4 pt-4 border-t border-white/10 animate-fade-in space-y-3 bg-white/5 rounded-lg p-3">
-                                    <div className="flex justify-between items-center text-sm">
-                                        <span className="text-white/80">Standard (4h)</span>
-                                        <span className="font-bold text-[#F3E5AB]">{results.NORMAL.totalEuros.toFixed(2)}€</span>
+                        {/* Selected City Details */}
+                        <div className="transition-all duration-300 ease-in-out">
+                            {selectedCity && (
+                                <div className="space-y-3 animate-in fade-in slide-in-from-bottom-2 bg-white/5 rounded-xl p-4 border border-white/10 mt-2">
+                                    <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-3">
+                                        <div className="flex items-center gap-2">
+                                            <span className="w-2 h-2 rounded-full bg-[#D4AF37]"></span>
+                                            <span className="font-serif text-lg font-medium text-white">{selectedCity.ville}</span>
+                                        </div>
                                     </div>
-                                    <div className="flex justify-between items-center text-sm">
-                                        <span className="text-white/80">Express (2h)</span>
-                                        <span className="font-bold text-[#F3E5AB]">{results.EXPRESS.totalEuros.toFixed(2)}€</span>
+
+                                    <div className="grid gap-2 text-sm">
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-gray-300">Standard (4h)</span>
+                                            <span className="font-bold text-[#F3E5AB]">
+                                                {selectedCity.formules.NORMAL} bons
+                                            </span>
+                                        </div>
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-gray-300">Express (2h)</span>
+                                            <span className="font-bold text-[#F3E5AB]">
+                                                {selectedCity.formules.EXPRESS} bons
+                                            </span>
+                                        </div>
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-gray-300">Urgence</span>
+                                            <span className="font-bold text-red-400">
+                                                {selectedCity.formules.URGENCE} bons
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                             )}
+                        </div>
+
+                        {/* Footer Link */}
+                        <div className="pt-2 text-center">
+                            <a href="/tarifs" className="text-[10px] uppercase tracking-wider text-gray-400 hover:text-[#D4AF37] transition-colors font-medium">
+                                Voir la grille complète →
+                            </a>
                         </div>
                     </div>
                 </Card>
@@ -141,204 +307,18 @@ const PricingSimulator = ({ variant = "default" }: { variant?: "default" | "comp
         );
     }
 
-    // Default Variant (Used in /tarifs page)
+    // Default variant: Show the full pricing grid
     return (
         <div className="w-full max-w-5xl mx-auto">
-            <div className="grid lg:grid-cols-12 gap-8">
-                {/* Controls */}
-                <Card className="lg:col-span-5 p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 bg-white rounded-2xl h-fit">
-                    <div className="space-y-8">
-                        <div className="space-y-2 border-b border-gray-100 pb-6">
-                            <h3 className="text-2xl font-serif font-bold text-[#0B1525] flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-full bg-[#D4AF37]/10 flex items-center justify-center">
-                                    <Calculator className="w-5 h-5 text-[#D4AF37]" />
-                                </div>
-                                Simulateur
-                            </h3>
-                            <p className="text-sm text-gray-500 font-light">
-                                Saisissez vos adresses pour obtenir une estimation précise.
-                            </p>
-                        </div>
-
-                        <div className="space-y-6">
-                            <div className="space-y-2">
-                                <Label className="text-gray-700">Adresse de départ</Label>
-                                <div className="relative group">
-                                    <MapPin className="absolute left-3 top-3 h-5 w-5 text-gray-400 group-focus-within:text-[#D4AF37] transition-colors" />
-                                    <Input
-                                        placeholder="Ex: 12 Rue de Rivoli, 75001 Paris"
-                                        className="pl-10 h-12 bg-gray-50 border-gray-200 focus:border-[#D4AF37] focus:ring-[#D4AF37]/20 transition-all"
-                                        value={adresseDepart}
-                                        onChange={(e) => setAdresseDepart(e.target.value)}
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="space-y-2">
-                                <Label className="text-gray-700">Adresse d'arrivée</Label>
-                                <div className="relative group">
-                                    <MapPin className="absolute left-3 top-3 h-5 w-5 text-gray-400 group-focus-within:text-[#D4AF37] transition-colors" />
-                                    <Input
-                                        placeholder="Ex: 1 Place de la Défense, Puteaux"
-                                        className="pl-10 h-12 bg-gray-50 border-gray-200 focus:border-[#D4AF37] focus:ring-[#D4AF37]/20 transition-all"
-                                        value={adresseArrivee}
-                                        onChange={(e) => setAdresseArrivee(e.target.value)}
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="space-y-4 pt-4 bg-gray-50 p-4 rounded-xl border border-gray-100">
-                                <div className="flex justify-between items-center">
-                                    <Label className="text-gray-700">Distance estimée</Label>
-                                    <span className="font-bold text-[#0B1525] bg-white px-3 py-1 rounded-md shadow-sm border border-gray-100">{distance[0]} km</span>
-                                </div>
-                                <Slider
-                                    value={distance}
-                                    onValueChange={setDistance}
-                                    max={100}
-                                    min={1}
-                                    step={1}
-                                    className="py-2"
-                                />
-                                <p className="text-xs text-gray-400 flex items-center gap-1.5 font-light">
-                                    <Info className="w-3 h-3 text-[#D4AF37]" />
-                                    Ajustez la distance si nécessaire pour affiner le prix.
-                                </p>
-                            </div>
-
-                            <Button
-                                onClick={handleCalculate}
-                                disabled={isCalculating}
-                                className="w-full bg-[#0B1525] hover:bg-[#1a2c4e] text-white h-14 text-lg font-medium shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all rounded-xl"
-                            >
-                                {isCalculating ? (
-                                    <span className="flex items-center gap-2">
-                                        <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></span>
-                                        Calcul en cours...
-                                    </span>
-                                ) : (
-                                    <span className="flex items-center gap-2">
-                                        Calculer mon tarif <ArrowRight className="w-5 h-5" />
-                                    </span>
-                                )}
-                            </Button>
-                        </div>
-                    </div>
-                </Card>
-
-                {/* Results */}
-                <div className="lg:col-span-7 space-y-6">
-                    {!results ? (
-                        <Card className="p-12 border border-gray-100 bg-white/50 shadow-sm flex flex-col items-center justify-center text-center h-full min-h-[400px] rounded-2xl">
-                            <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mb-6 animate-pulse">
-                                <Search className="w-8 h-8 text-gray-300" />
-                            </div>
-                            <h3 className="text-xl font-serif text-gray-400 mb-2">
-                                En attente d'estimation
-                            </h3>
-                            <p className="text-gray-400 font-light max-w-xs">
-                                Remplissez les adresses et validez pour voir nos offres sur-mesure.
-                            </p>
-                        </Card>
-                    ) : (
-                        <div className="space-y-6 animate-fade-in">
-                            <div className="grid gap-5">
-                                {/* Standard / Normal */}
-                                <PricingCard
-                                    title="Standard"
-                                    result={results.NORMAL}
-                                    delay="4h"
-                                    description="Livraison économique dans la demi-journée."
-                                />
-                                {/* Express */}
-                                <PricingCard
-                                    title="Express"
-                                    result={results.EXPRESS}
-                                    delay="2h"
-                                    popular
-                                    description="La solution idéale pour vos urgences quotidiennes."
-                                />
-                                {/* Urgence */}
-                                <PricingCard
-                                    title="Super Express"
-                                    result={results.URGENCE}
-                                    delay="45min"
-                                    description="Un coursier dédié part immédiatement."
-                                />
-                            </div>
-
-                            <div className="bg-blue-50/50 border border-blue-100/50 rounded-xl p-6 flex gap-4 items-start">
-                                <Info className="w-5 h-5 text-blue-600 mt-1 shrink-0" />
-                                <div className="space-y-2">
-                                    <h4 className="text-blue-900 font-medium">Transparence totale</h4>
-                                    <p className="text-sm text-blue-700/80 leading-relaxed">
-                                        Ces tarifs sont estimatifs et incluent la prise en charge et le kilométrage.
-                                        La valeur du Bon est fixée à <strong>{(DEFAULT_PRIX_BON_CENTS / 100).toFixed(2)}€ HT</strong>.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-                </div>
+            <div className="mb-8">
+                <h2 className="text-3xl font-serif font-bold text-[#0B1525]">Grille Tarifaire Officielle</h2>
+                <p className="text-gray-500 font-light mt-1">
+                    Retrouvez tous nos tarifs fixes par ville (Départ ou Arrivée Paris).
+                </p>
             </div>
+
+            <PricingGrid />
         </div>
-    );
-};
-
-const PricingCard = ({
-    title,
-    result,
-    delay,
-    popular,
-    description
-}: {
-    title: string,
-    result: CalculTarifaireResult,
-    delay: string,
-    popular?: boolean,
-    description: string
-}) => {
-    return (
-        <Card className={`relative overflow-hidden transition-all duration-300 group ${popular
-            ? 'border-[#D4AF37] shadow-[0_10px_40px_-10px_rgba(212,175,55,0.2)] bg-white transform hover:-translate-y-1'
-            : 'border-gray-100 bg-white hover:border-gray-200 hover:shadow-lg'
-            }`}>
-            {popular && (
-                <div className="absolute top-0 right-0">
-                    <div className="bg-[#D4AF37] text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl uppercase tracking-wider">
-                        Recommandé
-                    </div>
-                </div>
-            )}
-
-            <div className="p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6">
-                <div className="flex items-center gap-6 w-full md:w-auto">
-                    <div className={`w-16 h-16 rounded-2xl flex items-center justify-center text-xl font-serif font-bold transition-colors ${popular ? 'bg-[#D4AF37]/10 text-[#D4AF37]' : 'bg-gray-50 text-gray-400 group-hover:bg-[#0B1525] group-hover:text-white'}`}>
-                        {title[0]}
-                    </div>
-                    <div>
-                        <div className="flex items-center gap-3 mb-1">
-                            <h4 className="font-serif font-bold text-xl text-[#0B1525]">{title}</h4>
-                            <span className="flex items-center gap-1.5 text-xs font-medium px-2.5 py-0.5 rounded-full bg-green-50 text-green-700 border border-green-100">
-                                <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
-                                {delay}
-                            </span>
-                        </div>
-                        <p className="text-sm text-gray-500 font-light">{description}</p>
-                    </div>
-                </div>
-
-                <div className="text-right w-full md:w-auto border-t md:border-t-0 border-gray-100 pt-4 md:pt-0 mt-2 md:mt-0 flex flex-row md:flex-col justify-between md:justify-center items-center md:items-end">
-                    <span className="md:hidden text-gray-400 text-sm font-medium">Tarif estimé</span>
-                    <div>
-                        <div className="text-3xl font-serif font-bold text-[#0B1525]">{result.totalEuros.toFixed(2)}€</div>
-                        <div className="text-xs font-medium text-[#D4AF37] mt-1">
-                            {result.totalBons.toFixed(2)} Bons
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </Card>
     );
 };
 

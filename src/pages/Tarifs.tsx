@@ -38,7 +38,7 @@ const Tarifs = () => {
                 Notre tarification fonctionne par système de <strong>Bons</strong> pour une transparence totale.
                 <br />
                 <span className="inline-block mt-4 bg-white px-4 py-2 rounded-full text-sm font-medium border border-[#D4AF37]/30 text-[#0B1525] shadow-sm">
-                  1 Bon = 5.50€ HT
+                  1 Bon = 5.00€ HT
                 </span>
               </p>
             </div>

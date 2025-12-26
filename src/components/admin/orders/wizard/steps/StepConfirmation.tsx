@@ -64,7 +64,14 @@ export const StepConfirmation = ({ formData, pricingResults, onSubmit, onBack }:
                         <div>
                             <span className="text-gray-500 block mb-1">Prix estimé</span>
                             <span className="font-bold text-[#D4AF37]">
-                                {selectedPrice ? `${selectedPrice.totalEuros.toFixed(2)}€` : 'Non calculé'}
+                                {selectedPrice ? (
+                                    <>
+                                        {selectedPrice.totalEuros.toFixed(2)}€
+                                        <span className="text-gray-400 font-normal ml-1 text-xs">
+                                            ({selectedPrice.totalBons.toFixed(2)} bons)
+                                        </span>
+                                    </>
+                                ) : 'Non calculé'}
                             </span>
                         </div>
                     </div>
