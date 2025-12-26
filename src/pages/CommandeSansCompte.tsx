@@ -179,6 +179,10 @@ const CommandeSansCompte = () => {
     const [villeArrivee, setVilleArrivee] = useState<string>("");
     const [isStandardDisabled, setIsStandardDisabled] = useState(false);
 
+    // Validation stricte de l'autocomplétion
+    const [isPickupValid, setIsPickupValid] = useState(false);
+    const [isDeliveryValid, setIsDeliveryValid] = useState(false);
+
     // --- Gestionnaires d'état ---
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -193,6 +197,10 @@ const CommandeSansCompte = () => {
     const handleSelectChange = (name: keyof GuestOrderFormData, value: string) => {
         setFormData(prev => ({ ...prev, [name]: value }));
         if (errors[name]) setErrors(prev => ({ ...prev, [name]: undefined }));
+
+        // Invalidation si modification manuelle : on force la sélection
+        if (name === 'pickupAddress') setIsPickupValid(false);
+        if (name === 'deliveryAddress') setIsDeliveryValid(false);
     };
 
     const handleAddressSelect = (type: 'pickup' | 'delivery', suggestion: AddressSuggestion) => {
@@ -205,8 +213,14 @@ const CommandeSansCompte = () => {
 
         // Clear errors relative to address
         const newErrors = { ...errors };
-        if (type === 'pickup') { delete newErrors.pickupAddress; delete newErrors.pickupCity; delete newErrors.pickupZip; }
-        else { delete newErrors.deliveryAddress; delete newErrors.deliveryCity; delete newErrors.deliveryZip; }
+        if (type === 'pickup') {
+            delete newErrors.pickupAddress; delete newErrors.pickupCity; delete newErrors.pickupZip;
+            setIsPickupValid(true);
+        }
+        else {
+            delete newErrors.deliveryAddress; delete newErrors.deliveryCity; delete newErrors.deliveryZip;
+            setIsDeliveryValid(true);
+        }
         setErrors(newErrors);
     };
 
@@ -299,7 +313,10 @@ const CommandeSansCompte = () => {
         if (!formData.siret || formData.siret.length !== 14) newErrors.siret = "SIRET 14 chiffres";
 
         if (!formData.pickupAddress) newErrors.pickupAddress = "Adresse requise";
+        else if (!isPickupValid) newErrors.pickupAddress = "Veuillez sélectionner une adresse proposée";
+
         if (!formData.deliveryAddress) newErrors.deliveryAddress = "Adresse requise";
+        else if (!isDeliveryValid) newErrors.deliveryAddress = "Veuillez sélectionner une adresse proposée";
 
         if (!formData.packageType) newErrors.packageType = "Type requis";
         if (!formData.formula) newErrors.formula = "Formule requise";
