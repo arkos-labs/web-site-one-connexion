@@ -17,6 +17,7 @@ import {
 import heroImage from "@/assets/hero-delivery-paris-v2.jpg";
 import PricingSimulator from "@/components/client/PricingSimulator";
 import SEO from "@/components/SEO";
+import { motion } from "framer-motion";
 
 const Home = () => {
   const expertises = [
@@ -74,54 +75,79 @@ const Home = () => {
       <Header />
 
       {/* Hero Section */}
-      <section className="relative min-h-[85vh] flex items-center bg-[#0B1525]">
+      <section className="relative min-h-[90vh] flex items-center bg-[#0B1525] overflow-hidden">
         {/* Background Image with Overlay */}
         <div className="absolute inset-0 z-0">
           <div
             className="absolute inset-0 bg-cover bg-center"
             style={{ backgroundImage: `url(${heroImage})` }}
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0B1525]/90 via-[#0B1525]/60 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0B1525] via-[#0B1525]/80 to-[#0B1525]/30" />
         </div>
 
         <div className="container mx-auto px-4 relative z-10 pt-20">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
             {/* Left Content */}
-            <div className="space-y-8 max-w-2xl animate-fade-in-up">
-              <h1 className="text-5xl md:text-7xl font-serif text-white leading-tight">
-                Vos livraisons urgentes <br />
-                en moins de <span className="text-[#D4AF37] italic">2h</span>
-              </h1>
+            <div className="space-y-8 max-w-2xl">
+              <div>
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/20 text-[#D4AF37] text-sm font-medium mb-6">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#D4AF37] opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-[#D4AF37]"></span>
+                  </span>
+                  Disponible 24/7 en Île-de-France
+                </div>
 
-              <p className="text-lg text-gray-300 max-w-lg leading-relaxed font-light">
-                Service premium de coursier express pour professionnels et particuliers.
-                Disponible 24/7 dans toute l'Île-de-France.
-              </p>
+                <h1 className="text-5xl md:text-7xl font-serif text-white leading-[1.1] mb-6">
+                  L'excellence du <br />
+                  transport <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] to-[#F3D576]">urgents</span>
+                </h1>
 
-              <div className="flex items-center gap-4 pt-4">
-                <Link to="/commande-sans-compte">
-                  <Button
-                    size="lg"
-                    className="bg-gradient-to-r from-[#C5A028] to-[#E5C558] hover:from-[#B08D1F] hover:to-[#D4B346] text-white border-0 font-medium px-8 h-12 rounded-full shadow-lg hover:shadow-xl transition-all"
-                  >
-                    Commander maintenant
-                  </Button>
-                </Link>
-                <Link to="/tarifs">
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    className="bg-transparent border-white/20 text-white hover:bg-white/10 px-8 h-12 rounded-full"
-                  >
-                    Voir les tarifs
-                  </Button>
-                </Link>
+                <p className="text-lg text-gray-300 max-w-lg leading-relaxed font-light mb-8">
+                  La référence premium pour vos livraisons critiques.
+                  <span className="text-white font-medium"> Fiabilité absolue</span>,
+                  <span className="text-white font-medium"> confidentialité</span> et
+                  <span className="text-white font-medium"> prestige</span> pour chaque kilomètre parcouru.
+                </p>
+
+                <div className="flex flex-col sm:flex-row items-center gap-4">
+                  <Link to="/commande-sans-compte" className="w-full sm:w-auto">
+                    <Button
+                      size="lg"
+                      className="w-full sm:w-auto h-14 bg-gradient-to-r from-[#C5A028] to-[#E5C558] hover:from-[#B08D1F] hover:to-[#D4B346] text-white border-0 font-medium px-8 text-lg rounded-full shadow-[0_0_20px_rgba(212,175,55,0.3)] hover:shadow-[0_0_30px_rgba(212,175,55,0.5)] transition-all duration-300 transform hover:-translate-y-1"
+                    >
+                      Commander un course
+                    </Button>
+                  </Link>
+                  <Link to="/tarifs" className="w-full sm:w-auto">
+                    <Button
+                      variant="outline"
+                      size="lg"
+                      className="w-full sm:w-auto h-14 bg-white/5 backdrop-blur-sm border-white/20 text-white hover:bg-white/10 hover:border-white/40 px-8 text-lg rounded-full transition-all duration-300"
+                    >
+                      Estimer un tarif
+                    </Button>
+                  </Link>
+                </div>
+
+                <div className="mt-10 flex items-center gap-8 text-sm text-gray-400">
+                  <div className="flex items-center gap-2">
+                    <Clock className="w-5 h-5 text-[#D4AF37]" />
+                    <span>Intervention &lt; 1h</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Shield className="w-5 h-5 text-[#D4AF37]" />
+                    <span>Assurance incluse</span>
+                  </div>
+                </div>
               </div>
             </div>
 
             {/* Right Content - Simulator */}
-            <div className="lg:pl-12 animate-fade-in-up" style={{ animationDelay: '200ms' }}>
-              <PricingSimulator variant="compact" />
+            <div className="lg:pl-8 relative">
+              <div className="relative">
+                <PricingSimulator variant="compact" />
+              </div>
             </div>
           </div>
         </div>

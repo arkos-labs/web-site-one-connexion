@@ -1,7 +1,8 @@
 import { useState, useMemo, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Search, Info, X, ChevronRight, MapPin, Loader2 } from "lucide-react";
+import { Search, Info, X, ChevronRight, MapPin, Loader2, List } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { TARIFS_BONS, TarifVille } from "@/data/tarifs_idf";
 import { supabase } from "@/lib/supabase";
 
@@ -194,23 +195,39 @@ const PricingSimulator = ({ variant = "default" }: { variant?: "default" | "comp
         };
 
         return (
-            <div className="w-full max-w-sm ml-auto">
-                <Card className="p-6 bg-white/10 backdrop-blur-md border-white/20 shadow-2xl text-white overflow-visible transition-all duration-300">
-                    <div className="space-y-4">
+            <div className="w-full max-w-sm ml-auto font-sans">
+                <Card className="relative overflow-visible bg-white rounded-lg shadow-xl border-0 border-t-4 border-[#F97316]">
+                    <div className="p-6 space-y-4">
+                        <h3 className="text-xl text-center text-slate-700 font-medium pb-2">
+                            Calculer le prix
+                        </h3>
+
+                        {/* Point de départ */}
                         <div className="space-y-1">
-                            <h3 className="text-xl font-serif font-medium text-white flex items-center gap-2">
-                                <Search className="w-5 h-5 text-[#D4AF37]" />
-                                Tarif Rapide
-                            </h3>
-                            <p className="text-xs text-gray-300 font-light">
-                                Vérifiez le prix d'une ville (Départ/Arrivée Paris)
-                            </p>
+                            <label className="text-sm font-bold text-slate-600">Point de départ:</label>
+                            <div className="relative">
+                                <div className="absolute left-0 top-0 bottom-0 w-10 flex items-center justify-center bg-slate-100 border-r border-slate-200 rounded-l-md">
+                                    <List className="h-5 w-5 text-slate-400" />
+                                </div>
+                                <Input
+                                    className="pl-12 h-10 border-slate-200 bg-white focus:ring-0 focus:border-[#F97316] rounded-md text-sm text-slate-700 font-normal"
+                                    placeholder="Adresse de départ..."
+                                    defaultValue="Paris, France"
+                                />
+                                <button className="absolute right-2 top-2.5 text-slate-400 hover:text-slate-600">
+                                    <X className="h-4 w-4" />
+                                </button>
+                            </div>
                         </div>
 
-                        <div className="relative">
-                            <div className="relative z-50">
+                        {/* Destination (Active Search) */}
+                        <div className="space-y-1 relative z-50">
+                            <label className="text-sm font-bold text-slate-600">Destination:</label>
+                            <div className="relative group">
+                                <div className="absolute left-0 top-0 bottom-0 w-10 flex items-center justify-center bg-slate-100 border-r border-slate-200 rounded-l-md">
+                                    <List className="h-5 w-5 text-slate-400" />
+                                </div>
                                 <Input
-                                    placeholder="Ville ou code postal..."
                                     value={query}
                                     onChange={(e) => {
                                         setQuery(e.target.value);
@@ -218,88 +235,85 @@ const PricingSimulator = ({ variant = "default" }: { variant?: "default" | "comp
                                         if (!e.target.value) setSelectedCity(null);
                                     }}
                                     onFocus={() => setIsOpen(true)}
-                                    // Handle Blur with timeout to allow clicking suggestions
+                                    // Blur with timeout to allow clicking suggestions
                                     onBlur={() => setTimeout(() => setIsOpen(false), 200)}
-                                    className="pl-4 pr-10 h-12 bg-white/10 border-white/10 text-white placeholder:text-gray-400 focus:bg-[#0B1525] focus:border-[#D4AF37] transition-all rounded-lg"
+                                    className="pl-12 h-10 border-slate-200 bg-white focus:ring-0 focus:border-[#F97316] rounded-md text-sm text-slate-700 font-normal"
+                                    placeholder="Ville ou code postal..."
                                 />
                                 {query && (
                                     <button
                                         onClick={clearSearch}
-                                        className="absolute right-3 top-3.5 text-gray-400 hover:text-white transition-colors"
+                                        className="absolute right-2 top-2.5 text-slate-400 hover:text-slate-600"
                                     >
-                                        <X className="w-5 h-5" />
+                                        <X className="h-4 w-4" />
                                     </button>
                                 )}
+
+                                {/* Suggestions Dropdown */}
+                                {isOpen && filteredCities.length > 0 && !selectedCity && (
+                                    <div className="absolute top-full left-0 right-0 mt-1 bg-white rounded-md shadow-lg border border-slate-200 max-h-[200px] overflow-y-auto z-[60]">
+                                        <ul className="divide-y divide-slate-100">
+                                            {filteredCities.map((city, idx) => (
+                                                <li key={`${city.cp}-${city.ville}-${idx}`}>
+                                                    <button
+                                                        onClick={() => handleSelect(city)}
+                                                        className="w-full px-4 py-2 text-left hover:bg-slate-50 text-sm text-slate-700 flex items-center justify-between"
+                                                    >
+                                                        <span>{city.ville} ({city.cp})</span>
+                                                    </button>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Poid et Dimension */}
+                        <div className="space-y-1">
+                            <label className="text-sm font-bold text-slate-600">Poid et Dimension:</label>
+                            <select className="flex w-full h-10 items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-0 focus:border-[#F97316] disabled:cursor-not-allowed disabled:opacity-50 text-slate-700">
+                                <option>0-7 (kg) / 40x30x30 (cm)</option>
+                                <option>7-30 (kg) / 60x40x40 (cm)</option>
+                                <option>+30 (kg) / Sur devis</option>
+                            </select>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-3 items-end">
+                            {/* Délai (Results if selected) */}
+                            <div className="space-y-1">
+                                <label className="text-sm font-bold text-slate-600">Délai:</label>
+                                <select
+                                    className="flex w-full h-10 items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-0 focus:border-[#F97316] disabled:cursor-not-allowed disabled:opacity-50 text-slate-700"
+                                >
+                                    <option>Normal</option>
+                                    <option>Express</option>
+                                    <option>Urgence</option>
+                                </select>
                             </div>
 
-                            {/* Dropdown Suggestions */}
-                            {isOpen && filteredCities.length > 0 && !selectedCity && (
-                                <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden z-[60] animate-in fade-in zoom-in-95 duration-200">
-                                    <ul className="divide-y divide-gray-50 max-h-[300px] overflow-y-auto custom-scrollbar">
-                                        {filteredCities.map((city, idx) => (
-                                            <li key={`${city.cp}-${city.ville}-${idx}`}>
-                                                <button
-                                                    onClick={() => handleSelect(city)}
-                                                    className="w-full px-4 py-3 text-left hover:bg-blue-50/50 transition-colors flex items-center justify-between group text-gray-800"
-                                                >
-                                                    <div className="flex items-center gap-3">
-                                                        <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 group-hover:bg-[#D4AF37]/10 group-hover:text-[#D4AF37] transition-colors">
-                                                            <MapPin className="w-4 h-4" />
-                                                        </div>
-                                                        <div>
-                                                            <p className="font-medium text-gray-900">{city.ville}</p>
-                                                            <p className="text-xs text-gray-400">{city.cp}</p>
-                                                        </div>
-                                                    </div>
-                                                    <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-[#D4AF37] transition-colors" />
-                                                </button>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            )}
+                            <Button
+                                className="h-10 bg-[#F97316] hover:bg-[#EA580C] text-white font-medium shadow-sm transition-all"
+                            >
+                                Obtenir le prix
+                            </Button>
                         </div>
 
-                        {/* Selected City Details */}
-                        <div className="transition-all duration-300 ease-in-out">
+                        {/* Result Display (Injected into this UI structure) */}
+                        <div className={`transition-all duration-300 ${selectedCity ? 'max-h-[100px] opacity-100 mt-2' : 'max-h-0 opacity-0 overflow-hidden'}`}>
                             {selectedCity && (
-                                <div className="space-y-3 animate-in fade-in slide-in-from-bottom-2 bg-white/5 rounded-xl p-4 border border-white/10 mt-2">
-                                    <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-3">
-                                        <div className="flex items-center gap-2">
-                                            <span className="w-2 h-2 rounded-full bg-[#D4AF37]"></span>
-                                            <span className="font-serif text-lg font-medium text-white">{selectedCity.ville}</span>
-                                        </div>
+                                <div className="bg-slate-50 p-3 rounded border border-slate-200 text-sm text-center">
+                                    <p className="text-slate-500 mb-1">Estimation pour {selectedCity.ville}:</p>
+                                    <div className="font-bold text-[#F97316] text-xl">
+                                        {selectedCity.formules.NORMAL} <span className="text-sm text-slate-400">bons</span>
                                     </div>
-
-                                    <div className="grid gap-2 text-sm">
-                                        <div className="flex justify-between items-center">
-                                            <span className="text-gray-300">Standard (4h)</span>
-                                            <span className="font-bold text-[#F3E5AB]">
-                                                {selectedCity.formules.NORMAL} bons
-                                            </span>
-                                        </div>
-                                        <div className="flex justify-between items-center">
-                                            <span className="text-gray-300">Express (2h)</span>
-                                            <span className="font-bold text-[#F3E5AB]">
-                                                {selectedCity.formules.EXPRESS} bons
-                                            </span>
-                                        </div>
-                                        <div className="flex justify-between items-center">
-                                            <span className="text-gray-300">Urgence</span>
-                                            <span className="font-bold text-red-400">
-                                                {selectedCity.formules.URGENCE} bons
-                                            </span>
-                                        </div>
-                                    </div>
+                                    <a href="/tarifs" className="text-xs text-blue-500 hover:underline block mt-1">Voir détail →</a>
                                 </div>
                             )}
                         </div>
 
-                        {/* Footer Link */}
-                        <div className="pt-2 text-center">
-                            <a href="/tarifs" className="text-[10px] uppercase tracking-wider text-gray-400 hover:text-[#D4AF37] transition-colors font-medium">
-                                Voir la grille complète →
-                            </a>
+                        <div className="pt-2 text-center text-xs text-slate-500">
+                            Pour de renseignements, appeler au <span className="font-bold text-blue-500">01 88 33 60 60</span>.
                         </div>
                     </div>
                 </Card>
