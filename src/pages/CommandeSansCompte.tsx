@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Package, Truck, Clock, AlertCircle, Zap, CheckCircle2, MapPin, Phone, Mail, Building2, FileText, CalendarClock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import Header from "@/components/client/Header";
@@ -171,6 +172,7 @@ const CommandeSansCompte = () => {
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState<GuestOrderFormData>(INITIAL_STATE);
     const [errors, setErrors] = useState<Partial<Record<keyof GuestOrderFormData, string>>>({});
+    const [searchParams] = useSearchParams();
 
     // États Pricing
     const [pricingResults, setPricingResults] = useState<Record<FormuleNew, CalculTarifaireResult> | null>(null);
@@ -182,6 +184,29 @@ const CommandeSansCompte = () => {
     // Validation stricte de l'autocomplétion
     const [isPickupValid, setIsPickupValid] = useState(false);
     const [isDeliveryValid, setIsDeliveryValid] = useState(false);
+
+    // Initialisation depuis URL (Simulateur)
+    useEffect(() => {
+        const pickupAddr = searchParams.get("pickupAddress");
+        const deliveryAddr = searchParams.get("deliveryAddress");
+
+        if (pickupAddr || deliveryAddr) {
+            setFormData(prev => ({
+                ...prev,
+                pickupAddress: pickupAddr || prev.pickupAddress,
+                pickupCity: searchParams.get("pickupCity") || prev.pickupCity,
+                pickupZip: searchParams.get("pickupZip") || prev.pickupZip,
+                deliveryAddress: deliveryAddr || prev.deliveryAddress,
+                deliveryCity: searchParams.get("deliveryCity") || prev.deliveryCity,
+                deliveryZip: searchParams.get("deliveryZip") || prev.deliveryZip,
+                formula: searchParams.get("formula") || prev.formula
+            }));
+
+            // On valide implicitement car cela vient du simulateur qui utilise l'autocomplete
+            if (pickupAddr) setIsPickupValid(true);
+            if (deliveryAddr) setIsDeliveryValid(true);
+        }
+    }, [searchParams]);
 
     // --- Gestionnaires d'état ---
 

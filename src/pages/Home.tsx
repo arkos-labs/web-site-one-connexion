@@ -14,7 +14,7 @@ import {
   Clock,
   ArrowRight
 } from "lucide-react";
-import heroImage from "@/assets/hero-delivery-paris-v2.jpg";
+import heroImage from "@/assets/hero-courier-front.png";
 import PricingSimulator from "@/components/client/PricingSimulator";
 import SEO from "@/components/SEO";
 import { motion } from "framer-motion";

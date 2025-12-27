@@ -43,7 +43,10 @@ const Tarifs = () => {
               </p>
             </div>
 
-            <PricingSimulator />
+            {/* Simulator Widget */}
+            <div className="flex justify-center mb-16">
+              <PricingSimulator variant="compact" />
+            </div>
           </div>
 
           {/* FAQ Section */}

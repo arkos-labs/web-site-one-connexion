@@ -7,6 +7,7 @@ import { useState, useEffect, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { MapPin, Loader2 } from "lucide-react";
 import { autocompleteAddress, type AddressSuggestion } from "@/lib/autocomplete";
+import { rechercherVilles } from "@/data/tarifs_idf";
 import { cn } from "@/lib/utils";
 
 interface AddressAutocompleteProps {
@@ -50,9 +51,9 @@ export const AddressAutocomplete = ({
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
-    // Rechercher les suggestions avec debounce
+    // Rechercher les suggestions avec debounce optimisé
     useEffect(() => {
-        const fetchSuggestions = async () => {
+        const runSearch = async () => {
             if (skipSearchRef.current) {
                 skipSearchRef.current = false;
                 return;
@@ -64,6 +65,25 @@ export const AddressAutocomplete = ({
                 return;
             }
 
+            // 1. RESULTATS IMMÉDIATS (LOCAUX)
+            // On affiche tout de suite les villes de la base pour une sensation de "zéro latence"
+            const localHits = rechercherVilles(value, 5);
+            if (localHits.length > 0) {
+                const instantSuggestions: AddressSuggestion[] = localHits.map(ville => ({
+                    full: `${ville.ville} (${ville.cp})`,
+                    street: "",
+                    postcode: ville.cp,
+                    city: ville.ville,
+                    lat: "",
+                    lon: "",
+                    raw: null,
+                    isLocal: true
+                }));
+                // On affiche les locaux tout de suite
+                setSuggestions(instantSuggestions);
+                setShowSuggestions(true);
+            }
+
             setIsLoading(true);
             const results = await autocompleteAddress(value);
             setSuggestions(results);
@@ -71,7 +91,7 @@ export const AddressAutocomplete = ({
             setIsLoading(false);
         };
 
-        const timeoutId = setTimeout(fetchSuggestions, 300);
+        const timeoutId = setTimeout(runSearch, 150); // 150ms pour plus de réactivité
         return () => clearTimeout(timeoutId);
     }, [value]);
 

@@ -5,6 +5,7 @@ import { Search, Info, X, ChevronRight, MapPin, Loader2, List } from "lucide-rea
 import { Button } from "@/components/ui/button";
 import { TARIFS_BONS, TarifVille } from "@/data/tarifs_idf";
 import { supabase } from "@/lib/supabase";
+import { AddressAutocomplete } from "@/components/ui/AddressAutocomplete";
 
 // Hook personnalisé pour charger les données (Local + DB)
 const usePricingData = () => {
@@ -170,150 +171,196 @@ const PricingSimulator = ({ variant = "default" }: { variant?: "default" | "comp
     // Compact variant (Widget for Home/Sidebar)
     if (variant === "compact") {
         const [query, setQuery] = useState("");
-        const [isOpen, setIsOpen] = useState(false);
+        const [startQuery, setStartQuery] = useState("");
         const [selectedCity, setSelectedCity] = useState<TarifVille | null>(null);
+        const [selectedDelay, setSelectedDelay] = useState<"NORMAL" | "EXPRESS" | "URGENCE">("NORMAL");
+        const [showResult, setShowResult] = useState(false);
 
-        const filteredCities = useMemo(() => {
-            if (!query || query.length < 2) return [];
-            const lower = query.toLowerCase();
-            return pricingData.filter(t =>
-                t.ville.toLowerCase().includes(lower) ||
-                t.cp.includes(lower)
-            );
-        }, [query, pricingData]);
+        const [selectedStartCity, setSelectedStartCity] = useState<TarifVille | null>(null);
+
+        // Calculate the effective city to use for pricing (Max of Start or End)
+        const pricingCity = useMemo(() => {
+            if (!selectedCity && !selectedStartCity) return null;
+            if (!selectedCity) return selectedStartCity;
+            if (!selectedStartCity) return selectedCity;
+
+            // Logique : Le prix le plus élevé l'emporte
+            const priceStart = selectedStartCity.formules[selectedDelay];
+            const priceEnd = selectedCity.formules[selectedDelay];
+
+            return priceStart > priceEnd ? selectedStartCity : selectedCity;
+        }, [selectedCity, selectedStartCity, selectedDelay]);
 
         const handleSelect = (city: TarifVille) => {
             setSelectedCity(city);
-            setQuery(city.ville);
-            setIsOpen(false);
+            // On ne met PAS à jour 'query' ici car elle contient déjà l'adresse complète set par l'Autocomplete
+            setShowResult(false);
+        };
+
+        const handleStartSelect = (city: TarifVille) => {
+            setSelectedStartCity(city);
+            setShowResult(false);
         };
 
         const clearSearch = () => {
             setQuery("");
             setSelectedCity(null);
-            setIsOpen(false);
+            setShowResult(false);
+        };
+
+        const handleCalculate = () => {
+            if (pricingCity) setShowResult(true);
         };
 
         return (
             <div className="w-full max-w-sm ml-auto font-sans">
-                <Card className="relative overflow-visible bg-white rounded-lg shadow-xl border-0 border-t-4 border-[#F97316]">
-                    <div className="p-6 space-y-4">
-                        <h3 className="text-xl text-center text-slate-700 font-medium pb-2">
-                            Calculer le prix
+                <Card className="relative overflow-visible bg-white rounded-lg shadow-xl border-0 border-t-4 border-[#D4AF37]">
+                    <div className="p-6 space-y-5">
+                        <h3 className="text-xl text-center text-[#0B1525] font-serif font-bold pb-2">
+                            Estimer un tarif
                         </h3>
 
                         {/* Point de départ */}
                         <div className="space-y-1">
-                            <label className="text-sm font-bold text-slate-600">Point de départ:</label>
-                            <div className="relative">
-                                <div className="absolute left-0 top-0 bottom-0 w-10 flex items-center justify-center bg-slate-100 border-r border-slate-200 rounded-l-md">
-                                    <List className="h-5 w-5 text-slate-400" />
+                            <label className="text-sm font-bold text-[#0B1525]">Point de départ:</label>
+                            <div className="relative z-50">
+                                <div className="absolute left-0 top-0 bottom-0 w-10 flex items-center justify-center bg-gray-50 border-r border-gray-100 rounded-l-md z-10">
+                                    <List className="h-5 w-5 text-gray-400" />
                                 </div>
-                                <Input
-                                    className="pl-12 h-10 border-slate-200 bg-white focus:ring-0 focus:border-[#F97316] rounded-md text-sm text-slate-700 font-normal"
-                                    placeholder="Adresse de départ..."
-                                    defaultValue="Paris, France"
-                                />
-                                <button className="absolute right-2 top-2.5 text-slate-400 hover:text-slate-600">
-                                    <X className="h-4 w-4" />
-                                </button>
-                            </div>
-                        </div>
-
-                        {/* Destination (Active Search) */}
-                        <div className="space-y-1 relative z-50">
-                            <label className="text-sm font-bold text-slate-600">Destination:</label>
-                            <div className="relative group">
-                                <div className="absolute left-0 top-0 bottom-0 w-10 flex items-center justify-center bg-slate-100 border-r border-slate-200 rounded-l-md">
-                                    <List className="h-5 w-5 text-slate-400" />
-                                </div>
-                                <Input
-                                    value={query}
-                                    onChange={(e) => {
-                                        setQuery(e.target.value);
-                                        setIsOpen(true);
-                                        if (!e.target.value) setSelectedCity(null);
+                                <AddressAutocomplete
+                                    value={startQuery}
+                                    onChange={(val) => {
+                                        setStartQuery(val);
+                                        if (!val) {
+                                            setSelectedStartCity(null);
+                                            setShowResult(false);
+                                        }
                                     }}
-                                    onFocus={() => setIsOpen(true)}
-                                    // Blur with timeout to allow clicking suggestions
-                                    onBlur={() => setTimeout(() => setIsOpen(false), 200)}
-                                    className="pl-12 h-10 border-slate-200 bg-white focus:ring-0 focus:border-[#F97316] rounded-md text-sm text-slate-700 font-normal"
-                                    placeholder="Ville ou code postal..."
+                                    onAddressSelect={(suggestion) => {
+                                        const found = pricingData.find(p => p.ville === suggestion.city && p.cp === suggestion.postcode);
+                                        if (found) {
+                                            handleStartSelect(found);
+                                        }
+                                    }}
+                                    placeholder="Adresse de départ..."
+                                    className="w-full"
+                                    inputClassName="pl-12 h-10 border-gray-200 bg-white focus:ring-0 focus:border-[#D4AF37] rounded-md text-sm text-gray-700 font-normal shadow-none"
                                 />
-                                {query && (
+                                {startQuery && (
                                     <button
-                                        onClick={clearSearch}
-                                        className="absolute right-2 top-2.5 text-slate-400 hover:text-slate-600"
+                                        onClick={() => setStartQuery("")}
+                                        className="absolute right-2 top-2.5 text-gray-400 hover:text-gray-600 z-10"
                                     >
                                         <X className="h-4 w-4" />
                                     </button>
                                 )}
+                            </div>
+                        </div>
 
-                                {/* Suggestions Dropdown */}
-                                {isOpen && filteredCities.length > 0 && !selectedCity && (
-                                    <div className="absolute top-full left-0 right-0 mt-1 bg-white rounded-md shadow-lg border border-slate-200 max-h-[200px] overflow-y-auto z-[60]">
-                                        <ul className="divide-y divide-slate-100">
-                                            {filteredCities.map((city, idx) => (
-                                                <li key={`${city.cp}-${city.ville}-${idx}`}>
-                                                    <button
-                                                        onClick={() => handleSelect(city)}
-                                                        className="w-full px-4 py-2 text-left hover:bg-slate-50 text-sm text-slate-700 flex items-center justify-between"
-                                                    >
-                                                        <span>{city.ville} ({city.cp})</span>
-                                                    </button>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </div>
+                        {/* Destination (Active Search) */}
+                        <div className="space-y-1 relative">
+                            <label className="text-sm font-bold text-[#0B1525]">Destination:</label>
+                            <div className="relative group z-40">
+                                <div className="absolute left-0 top-0 bottom-0 w-10 flex items-center justify-center bg-gray-50 border-r border-gray-100 rounded-l-md z-10">
+                                    <List className="h-5 w-5 text-gray-400" />
+                                </div>
+                                <AddressAutocomplete
+                                    value={query}
+                                    onChange={(val) => {
+                                        setQuery(val);
+                                        if (!val) {
+                                            setSelectedCity(null);
+                                            setShowResult(false);
+                                        }
+                                    }}
+                                    onAddressSelect={(suggestion) => {
+                                        const found = pricingData.find(p => p.ville === suggestion.city && p.cp === suggestion.postcode);
+                                        if (found) {
+                                            handleSelect(found);
+                                        }
+                                    }}
+                                    placeholder="Ville ou code postal..."
+                                    className="w-full"
+                                    inputClassName="pl-12 h-10 border-gray-200 bg-white focus:ring-0 focus:border-[#D4AF37] rounded-md text-sm text-gray-700 font-normal shadow-none"
+                                />
+                                {query && (
+                                    <button
+                                        onClick={clearSearch}
+                                        className="absolute right-2 top-2.5 text-gray-400 hover:text-gray-600 z-10"
+                                    >
+                                        <X className="h-4 w-4" />
+                                    </button>
                                 )}
                             </div>
                         </div>
 
-                        {/* Poid et Dimension */}
-                        <div className="space-y-1">
-                            <label className="text-sm font-bold text-slate-600">Poid et Dimension:</label>
-                            <select className="flex w-full h-10 items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-0 focus:border-[#F97316] disabled:cursor-not-allowed disabled:opacity-50 text-slate-700">
-                                <option>0-7 (kg) / 40x30x30 (cm)</option>
-                                <option>7-30 (kg) / 60x40x40 (cm)</option>
-                                <option>+30 (kg) / Sur devis</option>
-                            </select>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-3 items-end">
+                        <div className="grid grid-cols-2 gap-3 items-end pt-2">
                             {/* Délai (Results if selected) */}
                             <div className="space-y-1">
-                                <label className="text-sm font-bold text-slate-600">Délai:</label>
+                                <label className="text-sm font-bold text-[#0B1525]">Délai:</label>
                                 <select
-                                    className="flex w-full h-10 items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-0 focus:border-[#F97316] disabled:cursor-not-allowed disabled:opacity-50 text-slate-700"
+                                    value={selectedDelay}
+                                    onChange={(e) => {
+                                        setSelectedDelay(e.target.value as "NORMAL" | "EXPRESS" | "URGENCE");
+                                        if (showResult) setShowResult(true);
+                                    }}
+                                    className="flex w-full h-10 items-center justify-between rounded-md border border-gray-200 bg-white px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-0 focus:border-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-50 text-gray-700 cursor-pointer"
                                 >
-                                    <option>Normal</option>
-                                    <option>Express</option>
-                                    <option>Urgence</option>
+                                    <option value="NORMAL">Normal</option>
+                                    <option value="EXPRESS">Express</option>
+                                    <option value="URGENCE">Urgence</option>
                                 </select>
                             </div>
 
                             <Button
-                                className="h-10 bg-[#F97316] hover:bg-[#EA580C] text-white font-medium shadow-sm transition-all"
+                                onClick={handleCalculate}
+                                disabled={!pricingCity}
+                                className={`h-10 text-white font-medium shadow-md transition-all border-0 ${pricingCity ? 'bg-gradient-to-r from-[#D4AF37] to-[#B08D1F] hover:from-[#B08D1F] hover:to-[#967D2B]' : 'bg-gray-300 cursor-not-allowed'}`}
                             >
                                 Obtenir le prix
                             </Button>
                         </div>
 
-                        {/* Result Display (Injected into this UI structure) */}
-                        <div className={`transition-all duration-300 ${selectedCity ? 'max-h-[100px] opacity-100 mt-2' : 'max-h-0 opacity-0 overflow-hidden'}`}>
-                            {selectedCity && (
-                                <div className="bg-slate-50 p-3 rounded border border-slate-200 text-sm text-center">
-                                    <p className="text-slate-500 mb-1">Estimation pour {selectedCity.ville}:</p>
-                                    <div className="font-bold text-[#F97316] text-xl">
-                                        {selectedCity.formules.NORMAL} <span className="text-sm text-slate-400">bons</span>
+                        {/* Result Display */}
+                        {/* Result Display */}
+                        <div className={`transition-all duration-300 ${showResult && pricingCity ? 'max-h-[150px] opacity-100 mt-4' : 'max-h-0 opacity-0 overflow-hidden'}`}>
+                            {pricingCity && (
+                                <div className="bg-[#0B1525]/5 p-4 rounded-lg border border-[#D4AF37]/20 text-sm text-center animate-in slide-in-from-top-2 fade-in">
+                                    <p className="text-gray-500 mb-1 font-medium">
+                                        Estimation pour {startQuery && query ? "le trajet" : pricingCity.ville} ({selectedDelay === "NORMAL" ? "Standard" : selectedDelay})
+                                    </p>
+                                    <div className="font-serif font-bold text-[#0B1525] text-3xl my-2">
+                                        {(pricingCity.formules[selectedDelay] * 5).toFixed(2)} €
+                                        <span className="block text-xs font-sans font-normal text-gray-500 mt-1">
+                                            ({pricingCity.formules[selectedDelay]} bons)
+                                        </span>
                                     </div>
-                                    <a href="/tarifs" className="text-xs text-blue-500 hover:underline block mt-1">Voir détail →</a>
+
+                                    <Button
+                                        onClick={() => {
+                                            const params = new URLSearchParams();
+                                            if (startQuery) params.append("pickupAddress", startQuery);
+                                            if (selectedStartCity) {
+                                                params.append("pickupCity", selectedStartCity.ville);
+                                                params.append("pickupZip", selectedStartCity.cp);
+                                            }
+                                            if (query) params.append("deliveryAddress", query);
+                                            if (selectedCity) {
+                                                params.append("deliveryCity", selectedCity.ville);
+                                                params.append("deliveryZip", selectedCity.cp);
+                                            }
+
+                                            const formulaMap: Record<string, string> = { "NORMAL": "standard", "EXPRESS": "express", "URGENCE": "flash" };
+                                            params.append("formula", formulaMap[selectedDelay] || "standard");
+
+                                            window.location.href = `/commande-sans-compte?${params.toString()}`;
+                                        }}
+                                        className="w-full mt-2 bg-[#0B1525] hover:bg-[#1a2c4e] text-white font-bold py-2 rounded shadow-sm text-xs uppercase tracking-wider"
+                                    >
+                                        Commander cette course
+                                    </Button>
                                 </div>
                             )}
-                        </div>
-
-                        <div className="pt-2 text-center text-xs text-slate-500">
-                            Pour de renseignements, appeler au <span className="font-bold text-blue-500">01 88 33 60 60</span>.
                         </div>
                     </div>
                 </Card>

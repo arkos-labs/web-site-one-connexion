@@ -57,7 +57,7 @@ export async function autocompleteAddress(query: string): Promise<AddressSuggest
         const bbox = "1.40,49.25,3.60,48.10";
         const url = `https://api.locationiq.com/v1/autocomplete?key=${key}&q=${encodeURIComponent(
             query
-        )}&limit=10&normalizecity=1&dedupe=1&countrycodes=fr&viewbox=${bbox}&bounded=1`;
+        )}&limit=10&normalizecity=1&addressdetails=1&dedupe=1&countrycodes=fr&viewbox=${bbox}&bounded=1`;
 
         try {
             const response = await fetch(url);
@@ -66,10 +66,6 @@ export async function autocompleteAddress(query: string): Promise<AddressSuggest
 
                 const apiSuggestions = data
                     .map((item: any) => {
-                        const street = item.address?.road
-                            ? `${item.address.house_number || ""} ${item.address.road}`.trim()
-                            : item.display_name.split(",")[0];
-
                         // Récupération intelligente de la ville et du CP
                         const resultCity = item.address?.city ||
                             item.address?.town ||
@@ -86,6 +82,24 @@ export async function autocompleteAddress(query: string): Promise<AddressSuggest
                         // Si la ville n'est pas desservie, on l'ignore
                         if (!foundCity) {
                             return null;
+                        }
+
+                        // Correction : Force le numéro s'il a été tapé par l'utilisateur mais oublié par l'API
+                        const userNumberMatch = query.trim().match(/^(\d+)/);
+                        const userNumber = userNumberMatch ? userNumberMatch[1] : null;
+                        const apiNumber = item.address?.house_number;
+                        const finalNumber = apiNumber || userNumber || "";
+
+                        let street = item.address?.road
+                            ? `${item.address.road}`.trim()
+                            : item.display_name.split(",")[0].trim();
+
+                        // Si on a un numéro à forcer et que la rue n'en a pas déjà un
+                        if (finalNumber && !street.match(/^\d+/)) {
+                            street = `${finalNumber} ${street}`;
+                        } else if (item.address?.road && item.address?.house_number) {
+                            // Cas standard API avec numéro
+                            street = `${item.address.house_number} ${item.address.road}`;
                         }
 
                         // On utilise les données CANONIQUES pour garantir que le pricing fonctionne
