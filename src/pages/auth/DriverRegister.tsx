@@ -5,7 +5,7 @@ import { Eye, EyeOff, Loader2, ArrowRight, User, Lock, ArrowLeft } from "lucide-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
 
 const DriverRegister = () => {
@@ -18,7 +18,7 @@ const DriverRegister = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
-    const { toast } = useToast();
+
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -30,9 +30,7 @@ const DriverRegister = () => {
 
         // Validation
         if (formData.password !== formData.confirmPassword) {
-            toast({
-                variant: "destructive",
-                title: "Erreur",
+            toast.error("Erreur", {
                 description: "Les mots de passe ne correspondent pas.",
             });
             setIsLoading(false);
@@ -40,9 +38,7 @@ const DriverRegister = () => {
         }
 
         if (formData.password.length < 6) {
-            toast({
-                variant: "destructive",
-                title: "Erreur",
+            toast.error("Erreur", {
                 description: "Le mot de passe doit contenir au moins 6 caractères.",
             });
             setIsLoading(false);
@@ -50,9 +46,7 @@ const DriverRegister = () => {
         }
 
         if (!formData.driverId.trim()) {
-            toast({
-                variant: "destructive",
-                title: "Erreur",
+            toast.error("Erreur", {
                 description: "L'identifiant chauffeur est obligatoire.",
             });
             setIsLoading(false);
@@ -88,10 +82,8 @@ const DriverRegister = () => {
                 throw new Error("Erreur lors de la création du compte");
             }
 
-            toast({
-                title: "Inscription réussie !",
+            toast.success("Inscription réussie !", {
                 description: `Bienvenue ${formData.fullName}. Vous pouvez maintenant vous connecter avec l'identifiant ${formData.driverId}.`,
-                className: "bg-green-50 border-green-200",
             });
 
             // Rediriger vers la page de connexion
@@ -101,9 +93,7 @@ const DriverRegister = () => {
 
         } catch (error: any) {
             console.error("Registration error:", error);
-            toast({
-                variant: "destructive",
-                title: "Erreur d'inscription",
+            toast.error("Erreur d'inscription", {
                 description: error.message || "Une erreur est survenue lors de l'inscription.",
             });
         } finally {

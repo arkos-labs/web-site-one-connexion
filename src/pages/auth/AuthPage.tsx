@@ -5,7 +5,7 @@ import { Eye, EyeOff, Loader2, ArrowRight, CheckCircle2, ArrowLeft, Building2, L
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
 
 type AuthMode = "login" | "register";
@@ -13,7 +13,7 @@ type AuthMode = "login" | "register";
 const AuthPage = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const { toast } = useToast();
+
 
     // Determine mode from URL
     const [mode, setMode] = useState<AuthMode>(
@@ -69,18 +69,15 @@ const AuthPage = () => {
 
             if (role === 'chauffeur' || role === 'driver') {
                 await supabase.auth.signOut();
-                toast({
-                    variant: "destructive",
-                    title: "Accès refusé",
+                await supabase.auth.signOut();
+                toast.error("Accès refusé", {
                     description: "Les chauffeurs doivent utiliser l'application mobile dédiée.",
                 });
                 return;
             }
 
-            toast({
-                title: "Connexion réussie",
+            toast.success("Connexion réussie", {
                 description: "Ravi de vous revoir !",
-                className: "bg-green-50 border-green-200",
             });
 
             if (role === 'admin') {
@@ -91,9 +88,7 @@ const AuthPage = () => {
 
         } catch (error: any) {
             console.error("Login error:", error);
-            toast({
-                variant: "destructive",
-                title: "Erreur de connexion",
+            toast.error("Erreur de connexion", {
                 description: error.message === "Invalid login credentials"
                     ? "Identifiants incorrects."
                     : error.message,
@@ -108,9 +103,7 @@ const AuthPage = () => {
         setIsLoading(true);
 
         if (registerData.password !== registerData.confirmPassword) {
-            toast({
-                variant: "destructive",
-                title: "Erreur",
+            toast.error("Erreur", {
                 description: "Les mots de passe ne correspondent pas.",
             });
             setIsLoading(false);
@@ -118,9 +111,7 @@ const AuthPage = () => {
         }
 
         if (registerData.password.length < 6) {
-            toast({
-                variant: "destructive",
-                title: "Erreur",
+            toast.error("Erreur", {
                 description: "Le mot de passe doit contenir au moins 6 caractères.",
             });
             setIsLoading(false);
@@ -128,9 +119,7 @@ const AuthPage = () => {
         }
 
         if (!registerData.companyName.trim()) {
-            toast({
-                variant: "destructive",
-                title: "Erreur",
+            toast.error("Erreur", {
                 description: "Le nom de l'entreprise est obligatoire.",
             });
             setIsLoading(false);
@@ -167,10 +156,8 @@ const AuthPage = () => {
                 throw new Error("Erreur lors de la création du compte");
             }
 
-            toast({
-                title: "Inscription réussie !",
+            toast.success("Inscription réussie !", {
                 description: "Un email de confirmation a été envoyé à votre adresse. Veuillez cliquer sur le lien pour activer votre compte.",
-                className: "bg-green-50 border-green-200",
             });
 
             // Rediriger vers la page de connexion
@@ -180,9 +167,7 @@ const AuthPage = () => {
 
         } catch (error: any) {
             console.error("Registration error:", error);
-            toast({
-                variant: "destructive",
-                title: "Erreur d'inscription",
+            toast.error("Erreur d'inscription", {
                 description: error.message || "Une erreur est survenue lors de l'inscription.",
             });
         } finally {

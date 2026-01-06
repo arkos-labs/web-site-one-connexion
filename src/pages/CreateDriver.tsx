@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
 
 const CreateDriver = () => {
@@ -16,7 +16,7 @@ const CreateDriver = () => {
     });
     const [isLoading, setIsLoading] = useState(false);
     const [createdDriver, setCreatedDriver] = useState<{ id: string; email: string } | null>(null);
-    const { toast } = useToast();
+
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -72,10 +72,8 @@ const CreateDriver = () => {
                 email: email
             });
 
-            toast({
-                title: "Chauffeur créé avec succès !",
+            toast.success("Chauffeur créé avec succès !", {
                 description: `${formData.fullName} peut maintenant se connecter avec l'identifiant ${formData.driverId}`,
-                className: "bg-green-50 border-green-200",
             });
 
             // Réinitialiser le formulaire
@@ -87,9 +85,7 @@ const CreateDriver = () => {
 
         } catch (error: any) {
             console.error("Create driver error:", error);
-            toast({
-                variant: "destructive",
-                title: "Erreur",
+            toast.error("Erreur", {
                 description: error.message || "Une erreur est survenue lors de la création du chauffeur.",
             });
         } finally {

@@ -5,7 +5,7 @@ import { Eye, EyeOff, Loader2, ArrowRight, User, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
 
 const DriverLogin = () => {
@@ -16,7 +16,7 @@ const DriverLogin = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
-    const { toast } = useToast();
+
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -39,10 +39,8 @@ const DriverLogin = () => {
 
             if (!data.user) throw new Error("Aucun utilisateur trouvé");
 
-            toast({
-                title: "Connexion réussie",
+            toast.success("Connexion réussie", {
                 description: "Bienvenue !",
-                className: "bg-green-50 border-green-200",
             });
 
             // Vérifier le profil pour s'assurer que c'est bien un chauffeur
@@ -69,9 +67,7 @@ const DriverLogin = () => {
 
         } catch (error: any) {
             console.error("Login error:", error);
-            toast({
-                variant: "destructive",
-                title: "Erreur de connexion",
+            toast.error("Erreur de connexion", {
                 description: error.message === "Invalid login credentials"
                     ? "Identifiant ou mot de passe incorrect."
                     : error.message,

@@ -36,6 +36,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { OrderCardSkeleton, StatCardSkeleton } from "@/components/ui/skeleton-loaders";
 
 const DashboardClient = () => {
   const navigate = useNavigate();
@@ -320,27 +321,36 @@ const DashboardClient = () => {
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {statsCards.map((stat, index) => (
-          <Card
-            key={index}
-            className="p-6 border-0 shadow-sm hover:shadow-md transition-all duration-300 bg-white group"
-          >
-            <div className="flex justify-between items-start mb-4">
-              <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${stat.bgColor} group-hover:scale-110 transition-transform duration-300`}>
-                <stat.icon className={`h-6 w-6 ${stat.color}`} />
+        {statsLoading ? (
+          <>
+            <StatCardSkeleton />
+            <StatCardSkeleton />
+            <StatCardSkeleton />
+            <StatCardSkeleton />
+          </>
+        ) : (
+          statsCards.map((stat, index) => (
+            <Card
+              key={index}
+              className="p-6 border-0 shadow-sm hover:shadow-md transition-all duration-300 bg-white group"
+            >
+              <div className="flex justify-between items-start mb-4">
+                <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${stat.bgColor} group-hover:scale-110 transition-transform duration-300`}>
+                  <stat.icon className={`h-6 w-6 ${stat.color}`} />
+                </div>
+                {stat.change && (
+                  <span className={`text-xs font-medium px-2 py-1 rounded-full ${stat.value.includes('+') ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'}`}>
+                    {stat.change}
+                  </span>
+                )}
               </div>
-              {stat.change && (
-                <span className={`text-xs font-medium px-2 py-1 rounded-full ${stat.value.includes('+') ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'}`}>
-                  {stat.change}
-                </span>
-              )}
-            </div>
-            <div>
-              <h3 className="text-gray-500 text-sm font-medium mb-1">{stat.title}</h3>
-              <p className="text-3xl font-bold text-[#0B1525]">{stat.value}</p>
-            </div>
-          </Card>
-        ))}
+              <div>
+                <h3 className="text-gray-500 text-sm font-medium mb-1">{stat.title}</h3>
+                <p className="text-3xl font-bold text-[#0B1525]">{stat.value}</p>
+              </div>
+            </Card>
+          ))
+        )}
       </div>
 
       <div className="grid lg:grid-cols-3 gap-8">
@@ -356,9 +366,10 @@ const DashboardClient = () => {
           <Card className="border-0 shadow-sm bg-white overflow-hidden">
             <div className="divide-y divide-gray-100">
               {isLoadingOrders ? (
-                <div className="p-12 text-center text-gray-400">
-                  <Loader2 className="h-8 w-8 animate-spin mx-auto mb-2" />
-                  Chargement...
+                <div className="p-6 space-y-4">
+                  <OrderCardSkeleton />
+                  <OrderCardSkeleton />
+                  <OrderCardSkeleton />
                 </div>
               ) : recentOrders.length === 0 ? (
                 <div className="p-12 text-center">

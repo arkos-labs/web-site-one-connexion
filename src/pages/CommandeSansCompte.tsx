@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Package, Truck, Clock, AlertCircle, Zap, CheckCircle2, MapPin, Phone, Mail, Building2, FileText, CalendarClock } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import Header from "@/components/client/Header";
 import Footer from "@/components/client/Footer";
 import { Button } from "@/components/ui/button";
@@ -168,7 +168,7 @@ function RecapCommande({ formData, pricingResults, loading, onCgvChange }: {
 // --- Main Component ---
 
 const CommandeSansCompte = () => {
-    const { toast } = useToast();
+
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState<GuestOrderFormData>(INITIAL_STATE);
     const [errors, setErrors] = useState<Partial<Record<keyof GuestOrderFormData, string>>>({});
@@ -311,10 +311,8 @@ const CommandeSansCompte = () => {
         // Si la formule actuelle est standard et qu'elle devient désactivée, on change
         if (disabled && formData.formula === 'standard') {
             setFormData(prev => ({ ...prev, formula: 'express' })); // Basculer sur Express par défaut
-            toast({
-                title: "Formule Standard Indisponible",
+            toast.warning("Formule Standard Indisponible", {
                 description: "Le délai étant inférieur à 1h, nous avons basculé sur la formule Express.",
-                variant: "default",
                 className: "bg-slate-900 text-white border-[#D4AF37]"
             });
         }
@@ -354,13 +352,13 @@ const CommandeSansCompte = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!validate()) {
-            toast({ variant: "destructive", title: "Formulaire incomplet", description: "Veuillez corriger les erreurs indiquées." });
+            toast.error("Formulaire incomplet", { description: "Veuillez corriger les erreurs indiquées." });
             // Scroll to top or first error could be implemented here
             return;
         }
 
         if (!pricingResults) {
-            toast({ variant: "destructive", title: "Erreur technique", description: "Impossible de calculer le prix. Vérifiez les adresses." });
+            toast.error("Erreur technique", { description: "Impossible de calculer le prix. Vérifiez les adresses." });
             return;
         }
 
@@ -398,8 +396,7 @@ const CommandeSansCompte = () => {
             });
 
             if (response.success) {
-                toast({
-                    title: "Commande validée !",
+                toast.success("Commande validée !", {
                     description: `Réf: ${response.reference}. Confirmation envoyée par email.`,
                     className: "bg-[#0B2D55] text-white border-[#D4AF37]"
                 });
@@ -409,7 +406,7 @@ const CommandeSansCompte = () => {
             }
         } catch (error: any) {
             console.error(error);
-            toast({ variant: "destructive", title: "Echec de la commande", description: error.message });
+            toast.error("Echec de la commande", { description: error.message });
         } finally {
             setLoading(false);
         }

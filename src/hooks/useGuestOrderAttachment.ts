@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useAuth } from './useAuth';
 import { checkPendingGuestOrders, attachOrdersToUser } from '@/services/guestOrderService';
-import { useToast } from './use-toast';
+import { toast } from 'sonner';
 
 /**
  * Hook pour rattacher automatiquement les commandes invitées
@@ -14,7 +14,7 @@ import { useToast } from './use-toast';
  */
 export const useGuestOrderAttachment = () => {
     const { user } = useAuth();
-    const { toast } = useToast();
+
 
     useEffect(() => {
         const attachOrders = async () => {
@@ -32,10 +32,9 @@ export const useGuestOrderAttachment = () => {
                     const result = await attachOrdersToUser(user.email, user.id);
 
                     if (result.success) {
-                        toast({
-                            title: "Commandes retrouvées !",
+                        toast.success("Commandes retrouvées !", {
                             description: `${result.orders_attached || pendingCount} commande(s) ont été rattachées à votre compte.`,
-                            className: "bg-[#0B2D55] text-white border-none",
+                            duration: 5000,
                         });
                     }
                 }

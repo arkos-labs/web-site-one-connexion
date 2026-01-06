@@ -24,6 +24,8 @@ import {
   Calendar,
 } from "lucide-react";
 
+import { StatCardSkeleton, ListSkeleton, Skeleton } from "@/components/ui/skeleton-loaders";
+
 import { useAdminStats, StatsFilter } from "@/hooks/useAdminStats";
 import { supabase } from "@/lib/supabase";
 import {
@@ -223,13 +225,7 @@ const DashboardAdmin = () => {
     },
   ];
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen bg-gray-50">
-        <Loader2 className="h-10 w-10 animate-spin text-[#D4AF37]" />
-      </div>
-    );
-  }
+
 
   return (
     <div className="space-y-8 pb-12 font-sans">
@@ -292,30 +288,39 @@ const DashboardAdmin = () => {
 
       {/* Main Metrics */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {mainMetrics.map((metric, index) => (
-          <Card
-            key={index}
-            className="p-6 border-0 shadow-sm hover:shadow-md transition-all duration-300 bg-white group cursor-pointer"
-            onClick={() => navigate(metric.path)}
-          >
-            <div className="flex justify-between items-start mb-4">
-              <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${metric.bgColor} group-hover:scale-110 transition-transform duration-300`}>
-                <metric.icon className={`h-6 w-6 ${metric.color}`} />
-              </div>
-              {metric.change && (
-                <div className={`flex items-center text-xs font-medium px-2 py-1 rounded-full ${metric.change.includes('+') ? 'bg-green-100 text-green-700' : metric.change.includes('-') ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-600'}`}>
-                  {metric.change.includes('+') ? <TrendingUp className="w-3 h-3 mr-1" /> : null}
-                  {metric.change}
+        {loading ? (
+          <>
+            <StatCardSkeleton />
+            <StatCardSkeleton />
+            <StatCardSkeleton />
+            <StatCardSkeleton />
+          </>
+        ) : (
+          mainMetrics.map((metric, index) => (
+            <Card
+              key={index}
+              className="p-6 border-0 shadow-sm hover:shadow-md transition-all duration-300 bg-white group cursor-pointer"
+              onClick={() => navigate(metric.path)}
+            >
+              <div className="flex justify-between items-start mb-4">
+                <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${metric.bgColor} group-hover:scale-110 transition-transform duration-300`}>
+                  <metric.icon className={`h-6 w-6 ${metric.color}`} />
                 </div>
-              )}
-            </div>
-            <div>
-              <h3 className="text-gray-500 text-sm font-medium mb-1">{metric.title}</h3>
-              <p className="text-3xl font-bold text-[#0B1525]">{metric.value}</p>
-              <p className="text-xs text-gray-400 mt-1">{metric.delta}</p>
-            </div>
-          </Card>
-        ))}
+                {metric.change && (
+                  <div className={`flex items-center text-xs font-medium px-2 py-1 rounded-full ${metric.change.includes('+') ? 'bg-green-100 text-green-700' : metric.change.includes('-') ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-600'}`}>
+                    {metric.change.includes('+') ? <TrendingUp className="w-3 h-3 mr-1" /> : null}
+                    {metric.change}
+                  </div>
+                )}
+              </div>
+              <div>
+                <h3 className="text-gray-500 text-sm font-medium mb-1">{metric.title}</h3>
+                <p className="text-3xl font-bold text-[#0B1525]">{metric.value}</p>
+                <p className="text-xs text-gray-400 mt-1">{metric.delta}</p>
+              </div>
+            </Card>
+          ))
+        )}
       </div>
 
       <div className="grid lg:grid-cols-3 gap-8">
@@ -324,31 +329,40 @@ const DashboardAdmin = () => {
           <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
             <h2 className="text-lg font-serif font-bold text-[#0B1525] mb-6">Flux opérationnel</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {operationalFlow.map((item, index) => (
-                <div
-                  key={index}
-                  className={`p-4 rounded-xl border transition-all hover:shadow-md cursor-pointer group flex flex-col items-center text-center ${item.status === "warning"
-                    ? "border-yellow-100 bg-yellow-50/50 hover:bg-yellow-50"
-                    : item.status === "info"
-                      ? "border-blue-100 bg-blue-50/50 hover:bg-blue-50"
-                      : item.status === "success"
-                        ? "border-green-100 bg-green-50/50 hover:bg-green-50"
-                        : "border-red-100 bg-red-50/50 hover:bg-red-50"
-                    }`}
-                >
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-3 ${item.status === "warning" ? "bg-yellow-100 text-yellow-600" :
+              {loading ? (
+                <>
+                  <Skeleton className="h-32 w-full rounded-xl" />
+                  <Skeleton className="h-32 w-full rounded-xl" />
+                  <Skeleton className="h-32 w-full rounded-xl" />
+                  <Skeleton className="h-32 w-full rounded-xl" />
+                </>
+              ) : (
+                operationalFlow.map((item, index) => (
+                  <div
+                    key={index}
+                    className={`p-4 rounded-xl border transition-all hover:shadow-md cursor-pointer group flex flex-col items-center text-center ${item.status === "warning"
+                      ? "border-yellow-100 bg-yellow-50/50 hover:bg-yellow-50"
+                      : item.status === "info"
+                        ? "border-blue-100 bg-blue-50/50 hover:bg-blue-50"
+                        : item.status === "success"
+                          ? "border-green-100 bg-green-50/50 hover:bg-green-50"
+                          : "border-red-100 bg-red-50/50 hover:bg-red-50"
+                      }`}
+                  >
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-3 ${item.status === "warning" ? "bg-yellow-100 text-yellow-600" :
                       item.status === "info" ? "bg-blue-100 text-blue-600" :
                         item.status === "success" ? "bg-green-100 text-green-600" :
                           "bg-red-100 text-red-600"
-                    }`}>
-                    <item.icon className="h-5 w-5" />
+                      }`}>
+                      <item.icon className="h-5 w-5" />
+                    </div>
+                    <span className="text-3xl font-bold text-[#0B1525] mb-1">
+                      {item.count}
+                    </span>
+                    <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">{item.label}</p>
                   </div>
-                  <span className="text-3xl font-bold text-[#0B1525] mb-1">
-                    {item.count}
-                  </span>
-                  <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">{item.label}</p>
-                </div>
-              ))}
+                ))
+              )}
             </div>
           </div>
 
@@ -363,7 +377,9 @@ const DashboardAdmin = () => {
               </Button>
             </div>
             <div className="space-y-3">
-              {teamMembers.length === 0 ? (
+              {loading ? (
+                <ListSkeleton items={4} />
+              ) : teamMembers.length === 0 ? (
                 <div className="text-center py-8 text-muted-foreground">
                   <Truck className="h-12 w-12 mx-auto mb-3 opacity-50" />
                   <p>Aucun chauffeur actif</p>
@@ -387,8 +403,8 @@ const DashboardAdmin = () => {
                       <Badge
                         variant="outline"
                         className={`border-0 ${member.available
-                            ? "bg-green-100 text-green-700"
-                            : "bg-yellow-100 text-yellow-700"
+                          ? "bg-green-100 text-green-700"
+                          : "bg-yellow-100 text-yellow-700"
                           }`}
                       >
                         {member.deliveries} livraison{member.deliveries > 1 ? 's' : ''}
@@ -444,7 +460,9 @@ const DashboardAdmin = () => {
               )}
             </div>
             <div className="space-y-3">
-              {alerts.length === 0 ? (
+              {loading ? (
+                <ListSkeleton items={2} />
+              ) : alerts.length === 0 ? (
                 <div className="text-center py-8 text-muted-foreground">
                   <CheckCircle className="h-10 w-10 mx-auto mb-3 opacity-50 text-green-500" />
                   <p className="text-sm">Aucune alerte - Tout est stable</p>

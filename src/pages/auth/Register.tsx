@@ -5,7 +5,7 @@ import { Eye, EyeOff, Loader2, ArrowRight, CheckCircle2, ArrowLeft } from "lucid
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 import AuthToggle from "@/components/client/AuthToggle";
 import { supabase } from "@/lib/supabase";
 import { generateInternalCode } from "@/utils/clientCode";
@@ -21,7 +21,7 @@ const Register = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
-    const { toast } = useToast();
+
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -32,9 +32,7 @@ const Register = () => {
         setIsLoading(true);
 
         if (formData.password !== formData.confirmPassword) {
-            toast({
-                variant: "destructive",
-                title: "Erreur",
+            toast.error("Erreur", {
                 description: "Les mots de passe ne correspondent pas.",
             });
             setIsLoading(false);
@@ -87,17 +85,14 @@ const Register = () => {
                     description += ` ${pendingOrdersCount} commande(s) précédente(s) ont été automatiquement rattachées à votre compte.`;
                 }
 
-                toast({
-                    title: "Compte créé",
+                toast.success("Compte créé", {
                     description: description,
                 });
                 navigate("/client/dashboard");
             }
         } catch (error) {
             const message = error instanceof Error ? error.message : "Une erreur est survenue.";
-            toast({
-                variant: "destructive",
-                title: "Erreur",
+            toast.error("Erreur", {
                 description: message,
             });
         } finally {

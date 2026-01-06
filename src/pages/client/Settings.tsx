@@ -9,7 +9,7 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
@@ -23,7 +23,7 @@ import { User as UserIcon, Lock, Bell, Trash2, LogOut, Save, Loader2, Building2,
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const Settings = () => {
-  const { toast } = useToast();
+
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState<User | null>(null);
@@ -112,9 +112,7 @@ const Settings = () => {
   const handleUpdateProfile = async () => {
     setLoading(true);
     if (!user || !clientId) {
-      toast({
-        variant: "destructive",
-        title: "Erreur",
+      toast.error("Erreur", {
         description: "Impossible de charger votre profil. Veuillez vous reconnecter.",
       });
       setLoading(false);
@@ -138,16 +136,12 @@ const Settings = () => {
 
       if (profileError) throw profileError;
 
-      toast({
-        title: "Succès",
+      toast.success("Succès", {
         description: "Vos informations ont été mises à jour.",
-        className: "bg-green-50 border-green-200",
       });
     } catch (error: any) {
       console.error("Profile update error:", error);
-      toast({
-        variant: "destructive",
-        title: "Erreur",
+      toast.error("Erreur", {
         description: error.message || "Une erreur est survenue lors de la mise à jour.",
       });
     } finally {
@@ -157,18 +151,14 @@ const Settings = () => {
 
   const handleEmailChange = async () => {
     if (!newEmail || !newEmail.includes('@')) {
-      toast({
-        variant: "destructive",
-        title: "Erreur",
+      toast.error("Erreur", {
         description: "Veuillez entrer une adresse email valide.",
       });
       return;
     }
 
     if (newEmail === user?.email) {
-      toast({
-        variant: "destructive",
-        title: "Erreur",
+      toast.error("Erreur", {
         description: "Cette adresse email est déjà utilisée.",
       });
       return;
@@ -186,16 +176,12 @@ const Settings = () => {
       setIsEmailDialogOpen(false);
       setNewEmail("");
 
-      toast({
-        title: "Email de confirmation envoyé",
+      toast.success("Email de confirmation envoyé", {
         description: `Un email a été envoyé à ${newEmail}. Veuillez cliquer sur le lien pour confirmer le changement.`,
-        className: "bg-blue-50 border-blue-200",
       });
     } catch (error: any) {
       console.error("Email update error:", error);
-      toast({
-        variant: "destructive",
-        title: "Erreur",
+      toast.error("Erreur", {
         description: error.message || "Impossible de modifier l'email.",
       });
     } finally {
@@ -205,18 +191,14 @@ const Settings = () => {
 
   const handleUpdatePassword = async () => {
     if (passwords.new !== passwords.confirm) {
-      toast({
-        variant: "destructive",
-        title: "Erreur",
+      toast.error("Erreur", {
         description: "Les nouveaux mots de passe ne correspondent pas.",
       });
       return;
     }
 
     if (passwords.new.length < 6) {
-      toast({
-        variant: "destructive",
-        title: "Erreur",
+      toast.error("Erreur", {
         description: "Le mot de passe doit contenir au moins 6 caractères.",
       });
       return;
@@ -231,15 +213,11 @@ const Settings = () => {
       if (error) throw error;
 
       setPasswords({ current: "", new: "", confirm: "" });
-      toast({
-        title: "Succès",
+      toast.success("Succès", {
         description: "Votre mot de passe a été modifié avec succès.",
-        className: "bg-green-50 border-green-200",
       });
     } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Erreur",
+      toast.error("Erreur", {
         description: (error as Error).message || "Impossible de modifier le mot de passe.",
       });
     } finally {
@@ -260,9 +238,7 @@ const Settings = () => {
       if (error) throw error;
     } catch (error) {
       setPreferences(prev => ({ ...prev, [key]: !newValue }));
-      toast({
-        variant: "destructive",
-        title: "Erreur",
+      toast.error("Erreur", {
         description: "Erreur lors de la sauvegarde.",
       });
     }
@@ -285,14 +261,11 @@ const Settings = () => {
 
       await supabase.auth.signOut();
       navigate("/login");
-      toast({
-        title: "Compte supprimé",
+      toast.success("Compte supprimé", {
         description: "Votre compte a été supprimé avec succès.",
       });
     } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Erreur",
+      toast.error("Erreur", {
         description: (error as Error).message || "Impossible de supprimer le compte.",
       });
     }

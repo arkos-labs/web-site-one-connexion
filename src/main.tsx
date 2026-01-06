@@ -4,6 +4,8 @@ import { HelmetProvider } from 'react-helmet-async';
 import App from "./App.tsx";
 import "./index.css";
 
+import ErrorPage from "./components/ui/ErrorPage";
+
 class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean; error: Error | null }> {
     constructor(props: { children: ReactNode }) {
         super(props);
@@ -20,13 +22,7 @@ class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boole
 
     render() {
         if (this.state.hasError) {
-            return (
-                <div style={{ padding: "20px", color: "red", fontFamily: "sans-serif" }}>
-                    <h1>Something went wrong.</h1>
-                    <pre>{this.state.error?.toString()}</pre>
-                    <pre>{this.state.error?.stack}</pre>
-                </div>
-            );
+            return <ErrorPage error={this.state.error} resetErrorBoundary={() => this.setState({ hasError: false, error: null })} />;
         }
 
         return this.props.children;

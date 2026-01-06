@@ -9,12 +9,12 @@ import {
 } from "@/components/ui/accordion";
 import { MessageSquare, Clock, Truck, RefreshCw, AlertCircle, FileText, Phone, Mail } from "lucide-react";
 import { NewMessageModal } from "@/components/client/NewMessageModal";
-import { useToast } from "@/hooks/use-toast";
+
 import { supabase } from "@/lib/supabase";
 
 const Help = () => {
   const [isMessageModalOpen, setIsMessageModalOpen] = useState(false);
-  const { toast } = useToast();
+
 
   const handleSendMessage = async (subject: string) => {
     // Logic to send message to Supabase is handled in NewMessageModal, 

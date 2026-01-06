@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useState, useEffect } from "react";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { Package, MapPin, Clock, User, Euro, AlertCircle, Loader2, Calendar } from "lucide-react";
 import { geocoderAdresse } from "@/services/locationiq";
 import { type FormuleNew, type CalculTarifaireResult } from "@/utils/pricingEngine";
@@ -14,7 +14,7 @@ import { OrderSummary } from "@/components/orders/OrderSummary";
 import { supabase } from "@/lib/supabase";
 
 const OrderWithoutAccount = () => {
-  const { toast } = useToast();
+
   const [step, setStep] = useState(1);
   const [orderData, setOrderData] = useState({
     // Sender info
@@ -90,20 +90,16 @@ const OrderWithoutAccount = () => {
     e.preventDefault();
 
     if (!pricingResults) {
-      toast({
-        title: "Erreur",
+      toast.error("Erreur", {
         description: "Veuillez entrer une adresse de livraison valide pour calculer le prix.",
-        variant: "destructive",
       });
       return;
     }
 
     // Validation des créneaux horaires
     if (orderData.scheduleType === 'scheduled' && (!orderData.pickupDate || !orderData.pickupTime)) {
-      toast({
-        title: "Erreur",
+      toast.error("Erreur", {
         description: "Veuillez choisir une date et une heure pour l'enlèvement.",
-        variant: "destructive",
       });
       return;
     }
@@ -119,10 +115,8 @@ const OrderWithoutAccount = () => {
         .single();
 
       if (existingClient && (existingClient.status === 'suspended' || existingClient.is_suspended)) {
-        toast({
-          title: "Impossible de créer la commande",
+        toast.error("Impossible de créer la commande", {
           description: `Ce compte client est suspendu. Raison : ${existingClient.suspension_reason || 'Non spécifiée'}.`,
-          variant: "destructive",
         });
         return;
       }
@@ -131,8 +125,7 @@ const OrderWithoutAccount = () => {
     }
 
     // Afficher un loader
-    toast({
-      title: "Création en cours...",
+    toast.info("Création en cours...", {
       description: "Votre commande est en cours de création, veuillez patienter.",
     });
 
@@ -159,8 +152,7 @@ const OrderWithoutAccount = () => {
       });
 
       if (response.success && response.reference) {
-        toast({
-          title: "Commande créée avec succès !",
+        toast.success("Commande créée avec succès !", {
           description: `Votre numéro de commande est ${response.reference}. Prix : ${selectedPrice.totalEuros.toFixed(2)}€ (${selectedPrice.totalBons.toFixed(2)} bons). Vous recevrez un email de confirmation à ${orderData.senderEmail}.`,
         });
 
@@ -192,10 +184,8 @@ const OrderWithoutAccount = () => {
 
     } catch (error) {
       console.error("Erreur lors de la création de la commande:", error);
-      toast({
-        title: "Erreur",
+      toast.error("Erreur", {
         description: error instanceof Error ? error.message : "Une erreur est survenue lors de la création de la commande. Veuillez réessayer.",
-        variant: "destructive",
       });
     }
   };
