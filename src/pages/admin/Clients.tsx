@@ -185,7 +185,7 @@ const Clients = () => {
   };
 
   const handleViewDetails = (clientId: string) => {
-    navigate(`/dashboard-admin/clients/${clientId}`);
+    navigate(`/admin/clients/${clientId}`);
   };
 
   const handleUnsuspendClient = async (client: Client) => {
@@ -508,3 +508,4 @@ const Clients = () => {
 };
 
 export default Clients;
+

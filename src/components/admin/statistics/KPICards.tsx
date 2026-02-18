@@ -31,7 +31,7 @@ export const KPICards = ({ data, onOpenRevenueDetails, onOpenGrowthDetails }: KP
             icon: Package,
             color: "text-success",
             bgColor: "bg-success-light",
-            onClick: () => navigate("/dashboard-admin/commandes"),
+            onClick: () => navigate("/admin/commandes"),
         },
         {
             title: "Taux de croissance",
@@ -51,7 +51,7 @@ export const KPICards = ({ data, onOpenRevenueDetails, onOpenGrowthDetails }: KP
             icon: Users,
             color: "text-warning",
             bgColor: "bg-warning-light",
-            onClick: () => navigate("/dashboard-admin/clients?filter=new"),
+            onClick: () => navigate("/admin/clients?filter=new"),
         },
     ];
 
@@ -87,3 +87,4 @@ export const KPICards = ({ data, onOpenRevenueDetails, onOpenGrowthDetails }: KP
         </div>
     );
 };
+

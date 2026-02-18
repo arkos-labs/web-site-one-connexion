@@ -240,7 +240,7 @@ export default function AdminDrivers() {
                 rows.map((r) => (
                   <tr
                     key={r.driver.id}
-                    onClick={() => navigate(`/dashboard-admin/drivers/${r.driver.id}`)}
+                    onClick={() => navigate(`/admin/drivers/${r.driver.id}`)}
                     className="hover:bg-slate-50/60 cursor-pointer transition-colors"
                   >
                     <td className="py-4 font-semibold text-slate-900">
@@ -301,7 +301,7 @@ export default function AdminDrivers() {
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
-                            navigate(`/dashboard-admin/drivers/${r.driver.id}`);
+                            navigate(`/admin/drivers/${r.driver.id}`);
                           }}
                           className="rounded-xl bg-slate-900 px-3 py-1.5 text-[10px] font-bold text-white shadow-sm ring-1 ring-slate-900 transition-all hover:bg-white hover:text-slate-900"
                         >
@@ -331,4 +331,5 @@ export default function AdminDrivers() {
     </div>
   );
 }
+
 

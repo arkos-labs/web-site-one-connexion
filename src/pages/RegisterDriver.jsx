@@ -89,7 +89,7 @@ export default function RegisterDriver() {
             </ul>
           </div>
           <button
-            onClick={() => navigate('/login')}
+            onClick={() => navigate('/connexion')}
             className="mt-8 w-full rounded-full bg-slate-900 py-3 text-sm font-bold text-white shadow-lg shadow-slate-900/20 hover:bg-slate-800"
           >
             Retour à l'accueil
@@ -256,3 +256,4 @@ export default function RegisterDriver() {
   </div>
   );
 }
+

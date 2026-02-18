@@ -48,7 +48,7 @@ export const Sidebar = ({ type, onClose }: SidebarProps) => {
         try {
             await supabase.auth.signOut();
             toast.success("Déconnexion réussie");
-            navigate("/login");
+            navigate("/connexion");
         } catch (error) {
             console.error("Erreur lors de la déconnexion:", error);
             toast.error("Erreur lors de la déconnexion");
@@ -59,17 +59,17 @@ export const Sidebar = ({ type, onClose }: SidebarProps) => {
         {
             label: "Tableau de bord",
             icon: LayoutDashboard,
-            path: "/client/dashboard",
+            path: "/client/tableau-de-bord",
         },
         {
             label: "Commandes",
             icon: Package,
-            path: "/client/orders",
+            path: "/client/commandes",
         },
         {
             label: "Factures",
             icon: FileText,
-            path: "/client/invoices",
+            path: "/client/factures",
         },
         {
             label: "Messages",
@@ -79,12 +79,12 @@ export const Sidebar = ({ type, onClose }: SidebarProps) => {
         {
             label: "Paramètres",
             icon: Settings,
-            path: "/client/settings",
+            path: "/client/parametres",
         },
         {
             label: "Centre d'aide",
             icon: HelpCircle,
-            path: "/client/help",
+            path: "/client/aide",
         },
     ];
 
@@ -92,52 +92,52 @@ export const Sidebar = ({ type, onClose }: SidebarProps) => {
         {
             label: "Tableau de bord",
             icon: LayoutDashboard,
-            path: "/dashboard-admin/tableau-de-bord",
+            path: "/admin/tableau-de-bord",
         },
         {
             label: "Commandes",
             icon: Package,
-            path: "/dashboard-admin/commandes",
+            path: "/admin/commandes",
         },
         {
             label: "Dispatch",
             icon: Send,
-            path: "/dashboard-admin/dispatch",
+            path: "/admin/dispatch",
         },
         {
             label: "Chauffeurs",
             icon: Truck,
-            path: "/dashboard-admin/chauffeurs",
+            path: "/admin/chauffeurs",
         },
         {
             label: "Clients",
             icon: Users,
-            path: "/dashboard-admin/clients",
+            path: "/admin/clients",
         },
         {
             label: "Statistiques",
             icon: BarChart3,
-            path: "/dashboard-admin/statistiques",
+            path: "/admin/statistiques",
         },
         {
             label: "Factures",
             icon: FileText,
-            path: "/dashboard-admin/factures",
+            path: "/admin/factures",
         },
         {
             label: "Carte en Direct",
             icon: MapPin,
-            path: "/dashboard-admin/carte-live",
+            path: "/admin/carte-live",
         },
         {
             label: "Messagerie",
             icon: MessageSquare,
-            path: "/dashboard-admin/messagerie",
+            path: "/admin/messagerie",
         },
         {
             label: "Paramètres",
             icon: Settings,
-            path: "/dashboard-admin/parametres",
+            path: "/admin/parametres",
         },
     ];
 
@@ -253,3 +253,4 @@ export const Sidebar = ({ type, onClose }: SidebarProps) => {
         </div>
     );
 };
+

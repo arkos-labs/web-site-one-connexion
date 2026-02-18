@@ -21,7 +21,7 @@ export const TopPerformances = ({ drivers, clients }: TopPerformancesProps) => {
                     <h2 className="text-xl font-display font-bold text-primary">
                         Top Chauffeurs
                     </h2>
-                    <Button variant="ghost" size="sm" onClick={() => navigate("/dashboard-admin/chauffeurs")}>
+                    <Button variant="ghost" size="sm" onClick={() => navigate("/admin/chauffeurs")}>
                         Voir tout
                     </Button>
                 </div>
@@ -30,7 +30,7 @@ export const TopPerformances = ({ drivers, clients }: TopPerformancesProps) => {
                         <div
                             key={driver.id}
                             className="flex items-center justify-between p-4 bg-muted/30 rounded-lg hover:bg-muted/50 transition-colors cursor-pointer"
-                            onClick={() => navigate(`/dashboard-admin/chauffeurs?id=${driver.id}`)}
+                            onClick={() => navigate(`/admin/chauffeurs?id=${driver.id}`)}
                         >
                             <div className="flex items-center gap-3">
                                 <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary">
@@ -72,7 +72,7 @@ export const TopPerformances = ({ drivers, clients }: TopPerformancesProps) => {
                     <h2 className="text-xl font-display font-bold text-primary">
                         Top Clients
                     </h2>
-                    <Button variant="ghost" size="sm" onClick={() => navigate("/dashboard-admin/clients")}>
+                    <Button variant="ghost" size="sm" onClick={() => navigate("/admin/clients")}>
                         Voir tout
                     </Button>
                 </div>
@@ -81,7 +81,7 @@ export const TopPerformances = ({ drivers, clients }: TopPerformancesProps) => {
                         <div
                             key={client.id}
                             className="flex items-center justify-between p-4 bg-muted/30 rounded-lg hover:bg-muted/50 transition-colors cursor-pointer"
-                            onClick={() => navigate(`/dashboard-admin/clients?id=${client.id}`)}
+                            onClick={() => navigate(`/admin/clients?id=${client.id}`)}
                         >
                             <div className="flex items-center gap-3">
                                 <div className="w-10 h-10 rounded-full bg-accent-light flex items-center justify-center font-bold text-accent-main">
@@ -106,3 +106,4 @@ export const TopPerformances = ({ drivers, clients }: TopPerformancesProps) => {
         </div>
     );
 };
+

@@ -246,7 +246,7 @@ const Settings = () => {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    navigate("/login");
+    navigate("/connexion");
   };
 
   const handleDeleteAccount = async () => {
@@ -260,7 +260,7 @@ const Settings = () => {
       if (error) throw error;
 
       await supabase.auth.signOut();
-      navigate("/login");
+      navigate("/connexion");
       toast.success("Compte supprimé", {
         description: "Votre compte a été supprimé avec succès.",
       });
@@ -657,3 +657,4 @@ const Settings = () => {
 };
 
 export default Settings;
+

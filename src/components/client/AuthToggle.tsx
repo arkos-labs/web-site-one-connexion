@@ -12,9 +12,9 @@ const AuthToggle = ({ activeMode }: AuthToggleProps) => {
         if (mode === activeMode) return;
 
         if (mode === "login") {
-            navigate("/login");
+            navigate("/connexion");
         } else {
-            navigate("/register");
+            navigate("/inscription");
         }
     };
 
@@ -81,3 +81,4 @@ const AuthToggle = ({ activeMode }: AuthToggleProps) => {
 };
 
 export default AuthToggle;
+

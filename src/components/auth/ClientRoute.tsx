@@ -17,17 +17,17 @@ export const ClientRoute = ({ children }: ClientRouteProps) => {
         if (!isLoading) {
             if (!user) {
                 // Pas connecté, rediriger vers la page de connexion
-                navigate('/login');
+                navigate('/connexion');
             } else if (!isClient) {
                 // Connecté mais pas client
                 if (role === 'admin' || role === 'super_admin' || role === 'dispatcher') {
-                    navigate('/dashboard-admin');
+                    navigate('/admin');
                 } else {
                     // Ni client ni admin (profil manquant ou en cours de création)
                     console.warn("Profil utilisateur introuvable ou incomplet");
                     setChecking(false); // Arrêter le chargement pour afficher quelque chose (ou rediriger)
                     // Optionnel : Rediriger vers login pour forcer un refresh ou afficher une erreur
-                    // navigate('/login'); 
+                    // navigate('/connexion'); 
                 }
             } else {
                 // Client authentifié
@@ -49,3 +49,4 @@ export const ClientRoute = ({ children }: ClientRouteProps) => {
 
     return <>{children}</>;
 };
+

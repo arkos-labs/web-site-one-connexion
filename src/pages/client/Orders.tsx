@@ -168,7 +168,7 @@ const Orders = () => {
 
   // Naviguer vers la page de détails
   const handleViewOrder = (order: OrderWithDriver) => {
-    navigate(`/client/orders/${order.id}`);
+    navigate(`/client/commandes/${order.id}`);
   };
 
   // Télécharger le bon de commande
@@ -358,3 +358,4 @@ const Orders = () => {
 };
 
 export default Orders;
+

@@ -25,7 +25,7 @@ export default function PublicFooter() {
             <div className="mt-4 space-y-2 text-sm text-slate-300">
               <Link to="/about" className="block hover:text-white">À propos</Link>
               <Link to="/contact" className="block hover:text-white">Contact</Link>
-              <Link to="/privacy" className="block hover:text-white">Confidentialité</Link>
+              <Link to="/confidentialite" className="block hover:text-white">Confidentialité</Link>
             </div>
           </div>
           <div>
@@ -71,3 +71,4 @@ export default function PublicFooter() {
     </footer>
   );
 }
+

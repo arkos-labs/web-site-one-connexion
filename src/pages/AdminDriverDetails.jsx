@@ -373,7 +373,7 @@ export default function AdminDriverDetails() {
               </button>
             </div>
           )}
-          <Link to="/dashboard-admin/drivers" className="group flex items-center gap-2 rounded-2xl bg-white border border-slate-200 px-6 py-3 text-sm font-bold text-slate-700 transition-all hover:bg-slate-50">
+          <Link to="/admin/drivers" className="group flex items-center gap-2 rounded-2xl bg-white border border-slate-200 px-6 py-3 text-sm font-bold text-slate-700 transition-all hover:bg-slate-50">
             <span className="transition-transform group-hover:-translate-x-1">←</span>
             Retour
           </Link>
@@ -691,3 +691,4 @@ export default function AdminDriverDetails() {
     </div>
   );
 }
+

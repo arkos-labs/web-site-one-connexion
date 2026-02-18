@@ -246,7 +246,7 @@ const DashboardClient = () => {
       title: "Suivre une livraison",
       description: "Temps réel",
       icon: MapPin,
-      link: "/client/orders",
+      link: "/client/commandes",
       color: "text-blue-600",
       bg: "bg-blue-50"
     },
@@ -254,7 +254,7 @@ const DashboardClient = () => {
       title: "Mes factures",
       description: "Consulter l'historique",
       icon: FileText,
-      link: "/client/invoices",
+      link: "/client/factures",
       color: "text-emerald-600",
       bg: "bg-emerald-50"
     },
@@ -358,7 +358,7 @@ const DashboardClient = () => {
         <div className="lg:col-span-2 space-y-6">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-serif font-bold text-[#0B1525]">Commandes récentes</h2>
-            <Button variant="ghost" size="sm" className="text-[#D4AF37] hover:bg-[#D4AF37]/10" onClick={() => navigate('/client/orders')}>
+            <Button variant="ghost" size="sm" className="text-[#D4AF37] hover:bg-[#D4AF37]/10" onClick={() => navigate('/client/commandes')}>
               Voir tout <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </div>
@@ -384,7 +384,7 @@ const DashboardClient = () => {
                   <div
                     key={order.id}
                     className="p-6 hover:bg-gray-50 transition-colors cursor-pointer group"
-                    onClick={() => navigate(`/client/orders/${order.id}`)}
+                    onClick={() => navigate(`/client/commandes/${order.id}`)}
                   >
                     <div className="flex justify-between items-start mb-3">
                       <div className="flex items-center gap-3">
@@ -497,3 +497,4 @@ const DashboardClient = () => {
 };
 
 export default DashboardClient;
+

@@ -20,7 +20,7 @@ export default function Login() {
         <div className="hidden w-1/2 flex-col justify-between bg-slate-950 p-12 text-white lg:flex relative overflow-hidden">
           {/* Photo Background */}
           <div className="absolute inset-0">
-            <img src="/login-hero.jpg" alt="Livraison" className="h-full w-full object-cover" />
+            <img src="/connexion-hero.jpg" alt="Livraison" className="h-full w-full object-cover" />
           </div>
           <div className="absolute inset-0 bg-slate-950/55"></div>
 
@@ -97,7 +97,7 @@ export default function Login() {
               setLoading(false);
 
               if (profile?.role === 'admin') {
-                navigate('/dashboard-admin');
+                navigate('/admin');
               } else {
                 navigate('/dashboard-client');
               }
@@ -146,7 +146,7 @@ export default function Login() {
               </button>
               <button
                 type="button"
-                onClick={() => navigate('/dashboard-admin')}
+                onClick={() => navigate('/admin')}
                 className="w-full rounded-full border border-slate-200 bg-white py-3.5 text-sm font-bold text-slate-900 transition-all hover:bg-slate-50"
               >
                 Accès dashboard admin
@@ -155,7 +155,7 @@ export default function Login() {
 
             <p className="mt-8 text-center text-sm text-slate-500">
               Pas encore de compte ?{" "}
-              <Link to="/register" className="font-semibold text-slate-900 hover:underline">
+              <Link to="/inscription" className="font-semibold text-slate-900 hover:underline">
                 S'inscrire
               </Link>
             </p>
@@ -165,3 +165,4 @@ export default function Login() {
     </div>
   );
 }
+

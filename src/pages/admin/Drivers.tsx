@@ -1,4 +1,4 @@
-Ôªøimport { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -35,14 +35,14 @@ const Drivers = () => {
   useEffect(() => {
     fetchDrivers();
 
-    // Realtime subscription : Optimis√© pour une mise √† jour INSTANTAN√âE (Directe)
+    // Realtime subscription : OptimisÈ pour une mise ‡ jour INSTANTAN…E (Directe)
     const channel = supabase
       .channel('admin-drivers-list')
       .on(
         'postgres_changes',
         { event: 'UPDATE', schema: 'public', table: 'drivers' },
         (payload) => {
-          // 1. Mise √† jour Optimiste (Imm√©diate)
+          // 1. Mise ‡ jour Optimiste (ImmÈdiate)
           setDrivers((currentDrivers) =>
             currentDrivers.map((driver) => {
               if (driver.id === payload.new.id) {
@@ -58,8 +58,8 @@ const Drivers = () => {
 
                 return {
                   ...driver,
-                  ...payload.new, // Met √† jour les champs bruts
-                  status: newStatus as any, // Cast n√©cessaire car le type DriverStatus est strict
+                  ...payload.new, // Met ‡ jour les champs bruts
+                  status: newStatus as any, // Cast nÈcessaire car le type DriverStatus est strict
                 };
               }
               return driver;
@@ -149,9 +149,9 @@ const Drivers = () => {
           const vehicleInfo = d.vehicle ? {
             id: 'primary',
             driver_id: d.id,
-            brand: d.vehicle.brand || 'V√©hicule',
+            brand: d.vehicle.brand || 'VÈhicule',
             model: d.vehicle.model || 'Principal',
-            plate_number: d.vehicle.plate_number || d.vehicle_registration || 'Non renseign√©',
+            plate_number: d.vehicle.plate_number || d.vehicle_registration || 'Non renseignÈ',
             type: d.vehicle.type || d.vehicle_type,
             status: 'active',
             created_at: d.created_at,
@@ -159,9 +159,9 @@ const Drivers = () => {
           } : d.vehicle_type ? {
             id: 'primary',
             driver_id: d.id,
-            brand: 'V√©hicule',
+            brand: 'VÈhicule',
             model: 'Principal',
-            plate_number: d.vehicle_registration || 'Non renseign√©',
+            plate_number: d.vehicle_registration || 'Non renseignÈ',
             type: d.vehicle_type,
             status: 'active',
             created_at: d.created_at,
@@ -194,7 +194,7 @@ const Drivers = () => {
             phone: d.phone,
             username: d.username,        // Nouveau
             plain_password: d.plain_password, // Nouveau
-            documents_status: documentsStatus, // Statut calcul√© des documents
+            documents_status: documentsStatus, // Statut calculÈ des documents
             documents_submitted_at: d.documents_submitted_at, // Date de soumission
             status: status,
             vehicle: vehicleInfo,
@@ -237,21 +237,21 @@ const Drivers = () => {
 
   const handleCreateDriver = async () => {
     try {
-      // Le modal s'occupe d√©j√† de la cr√©ation via RPC
-      // On a juste besoin de rafra√Æchir la liste
+      // Le modal s'occupe dÈj‡ de la crÈation via RPC
+      // On a juste besoin de rafraÓchir la liste
       setShowCreateModal(false);
       fetchDrivers();
     } catch (error: any) {
-      console.error("Erreur post-cr√©ation:", error);
+      console.error("Erreur post-crÈation:", error);
     }
   };
 
   const handleViewDetails = (driverId: string) => {
-    navigate(`/dashboard-admin/chauffeurs/${driverId}`);
+    navigate(`/admin/chauffeurs/${driverId}`);
   };
 
   const handleDriverMapClick = (driver: Driver) => {
-    navigate(`/dashboard-admin/chauffeurs/${driver.id}`);
+    navigate(`/admin/chauffeurs/${driver.id}`);
   };
 
   // Stats
@@ -281,11 +281,11 @@ const Drivers = () => {
           <h1 className="text-3xl font-display font-bold text-primary mb-2">
             Gestion des chauffeurs
           </h1>
-          <p className="text-muted-foreground">Suivi et gestion de votre flotte en temps r√©el</p>
+          <p className="text-muted-foreground">Suivi et gestion de votre flotte en temps rÈel</p>
         </div>
         <Button variant="cta" onClick={() => setShowCreateModal(true)} className="gap-2">
           <Plus size={18} />
-          Cr√©er chauffeur
+          CrÈer chauffeur
         </Button>
       </div>
 
@@ -305,7 +305,7 @@ const Drivers = () => {
         </Card>
         <Card className="p-6">
           <p className="text-sm text-muted-foreground mb-2">Gains totaux</p>
-          <p className="text-3xl font-bold text-warning">{totalEarnings.toLocaleString()}‚Ç¨</p>
+          <p className="text-3xl font-bold text-warning">{totalEarnings.toLocaleString()}Ä</p>
         </Card>
       </div>
 
@@ -315,7 +315,7 @@ const Drivers = () => {
           <TabsTrigger value="list">Liste des chauffeurs</TabsTrigger>
           <TabsTrigger value="map">
             <Map className="h-4 w-4 mr-2" />
-            Carte en temps r√©el
+            Carte en temps rÈel
           </TabsTrigger>
         </TabsList>
 
@@ -327,7 +327,7 @@ const Drivers = () => {
               <div className="flex-1 relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
-                  placeholder="Rechercher par nom, email, t√©l√©phone..."
+                  placeholder="Rechercher par nom, email, tÈlÈphone..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-10"
@@ -340,7 +340,7 @@ const Drivers = () => {
                 <SelectContent>
                   <SelectItem value="all">Tous les statuts</SelectItem>
                   <SelectItem value="online">En ligne</SelectItem>
-                  <SelectItem value="on_delivery">En d√©placement</SelectItem>
+                  <SelectItem value="on_delivery">En dÈplacement</SelectItem>
                   <SelectItem value="on_break">En pause</SelectItem>
                   <SelectItem value="offline">Hors ligne</SelectItem>
                   <SelectItem value="on_vacation">En vacances</SelectItem>
@@ -356,7 +356,7 @@ const Drivers = () => {
                 <TableRow>
                   <TableHead>Chauffeur</TableHead>
                   <TableHead>Contact</TableHead>
-                  <TableHead>V√©hicule</TableHead>
+                  <TableHead>VÈhicule</TableHead>
                   <TableHead>Statut</TableHead>
                   <TableHead>Documents</TableHead>
                   <TableHead>En cours</TableHead>
@@ -376,7 +376,7 @@ const Drivers = () => {
                 ) : filteredDrivers.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={10} className="text-center py-8">
-                      Aucun chauffeur trouv√©
+                      Aucun chauffeur trouvÈ
                     </TableCell>
                   </TableRow>
                 ) : (
@@ -426,8 +426,8 @@ const Drivers = () => {
                         </span>
                       </TableCell>
                       <TableCell>{driver.stats.total_deliveries}</TableCell>
-                      <TableCell>‚≠ê {driver.stats.average_rating}</TableCell>
-                      <TableCell className="font-semibold">{driver.stats.total_earnings}‚Ç¨</TableCell>
+                      <TableCell>? {driver.stats.average_rating}</TableCell>
+                      <TableCell className="font-semibold">{driver.stats.total_earnings}Ä</TableCell>
                       <TableCell onClick={(e) => e.stopPropagation()}>
                         <Button
                           variant="outline"
@@ -436,7 +436,7 @@ const Drivers = () => {
                           className="gap-2"
                         >
                           <Eye size={16} />
-                          D√©tails
+                          DÈtails
                         </Button>
                       </TableCell>
                     </TableRow>
@@ -464,3 +464,4 @@ const Drivers = () => {
 };
 
 export default Drivers;
+

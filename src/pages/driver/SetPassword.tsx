@@ -30,12 +30,12 @@ export default function SetDriverPassword() {
                 } else {
                     // Pas de session valide
                     toast.error('Lien d\'invitation invalide ou expiré');
-                    setTimeout(() => navigate('/driver/login'), 2000);
+                    setTimeout(() => navigate('/connexion'), 2000);
                 }
             } catch (error) {
                 console.error('Erreur lors de la validation:', error);
                 toast.error('Erreur lors de la validation du lien');
-                setTimeout(() => navigate('/driver/login'), 2000);
+                setTimeout(() => navigate('/connexion'), 2000);
             }
         };
 
@@ -112,7 +112,7 @@ export default function SetDriverPassword() {
             await supabase.auth.signOut();
 
             setTimeout(() => {
-                navigate('/driver/login');
+                navigate('/connexion');
             }, 2000);
 
         } catch (error: any) {
@@ -251,3 +251,5 @@ export default function SetDriverPassword() {
         </div>
     );
 }
+
+

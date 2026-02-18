@@ -83,11 +83,11 @@ const Index = () => {
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={<AuthPage />} />
-        <Route path="/register" element={<AuthPage />} />
-        <Route path="/create-driver" element={<CreateDriver />} />
-        <Route path="/auth" element={<Navigate to="/login" replace />} />
-        <Route path="/about" element={<About />} />
+        <Route path="/connexion" element={<AuthPage />} />
+        <Route path="/inscription" element={<AuthPage />} />
+        <Route path="/devenir-chauffeur" element={<CreateDriver />} />
+        <Route path="/auth" element={<Navigate to="/connexion" replace />} />
+        <Route path="/about" element={<Navigate to="/a-propos" replace />} />
         <Route path="/a-propos" element={<About />} />
         <Route path="/expertises" element={<Expertises />} />
         <Route path="/expertises/medical" element={<Medical />} />
@@ -100,16 +100,17 @@ const Index = () => {
         <Route path="/faq" element={<FAQ />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/commande-sans-compte" element={<CommandeSansCompte />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/driver/set-password" element={<SetDriverPassword />} />
-        <Route path="/driver/dashboard" element={<DriverDashboard />} />
-        <Route path="/app" element={<Navigate to="/driver/dashboard" replace />} />
+        <Route path="/mot-de-passe-oublie" element={<ForgotPassword />} />
+        <Route path="/reinitialiser-mot-de-passe" element={<ResetPassword />} />
+        <Route path="/chauffeur/definir-mot-de-passe" element={<SetDriverPassword />} />
+        <Route path="/chauffeur/tableau-de-bord" element={<DriverDashboard />} />
+        <Route path="/app" element={<Navigate to="/chauffeur/tableau-de-bord" replace />} />
         <Route path="/cgv" element={<CGV />} />
         <Route path="/mentions-legales" element={<MentionsLegales />} />
         <Route path="/cookies" element={<Cookies />} />
-        <Route path="/politique-confidentialite" element={<PolitiqueConfidentialite />} />
-        <Route path="/privacy" element={<PolitiqueConfidentialite />} />
+        <Route path="/confidentialite" element={<PolitiqueConfidentialite />} />
+        <Route path="/politique-confidentialite" element={<Navigate to="/confidentialite" replace />} />
+        <Route path="/privacy" element={<Navigate to="/confidentialite" replace />} />
 
         {/* Client Dashboard Routes */}
         <Route path="/client" element={
@@ -117,24 +118,24 @@ const Index = () => {
             <DashboardLayout type="client" />
           </ClientRoute>
         }>
-          <Route index element={<Navigate to="/client/dashboard" replace />} />
-          <Route path="dashboard" element={<DashboardClient />} />
-          <Route path="orders" element={<Orders />} />
-          <Route path="orders/:orderId" element={<OrderDetailClient />} />
-          <Route path="tracking" element={<Tracking />} />
-          <Route path="invoices" element={<Invoices />} />
+          <Route index element={<Navigate to="/client/tableau-de-bord" replace />} />
+          <Route path="tableau-de-bord" element={<DashboardClient />} />
+          <Route path="commandes" element={<Orders />} />
+          <Route path="commandes/:orderId" element={<OrderDetailClient />} />
+          <Route path="suivi" element={<Tracking />} />
+          <Route path="factures" element={<Invoices />} />
           <Route path="messages" element={<Messages />} />
-          <Route path="settings" element={<SettingsClient />} />
-          <Route path="help" element={<Help />} />
+          <Route path="parametres" element={<SettingsClient />} />
+          <Route path="aide" element={<Help />} />
         </Route>
 
         {/* Admin Dashboard Routes */}
-        <Route path="/dashboard-admin" element={
+        <Route path="/admin" element={
           <AdminRoute>
             <DashboardLayout type="admin" />
           </AdminRoute>
         }>
-          <Route index element={<Navigate to="/dashboard-admin/tableau-de-bord" replace />} />
+          <Route index element={<Navigate to="/admin/tableau-de-bord" replace />} />
           <Route path="tableau-de-bord" element={<DashboardAdmin />} />
           <Route path="dispatch" element={<Dispatch />} />
           <Route path="commandes" element={<OrdersAdmin />} />
@@ -158,3 +159,4 @@ const Index = () => {
 };
 
 export default Index;
+

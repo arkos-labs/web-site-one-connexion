@@ -52,7 +52,7 @@ export default function ResetPassword() {
 
             // Redirection après 2 secondes
             setTimeout(() => {
-                navigate('/login');
+                navigate('/connexion');
             }, 2000);
         } catch (error: any) {
             console.error("Error resetting password:", error);
@@ -179,3 +179,4 @@ export default function ResetPassword() {
         </div>
     );
 }
+

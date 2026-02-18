@@ -46,7 +46,7 @@ const Footer = () => {
                             <FooterLink to="/mentions-legales" label="Mentions Légales" />
                             <FooterLink to="/cgv" label="Conditions Générales (CGV)" />
                             <FooterLink to="/cookies" label="Politique Cookies" />
-                            <FooterLink to="/politique-confidentialite" label="Confidentialité" />
+                            <FooterLink to="/confidentialite" label="Confidentialité" />
                         </ul>
                     </div>
 
@@ -123,3 +123,4 @@ const SocialLink = ({ href, icon }: { href: string; icon: React.ReactNode }) => 
 );
 
 export default Footer;
+

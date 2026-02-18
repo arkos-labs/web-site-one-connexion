@@ -47,13 +47,13 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Landing />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/register-driver" element={<RegisterDriver />} />
+        <Route path="/connexion" element={<Login />} />
+        <Route path="/inscription" element={<Register />} />
+        <Route path="/inscription-driver" element={<RegisterDriver />} />
         <Route path="/guest-order" element={<GuestOrder />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/about" element={<About />} />
-        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/confidentialite" element={<Privacy />} />
         <Route path="/coursier-b2b-paris" element={<CoursierB2BParis />} />
         <Route path="/coursier-ile-de-france" element={<CoursierIDF />} />
         <Route path="/messagerie-express-ile-de-france" element={<MessagerieExpressIDF />} />
@@ -83,7 +83,7 @@ export default function App() {
           <Route path="chat" element={<ClientChat />} />
         </Route>
         <Route
-          path="/dashboard-admin"
+          path="/admin"
           element={
             <ProtectedRoute>
               <DashboardAdminLayout />
@@ -116,3 +116,4 @@ export default function App() {
     </BrowserRouter>
   );
 }
+

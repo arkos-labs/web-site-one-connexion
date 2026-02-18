@@ -148,7 +148,7 @@ export default function MentionsLegales() {
                 </p>
                 <p className="text-muted-foreground leading-relaxed mt-4">
                   Pour plus d'informations, consultez notre{" "}
-                  <a href="/politique-confidentialite" className="text-primary hover:underline">
+                  <a href="/confidentialite" className="text-primary hover:underline">
                     Politique de Confidentialité
                   </a>.
                 </p>
@@ -212,3 +212,4 @@ export default function MentionsLegales() {
     </PublicLayout>
   );
 }
+

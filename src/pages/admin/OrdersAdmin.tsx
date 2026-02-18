@@ -382,7 +382,7 @@ const OrdersAdmin = () => {
 
   // Navigation vers la page de détails
   const openDetailsPage = (orderId: string) => {
-    navigate(`/dashboard-admin/commandes/${orderId}`);
+    navigate(`/admin/commandes/${orderId}`);
   };
 
   // ==================== HELPERS ====================
@@ -780,7 +780,7 @@ const OrdersAdmin = () => {
                 onClick={() => {
                   setShowSuccessDialog(false);
                   if (newCreatedOrderId) {
-                    navigate(`/dashboard-admin/commandes/${newCreatedOrderId}`);
+                    navigate(`/admin/commandes/${newCreatedOrderId}`);
                   }
                 }}
               >
@@ -820,3 +820,4 @@ const OrdersAdmin = () => {
 };
 
 export default OrdersAdmin;
+

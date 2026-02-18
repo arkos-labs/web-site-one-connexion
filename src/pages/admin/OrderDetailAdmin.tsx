@@ -148,7 +148,7 @@ export default function OrderDetailAdmin() {
                 setOrder(orderData);
             } else {
                 toast.error("Commande introuvable");
-                navigate("/dashboard-admin/commandes");
+                navigate("/admin/commandes");
             }
         } catch (error: any) {
             console.error("Error fetching order details:", error);
@@ -710,7 +710,7 @@ export default function OrderDetailAdmin() {
             {/* HEADER */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div className="flex items-center gap-4">
-                    <Button variant="ghost" size="icon" onClick={() => navigate("/dashboard-admin/commandes")}>
+                    <Button variant="ghost" size="icon" onClick={() => navigate("/admin/commandes")}>
                         <ArrowLeft className="h-5 w-5" />
                     </Button>
                     <div>
@@ -1056,7 +1056,7 @@ export default function OrderDetailAdmin() {
                                 onClick={() => {
                                     setShowSuccessDialog(false);
                                     if (newCreatedOrderId) {
-                                        navigate(`/dashboard-admin/commandes/${newCreatedOrderId}`);
+                                        navigate(`/admin/commandes/${newCreatedOrderId}`);
                                     }
                                 }}
                             >
@@ -1069,3 +1069,4 @@ export default function OrderDetailAdmin() {
         </div>
     );
 }
+

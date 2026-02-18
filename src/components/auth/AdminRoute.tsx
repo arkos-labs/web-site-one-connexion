@@ -20,7 +20,7 @@ export const AdminRoute = ({ children }: AdminRouteProps) => {
                 navigate('/auth');
             } else if (!isAdmin) {
                 // Connecté mais pas admin, rediriger vers le dashboard client
-                navigate('/client/dashboard');
+                navigate('/client/tableau-de-bord');
             } else {
                 // Admin authentifié
                 setChecking(false);
@@ -41,3 +41,4 @@ export const AdminRoute = ({ children }: AdminRouteProps) => {
 
     return <>{children}</>;
 };
+

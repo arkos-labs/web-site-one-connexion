@@ -137,7 +137,7 @@ const DashboardAdmin = () => {
       icon: Package,
       color: "text-[#D4AF37]",
       bgColor: "bg-[#D4AF37]/10",
-      path: "/dashboard-admin/commandes",
+      path: "/admin/commandes",
     },
     {
       title: `Clients (${periodLabel})`,
@@ -147,7 +147,7 @@ const DashboardAdmin = () => {
       icon: Users,
       color: "text-blue-600",
       bgColor: "bg-blue-50",
-      path: "/dashboard-admin/clients",
+      path: "/admin/clients",
     },
     {
       title: "Chauffeurs actifs",
@@ -157,7 +157,7 @@ const DashboardAdmin = () => {
       icon: Truck,
       color: "text-indigo-600",
       bgColor: "bg-indigo-50",
-      path: "/dashboard-admin/chauffeurs",
+      path: "/admin/chauffeurs",
     },
     {
       title: `Revenus (${periodLabel})`,
@@ -167,7 +167,7 @@ const DashboardAdmin = () => {
       icon: TrendingUp,
       color: "text-emerald-600",
       bgColor: "bg-emerald-50",
-      path: "/dashboard-admin/statistiques",
+      path: "/admin/statistiques",
     },
   ];
 
@@ -178,7 +178,7 @@ const DashboardAdmin = () => {
       icon: MapPin,
       color: "text-blue-600",
       bgColor: "bg-blue-50",
-      path: "/dashboard-admin/carte-live",
+      path: "/admin/carte-live",
     },
     {
       title: "Statistiques",
@@ -186,7 +186,7 @@ const DashboardAdmin = () => {
       icon: BarChart3,
       color: "text-purple-600",
       bgColor: "bg-purple-50",
-      path: "/dashboard-admin/statistiques",
+      path: "/admin/statistiques",
     },
     {
       title: "Messagerie",
@@ -194,7 +194,7 @@ const DashboardAdmin = () => {
       icon: MessageSquare,
       color: "text-[#D4AF37]",
       bgColor: "bg-[#D4AF37]/10",
-      path: "/dashboard-admin/messagerie",
+      path: "/admin/messagerie",
     },
   ];
 
@@ -372,7 +372,7 @@ const DashboardAdmin = () => {
               <h2 className="text-lg font-serif font-bold text-[#0B1525]">
                 État de l'équipe
               </h2>
-              <Button variant="ghost" size="sm" className="text-[#D4AF37] hover:bg-[#D4AF37]/10" onClick={() => navigate('/dashboard-admin/chauffeurs')}>
+              <Button variant="ghost" size="sm" className="text-[#D4AF37] hover:bg-[#D4AF37]/10" onClick={() => navigate('/admin/chauffeurs')}>
                 Voir tout <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </div>
@@ -522,3 +522,4 @@ const DashboardAdmin = () => {
 };
 
 export default DashboardAdmin;
+

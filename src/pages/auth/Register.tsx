@@ -88,7 +88,7 @@ const Register = () => {
                 toast.success("Compte créé", {
                     description: description,
                 });
-                navigate("/client/dashboard");
+                navigate("/client/tableau-de-bord");
             }
         } catch (error) {
             const message = error instanceof Error ? error.message : "Une erreur est survenue.";
@@ -281,7 +281,7 @@ const Register = () => {
                         <p className="text-sm text-muted-foreground">
                             Vous avez déjà un compte ?{" "}
                             <Link
-                                to="/login"
+                                to="/connexion"
                                 className="font-bold text-primary hover:text-cta transition-colors"
                             >
                                 Se connecter
@@ -295,3 +295,4 @@ const Register = () => {
 };
 
 export default Register;
+

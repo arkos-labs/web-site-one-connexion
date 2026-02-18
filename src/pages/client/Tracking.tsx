@@ -182,7 +182,7 @@ const Tracking = () => {
             <Button
               variant="cta"
               size="lg"
-              onClick={() => navigate('/client/dashboard', { state: { openNewOrder: true } })}
+              onClick={() => navigate('/client/tableau-de-bord', { state: { openNewOrder: true } })}
             >
               <Package className="h-5 w-5 mr-2" />
               Créer une nouvelle commande
@@ -440,3 +440,4 @@ const Tracking = () => {
 };
 
 export default Tracking;
+

@@ -583,7 +583,7 @@ export default function DashboardAdmin() {
                     {ordersAll.filter((o) => o.status === operationView).map((o) => (
                       <div
                         key={o.id}
-                        onClick={() => navigate(`/dashboard-admin/orders/${o.id}`)}
+                        onClick={() => navigate(`/admin/orders/${o.id}`)}
                         className="p-5 bg-white hover:bg-slate-50 transition-all group cursor-pointer"
                       >
                         <div className="flex justify-between items-start mb-3">
@@ -617,7 +617,7 @@ export default function DashboardAdmin() {
                     <span className="text-sm font-bold">Nouvelle course</span>
                     <span className="bg-white/20 p-1.5 rounded-lg group-hover:bg-white/30 transition-colors">+</span>
                   </button>
-                  <button onClick={() => navigate("/dashboard-admin/orders?status=pending")} className="w-full group flex items-center justify-between p-4 bg-white border border-slate-100 text-slate-700 rounded-2xl hover:border-slate-300 transition-all">
+                  <button onClick={() => navigate("/admin/orders?status=pending")} className="w-full group flex items-center justify-between p-4 bg-white border border-slate-100 text-slate-700 rounded-2xl hover:border-slate-300 transition-all">
                     <span className="text-sm font-bold">Gérer les commandes</span>
                     <span className="text-slate-400 group-hover:translate-x-1 transition-transform">→</span>
                   </button>
@@ -627,7 +627,7 @@ export default function DashboardAdmin() {
               <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden flex flex-col">
                 <div className="p-6 border-b border-slate-50 bg-slate-50/50 flex items-center justify-between">
                   <h4 className="font-bold text-xs uppercase tracking-wider text-slate-500"> des Paiements</h4>
-                  <button onClick={() => navigate("/dashboard-admin/invoices")} className="text-[10px] font-bold text-blue-600 hover:underline">Voir tout</button>
+                  <button onClick={() => navigate("/admin/invoices")} className="text-[10px] font-bold text-blue-600 hover:underline">Voir tout</button>
                 </div>
                 <div className="divide-y divide-slate-50 overflow-y-auto max-h-[220px]">
                   {clientPaymentRows.length === 0 ? <div className="p-4 text-xs text-slate-400 text-center">Aucun client.</div> : clientPaymentRows.map((c) => (
@@ -677,7 +677,7 @@ export default function DashboardAdmin() {
                 <button
                   onClick={() => {
                     setNewOrderAlert(null);
-                    navigate(`/dashboard-admin/orders/${newOrderAlert.id}`);
+                    navigate(`/admin/orders/${newOrderAlert.id}`);
                   }}
                   className="px-3 py-1.5 bg-white text-slate-900 text-xs font-bold rounded-lg hover:bg-emerald-50"
                 >
@@ -986,3 +986,4 @@ function Field({ label, value, onChange }) {
     </div>
   );
 }
+

@@ -71,7 +71,7 @@ export default function AdminInvoiceDetails() {
           <h1 className="text-3xl font-bold text-slate-900">Facture introuvable</h1>
           <p className="text-sm text-slate-500">L’identifiant {id} n’existe pas.</p>
         </header>
-        <Link to="/dashboard-admin/invoices" className="rounded-full bg-slate-100 px-5 py-2 text-xs font-bold text-slate-700">Retour aux factures</Link>
+        <Link to="/admin/invoices" className="rounded-full bg-slate-100 px-5 py-2 text-xs font-bold text-slate-700">Retour aux factures</Link>
       </div>
     );
   }
@@ -144,3 +144,4 @@ export default function AdminInvoiceDetails() {
     </div>
   );
 }
+

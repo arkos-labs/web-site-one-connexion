@@ -153,7 +153,7 @@ const ClientDetail = () => {
             const clientData = await getClientDetails(id);
             if (!clientData) {
                 toast.error("Client introuvable");
-                navigate('/dashboard-admin/clients');
+                navigate('/admin/clients');
                 return;
             }
             setClient(clientData);
@@ -331,7 +331,7 @@ const ClientDetail = () => {
         return (
             <div className="text-center py-12">
                 <p className="text-muted-foreground">Client non trouvé</p>
-                <Button variant="outline" onClick={() => navigate('/dashboard-admin/clients')} className="mt-4">
+                <Button variant="outline" onClick={() => navigate('/admin/clients')} className="mt-4">
                     Retour à la liste
                 </Button>
             </div>
@@ -364,7 +364,7 @@ const ClientDetail = () => {
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="flex items-center gap-4">
-                    <Button variant="ghost" onClick={() => navigate('/dashboard-admin/clients')}>
+                    <Button variant="ghost" onClick={() => navigate('/admin/clients')}>
                         <ArrowLeft className="h-4 w-4 mr-2" />
                         Retour
                     </Button>
@@ -628,7 +628,7 @@ const ClientDetail = () => {
                                             <TableRow
                                                 key={order.id}
                                                 className="cursor-pointer hover:bg-muted/30 transition-colors"
-                                                onClick={() => navigate(`/dashboard-admin/commandes/${order.id}`)}
+                                                onClick={() => navigate(`/admin/commandes/${order.id}`)}
                                             >
                                                 <TableCell className="font-medium text-primary">
                                                     <div className="flex flex-col">
@@ -827,3 +827,4 @@ const ClientDetail = () => {
 };
 
 export default ClientDetail;
+

@@ -18,10 +18,11 @@ export default function PublicHeader() {
           <Link to="/contact" className="hover:text-slate-900 transition-colors">Contact</Link>
         </nav>
         <div className="ml-auto flex gap-3">
-          <Link to="/login" className="rounded-full border border-slate-200 px-5 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors">Se connecter</Link>
-          <Link to="/register" className="rounded-full bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-slate-800 transition-colors">Créer un compte</Link>
+          <Link to="/connexion" className="rounded-full border border-slate-200 px-5 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors">Se connecter</Link>
+          <Link to="/inscription" className="rounded-full bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-slate-800 transition-colors">Créer un compte</Link>
         </div>
       </div>
     </header>
   );
 }
+

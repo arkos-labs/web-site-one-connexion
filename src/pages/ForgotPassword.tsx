@@ -36,7 +36,7 @@ export default function ForgotPassword() {
       // Supabase envoie un email UNIQUEMENT si l'adresse existe
       // Mais on affiche toujours un message de succès (bonne pratique de sécurité)
       const { error: supabaseError } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/reset-password`
+        redirectTo: `${window.location.origin}/reinitialiser-mot-de-passe`
       });
 
       // On ignore l'erreur "User not found" pour ne pas révéler si l'email existe
@@ -64,7 +64,7 @@ export default function ForgotPassword() {
       <div className="w-full max-w-md">
         {/* Back to login link */}
         <Link
-          to="/login"
+          to="/connexion"
           className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary mb-6 transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
@@ -173,7 +173,7 @@ export default function ForgotPassword() {
                     Renvoyer un email
                   </Button>
 
-                  <Link to="/login" className="block">
+                  <Link to="/connexion" className="block">
                     <Button variant="ghost" className="w-full">
                       Retour à la connexion
                     </Button>
@@ -195,3 +195,4 @@ export default function ForgotPassword() {
     </div>
   );
 }
+

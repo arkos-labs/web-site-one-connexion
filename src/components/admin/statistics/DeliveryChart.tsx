@@ -10,7 +10,7 @@ export const DeliveryChart = ({ data }: DeliveryChartProps) => {
     const navigate = useNavigate();
 
     const handleClick = (type: string) => {
-        navigate(`/dashboard-admin/commandes?type=${encodeURIComponent(type)}`);
+        navigate(`/admin/commandes?type=${encodeURIComponent(type)}`);
     };
 
     return (
@@ -45,3 +45,4 @@ export const DeliveryChart = ({ data }: DeliveryChartProps) => {
         </Card>
     );
 };
+

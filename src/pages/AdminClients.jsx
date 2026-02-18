@@ -159,7 +159,7 @@ export default function AdminClients() {
                   <td className="py-3 text-slate-500">{c.last}</td>
                   <td className="py-3">
                     <div className="flex justify-end">
-                      <button onClick={() => navigate(`/dashboard-admin/clients/${c.id}`)} className="rounded-full bg-slate-900 px-3 py-1.5 text-[11px] font-bold text-white">Détails</button>
+                      <button onClick={() => navigate(`/admin/clients/${c.id}`)} className="rounded-full bg-slate-900 px-3 py-1.5 text-[11px] font-bold text-white">Détails</button>
                     </div>
                   </td>
                 </tr>
@@ -171,4 +171,5 @@ export default function AdminClients() {
     </div>
   );
 }
+
 

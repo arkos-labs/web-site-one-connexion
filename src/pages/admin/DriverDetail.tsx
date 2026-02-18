@@ -84,7 +84,7 @@ export default function DriverDetail() {
                 setOrders(ordersData);
             } else {
                 toast.error("Chauffeur introuvable");
-                navigate("/dashboard-admin/chauffeurs");
+                navigate("/admin/chauffeurs");
             }
         } catch (error) {
             console.error("Error fetching driver:", error);
@@ -151,7 +151,7 @@ export default function DriverDetail() {
         <div className="container mx-auto p-6 max-w-5xl">
             <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-4">
-                    <Button variant="ghost" size="icon" onClick={() => navigate("/dashboard-admin/chauffeurs")}>
+                    <Button variant="ghost" size="icon" onClick={() => navigate("/admin/chauffeurs")}>
                         <ArrowLeft className="h-5 w-5" />
                     </Button>
                     <div>
@@ -309,7 +309,7 @@ export default function DriverDetail() {
                                             <tr
                                                 key={order.id}
                                                 className="hover:bg-muted/50 cursor-pointer transition-colors"
-                                                onClick={() => navigate(`/dashboard-admin/commandes/${order.id}`)}
+                                                onClick={() => navigate(`/admin/commandes/${order.id}`)}
                                             >
                                                 <td className="py-3 font-medium">{order.reference}</td>
                                                 <td className="py-3 text-sm text-muted-foreground">
@@ -355,3 +355,4 @@ export default function DriverDetail() {
         </div>
     );
 }
+

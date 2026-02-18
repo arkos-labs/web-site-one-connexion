@@ -166,22 +166,22 @@ const Header = () => {
                                             <div className="p-1.5">
                                                 {userRole === 'admin' ? (
                                                     <>
-                                                        <Link to="/dashboard-admin" onClick={() => setIsUserMenuOpen(false)} className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-50 text-sm text-gray-700">
+                                                        <Link to="/admin" onClick={() => setIsUserMenuOpen(false)} className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-50 text-sm text-gray-700">
                                                             <ShieldCheck className="w-4 h-4 text-red-600" /> Dashboard Admin
                                                         </Link>
-                                                        <Link to="/dashboard-admin/commandes" onClick={() => setIsUserMenuOpen(false)} className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-50 text-sm text-gray-700">
+                                                        <Link to="/admin/commandes" onClick={() => setIsUserMenuOpen(false)} className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-50 text-sm text-gray-700">
                                                             <Package className="w-4 h-4 text-red-600" /> Gérer les commandes
                                                         </Link>
                                                     </>
                                                 ) : (
                                                     <>
-                                                        <Link to="/client/dashboard" onClick={() => setIsUserMenuOpen(false)} className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-50 text-sm text-gray-700">
+                                                        <Link to="/client/tableau-de-bord" onClick={() => setIsUserMenuOpen(false)} className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-50 text-sm text-gray-700">
                                                             <LayoutDashboard className="w-4 h-4 text-primary" /> Tableau de bord
                                                         </Link>
-                                                        <Link to="/client/orders" onClick={() => setIsUserMenuOpen(false)} className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-50 text-sm text-gray-700">
+                                                        <Link to="/client/commandes" onClick={() => setIsUserMenuOpen(false)} className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-50 text-sm text-gray-700">
                                                             <Package className="w-4 h-4 text-primary" /> Mes commandes
                                                         </Link>
-                                                        <Link to="/client/settings" onClick={() => setIsUserMenuOpen(false)} className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-50 text-sm text-gray-700">
+                                                        <Link to="/client/parametres" onClick={() => setIsUserMenuOpen(false)} className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-50 text-sm text-gray-700">
                                                             <Settings className="w-4 h-4 text-primary" /> Paramètres
                                                         </Link>
                                                     </>
@@ -197,12 +197,12 @@ const Header = () => {
                                 </div>
                             ) : (
                                 <div className="flex items-center gap-3">
-                                    <Link to="/login">
+                                    <Link to="/connexion">
                                         <Button variant="ghost" size="sm" className="text-gray-600 hover:text-primary hover:bg-gray-100 font-medium h-8 px-3 text-xs">
                                             Connexion
                                         </Button>
                                     </Link>
-                                    <Link to="/register">
+                                    <Link to="/inscription">
                                         <Button size="sm" className="bg-cta hover:bg-cta/90 text-white font-bold shadow-md h-8 px-3 text-xs">
                                             Compte Pro
                                         </Button>
@@ -238,7 +238,7 @@ const Header = () => {
                                         <span className="block text-xs text-gray-500 truncate">{user?.email}</span>
                                     </div>
                                 </div>
-                                <Link to={userRole === 'admin' ? "/dashboard-admin" : "/client/dashboard"}>
+                                <Link to={userRole === 'admin' ? "/admin" : "/client/tableau-de-bord"}>
                                     <Button className="w-full justify-start mb-2" variant="outline">
                                         <LayoutDashboard className="w-4 h-4 mr-2" /> Accéder au Dashboard
                                     </Button>
@@ -249,8 +249,8 @@ const Header = () => {
                             </>
                         ) : (
                             <div className="flex flex-col gap-2">
-                                <Link to="/login" className="w-full"><Button variant="outline" className="w-full justify-center">Se connecter</Button></Link>
-                                <Link to="/register" className="w-full"><Button className="w-full justify-center bg-cta hover:bg-cta/90">Créer un compte</Button></Link>
+                                <Link to="/connexion" className="w-full"><Button variant="outline" className="w-full justify-center">Se connecter</Button></Link>
+                                <Link to="/inscription" className="w-full"><Button className="w-full justify-center bg-cta hover:bg-cta/90">Créer un compte</Button></Link>
                             </div>
                         )}
                     </div>
@@ -261,3 +261,4 @@ const Header = () => {
     );
 };
 export default Header;
+

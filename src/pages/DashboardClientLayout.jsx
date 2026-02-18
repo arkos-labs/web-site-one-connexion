@@ -72,7 +72,7 @@ export default function DashboardClientLayout() {
         </div>
 
         {/* Logout */}
-        <Link to="/login" className="group flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-slate-500 transition-all hover:bg-slate-50 hover:text-red-500">
+        <Link to="/connexion" className="group flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-slate-500 transition-all hover:bg-slate-50 hover:text-red-500">
           <LogOut size={20} className="transition-transform group-hover:-translate-x-1" />
           <span>Déconnexion</span>
         </Link>
@@ -103,3 +103,4 @@ function NavItem({ icon: Icon, label, active, badge, to }) {
     </Link>
   );
 }
+

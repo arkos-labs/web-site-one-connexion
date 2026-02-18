@@ -17,7 +17,7 @@ const AuthPage = () => {
 
     // Determine mode from URL
     const [mode, setMode] = useState<AuthMode>(
-        location.pathname === "/register" ? "register" : "login"
+        location.pathname === "/inscription" ? "register" : "login"
     );
 
     const [loginData, setLoginData] = useState({ email: "", password: "" });
@@ -37,7 +37,7 @@ const AuthPage = () => {
         if (newMode === mode) return;
         setMode(newMode);
         // Update URL without page reload
-        navigate(newMode === "login" ? "/login" : "/register", { replace: true });
+        navigate(newMode === "login" ? "/connexion" : "/inscription", { replace: true });
     };
 
     const handleLogin = async (e: React.FormEvent) => {
@@ -81,9 +81,9 @@ const AuthPage = () => {
             });
 
             if (role === 'admin') {
-                navigate("/dashboard-admin");
+                navigate("/admin");
             } else {
-                navigate("/client/dashboard");
+                navigate("/client/tableau-de-bord");
             }
 
         } catch (error: any) {
@@ -146,7 +146,7 @@ const AuthPage = () => {
                 password: registerData.password,
                 options: {
                     data: metaData,
-                    emailRedirectTo: window.location.origin + '/client/dashboard'
+                    emailRedirectTo: window.location.origin + '/client/tableau-de-bord'
                 }
             });
 
@@ -339,7 +339,7 @@ const AuthPage = () => {
                                         <div className="flex justify-between items-center">
                                             <Label htmlFor="login-password" className="text-gray-700 font-medium">Mot de passe</Label>
                                             <Link
-                                                to="/forgot-password"
+                                                to="/mot-de-passe-oublie"
                                                 className="text-xs font-medium text-[#D4AF37] hover:text-[#B08D1F] transition-colors"
                                             >
                                                 Mot de passe oublié ?
@@ -510,3 +510,4 @@ const AuthPage = () => {
 };
 
 export default AuthPage;
+

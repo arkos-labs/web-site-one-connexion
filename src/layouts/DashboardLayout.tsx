@@ -18,7 +18,7 @@ const DashboardLayout = ({ type }: DashboardLayoutProps) => {
   // Set up new order notifications for admin (hook is always called, callback only executes for admin)
   useNewOrderNotifications(
     type === "admin"
-      ? () => navigate("/dashboard-admin/commandes")
+      ? () => navigate("/admin/commandes")
       : undefined
   );
 
@@ -60,3 +60,4 @@ const DashboardLayout = ({ type }: DashboardLayoutProps) => {
 };
 
 export default DashboardLayout;
+

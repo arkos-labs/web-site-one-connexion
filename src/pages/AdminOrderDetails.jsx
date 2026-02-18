@@ -188,7 +188,7 @@ export default function AdminOrderDetails() {
       <div className="rounded-3xl bg-white p-6 shadow-sm">
         <div className="mb-3 text-lg font-bold text-slate-900">Commande introuvable</div>
         <p className="text-sm text-slate-500">L’identifiant {id} n’existe pas.</p>
-        <Link to="/dashboard-admin/orders" className="mt-4 inline-flex rounded-full bg-slate-900 px-4 py-2 text-xs font-bold text-white">Retour</Link>
+        <Link to="/admin/orders" className="mt-4 inline-flex rounded-full bg-slate-900 px-4 py-2 text-xs font-bold text-white">Retour</Link>
       </div>
     );
   }
@@ -467,3 +467,4 @@ export default function AdminOrderDetails() {
     </div>
   );
 }
+

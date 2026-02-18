@@ -13,7 +13,7 @@ export default function DashboardDriverLayout() {
                     <div className="grid h-10 w-10 place-items-center rounded-xl bg-slate-900 text-white font-bold">OC</div>
                     <span className="text-lg font-bold tracking-tight">Espace Chauffeur</span>
                 </div>
-                <Link to="/login" className="rounded-full bg-slate-100 p-2 text-slate-500 hover:bg-slate-200">
+                <Link to="/connexion" className="rounded-full bg-slate-100 p-2 text-slate-500 hover:bg-slate-200">
                     <LogOut size={20} />
                 </Link>
             </header>
@@ -48,3 +48,4 @@ export default function DashboardDriverLayout() {
         </div>
     );
 }
+

@@ -58,7 +58,7 @@ export default function Register() {
 
             if (authData.user) {
                 setSuccess(true);
-                setTimeout(() => navigate('/login'), 3000);
+                setTimeout(() => navigate('/connexion'), 3000);
             }
         } catch (err) {
             if (err.message?.includes("rate limit")) {
@@ -86,7 +86,7 @@ export default function Register() {
                             Redirection vers la page de connexion...
                         </p>
                         <button
-                            onClick={() => navigate('/login')}
+                            onClick={() => navigate('/connexion')}
                             className="mt-8 w-full rounded-full bg-slate-900 py-4 text-sm font-bold text-white transition-all hover:bg-slate-800"
                         >
                             Se connecter maintenant
@@ -152,7 +152,7 @@ export default function Register() {
                 {/* Right Panel - Form */}
                 <div className="flex w-full flex-col bg-white p-8 lg:w-1/2 lg:p-12 overflow-y-auto">
                     <div className="mx-auto w-full max-w-lg">
-                        <Link to="/login" className="mb-12 inline-flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors">
+                        <Link to="/connexion" className="mb-12 inline-flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors">
                             <ArrowLeft size={16} />
                             Retour à la connexion
                         </Link>
@@ -311,7 +311,7 @@ export default function Register() {
 
                             <p className="text-center text-sm text-slate-500">
                                 Déjà un compte ?{" "}
-                                <Link to="/login" className="font-bold text-slate-900 hover:underline">
+                                <Link to="/connexion" className="font-bold text-slate-900 hover:underline">
                                     Se connecter
                                 </Link>
                             </p>
@@ -322,3 +322,4 @@ export default function Register() {
         </div >
     );
 }
+

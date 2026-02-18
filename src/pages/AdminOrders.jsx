@@ -492,7 +492,7 @@ export default function AdminOrders() {
                     <td className="py-4">
                       <div className="flex justify-end gap-2">
                         <button onClick={() => duplicateOrder(o)} className="rounded-full bg-slate-100 px-3 py-1.5 text-[11px] font-bold text-slate-700 hover:bg-slate-200">Dupliquer</button>
-                        <button onClick={() => navigate(`/dashboard-admin/orders/${o.id}`)} className="rounded-full bg-slate-900 px-3 py-1.5 text-[11px] font-bold text-white">Détails</button>
+                        <button onClick={() => navigate(`/admin/orders/${o.id}`)} className="rounded-full bg-slate-900 px-3 py-1.5 text-[11px] font-bold text-white">Détails</button>
                       </div>
                     </td>
                   </tr>
@@ -528,7 +528,7 @@ export default function AdminOrders() {
                       )}
 
                       <div className="mt-3 flex flex-wrap gap-2">
-                        <button onClick={() => navigate(`/dashboard-admin/orders/${o.id}`)} className="rounded-full bg-slate-100 px-3 py-1 text-[10px] font-bold text-slate-700">Détails</button>
+                        <button onClick={() => navigate(`/admin/orders/${o.id}`)} className="rounded-full bg-slate-100 px-3 py-1 text-[10px] font-bold text-slate-700">Détails</button>
                         <button onClick={() => duplicateOrder(o)} className="rounded-full bg-slate-100 px-3 py-1 text-[10px] font-bold text-slate-700 hover:bg-slate-200">Dupliquer</button>
 
                         {o.status === "pending" && (
@@ -593,4 +593,5 @@ export default function AdminOrders() {
     </div>
   );
 }
+
 

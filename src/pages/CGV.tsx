@@ -184,7 +184,7 @@ export default function CGV() {
                   Les données personnelles collectées sont utilisées uniquement pour la gestion des commandes
                   et la facturation. Conformément au RGPD, le client dispose d'un droit d'accès, de rectification
                   et de suppression de ses données. Pour plus d'informations, consultez notre{" "}
-                  <a href="/politique-confidentialite" className="text-primary hover:underline">Politique de Confidentialité</a>.
+                  <a href="/confidentialite" className="text-primary hover:underline">Politique de Confidentialité</a>.
                 </p>
               </section>
 
@@ -216,3 +216,4 @@ export default function CGV() {
     </PublicLayout>
   );
 }
+

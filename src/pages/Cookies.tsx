@@ -128,7 +128,7 @@ export default function Cookies() {
                       <span className="text-sm">Analyse d'audience et statistiques de visite</span>
                       <br />
                       <a
-                        href="https://policies.google.com/privacy"
+                        href="https://policies.google.com/confidentialite"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-primary hover:underline text-sm"
@@ -145,7 +145,7 @@ export default function Cookies() {
                       <span className="text-sm">Authentification et base de données</span>
                       <br />
                       <a
-                        href="https://supabase.com/privacy"
+                        href="https://supabase.com/confidentialite"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-primary hover:underline text-sm"
@@ -242,3 +242,4 @@ export default function Cookies() {
     </PublicLayout>
   );
 }
+

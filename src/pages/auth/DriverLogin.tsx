@@ -58,7 +58,7 @@ const DriverLogin = () => {
 
             if (role === 'driver') {
                 // Redirection vers le dashboard chauffeur
-                navigate("/dashboard");
+                navigate("/chauffeur/tableau-de-bord");
             } else {
                 // Si ce n'est pas un chauffeur, déconnecter
                 await supabase.auth.signOut();
@@ -215,7 +215,7 @@ const DriverLogin = () => {
                         <p className="text-sm text-muted-foreground">
                             Pas encore de compte ?{" "}
                             <button
-                                onClick={() => navigate("/register")}
+                                onClick={() => navigate("/inscription")}
                                 className="font-bold text-primary hover:text-cta transition-colors"
                             >
                                 Créer un compte chauffeur
@@ -229,3 +229,4 @@ const DriverLogin = () => {
 };
 
 export default DriverLogin;
+

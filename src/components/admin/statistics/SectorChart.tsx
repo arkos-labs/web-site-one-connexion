@@ -22,7 +22,7 @@ export const SectorChart = ({ data }: SectorChartProps) => {
     const handleBarClick = (data: { activePayload?: Array<{ payload: SectorStat }> }) => {
         if (data && data.activePayload && data.activePayload.length > 0) {
             const sectorName = data.activePayload[0].payload.name;
-            navigate(`/dashboard-admin/clients?sector=${encodeURIComponent(sectorName)}`);
+            navigate(`/admin/clients?sector=${encodeURIComponent(sectorName)}`);
         }
     };
 
@@ -70,3 +70,4 @@ export const SectorChart = ({ data }: SectorChartProps) => {
         </Card>
     );
 };
+

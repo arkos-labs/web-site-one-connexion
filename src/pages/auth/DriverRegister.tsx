@@ -88,7 +88,7 @@ const DriverRegister = () => {
 
             // Rediriger vers la page de connexion
             setTimeout(() => {
-                navigate("/login");
+                navigate("/connexion");
             }, 2000);
 
         } catch (error: any) {
@@ -173,7 +173,7 @@ const DriverRegister = () => {
                     {/* Back Button */}
                     <div
                         className="flex items-center cursor-pointer group w-fit"
-                        onClick={() => navigate("/login")}
+                        onClick={() => navigate("/connexion")}
                     >
                         <ArrowLeft className="w-5 h-5 text-primary group-hover:text-cta transition-colors" />
                         <span className="ml-2 text-primary group-hover:text-cta font-medium text-sm transition-colors">
@@ -294,7 +294,7 @@ const DriverRegister = () => {
                         <p className="text-sm text-muted-foreground">
                             Vous avez déjà un compte ?{" "}
                             <button
-                                onClick={() => navigate("/login")}
+                                onClick={() => navigate("/connexion")}
                                 className="font-bold text-primary hover:text-cta transition-colors"
                             >
                                 Se connecter
@@ -308,3 +308,4 @@ const DriverRegister = () => {
 };
 
 export default DriverRegister;
+

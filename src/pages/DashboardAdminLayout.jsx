@@ -7,7 +7,7 @@ export default function DashboardAdminLayout() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const isActive = (path) => {
-    if (path === "/dashboard-admin") return pathname === path;
+    if (path === "/admin") return pathname === path;
     return pathname.startsWith(path);
   };
   const [activeCount, setActiveCount] = useState(0);
@@ -111,7 +111,7 @@ export default function DashboardAdminLayout() {
       <aside className="hidden w-72 flex-col justify-between bg-white px-6 py-8 shadow-xl shadow-slate-200/50 lg:flex rounded-r-[2rem] z-20">
         <div>
           {/* Logo */}
-          <Link to="/dashboard-admin" className="mb-12 flex items-center gap-3 px-2">
+          <Link to="/admin" className="mb-12 flex items-center gap-3 px-2">
             <div className="grid h-10 w-10 place-items-center rounded-xl bg-orange-500 text-white font-bold shadow-lg shadow-orange-500/20">OC</div>
             <span className="text-xl font-bold tracking-tight">One Connexion</span>
           </Link>
@@ -119,25 +119,25 @@ export default function DashboardAdminLayout() {
           {/* Navigation */}
           <nav className="space-y-2">
             <div className="mb-4 px-4 text-xs font-bold uppercase tracking-wider text-slate-400">Menu Principal</div>
-            <NavItem icon={LayoutDashboard} label="Tableau de bord" to="/dashboard-admin" active={isActive("/dashboard-admin")} />
+            <NavItem icon={LayoutDashboard} label="Tableau de bord" to="/admin" active={isActive("/admin")} />
             <NavItem
               icon={Truck}
               label="Commandes"
               badge={activeCount > 0 ? activeCount : null}
-              to="/dashboard-admin/orders"
-              active={isActive("/dashboard-admin/orders")}
+              to="/admin/orders"
+              active={isActive("/admin/orders")}
             />
-            <NavItem icon={Users} label="Chauffeurs" to="/dashboard-admin/drivers" active={isActive("/dashboard-admin/drivers")} />
-            <NavItem icon={FileText} label="Factures" to="/dashboard-admin/invoices" active={isActive("/dashboard-admin/invoices")} />
-            <NavItem icon={Users} label="Clients" to="/dashboard-admin/clients" active={isActive("/dashboard-admin/clients")} />
+            <NavItem icon={Users} label="Chauffeurs" to="/admin/drivers" active={isActive("/admin/drivers")} />
+            <NavItem icon={FileText} label="Factures" to="/admin/invoices" active={isActive("/admin/invoices")} />
+            <NavItem icon={Users} label="Clients" to="/admin/clients" active={isActive("/admin/clients")} />
 
             <div className="mb-4 mt-8 px-4 text-xs font-bold uppercase tracking-wider text-slate-400">Support</div>
-            <NavItem icon={MessageSquare} label="Tchat" to="/dashboard-admin/chat" active={isActive("/dashboard-admin/chat")} />
+            <NavItem icon={MessageSquare} label="Tchat" to="/admin/chat" active={isActive("/admin/chat")} />
           </nav>
         </div>
 
         {/* Logout */}
-        <Link to="/login" className="group flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-slate-500 transition-all hover:bg-slate-50 hover:text-red-500">
+        <Link to="/connexion" className="group flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-slate-500 transition-all hover:bg-slate-50 hover:text-red-500">
           <LogOut size={20} className="transition-transform group-hover:-translate-x-1" />
           <span>Déconnexion</span>
         </Link>
@@ -208,7 +208,7 @@ export default function DashboardAdminLayout() {
                   </button>
                   <button
                     onClick={() => {
-                      navigate(`/dashboard-admin/orders/${newOrderPopup.id}`);
+                      navigate(`/admin/orders/${newOrderPopup.id}`);
                       setNewOrderPopup(null);
                     }}
                     className="flex-[2] flex gap-2 items-center justify-center rounded-2xl bg-slate-900 py-4 text-sm font-bold text-white shadow-xl shadow-slate-900/20 transition-all hover:bg-slate-800 hover:-translate-y-1 active:scale-95"
@@ -243,3 +243,4 @@ function NavItem({ icon: Icon, label, active, badge, to }) {
     </Link>
   );
 }
+

@@ -59,7 +59,7 @@ const OrderDetail = () => {
         } catch (error) {
             console.error("Erreur lors du chargement de la commande:", error);
             toast.error("Impossible de charger la commande");
-            navigate("/client/orders");
+            navigate("/client/commandes");
         } finally {
             setLoading(false);
         }
@@ -249,7 +249,7 @@ const OrderDetail = () => {
             <div className="flex items-center gap-4">
                 <Button
                     variant="ghost"
-                    onClick={() => navigate("/client/orders")}
+                    onClick={() => navigate("/client/commandes")}
                     className="hover:bg-muted"
                 >
                     <ArrowLeft className="h-5 w-5 mr-2" />
@@ -593,3 +593,4 @@ const OrderDetail = () => {
 };
 
 export default OrderDetail;
+
