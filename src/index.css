@@ -1,0 +1,129 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  @apply bg-white text-slate-900 antialiased;
+  caret-color: transparent;
+}
+
+input,
+textarea,
+[contenteditable] {
+  caret-color: auto;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stagger>* {
+  opacity: 0;
+  animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.stagger>*:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.stagger>*:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.stagger>*:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.stagger>*:nth-child(4) {
+  animation-delay: 0.4s;
+}
+
+.stagger>*:nth-child(5) {
+  animation-delay: 0.5s;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.blog-page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 64px 24px;
+  color: #0f172a;
+}
+
+.blog-page h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.blog-page h2 {
+  margin-top: 2rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.blog-page p {
+  margin-top: 1rem;
+  color: #475569;
+  line-height: 1.8;
+}
+
+.blog-page ul {
+  margin-top: 1rem;
+  padding-left: 1.5rem;
+  color: #475569;
+}
+
+.blog-page li {
+  margin-top: 0.5rem;
+}
+
+.seo-links {
+  position: fixed;
+  bottom: 8px;
+  left: 8px;
+  display: flex;
+  gap: 10px;
+  font-size: 12px;
+  opacity: 0.5;
+  z-index: 1;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.animate-slideUp {
+  animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
