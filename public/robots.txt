@@ -1,3 +1,4 @@
 User-agent: *
 Allow: /
-Sitemap: http://localhost:5176/sitemap.xml
+
+Sitemap: https://web-site-one-connexion.vercel.app/sitemap.xml
