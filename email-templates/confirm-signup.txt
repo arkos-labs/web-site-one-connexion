@@ -1,0 +1,44 @@
+═══════════════════════════════════════════════════════════
+  ONE CONNEXION - Bienvenue !
+═══════════════════════════════════════════════════════════
+
+Bonjour,
+
+Merci de vous être inscrit sur One Connexion, votre plateforme 
+de livraison express professionnelle.
+
+Pour finaliser votre inscription et accéder à votre espace, 
+veuillez confirmer votre adresse email.
+
+───────────────────────────────────────────────────────────
+
+CONFIRMER MON EMAIL :
+{{ .ConfirmationURL }}
+
+───────────────────────────────────────────────────────────
+
+OU UTILISEZ CE CODE DE VÉRIFICATION :
+
+    {{ .Token }}
+
+───────────────────────────────────────────────────────────
+
+⚠️ IMPORTANT :
+Ce lien et ce code sont valables pendant 24 heures.
+Si vous n'avez pas demandé cette inscription, vous pouvez 
+ignorer cet email en toute sécurité.
+
+───────────────────────────────────────────────────────────
+
+One Connexion - Livraison Express Professionnelle
+📍 Paris, France
+📧 contact@oneconnexion.fr
+📞 +33 1 XX XX XX XX
+
+CGU : https://oneconnexion.fr/legal/cgu
+Confidentialité : https://oneconnexion.fr/legal/privacy
+Contact : https://oneconnexion.fr/contact
+
+© 2025 One Connexion. Tous droits réservés.
+
+═══════════════════════════════════════════════════════════

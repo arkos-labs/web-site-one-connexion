@@ -1,0 +1,2477 @@
+export const TARIFS_BONS: TarifVille[] = [
+  {
+    "cp": "75001",
+    "ville": "Paris 1er",
+    "formules": {
+      "NORMAL": 2,
+      "EXPRESS": 4,
+      "URGENCE": 7,
+      "VL_NORMAL": 1,
+      "VL_EXPRESS": 3
+    }
+  },
+  {
+    "cp": "75002",
+    "ville": "Paris 2e",
+    "formules": {
+      "NORMAL": 2,
+      "EXPRESS": 4,
+      "URGENCE": 7,
+      "VL_NORMAL": 1,
+      "VL_EXPRESS": 3
+    }
+  },
+  {
+    "cp": "75003",
+    "ville": "Paris 3e",
+    "formules": {
+      "NORMAL": 2,
+      "EXPRESS": 4,
+      "URGENCE": 7,
+      "VL_NORMAL": 1,
+      "VL_EXPRESS": 3
+    }
+  },
+  {
+    "cp": "75004",
+    "ville": "Paris 4e",
+    "formules": {
+      "NORMAL": 2,
+      "EXPRESS": 4,
+      "URGENCE": 7,
+      "VL_NORMAL": 1,
+      "VL_EXPRESS": 3
+    }
+  },
+  {
+    "cp": "75005",
+    "ville": "Paris 5e",
+    "formules": {
+      "NORMAL": 2,
+      "EXPRESS": 4,
+      "URGENCE": 7,
+      "VL_NORMAL": 1,
+      "VL_EXPRESS": 3
+    }
+  },
+  {
+    "cp": "75006",
+    "ville": "Paris 6e",
+    "formules": {
+      "NORMAL": 2,
+      "EXPRESS": 4,
+      "URGENCE": 7,
+      "VL_NORMAL": 1,
+      "VL_EXPRESS": 3
+    }
+  },
+  {
+    "cp": "75007",
+    "ville": "Paris 7e",
+    "formules": {
+      "NORMAL": 2,
+      "EXPRESS": 4,
+      "URGENCE": 7,
+      "VL_NORMAL": 1,
+      "VL_EXPRESS": 3
+    }
+  },
+  {
+    "cp": "75008",
+    "ville": "Paris 8e",
+    "formules": {
+      "NORMAL": 2,
+      "EXPRESS": 4,
+      "URGENCE": 7,
+      "VL_NORMAL": 1,
+      "VL_EXPRESS": 3
+    }
+  },
+  {
+    "cp": "75009",
+    "ville": "Paris 9e",
+    "formules": {
+      "NORMAL": 2,
+      "EXPRESS": 4,
+      "URGENCE": 7,
+      "VL_NORMAL": 1,
+      "VL_EXPRESS": 3
+    }
+  },
+  {
+    "cp": "75010",
+    "ville": "Paris 10e",
+    "formules": {
+      "NORMAL": 3,
+      "EXPRESS": 5,
+      "URGENCE": 8,
+      "VL_NORMAL": 2,
+      "VL_EXPRESS": 4
+    }
+  },
+  {
+    "cp": "75011",
+    "ville": "Paris 11e",
+    "formules": {
+      "NORMAL": 3,
+      "EXPRESS": 5,
+      "URGENCE": 8,
+      "VL_NORMAL": 2,
+      "VL_EXPRESS": 4
+    }
+  },
+  {
+    "cp": "75012",
+    "ville": "Paris 12e",
+    "formules": {
+      "NORMAL": 3,
+      "EXPRESS": 5,
+      "URGENCE": 8,
+      "VL_NORMAL": 2,
+      "VL_EXPRESS": 4
+    }
+  },
+  {
+    "cp": "75013",
+    "ville": "Paris 13e",
+    "formules": {
+      "NORMAL": 3,
+      "EXPRESS": 5,
+      "URGENCE": 8,
+      "VL_NORMAL": 2,
+      "VL_EXPRESS": 4
+    }
+  },
+  {
+    "cp": "75014",
+    "ville": "Paris 14e",
+    "formules": {
+      "NORMAL": 3,
+      "EXPRESS": 5,
+      "URGENCE": 8,
+      "VL_NORMAL": 2,
+      "VL_EXPRESS": 4
+    }
+  },
+  {
+    "cp": "75015",
+    "ville": "Paris 15e",
+    "formules": {
+      "NORMAL": 3,
+      "EXPRESS": 5,
+      "URGENCE": 8,
+      "VL_NORMAL": 2,
+      "VL_EXPRESS": 4
+    }
+  },
+  {
+    "cp": "75016",
+    "ville": "Paris 16e",
+    "formules": {
+      "NORMAL": 3,
+      "EXPRESS": 5,
+      "URGENCE": 8,
+      "VL_NORMAL": 2,
+      "VL_EXPRESS": 4
+    }
+  },
+  {
+    "cp": "75017",
+    "ville": "Paris 17e",
+    "formules": {
+      "NORMAL": 3,
+      "EXPRESS": 5,
+      "URGENCE": 8,
+      "VL_NORMAL": 2,
+      "VL_EXPRESS": 4
+    }
+  },
+  {
+    "cp": "75018",
+    "ville": "Paris 18e",
+    "formules": {
+      "NORMAL": 3,
+      "EXPRESS": 5,
+      "URGENCE": 8,
+      "VL_NORMAL": 2,
+      "VL_EXPRESS": 4
+    }
+  },
+  {
+    "cp": "75019",
+    "ville": "Paris 19e",
+    "formules": {
+      "NORMAL": 3,
+      "EXPRESS": 5,
+      "URGENCE": 8,
+      "VL_NORMAL": 2,
+      "VL_EXPRESS": 4
+    }
+  },
+  {
+    "cp": "75020",
+    "ville": "Paris 20e",
+    "formules": {
+      "NORMAL": 3,
+      "EXPRESS": 5,
+      "URGENCE": 8,
+      "VL_NORMAL": 2,
+      "VL_EXPRESS": 4
+    }
+  },
+  {
+    "cp": "92160",
+    "ville": "Antony",
+    "formules": {
+      "NORMAL": 8,
+      "EXPRESS": 12,
+      "URGENCE": 16,
+      "VL_NORMAL": 6,
+      "VL_EXPRESS": 10
+    }
+  },
+  {
+    "cp": "92600",
+    "ville": "Asnières-sur-Seine",
+    "formules": {
+      "NORMAL": 4,
+      "EXPRESS": 7,
+      "URGENCE": 10,
+      "VL_NORMAL": 3,
+      "VL_EXPRESS": 6
+    }
+  },
+  {
+    "cp": "92220",
+    "ville": "Bagneux",
+    "formules": {
+      "NORMAL": 4,
+      "EXPRESS": 7,
+      "URGENCE": 10,
+      "VL_NORMAL": 3,
+      "VL_EXPRESS": 6
+    }
+  },
+  {
+    "cp": "92270",
+    "ville": "Bois-Colombes",
+    "formules": {
+      "NORMAL": 4,
+      "EXPRESS": 7,
+      "URGENCE": 10,
+      "VL_NORMAL": 3,
+      "VL_EXPRESS": 6
+    }
+  },
+  {
+    "cp": "92100",
+    "ville": "Boulogne-Billancourt",
+    "formules": {
+      "NORMAL": 3,
+      "EXPRESS": 6,
+      "URGENCE": 9,
+      "VL_NORMAL": 2,
+      "VL_EXPRESS": 5
+    }
+  },
+  {
+    "cp": "92340",
+    "ville": "Bourg-la-Reine",
+    "formules": {
+      "NORMAL": 8,
+      "EXPRESS": 12,
+      "URGENCE": 16,
+      "VL_NORMAL": 6,
+      "VL_EXPRESS": 10
+    }
+  },
+  {
+    "cp": "92290",
+    "ville": "Châtenay-Malabry",
+    "formules": {
+      "NORMAL": 8,
+      "EXPRESS": 12,
+      "URGENCE": 16,
+      "VL_NORMAL": 6,
+      "VL_EXPRESS": 10
+    }
+  },
+  {
+    "cp": "92320",
+    "ville": "Châtillon",
+    "formules": {
+      "NORMAL": 4,
+      "EXPRESS": 7,
+      "URGENCE": 10,
+      "VL_NORMAL": 3,
+      "VL_EXPRESS": 6
+    }
+  },
+  {
+    "cp": "92370",
+    "ville": "Chaville",
+    "formules": {
+      "NORMAL": 7,
+      "EXPRESS": 11,
+      "URGENCE": 15,
+      "VL_NORMAL": 5,
+      "VL_EXPRESS": 9
+    }
+  },
+  {
+    "cp": "92140",
+    "ville": "Clamart",
+    "formules": {
+      "NORMAL": 4,
+      "EXPRESS": 7,
+      "URGENCE": 10,
+      "VL_NORMAL": 3,
+      "VL_EXPRESS": 6
+    }
+  },
+  {
+    "cp": "92110",
+    "ville": "Clichy",
+    "formules": {
+      "NORMAL": 3,
+      "EXPRESS": 6,
+      "URGENCE": 9,
+      "VL_NORMAL": 2,
+      "VL_EXPRESS": 5
+    }
+  },
+  {
+    "cp": "92700",
+    "ville": "Colombes",
+    "formules": {
+      "NORMAL": 4,
+      "EXPRESS": 7,
+      "URGENCE": 10,
+      "VL_NORMAL": 3,
+      "VL_EXPRESS": 6
+    }
+  },
+  {
+    "cp": "92400",
+    "ville": "Courbevoie",
+    "formules": {
+      "NORMAL": 3,
+      "EXPRESS": 6,
+      "URGENCE": 9,
+      "VL_NORMAL": 2,
+      "VL_EXPRESS": 5
+    }
+  },
+  {
+    "cp": "92260",
+    "ville": "Fontenay-aux-Roses",
+    "formules": {
+      "NORMAL": 4,
+      "EXPRESS": 7,
+      "URGENCE": 10,
+      "VL_NORMAL": 3,
+      "VL_EXPRESS": 6
+    }
+  },
+  {
+    "cp": "92380",
+    "ville": "Garches",
+    "formules": {
+      "NORMAL": 4,
+      "EXPRESS": 7,
+      "URGENCE": 10,
+      "VL_NORMAL": 3,
+      "VL_EXPRESS": 6
+    }
+  },
+  {
+    "cp": "92250",
+    "ville": "La Garenne-Colombes",
+    "formules": {
+      "NORMAL": 4,
+      "EXPRESS": 7,
+      "URGENCE": 10,
+      "VL_NORMAL": 3,
+      "VL_EXPRESS": 6
+    }
+  },
+  {
+    "cp": "92230",
+    "ville": "Gennevilliers",
+    "formules": {
+      "NORMAL": 4,
+      "EXPRESS": 7,
+      "URGENCE": 10,
+      "VL_NORMAL": 3,
+      "VL_EXPRESS": 6
+    }
+  },
+  {
+    "cp": "92130",
+    "ville": "Issy-les-Moulineaux",
+    "formules": {
+      "NORMAL": 3,
+      "EXPRESS": 6,
+      "URGENCE": 9,
+      "VL_NORMAL": 2,
+      "VL_EXPRESS": 5
+    }
+  },
+  {
+    "cp": "92300",
+    "ville": "Levallois-Perret",
+    "formules": {
+      "NORMAL": 3,
+      "EXPRESS": 6,
+      "URGENCE": 9,
+      "VL_NORMAL": 2,
+      "VL_EXPRESS": 5
+    }
+  },
+  {
+    "cp": "92240",
+    "ville": "Malakoff",
+    "formules": {
+      "NORMAL": 3,
+      "EXPRESS": 6,
+      "URGENCE": 9,
+      "VL_NORMAL": 2,
+      "VL_EXPRESS": 5
+    }
+  },
+  {
+    "cp": "92430",
+    "ville": "Marnes-la-Coquette",
+    "formules": {
+      "NORMAL": 7,
+      "EXPRESS": 11,
+      "URGENCE": 15,
+      "VL_NORMAL": 5,
+      "VL_EXPRESS": 9
+    }
+  },
+  {
+    "cp": "92190",
+    "ville": "Meudon",
+    "formules": {
+      "NORMAL": 4,
+      "EXPRESS": 7,
+      "URGENCE": 10,
+      "VL_NORMAL": 3,
+      "VL_EXPRESS": 6
+    }
+  },
+  {
+    "cp": "92120",
+    "ville": "Montrouge",
+    "formules": {
+      "NORMAL": 3,
+      "EXPRESS": 6,
+      "URGENCE": 9,
+      "VL_NORMAL": 2,
+      "VL_EXPRESS": 5
+    }
+  },
+  {
+    "cp": "92000",
+    "ville": "Nanterre",
+    "formules": {
+      "NORMAL": 4,
+      "EXPRESS": 7,
+      "URGENCE": 10,
+      "VL_NORMAL": 3,
+      "VL_EXPRESS": 6
+    }
+  },
+  {
+    "cp": "92200",
+    "ville": "Neuilly-sur-Seine",
+    "formules": {
+      "NORMAL": 3,
+      "EXPRESS": 6,
+      "URGENCE": 9,
+      "VL_NORMAL": 2,
+      "VL_EXPRESS": 5
+    }
+  },
+  {
+    "cp": "92350",
+    "ville": "Le Plessis-Robinson",
+    "formules": {
+      "NORMAL": 8,
+      "EXPRESS": 12,
+      "URGENCE": 16,
+      "VL_NORMAL": 6,
+      "VL_EXPRESS": 10
+    }
+  },
+  {
+    "cp": "92800",
+    "ville": "Puteaux",
+    "formules": {
+      "NORMAL": 3,
+      "EXPRESS": 6,
+      "URGENCE": 9,
+      "VL_NORMAL": 2,
+      "VL_EXPRESS": 5
+    }
+  },
+  {
+    "cp": "92500",
+    "ville": "Rueil-Malmaison",
+    "formules": {
+      "NORMAL": 5,
+      "EXPRESS": 8,
+      "URGENCE": 12,
+      "VL_NORMAL": 4,
+      "VL_EXPRESS": 6
+    }
+  },
+  {
+    "cp": "92210",
+    "ville": "Saint-Cloud",
+    "formules": {
+      "NORMAL": 4,
+      "EXPRESS": 7,
+      "URGENCE": 10,
+      "VL_NORMAL": 3,
+      "VL_EXPRESS": 6
+    }
+  },
+  {
+    "cp": "92330",
+    "ville": "Sceaux",
+    "formules": {
+      "NORMAL": 8,
+      "EXPRESS": 12,
+      "URGENCE": 16,
+      "VL_NORMAL": 6,
+      "VL_EXPRESS": 10
+    }
+  },
+  {
+    "cp": "92310",
+    "ville": "Sèvres",
+    "formules": {
+      "NORMAL": 4,
+      "EXPRESS": 7,
+      "URGENCE": 10,
+      "VL_NORMAL": 3,
+      "VL_EXPRESS": 6
+    }
+  },
+  {
+    "cp": "92150",
+    "ville": "Suresnes",
+    "formules": {
+      "NORMAL": 3,
+      "EXPRESS": 6,
+      "URGENCE": 9,
+      "VL_NORMAL": 2,
+      "VL_EXPRESS": 5
+    }
+  },
+  {
+    "cp": "92170",
+    "ville": "Vanves",
+    "formules": {
+      "NORMAL": 3,
+      "EXPRESS": 6,
+      "URGENCE": 9,
+      "VL_NORMAL": 2,
+      "VL_EXPRESS": 5
+    }
+  },
+  {
+    "cp": "92420",
+    "ville": "Vaucresson",
+    "formules": {
+      "NORMAL": 7,
+      "EXPRESS": 11,
+      "URGENCE": 15,
+      "VL_NORMAL": 5,
+      "VL_EXPRESS": 9
+    }
+  },
+  {
+    "cp": "92410",
+    "ville": "Ville-d'Avray",
+    "formules": {
+      "NORMAL": 7,
+      "EXPRESS": 11,
+      "URGENCE": 15,
+      "VL_NORMAL": 5,
+      "VL_EXPRESS": 9
+    }
+  },
+  {
+    "cp": "92390",
+    "ville": "Villeneuve-la-Garenne",
+    "formules": {
+      "NORMAL": 6,
+      "EXPRESS": 10,
+      "URGENCE": 14,
+      "VL_NORMAL": 4,
+      "VL_EXPRESS": 8
+    }
+  },
+  {
+    "cp": "93300",
+    "ville": "Aubervilliers",
+    "formules": {
+      "NORMAL": 4,
+      "EXPRESS": 7,
+      "URGENCE": 10,
+      "VL_NORMAL": 3,
+      "VL_EXPRESS": 6
+    }
+  },
+  {
+    "cp": "93600",
+    "ville": "Aulnay-sous-Bois",
+    "formules": {
+      "NORMAL": 9,
+      "EXPRESS": 14,
+      "URGENCE": 18,
+      "VL_NORMAL": 6,
+      "VL_EXPRESS": 11
+    }
+  },
+  {
+    "cp": "93170",
+    "ville": "Bagnolet",
+    "formules": {
+      "NORMAL": 4,
+      "EXPRESS": 7,
+      "URGENCE": 10,
+      "VL_NORMAL": 3,
+      "VL_EXPRESS": 6
+    }
+  },
+  {
+    "cp": "93150",
+    "ville": "Le Blanc-Mesnil",
+    "formules": {
+      "NORMAL": 8,
+      "EXPRESS": 12,
+      "URGENCE": 16,
+      "VL_NORMAL": 6,
+      "VL_EXPRESS": 10
+    }
+  },
+  {
+    "cp": "93000",
+    "ville": "Bobigny",
+    "formules": {
+      "NORMAL": 6,
+      "EXPRESS": 10,
+      "URGENCE": 14,
+      "VL_NORMAL": 4,
+      "VL_EXPRESS": 8
+    }
+  },
+  {
+    "cp": "93140",
+    "ville": "Bondy",
+    "formules": {
+      "NORMAL": 8,
+      "EXPRESS": 12,
+      "URGENCE": 16,
+      "VL_NORMAL": 6,
+      "VL_EXPRESS": 10
+    }
+  },
+  {
+    "cp": "93350",
+    "ville": "Le Bourget",
+    "formules": {
+      "NORMAL": 8,
+      "EXPRESS": 12,
+      "URGENCE": 16,
+      "VL_NORMAL": 6,
+      "VL_EXPRESS": 10
+    }
+  },
+  {
+    "cp": "93390",
+    "ville": "Clichy-sous-Bois",
+    "formules": {
+      "NORMAL": 14,
+      "EXPRESS": 19,
+      "URGENCE": 24,
+      "VL_NORMAL": 10,
+      "VL_EXPRESS": 15
+    }
+  },
+  {
+    "cp": "93470",
+    "ville": "Coubron",
+    "formules": {
+      "NORMAL": 14,
+      "EXPRESS": 19,
+      "URGENCE": 24,
+      "VL_NORMAL": 10,
+      "VL_EXPRESS": 15
+    }
+  },
+  {
+    "cp": "93120",
+    "ville": "La Courneuve",
+    "formules": {
+      "NORMAL": 6,
+      "EXPRESS": 10,
+      "URGENCE": 14,
+      "VL_NORMAL": 4,
+      "VL_EXPRESS": 8
+    }
+  },
+  {
+    "cp": "93700",
+    "ville": "Drancy",
+    "formules": {
+      "NORMAL": 8,
+      "EXPRESS": 12,
+      "URGENCE": 16,
+      "VL_NORMAL": 6,
+      "VL_EXPRESS": 10
+    }
+  },
+  {
+    "cp": "93440",
+    "ville": "Dugny",
+    "formules": {
+      "NORMAL": 8,
+      "EXPRESS": 12,
+      "URGENCE": 16,
+      "VL_NORMAL": 6,
+      "VL_EXPRESS": 10
+    }
+  },
+  {
+    "cp": "93800",
+    "ville": "Epinay-sur-Seine",
+    "formules": {
+      "NORMAL": 6,
+      "EXPRESS": 10,
+      "URGENCE": 14,
+      "VL_NORMAL": 4,
+      "VL_EXPRESS": 8
+    }
+  },
+  {
+    "cp": "93220",
+    "ville": "Gagny",
+    "formules": {
+      "NORMAL": 12,
+      "EXPRESS": 17,
+      "URGENCE": 22,
+      "VL_NORMAL": 8,
+      "VL_EXPRESS": 14
+    }
+  },
+  {
+    "cp": "93460",
+    "ville": "Gournay-sur-Marne",
+    "formules": {
+      "NORMAL": 14,
+      "EXPRESS": 19,
+      "URGENCE": 24,
+      "VL_NORMAL": 10,
+      "VL_EXPRESS": 15
+    }
+  },
+  {
+    "cp": "93450",
+    "ville": "L'Île-Saint-Denis",
+    "formules": {
+      "NORMAL": 6,
+      "EXPRESS": 10,
+      "URGENCE": 14,
+      "VL_NORMAL": 4,
+      "VL_EXPRESS": 8
+    }
+  },
+  {
+    "cp": "93260",
+    "ville": "Les Lilas",
+    "formules": {
+      "NORMAL": 4,
+      "EXPRESS": 7,
+      "URGENCE": 10,
+      "VL_NORMAL": 3,
+      "VL_EXPRESS": 6
+    }
+  },
+  {
+    "cp": "93190",
+    "ville": "Livry-Gargan",
+    "formules": {
+      "NORMAL": 14,
+      "EXPRESS": 19,
+      "URGENCE": 24,
+      "VL_NORMAL": 10,
+      "VL_EXPRESS": 15
+    }
+  },
+  {
+    "cp": "93370",
+    "ville": "Montfermeil",
+    "formules": {
+      "NORMAL": 14,
+      "EXPRESS": 19,
+      "URGENCE": 24,
+      "VL_NORMAL": 10,
+      "VL_EXPRESS": 15
+    }
+  },
+  {
+    "cp": "93100",
+    "ville": "Montreuil",
+    "formules": {
+      "NORMAL": 4,
+      "EXPRESS": 7,
+      "URGENCE": 10,
+      "VL_NORMAL": 3,
+      "VL_EXPRESS": 6
+    }
+  },
+  {
+    "cp": "93360",
+    "ville": "Neuilly-Plaisance",
+    "formules": {
+      "NORMAL": 12,
+      "EXPRESS": 17,
+      "URGENCE": 22,
+      "VL_NORMAL": 8,
+      "VL_EXPRESS": 14
+    }
+  },
+  {
+    "cp": "93330",
+    "ville": "Neuilly-sur-Marne",
+    "formules": {
+      "NORMAL": 12,
+      "EXPRESS": 17,
+      "URGENCE": 22,
+      "VL_NORMAL": 8,
+      "VL_EXPRESS": 14
+    }
+  },
+  {
+    "cp": "93160",
+    "ville": "Noisy-le-Grand",
+    "formules": {
+      "NORMAL": 12,
+      "EXPRESS": 17,
+      "URGENCE": 22,
+      "VL_NORMAL": 8,
+      "VL_EXPRESS": 14
+    }
+  },
+  {
+    "cp": "93130",
+    "ville": "Noisy-le-Sec",
+    "formules": {
+      "NORMAL": 6,
+      "EXPRESS": 10,
+      "URGENCE": 14,
+      "VL_NORMAL": 4,
+      "VL_EXPRESS": 8
+    }
+  },
+  {
+    "cp": "93500",
+    "ville": "Pantin",
+    "formules": {
+      "NORMAL": 4,
+      "EXPRESS": 7,
+      "URGENCE": 10,
+      "VL_NORMAL": 3,
+      "VL_EXPRESS": 6
+    }
+  },
+  {
+    "cp": "93320",
+    "ville": "Les Pavillons-sous-Bois",
+    "formules": {
+      "NORMAL": 12,
+      "EXPRESS": 17,
+      "URGENCE": 22,
+      "VL_NORMAL": 8,
+      "VL_EXPRESS": 14
+    }
+  },
+  {
+    "cp": "93380",
+    "ville": "Pierrefitte-sur-Seine",
+    "formules": {
+      "NORMAL": 8,
+      "EXPRESS": 12,
+      "URGENCE": 16,
+      "VL_NORMAL": 6,
+      "VL_EXPRESS": 10
+    }
+  },
+  {
+    "cp": "93310",
+    "ville": "Le Pré-Saint-Gervais",
+    "formules": {
+      "NORMAL": 4,
+      "EXPRESS": 7,
+      "URGENCE": 10,
+      "VL_NORMAL": 3,
+      "VL_EXPRESS": 6
+    }
+  },
+  {
+    "cp": "93340",
+    "ville": "Le Raincy",
+    "formules": {
+      "NORMAL": 12,
+      "EXPRESS": 17,
+      "URGENCE": 22,
+      "VL_NORMAL": 8,
+      "VL_EXPRESS": 14
+    }
+  },
+  {
+    "cp": "93230",
+    "ville": "Romainville",
+    "formules": {
+      "NORMAL": 6,
+      "EXPRESS": 10,
+      "URGENCE": 14,
+      "VL_NORMAL": 4,
+      "VL_EXPRESS": 8
+    }
+  },
+  {
+    "cp": "93110",
+    "ville": "Rosny-sous-Bois",
+    "formules": {
+      "NORMAL": 6,
+      "EXPRESS": 10,
+      "URGENCE": 14,
+      "VL_NORMAL": 4,
+      "VL_EXPRESS": 8
+    }
+  },
+  {
+    "cp": "93200",
+    "ville": "Saint-Denis",
+    "formules": {
+      "NORMAL": 6,
+      "EXPRESS": 10,
+      "URGENCE": 14,
+      "VL_NORMAL": 4,
+      "VL_EXPRESS": 8
+    }
+  },
+  {
+    "cp": "93210",
+    "ville": "Saint-Denis (La Plaine)",
+    "formules": {
+      "NORMAL": 4,
+      "EXPRESS": 7,
+      "URGENCE": 10,
+      "VL_NORMAL": 3,
+      "VL_EXPRESS": 6
+    }
+  },
+  {
+    "cp": "93400",
+    "ville": "Saint-Ouen",
+    "formules": {
+      "NORMAL": 4,
+      "EXPRESS": 7,
+      "URGENCE": 10,
+      "VL_NORMAL": 3,
+      "VL_EXPRESS": 6
+    }
+  },
+  {
+    "cp": "93270",
+    "ville": "Sevran",
+    "formules": {
+      "NORMAL": 14,
+      "EXPRESS": 19,
+      "URGENCE": 24,
+      "VL_NORMAL": 10,
+      "VL_EXPRESS": 15
+    }
+  },
+  {
+    "cp": "93240",
+    "ville": "Stains",
+    "formules": {
+      "NORMAL": 8,
+      "EXPRESS": 12,
+      "URGENCE": 16,
+      "VL_NORMAL": 6,
+      "VL_EXPRESS": 10
+    }
+  },
+  {
+    "cp": "93290",
+    "ville": "Tremblay-en-France",
+    "formules": {
+      "NORMAL": 14,
+      "EXPRESS": 19,
+      "URGENCE": 24,
+      "VL_NORMAL": 10,
+      "VL_EXPRESS": 15
+    }
+  },
+  {
+    "cp": "93410",
+    "ville": "Vaujours",
+    "formules": {
+      "NORMAL": 14,
+      "EXPRESS": 19,
+      "URGENCE": 24,
+      "VL_NORMAL": 10,
+      "VL_EXPRESS": 15
+    }
+  },
+  {
+    "cp": "93250",
+    "ville": "Villemomble",
+    "formules": {
+      "NORMAL": 8,
+      "EXPRESS": 12,
+      "URGENCE": 16,
+      "VL_NORMAL": 6,
+      "VL_EXPRESS": 10
+    }
+  },
+  {
+    "cp": "93420",
+    "ville": "Villepinte",
+    "formules": {
+      "NORMAL": 14,
+      "EXPRESS": 19,
+      "URGENCE": 24,
+      "VL_NORMAL": 10,
+      "VL_EXPRESS": 15
+    }
+  },
+  {
+    "cp": "93430",
+    "ville": "Villetaneuse",
+    "formules": {
+      "NORMAL": 8,
+      "EXPRESS": 12,
+      "URGENCE": 16,
+      "VL_NORMAL": 6,
+      "VL_EXPRESS": 10
+    }
+  },
+  {
+    "cp": "94480",
+    "ville": "Ablon-sur-Seine",
+    "formules": {
+      "NORMAL": 9,
+      "EXPRESS": 14,
+      "URGENCE": 18,
+      "VL_NORMAL": 6,
+      "VL_EXPRESS": 11
+    }
+  },
+  {
+    "cp": "94140",
+    "ville": "Alfortville",
+    "formules": {
+      "NORMAL": 6,
+      "EXPRESS": 10,
+      "URGENCE": 14,
+      "VL_NORMAL": 4,
+      "VL_EXPRESS": 8
+    }
+  },
+  {
+    "cp": "94110",
+    "ville": "Arcueil",
+    "formules": {
+      "NORMAL": 4,
+      "EXPRESS": 7,
+      "URGENCE": 10,
+      "VL_NORMAL": 3,
+      "VL_EXPRESS": 6
+    }
+  },
+  {
+    "cp": "94470",
+    "ville": "Boissy-Saint-Léger",
+    "formules": {
+      "NORMAL": 8,
+      "EXPRESS": 12,
+      "URGENCE": 16,
+      "VL_NORMAL": 6,
+      "VL_EXPRESS": 10
+    }
+  },
+  {
+    "cp": "94380",
+    "ville": "Bonneuil-sur-Marne",
+    "formules": {
+      "NORMAL": 12,
+      "EXPRESS": 17,
+      "URGENCE": 22,
+      "VL_NORMAL": 8,
+      "VL_EXPRESS": 14
+    }
+  },
+  {
+    "cp": "94360",
+    "ville": "Bry-sur-Marne",
+    "formules": {
+      "NORMAL": 8,
+      "EXPRESS": 12,
+      "URGENCE": 16,
+      "VL_NORMAL": 6,
+      "VL_EXPRESS": 10
+    }
+  },
+  {
+    "cp": "94230",
+    "ville": "Cachan",
+    "formules": {
+      "NORMAL": 4,
+      "EXPRESS": 7,
+      "URGENCE": 10,
+      "VL_NORMAL": 3,
+      "VL_EXPRESS": 6
+    }
+  },
+  {
+    "cp": "94500",
+    "ville": "Champigny-sur-Marne",
+    "formules": {
+      "NORMAL": 8,
+      "EXPRESS": 12,
+      "URGENCE": 16,
+      "VL_NORMAL": 6,
+      "VL_EXPRESS": 10
+    }
+  },
+  {
+    "cp": "94220",
+    "ville": "Charenton-le-Pont",
+    "formules": {
+      "NORMAL": 4,
+      "EXPRESS": 7,
+      "URGENCE": 10,
+      "VL_NORMAL": 3,
+      "VL_EXPRESS": 6
+    }
+  },
+  {
+    "cp": "94430",
+    "ville": "Chennevières-sur-Marne",
+    "formules": {
+      "NORMAL": 12,
+      "EXPRESS": 17,
+      "URGENCE": 22,
+      "VL_NORMAL": 8,
+      "VL_EXPRESS": 14
+    }
+  },
+  {
+    "cp": "94550",
+    "ville": "Chevilly-Larue",
+    "formules": {
+      "NORMAL": 8,
+      "EXPRESS": 12,
+      "URGENCE": 16,
+      "VL_NORMAL": 6,
+      "VL_EXPRESS": 10
+    }
+  },
+  {
+    "cp": "94600",
+    "ville": "Choisy-le-Roi",
+    "formules": {
+      "NORMAL": 8,
+      "EXPRESS": 12,
+      "URGENCE": 16,
+      "VL_NORMAL": 6,
+      "VL_EXPRESS": 10
+    }
+  },
+  {
+    "cp": "94000",
+    "ville": "Créteil",
+    "formules": {
+      "NORMAL": 8,
+      "EXPRESS": 12,
+      "URGENCE": 16,
+      "VL_NORMAL": 6,
+      "VL_EXPRESS": 10
+    }
+  },
+  {
+    "cp": "94120",
+    "ville": "Fontenay-sous-Bois",
+    "formules": {
+      "NORMAL": 6,
+      "EXPRESS": 10,
+      "URGENCE": 14,
+      "VL_NORMAL": 4,
+      "VL_EXPRESS": 8
+    }
+  },
+  {
+    "cp": "94260",
+    "ville": "Fresnes",
+    "formules": {
+      "NORMAL": 8,
+      "EXPRESS": 12,
+      "URGENCE": 16,
+      "VL_NORMAL": 6,
+      "VL_EXPRESS": 10
+    }
+  },
+  {
+    "cp": "94250",
+    "ville": "Gentilly",
+    "formules": {
+      "NORMAL": 4,
+      "EXPRESS": 7,
+      "URGENCE": 10,
+      "VL_NORMAL": 3,
+      "VL_EXPRESS": 6
+    }
+  },
+  {
+    "cp": "94240",
+    "ville": "L'Haÿ-les-Roses",
+    "formules": {
+      "NORMAL": 6,
+      "EXPRESS": 10,
+      "URGENCE": 14,
+      "VL_NORMAL": 4,
+      "VL_EXPRESS": 8
+    }
+  },
+  {
+    "cp": "94200",
+    "ville": "Ivry-sur-Seine",
+    "formules": {
+      "NORMAL": 4,
+      "EXPRESS": 7,
+      "URGENCE": 10,
+      "VL_NORMAL": 3,
+      "VL_EXPRESS": 6
+    }
+  },
+  {
+    "cp": "94340",
+    "ville": "Joinville-le-Pont",
+    "formules": {
+      "NORMAL": 6,
+      "EXPRESS": 10,
+      "URGENCE": 14,
+      "VL_NORMAL": 4,
+      "VL_EXPRESS": 8
+    }
+  },
+  {
+    "cp": "94270",
+    "ville": "Le Kremlin-Bicêtre",
+    "formules": {
+      "NORMAL": 4,
+      "EXPRESS": 7,
+      "URGENCE": 10,
+      "VL_NORMAL": 3,
+      "VL_EXPRESS": 6
+    }
+  },
+  {
+    "cp": "94450",
+    "ville": "Limeil-Brévannes",
+    "formules": {
+      "NORMAL": 12,
+      "EXPRESS": 17,
+      "URGENCE": 22,
+      "VL_NORMAL": 8,
+      "VL_EXPRESS": 14
+    }
+  },
+  {
+    "cp": "94700",
+    "ville": "Maisons-Alfort",
+    "formules": {
+      "NORMAL": 6,
+      "EXPRESS": 10,
+      "URGENCE": 14,
+      "VL_NORMAL": 4,
+      "VL_EXPRESS": 8
+    }
+  },
+  {
+    "cp": "94520",
+    "ville": "Mandres-les-Roses",
+    "formules": {
+      "NORMAL": 9,
+      "EXPRESS": 14,
+      "URGENCE": 18,
+      "VL_NORMAL": 6,
+      "VL_EXPRESS": 11
+    }
+  },
+  {
+    "cp": "94440",
+    "ville": "Marolles-en-Brie",
+    "formules": {
+      "NORMAL": 9,
+      "EXPRESS": 14,
+      "URGENCE": 18,
+      "VL_NORMAL": 6,
+      "VL_EXPRESS": 11
+    }
+  },
+  {
+    "cp": "94130",
+    "ville": "Nogent-sur-Marne",
+    "formules": {
+      "NORMAL": 6,
+      "EXPRESS": 10,
+      "URGENCE": 14,
+      "VL_NORMAL": 4,
+      "VL_EXPRESS": 8
+    }
+  },
+  {
+    "cp": "94880",
+    "ville": "Noiseau",
+    "formules": {
+      "NORMAL": 12,
+      "EXPRESS": 17,
+      "URGENCE": 22,
+      "VL_NORMAL": 8,
+      "VL_EXPRESS": 14
+    }
+  },
+  {
+    "cp": "94310",
+    "ville": "Orly",
+    "formules": {
+      "NORMAL": 8,
+      "EXPRESS": 12,
+      "URGENCE": 16,
+      "VL_NORMAL": 6,
+      "VL_EXPRESS": 10
+    }
+  },
+  {
+    "cp": "94490",
+    "ville": "Ormesson-sur-Marne",
+    "formules": {
+      "NORMAL": 12,
+      "EXPRESS": 17,
+      "URGENCE": 22,
+      "VL_NORMAL": 8,
+      "VL_EXPRESS": 14
+    }
+  },
+  {
+    "cp": "94170",
+    "ville": "Le Perreux-sur-Marne",
+    "formules": {
+      "NORMAL": 8,
+      "EXPRESS": 12,
+      "URGENCE": 16,
+      "VL_NORMAL": 6,
+      "VL_EXPRESS": 10
+    }
+  },
+  {
+    "cp": "94420",
+    "ville": "Le Plessis-Trévise",
+    "formules": {
+      "NORMAL": 14,
+      "EXPRESS": 19,
+      "URGENCE": 24,
+      "VL_NORMAL": 10,
+      "VL_EXPRESS": 15
+    }
+  },
+  {
+    "cp": "94510",
+    "ville": "La Queue-en-Brie",
+    "formules": {
+      "NORMAL": 14,
+      "EXPRESS": 19,
+      "URGENCE": 24,
+      "VL_NORMAL": 10,
+      "VL_EXPRESS": 15
+    }
+  },
+  {
+    "cp": "94150",
+    "ville": "Rungis",
+    "formules": {
+      "NORMAL": 8,
+      "EXPRESS": 12,
+      "URGENCE": 16,
+      "VL_NORMAL": 6,
+      "VL_EXPRESS": 10
+    }
+  },
+  {
+    "cp": "94160",
+    "ville": "Saint-Mandé",
+    "formules": {
+      "NORMAL": 4,
+      "EXPRESS": 7,
+      "URGENCE": 10,
+      "VL_NORMAL": 3,
+      "VL_EXPRESS": 6
+    }
+  },
+  {
+    "cp": "94100",
+    "ville": "Saint-Maur-des-Fossés",
+    "formules": {
+      "NORMAL": 8,
+      "EXPRESS": 12,
+      "URGENCE": 16,
+      "VL_NORMAL": 6,
+      "VL_EXPRESS": 10
+    }
+  },
+  {
+    "cp": "94410",
+    "ville": "Saint-Maurice",
+    "formules": {
+      "NORMAL": 6,
+      "EXPRESS": 10,
+      "URGENCE": 14,
+      "VL_NORMAL": 4,
+      "VL_EXPRESS": 8
+    }
+  },
+  {
+    "cp": "94370",
+    "ville": "Sucy-en-Brie",
+    "formules": {
+      "NORMAL": 12,
+      "EXPRESS": 17,
+      "URGENCE": 22,
+      "VL_NORMAL": 8,
+      "VL_EXPRESS": 14
+    }
+  },
+  {
+    "cp": "94320",
+    "ville": "Thiais",
+    "formules": {
+      "NORMAL": 8,
+      "EXPRESS": 12,
+      "URGENCE": 16,
+      "VL_NORMAL": 6,
+      "VL_EXPRESS": 10
+    }
+  },
+  {
+    "cp": "94460",
+    "ville": "Valenton",
+    "formules": {
+      "NORMAL": 12,
+      "EXPRESS": 17,
+      "URGENCE": 22,
+      "VL_NORMAL": 8,
+      "VL_EXPRESS": 14
+    }
+  },
+  {
+    "cp": "94440",
+    "ville": "Villecresnes",
+    "formules": {
+      "NORMAL": 14,
+      "EXPRESS": 19,
+      "URGENCE": 24,
+      "VL_NORMAL": 10,
+      "VL_EXPRESS": 15
+    }
+  },
+  {
+    "cp": "94800",
+    "ville": "Villejuif",
+    "formules": {
+      "NORMAL": 6,
+      "EXPRESS": 10,
+      "URGENCE": 14,
+      "VL_NORMAL": 4,
+      "VL_EXPRESS": 8
+    }
+  },
+  {
+    "cp": "94290",
+    "ville": "Villeneuve-le-Roi",
+    "formules": {
+      "NORMAL": 8,
+      "EXPRESS": 12,
+      "URGENCE": 16,
+      "VL_NORMAL": 6,
+      "VL_EXPRESS": 10
+    }
+  },
+  {
+    "cp": "94190",
+    "ville": "Villeneuve-Saint-Georges",
+    "formules": {
+      "NORMAL": 12,
+      "EXPRESS": 17,
+      "URGENCE": 22,
+      "VL_NORMAL": 8,
+      "VL_EXPRESS": 14
+    }
+  },
+  {
+    "cp": "94350",
+    "ville": "Villiers-sur-Marne",
+    "formules": {
+      "NORMAL": 8,
+      "EXPRESS": 12,
+      "URGENCE": 16,
+      "VL_NORMAL": 6,
+      "VL_EXPRESS": 10
+    }
+  },
+  {
+    "cp": "94300",
+    "ville": "Vincennes",
+    "formules": {
+      "NORMAL": 4,
+      "EXPRESS": 7,
+      "URGENCE": 10,
+      "VL_NORMAL": 3,
+      "VL_EXPRESS": 6
+    }
+  },
+  {
+    "cp": "94400",
+    "ville": "Vitry-sur-Seine",
+    "formules": {
+      "NORMAL": 6,
+      "EXPRESS": 10,
+      "URGENCE": 14,
+      "VL_NORMAL": 4,
+      "VL_EXPRESS": 8
+    }
+  },
+  {
+    "cp": "77000",
+    "ville": "Melun",
+    "formules": {
+      "NORMAL": 25,
+      "EXPRESS": 30,
+      "URGENCE": 35,
+      "VL_NORMAL": 18,
+      "VL_EXPRESS": 24
+    }
+  },
+  {
+    "cp": "77100",
+    "ville": "Meaux",
+    "formules": {
+      "NORMAL": 25,
+      "EXPRESS": 30,
+      "URGENCE": 35,
+      "VL_NORMAL": 18,
+      "VL_EXPRESS": 24
+    }
+  },
+  {
+    "cp": "77170",
+    "ville": "Brie-Comte-Robert",
+    "formules": {
+      "NORMAL": 20,
+      "EXPRESS": 25,
+      "URGENCE": 30,
+      "VL_NORMAL": 14,
+      "VL_EXPRESS": 20
+    }
+  },
+  {
+    "cp": "77185",
+    "ville": "Lognes",
+    "formules": {
+      "NORMAL": 14,
+      "EXPRESS": 19,
+      "URGENCE": 24,
+      "VL_NORMAL": 10,
+      "VL_EXPRESS": 15
+    }
+  },
+  {
+    "cp": "77200",
+    "ville": "Torcy",
+    "formules": {
+      "NORMAL": 14,
+      "EXPRESS": 19,
+      "URGENCE": 24,
+      "VL_NORMAL": 10,
+      "VL_EXPRESS": 15
+    }
+  },
+  {
+    "cp": "77290",
+    "ville": "Mitry-Mory",
+    "formules": {
+      "NORMAL": 14,
+      "EXPRESS": 19,
+      "URGENCE": 24,
+      "VL_NORMAL": 10,
+      "VL_EXPRESS": 15
+    }
+  },
+  {
+    "cp": "77300",
+    "ville": "Fontainebleau",
+    "formules": {
+      "NORMAL": 30,
+      "EXPRESS": 35,
+      "URGENCE": 40,
+      "VL_NORMAL": 21,
+      "VL_EXPRESS": 28
+    }
+  },
+  {
+    "cp": "77340",
+    "ville": "Pontault-Combault",
+    "formules": {
+      "NORMAL": 15,
+      "EXPRESS": 20,
+      "URGENCE": 25,
+      "VL_NORMAL": 11,
+      "VL_EXPRESS": 16
+    }
+  },
+  {
+    "cp": "77380",
+    "ville": "Combs-la-Ville",
+    "formules": {
+      "NORMAL": 18,
+      "EXPRESS": 23,
+      "URGENCE": 28,
+      "VL_NORMAL": 13,
+      "VL_EXPRESS": 18
+    }
+  },
+  {
+    "cp": "77400",
+    "ville": "Lagny-sur-Marne",
+    "formules": {
+      "NORMAL": 12,
+      "EXPRESS": 17,
+      "URGENCE": 22,
+      "VL_NORMAL": 8,
+      "VL_EXPRESS": 14
+    }
+  },
+  {
+    "cp": "77420",
+    "ville": "Champs-sur-Marne",
+    "formules": {
+      "NORMAL": 14,
+      "EXPRESS": 19,
+      "URGENCE": 24,
+      "VL_NORMAL": 10,
+      "VL_EXPRESS": 15
+    }
+  },
+  {
+    "cp": "77500",
+    "ville": "Chelles",
+    "formules": {
+      "NORMAL": 14,
+      "EXPRESS": 19,
+      "URGENCE": 24,
+      "VL_NORMAL": 10,
+      "VL_EXPRESS": 15
+    }
+  },
+  {
+    "cp": "77600",
+    "ville": "Bussy-Saint-Georges",
+    "formules": {
+      "NORMAL": 14,
+      "EXPRESS": 19,
+      "URGENCE": 24,
+      "VL_NORMAL": 10,
+      "VL_EXPRESS": 15
+    }
+  },
+  {
+    "cp": "77700",
+    "ville": "Chessy / Marne-la-Vallée",
+    "formules": {
+      "NORMAL": 20,
+      "EXPRESS": 25,
+      "URGENCE": 30,
+      "VL_NORMAL": 14,
+      "VL_EXPRESS": 20
+    }
+  },
+  {
+    "cp": "78000",
+    "ville": "Versailles",
+    "formules": {
+      "NORMAL": 8,
+      "EXPRESS": 12,
+      "URGENCE": 16,
+      "VL_NORMAL": 6,
+      "VL_EXPRESS": 10
+    }
+  },
+  {
+    "cp": "78100",
+    "ville": "Saint-Germain-en-Laye",
+    "formules": {
+      "NORMAL": 10,
+      "EXPRESS": 15,
+      "URGENCE": 20,
+      "VL_NORMAL": 7,
+      "VL_EXPRESS": 12
+    }
+  },
+  {
+    "cp": "78110",
+    "ville": "Le Vésinet",
+    "formules": {
+      "NORMAL": 8,
+      "EXPRESS": 12,
+      "URGENCE": 16,
+      "VL_NORMAL": 6,
+      "VL_EXPRESS": 10
+    }
+  },
+  {
+    "cp": "78140",
+    "ville": "Vélizy-Villacoublay",
+    "formules": {
+      "NORMAL": 8,
+      "EXPRESS": 12,
+      "URGENCE": 16,
+      "VL_NORMAL": 6,
+      "VL_EXPRESS": 10
+    }
+  },
+  {
+    "cp": "78150",
+    "ville": "Le Chesnay",
+    "formules": {
+      "NORMAL": 8,
+      "EXPRESS": 12,
+      "URGENCE": 16,
+      "VL_NORMAL": 6,
+      "VL_EXPRESS": 10
+    }
+  },
+  {
+    "cp": "78160",
+    "ville": "Marly-le-Roi",
+    "formules": {
+      "NORMAL": 8,
+      "EXPRESS": 12,
+      "URGENCE": 16,
+      "VL_NORMAL": 6,
+      "VL_EXPRESS": 10
+    }
+  },
+  {
+    "cp": "78170",
+    "ville": "La Celle-Saint-Cloud",
+    "formules": {
+      "NORMAL": 6,
+      "EXPRESS": 10,
+      "URGENCE": 14,
+      "VL_NORMAL": 4,
+      "VL_EXPRESS": 8
+    }
+  },
+  {
+    "cp": "78180",
+    "ville": "Montigny-le-Bretonneux",
+    "formules": {
+      "NORMAL": 14,
+      "EXPRESS": 19,
+      "URGENCE": 24,
+      "VL_NORMAL": 10,
+      "VL_EXPRESS": 15
+    }
+  },
+  {
+    "cp": "78190",
+    "ville": "Trappes",
+    "formules": {
+      "NORMAL": 14,
+      "EXPRESS": 19,
+      "URGENCE": 24,
+      "VL_NORMAL": 10,
+      "VL_EXPRESS": 15
+    }
+  },
+  {
+    "cp": "78200",
+    "ville": "Mantes-la-Jolie",
+    "formules": {
+      "NORMAL": 25,
+      "EXPRESS": 30,
+      "URGENCE": 35,
+      "VL_NORMAL": 18,
+      "VL_EXPRESS": 24
+    }
+  },
+  {
+    "cp": "78220",
+    "ville": "Viroflay",
+    "formules": {
+      "NORMAL": 8,
+      "EXPRESS": 12,
+      "URGENCE": 16,
+      "VL_NORMAL": 6,
+      "VL_EXPRESS": 10
+    }
+  },
+  {
+    "cp": "78280",
+    "ville": "Guyancourt",
+    "formules": {
+      "NORMAL": 14,
+      "EXPRESS": 19,
+      "URGENCE": 24,
+      "VL_NORMAL": 10,
+      "VL_EXPRESS": 15
+    }
+  },
+  {
+    "cp": "78300",
+    "ville": "Poissy",
+    "formules": {
+      "NORMAL": 15,
+      "EXPRESS": 20,
+      "URGENCE": 25,
+      "VL_NORMAL": 11,
+      "VL_EXPRESS": 16
+    }
+  },
+  {
+    "cp": "78350",
+    "ville": "Jouy-en-Josas",
+    "formules": {
+      "NORMAL": 8,
+      "EXPRESS": 12,
+      "URGENCE": 16,
+      "VL_NORMAL": 6,
+      "VL_EXPRESS": 10
+    }
+  },
+  {
+    "cp": "78370",
+    "ville": "Plaisir",
+    "formules": {
+      "NORMAL": 14,
+      "EXPRESS": 19,
+      "URGENCE": 24,
+      "VL_NORMAL": 10,
+      "VL_EXPRESS": 15
+    }
+  },
+  {
+    "cp": "78380",
+    "ville": "Bougival",
+    "formules": {
+      "NORMAL": 8,
+      "EXPRESS": 12,
+      "URGENCE": 16,
+      "VL_NORMAL": 6,
+      "VL_EXPRESS": 10
+    }
+  },
+  {
+    "cp": "78390",
+    "ville": "Bois-d'Arcy",
+    "formules": {
+      "NORMAL": 14,
+      "EXPRESS": 19,
+      "URGENCE": 24,
+      "VL_NORMAL": 10,
+      "VL_EXPRESS": 15
+    }
+  },
+  {
+    "cp": "78400",
+    "ville": "Chatou",
+    "formules": {
+      "NORMAL": 8,
+      "EXPRESS": 12,
+      "URGENCE": 16,
+      "VL_NORMAL": 6,
+      "VL_EXPRESS": 10
+    }
+  },
+  {
+    "cp": "78420",
+    "ville": "Carrières-sur-Seine",
+    "formules": {
+      "NORMAL": 8,
+      "EXPRESS": 12,
+      "URGENCE": 16,
+      "VL_NORMAL": 6,
+      "VL_EXPRESS": 10
+    }
+  },
+  {
+    "cp": "78430",
+    "ville": "Louveciennes",
+    "formules": {
+      "NORMAL": 8,
+      "EXPRESS": 12,
+      "URGENCE": 16,
+      "VL_NORMAL": 6,
+      "VL_EXPRESS": 10
+    }
+  },
+  {
+    "cp": "78500",
+    "ville": "Sartrouville",
+    "formules": {
+      "NORMAL": 8,
+      "EXPRESS": 12,
+      "URGENCE": 16,
+      "VL_NORMAL": 6,
+      "VL_EXPRESS": 10
+    }
+  },
+  {
+    "cp": "78600",
+    "ville": "Maisons-Laffitte",
+    "formules": {
+      "NORMAL": 10,
+      "EXPRESS": 15,
+      "URGENCE": 20,
+      "VL_NORMAL": 7,
+      "VL_EXPRESS": 12
+    }
+  },
+  {
+    "cp": "78700",
+    "ville": "Conflans-Sainte-Honorine",
+    "formules": {
+      "NORMAL": 15,
+      "EXPRESS": 20,
+      "URGENCE": 25,
+      "VL_NORMAL": 11,
+      "VL_EXPRESS": 16
+    }
+  },
+  {
+    "cp": "78800",
+    "ville": "Houilles",
+    "formules": {
+      "NORMAL": 8,
+      "EXPRESS": 12,
+      "URGENCE": 16,
+      "VL_NORMAL": 6,
+      "VL_EXPRESS": 10
+    }
+  },
+  {
+    "cp": "78960",
+    "ville": "Voisins-le-Bretonneux",
+    "formules": {
+      "NORMAL": 14,
+      "EXPRESS": 19,
+      "URGENCE": 24,
+      "VL_NORMAL": 10,
+      "VL_EXPRESS": 15
+    }
+  },
+  {
+    "cp": "78990",
+    "ville": "Elancourt",
+    "formules": {
+      "NORMAL": 14,
+      "EXPRESS": 19,
+      "URGENCE": 24,
+      "VL_NORMAL": 10,
+      "VL_EXPRESS": 15
+    }
+  },
+  {
+    "cp": "91000",
+    "ville": "Evry",
+    "formules": {
+      "NORMAL": 15,
+      "EXPRESS": 20,
+      "URGENCE": 25,
+      "VL_NORMAL": 11,
+      "VL_EXPRESS": 16
+    }
+  },
+  {
+    "cp": "91070",
+    "ville": "Bondoufle",
+    "formules": {
+      "NORMAL": 15,
+      "EXPRESS": 20,
+      "URGENCE": 25,
+      "VL_NORMAL": 11,
+      "VL_EXPRESS": 16
+    }
+  },
+  {
+    "cp": "91080",
+    "ville": "Courcouronnes",
+    "formules": {
+      "NORMAL": 15,
+      "EXPRESS": 20,
+      "URGENCE": 25,
+      "VL_NORMAL": 11,
+      "VL_EXPRESS": 16
+    }
+  },
+  {
+    "cp": "91100",
+    "ville": "Corbeil-Essonnes",
+    "formules": {
+      "NORMAL": 19,
+      "EXPRESS": 24,
+      "URGENCE": 29,
+      "VL_NORMAL": 13,
+      "VL_EXPRESS": 19
+    }
+  },
+  {
+    "cp": "91120",
+    "ville": "Palaiseau",
+    "formules": {
+      "NORMAL": 12,
+      "EXPRESS": 17,
+      "URGENCE": 22,
+      "VL_NORMAL": 8,
+      "VL_EXPRESS": 14
+    }
+  },
+  {
+    "cp": "91160",
+    "ville": "Longjumeau",
+    "formules": {
+      "NORMAL": 12,
+      "EXPRESS": 17,
+      "URGENCE": 22,
+      "VL_NORMAL": 8,
+      "VL_EXPRESS": 14
+    }
+  },
+  {
+    "cp": "91190",
+    "ville": "Gif-sur-Yvette",
+    "formules": {
+      "NORMAL": 15,
+      "EXPRESS": 20,
+      "URGENCE": 25,
+      "VL_NORMAL": 11,
+      "VL_EXPRESS": 16
+    }
+  },
+  {
+    "cp": "91200",
+    "ville": "Athis-Mons",
+    "formules": {
+      "NORMAL": 12,
+      "EXPRESS": 17,
+      "URGENCE": 22,
+      "VL_NORMAL": 8,
+      "VL_EXPRESS": 14
+    }
+  },
+  {
+    "cp": "91260",
+    "ville": "Juvisy-sur-Orge",
+    "formules": {
+      "NORMAL": 12,
+      "EXPRESS": 17,
+      "URGENCE": 22,
+      "VL_NORMAL": 8,
+      "VL_EXPRESS": 14
+    }
+  },
+  {
+    "cp": "91300",
+    "ville": "Massy",
+    "formules": {
+      "NORMAL": 12,
+      "EXPRESS": 17,
+      "URGENCE": 22,
+      "VL_NORMAL": 8,
+      "VL_EXPRESS": 14
+    }
+  },
+  {
+    "cp": "91320",
+    "ville": "Wissous",
+    "formules": {
+      "NORMAL": 10,
+      "EXPRESS": 15,
+      "URGENCE": 20,
+      "VL_NORMAL": 7,
+      "VL_EXPRESS": 12
+    }
+  },
+  {
+    "cp": "91380",
+    "ville": "Chilly-Mazarin",
+    "formules": {
+      "NORMAL": 12,
+      "EXPRESS": 17,
+      "URGENCE": 22,
+      "VL_NORMAL": 8,
+      "VL_EXPRESS": 14
+    }
+  },
+  {
+    "cp": "91400",
+    "ville": "Orsay",
+    "formules": {
+      "NORMAL": 15,
+      "EXPRESS": 20,
+      "URGENCE": 25,
+      "VL_NORMAL": 11,
+      "VL_EXPRESS": 16
+    }
+  },
+  {
+    "cp": "91420",
+    "ville": "Morangis",
+    "formules": {
+      "NORMAL": 12,
+      "EXPRESS": 17,
+      "URGENCE": 22,
+      "VL_NORMAL": 8,
+      "VL_EXPRESS": 14
+    }
+  },
+  {
+    "cp": "91500",
+    "ville": "Savigny-sur-Orge",
+    "formules": {
+      "NORMAL": 12,
+      "EXPRESS": 17,
+      "URGENCE": 22,
+      "VL_NORMAL": 8,
+      "VL_EXPRESS": 14
+    }
+  },
+  {
+    "cp": "91600",
+    "ville": "Savigny-sur-Orge",
+    "formules": {
+      "NORMAL": 12,
+      "EXPRESS": 17,
+      "URGENCE": 22,
+      "VL_NORMAL": 8,
+      "VL_EXPRESS": 14
+    }
+  },
+  {
+    "cp": "91700",
+    "ville": "Sainte-Geneviève-des-Bois",
+    "formules": {
+      "NORMAL": 14,
+      "EXPRESS": 19,
+      "URGENCE": 24,
+      "VL_NORMAL": 10,
+      "VL_EXPRESS": 15
+    }
+  },
+  {
+    "cp": "91940",
+    "ville": "Les Ulis",
+    "formules": {
+      "NORMAL": 15,
+      "EXPRESS": 20,
+      "URGENCE": 25,
+      "VL_NORMAL": 11,
+      "VL_EXPRESS": 16
+    }
+  },
+  {
+    "cp": "95000",
+    "ville": "Cergy / Pontoise",
+    "formules": {
+      "NORMAL": 15,
+      "EXPRESS": 20,
+      "URGENCE": 25,
+      "VL_NORMAL": 11,
+      "VL_EXPRESS": 16
+    }
+  },
+  {
+    "cp": "95100",
+    "ville": "Argenteuil",
+    "formules": {
+      "NORMAL": 8,
+      "EXPRESS": 12,
+      "URGENCE": 16,
+      "VL_NORMAL": 6,
+      "VL_EXPRESS": 10
+    }
+  },
+  {
+    "cp": "95110",
+    "ville": "Sannois",
+    "formules": {
+      "NORMAL": 10,
+      "EXPRESS": 15,
+      "URGENCE": 20,
+      "VL_NORMAL": 7,
+      "VL_EXPRESS": 12
+    }
+  },
+  {
+    "cp": "95120",
+    "ville": "Ermont",
+    "formules": {
+      "NORMAL": 10,
+      "EXPRESS": 15,
+      "URGENCE": 20,
+      "VL_NORMAL": 7,
+      "VL_EXPRESS": 12
+    }
+  },
+  {
+    "cp": "95130",
+    "ville": "Franconville",
+    "formules": {
+      "NORMAL": 10,
+      "EXPRESS": 15,
+      "URGENCE": 20,
+      "VL_NORMAL": 7,
+      "VL_EXPRESS": 12
+    }
+  },
+  {
+    "cp": "95140",
+    "ville": "Garges-lès-Gonesse",
+    "formules": {
+      "NORMAL": 10,
+      "EXPRESS": 15,
+      "URGENCE": 20,
+      "VL_NORMAL": 7,
+      "VL_EXPRESS": 12
+    }
+  },
+  {
+    "cp": "95150",
+    "ville": "Taverny",
+    "formules": {
+      "NORMAL": 13,
+      "EXPRESS": 18,
+      "URGENCE": 23,
+      "VL_NORMAL": 9,
+      "VL_EXPRESS": 14
+    }
+  },
+  {
+    "cp": "95160",
+    "ville": "Montmorency",
+    "formules": {
+      "NORMAL": 10,
+      "EXPRESS": 15,
+      "URGENCE": 20,
+      "VL_NORMAL": 7,
+      "VL_EXPRESS": 12
+    }
+  },
+  {
+    "cp": "95170",
+    "ville": "Deuil-la-Barre",
+    "formules": {
+      "NORMAL": 10,
+      "EXPRESS": 15,
+      "URGENCE": 20,
+      "VL_NORMAL": 7,
+      "VL_EXPRESS": 12
+    }
+  },
+  {
+    "cp": "95190",
+    "ville": "Goussainville",
+    "formules": {
+      "NORMAL": 14,
+      "EXPRESS": 19,
+      "URGENCE": 24,
+      "VL_NORMAL": 10,
+      "VL_EXPRESS": 15
+    }
+  },
+  {
+    "cp": "95200",
+    "ville": "Sarcelles",
+    "formules": {
+      "NORMAL": 10,
+      "EXPRESS": 15,
+      "URGENCE": 20,
+      "VL_NORMAL": 7,
+      "VL_EXPRESS": 12
+    }
+  },
+  {
+    "cp": "95210",
+    "ville": "Saint-Gratien",
+    "formules": {
+      "NORMAL": 10,
+      "EXPRESS": 15,
+      "URGENCE": 20,
+      "VL_NORMAL": 7,
+      "VL_EXPRESS": 12
+    }
+  },
+  {
+    "cp": "95220",
+    "ville": "Herblay",
+    "formules": {
+      "NORMAL": 15,
+      "EXPRESS": 20,
+      "URGENCE": 25,
+      "VL_NORMAL": 11,
+      "VL_EXPRESS": 16
+    }
+  },
+  {
+    "cp": "95230",
+    "ville": "Soisy-sous-Montmorency",
+    "formules": {
+      "NORMAL": 10,
+      "EXPRESS": 15,
+      "URGENCE": 20,
+      "VL_NORMAL": 7,
+      "VL_EXPRESS": 12
+    }
+  },
+  {
+    "cp": "95240",
+    "ville": "Cormeilles-en-Parisis",
+    "formules": {
+      "NORMAL": 10,
+      "EXPRESS": 15,
+      "URGENCE": 20,
+      "VL_NORMAL": 7,
+      "VL_EXPRESS": 12
+    }
+  },
+  {
+    "cp": "95250",
+    "ville": "Beauchamp",
+    "formules": {
+      "NORMAL": 13,
+      "EXPRESS": 18,
+      "URGENCE": 23,
+      "VL_NORMAL": 9,
+      "VL_EXPRESS": 14
+    }
+  },
+  {
+    "cp": "95300",
+    "ville": "Pontoise",
+    "formules": {
+      "NORMAL": 15,
+      "EXPRESS": 20,
+      "URGENCE": 25,
+      "VL_NORMAL": 11,
+      "VL_EXPRESS": 16
+    }
+  },
+  {
+    "cp": "95310",
+    "ville": "Saint-Ouen-l'Aumône",
+    "formules": {
+      "NORMAL": 15,
+      "EXPRESS": 20,
+      "URGENCE": 25,
+      "VL_NORMAL": 11,
+      "VL_EXPRESS": 16
+    }
+  },
+  {
+    "cp": "95330",
+    "ville": "Domont",
+    "formules": {
+      "NORMAL": 14,
+      "EXPRESS": 19,
+      "URGENCE": 24,
+      "VL_NORMAL": 10,
+      "VL_EXPRESS": 15
+    }
+  },
+  {
+    "cp": "95400",
+    "ville": "Villiers-le-Bel",
+    "formules": {
+      "NORMAL": 13,
+      "EXPRESS": 18,
+      "URGENCE": 23,
+      "VL_NORMAL": 9,
+      "VL_EXPRESS": 14
+    }
+  },
+  {
+    "cp": "95500",
+    "ville": "Gonesse",
+    "formules": {
+      "NORMAL": 10,
+      "EXPRESS": 15,
+      "URGENCE": 20,
+      "VL_NORMAL": 7,
+      "VL_EXPRESS": 12
+    }
+  },
+  {
+    "cp": "95600",
+    "ville": "Eaubonne",
+    "formules": {
+      "NORMAL": 10,
+      "EXPRESS": 15,
+      "URGENCE": 20,
+      "VL_NORMAL": 7,
+      "VL_EXPRESS": 12
+    }
+  },
+  {
+    "cp": "95700",
+    "ville": "Roissy-en-France",
+    "formules": {
+      "NORMAL": 14,
+      "EXPRESS": 19,
+      "URGENCE": 24,
+      "VL_NORMAL": 10,
+      "VL_EXPRESS": 15
+    }
+  },
+  {
+    "cp": "95870",
+    "ville": "Bezons",
+    "formules": {
+      "NORMAL": 8,
+      "EXPRESS": 12,
+      "URGENCE": 16,
+      "VL_NORMAL": 6,
+      "VL_EXPRESS": 10
+    }
+  },
+  {
+    "cp": "95880",
+    "ville": "Enghien-les-Bains",
+    "formules": {
+      "NORMAL": 10,
+      "EXPRESS": 15,
+      "URGENCE": 20,
+      "VL_NORMAL": 7,
+      "VL_EXPRESS": 12
+    }
+  }
+];
