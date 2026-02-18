@@ -4,8 +4,8 @@ import PublicFooter from "../components/PublicFooter.jsx";
 import { ArrowUpRight, Package, FileText, MessageSquare, CreditCard, Stethoscope, Scale, Calendar, Car, Plus, Facebook, Twitter, Instagram, Linkedin, ShoppingCart, Star } from "lucide-react";
 
 const benefits = [
-  { title: "Bon de commande & Suivi", desc: "Génération automatique PDF et traçabilité complète de chaque envoi." },
-  { title: "Facturation Logistique", desc: "Mensuelle, détaillée et conforme Factur-X pour simplifier votre comptabilité." },
+  { title: "Bon de commande & Suivi", desc: <span>Génération automatique PDF et traçabilité complète de chaque envoi. <Link to="/register" className="underline decoration-orange-500/30 hover:decoration-orange-500">Ouvrir un compte</Link></span> },
+  { title: "Facturation Logistique", desc: <span>Mensuelle, détaillée et conforme <a href="https://fnfe-mpe.org/factur-x/" target="_blank" rel="noopener noreferrer" className="underline decoration-orange-500/30 hover:decoration-orange-500">Factur-X</a> pour simplifier votre comptabilité.</span> },
   { title: "Suivi Transport Live", desc: "Notifications temps réel à l'enlèvement et à la livraison du colis." },
   { title: "Tout Type de Fret", desc: "Du pli urgent à la palette, transport sécurisé partout en Île-de-France." },
 ];
@@ -48,15 +48,16 @@ const testimonials = [
   { name: "LogiNord", text: "On a réduit de 40% le temps admin grâce à la facturation mensuelle." },
   { name: "Industrie Atlas", text: "Le   a fait disparaître les appels de relance." },
   { name: "Groupe Delta", text: "Commande en 3 clics, tout est clair et rapide." },
+  { name: "BioLab Paris", text: "Transport médical fiable, respect des délais pour les prélèvements urgents." },
 ];
 
 const faqs = [
-  { q: "Comment fonctionne le bon de commande ?", a: "C'est simple et automatique : dès que votre course est validée par notre système, un Bon de Commande (BC) officiel est généré. Il est instantanément accessible dans votre espace client et envoyé par email. Ce document comprend tous les détails logistiques et fait foi de l'ordre de mission." },
+  { q: "Comment fonctionne le bon de commande ?", a: <span>C'est simple et automatique : dès que votre course est validée par notre système, un Bon de Commande (BC) officiel est généré. Il est instantanément accessible dans votre <Link to="/login" className="text-orange-600 font-medium hover:underline">espace client</Link> et envoyé par email. Ce document comprend tous les détails logistiques et fait foi de l'ordre de mission.</span> },
   { q: "La facturation est-elle compatible avec les normes 2026 ?", a: "Oui, nous sommes prêts. Toutes nos factures sont émises au format électronique structuré. Cela garantit une conformité totale avec les nouvelles obligations fiscales et facilite l'import automatique dans votre logiciel comptable." },
-  { q: "Puis-je avoir une estimation rapide du prix ?", a: "Absolument. Notre simulateur en ligne vous donne un prix ferme et définitif en quelques secondes. Il prend en compte le type de véhicule (moto, voiture), la distance réelle et le niveau d'urgence. Pas de mauvaises surprises à l'arrivée." },
+  { q: "Puis-je avoir une estimation rapide du prix ?", a: <span>Absolument. Notre <Link to="/guest-order" className="text-orange-600 font-medium hover:underline">simulateur en ligne</Link> vous donne un prix ferme et définitif en quelques secondes. Il prend en compte le type de véhicule (moto, voiture), la distance réelle et le niveau d'urgence. Pas de mauvaises surprises à l'arrivée.</span> },
   { q: "Quels sont les délais de prise en charge à Paris ?", a: "Pour les courses 'Urgentes', nous nous engageons sur une prise en charge en moins de 45 minutes dans Paris intra-muros. Grâce à notre flotte répartie stratégiquement, un chauffeur est toujours à proximité de vos bureaux ou entrepôts." },
-  { q: "Puis-je ouvrir un compte pro sans engagement ?", a: "Oui, la création d'un compte professionnel est 100% gratuite et sans aucun engagement de durée. Vous ne payez que ce que vous consommez. Pas d'abonnement mensuel caché, pas de frais de dossier." },
-  { q: "Les marchandises sont-elles assurées ?", a: "Votre sérénité est notre priorité. Chaque transport réalisé via One Connexion est couvert par notre assurance ad valorem jusqu'à 50 000€, incluse dans le prix. Vos marchandises précieuses ou sensibles sont protégées contre la perte et les dommages." },
+  { q: "Puis-je ouvrir un compte pro sans engagement ?", a: <span>Oui, la création d'un <Link to="/register" className="text-orange-600 font-medium hover:underline">compte professionnel</Link> est 100% gratuite et sans aucun engagement de durée. Vous ne payez que ce que vous consommez. Pas d'abonnement mensuel caché, pas de frais de dossier.</span> },
+  { q: "Les marchandises sont-elles assurées ?", a: <span>Votre sérénité est notre priorité. Chaque transport réalisé via One Connexion est couvert par notre assurance ad valorem jusqu'à 50 000€, incluse dans le prix. Vos marchandises précieuses ou sensibles sont protégées contre la perte et les dommages.</span> },
   { q: "Proposez-vous des tournées régulières ?", a: "Tout à fait. En plus des courses à la demande, nous organisons des tournées programmées (navettes inter-sites, ramassage courrier, livraisons e-commerce). Contactez notre service commercial pour mettre en place un plan de transport sur-mesure." },
 ];
 
