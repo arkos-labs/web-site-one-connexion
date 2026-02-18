@@ -4,44 +4,44 @@ import PublicFooter from "../components/PublicFooter.jsx";
 import { ArrowUpRight, Package, FileText, MessageSquare, CreditCard, Stethoscope, Scale, Calendar, Car, Plus, Facebook, Twitter, Instagram, Linkedin, ShoppingCart, Star } from "lucide-react";
 
 const benefits = [
-  { title: "Bon de commande instantané", desc: "PDF automatique à chaque envoi, statut juridique clair." },
-  { title: "Facturation mensuelle", desc: "Récapitulatif + annexe détaillée, prêt Factur‑X." },
-  { title: " des étapes", desc: "Notifications instantanées à la prise en charge et à la livraison." },
-  { title: "Colis & marchandises", desc: "Du pli urgent aux palettes, partout à Paris et en Île‑de‑France." },
+  { title: "Bon de commande & Suivi", desc: "Génération automatique PDF et traçabilité complète de chaque envoi." },
+  { title: "Facturation Logistique", desc: "Mensuelle, détaillée et conforme Factur-X pour simplifier votre comptabilité." },
+  { title: "Suivi Transport Live", desc: "Notifications temps réel à l'enlèvement et à la livraison du colis." },
+  { title: "Tout Type de Fret", desc: "Du pli urgent à la palette, transport sécurisé partout en Île-de-France." },
 ];
 
 const expertises = [
   {
     icon: Stethoscope,
-    title: "Médical",
-    desc: "Transport urgent de prélèvements biologiques, sang et matériel médical sous température dirigée. Respect strict des normes d'hygiène et délais critiques.",
+    title: "Transport Médical",
+    desc: "Acheminement urgent de prélèvements, sang et matériel médical sous température dirigée. Respect des normes d'hygiène.",
     link: "/coursier-dentiste-paris"
   },
   {
     icon: Scale,
-    title: "Juridique",
-    desc: "Acheminement sécurisé et confidentiel de dossiers sensibles, actes originaux et plis urgents pour cabinets d'avocats, notaires et tribunaux.",
+    title: "Courses Juridiques",
+    desc: "Transport sécurisé et confidentiel de dossiers sensibles et actes originaux pour avocats et notaires.",
     link: "/coursier-juridique-paris"
   },
   {
     icon: Calendar,
-    title: "Événementiel",
-    desc: "Logistique express pour vos salons et événements. Livraison 24/7 de matériel, stands et supports de communication avec une fiabilité totale.",
+    title: "Logistique Événementielle",
+    desc: "Livraison express 24/7 de matériel, stands et supports pour vos salons et événements urgents.",
     link: "/coursier-evenementiel-paris"
   },
   {
     icon: Car,
-    title: "Automobile",
-    desc: "Livraison critique de pièces détachées pour garages et concessions. Solution immédiate pour éviter l'immobilisation de véhicules (AOG/VOG).",
+    title: "Pièces Auto Urgent",
+    desc: "Livraison critique de pièces détachées pour garages. Solution immédiate (AOG/VOG) pour éviter l'immobilisation.",
     link: "/coursier-automobile-paris"
   }
 ];
 
 const steps = [
-  { num: "01", title: "Commande", desc: "Saisie simplifiée avec carnet d’adresses et choix du véhicule adapté." },
-  { num: "02", title: "Assignation", desc: "Un chauffeur qualifié prend en charge votre course immédiatement." },
-  { num: "03", title: "Livraison", desc: "Remise en main propre et validation instantanée par photo." },
-  { num: "04", title: "Facture", desc: "Consolidation mensuelle avec annexes détaillées pour votre compta." },
+  { num: "01", title: "Commande Express", desc: "Saisie rapide, carnet d’adresses et choix du véhicule (moto, camion)." },
+  { num: "02", title: "Assignation Chauffeur", desc: "Un coursier qualifié prend en charge votre mission immédiatement." },
+  { num: "03", title: "Livraison & Preuve", desc: "Remise en main propre sécurisée et validation instantanée par photo." },
+  { num: "04", title: "Facture Unique", desc: "Toutes vos courses regroupées en une seule facture mensuelle détaillée." },
 ];
 
 const testimonials = [
