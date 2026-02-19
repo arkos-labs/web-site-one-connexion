@@ -68,7 +68,7 @@ export default function Landing() {
       <PublicHeader />
 
       {/* Hero */}
-      <section className="relative flex min-h-[85vh] items-center justify-center overflow-hidden bg-slate-900 px-4 py-32 text-center">
+      <section className="relative flex min-h-[85vh] items-center justify-center overflow-hidden bg-slate-900 px-4 py-16 md:py-32 text-center">
         {/* Background Image & Overlay */}
         <div className="absolute inset-0 z-0">
           <img
@@ -124,8 +124,8 @@ export default function Landing() {
       </section>
 
       {/* Benefits */}
-      <section id="features" className="bg-slate-50 py-24">
-        <div className="mx-auto max-w-6xl px-4">
+      <section id="features" className="bg-slate-50 py-16 md:py-24">
+        <div className="mx-auto max-w-6xl px-4 md:px-8">
           <div className="mb-16 text-center">
             <h2 className="font-serif text-3xl font-medium text-slate-900 md:text-5xl">
               Pourquoi choisir One Connexion ?
@@ -159,8 +159,8 @@ export default function Landing() {
       </section>
 
       {/* Expertises */}
-      <section id="expertises" className="bg-white py-24">
-        <div className="mx-auto max-w-6xl px-4">
+      <section id="expertises" className="bg-white py-16 md:py-24">
+        <div className="mx-auto max-w-6xl px-4 md:px-8">
           <div className="mb-16 text-center">
             <h2 className="font-serif text-3xl font-medium text-slate-900 md:text-5xl">Nos Expertises</h2>
             <p className="mx-auto mt-4 max-w-2xl text-slate-500">
@@ -188,8 +188,8 @@ export default function Landing() {
       </section>
 
       {/* Workflow */}
-      <section id="workflow" className="bg-slate-50 py-24">
-        <div className="mx-auto max-w-6xl px-4">
+      <section id="workflow" className="bg-slate-50 py-16 md:py-24">
+        <div className="mx-auto max-w-6xl px-4 md:px-8">
           <div className="mb-16 text-center">
             <h2 className="font-serif text-3xl font-medium text-slate-900 md:text-5xl">
               Un parcours maîtrisé, de la commande à la facturation
@@ -222,8 +222,8 @@ export default function Landing() {
 
       {/* Testimonials */}
       {/* Testimonials */}
-      <section className="bg-white py-24">
-        <div className="mx-auto max-w-6xl px-4">
+      <section className="bg-white py-16 md:py-24">
+        <div className="mx-auto max-w-6xl px-4 md:px-8">
           <div className="mb-16 text-center">
             <h2 className="font-serif text-3xl font-medium text-slate-900 md:text-5xl">
               Ils nous font confiance
@@ -260,7 +260,7 @@ export default function Landing() {
       </section>
 
       {/* FAQ */}
-      <section id="faq" className="bg-white py-16">
+      <section id="faq" className="bg-white py-12 md:py-16">
         <div className="mx-auto max-w-3xl px-4">
           <div className="mb-16 text-center">
             <h2 className="font-serif text-3xl font-medium text-slate-900 md:text-5xl">Questions fréquentes</h2>
