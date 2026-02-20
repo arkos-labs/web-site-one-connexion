@@ -82,7 +82,7 @@ export default function DashboardDriver() {
             .from('orders')
             .select('*')
             .eq('driver_id', id)
-            .in('status', ['assigned', 'picked_up'])
+            .in('status', ['assigned', 'dispatched', 'driver_accepted', 'in_progress', 'picked_up'])
             .order('created_at', { ascending: true });
 
         if (!error) {
@@ -137,14 +137,16 @@ export default function DashboardDriver() {
     };
 
     const updateStatus = async (orderId, newStatus) => {
+        // Map new status if needed
+        let statusToSave = newStatus;
+        if (newStatus === 'picked_up') statusToSave = 'in_progress';
+
         const { error } = await supabase
             .from('orders')
-            .update({ status: newStatus })
+            .update({ status: statusToSave })
             .eq('id', orderId);
 
-        if (error) {
-            alert("Erreur de mise à jour");
-        } else {
+        if (!error) {
             fetchMyTasks();
         }
     };
@@ -217,7 +219,7 @@ export default function DashboardDriver() {
                                             <div className="text-sm text-slate-500 mt-1">{task.pickup_address}</div>
                                             <div className="flex gap-2 mt-3">
                                                 <button onClick={() => openMap(task.pickup_address)} className="flex items-center gap-1 rounded-lg bg-slate-100 px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-200">
-                                                    <Navigation size={14} /> 
+                                                    <Navigation size={14} />
                                                 </button>
                                                 {task.notes?.includes('Contact') && (
                                                     <button className="flex items-center gap-1 rounded-lg bg-slate-100 px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-200">
@@ -237,7 +239,7 @@ export default function DashboardDriver() {
                                             <div className="text-sm text-slate-500 mt-1">{task.delivery_address}</div>
                                             <div className="flex gap-2 mt-3">
                                                 <button onClick={() => openMap(task.delivery_address)} className="flex items-center gap-1 rounded-lg bg-slate-100 px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-200">
-                                                    <Navigation size={14} /> 
+                                                    <Navigation size={14} />
                                                 </button>
                                             </div>
                                         </div>
@@ -256,7 +258,7 @@ export default function DashboardDriver() {
 
                                 {/* Actions */}
                                 <div className="pt-2">
-                                    {task.status === 'assigned' ? (
+                                    {(['assigned', 'dispatched', 'accepted', 'driver_accepted'].includes(task.status)) ? (
                                         <button
                                             onClick={() => updateStatus(task.id, 'picked_up')}
                                             className="w-full rounded-2xl bg-slate-900 py-4 text-center font-bold text-white shadow-xl shadow-slate-900/20 active:scale-[0.98] transition-all"

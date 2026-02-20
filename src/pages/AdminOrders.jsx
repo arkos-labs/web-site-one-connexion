@@ -293,7 +293,7 @@ export default function AdminOrders() {
 
   const confirmDecision = async () => {
     if (!decisionOrder) return;
-    const nextStatus = decisionType === "accept" ? "assigned" : "cancelled";
+    const nextStatus = decisionType === "accept" ? "accepted" : "cancelled";
 
     const updatePayload = {
       status: nextStatus,
@@ -339,7 +339,7 @@ export default function AdminOrders() {
     }
 
     const { error } = await supabase.from('orders').update({
-      status: 'assigned', // CHANGED: 'assigned' triggers "À accepter" on driver side
+      status: 'dispatched', // New schema status for "Assigned to driver"
       driver_id: dispatchDriver,
       notes: `${dispatchOrder.notes || ''} | Note dispatch: ${dispatchNote}`
     }).eq('id', dispatchOrder.id);
@@ -510,8 +510,8 @@ export default function AdminOrders() {
                       <div className="text-sm font-semibold text-slate-900">{o.date}</div>
                     </td>
                     <td className="py-4">
-                      <span className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wide ${o.status === "delivered" ? "bg-emerald-50 text-emerald-600" : "bg-slate-100 text-slate-600"}`}>
-                        {o.status === "pending" ? "À Accepter" : (o.status === "assigned" ? (o.driver_id ? "Dispatchée" : "Acceptée") : (o.status === "delivered" ? "Terminée" : o.status))}
+                      <span className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wide ${o.status.includes('pending') ? 'bg-emerald-50 text-emerald-600' : (['accepted', 'assigned'].includes(o.status) ? 'bg-blue-50 text-blue-600' : 'bg-slate-100 text-slate-600')}`}>
+                        {o.status.includes('pending') ? 'À Accepter' : ((['accepted', 'assigned'].includes(o.status)) ? (o.driver_id ? 'Dispatchée' : 'Acceptée') : (['delivered'].includes(o.status) ? 'Terminée' : (['in_progress', 'picked_up', 'dispatched'].includes(o.status) ? 'En cours' : o.status)))}
                       </span>
                     </td>
                     <td className="py-4 font-semibold text-slate-900">{Number(o.total || 0).toFixed(2)}€</td>
@@ -529,9 +529,10 @@ export default function AdminOrders() {
         ) : (
           <div className="grid gap-4 lg:grid-cols-3">
             {[
-              { label: "Accepter", statuses: ["pending"] },
-              { label: "Dispatcher", statuses: ["assigned"] },
-              { label: "En cours / Acceptée", statuses: ["accepted", "picked_up"] }, // KEEP: already added
+              { label: "À Accepter", statuses: ["pending_acceptance", "pending"] },
+              { label: "Dispatcher", statuses: ["accepted", "assigned"] },
+              { label: "En cours", statuses: ["dispatched", "driver_accepted", "in_progress", "picked_up"] },
+              { label: "Terminées", statuses: ["delivered"] },
             ].map((col) => (
               <div key={col.label} className="rounded-3xl bg-white p-4 border border-slate-100">
                 <div className="mb-3 text-xs font-bold uppercase tracking-wider text-slate-400">{col.label}</div>
@@ -577,7 +578,7 @@ export default function AdminOrders() {
                           Dupliquer
                         </button>
 
-                        {o.status === "pending" && (
+                        {(['pending_acceptance', 'pending'].includes(o.status)) && (
                           <button
                             type="button"
                             onClick={(e) => {
@@ -593,14 +594,14 @@ export default function AdminOrders() {
                           </button>
                         )}
 
-                        {/* Only show Dispatch button if in 'assigned' state (À dispatcher) */}
-                        {o.status === "assigned" && (
+                        {/* Only show Dispatch button if in 'accepted' or 'assigned' state (À dispatcher) */}
+                        {(['accepted', 'assigned'].includes(o.status)) && (
                           <button onClick={() => openDispatch(o)} className="rounded-full bg-slate-900 px-4 py-1.5 text-[11px] font-bold text-white shadow-lg shadow-slate-900/20 hover:bg-slate-800 transition-all active:scale-95">
                             {o.driver_id ? "Réassigner" : "Dispatcher"}
                           </button>
                         )}
 
-                        {(o.status === "picked_up" || o.status === "accepted") && (
+                        {(['in_progress', 'picked_up', 'dispatched', 'driver_accepted'].includes(o.status)) && (
                           <button onClick={() => completeOrder(o.id)} className="rounded-full bg-orange-500 px-3 py-1 text-[10px] font-bold text-white">Terminer</button>
                         )}
                       </div>

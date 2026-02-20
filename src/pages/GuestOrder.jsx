@@ -247,7 +247,7 @@ export default function GuestOrder() {
                 delivery_name: form.deliveryName,
                 vehicle_type: form.vehicle.toLowerCase(),
                 service_level: form.service.toLowerCase(),
-                status: 'pending',
+                status: 'pending_acceptance',
                 price_ht: price,
                 package_description: form.packageDesc,
                 weight: parseFloat(form.packageWeight) || 0,

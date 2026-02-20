@@ -9,8 +9,13 @@ function clientStatusLabel(order) {
   const driverId = typeof order === 'string' ? null : order.driver_id;
 
   switch (status) {
+    case "pending_acceptance":
     case "pending": return "En attente";
+    case "accepted":
     case "assigned": return driverId ? "Dispatchée" : "Acceptée";
+    case "dispatched":
+    case "driver_accepted":
+    case "in_progress":
     case "picked_up": return "En cours";
     case "delivered": return "Terminée";
     case "cancelled": return "Annulée";
@@ -20,8 +25,13 @@ function clientStatusLabel(order) {
 
 function statusColor(status) {
   switch (status) {
+    case "pending_acceptance":
     case "pending": return "bg-slate-100 text-slate-600";
+    case "accepted":
     case "assigned": return "bg-blue-50 text-blue-600";
+    case "dispatched":
+    case "driver_accepted":
+    case "in_progress":
     case "picked_up": return "bg-orange-50 text-orange-600";
     case "delivered": return "bg-emerald-50 text-emerald-600";
     case "cancelled": return "bg-red-50 text-red-600";

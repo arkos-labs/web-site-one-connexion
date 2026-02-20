@@ -25,7 +25,7 @@ function computeDriverPay(order) {
 function computeDurationMinutes(order) {
   if (order?.status === "delivered" && order?.updated_at) {
     // We prioritize the time between actual pickup and actual delivery
-    const start = order.picked_up_at || order.dispatched_at || order.created_at;
+    const start = order.picked_up_at || order.dispatched_at || order.accepted_at || order.created_at;
     const end = order.updated_at;
 
     if (start && end) {
@@ -185,7 +185,7 @@ export default function AdminDriverDetails() {
           clientName: 'Client',
           route: `${o.pickup_city || ''} → ${o.delivery_city || ''}`,
           displayDate: o.scheduled_at ? new Date(o.scheduled_at).toLocaleDateString() : '—',
-          displayStatus: o.status === 'delivered' ? 'Terminée' : (o.status === 'picked_up' ? 'En cours' : o.status),
+          displayStatus: o.status === 'delivered' ? 'Terminée' : (['picked_up', 'in_progress', 'dispatched', 'driver_accepted'].includes(o.status) ? 'En cours' : o.status),
           pickupTime: pickupInfo,
           deliveryTime: deliveryInfo
         };

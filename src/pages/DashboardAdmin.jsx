@@ -24,7 +24,7 @@ export default function DashboardAdmin() {
   const [drivers, setDrivers] = useState([]);
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [operationView, setOperationView] = useState("pending");
+  const [operationView, setOperationView] = useState("pending_acceptance");
 
   // Form State
   const [clientMode, setClientMode] = useState("existing");
@@ -230,7 +230,7 @@ export default function DashboardAdmin() {
 
       const { data, error } = await supabase
         .from('orders')
-        .update({ status: 'assigned' })
+        .update({ status: 'accepted' })
         .eq('id', orderId)
         .select();
 
@@ -309,11 +309,11 @@ export default function DashboardAdmin() {
   }, [form.pickup, form.delivery, form.vehicle, form.service]);
 
   const kpis = useMemo(() => {
-    const toAccept = ordersAll.filter((o) => o.status === "pending").length;
-    const toDispatch = ordersAll.filter((o) => o.status === "assigned").length;
-    const active = ordersAll.filter((o) => o.status === "picked_up").length;
+    const toAccept = ordersAll.filter((o) => o.status === "pending_acceptance" || o.status === "pending").length;
+    const toDispatch = ordersAll.filter((o) => o.status === "accepted" || o.status === "assigned").length;
+    const active = ordersAll.filter((o) => o.status === "in_progress" || o.status === "picked_up" || o.status === "dispatched").length;
 
-    const revenueOps = ordersAll.filter(o => ['pending', 'assigned', 'picked_up'].includes(o.status)).reduce((acc, o) => acc + (Number(o.price_ht) || 0), 0);
+    const revenueOps = ordersAll.filter(o => ['pending_acceptance', 'pending', 'accepted', 'assigned', 'dispatched', 'in_progress', 'picked_up'].includes(o.status)).reduce((acc, o) => acc + (Number(o.price_ht) || 0), 0);
     const totalDelivered = ordersAll.filter(o => o.status === 'delivered').reduce((acc, o) => acc + (Number(o.price_ht) || 0), 0);
     const revenuePaid = invoicesAll.filter(i => i.status === 'paid').reduce((acc, i) => acc + (Number(i.total_ht) || 0), 0);
 
@@ -339,7 +339,7 @@ export default function DashboardAdmin() {
 
   const driverRows = useMemo(() => {
     return drivers.map((d) => {
-      const activeOrder = ordersAll.find((o) => o.driver_id === d.id && o.status === "picked_up");
+      const activeOrder = ordersAll.find((o) => o.driver_id === d.id && (o.status === "in_progress" || o.status === "picked_up"));
       const status = activeOrder ? "EN MISSION" : "À VIDE";
       const cls = activeOrder ? "bg-amber-100 text-amber-700" : "bg-emerald-100 text-emerald-700";
       return { ...d, status, cls };
@@ -451,7 +451,7 @@ export default function DashboardAdmin() {
       delivery_postal_code: form.deliveryPostcode || getPostcode(form.delivery),
       vehicle_type: form.vehicle.toLowerCase(),
       service_level: form.service.toLowerCase(),
-      status: 'pending',
+      status: 'pending_acceptance',
       delivery_deadline: form.date && form.deliveryDeadline ? `${form.date}T${form.deliveryDeadline}:00` : null,
       package_type: form.packageType,
       package_description: form.packageDesc,
@@ -566,29 +566,29 @@ export default function DashboardAdmin() {
               <div className="p-6 border-b border-slate-50 bg-slate-50/50 flex items-center justify-between">
                 <h4 className="font-bold text-xs uppercase tracking-wider text-slate-500">Opérations en cours</h4>
                 <div className="flex bg-slate-100 p-1 rounded-xl">
-                  {['pending', 'assigned', 'picked_up'].map(s => (
+                  {['pending_acceptance', 'accepted', 'in_progress'].map(s => (
                     <button
                       key={s}
                       onClick={() => setOperationView(s)}
                       className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${operationView === s ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
                     >
-                      {s === 'pending' ? 'Accepter' : s === 'assigned' ? 'Assigner' : 'En cours'}
+                      {s === 'pending_acceptance' ? 'Accepter' : s === 'accepted' ? 'Assigner' : 'En cours'}
                     </button>
                   ))}
                 </div>
               </div>
               <div className="divide-y divide-slate-50 min-h-[300px]">
-                {ordersAll.filter((o) => o.status === operationView).length === 0 ? (
+                {ordersAll.filter((o) => (operationView === 'pending_acceptance' ? (o.status === 'pending_acceptance' || o.status === 'pending') : o.status === operationView)).length === 0 ? (
                   <div className="p-12 text-sm text-slate-500 text-center flex flex-col items-center gap-3">
                     <span className="text-3xl text-slate-200 opacity-50">📋</span>
-                    Aucune commande {operationView === 'pending' ? 'à accepter' : operationView === 'assigned' ? 'à assigner' : 'en cours'}.
+                    Aucune commande {operationView === 'pending_acceptance' ? 'à accepter' : operationView === 'accepted' ? 'à assigner' : 'en cours'}.
                   </div>
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-px bg-slate-50">
-                    {ordersAll.filter((o) => o.status === operationView).map((o) => (
+                    {ordersAll.filter((o) => (operationView === 'pending_acceptance' ? (o.status === 'pending_acceptance' || o.status === 'pending') : o.status === operationView)).map((o) => (
                       <div
                         key={o.id}
-                        onClick={() => navigate(`/admin/orders/${o.id}`)}
+                        onClick={() => navigate(operationView === 'accepted' ? `/admin/orders?status=assigned` : `/admin/orders/${o.id}`)}
                         className="p-5 bg-white hover:bg-slate-50 transition-all group cursor-pointer"
                       >
                         <div className="flex justify-between items-start mb-3">
@@ -596,8 +596,8 @@ export default function DashboardAdmin() {
                             <span className="text-xs font-bold text-slate-400 block mb-1 uppercase tracking-tighter">#{o.id.slice(0, 8)}</span>
                             <span className="text-sm font-bold text-slate-900 group-hover:text-slate-700 transition-colors line-clamp-1">{o.clientName}</span>
                           </div>
-                          <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide ${o.status === "pending" ? "bg-emerald-50 text-emerald-600" : o.status === "assigned" ? "bg-blue-50 text-blue-600" : "bg-amber-50 text-amber-600"}`}>
-                            {o.status === 'pending' ? 'À Accepter' : (o.status === 'assigned' ? (o.driver_id ? 'Dispatchée' : 'Acceptée') : (o.status === 'picked_up' ? 'En cours' : o.status))}
+                          <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide ${o.status.includes('pending') ? "bg-emerald-50 text-emerald-600" : (o.status === "accepted" || o.status === "assigned") ? "bg-blue-50 text-blue-600" : "bg-amber-50 text-amber-600"}`}>
+                            {o.status.includes('pending') ? 'À Accepter' : ((o.status === 'accepted' || o.status === 'assigned') ? (o.driver_id ? 'Dispatchée' : 'Acceptée') : (['in_progress', 'picked_up', 'dispatched'].includes(o.status) ? 'En cours' : o.status))}
                           </span>
                         </div>
                         <div className="text-xs font-semibold text-slate-500 leading-relaxed mb-3 line-clamp-2">
@@ -605,7 +605,7 @@ export default function DashboardAdmin() {
                         </div>
                         <div className="flex items-center justify-between pt-2 border-t border-slate-50 relative z-20">
                           <div className="flex gap-2">
-                            {o.status === 'pending' && (
+                            {(o.status === 'pending_acceptance' || o.status === 'pending') && (
                               <button
                                 type="button"
                                 onClick={(e) => {
@@ -618,7 +618,7 @@ export default function DashboardAdmin() {
                                 Accepter
                               </button>
                             )}
-                            {o.status === 'assigned' && (
+                            {(o.status === 'accepted' || o.status === 'assigned') && (
                               <button
                                 type="button"
                                 onClick={(e) => {
