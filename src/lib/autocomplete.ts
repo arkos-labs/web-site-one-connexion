@@ -5,7 +5,7 @@
  * Compatible avec la base tarifaire existante du projet
  */
 
-import { rechercherVilles, estVilleDesservie, findCityByZipAndName } from "@/data/tarifs_idf";
+import { rechercherVilles, estVilleDesservie, findCityByZipAndName } from "../data/tarifs_idf";
 
 export interface AddressSuggestion {
     full: string;        // Adresse complète pour affichage dans les suggestions
