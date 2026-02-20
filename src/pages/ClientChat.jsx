@@ -216,7 +216,10 @@ export default function ClientChat() {
                         </div>
                     ) : (
                         messages.map((m) => {
-                            const isMe = (m.is_admin_message ?? (m.sender_id === currentUser?.id)) === false;
+                            const isFromAdmin = m.is_admin_message === true;
+                            const isFromMe = m.sender_id === currentUser?.id;
+                            const isMe = isFromMe; // For the client/driver, 'Me' is whoever is logged in
+
                             return (
                                 <div key={m.id} className={`flex ${isMe ? "justify-end" : "justify-start"}`}>
                                     <div className={`max-w-[75%] group relative flex flex-col ${isMe ? "items-end" : "items-start"}`}>
