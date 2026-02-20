@@ -485,7 +485,7 @@ export default function AdminOrders() {
                     </td>
                     <td className="py-4">
                       <span className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wide ${o.status === "delivered" ? "bg-emerald-50 text-emerald-600" : "bg-slate-100 text-slate-600"}`}>
-                        {o.status}
+                        {o.status === "pending" ? "Accepter" : o.status === "assigned" ? "Assigner" : o.status === "delivered" ? "Terminée" : o.status}
                       </span>
                     </td>
                     <td className="py-4 font-semibold text-slate-900">{Number(o.total || 0).toFixed(2)}€</td>
@@ -503,9 +503,9 @@ export default function AdminOrders() {
         ) : (
           <div className="grid gap-4 lg:grid-cols-3">
             {[
-              { label: "En attente", statuses: ["pending"] },
-              { label: "À dispatcher", statuses: ["assigned"] },
-              { label: "En cours / Acceptée", statuses: ["accepted", "picked_up"] }, // CHANGED: Added accepted
+              { label: "Accepter", statuses: ["pending"] },
+              { label: "Assigner", statuses: ["assigned"] },
+              { label: "En cours / Acceptée", statuses: ["accepted", "picked_up"] }, // KEEP: already added
             ].map((col) => (
               <div key={col.label} className="rounded-3xl bg-white p-4 border border-slate-100">
                 <div className="mb-3 text-xs font-bold uppercase tracking-wider text-slate-400">{col.label}</div>

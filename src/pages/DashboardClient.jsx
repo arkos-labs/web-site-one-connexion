@@ -6,8 +6,8 @@ import { generateInvoicePdf } from "../lib/pdfGenerator";
 
 function clientStatusLabel(status) {
   switch (status) {
-    case "pending": return "En attente";
-    case "assigned": return "Chauffeur assigné";
+    case "pending": return "Accepter";
+    case "assigned": return "Assigner";
     case "picked_up": return "En cours";
     case "delivered": return "Terminée";
     case "cancelled": return "Annulée";

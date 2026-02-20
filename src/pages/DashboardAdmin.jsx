@@ -554,7 +554,7 @@ export default function DashboardAdmin() {
                       onClick={() => setOperationView(s)}
                       className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${operationView === s ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
                     >
-                      {s === 'pending' ? 'En attente' : s === 'assigned' ? 'À dispatcher' : 'En cours'}
+                      {s === 'pending' ? 'Accepter' : s === 'assigned' ? 'Assigner' : 'En cours'}
                     </button>
                   ))}
                 </div>
@@ -563,7 +563,7 @@ export default function DashboardAdmin() {
                 {ordersAll.filter((o) => o.status === operationView).length === 0 ? (
                   <div className="p-12 text-sm text-slate-500 text-center flex flex-col items-center gap-3">
                     <span className="text-3xl text-slate-200 opacity-50">📋</span>
-                    Aucune commande {operationView === 'pending' ? 'en attente' : operationView === 'assigned' ? 'à dispatcher' : 'en cours'}.
+                    Aucune commande {operationView === 'pending' ? 'à accepter' : operationView === 'assigned' ? 'à assigner' : 'en cours'}.
                   </div>
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-px bg-slate-50">
@@ -579,7 +579,7 @@ export default function DashboardAdmin() {
                             <span className="text-sm font-bold text-slate-900 group-hover:text-slate-700 transition-colors line-clamp-1">{o.clientName}</span>
                           </div>
                           <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide ${o.status === "pending" ? "bg-emerald-50 text-emerald-600" : o.status === "assigned" ? "bg-blue-50 text-blue-600" : "bg-amber-50 text-amber-600"}`}>
-                            {o.status}
+                            {o.status === 'pending' ? 'Accepter' : o.status === 'assigned' ? 'Assigner' : o.status}
                           </span>
                         </div>
                         <div className="text-xs font-semibold text-slate-500 leading-relaxed mb-3 line-clamp-2">
