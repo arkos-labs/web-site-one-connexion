@@ -239,6 +239,8 @@ export default function DashboardAdmin() {
       console.log("DEBUG: handleQuickAccept success", data);
 
       // Provide immediate visual feedback
+      alert('Commande acceptée avec succès');
+      setOperationView('accepted');
       fetchOrders();
     } catch (err) {
       console.error("DEBUG: handleQuickAccept error", err);
