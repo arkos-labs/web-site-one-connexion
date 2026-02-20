@@ -34,7 +34,7 @@ function clientStatusLabel(order) {
 
   switch (status) {
     case "pending": return "En attente";
-    case "assigned": return driverId ? "Assignée" : "Acceptée";
+    case "assigned": return driverId ? "Dispatchée" : "Acceptée";
     case "picked_up": return "En cours";
     case "delivered": return "Terminée";
     case "cancelled": return "Annulée";
@@ -100,6 +100,20 @@ export default function Orders() {
   useEffect(() => {
     fetchOrders();
     fetchAddresses();
+
+    // Subscribe to realtime updates for orders
+    const channel = supabase
+      .channel('client-orders-list-updates')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'orders' },
+        () => fetchOrders()
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const fetchAddresses = async () => {

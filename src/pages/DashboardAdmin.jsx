@@ -200,22 +200,16 @@ export default function DashboardAdmin() {
 
   const fetchProfiles = async () => {
     try {
-      // On récupère TOUS les profils pour être sûr de ne rien rater
       const { data, error } = await supabase.from('profiles').select('*');
-
       if (!error && data) {
-        // Filtrage des chauffeurs (courier) - SEULEMENT CEUX EN LIGNE
         const dList = data
           .filter(p => p.role?.toLowerCase() === 'courier' && p.is_online === true)
           .map(p => ({
             id: p.id,
             name: p.details?.full_name || p.details?.company || 'Nom inconnu',
-            status: 'À VIDE',
-            cls: "bg-emerald-100 text-emerald-700"
           }));
         setDrivers(dList);
 
-        // Filtrage des clients (tout ce qui n'est pas chauffeur, ou role=client)
         const cList = data.filter(p => p.role?.toLowerCase() === 'client' || !p.role || p.role === 'admin').map(p => ({
           id: p.id,
           name: p.details?.company || p.details?.full_name || 'Client',
@@ -225,6 +219,30 @@ export default function DashboardAdmin() {
       }
     } catch (err) {
       console.error("Error fetching profiles:", err);
+    }
+  };
+
+  const handleQuickAccept = async (orderId) => {
+    if (!orderId) return;
+    try {
+      console.log("DEBUG: handleQuickAccept started", orderId);
+      // Optional: set a local loading state for this specific order
+
+      const { data, error } = await supabase
+        .from('orders')
+        .update({ status: 'assigned' })
+        .eq('id', orderId)
+        .select();
+
+      if (error) throw error;
+
+      console.log("DEBUG: handleQuickAccept success", data);
+
+      // Provide immediate visual feedback
+      fetchOrders();
+    } catch (err) {
+      console.error("DEBUG: handleQuickAccept error", err);
+      alert("Erreur lors de l'acceptation : " + (err.message || "Erreur inconnue"));
     }
   };
 
@@ -493,8 +511,8 @@ export default function DashboardAdmin() {
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 stagger">
             {[
-              { label: "En attente", value: kpis.toAccept, tone: "text-emerald-600", bg: "bg-emerald-50", icon: "🚨" },
-              { label: "À dispatcher", value: kpis.toDispatch, tone: "text-blue-600", bg: "bg-blue-50", icon: "🧭" },
+              { label: "À Accepter", value: kpis.toAccept, tone: "text-emerald-600", bg: "bg-emerald-50", icon: "🚨" },
+              { label: "À Dispatcher", value: kpis.toDispatch, tone: "text-blue-600", bg: "bg-blue-50", icon: "🧭" },
               { label: "Courses actives", value: kpis.active, tone: "text-amber-600", bg: "bg-amber-50", icon: "🚚" },
               { label: "CA Opérationnel", value: `${kpis.revenueOps.toFixed(2)}€`, tone: "text-slate-500", bg: "bg-slate-50", icon: "🛠️" },
               { label: "CA à Recouvrer (Livrées)", value: `${kpis.revenueToRecoup.toFixed(2)}€`, tone: "text-rose-600", bg: "bg-rose-50", icon: "⏳" },
@@ -579,15 +597,42 @@ export default function DashboardAdmin() {
                             <span className="text-sm font-bold text-slate-900 group-hover:text-slate-700 transition-colors line-clamp-1">{o.clientName}</span>
                           </div>
                           <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide ${o.status === "pending" ? "bg-emerald-50 text-emerald-600" : o.status === "assigned" ? "bg-blue-50 text-blue-600" : "bg-amber-50 text-amber-600"}`}>
-                            {o.status === 'pending' ? 'Accepter' : (o.status === 'assigned' ? (o.driver_id ? 'Assigné' : 'Assigner') : o.status)}
+                            {o.status === 'pending' ? 'À Accepter' : (o.status === 'assigned' ? (o.driver_id ? 'Dispatchée' : 'Acceptée') : (o.status === 'picked_up' ? 'En cours' : o.status))}
                           </span>
                         </div>
                         <div className="text-xs font-semibold text-slate-500 leading-relaxed mb-3 line-clamp-2">
                           {o.pickup_city || o.pickup_address.split(',')[0]} → {o.delivery_city || o.delivery_address.split(',')[0]}
                         </div>
-                        <div className="flex items-center justify-between pt-2 border-t border-slate-50">
-                          <span className="text-xs font-bold text-slate-800">{Number(o.price_ht || 0).toFixed(2)}€</span>
-                          <span className="text-[10px] font-bold text-slate-400">Voir détails →</span>
+                        <div className="flex items-center justify-between pt-2 border-t border-slate-50 relative z-20">
+                          <div className="flex gap-2">
+                            {o.status === 'pending' && (
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  handleQuickAccept(o.id);
+                                }}
+                                className="rounded-full bg-emerald-600 px-4 py-2 text-[11px] font-bold text-white shadow-lg shadow-emerald-500/20 hover:bg-emerald-700 active:scale-95 transition-all cursor-pointer"
+                              >
+                                Accepter
+                              </button>
+                            )}
+                            {o.status === 'assigned' && (
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  navigate(`/admin/orders?status=assigned`);
+                                }}
+                                className="rounded-full bg-slate-900 px-4 py-2 text-[11px] font-bold text-white shadow-lg shadow-slate-900/20 hover:bg-slate-800 transition-all cursor-pointer"
+                              >
+                                Dispatcher
+                              </button>
+                            )}
+                          </div>
+                          <span className="text-[10px] font-bold text-slate-400">Détails →</span>
                         </div>
                       </div>
                     ))}

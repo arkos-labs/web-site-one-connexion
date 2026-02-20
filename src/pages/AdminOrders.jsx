@@ -210,27 +210,53 @@ export default function AdminOrders() {
   const kanbanList = useMemo(() => sortOrders(activeOrders), [activeOrders, sortMode]);
 
   const openDecision = (order, type) => {
-    setDecisionOrder(order);
-    setDecisionType(type);
-    setReason("");
-    setDecisionEditMode(false);
+    if (!order) return;
+    try {
+      console.log("DEBUG: openDecision started for", order.id, type);
+      setDecisionOrder(order);
+      setDecisionType(type);
+      setReason("");
+      setDecisionEditMode(false);
 
-    const total = Number(order?.total || 0);
-    const share = total > 0 && total <= 10 ? 0.5 : 0.4;
-    const defaultDriverPay = total ? (total * share) : 0;
+      const total = Number(order.price_ht || 0);
+      const share = total > 0 && total <= 10 ? 0.5 : 0.4;
+      const defaultDriverPay = total ? (total * share) : 0;
 
-    setDecisionEdit({
-      pickup: order?.pickup || "",
-      delivery: order?.delivery || "",
-      date: order?.date || "",
-      pickupTime: order?.scheduled_at ? new Date(order.scheduled_at).toLocaleTimeString().slice(0, 5) : "",
-      deliveryDeadline: "",
-      contactPhone: "",
-      accessCode: "",
-      driverPay: defaultDriverPay ? defaultDriverPay.toFixed(2) : "",
-    });
+      let pickupTimeStr = "";
+      if (order.scheduled_at) {
+        try {
+          const d = new Date(order.scheduled_at);
+          if (!isNaN(d.getTime())) {
+            pickupTimeStr = d.getHours().toString().padStart(2, '0') + ":" + d.getMinutes().toString().padStart(2, '0');
+          }
+        } catch (e) { }
+      }
 
-    setDecisionOpen(true);
+      const safeDate = order.created_at ? (function () {
+        const d = new Date(order.created_at);
+        return isNaN(d.getTime()) ? new Date().toISOString().split('T')[0] : d.toISOString().split('T')[0];
+      })() : new Date().toISOString().split('T')[0];
+
+      setDecisionEdit({
+        pickup: order.pickup_address || "",
+        delivery: order.delivery_address || "",
+        date: safeDate,
+        pickupTime: pickupTimeStr,
+        deliveryDeadline: "",
+        contactPhone: order.contact_phone || "",
+        accessCode: "",
+        driverPay: defaultDriverPay ? defaultDriverPay.toFixed(2) : "",
+      });
+
+      console.log("DEBUG: opening modal now");
+      setDecisionOpen(true);
+    } catch (err) {
+      console.error("DEBUG: openDecision crash", err);
+      // Fallback: open with minimal data to avoid staying blocked
+      setDecisionOrder(order);
+      setDecisionType(type);
+      setDecisionOpen(true);
+    }
   };
 
   const openDispatch = (order) => {
@@ -376,8 +402,8 @@ export default function AdminOrders() {
   return (
     <div className="p-8">
       <header className="mb-6">
-        <h1 className="text-4xl font-extrabold text-slate-900"> des Commandes 📦</h1>
-        <p className="mt-2 text-base font-medium text-slate-500">Gérez, attribuez et optimisez vos livraisons en .</p>
+        <h1 className="text-4xl font-extrabold text-slate-900">Gestion des Commandes 📦</h1>
+        <p className="mt-2 text-base font-medium text-slate-500">Gérez, attribuez et optimisez vos livraisons en temps réel.</p>
       </header>
 
       <div className="rounded-3xl bg-white p-6 shadow-sm">
@@ -485,7 +511,7 @@ export default function AdminOrders() {
                     </td>
                     <td className="py-4">
                       <span className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wide ${o.status === "delivered" ? "bg-emerald-50 text-emerald-600" : "bg-slate-100 text-slate-600"}`}>
-                        {o.status === "pending" ? "Accepter" : (o.status === "assigned" ? (o.driver_id ? "Assigné" : "Assigner") : (o.status === "delivered" ? "Terminée" : o.status))}
+                        {o.status === "pending" ? "À Accepter" : (o.status === "assigned" ? (o.driver_id ? "Dispatchée" : "Acceptée") : (o.status === "delivered" ? "Terminée" : o.status))}
                       </span>
                     </td>
                     <td className="py-4 font-semibold text-slate-900">{Number(o.total || 0).toFixed(2)}€</td>
@@ -504,7 +530,7 @@ export default function AdminOrders() {
           <div className="grid gap-4 lg:grid-cols-3">
             {[
               { label: "Accepter", statuses: ["pending"] },
-              { label: "Assigner", statuses: ["assigned"] },
+              { label: "Dispatcher", statuses: ["assigned"] },
               { label: "En cours / Acceptée", statuses: ["accepted", "picked_up"] }, // KEEP: already added
             ].map((col) => (
               <div key={col.label} className="rounded-3xl bg-white p-4 border border-slate-100">
@@ -527,17 +553,51 @@ export default function AdminOrders() {
                         </div>
                       )}
 
-                      <div className="mt-3 flex flex-wrap gap-2">
-                        <button onClick={() => navigate(`/admin/orders/${o.id}`)} className="rounded-full bg-slate-100 px-3 py-1 text-[10px] font-bold text-slate-700">Détails</button>
-                        <button onClick={() => duplicateOrder(o)} className="rounded-full bg-slate-100 px-3 py-1 text-[10px] font-bold text-slate-700 hover:bg-slate-200">Dupliquer</button>
+                      <div className="mt-3 flex flex-wrap gap-2 relative z-20">
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            navigate(`/admin/orders/${o.id}`);
+                          }}
+                          className="rounded-full bg-slate-100 px-3 py-1 text-[10px] font-bold text-slate-700 hover:bg-slate-200"
+                        >
+                          Détails
+                        </button>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            duplicateOrder(o);
+                          }}
+                          className="rounded-full bg-slate-100 px-3 py-1 text-[10px] font-bold text-slate-700 hover:bg-slate-200"
+                        >
+                          Dupliquer
+                        </button>
 
                         {o.status === "pending" && (
-                          <button onClick={() => openDecision(o, "accept")} className="rounded-full bg-emerald-50 px-3 py-1 text-[10px] font-bold text-emerald-600">Accepter</button>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              console.log("CLICK: Accepter button kanban", o.id);
+                              openDecision(o, "accept");
+                            }}
+                            className="inline-flex items-center justify-center rounded-full bg-emerald-600 px-5 py-2 text-[11px] font-bold text-white shadow-lg shadow-emerald-500/20 hover:bg-emerald-700 active:scale-95 transition-all cursor-pointer ring-2 ring-emerald-100"
+                            title="Accepter la commande"
+                          >
+                            Accepter
+                          </button>
                         )}
 
                         {/* Only show Dispatch button if in 'assigned' state (À dispatcher) */}
                         {o.status === "assigned" && (
-                          <button onClick={() => openDispatch(o)} className="rounded-full bg-slate-900 px-3 py-1 text-[10px] font-bold text-white">Dispatcher</button>
+                          <button onClick={() => openDispatch(o)} className="rounded-full bg-slate-900 px-4 py-1.5 text-[11px] font-bold text-white shadow-lg shadow-slate-900/20 hover:bg-slate-800 transition-all active:scale-95">
+                            {o.driver_id ? "Réassigner" : "Dispatcher"}
+                          </button>
                         )}
 
                         {(o.status === "picked_up" || o.status === "accepted") && (
@@ -554,38 +614,66 @@ export default function AdminOrders() {
       </div>
 
       {decisionOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div className="w-full max-w-md bg-white rounded-3xl p-6">
-            <h3 className="font-bold mb-4">{decisionType === 'accept' ? 'Accepter' : 'Refuser'} la commande</h3>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn">
+          <div className="w-full max-w-md bg-white rounded-[2.5rem] p-8 shadow-2xl animate-scaleIn">
+            <h3 className="text-xl font-bold text-slate-900 mb-2">Accepter la commande</h3>
+            <p className="text-sm text-slate-500 mb-6 font-medium">Voulez-vous valider cette mission ? Vous pourrez ensuite l'assigner à un chauffeur.</p>
+
+            <label className="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-2 px-1">Note interne (optionnel)</label>
             <textarea
-              className="w-full rounded-2xl border border-slate-200 p-4 text-sm mb-4"
-              placeholder="Motif..."
+              className="w-full rounded-2xl border border-slate-100 bg-slate-50 p-4 text-sm mb-6 focus:ring-4 focus:ring-slate-100 outline-none transition-all"
+              placeholder="Ex: Urgent, fragile..."
               value={reason}
               onChange={(e) => setReason(e.target.value)}
+              rows={3}
             />
             <div className="flex justify-end gap-3">
-              <button onClick={() => setDecisionOpen(false)} className="px-4 py-2 text-sm font-bold">Annuler</button>
-              <button onClick={confirmDecision} className="bg-slate-900 text-white rounded-full px-6 py-2 text-sm font-bold">Confirmer</button>
+              <button
+                onClick={() => setDecisionOpen(false)}
+                className="px-6 py-3 text-sm font-bold text-slate-400 hover:text-slate-900 transition-colors"
+              >
+                Annuler
+              </button>
+              <button
+                onClick={confirmDecision}
+                className="bg-slate-900 text-white rounded-2xl px-8 py-3 text-sm font-bold shadow-lg shadow-slate-900/20 hover:bg-slate-800 transition-all active:scale-95"
+              >
+                Confirmer
+              </button>
             </div>
           </div>
         </div>
       )}
 
       {dispatchOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div className="w-full max-w-md bg-white rounded-3xl p-6">
-            <h3 className="font-bold mb-4">Dispatcher au chauffeur</h3>
+        <div className="fixed inset-0 z-[110] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn">
+          <div className="w-full max-w-md bg-white rounded-[2.5rem] p-8 shadow-2xl animate-scaleIn">
+            <h3 className="text-xl font-bold text-slate-900 mb-2">Dispatcher la course</h3>
+            <p className="text-sm text-slate-500 mb-6 font-medium">Sélectionnez le chauffeur qui effectuera cette livraison.</p>
+
+            <label className="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-2 px-1">Chauffeur disponible</label>
             <select
-              className="w-full rounded-2xl border border-slate-200 p-4 text-sm mb-4"
+              className="w-full rounded-2xl border border-slate-100 bg-slate-50 p-4 text-sm mb-6 focus:ring-4 focus:ring-slate-100 outline-none transition-all appearance-none cursor-pointer font-bold"
               value={dispatchDriver}
               onChange={(e) => setDispatchDriver(e.target.value)}
             >
-              <option value="">Choisir un chauffeur</option>
+              <option value="">— Sélectionner —</option>
               {drivers.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
             </select>
+
             <div className="flex justify-end gap-3">
-              <button onClick={() => setDispatchOpen(false)} className="px-4 py-2 text-sm font-bold">Annuler</button>
-              <button onClick={confirmDispatch} className="bg-slate-900 text-white rounded-full px-6 py-2 text-sm font-bold">Confirmer</button>
+              <button
+                onClick={() => setDispatchOpen(false)}
+                className="px-6 py-3 text-sm font-bold text-slate-400 hover:text-slate-900 transition-colors"
+              >
+                Annuler
+              </button>
+              <button
+                onClick={confirmDispatch}
+                className="bg-slate-900 text-white rounded-2xl px-8 py-3 text-sm font-bold shadow-lg shadow-slate-900/20 hover:bg-slate-800 transition-all active:scale-95"
+              >
+                Assigner
+              </button>
             </div>
           </div>
         </div>
