@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 import { MapPin, Plus, Edit2, Trash2 } from "lucide-react";
+import { autocompleteAddress } from "../lib/autocomplete";
 
 const LOCATIONIQ_KEY = import.meta.env.VITE_LOCATIONIQ_API_KEY;
 const LOCATIONIQ_URL = "https://api.locationiq.com/v1/autocomplete";
@@ -67,25 +68,18 @@ export default function Addresses() {
   };
 
   const fetchSuggestions = async (query) => {
-    if (!LOCATIONIQ_KEY || query.trim().length < 3) {
+    if (query.trim().length < 2) {
       setSuggestions([]);
       return;
     }
     try {
       setLoadingSuggestions(true);
-      const viewbox = "1.446,49.241,3.559,48.120"; // Approx Ile-de-France viewbox
-      const url = `${LOCATIONIQ_URL}?key=${LOCATIONIQ_KEY}&q=${encodeURIComponent(query)}&limit=5&format=json&accept-language=fr&countrycodes=fr`;
-
-      const res = await fetch(`${url}&viewbox=${viewbox}&bounded=1`);
-
-      const data = await res.json();
-      const list = Array.isArray(data)
-        ? data.map((d) => ({
-          label: d.display_name,
-          city: d.address?.city || d.address?.town || d.address?.village || "",
-          postcode: d.address?.postcode || ""
-        }))
-        : [];
+      const results = await autocompleteAddress(query);
+      const list = results.map(s => ({
+        label: s.full,
+        city: s.city,
+        postcode: s.postcode
+      }));
       setSuggestions(list);
     } catch (err) {
       console.error("Autocomplete error:", err);

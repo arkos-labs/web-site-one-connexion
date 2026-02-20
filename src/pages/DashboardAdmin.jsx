@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useMemo, useState, useRef } from "react";
 import { supabase } from "../lib/supabase";
 import { Search, X, MapPin, BookOpen } from "lucide-react";
+import { autocompleteAddress } from "../lib/autocomplete";
 
 const LOCATIONIQ_KEY = import.meta.env.VITE_LOCATIONIQ_API_KEY;
 const LOCATIONIQ_URL = "https://api.locationiq.com/v1/autocomplete";
@@ -398,35 +399,21 @@ export default function DashboardAdmin() {
   };
 
   const fetchSuggestions = async (query, setSuggestions, setLoading) => {
-    if (!LOCATIONIQ_KEY || query.trim().length < 3) {
+    if (query.trim().length < 2) {
       setSuggestions([]);
       return;
     }
-    // ... (rest of fetchSuggestions remains same)
     try {
       setLoading(true);
-      const viewbox = "1.446,49.241,3.559,48.120";
-      const url = `${LOCATIONIQ_URL}?key=${LOCATIONIQ_KEY}&q=${encodeURIComponent(query)}&limit=6&format=json&accept-language=fr&countrycodes=fr&viewbox=${viewbox}&bounded=1`;
-      const res = await fetch(url);
-      const data = await res.json();
-      const allowed = ['75', '77', '78', '91', '92', '93', '94', '95'];
-      const list = Array.isArray(data)
-        ? data.map((d) => {
-          const addr = d.address || {};
-          const street = [addr.house_number, addr.road].filter(Boolean).join(' ');
-          const local = [addr.postcode, addr.city || addr.town || addr.village].filter(Boolean).join(' ');
-          const cleanLabel = [street, local].filter(Boolean).join(', ') || d.display_name;
-
-          return {
-            label: cleanLabel,
-            city: addr.city || addr.town || addr.village || "",
-            postcode: addr.postcode || ""
-          };
-        })
-          .filter(item => item.postcode && allowed.some(prefix => item.postcode.startsWith(prefix)))
-        : [];
+      const results = await autocompleteAddress(query);
+      const list = results.map(s => ({
+        label: s.full,
+        city: s.city,
+        postcode: s.postcode
+      }));
       setSuggestions(list);
-    } catch {
+    } catch (err) {
+      console.error("Autocomplete error:", err);
       setSuggestions([]);
     } finally {
       setLoading(false);

@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Package, Truck, Clock, MapPin, Phone, User, ArrowLeft, Loader2, CheckCircle2, ShoppingCart, Info, AlertCircle, Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
 import { supabase } from "../lib/supabase.js";
 import PublicHeader from "../components/PublicHeader.jsx";
+import { autocompleteAddress } from "../lib/autocomplete";
 
 const VEHICLES = ["Moto", "Voiture"];
 const LOCATIONIQ_KEY = import.meta.env.VITE_LOCATIONIQ_API_KEY;
@@ -14,6 +15,9 @@ const getPostcode = (str = "") => {
 };
 
 const formatAddress = (d) => {
+    // If it's a suggestion from our new service, it already has the label in 'full'
+    if (d.full) return d.full;
+
     const a = d.address || {};
     const street = [a.house_number, a.road].filter(Boolean).join(" ");
     const city = [a.postcode, a.city || a.town || a.village].filter(Boolean).join(" ");
@@ -129,28 +133,22 @@ export default function GuestOrder() {
     }, [form.pickup, form.delivery, form.vehicle, form.service]);
 
     const fetchSuggestions = async (query, setSuggestions, setLoading) => {
-        if (!LOCATIONIQ_KEY || query.trim().length < 3) {
+        if (query.trim().length < 2) {
             setSuggestions([]);
             return;
         }
         try {
             setLoading(true);
-            const viewbox = "1.446,49.241,3.559,48.120"; // Île-de-France bbox
-            const url = `${LOCATIONIQ_URL}?key=${LOCATIONIQ_KEY}&q=${encodeURIComponent(query)}&limit=5&format=json&accept-language=fr&countrycodes=fr&viewbox=${viewbox}&bounded=1`;
-            const res = await fetch(url);
-            const data = await res.json();
-            const allowed = ['75', '77', '78', '91', '92', '93', '94', '95'];
-            const list = Array.isArray(data)
-                ? data
-                    .map((d) => ({
-                        label: formatAddress(d),
-                        city: d.address?.city || d.address?.town || d.address?.village || "",
-                        postcode: d.address?.postcode || ""
-                    }))
-                    .filter(item => allowed.some(prefix => item.postcode.startsWith(prefix)))
-                : [];
+            const results = await autocompleteAddress(query);
+            const list = results.map(s => ({
+                label: s.full,
+                city: s.city,
+                postcode: s.postcode,
+                street: s.street
+            }));
             setSuggestions(list);
-        } catch {
+        } catch (err) {
+            console.error("Autocomplete error:", err);
             setSuggestions([]);
         } finally {
             setLoading(false);

@@ -100,7 +100,10 @@ export const AddressAutocomplete = ({
         skipSearchRef.current = true;
 
         // Remplir avec l'adresse complète : rue + numéro, code postal et ville
-        const fullAddress = `${suggestion.street}, ${suggestion.postcode} ${suggestion.city}`;
+        const fullAddress = suggestion.full || (suggestion.street
+            ? `${suggestion.street}, ${suggestion.postcode} ${suggestion.city}`
+            : `${suggestion.postcode} ${suggestion.city}`);
+
         onChange(fullAddress);
         setSuggestions([]);
         setShowSuggestions(false);

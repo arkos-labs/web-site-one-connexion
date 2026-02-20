@@ -85,7 +85,8 @@ export async function autocompleteAddress(query: string): Promise<AddressSuggest
                         }
 
                         // Correction : Force le numéro s'il a été tapé par l'utilisateur mais oublié par l'API
-                        const userNumberMatch = query.trim().match(/^(\d+)/);
+                        // On cherche un numéro au début (ex: "12", "12 bis", "12b")
+                        const userNumberMatch = query.trim().match(/^(\d+(?:\s*[a-zA-Z]{1,3})?)\b/);
                         const userNumber = userNumberMatch ? userNumberMatch[1] : null;
                         const apiNumber = item.address?.house_number;
                         const finalNumber = apiNumber || userNumber || "";
@@ -95,11 +96,14 @@ export async function autocompleteAddress(query: string): Promise<AddressSuggest
                             : item.display_name.split(",")[0].trim();
 
                         // Si on a un numéro à forcer et que la rue n'en a pas déjà un
+                        // On vérifie si la rue commence déjà par un chiffre
                         if (finalNumber && !street.match(/^\d+/)) {
                             street = `${finalNumber} ${street}`;
-                        } else if (item.address?.road && item.address?.house_number) {
-                            // Cas standard API avec numéro
-                            street = `${item.address.house_number} ${item.address.road}`;
+                        } else if (item.address?.house_number && item.address?.road) {
+                            // Cas standard API avec numéro - on s'assure qu'il est au début
+                            if (!street.includes(item.address.house_number)) {
+                                street = `${item.address.house_number} ${item.address.road}`;
+                            }
                         }
 
                         // On utilise les données CANONIQUES pour garantir que le pricing fonctionne

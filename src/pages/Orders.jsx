@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Clock, Truck, Loader2 } from "lucide-react";
 import { supabase } from "../lib/supabase";
+import { autocompleteAddress } from "../lib/autocomplete";
 
 const VEHICLES = ["Moto", "Voiture"];
 const SERVICES = ["Normal", "Exclu", "Super"];
@@ -19,6 +20,7 @@ const getPostcode = (str = "") => {
 };
 
 const formatAddress = (d) => {
+  if (d.full) return d.full;
   const a = d.address || {};
   const street = [a.house_number, a.road].filter(Boolean).join(" ");
   const city = [a.postcode, a.city || a.town || a.village].filter(Boolean).join(" ");
@@ -225,28 +227,22 @@ export default function Orders() {
   };
 
   const fetchSuggestions = async (query, setSuggestions, setLoading) => {
-    if (!LOCATIONIQ_KEY || query.trim().length < 3) {
+    if (query.trim().length < 2) {
       setSuggestions([]);
       return;
     }
     try {
       setLoading(true);
-      const viewbox = "1.446,49.241,3.559,48.120"; // Île-de-France bbox
-      const url = `${LOCATIONIQ_URL}?key=${LOCATIONIQ_KEY}&q=${encodeURIComponent(query)}&limit=5&format=json&accept-language=fr&countrycodes=fr&viewbox=${viewbox}&bounded=1`;
-      const res = await fetch(url);
-      const data = await res.json();
-      const allowed = ['75', '77', '78', '91', '92', '93', '94', '95'];
-      const list = Array.isArray(data)
-        ? data
-          .map((d) => ({
-            label: formatAddress(d),
-            city: d.address?.city || d.address?.town || d.address?.village || "",
-            postcode: d.address?.postcode || ""
-          }))
-          .filter(item => allowed.some(prefix => item.postcode.startsWith(prefix)))
-        : [];
+      const results = await autocompleteAddress(query);
+      const list = results.map(s => ({
+        label: s.full,
+        city: s.city,
+        postcode: s.postcode,
+        street: s.street
+      }));
       setSuggestions(list);
-    } catch {
+    } catch (err) {
+      console.error("Autocomplete error:", err);
       setSuggestions([]);
     } finally {
       setLoading(false);
