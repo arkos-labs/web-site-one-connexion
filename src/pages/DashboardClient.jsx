@@ -4,10 +4,13 @@ import { Search, Bell, MoreHorizontal, ArrowUpRight, Truck, Clock, Check, Loader
 import { supabase } from "../lib/supabase";
 import { generateInvoicePdf } from "../lib/pdfGenerator";
 
-function clientStatusLabel(status) {
+function clientStatusLabel(order) {
+  const status = typeof order === 'string' ? order : order.status;
+  const driverId = typeof order === 'string' ? null : order.driver_id;
+
   switch (status) {
-    case "pending": return "Accepter";
-    case "assigned": return "Assigner";
+    case "pending": return "En attente";
+    case "assigned": return driverId ? "Assignée" : "Acceptée";
     case "picked_up": return "En cours";
     case "delivered": return "Terminée";
     case "cancelled": return "Annulée";
@@ -210,7 +213,7 @@ export default function DashboardClient() {
                         </div>
                         <div className="flex items-center gap-3">
                           <span className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wide ${statusColor(d.status)}`}>
-                            {clientStatusLabel(d.status)}
+                            {clientStatusLabel(d)}
                           </span>
                           <button
                             onClick={(e) => {

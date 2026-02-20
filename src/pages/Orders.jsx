@@ -28,10 +28,13 @@ const formatAddress = (d) => {
   return d.display_name;
 };
 
-function clientStatusLabel(status) {
+function clientStatusLabel(order) {
+  const status = typeof order === 'string' ? order : order.status;
+  const driverId = typeof order === 'string' ? null : order.driver_id;
+
   switch (status) {
-    case "pending": return "Accepter";
-    case "assigned": return "Assigner";
+    case "pending": return "En attente";
+    case "assigned": return driverId ? "Assignée" : "Acceptée";
     case "picked_up": return "En cours";
     case "delivered": return "Terminée";
     case "cancelled": return "Annulée";
@@ -516,7 +519,7 @@ export default function Orders() {
 
                 <div className="flex items-center gap-2">
                   <span className={`hidden sm:inline-block rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wide ${statusColor(order.status)}`}>
-                    {clientStatusLabel(order.status)}
+                    {clientStatusLabel(order)}
                   </span>
 
                   {/* Action Buttons */}

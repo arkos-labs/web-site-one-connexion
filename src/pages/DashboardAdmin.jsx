@@ -579,7 +579,7 @@ export default function DashboardAdmin() {
                             <span className="text-sm font-bold text-slate-900 group-hover:text-slate-700 transition-colors line-clamp-1">{o.clientName}</span>
                           </div>
                           <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide ${o.status === "pending" ? "bg-emerald-50 text-emerald-600" : o.status === "assigned" ? "bg-blue-50 text-blue-600" : "bg-amber-50 text-amber-600"}`}>
-                            {o.status === 'pending' ? 'Accepter' : o.status === 'assigned' ? 'Assigner' : o.status}
+                            {o.status === 'pending' ? 'Accepter' : (o.status === 'assigned' ? (o.driver_id ? 'Assigné' : 'Assigner') : o.status)}
                           </span>
                         </div>
                         <div className="text-xs font-semibold text-slate-500 leading-relaxed mb-3 line-clamp-2">

@@ -485,7 +485,7 @@ export default function AdminOrders() {
                     </td>
                     <td className="py-4">
                       <span className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wide ${o.status === "delivered" ? "bg-emerald-50 text-emerald-600" : "bg-slate-100 text-slate-600"}`}>
-                        {o.status === "pending" ? "Accepter" : o.status === "assigned" ? "Assigner" : o.status === "delivered" ? "Terminée" : o.status}
+                        {o.status === "pending" ? "Accepter" : (o.status === "assigned" ? (o.driver_id ? "Assigné" : "Assigner") : (o.status === "delivered" ? "Terminée" : o.status))}
                       </span>
                     </td>
                     <td className="py-4 font-semibold text-slate-900">{Number(o.total || 0).toFixed(2)}€</td>
