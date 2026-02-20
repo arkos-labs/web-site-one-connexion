@@ -1,16 +1,19 @@
 // Configuration Supabase
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://placeholder.supabase.co';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'placeholder-key';
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-console.log('Supabase Init:', {
-    url: supabaseUrl,
-    keyLength: supabaseAnonKey?.length,
-    isPlaceholder: supabaseUrl.includes('placeholder')
-});
+if (!supabaseUrl || !supabaseAnonKey || supabaseUrl.includes('placeholder')) {
+    console.warn('⚠️ Supabase environment variables are missing or use placeholders. Authentication will not work.');
+}
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createClient(
+    supabaseUrl || 'https://placeholder.supabase.co',
+    supabaseAnonKey || 'placeholder-key'
+);
+
+console.log('Supabase initialized for:', supabaseUrl?.split('//')[1]?.split('.')[0] || 'Unknown Project');
 
 supabase.auth.onAuthStateChange((event, session) => {
     console.log('Supabase Auth State Change:', event, session?.user?.email);

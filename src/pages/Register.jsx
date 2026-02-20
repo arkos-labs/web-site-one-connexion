@@ -61,8 +61,11 @@ export default function Register() {
                 setTimeout(() => navigate('/connexion'), 3000);
             }
         } catch (err) {
+            console.error("Registration error:", err);
             if (err.message?.includes("rate limit")) {
                 setError("Trop de tentatives. Veuillez essayer avec une autre adresse email ou patienter.");
+            } else if (err.message?.includes("fetch")) {
+                setError("Erreur de connexion au serveur Supabase. Vérifiez votre configuration.");
             } else {
                 setError(err.message || "Une erreur est survenue lors de l'inscription.");
             }

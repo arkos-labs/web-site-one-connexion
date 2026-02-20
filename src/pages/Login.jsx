@@ -69,6 +69,13 @@ export default function Login() {
               e.preventDefault();
               setError("");
               setLoading(true);
+
+              if (supabase.auth === undefined) {
+                setLoading(false);
+                setError("Erreur de configuration : Le client Supabase n'est pas initialisé correctement.");
+                return;
+              }
+
               const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
                 email,
                 password,
@@ -76,7 +83,15 @@ export default function Login() {
 
               if (authError) {
                 setLoading(false);
-                setError("Identifiants invalides");
+                console.error("Login error:", authError);
+
+                if (authError.message === "Invalid login credentials") {
+                  setError("Identifiants invalides (email ou mot de passe incorrect)");
+                } else if (authError.message.includes("fetch")) {
+                  setError("Erreur de connexion : Impossible de joindre le serveur. Vérifiez votre connexion internet.");
+                } else {
+                  setError(authError.message);
+                }
                 return;
               }
 
