@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState, useRef } from "react";
 import { supabase } from "../lib/supabase";
 import { Search, X, MapPin, BookOpen } from "lucide-react";
 
-const LOCATIONIQ_KEY = import.meta.env.VITE_LOCATIONIQ_KEY;
+const LOCATIONIQ_KEY = import.meta.env.VITE_LOCATIONIQ_API_KEY;
 const LOCATIONIQ_URL = "https://api.locationiq.com/v1/autocomplete";
 
 // Simulation de la date (pour test)

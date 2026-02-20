@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 import { MapPin, Plus, Edit2, Trash2 } from "lucide-react";
 
-const LOCATIONIQ_KEY = import.meta.env.VITE_LOCATIONIQ_KEY;
+const LOCATIONIQ_KEY = import.meta.env.VITE_LOCATIONIQ_API_KEY;
 const LOCATIONIQ_URL = "https://api.locationiq.com/v1/autocomplete";
 
 export default function Addresses() {

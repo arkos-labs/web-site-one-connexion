@@ -5,7 +5,7 @@ import { supabase } from "../lib/supabase";
 
 const VEHICLES = ["Moto", "Voiture"];
 const SERVICES = ["Normal", "Exclu", "Super"];
-const LOCATIONIQ_KEY = import.meta.env.VITE_LOCATIONIQ_KEY;
+const LOCATIONIQ_KEY = import.meta.env.VITE_LOCATIONIQ_API_KEY;
 const LOCATIONIQ_URL = "https://api.locationiq.com/v1/autocomplete";
 
 const FAVORITES = [

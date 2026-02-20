@@ -5,7 +5,7 @@ import { supabase } from "../lib/supabase.js";
 import PublicHeader from "../components/PublicHeader.jsx";
 
 const VEHICLES = ["Moto", "Voiture"];
-const LOCATIONIQ_KEY = import.meta.env.VITE_LOCATIONIQ_KEY;
+const LOCATIONIQ_KEY = import.meta.env.VITE_LOCATIONIQ_API_KEY;
 const LOCATIONIQ_URL = "https://api.locationiq.com/v1/autocomplete";
 
 const getPostcode = (str = "") => {
