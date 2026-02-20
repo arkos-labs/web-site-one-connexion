@@ -214,6 +214,7 @@ export default function Orders() {
       status: 'pending',
       price_ht: price,
       scheduled_at: form.date && form.pickupTime ? `${form.date}T${form.pickupTime}:00` : null,
+      delivery_deadline: form.date && form.deliveryDeadline ? `${form.date}T${form.deliveryDeadline}:00` : null,
       notes: `${form.packageType} - ${form.packageDesc}. Poids: ${form.packageWeight}. Dims: ${form.packageSize}. Contact: ${form.contactPhone}. Code: ${form.accessCode}`,
     });
 
@@ -351,7 +352,7 @@ export default function Orders() {
               </div>
 
               {/* Options */}
-              <div className="grid gap-4 md:grid-cols-4">
+              <div className="grid gap-4 md:grid-cols-5">
                 <div>
                   <label className="text-xs font-bold uppercase tracking-wider text-slate-400">Date</label>
                   <input type="date" className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} />
@@ -359,6 +360,10 @@ export default function Orders() {
                 <div>
                   <label className="text-xs font-bold uppercase tracking-wider text-slate-400">Heure enlévement</label>
                   <input type="time" className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm" value={form.pickupTime} onChange={(e) => setForm({ ...form, pickupTime: e.target.value })} />
+                </div>
+                <div>
+                  <label className="text-xs font-bold uppercase tracking-wider text-slate-400">Heure livraison max</label>
+                  <input type="time" className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm" value={form.deliveryDeadline} onChange={(e) => setForm({ ...form, deliveryDeadline: e.target.value })} />
                 </div>
                 <div>
                   <label className="text-xs font-bold uppercase tracking-wider text-slate-400">Véhicule</label>

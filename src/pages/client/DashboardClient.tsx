@@ -181,6 +181,7 @@ const DashboardClient = () => {
         status: 'pending_acceptance',
         notes: data.notes,
         pickup_time: data.pickupDate ? new Date(`${data.pickupDate}T${data.pickupTime || '00:00'}`).toISOString() : null,
+        delivery_deadline: data.deliveryDeadline ? new Date(`${data.pickupDate || new Date().toISOString().split('T')[0]}T${data.deliveryDeadline}`).toISOString() : null,
         user_id: profile.user_id,
         pickup_lat: data.pickupLat,
         pickup_lng: data.pickupLng,

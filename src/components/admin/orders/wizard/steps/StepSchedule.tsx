@@ -99,6 +99,28 @@ export const StepSchedule = ({ formData, updateFormData, onNext, onBack }: StepS
                         </div>
                     </div>
                 )}
+
+                <div className="pt-6 mt-2 border-t border-gray-100 space-y-3">
+                    <div className="flex items-center gap-2">
+                        <Clock className="h-4 w-4 text-[#D4AF37]" />
+                        <h3 className="font-semibold text-sm text-[#0B1525]">Délai de livraison</h3>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                        <div className="space-y-2">
+                            <Label htmlFor="deliveryDeadline" className="text-xs text-gray-500 uppercase tracking-wider font-bold">Heure de livraison max</Label>
+                            <Input
+                                id="deliveryDeadline"
+                                type="time"
+                                value={formData.deliveryDeadline}
+                                onChange={(e) => updateFormData({ deliveryDeadline: e.target.value })}
+                                className="focus-visible:ring-[#0B1525]"
+                            />
+                        </div>
+                        <div className="text-xs text-gray-400 italic bg-gray-50 p-3 rounded-lg border border-gray-100">
+                            Cette heure permet de déterminer automatiquement si votre course est Standard, Express ou Flash.
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div className="pt-6 flex justify-between">

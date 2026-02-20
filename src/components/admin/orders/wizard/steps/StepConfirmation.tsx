@@ -62,6 +62,10 @@ export const StepConfirmation = ({ formData, pricingResults, onSubmit, onBack }:
                             <span className="font-medium text-[#0B1525]">{formData.formula}</span>
                         </div>
                         <div>
+                            <span className="text-gray-500 block mb-1">Livraison max</span>
+                            <span className="font-medium text-[#0B1525]">{formData.deliveryDeadline || '—'}</span>
+                        </div>
+                        <div>
                             <span className="text-gray-500 block mb-1">Prix estimé</span>
                             <span className="font-bold text-[#D4AF37]">
                                 {selectedPrice ? (

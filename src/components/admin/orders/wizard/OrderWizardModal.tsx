@@ -52,6 +52,7 @@ export interface OrderFormData {
     formula: FormuleNew | null;
     pickupDate: string;
     pickupTime: string;
+    deliveryDeadline: string;
     notes: string;
     scheduleType: 'immediate' | 'in1h' | 'deferred';
 }
@@ -91,6 +92,7 @@ export const OrderWizardModal = ({ isOpen, onClose, onSubmit, mode = 'admin' }: 
         formula: null,
         pickupDate: "",
         pickupTime: "",
+        deliveryDeadline: "",
         notes: "",
         scheduleType: 'immediate'
     });
@@ -163,6 +165,44 @@ export const OrderWizardModal = ({ isOpen, onClose, onSubmit, mode = 'admin' }: 
             }
         }
     }, [isOpen, mode]);
+
+    // Auto-calculate formula based on pickup vs delivery deadline
+    useEffect(() => {
+        if (!formData.deliveryDeadline) return;
+
+        let pickup: Date;
+        if (formData.scheduleType === 'immediate') {
+            pickup = new Date();
+        } else if (formData.pickupDate && formData.pickupTime) {
+            pickup = new Date(`${formData.pickupDate}T${formData.pickupTime}`);
+        } else {
+            return;
+        }
+
+        const delivery = new Date(`${formData.pickupDate || new Date().toISOString().split('T')[0]}T${formData.deliveryDeadline}`);
+
+        // Handle midnight crossover
+        if (delivery < pickup) {
+            delivery.setDate(delivery.getDate() + 1);
+        }
+
+        const diffMinutes = (delivery.getTime() - pickup.getTime()) / (1000 * 60);
+
+        let autoFormula: FormuleNew = "NORMAL";
+        if (diffMinutes <= 0) {
+            autoFormula = "NORMAL";
+        } else if (diffMinutes <= 90) {
+            autoFormula = "URGENCE";
+        } else if (diffMinutes <= 180) {
+            autoFormula = "EXPRESS";
+        } else {
+            autoFormula = "NORMAL";
+        }
+
+        if (formData.formula !== autoFormula) {
+            setFormData(prev => ({ ...prev, formula: autoFormula }));
+        }
+    }, [formData.deliveryDeadline, formData.pickupTime, formData.pickupDate, formData.scheduleType]);
 
     const fetchClients = async () => {
         setIsLoadingClients(true);
