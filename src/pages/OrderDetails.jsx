@@ -128,29 +128,32 @@ export default function OrderDetails() {
               <div className="rounded-2xl bg-slate-50 p-4">
                 <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Contact / Accès</div>
                 <div className="mt-2 text-sm font-semibold text-slate-900">
-                  {order.notes?.match(/Contact: ([\d\s]+)/)?.[1] || "—"}
+                  {order.pickup_phone || order.notes?.match(/Contact: ([\d\s]+)/)?.[1] || "—"}
                 </div>
-                <div className="text-xs text-slate-500">Code: {order.notes?.match(/Code: (\w+)/)?.[1] || "—"}</div>
+                <div className="text-xs text-slate-500">Code: {order.pickup_access_code || order.notes?.match(/Code: (\w+)/)?.[1] || "—"}</div>
               </div>
-              <div className="rounded-2xl bg-slate-50 p-4">
-                <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Type de Colis</div>
-                <div className="mt-2 text-sm font-semibold text-slate-900">{order.notes?.split(' - ')?.[0] || "—"}</div>
+              <div className="rounded-2xl bg-slate-50 p-4 border border-slate-100">
+                <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Nature du Colis</div>
+                <div className="mt-2 text-sm font-bold text-slate-900">
+                  {order.package_type || order.notes?.split(' - ')?.[0] || "—"}
+                </div>
               </div>
             </div>
             <div className="grid gap-3 sm:grid-cols-2">
               <div className="rounded-2xl bg-slate-50 p-4">
-                <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Client</div>
-                <div className="mt-2 text-sm font-semibold text-slate-900">{client?.company || order.client?.name || "—"}</div>
+                <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Client / Expéditeur</div>
+                <div className="mt-2 text-sm font-bold text-slate-900">{client?.company || order.client?.name || order.pickup_name || "—"}</div>
                 <div className="text-xs text-slate-500">{client?.email || order.client?.email || "—"}</div>
                 <div className="text-xs text-slate-500">{client?.phone || order.client?.phone || "—"}</div>
-                <div className="text-xs text-slate-500">SIRET: {client?.siret || order.client?.siret || "—"}</div>
               </div>
-              <div className="rounded-2xl bg-slate-50 p-4">
-                <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Détails Colis</div>
-                <div className="mt-2 text-sm font-semibold text-slate-900">
-                  {order.notes?.match(/Poids: ([\d\w\s]+)/)?.[0] || "—"}
+              <div className="rounded-2xl bg-slate-50 p-4 border border-slate-100">
+                <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Poids & Dimensions</div>
+                <div className="mt-2 text-sm font-bold text-slate-900">
+                  {order.weight ? `${order.weight} kg` : (order.notes?.match(/Poids: ([\d\w\s]+)/)?.[0] || "Poids: —")}
                 </div>
-                <div className="text-xs text-slate-500">{order.notes?.match(/Dims: ([\d\w\sx]+)/)?.[0] || ""}</div>
+                <div className="text-xs font-bold text-slate-500 mt-1">
+                  {order.package_description || order.notes?.match(/Dims: ([\d\w\sx]+)/)?.[0] || order.notes?.match(/Dimensions: ([^.]+)/)?.[1] || ""}
+                </div>
               </div>
             </div>
           </div>

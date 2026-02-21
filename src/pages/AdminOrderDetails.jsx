@@ -85,7 +85,7 @@ export default function AdminOrderDetails() {
         // Fetch Client
         if (ord.client_id) {
           const { data: profile } = await supabase.from('profiles').select('*').eq('id', ord.client_id).single();
-          if (profile) setClient(profile.details || {});
+          if (profile) setClient(profile);
         }
 
         const safeTime = (dateStr) => {
@@ -207,8 +207,12 @@ export default function AdminOrderDetails() {
           <div className="text-xs font-semibold uppercase tracking-wider text-slate-400">Commande</div>
           <h1 className="text-2xl font-bold text-slate-900">#{order.id.slice(0, 8)}</h1>
           <div className="text-sm text-slate-500">
-            {client?.company || order.pickup_name || "Client"}
-            {!client?.id && <span className="ml-2 inline-block px-1.5 py-0.5 rounded text-[10px] font-bold bg-orange-100 text-orange-600 border border-orange-200 uppercase">Invité</span>}
+            {client?.details?.company || client?.details?.full_name || order.pickup_name || "Client"}
+            {!client?.id && (
+              <span className="ml-2 inline-block px-1.5 py-0.5 rounded text-[10px] font-bold bg-orange-100 text-orange-600 border border-orange-200 uppercase">
+                Invité (Pas de compte)
+              </span>
+            )}
             • {order.pickup_city} &gt; {order.delivery_city}
           </div>
         </div>
@@ -283,17 +287,29 @@ export default function AdminOrderDetails() {
               </div>
             </div>
 
-            <div className="rounded-2xl bg-slate-50 p-4">
-              <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Colis</div>
-              <div className="mt-2 text-sm font-semibold text-slate-900">
-                {order.package_type || "—"}
-                {order.package_description ? ` • ${order.package_description}` : ""}
+            <div className="rounded-2xl bg-slate-50 p-4 border border-slate-100">
+              <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Détails du Colis</div>
+              <div className="mt-3 grid grid-cols-2 md:grid-cols-3 gap-4">
+                <div>
+                  <div className="text-[10px] font-bold text-slate-400 uppercase">Nature</div>
+                  <div className="text-sm font-bold text-slate-900">{order.package_type || "—"}</div>
+                </div>
+                <div>
+                  <div className="text-[10px] font-bold text-slate-400 uppercase">Poids</div>
+                  <div className="text-sm font-bold text-slate-900">{order.weight ? `${order.weight} kg` : "—"}</div>
+                </div>
+                <div>
+                  <div className="text-[10px] font-bold text-slate-400 uppercase">Taille / Dimensions</div>
+                  <div className="text-sm font-bold text-slate-900">
+                    {order.package_description || order.notes?.match(/Dimensions: ([^.]+)/)?.[1] || "—"}
+                  </div>
+                </div>
               </div>
-              <div className="mt-1 text-xs text-slate-500">
-                {order.weight ? `Poids: ${order.weight} kg` : "Poids: —"}
-                {/* Fallback to parsing dimensions from notes if regex matches, otherwise just use notes content */}
-                {order.notes?.includes("Dimensions:") ? ` • ${order.notes.match(/Dimensions: ([^.]+)/)?.[0]}` : ""}
-              </div>
+              {order.package_description && order.notes?.match(/Dimensions:/) && (
+                <div className="mt-2 text-xs text-slate-500 italic">
+                  Note: {order.notes?.match(/Dimensions: ([^.]+)/)?.[0]}
+                </div>
+              )}
             </div>
 
             <div className="grid gap-3 sm:grid-cols-2">
@@ -321,28 +337,32 @@ export default function AdminOrderDetails() {
             <div className="rounded-2xl bg-slate-50 p-4">
               <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Client / Facturation</div>
               <div className="mt-2 text-sm font-semibold text-slate-900 leading-snug flex items-center gap-2">
-                {client?.company || client?.full_name || order.pickup_name || "—"}
-                {!client?.id && <span className="inline-block px-1.5 py-0.5 rounded text-[9px] font-bold bg-orange-100 text-orange-600 border border-orange-200 uppercase">Invité</span>}
+                {client?.details?.company || client?.details?.full_name || order.pickup_name || "—"}
+                {!client?.id && (
+                  <span className="inline-block px-1.5 py-0.5 rounded text-[9px] font-bold bg-orange-100 text-orange-600 border border-orange-200 uppercase">
+                    Invité
+                  </span>
+                )}
               </div>
 
               {/* Billing Address */}
               <div className="mt-1 text-xs text-slate-500">
                 <span className="font-bold text-slate-400">Facturation: </span>
-                {client?.billing_address || order.pickup_address || "—"}
+                {client?.details?.address || order.pickup_address || "—"}
               </div>
 
               <div className="mt-3 space-y-1">
                 <div className="text-xs text-slate-500">
                   <span className="font-bold text-slate-400">Contact: </span>
-                  {client?.contact_person || order.pickup_contact || order.notes?.match(/Contact: ([^(]+)/)?.[1]?.trim() || "—"}
+                  {client?.details?.contact || client?.details?.full_name || order.notes?.match(/Contact: ([^(]+)/)?.[1]?.trim() || "—"}
                 </div>
                 <div className="text-xs text-slate-500">
                   <span className="font-bold text-slate-400">Email: </span>
-                  {client?.email || order.notes?.match(/Email: ([^\s]+)/)?.[1] || order.pickup_email || "—"}
+                  {client?.details?.email || order.notes?.match(/Email: ([^\s]+)/)?.[1] || order.pickup_email || "—"}
                 </div>
                 <div className="text-xs text-slate-500">
                   <span className="font-bold text-slate-400">Tél: </span>
-                  {client?.phone || order.notes?.match(/Phone: ([\d\s]+)/)?.[1] || order.pickup_phone || "—"}
+                  {client?.details?.phone || order.notes?.match(/Phone: ([\d\s]+)/)?.[1] || order.pickup_phone || "—"}
                 </div>
               </div>
             </div>

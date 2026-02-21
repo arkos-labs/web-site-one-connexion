@@ -79,8 +79,8 @@ export function generateOrderPdf(order, client = {}) {
     doc.setFont("helvetica", "bold");
 
     // LOGIC: If 'client' object is empty or minimal, try to parse guest info from order columns/notes
-    const isGuest = !client.id && !client.company && !client.full_name;
-    const clientName = client.company || client.name || client.full_name || order.pickup_name || "Client Invité";
+    const isGuest = !client.id && !order.client_id;
+    const clientName = client.details?.company || client.details?.name || client.details?.full_name || order.pickup_name || "Client Invité";
 
     doc.text(clientName.toUpperCase(), margin, leftY);
 
@@ -100,16 +100,10 @@ export function generateOrderPdf(order, client = {}) {
     const gEmail = order.pickup_email || order.notes?.match(/Email: ([^\s]+)/)?.[1];
     const gPhone = order.pickup_phone || order.notes?.match(/Phone: ([\d\s]+)/)?.[1];
 
-    // Parse billing from notes: "Billing: Name | Company | Address"
-    const billingMatch = order.notes?.match(/Billing: (.*?) \| (.*?) \| (.*?)$/);
-    const gBillingName = billingMatch?.[1];
-    const gBillingCompany = billingMatch?.[2];
-    const gBillingAddress = billingMatch?.[3];
-
-    const displayContact = client.contact_person || client.contact || gContact;
-    const displayEmail = client.email || gEmail;
-    const displayPhone = client.phone || gPhone;
-    const displayAddress = client.address || client.billing_address || gBillingAddress || order.pickup_address; // Fallback to pickup if absolutely nothing else
+    const displayContact = client.details?.contact || client.details?.contact_person || client.details?.full_name || gContact;
+    const displayEmail = client.details?.email || gEmail;
+    const displayPhone = client.details?.phone || client.details?.phone_number || gPhone;
+    const displayAddress = client.details?.address || client.details?.billing_address || order.pickup_address; // Fallback to pickup
 
     if (displayContact) {
         doc.text(`Contact: ${displayContact}`, margin, detailY);
@@ -208,9 +202,10 @@ export function generateOrderPdf(order, client = {}) {
 
     // Parse notes if possible
     const notesStr = order.notes || "";
-    const pType = notesStr.split(' - ')?.[0] || order.packageType || order.package?.type || "—";
-    const pWeight = notesStr.match(/Poids: ([\d\w\s]+)/)?.[1] || order.packageWeight || order.package?.weight || "—";
-    const pContact = notesStr.match(/Contact: ([\d\s]+)/)?.[1] || "—";
+    const pType = order.package_type || notesStr.split(' - ')?.[0] || order.packageType || "—";
+    const pWeight = order.weight || notesStr.match(/Poids: ([\d\w\s]+)/)?.[1] || "—";
+    const pContact = order.pickup_phone || notesStr.match(/Contact: ([\d\s]+)/)?.[1] || "—";
+    const pDims = order.package_description || notesStr.match(/Dimensions: ([^.]+)/)?.[1] || notesStr.match(/Dims: ([\d\w\sx]+)/)?.[1] || "—";
 
     doc.setFont("helvetica", "bold");
     doc.text("Type:", margin, y);
@@ -220,12 +215,12 @@ export function generateOrderPdf(order, client = {}) {
     doc.setFont("helvetica", "bold");
     doc.text("Poids:", margin + 180, y);
     doc.setFont("helvetica", "normal");
-    doc.text(String(pWeight).includes('kg') ? pWeight : `${pWeight} kg`, margin + 230, y);
+    doc.text(String(pWeight).includes('kg') ? String(pWeight) : `${pWeight} kg`, margin + 230, y);
 
     doc.setFont("helvetica", "bold");
-    doc.text("Contact:", margin + 350, y);
+    doc.text("Dimensions:", margin + 350, y);
     doc.setFont("helvetica", "normal");
-    doc.text(pContact, margin + 400, y);
+    doc.text(pDims, margin + 420, y);
 
     doc.setFont("helvetica", "bold");
     doc.text("Notes:", margin, y + 25);
