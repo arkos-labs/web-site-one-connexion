@@ -104,13 +104,15 @@ export default function OrderDetails() {
         <div className="rounded-3xl border border-slate-100 bg-white p-6 shadow-sm">
           <div className="text-xs font-bold uppercase tracking-wider text-slate-400">Itinéraire</div>
           <div className="mt-4 grid gap-4">
-            <div className="rounded-2xl bg-slate-50 p-4">
+            <div className="rounded-2xl bg-slate-50 p-4 border border-slate-100">
               <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Enlèvement</div>
-              <div className="mt-2 text-sm font-semibold text-slate-900 leading-snug">{order.pickup_address || "—"}</div>
+              <div className="mt-2 text-sm font-bold text-slate-900 leading-none mb-1">{order.pickup_name || "—"}</div>
+              <div className="text-xs text-slate-500 leading-snug">{order.pickup_address || "—"}</div>
             </div>
-            <div className="rounded-2xl bg-slate-50 p-4">
+            <div className="rounded-2xl bg-slate-50 p-4 border border-slate-100">
               <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Livraison</div>
-              <div className="mt-2 text-sm font-semibold text-slate-900 leading-snug">{order.delivery_address || "—"}</div>
+              <div className="mt-2 text-sm font-bold text-slate-900 leading-none mb-1">{order.delivery_name || "—"}</div>
+              <div className="text-xs text-slate-500 leading-snug">{order.delivery_address || "—"}</div>
             </div>
             <div className="grid gap-3 sm:grid-cols-2">
               <div className="rounded-2xl bg-slate-50 p-4">

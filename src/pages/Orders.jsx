@@ -93,6 +93,7 @@ export default function Orders() {
     vehicle: "moto", // lowercase for DB enum
     service: "normal", // lowercase
     packageType: "Pli",
+    packageTypeOther: "",
     packageDesc: "",
     packageWeight: "",
     packageSize: "",
@@ -244,7 +245,7 @@ export default function Orders() {
       price_ht: price,
       scheduled_at: form.date && form.pickupTime ? `${form.date}T${form.pickupTime}:00` : null,
       delivery_deadline: form.date && form.deliveryDeadline ? `${form.date}T${form.deliveryDeadline}:00` : null,
-      package_type: form.packageType,
+      package_type: form.packageType === "Autre" ? (form.packageTypeOther || "Autre") : form.packageType,
       package_description: form.packageDesc || form.packageSize,
       weight: parseFloat(String(form.packageWeight).replace(',', '.')) || null,
       notes: `${form.packageType} - ${form.packageDesc}. Poids: ${form.packageWeight}. Dims: ${form.packageSize}. Contact: ${form.contactPhone}. Code: ${form.accessCode}`,
@@ -415,7 +416,22 @@ export default function Orders() {
               <div className="grid gap-4 md:grid-cols-2 bg-slate-50 p-4 rounded-2xl border border-slate-100">
                 <div className="space-y-4">
                   <label className="text-xs font-bold uppercase tracking-wider text-slate-400">Détails colis</label>
-                  <input className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm" placeholder="Description (ex: Documents)" value={form.packageDesc} onChange={(e) => setForm({ ...form, packageDesc: e.target.value })} />
+                  <select
+                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-slate-100 bg-white"
+                    value={form.packageType}
+                    onChange={(e) => setForm({ ...form, packageType: e.target.value })}
+                  >
+                    {["Pli", "Colis", "Palette", "Sac", "Matériel", "Autre"].map(t => <option key={t} value={t}>{t}</option>)}
+                  </select>
+                  {form.packageType === "Autre" && (
+                    <input
+                      className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm"
+                      placeholder="Précisez le type (ex: Meuble)"
+                      value={form.packageTypeOther}
+                      onChange={(e) => setForm({ ...form, packageTypeOther: e.target.value })}
+                    />
+                  )}
+                  <input className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm" placeholder="Contenu (ex: Documents)" value={form.packageDesc} onChange={(e) => setForm({ ...form, packageDesc: e.target.value })} />
                   <div className="flex gap-2">
                     <input className="w-1/2 rounded-xl border border-slate-200 px-3 py-2 text-sm" placeholder="Poids (kg)" value={form.packageWeight} onChange={(e) => setForm({ ...form, packageWeight: e.target.value })} />
                     <input className="w-1/2 rounded-xl border border-slate-200 px-3 py-2 text-sm" placeholder="Dims (cm)" value={form.packageSize} onChange={(e) => setForm({ ...form, packageSize: e.target.value })} />
