@@ -232,6 +232,8 @@ export default function Orders() {
       pickup_city: form.pickupCity || form.pickup.split(',').find(p => p.trim().match(/^\d{5}\s/))?.trim().split(' ').slice(1).join(' ') || form.pickup.split(',').pop()?.trim(),
       pickup_postal_code: form.pickupPostcode || getPostcode(form.pickup),
       pickup_name: form.pickupName,
+      pickup_phone: form.contactPhone,
+      pickup_access_code: form.accessCode,
       delivery_address: form.delivery,
       delivery_city: form.deliveryCity || form.delivery.split(',').find(p => p.trim().match(/^\d{5}\s/))?.trim().split(' ').slice(1).join(' ') || form.delivery.split(',').pop()?.trim(),
       delivery_postal_code: form.deliveryPostcode || getPostcode(form.delivery),
@@ -242,6 +244,9 @@ export default function Orders() {
       price_ht: price,
       scheduled_at: form.date && form.pickupTime ? `${form.date}T${form.pickupTime}:00` : null,
       delivery_deadline: form.date && form.deliveryDeadline ? `${form.date}T${form.deliveryDeadline}:00` : null,
+      package_type: form.packageType,
+      package_description: form.packageDesc || form.packageSize,
+      weight: parseFloat(String(form.packageWeight).replace(',', '.')) || null,
       notes: `${form.packageType} - ${form.packageDesc}. Poids: ${form.packageWeight}. Dims: ${form.packageSize}. Contact: ${form.contactPhone}. Code: ${form.accessCode}`,
     });
 

@@ -292,24 +292,23 @@ export default function AdminOrderDetails() {
               <div className="mt-3 grid grid-cols-2 md:grid-cols-3 gap-4">
                 <div>
                   <div className="text-[10px] font-bold text-slate-400 uppercase">Nature</div>
-                  <div className="text-sm font-bold text-slate-900">{order.package_type || "—"}</div>
+                  <div className="text-sm font-bold text-slate-900">
+                    {order.package_type || order.notes?.split(' - ')?.[0] || "—"}
+                  </div>
                 </div>
                 <div>
                   <div className="text-[10px] font-bold text-slate-400 uppercase">Poids</div>
-                  <div className="text-sm font-bold text-slate-900">{order.weight ? `${order.weight} kg` : "—"}</div>
+                  <div className="text-sm font-bold text-slate-900">
+                    {order.weight ? `${order.weight} kg` : (order.notes?.match(/Poids: ([\d\w\s,.<>]+)/)?.[1] || "—")}
+                  </div>
                 </div>
                 <div>
                   <div className="text-[10px] font-bold text-slate-400 uppercase">Taille / Dimensions</div>
                   <div className="text-sm font-bold text-slate-900">
-                    {order.package_description || order.notes?.match(/Dimensions: ([^.]+)/)?.[1] || "—"}
+                    {order.package_description || order.notes?.match(/Dims: ([\d\w\sxX]+)/)?.[1] || order.notes?.match(/Dimensions: ([^.]+)/)?.[1] || "—"}
                   </div>
                 </div>
               </div>
-              {order.package_description && order.notes?.match(/Dimensions:/) && (
-                <div className="mt-2 text-xs text-slate-500 italic">
-                  Note: {order.notes?.match(/Dimensions: ([^.]+)/)?.[0]}
-                </div>
-              )}
             </div>
 
             <div className="grid gap-3 sm:grid-cols-2">
