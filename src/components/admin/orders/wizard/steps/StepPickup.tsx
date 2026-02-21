@@ -420,6 +420,21 @@ export const StepPickup = ({ formData, updateFormData, onNext, clients, mode, on
                         name="pickupAddress"
                     />
 
+                    <div className="grid grid-cols-1 gap-3">
+                        <div>
+                            <Label htmlFor="pickupName" className="flex items-center gap-2 mb-1 text-xs text-gray-500 uppercase font-semibold">
+                                Société / Enseigne
+                            </Label>
+                            <Input
+                                id="pickupName"
+                                value={formData.pickupName}
+                                onChange={(e) => updateFormData({ pickupName: e.target.value })}
+                                placeholder="Ex: Boutique Paris"
+                                className="h-8 text-sm focus-visible:ring-[#0B1525]"
+                            />
+                        </div>
+                    </div>
+
                     <div className="grid grid-cols-2 gap-3">
                         <div>
                             <Label htmlFor="pickupContact" className="flex items-center gap-2 mb-1 text-xs text-gray-500 uppercase font-semibold">
@@ -445,6 +460,32 @@ export const StepPickup = ({ formData, updateFormData, onNext, clients, mode, on
                                 className="h-8 text-sm focus-visible:ring-[#0B1525]"
                             />
                         </div>
+                    </div>
+
+                    <div className="space-y-1">
+                        <Label htmlFor="pickupEmail" className="flex items-center gap-2 mb-1 text-xs text-gray-500 uppercase font-semibold">
+                            Email contact site
+                        </Label>
+                        <Input
+                            id="pickupEmail"
+                            value={formData.pickupEmail}
+                            onChange={(e) => updateFormData({ pickupEmail: e.target.value })}
+                            placeholder="contact@boutique.fr"
+                            className="h-8 text-sm focus-visible:ring-[#0B1525]"
+                        />
+                    </div>
+
+                    <div className="space-y-1">
+                        <Label htmlFor="pickupInstructions" className="flex items-center gap-2 mb-1 text-xs text-gray-500 uppercase font-semibold">
+                            Instructions Chauffeur (Départ)
+                        </Label>
+                        <Textarea
+                            id="pickupInstructions"
+                            value={formData.pickupInstructions}
+                            onChange={(e) => updateFormData({ pickupInstructions: e.target.value })}
+                            placeholder="Ex: Sonner à l'interphone 'Bureau 4'..."
+                            className="text-sm focus-visible:ring-[#0B1525] min-h-[60px]"
+                        />
                     </div>
                 </div>
             </div>

@@ -354,7 +354,10 @@ const OrdersAdmin = () => {
           reference: reference,
           client_id: clientIdToUse,
           pickup_address: data.pickupAddress,
+          pickup_name: data.pickupName,
+          pickup_phone: data.pickupPhone,
           delivery_address: data.deliveryAddress,
+          delivery_name: data.deliveryName,
 
           pickup_lat: data.pickupLat,
           pickup_lng: data.pickupLng,
@@ -363,8 +366,9 @@ const OrdersAdmin = () => {
 
           delivery_type: data.packageType,
           status: 'pending_acceptance',
-          price: data.pricingResult?.totalEuros || 0,
-          pickup_time: pickupTime,
+          price_ht: data.pricingResult?.totalEuros || 0,
+          scheduled_at: pickupTime,
+          notes: `Entreprise Pick: ${data.pickupName}. Contact Pick: ${data.pickupContact}. Phone Pick: ${data.pickupPhone}. Email Enlev: ${data.pickupEmail}. Entreprise Deliv: ${data.deliveryName}. Contact Deliv: ${data.deliveryContact}. Phone Deliv: ${data.deliveryPhone}. Instructions: ${data.pickupInstructions} / ${data.deliveryInstructions}`,
         });
 
       if (error) throw error;

@@ -34,15 +34,20 @@ export interface OrderFormData {
     // Standard order data
     pickupAddress: string;
     pickupCity: string;
+    pickupName: string;
     pickupContact: string;
     pickupPhone: string;
+    pickupEmail: string;
+    pickupInstructions: string;
     pickupLat?: number;
     pickupLng?: number;
 
     deliveryAddress: string;
     deliveryCity: string;
+    deliveryName: string;
     deliveryContact: string;
     deliveryPhone: string;
+    deliveryInstructions: string;
     deliveryLat?: number;
     deliveryLng?: number;
 
@@ -76,14 +81,19 @@ export const OrderWizardModal = ({ isOpen, onClose, onSubmit, mode = 'admin' }: 
         clientCompany: "",
         pickupAddress: "",
         pickupCity: "",
+        pickupName: "",
         pickupContact: "",
         pickupPhone: "",
+        pickupEmail: "",
+        pickupInstructions: "",
         pickupLat: undefined,
         pickupLng: undefined,
         deliveryAddress: "",
         deliveryCity: "",
+        deliveryName: "",
         deliveryContact: "",
         deliveryPhone: "",
+        deliveryInstructions: "",
         deliveryLat: undefined,
         deliveryLng: undefined,
         packageType: "standard",

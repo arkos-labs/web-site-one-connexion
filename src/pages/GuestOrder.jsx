@@ -51,6 +51,8 @@ export default function GuestOrder() {
         pickupCode: "",
         pickupCity: "",
         pickupPostcode: "",
+        pickupEmail: "",
+        pickupEmail: "",
         delivery: "",
         deliveryName: "",
         deliveryContact: "",
@@ -254,7 +256,7 @@ export default function GuestOrder() {
                 scheduled_at: scheduledAt,
                 delivery_deadline: deliveryDeadline,
                 package_type: form.packageType === "Autre" ? (form.packageTypeOther || "Autre") : form.packageType,
-                notes: `Guest Order. Contact: ${form.pickupContact} (Pick) / ${form.deliveryContact} (Deliv). Instructions: ${form.pickupInstructions} / ${form.deliveryInstructions}. Email: ${form.guestEmail}. Phone: ${form.contactPhone}. Billing: ${form.billingName} | ${form.billingCompany} | ${form.billingAddress}`,
+                notes: `Guest Order. Entreprise Pick: ${form.pickupName}. Contact Pick: ${form.pickupContact}. Phone Pick: ${form.pickupPhone}. Email Enlev: ${form.pickupEmail}. Entreprise Deliv: ${form.deliveryName}. Contact Deliv: ${form.deliveryContact}. Phone Deliv: ${form.deliveryPhone || ""}. Instructions: ${form.pickupInstructions} / ${form.deliveryInstructions}. Email Client: ${form.guestEmail}. Phone: ${form.contactPhone}. Billing: ${form.billingName} | ${form.billingCompany} | ${form.billingAddress}`,
             }).select().single();
 
             if (orderError) throw orderError;
@@ -447,6 +449,19 @@ export default function GuestOrder() {
                                                 onChange={(e) => setForm({ ...form, pickupPhone: e.target.value })}
                                             />
                                         </div>
+                                        <div className="space-y-1.5">
+                                            <label className="text-xs font-bold uppercase tracking-widest text-slate-400">Email contact (Optionnel)</label>
+                                            <input
+                                                type="email"
+                                                placeholder="contact@exemple.com"
+                                                className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-3.5 text-sm font-medium focus:bg-white focus:outline-none focus:ring-4 focus:ring-slate-100 transition-all"
+                                                value={form.pickupEmail}
+                                                onChange={(e) => setForm({ ...form, pickupEmail: e.target.value })}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="grid gap-6 md:grid-cols-1">
                                         <div className="space-y-1.5">
                                             <label className="text-xs font-bold uppercase tracking-widest text-slate-400">Code / Étage</label>
                                             <input

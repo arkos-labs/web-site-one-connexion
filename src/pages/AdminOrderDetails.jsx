@@ -310,6 +310,53 @@ export default function AdminOrderDetails() {
               </div>
             </div>
 
+            {/* NEW: Instructions & Notes Section */}
+            {(order.notes || order.pickup_instructions || order.delivery_instructions) && (
+              <div className="rounded-2xl bg-slate-50 p-4 border border-slate-100">
+                <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400 mb-3">Instructions & Notes</div>
+                <div className="grid gap-3">
+                  {/* Instructions parsing for guest orders */}
+                  {(() => {
+                    const instructMatch = order.notes?.match(/Instructions : (.*?) \/ (.*?)\./) || order.notes?.match(/Instructions: (.*?) \/ (.*?)\./);
+                    const pI = order.pickup_instructions || (instructMatch?.[1] && instructMatch[1] !== "—" ? instructMatch[1] : null);
+                    const dI = order.delivery_instructions || (instructMatch?.[2] && instructMatch[2] !== "—" ? instructMatch[2] : null);
+
+                    const cleanNote = order.notes
+                      ?.replace(/Guest Order\.\s?/g, "")
+                      .replace(/Contact:.*?\)\.\s?/g, "")
+                      .replace(/Instructions :?.*?\.\s?/g, "")
+                      .replace(/Email:.*?\.\s?/g, "")
+                      .replace(/Phone:.*?\.\s?/g, "")
+                      .replace(/Billing:.*$/g, "")
+                      .trim();
+
+                    return (
+                      <>
+                        {pI && (
+                          <div className="text-xs">
+                            <span className="font-bold text-slate-900">Enlèvement : </span>
+                            <span className="text-slate-600 italic">"{pI}"</span>
+                          </div>
+                        )}
+                        {dI && (
+                          <div className="text-xs">
+                            <span className="font-bold text-slate-900">Livraison : </span>
+                            <span className="text-slate-600 italic">"{dI}"</span>
+                          </div>
+                        )}
+                        {cleanNote && cleanNote !== "—" && cleanNote !== "/" && cleanNote.length > 2 && (
+                          <div className="mt-1 rounded-xl bg-white p-3 border border-slate-200 text-xs text-slate-700 leading-relaxed shadow-sm">
+                            <div className="font-bold text-slate-400 uppercase text-[9px] mb-1">Note Client</div>
+                            {cleanNote}
+                          </div>
+                        )}
+                      </>
+                    );
+                  })()}
+                </div>
+              </div>
+            )}
+
             <div className="grid gap-3 sm:grid-cols-2">
               <div className="rounded-2xl bg-slate-50 p-4">
                 <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Heure d’enlèvement</div>
@@ -323,13 +370,23 @@ export default function AdminOrderDetails() {
 
             <div className="grid gap-3 sm:grid-cols-2">
               <div className="rounded-2xl bg-slate-50 p-4">
-                <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Téléphone sur place</div>
-                <div className="mt-2 text-sm font-semibold text-slate-900">{order.contactPhone || edit.contactPhone || "—"}</div>
+                <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Tél. Enlèvement</div>
+                <div className="mt-2 text-sm font-semibold text-slate-900">{order.pickup_phone || order.contactPhone || edit.contactPhone || "—"}</div>
               </div>
               <div className="rounded-2xl bg-slate-50 p-4">
-                <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Code / accès</div>
-                <div className="mt-2 text-sm font-semibold text-slate-900">{order.accessCode || edit.accessCode || "—"}</div>
+                <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Tél. Livraison</div>
+                <div className="mt-2 text-sm font-semibold text-slate-900">{order.delivery_phone || order.notes?.match(/Phone Deliv: ([\d\s]+)/)?.[1] || "—"}</div>
               </div>
+            </div>
+
+            <div className="rounded-2xl bg-slate-50 p-4">
+              <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Code / accès / instructions livraison</div>
+              <div className="mt-2 text-sm font-semibold text-slate-900">{order.delivery_instructions || order.pickup_access_code || order.accessCode || edit.accessCode || "—"}</div>
+            </div>
+
+            <div className="rounded-2xl bg-slate-50 p-4">
+              <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Instructions Enlèvement</div>
+              <div className="mt-2 text-sm font-semibold text-slate-900">{order.pickup_instructions || "—"}</div>
             </div>
 
             <div className="rounded-2xl bg-slate-50 p-4">
@@ -352,15 +409,18 @@ export default function AdminOrderDetails() {
               <div className="mt-3 space-y-1">
                 <div className="text-xs text-slate-500">
                   <span className="font-bold text-slate-400">Contact: </span>
-                  {client?.details?.contact || client?.details?.full_name || order.notes?.match(/Contact: ([^(]+)/)?.[1]?.trim() || "—"}
+                  {client?.details?.contact || client?.details?.full_name || order.notes?.match(/Contact Pick: ([^.]+)/)?.[1]?.trim() || order.notes?.match(/Contact: ([^(]+)/)?.[1]?.trim() || "—"}
                 </div>
-                <div className="text-xs text-slate-500">
-                  <span className="font-bold text-slate-400">Email: </span>
-                  {client?.details?.email || order.notes?.match(/Email: ([^\s]+)/)?.[1] || order.pickup_email || "—"}
-                </div>
+                {order.notes?.match(/Entreprise Pick: ([^.]+)/) && (
+                  <div className="text-xs text-slate-500">
+                    <span className="font-bold text-slate-400 uppercase text-[9px]">Enseigne: </span>
+                    <span className="font-semibold text-slate-900">{order.notes?.match(/Entreprise Pick: ([^.]+)/)?.[1]}</span>
+                  </div>
+                )}
+
                 <div className="text-xs text-slate-500">
                   <span className="font-bold text-slate-400">Tél: </span>
-                  {client?.details?.phone || order.notes?.match(/Phone: ([\d\s]+)/)?.[1] || order.pickup_phone || "—"}
+                  {client?.details?.phone || order.notes?.match(/Phone Pick: ([\d\s]+)/)?.[1] || order.notes?.match(/Phone Deliv: ([\d\s]+)/)?.[1] || order.notes?.match(/Phone: ([\d\s]+)/)?.[1] || order.pickup_phone || "—"}
                 </div>
               </div>
             </div>
@@ -472,7 +532,7 @@ export default function AdminOrderDetails() {
 
       <div className="rounded-3xl border border-slate-100 bg-white p-6 shadow-sm">
         <div className="mb-6 flex items-center justify-between">
-          <div className="text-xs font-bold uppercase tracking-wider text-slate-400"> de la commande</div>
+          <div className="text-xs font-bold uppercase tracking-wider text-slate-400">Historique de la commande</div>
         </div>
         <div className="relative grid gap-6">
           <div className="absolute left-3 top-1 h-full w-px bg-slate-200" />

@@ -174,7 +174,7 @@ export default function OrderDetails() {
 
       <div className="rounded-3xl border border-slate-100 bg-white p-6 shadow-sm">
         <div className="mb-6 flex items-center justify-between">
-          <div className="text-xs font-bold uppercase tracking-wider text-slate-400"> de la commande</div>
+          <div className="text-xs font-bold uppercase tracking-wider text-slate-400">Historique de la commande</div>
         </div>
         <div className="relative grid gap-6">
           <div className="absolute left-3 top-1 h-full w-px bg-slate-200" />

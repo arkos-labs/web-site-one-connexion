@@ -80,7 +80,7 @@ export function generateOrderPdf(order, client = {}) {
 
     // LOGIC: If 'client' object is empty or minimal, try to parse guest info from order columns/notes
     const isGuest = !client.id && !order.client_id;
-    const clientName = client.details?.company || client.details?.name || client.details?.full_name || order.pickup_name || "Client Invité";
+    const clientName = client.company || client.details?.company || client.name || client.details?.name || client.full_name || client.details?.full_name || order.pickup_name || "Client Invité";
 
     doc.text(clientName.toUpperCase(), margin, leftY);
 
@@ -95,22 +95,41 @@ export function generateOrderPdf(order, client = {}) {
     doc.setFontSize(9);
     let detailY = leftY + 15;
 
-    // Helper to get guest fields from regex or direct columns if they exist
-    const gContact = order.pickup_contact || order.notes?.match(/Contact: ([^/]+)/)?.[1]?.trim();
-    const gEmail = order.pickup_email || order.notes?.match(/Email: ([^\s]+)/)?.[1];
-    const gPhone = order.pickup_phone || order.notes?.match(/Phone: ([\d\s]+)/)?.[1];
+    const notesStr = order.notes || "";
 
-    const displayContact = client.details?.contact || client.details?.contact_person || client.details?.full_name || gContact;
-    const displayEmail = client.details?.email || gEmail;
-    const displayPhone = client.details?.phone || client.details?.phone_number || gPhone;
-    const displayAddress = client.details?.address || client.details?.billing_address || order.pickup_address; // Fallback to pickup
+    // Helper to get guest fields from regex or direct columns if they exist
+    const gBillingMatch = notesStr.match(/Billing: (.*?) \| (.*?) \| (.*?)$/);
+    const gBillingName = gBillingMatch?.[1];
+    const gBillingCompany = gBillingMatch?.[2];
+    const gBillingAddress = gBillingMatch?.[3];
+
+    // Extract detailed fields from notes if they exist (common for both guest and client now)
+    const nEntreprisePick = notesStr.match(/Entreprise Pick: (.*?)(\.|$|Contact)/)?.[1]?.trim();
+    const nContactPick = notesStr.match(/Contact Pick: (.*?)(\.|$|Phone|Email)/)?.[1]?.trim();
+    const nPhonePick = notesStr.match(/Phone Pick: (.*?)(\.|$|Email)/)?.[1]?.trim();
+    const nEmailEnlev = notesStr.match(/Email Enlev: (.*?)(\.|$|Entreprise|Contact|Instructions)/)?.[1]?.trim();
+
+    const nEntrepriseDeliv = notesStr.match(/Entreprise Deliv: (.*?)(\.|$|Contact)/)?.[1]?.trim();
+    const nContactDeliv = notesStr.match(/Contact Deliv: (.*?)(\.|$|Phone|Instructions)/)?.[1]?.trim();
+    const nPhoneDeliv = notesStr.match(/Phone Deliv: (.*?)(\.|$|Instructions)/)?.[1]?.trim();
+
+    const nInstructions = notesStr.match(/Instructions: (.*?)(\.|$)/)?.[1]?.trim();
+    const [nPNote, nDNote] = nInstructions ? nInstructions.split('/').map(s => s.trim()) : [null, null];
+
+    const gContact = order.pickup_contact || nContactPick || gBillingName || notesStr.match(/Contact: ([^/]+)/)?.[1]?.trim();
+    const gEmail = order.pickup_email || nEmailEnlev || notesStr.match(/Email: ([^\s]+)/)?.[1];
+    const gPhone = order.pickup_phone || notesStr.match(/Phone: ([\d\s]+)/)?.[1];
+
+    const displayContact = client.contact || client.details?.contact || client.contact_person || client.details?.contact_person || client.full_name || client.details?.full_name || gContact;
+    const displayEmail = client.email || client.details?.email || gEmail;
+    const displayPhone = client.phone || client.details?.phone || client.phone_number || client.details?.phone_number || gPhone;
+    const displayAddress = client.address || client.details?.address || client.billing_address || client.details?.billing_address || gBillingAddress || order.pickup_address; // Fallback to pickup
 
     if (displayContact) {
         doc.text(`Contact: ${displayContact}`, margin, detailY);
         detailY += 12;
     }
     if (gBillingCompany && gBillingCompany !== clientName) {
-        // If we found a specific billing company DIFFERENT from the main label
         doc.text(`Société: ${gBillingCompany}`, margin, detailY);
         detailY += 12;
     }
@@ -128,20 +147,27 @@ export function generateOrderPdf(order, client = {}) {
         doc.text(addrLines, margin, detailY);
         detailY += (12 * addrLines.length);
     }
-    if (client.zip || client.city) {
-        doc.text(`${client.zip || ""} ${client.city || ""}`, margin, detailY);
+
+    const zip = client.zip || client.details?.zip;
+    const city = client.city || client.details?.city;
+    const siret = client.siret || client.details?.siret;
+    const tvaNum = client.tva || client.details?.tva;
+    const ibanNum = client.iban || client.details?.iban;
+
+    if (zip || city) {
+        doc.text(`${zip || ""} ${city || ""}`, margin, detailY);
         detailY += 12;
     }
-    if (client.siret) {
-        doc.text(`SIRET: ${client.siret}`, margin, detailY);
+    if (siret) {
+        doc.text(`SIRET: ${siret}`, margin, detailY);
         detailY += 12;
     }
-    if (client.tva) {
-        doc.text(`TVA: ${client.tva}`, margin, detailY);
+    if (tvaNum) {
+        doc.text(`TVA: ${tvaNum}`, margin, detailY);
         detailY += 12;
     }
-    if (client.iban) {
-        doc.text(`IBAN: ${client.iban}`, margin, detailY);
+    if (ibanNum) {
+        doc.text(`IBAN: ${ibanNum}`, margin, detailY);
         detailY += 12;
     }
 
@@ -154,7 +180,7 @@ export function generateOrderPdf(order, client = {}) {
     doc.setFont("helvetica", "bold");
     doc.text("Date:", margin + contentW / 2 + 20, rightY);
     doc.setFont("helvetica", "normal");
-    const displayDate = order.created_at ? new Date(order.created_at).toLocaleDateString('fr-FR') : (order.date || new Date().toLocaleDateString('fr-FR'));
+    const displayDate = order.created_at ? new Date(order.created_at).toLocaleDateString("fr-FR") : order.date || new Date().toLocaleDateString("fr-FR");
     doc.text(displayDate, margin + contentW / 2 + 100, rightY);
 
     doc.setFont("helvetica", "bold");
@@ -167,74 +193,183 @@ export function generateOrderPdf(order, client = {}) {
     doc.setFont("helvetica", "normal");
     doc.text(String(order.service_level || order.service || "Normal").toUpperCase(), margin + contentW / 2 + 100, rightY + 30);
 
-    y = Math.max(leftY + 60, rightY + 60);
+
+
+    y = Math.max(leftY, rightY + 60) + 30;
+
+    // Extract instructions for itinerary if present (guest order format)
+    const instructionsMatch = notesStr.match(/Instructions : (.*?) \/ (.*?)\./) || notesStr.match(/Instructions: (.*?) \/ (.*?)\./);
+    const pInstruct = instructionsMatch?.[1] && instructionsMatch[1] !== "—" ? instructionsMatch[1] : null;
+    const dInstruct = instructionsMatch?.[2] && instructionsMatch[2] !== "—" ? instructionsMatch[2] : null;
 
     // Itinerary Section
-    y = drawSection("Itinéraire", margin, y, contentW);
-    doc.setFontSize(10);
+    y = drawSection("Itinéraire / Instructions", margin, y, contentW);
+    doc.setFontSize(9);
     doc.setTextColor(15, 23, 42);
 
     // Pickup
-    doc.setFillColor(248, 250, 252); // slate-50
-    doc.roundedRect(margin, y, contentW, 40, 5, 5, "F");
-    doc.setFont("helvetica", "bold");
-    doc.text("ENLÈVEMENT:", margin + 15, y + 25);
-    doc.setFont("helvetica", "normal");
+    const pickupName = order.pickup_name || nEntreprisePick || nContactPick || "—";
     const pickupAddr = order.pickup_address || order.pickup || "—";
-    doc.text(pickupAddr, margin + 120, y + 25);
+    const pCode = order.pickup_access_code || notesStr.match(/Code : ([\w\d]+)/)?.[1] || notesStr.match(/Code: ([\w\d]+)/)?.[1];
+    const pEmail = nEmailEnlev;
+    const pPhone = order.pickup_phone || nPhonePick || notesStr.match(/Phone: ([\d\s]+)/)?.[1];
 
-    y += 45;
+    let pickupBoxH = 65;
+    if (nPNote && nPNote !== "—") pickupBoxH += 15;
+    if (pCode) pickupBoxH += 15;
+    if (pEmail || pPhone) pickupBoxH += 15;
+
+    doc.setFillColor(248, 250, 252);
+    doc.roundedRect(margin, y, contentW, pickupBoxH, 5, 5, "F");
+    doc.setFont("helvetica", "bold");
+    doc.text("ENLÈVEMENT :", margin + 15, y + 20);
+    doc.text(pickupName, margin + 120, y + 20);
+    doc.setFont("helvetica", "normal");
+    doc.text(pickupAddr, margin + 120, y + 35);
+
+    let currentY = y + 50;
+
+    if (pEmail || pPhone) {
+        doc.setFontSize(8);
+        doc.setTextColor(100, 116, 139);
+        doc.text(`${pPhone || ""} ${pEmail ? "• " + pEmail : ""}`, margin + 120, currentY);
+        currentY += 12;
+        doc.setFontSize(9);
+        doc.setTextColor(15, 23, 42);
+    }
+
+    if (pCode) {
+        doc.setFont("helvetica", "bold");
+        doc.text(`CODE ACCÈS : ${pCode}`, margin + 120, currentY);
+        currentY += 15;
+    }
+    if (nPNote && nPNote !== "—") {
+        doc.setFont("helvetica", "oblique");
+        doc.setTextColor(100, 116, 139);
+        doc.text(`Instructions : ${nPNote}`, margin + 120, currentY);
+    }
+    doc.setTextColor(15, 23, 42);
+
+    y += pickupBoxH + 10;
 
     // Delivery
-    doc.setFillColor(248, 250, 252);
-    doc.roundedRect(margin, y, contentW, 40, 5, 5, "F");
-    doc.setFont("helvetica", "bold");
-    doc.text("LIVRAISON:", margin + 15, y + 25);
-    doc.setFont("helvetica", "normal");
+    const deliveryName = order.delivery_name || nEntrepriseDeliv || nContactDeliv || "—";
     const deliveryAddr = order.delivery_address || order.delivery || "—";
-    doc.text(deliveryAddr, margin + 120, y + 25);
+    const dCode = order.delivery_access_code || notesStr.match(/Code Deliv: ([\w\d]+)/)?.[1];
+    const dPhone = order.delivery_phone || nPhoneDeliv;
 
-    y += 70;
+    let deliveryBoxH = 65;
+    if (nDNote && nDNote !== "—") deliveryBoxH += 15;
+    if (dCode) deliveryBoxH += 15;
+    if (dPhone) deliveryBoxH += 15;
 
-    // Package Info
+    doc.setFillColor(248, 250, 252);
+    doc.roundedRect(margin, y, contentW, deliveryBoxH, 5, 5, "F");
+    doc.setFont("helvetica", "bold");
+    doc.text("LIVRAISON :", margin + 15, y + 20);
+    doc.text(deliveryName, margin + 120, y + 20);
+    doc.setFont("helvetica", "normal");
+    doc.text(deliveryAddr, margin + 120, y + 35);
+
+    currentY = y + 50;
+
+    if (dPhone) {
+        doc.setFontSize(8);
+        doc.setTextColor(100, 116, 139);
+        doc.text(`Tél: ${dPhone}`, margin + 120, currentY);
+        currentY += 12;
+        doc.setFontSize(9);
+        doc.setTextColor(15, 23, 42);
+    }
+
+    if (dCode) {
+        doc.setFont("helvetica", "bold");
+        doc.text(`CODE ACCÈS : ${dCode}`, margin + 120, currentY);
+        currentY += 15;
+    }
+    if (nDNote && nDNote !== "—") {
+        doc.setFont("helvetica", "oblique");
+        doc.setTextColor(100, 116, 139);
+        doc.text(`Instructions : ${nDNote}`, margin + 120, currentY);
+    }
+    doc.setTextColor(15, 23, 42);
+
+    y += deliveryBoxH + 25;
+
+    // Package Info Section
     y = drawSection("Informations Colis", margin, y, contentW);
-    doc.setFontSize(10);
 
-    // Parse notes if possible
-    const notesStr = order.notes || "";
-    const pType = order.package_type || notesStr.split(' - ')?.[0] || order.packageType || "—";
+    const pType = order.package_type || notesStr.split(" - ")?.[0] || order.packageType || "—";
     const pWeight = order.weight || notesStr.match(/Poids: ([\d\w\s]+)/)?.[1] || "—";
-    const pContact = order.pickup_phone || notesStr.match(/Contact: ([\d\s]+)/)?.[1] || "—";
     const pDims = order.package_description || notesStr.match(/Dimensions: ([^.]+)/)?.[1] || notesStr.match(/Dims: ([\d\w\sx]+)/)?.[1] || "—";
 
-    doc.setFont("helvetica", "bold");
-    doc.text("Type:", margin, y);
-    doc.setFont("helvetica", "normal");
-    doc.text(pType, margin + 60, y);
+    const drawInfoBox = (label, value, xPos, width) => {
+        doc.setFillColor(248, 250, 252);
+        doc.roundedRect(xPos, y, width, 40, 5, 5, "F");
+        doc.setFontSize(8);
+        doc.setTextColor(100, 116, 139);
+        doc.setFont("helvetica", "bold");
+        doc.text(label.toUpperCase(), xPos + 10, y + 15);
+        doc.setFontSize(10);
+        doc.setTextColor(15, 23, 42);
+        doc.setFont("helvetica", "normal");
+        doc.text(String(value), xPos + 10, y + 30);
+    };
 
-    doc.setFont("helvetica", "bold");
-    doc.text("Poids:", margin + 180, y);
-    doc.setFont("helvetica", "normal");
-    doc.text(String(pWeight).includes('kg') ? String(pWeight) : `${pWeight} kg`, margin + 230, y);
+    const boxW = (contentW - 20) / 3;
+    drawInfoBox("Nature", pType, margin, boxW);
+    drawInfoBox("Poids", String(pWeight).includes("kg") ? String(pWeight) : `${pWeight} kg`, margin + boxW + 10, boxW);
+    drawInfoBox("Description", pDims, margin + (boxW + 10) * 2, boxW);
 
-    doc.setFont("helvetica", "bold");
-    doc.text("Dimensions:", margin + 350, y);
-    doc.setFont("helvetica", "normal");
-    doc.text(pDims, margin + 420, y);
+    y += 60;
 
-    doc.setFont("helvetica", "bold");
-    doc.text("Notes:", margin, y + 25);
-    doc.setFont("helvetica", "normal");
-    const notesLines = doc.splitTextToSize(notesStr || "—", contentW - 60);
-    doc.text(notesLines, margin + 60, y + 25);
+    // Clean displayNotes (remove internal guest metadata & technical chunks)
+    let displayNotes = notesStr
+        .replace(/Guest Order\.\s?/g, "")
+        .replace(/Entreprise Pick:.*?(?=\.|$)\.?\s?/g, "")
+        .replace(/Entreprise Deliv:.*?(?=\.|$)\.?\s?/g, "")
+        .replace(/Contact Pick:.*?(?=\.|$)\.?\s?/g, "")
+        .replace(/Contact Deliv:.*?(?=\.|$)\.?\s?/g, "")
+        .replace(/Email Enlev:.*?(?=\.|$)\.?\s?/g, "")
+        .replace(/Phone Pick:.*?(?=\.|$)\.?\s?/g, "")
+        .replace(/Phone Deliv:.*?(?=\.|$)\.?\s?/g, "")
+        .replace(/Instructions:.*?(?=\.|$)\.?\s?/g, "")
+        .replace(/Contact:.*?\)\.\s?/g, "")
+        .replace(/Instructions :.*?\.\s?/g, "")
+        .replace(/Email:.*?\.\s?/g, "")
+        .replace(/Phone:.*?\.\s?/g, "")
+        .replace(/Billing:.*$/g, "")
+        .replace(/Poids:.*$/g, "")
+        .replace(/Dims:.*$/g, "")
+        .replace(/Dimensions:.*$/g, "")
+        .trim();
 
-    y += 100;
+    if (displayNotes && displayNotes !== "—" && displayNotes !== "/" && displayNotes.length > 2) {
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(10);
+        doc.setTextColor(100, 116, 139);
+        doc.text("NOTES COMPLÉMENTAIRES:", margin, y);
+
+        y += 10;
+        const cleanNotesLines = doc.splitTextToSize(displayNotes, contentW - 30);
+        const notesBoxH = Math.max(30, cleanNotesLines.length * 15 + 15);
+
+        doc.setFillColor(241, 245, 249); // light blue/gray
+        doc.roundedRect(margin, y, contentW, notesBoxH, 5, 5, "F");
+        doc.setTextColor(15, 23, 42);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+        doc.text(cleanNotesLines, margin + 15, y + 18);
+        y += notesBoxH + 30;
+    } else {
+        y += 10;
+    }
 
     // Footer (Summary with Tax Breakdown)
     y = Math.max(y, pageH - 220); // Move footer towards bottom
 
-    const priceHT = typeof order.price === 'number' ? order.price : parseFloat(order.price || order.price_ht || 0);
-    const tva = priceHT * 0.20;
+    const priceHT = typeof order.price === "number" ? order.price : parseFloat(order.price || order.price_ht || 0);
+    const tva = priceHT * 0.2;
     const priceTTC = priceHT + tva;
 
     doc.setFillColor(248, 250, 252); // slate-50
@@ -340,7 +475,7 @@ export function generateInvoicePdf(invoice, orders = [], client = {}) {
     const firstOrder = orders[0] || {};
     const isGuest = !client.id && !client.company && !client.full_name;
     // Fallback name from first order if client profile is empty
-    const clientName = client.company || client.name || client.full_name || firstOrder.pickup_name || "Client Invité";
+    const clientName = client.company || client.details?.company || client.name || client.details?.name || client.full_name || client.details?.full_name || firstOrder.pickup_name || "Client Invité";
 
     doc.text(clientName.toUpperCase(), margin, leftY);
     if (isGuest) {
@@ -362,10 +497,10 @@ export function generateInvoicePdf(invoice, orders = [], client = {}) {
     const gEmail = firstOrder.pickup_email || firstOrder.notes?.match(/Email: ([^\s]+)/)?.[1];
     const gPhone = firstOrder.pickup_phone || firstOrder.notes?.match(/Phone: ([\d\s]+)/)?.[1];
 
-    const displayContact = client.contact_person || client.contact || gBillingName || firstOrder.pickup_contact;
-    const displayEmail = client.email || gEmail;
-    const displayPhone = client.phone || gPhone;
-    const displayAddress = client.address || client.billing_address || gBillingAddress || firstOrder.pickup_address;
+    const displayContact = client.contact || client.details?.contact || client.contact_person || client.details?.contact_person || client.full_name || client.details?.full_name || gBillingName || firstOrder.pickup_contact;
+    const displayEmail = client.email || client.details?.email || gEmail;
+    const displayPhone = client.phone || client.details?.phone || client.phone_number || client.details?.phone_number || gPhone;
+    const displayAddress = client.address || client.details?.address || client.billing_address || client.details?.billing_address || gBillingAddress || firstOrder.pickup_address;
 
     if (displayContact) {
         doc.text(`Contact: ${displayContact}`, margin, detailY);
@@ -386,22 +521,29 @@ export function generateInvoicePdf(invoice, orders = [], client = {}) {
     if (displayAddress) {
         const addrLines = doc.splitTextToSize(displayAddress, contentW / 2 - 30);
         doc.text(addrLines, margin, detailY);
-        detailY += (12 * addrLines.length);
+        detailY += 12 * addrLines.length;
     }
-    if (client.zip || client.city) {
-        doc.text(`${client.zip || ""} ${client.city || ""}`, margin, detailY);
+
+    const zip = client.zip || client.details?.zip;
+    const city = client.city || client.details?.city;
+    const siret = client.siret || client.details?.siret;
+    const tvaNum = client.tva || client.details?.tva;
+    const ibanNum = client.iban || client.details?.iban;
+
+    if (zip || city) {
+        doc.text(`${zip || ""} ${city || ""}`, margin, detailY);
         detailY += 12;
     }
-    if (client.siret) {
-        doc.text(`SIRET: ${client.siret}`, margin, detailY);
+    if (siret) {
+        doc.text(`SIRET: ${siret}`, margin, detailY);
         detailY += 12;
     }
-    if (client.tva) {
-        doc.text(`TVA: ${client.tva}`, margin, detailY);
+    if (tvaNum) {
+        doc.text(`TVA: ${tvaNum}`, margin, detailY);
         detailY += 12;
     }
-    if (client.iban) {
-        doc.text(`IBAN: ${client.iban}`, margin, detailY);
+    if (ibanNum) {
+        doc.text(`IBAN: ${ibanNum}`, margin, detailY);
         detailY += 12;
     }
 
@@ -451,11 +593,12 @@ export function generateInvoicePdf(invoice, orders = [], client = {}) {
             doc.addPage();
             y = 40;
         }
-        const price = typeof o.total === 'number' ? o.total : parseFloat(o.total || o.price_ht || 0);
+        const price = typeof o.total === "number" ? o.total : parseFloat(o.total || o.price_ht || 0);
         doc.text(`#${String(o.id).slice(0, 8).toUpperCase()}`, margin + 10, y);
 
         // Fix: Use created_at if date is missing
-        const orderDate = o.date || (o.created_at ? new Date(o.created_at).toLocaleDateString('fr-FR') : new Date().toLocaleDateString('fr-FR'));
+        const orderDate =
+            o.date || (o.created_at ? new Date(o.created_at).toLocaleDateString("fr-FR") : new Date().toLocaleDateString("fr-FR"));
         doc.text(orderDate, margin + 100, y);
 
         const route = o.route || (o.pickup_city && o.delivery_city ? `${o.pickup_city} > ${o.delivery_city}` : "—");
@@ -473,11 +616,11 @@ export function generateInvoicePdf(invoice, orders = [], client = {}) {
 
     // Totals Calculation (Dynamic based on provided orders)
     const totalHT = orders.reduce((sum, o) => {
-        const price = typeof o.total === 'number' ? o.total : parseFloat(o.total || o.price_ht || 0);
+        const price = typeof o.total === "number" ? o.total : parseFloat(o.total || o.price_ht || 0);
         return sum + price;
     }, 0);
 
-    const tva = totalHT * 0.20;
+    const tva = totalHT * 0.2;
     const totalTTC = totalHT + tva;
 
     const drawTotal = (label, value, isBold = false) => {
@@ -507,8 +650,8 @@ export function generateInvoicePdf(invoice, orders = [], client = {}) {
     doc.text(`IBAN: ${COMPANY.iban}`, margin, y + 15);
     doc.text("Merci de préciser le numéro de facture dans l'objet du virement.", margin, y + 30);
 
-    if (driver.returnBlob) {
-        return doc.output('blob');
+    if (invoice.returnBlob) {
+        return doc.output("blob");
     }
 
     doc.save(`facture-${String(invoice.id).slice(0, 8)}.pdf`);
@@ -559,7 +702,9 @@ export function generateDriverStatementPdf(driver, orders = [], period = "—", 
     doc.text(period.toUpperCase(), pageW - margin - 205, 75);
 
     doc.setFontSize(9);
-    const refRL = `RÉF : RL-${String(driver.id).slice(0, 4).toUpperCase()}-${new Date().getFullYear()}${String(new Date().getMonth() + 1).padStart(2, '0')}`;
+    const refRL = `RÉF : RL-${String(driver.id).slice(0, 4).toUpperCase()}-${new Date().getFullYear()}${String(
+        new Date().getMonth() + 1
+    ).padStart(2, "0")}`;
     const badgeW = doc.getTextWidth(refRL) + 16;
     doc.setFillColor(255, 255, 255, 0.05);
     doc.roundedRect(pageW - margin - 205 - 4, 84, badgeW, 14, 2, 2, "F");
@@ -650,15 +795,22 @@ export function generateDriverStatementPdf(driver, orders = [], period = "—", 
         const gain = computePay(o);
         totalGain += gain;
 
-        const dateStr = o.scheduled_at ? new Date(o.scheduled_at).toLocaleDateString() : (o.created_at ? new Date(o.created_at).toLocaleDateString() : "—");
+        const dateStr = o.scheduled_at
+            ? new Date(o.scheduled_at).toLocaleDateString()
+            : o.created_at
+                ? new Date(o.created_at).toLocaleDateString()
+                : "—";
         doc.text(dateStr, margin + 10, y);
         doc.text(`#${String(o.id).slice(0, 8).toUpperCase()}`, margin + 80, y);
 
-        const route = `${o.pickup_city || ''} > ${o.delivery_city || ''}`.slice(0, 35);
+        const route = `${o.pickup_city || ""} > ${o.delivery_city || ""}`.slice(0, 35);
         doc.text(route, margin + 160, y);
 
-        const pTime = o.picked_up_at ? new Date(o.picked_up_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "—";
-        const dTime = (o.status === "delivered" && o.updated_at) ? new Date(o.updated_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "—";
+        const pTime = o.picked_up_at ? new Date(o.picked_up_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "—";
+        const dTime =
+            o.status === "delivered" && o.updated_at
+                ? new Date(o.updated_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+                : "—";
 
         doc.text(pTime, margin + 350, y);
         doc.text(dTime, margin + 400, y);
@@ -700,13 +852,17 @@ export function generateDriverStatementPdf(driver, orders = [], period = "—", 
     doc.setFontSize(8);
     doc.setFont("helvetica", "normal");
     const footerY = pageH - 40;
-    doc.text(`Généré par One Connexion le ${new Date().toLocaleDateString()} - Relevé d'auto-liquidation pour le compte du prestataire.`, margin, footerY);
+    doc.text(
+        `Généré par One Connexion le ${new Date().toLocaleDateString()} - Relevé d'auto-liquidation pour le compte du prestataire.`,
+        margin,
+        footerY
+    );
 
     if (driver.returnBlob) {
-        return doc.output('blob');
+        return doc.output("blob");
     }
 
-    doc.save(`listing-chauffeur-${details.full_name?.replace(/\s+/g, '-') || 'relevé'}-${period.replace(/\s+/g, '-')}.pdf`);
+    doc.save(`listing-chauffeur-${details.full_name?.replace(/\s+/g, "-") || "relevé"}-${period.replace(/\s+/g, "-")}.pdf`);
 }
 
 /**
@@ -751,7 +907,9 @@ export function generateDriverInvoicePdf(driver, orders = [], period = "—", co
     doc.text(period.toUpperCase(), pageW - margin - 185, 75);
 
     doc.setFontSize(11);
-    const refFP = `N° FP-${String(driver.id).slice(0, 4).toUpperCase()}-${new Date().getFullYear()}${String(new Date().getMonth() + 1).padStart(2, '0')}`;
+    const refFP = `N° FP-${String(driver.id).slice(0, 4).toUpperCase()}-${new Date().getFullYear()}${String(
+        new Date().getMonth() + 1
+    ).padStart(2, "0")}`;
     const badgeW = doc.getTextWidth(refFP) + 20;
     doc.setFillColor(255, 255, 255, 0.1);
     doc.roundedRect(pageW - margin - 185 - 5, 83, badgeW, 20, 3, 3, "F");
@@ -855,5 +1013,5 @@ export function generateDriverInvoicePdf(driver, orders = [], period = "—", co
     doc.text("TVA non applicable, art. 293 B du CGI (si applicable au statut auto-entrepreneur).", margin, footerY);
     doc.text("Facture générée automatiquement via la plateforme One Connexion.", margin, footerY + 12);
 
-    doc.save(`facture-chauffeur-${details.full_name?.replace(/\s+/g, '-') || 'facture'}-${period.replace(/\s+/g, '-')}.pdf`);
+    doc.save(`facture-chauffeur-${details.full_name?.replace(/\s+/g, "-") || "facture"}-${period.replace(/\s+/g, "-")}.pdf`);
 }

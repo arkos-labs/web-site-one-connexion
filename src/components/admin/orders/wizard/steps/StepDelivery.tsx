@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { User, Phone, ArrowRight, ArrowLeft } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
 
 interface StepDeliveryProps {
     formData: OrderFormData;
@@ -43,6 +44,18 @@ export const StepDelivery = ({ formData, updateFormData, onNext, onBack }: StepD
 
                 <div className="grid grid-cols-2 gap-4">
                     <div>
+                        <Label htmlFor="deliveryName" className="flex items-center gap-2 mb-1 text-xs text-gray-500 uppercase font-semibold">
+                            Société / Destinataire
+                        </Label>
+                        <Input
+                            id="deliveryName"
+                            value={formData.deliveryName}
+                            onChange={(e) => updateFormData({ deliveryName: e.target.value })}
+                            placeholder="Ex: Client B"
+                            className="h-9 focus-visible:ring-[#0B1525]"
+                        />
+                    </div>
+                    <div>
                         <Label htmlFor="deliveryContact" className="flex items-center gap-2 mb-1.5 text-xs text-gray-500 uppercase font-semibold">
                             Nom du contact
                         </Label>
@@ -54,6 +67,9 @@ export const StepDelivery = ({ formData, updateFormData, onNext, onBack }: StepD
                             className="h-9 focus-visible:ring-[#0B1525]"
                         />
                     </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
                     <div>
                         <Label htmlFor="deliveryPhone" className="flex items-center gap-2 mb-1.5 text-xs text-gray-500 uppercase font-semibold">
                             Téléphone
@@ -63,6 +79,18 @@ export const StepDelivery = ({ formData, updateFormData, onNext, onBack }: StepD
                             value={formData.deliveryPhone}
                             onChange={(e) => updateFormData({ deliveryPhone: e.target.value })}
                             placeholder="06 98 76 54 32"
+                            className="h-9 focus-visible:ring-[#0B1525]"
+                        />
+                    </div>
+                    <div className="space-y-1">
+                        <Label htmlFor="deliveryInstructions" className="flex items-center gap-2 mb-1.5 text-xs text-gray-500 uppercase font-semibold">
+                            Instructions (Code, Étage...)
+                        </Label>
+                        <Input
+                            id="deliveryInstructions"
+                            value={formData.deliveryInstructions}
+                            onChange={(e) => updateFormData({ deliveryInstructions: e.target.value })}
+                            placeholder="Code 1234, 2ème étage..."
                             className="h-9 focus-visible:ring-[#0B1525]"
                         />
                     </div>
