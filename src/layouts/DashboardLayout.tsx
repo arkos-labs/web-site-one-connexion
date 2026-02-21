@@ -38,7 +38,7 @@ const DashboardLayout = ({ type }: DashboardLayoutProps) => {
           </div>
           <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon">
+              <Button variant="ghost" size="icon" aria-label="Ouvrir le menu">
                 <Menu className="h-6 w-6" />
               </Button>
             </SheetTrigger>
@@ -47,6 +47,20 @@ const DashboardLayout = ({ type }: DashboardLayoutProps) => {
             </SheetContent>
           </Sheet>
         </header>
+
+        {/* Floating menu button (mobile safety) */}
+        <div className="md:hidden fixed bottom-4 right-4 z-50">
+          <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
+            <SheetTrigger asChild>
+              <Button className="rounded-full h-12 w-12 shadow-lg" aria-label="Ouvrir le menu">
+                <Menu className="h-5 w-5" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="p-0 w-72 border-r-0">
+              <Sidebar type={type} onClose={() => setIsMobileOpen(false)} />
+            </SheetContent>
+          </Sheet>
+        </div>
 
         {/* Main Content */}
         <main className="flex-1 overflow-y-auto scroll-smooth">
