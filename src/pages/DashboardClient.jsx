@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search, Bell, MoreHorizontal, ArrowUpRight, Truck, Clock, Check, Loader2, FileText } from "lucide-react";
 import { supabase } from "../lib/supabase";
-import { generateInvoicePdf } from "../lib/pdfGenerator";
+// pdfGenerator loaded dynamically
 
 function clientStatusLabel(order) {
   const status = typeof order === 'string' ? order : order.status;

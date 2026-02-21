@@ -47,7 +47,8 @@ import {
     Euro,
     Download,
     Plus,
-    AlertCircle
+    AlertCircle,
+    User
 } from "lucide-react";
 import { toast } from "sonner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -496,10 +497,33 @@ const ClientDetail = () => {
                                     </div>
                                 </div>
                                 <div className="flex items-start gap-3">
+                                    <User className="h-5 w-5 text-muted-foreground mt-0.5" />
+                                    <div>
+                                        <p className="text-sm text-muted-foreground">Contact</p>
+                                        <p className="font-medium">
+                                            {`${client.first_name || ''} ${client.last_name || ''}`.trim() || 'Non renseigné'}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="flex items-start gap-3">
                                     <MapPin className="h-5 w-5 text-muted-foreground mt-0.5" />
                                     <div>
                                         <p className="text-sm text-muted-foreground">Adresse principale</p>
                                         <p className="font-medium">{client.address || 'Non renseignée'}</p>
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+                                    <div>
+                                        <p className="text-xs text-muted-foreground">SIRET</p>
+                                        <p className="font-medium text-sm">{client.siret || '—'}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-xs text-muted-foreground">TVA</p>
+                                        <p className="font-medium text-sm">{client.tva_number || '—'}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-xs text-muted-foreground">IBAN</p>
+                                        <p className="font-medium text-sm break-all">{client.iban || '—'}</p>
                                     </div>
                                 </div>
                             </div>

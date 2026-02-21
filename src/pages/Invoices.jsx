@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { jsPDF } from "jspdf";
+// jsPDF loaded via pdfGenerator
 import { supabase } from "../lib/supabase";
 import { Loader2, FileText, Download } from "lucide-react";
-import { generateInvoicePdf } from "../lib/pdfGenerator";
+// pdfGenerator loaded dynamically
 
 const COMPANY = {
   name: "One Connexion",
@@ -79,9 +79,10 @@ export default function Invoices() {
   }, [selected]);
 
 
-  const downloadInvoice = () => {
+  const downloadInvoice = async () => {
     if (!selected) return;
     const periodStr = new Date(selected.period_start).toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+    const { generateInvoicePdf } = await import("../lib/pdfGenerator");
     generateInvoicePdf({ ...selected, period: periodStr }, orders, profile || {});
   };
 

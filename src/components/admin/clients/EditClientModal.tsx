@@ -30,6 +30,8 @@ const EditClientModal = ({ isOpen, onClose, client, onSuccess }: EditClientModal
                 first_name: client.first_name || "",
                 last_name: client.last_name || "",
                 billing_address: client.billing_address || "",
+                tva_number: client.tva_number || "",
+                iban: client.iban || "",
             });
         }
     }, [client, isOpen]);
@@ -157,6 +159,27 @@ const EditClientModal = ({ isOpen, onClose, client, onSuccess }: EditClientModal
                             value={formData.siret || ""}
                             onChange={handleChange}
                         />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="tva_number">N° TVA</Label>
+                            <Input
+                                id="tva_number"
+                                name="tva_number"
+                                value={formData.tva_number || ""}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="iban">IBAN</Label>
+                            <Input
+                                id="iban"
+                                name="iban"
+                                value={formData.iban || ""}
+                                onChange={handleChange}
+                            />
+                        </div>
                     </div>
 
                     <DialogFooter>

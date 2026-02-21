@@ -109,6 +109,8 @@ export interface Client {
     first_name?: string;
     last_name?: string;
     billing_address?: string;
+    tva_number?: string;
+    iban?: string;
     email_notif?: boolean;
     sms_notif?: boolean;
     auto_invoice?: boolean;

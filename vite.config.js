@@ -53,6 +53,21 @@ export default defineConfig({
       format: {
         comments: false
       }
+    },
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (!id.includes('node_modules')) return;
+          if (id.includes('react-router')) return 'vendor-router';
+          if (id.includes('lucide-react')) return 'vendor-icons';
+          if (id.includes('@supabase')) return 'vendor-supabase';
+          if (id.includes('html2canvas')) return 'vendor-html2canvas';
+          if (id.includes('jspdf')) return 'vendor-jspdf';
+          if (id.includes('react-dom')) return 'vendor-react';
+          if (id.includes('/react/')) return 'vendor-react';
+          return undefined;
+        }
+      }
     }
   }
 })

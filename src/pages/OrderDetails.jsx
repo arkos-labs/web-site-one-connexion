@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
-import { generateOrderPdf } from "../lib/pdfGenerator";
+// pdfGenerator loaded dynamically
 import { Loader2 } from "lucide-react";
 
 function clientStatusLabel(order) {
@@ -69,7 +69,8 @@ export default function OrderDetails() {
     { label: " en cours", value: order.status === 'delivered' ? "Effectuée" : "En cours" },
   ];
 
-  const downloadPdf = () => {
+  const downloadPdf = async () => {
+    const { generateOrderPdf } = await import("../lib/pdfGenerator");
     generateOrderPdf(order, client || order.client || {});
   };
 

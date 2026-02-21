@@ -63,6 +63,7 @@ export default function AdminClientDetails() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("Tous");
   const [action, setAction] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
   const [chatMsg, setChatMsg] = useState("");
   const [sending, setSending] = useState(false);
 
@@ -115,6 +116,34 @@ export default function AdminClientDetails() {
     return `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   }, [client, risk]);
 
+  const handleDetailChange = (name, value) => {
+    setClient(prev => ({
+      ...prev,
+      details: {
+        ...(prev.details || {}),
+        [name]: value
+      }
+    }));
+  };
+
+  const handleSaveDetails = async () => {
+    setSending(true);
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({ details: client.details })
+        .eq('id', id);
+
+      if (error) throw error;
+      alert("Détails mis à jour avec succès !");
+      setIsEditing(false);
+    } catch (err) {
+      alert("Erreur: " + err.message);
+    } finally {
+      setSending(false);
+    }
+  };
+
   const handleSendChat = async () => {
     if (!chatMsg.trim()) return;
     setSending(true);
@@ -141,10 +170,11 @@ export default function AdminClientDetails() {
   };
 
   if (loading) return <div className="flex justify-center p-20"><Loader2 className="animate-spin text-slate-400" /></div>;
-  if (!client) {
+  if (!client || client.role === 'admin') {
     return (
       <div className="p-8">
-        <h1 className="text-3xl font-bold text-slate-900">Client introuvable</h1>
+        <h1 className="text-3xl font-bold text-slate-900">{!client ? "Client introuvable" : "Accès Refusé"}</h1>
+        <p className="mt-2 text-slate-500">{!client ? "Le profil demandé n'existe pas." : "Ce profil appartient à un administrateur et ne peut pas être géré depuis cette section."}</p>
         <Link to="/admin/clients" className="mt-4 inline-block rounded-full bg-slate-100 px-5 py-2 text-xs font-bold text-slate-700">Retour aux clients</Link>
       </div>
     );
@@ -173,18 +203,82 @@ export default function AdminClientDetails() {
 
       <div className="grid gap-6 lg:grid-cols-[1fr_0.8fr]">
         <div className="rounded-3xl bg-white p-6 shadow-sm border border-slate-100">
-          <div className="text-sm font-bold text-slate-900">Fiche client (CRM)</div>
+          <div className="flex items-center justify-between">
+            <div className="text-sm font-bold text-slate-900">Fiche client (CRM)</div>
+            <button
+              onClick={() => {
+                if (isEditing) {
+                  handleSaveDetails();
+                } else {
+                  setIsEditing(true);
+                }
+              }}
+              className={`rounded-full px-4 py-1.5 text-[11px] font-bold transition-all ${isEditing ? "bg-emerald-600 text-white" : "bg-slate-100 text-slate-700 hover:bg-slate-200"}`}
+            >
+              {isEditing ? "Sauvegarder" : "Modifier"}
+            </button>
+          </div>
+
           <div className="mt-4 grid gap-3 text-sm md:grid-cols-2">
             <div className="space-y-3">
-              <Info label="Contact" value={client.details?.contact_name || client.details?.contact_person || "—"} />
-              <Info label="Email" value={client.details?.email || "—"} />
-              <Info label="Téléphone" value={client.details?.phone || "—"} />
-              <Info label="Adresse" value={client.details?.address || "—"} />
+              <EditableInfo
+                label="Entreprise"
+                name="company"
+                value={client.details?.company || ""}
+                isEditing={isEditing}
+                onChange={handleDetailChange}
+              />
+              <EditableInfo
+                label="Contact"
+                name="contact_name"
+                value={client.details?.contact_name || client.details?.contact_person || ""}
+                isEditing={isEditing}
+                onChange={handleDetailChange}
+              />
+              <EditableInfo
+                label="Email"
+                name="email"
+                value={client.details?.email || ""}
+                isEditing={isEditing}
+                onChange={handleDetailChange}
+              />
+              <EditableInfo
+                label="Téléphone"
+                name="phone"
+                value={client.details?.phone || ""}
+                isEditing={isEditing}
+                onChange={handleDetailChange}
+              />
             </div>
             <div className="space-y-3">
-              <Info label="SIRET" value={client.details?.siret || "—"} />
-              <Info label="TVA" value={client.details?.tva || "—"} />
-              <Info label="IBAN" value={client.details?.iban || "—"} />
+              <EditableInfo
+                label="Adresse"
+                name="address"
+                value={client.details?.address || ""}
+                isEditing={isEditing}
+                onChange={handleDetailChange}
+              />
+              <EditableInfo
+                label="SIRET"
+                name="siret"
+                value={client.details?.siret || ""}
+                isEditing={isEditing}
+                onChange={handleDetailChange}
+              />
+              <EditableInfo
+                label="TVA"
+                name="tva"
+                value={client.details?.tva || ""}
+                isEditing={isEditing}
+                onChange={handleDetailChange}
+              />
+              <EditableInfo
+                label="IBAN"
+                name="iban"
+                value={client.details?.iban || ""}
+                isEditing={isEditing}
+                onChange={handleDetailChange}
+              />
             </div>
           </div>
           <div className="mt-5 flex flex-wrap gap-2">
@@ -198,16 +292,45 @@ export default function AdminClientDetails() {
           </div>
           <div className="mt-4">
             <label className="text-xs font-bold uppercase tracking-wider text-slate-400">Notes CRM</label>
-            <textarea className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm focus:outline-none focus:ring-4 focus:ring-slate-100" rows={3} placeholder="Notes sur le client..." />
+            <textarea
+              className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm focus:outline-none focus:ring-4 focus:ring-slate-100"
+              rows={3}
+              placeholder="Notes sur le client..."
+              value={client.details?.notes || ""}
+              onChange={(e) => handleDetailChange("notes", e.target.value)}
+              disabled={!isEditing}
+            />
           </div>
 
           <div className="mt-6 border-t border-slate-100 pt-6">
             <h3 className="text-sm font-bold text-slate-900 mb-3">Gestion du compte</h3>
             <div className="bg-slate-50 rounded-2xl p-4">
-              <label className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2 block">Rôle Utilisateur</label>
+              <div className="flex items-center justify-between mb-2">
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-400">Rôle Utilisateur</label>
+                {client.id && (
+                  <button
+                    onClick={async () => {
+                      if (window.confirm("Êtes-vous sûr de vouloir supprimer ce client ? Cette action est irréversible.")) {
+                        const { error } = await supabase.from('profiles').delete().eq('id', client.id);
+                        if (error) {
+                          alert("Erreur lors de la suppression du profil : " + error.message);
+                        } else {
+                          // Note: La suppression de l'utilisateur Auth doit se faire via l'API Admin de Supabase ou manuellement dans le dashboard
+                          alert("Profil supprimé de la base de données publique.");
+                          navigate("/admin/clients");
+                        }
+                      }
+                    }}
+                    className="text-[10px] font-bold text-rose-500 hover:text-rose-700 uppercase"
+                  >
+                    Supprimer le profil
+                  </button>
+                )}
+              </div>
               <div className="flex gap-2">
                 <select
                   value={client.role || 'client'}
+                  disabled={!isEditing}
                   onChange={async (e) => {
                     const newRole = e.target.value;
                     const { error } = await supabase.from('profiles').update({ role: newRole }).eq('id', client.id);
@@ -217,7 +340,7 @@ export default function AdminClientDetails() {
                       alert("Rôle mis à jour !");
                     }
                   }}
-                  className="flex-1 rounded-xl border border-slate-200 px-3 py-2 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-slate-900"
+                  className="flex-1 rounded-xl border border-slate-200 px-3 py-2 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-slate-900 disabled:opacity-60"
                 >
                   <option value="client">Client</option>
                   <option value="courier">Chauffeur (Courier)</option>
@@ -292,7 +415,7 @@ export default function AdminClientDetails() {
       </div>
 
       {
-        action && (
+        action && action !== "edit" && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
             <div className="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl">
               <div className="mb-4 flex items-center justify-between">
@@ -340,6 +463,29 @@ function Info({ label, value }) {
     <div className="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-3">
       <div className="text-xs font-bold uppercase tracking-wider text-slate-400">{label}</div>
       <div className="font-semibold text-slate-900">{value}</div>
+    </div>
+  );
+}
+
+function EditableInfo({ label, name, value, isEditing, onChange }) {
+  if (isEditing) {
+    return (
+      <div className="flex flex-col rounded-2xl bg-slate-50 px-4 py-2 border border-slate-200">
+        <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400">{label}</label>
+        <input
+          type="text"
+          className="bg-transparent font-semibold text-slate-900 outline-none w-full"
+          value={value}
+          onChange={(e) => onChange(name, e.target.value)}
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-3">
+      <div className="text-xs font-bold uppercase tracking-wider text-slate-400">{label}</div>
+      <div className="font-semibold text-slate-900">{value || "—"}</div>
     </div>
   );
 }

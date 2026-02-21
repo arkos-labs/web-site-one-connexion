@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import { FileText as FileIcon, Download as DownloadIcon, Users as UsersIcon, Briefcase as BriefcaseIcon, Calendar as CalendarIcon, Loader2 as LoaderIcon, Search as SearchIcon, X as XIcon, Send as SendIcon, CheckCircle as CheckIcon } from "lucide-react";
-import { generateDriverInvoicePdf, generateDriverStatementPdf } from "../lib/pdfGenerator";
+// pdfGenerator loaded dynamically
 
 function isoToMs(iso) {
   if (!iso) return null;
@@ -472,7 +472,10 @@ export default function AdminInvoices() {
                           </button>
                         )}
                         <button
-                          onClick={() => generateDriverStatementPdf(d, d.orders, getMonthLabel(selectedMonth), computeDriverPay)}
+                          onClick={async () => {
+                            const { generateDriverStatementPdf } = await import("../lib/pdfGenerator");
+                            generateDriverStatementPdf(d, d.orders, getMonthLabel(selectedMonth), computeDriverPay);
+                          }}
                           disabled={d.orders.length === 0}
                           className="flex items-center gap-2 rounded-xl bg-white border border-slate-200 px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-all hover:border-slate-300"
                           title="Générer le relevé (Listing)"
@@ -481,7 +484,10 @@ export default function AdminInvoices() {
                           <span>Relevé</span>
                         </button>
                         <button
-                          onClick={() => generateDriverInvoicePdf(d, d.orders, getMonthLabel(selectedMonth), computeDriverPay)}
+                          onClick={async () => {
+                            const { generateDriverInvoicePdf } = await import("../lib/pdfGenerator");
+                            generateDriverInvoicePdf(d, d.orders, getMonthLabel(selectedMonth), computeDriverPay);
+                          }}
                           disabled={d.orders.length === 0}
                           className="flex items-center gap-2 rounded-xl bg-white border border-slate-200 px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-all hover:border-slate-300"
                           title="Générer la facture"

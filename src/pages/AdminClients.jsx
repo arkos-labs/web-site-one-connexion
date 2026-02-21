@@ -56,7 +56,7 @@ export default function AdminClients() {
     if (cRes.data) {
       // Filtrage souple : client, admin ou rôle vide
       const filteredClients = cRes.data.filter(p =>
-        p.role?.toLowerCase() === 'client' || !p.role || p.role === 'admin'
+        p.role?.toLowerCase() === 'client' || !p.role
       );
       setClients(filteredClients);
     }

@@ -7,6 +7,7 @@ import { MapPin, Clock, Star, Package, Search, AlertCircle, CheckCircle2 } from 
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
 import { AvailableDriver, isDriverAvailable, getDriverStatusLabel, getDriverStatusBadgeColor } from "@/types/orders";
+import { geocoderAdresse } from "@/services/locationiq";
 
 interface DispatchDriverModalProps {
     isOpen: boolean;
@@ -16,10 +17,19 @@ interface DispatchDriverModalProps {
     onDispatch: (driverId: string) => void;
 }
 
-// Mock function to calculate distance (in real app, use Google Maps API or similar)
+// Haversine formula to calculate distance between two GPS coordinates in km
 const calculateDistance = (lat1?: number, lon1?: number, lat2?: number, lon2?: number): number => {
-    // Mock calculation - returns random distance between 1-15 km
-    return Math.random() * 14 + 1;
+    if (lat1 === undefined || lon1 === undefined || lat2 === undefined || lon2 === undefined) return 999;
+
+    const R = 6371; // Radius of the Earth in km
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
 };
 
 // Mock function to calculate ETA based on distance
@@ -39,18 +49,29 @@ const DispatchDriverModal = ({
     const [searchQuery, setSearchQuery] = useState("");
     const [availableDrivers, setAvailableDrivers] = useState<AvailableDriver[]>([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [pickupCoords, setPickupCoords] = useState<{ lat: number, lng: number } | null>(null);
 
-    // Fetch available drivers
+    // Fetch available drivers and geocode pickup address
     useEffect(() => {
         if (isOpen) {
-            fetchAvailableDrivers();
+            fetchData();
         }
-    }, [isOpen]);
+    }, [isOpen, pickupAddress]);
 
-    const fetchAvailableDrivers = async () => {
+    const fetchData = async () => {
         setIsLoading(true);
-
         try {
+            // 1. Geocode pickup address
+            let currentPickupCoords = { lat: 48.8566, lng: 2.3522 }; // Default Paris
+            try {
+                const geo = await geocoderAdresse(pickupAddress);
+                currentPickupCoords = { lat: geo.latitude, lng: geo.longitude };
+                setPickupCoords(currentPickupCoords);
+            } catch (e) {
+                console.warn("Geocoding failed, using default Paris:", e);
+            }
+
+            // 2. Fetch drivers
             const { data, error } = await supabase
                 .from('drivers')
                 .select('*');
@@ -95,8 +116,8 @@ const DispatchDriverModal = ({
                         distance_to_pickup: calculateDistance(
                             driver.current_location?.latitude,
                             driver.current_location?.longitude,
-                            48.8566, // Mock pickup location (should be parsed from address)
-                            2.3522
+                            currentPickupCoords.lat,
+                            currentPickupCoords.lng
                         ),
                         estimated_time: 0
                     }))
@@ -109,8 +130,8 @@ const DispatchDriverModal = ({
                 setAvailableDrivers(available);
             }
         } catch (error) {
-            console.error("Error fetching drivers:", error);
-            toast.error("Erreur lors du chargement des chauffeurs");
+            console.error("Error fetching data:", error);
+            toast.error("Erreur lors du chargement des données");
         } finally {
             setIsLoading(false);
         }
@@ -228,7 +249,7 @@ const DispatchDriverModal = ({
                             </p>
                         </div>
                     ) : (
-                        filteredDrivers.map((driver) => (
+                        filteredDrivers.map((driver, index) => (
                             <div
                                 key={driver.id}
                                 onClick={() => setSelectedDriverId(driver.id)}
@@ -252,6 +273,11 @@ const DispatchDriverModal = ({
                                             >
                                                 {getDriverStatusLabel(driver.status)}
                                             </Badge>
+                                            {index === 0 && !searchQuery && (
+                                                <Badge className="bg-gradient-to-r from-amber-400 to-orange-500 text-white border-0 animate-pulse">
+                                                    ✨ IA : Recommandé
+                                                </Badge>
+                                            )}
                                             {selectedDriverId === driver.id && (
                                                 <CheckCircle2 className="h-5 w-5 text-primary ml-auto" />
                                             )}

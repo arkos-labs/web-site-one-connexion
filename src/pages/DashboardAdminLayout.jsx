@@ -13,20 +13,7 @@ export default function DashboardAdminLayout() {
   const [activeCount, setActiveCount] = useState(0);
   const [newOrderPopup, setNewOrderPopup] = useState(null);
 
-  // Audio notification
-  const [audio] = useState(new Audio("https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3"));
 
-  useEffect(() => {
-    const unlock = () => {
-      audio.play().then(() => {
-        audio.pause();
-        audio.currentTime = 0;
-      }).catch(() => {});
-      window.removeEventListener('click', unlock);
-    };
-    window.addEventListener('click', unlock);
-    return () => window.removeEventListener('click', unlock);
-  }, [audio]);
 
   useEffect(() => {
     const fetchActiveOrders = async () => {
@@ -65,7 +52,6 @@ export default function DashboardAdminLayout() {
         price: order.price_ht
       });
 
-      audio.play().catch(() => {});
       setTimeout(() => setNewOrderPopup(null), 15000);
     };
 

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import { Loader2, Mail, Phone, MapPin, Building2, CreditCard, User, Clock, CheckCircle2, TrendingUp, Calendar, Save, Edit2, X, Truck, Banknote, FileText, Download } from "lucide-react";
-import { generateDriverStatementPdf, generateDriverInvoicePdf } from "../lib/pdfGenerator";
+// pdfGenerator loaded dynamically
 
 function parseOrderDateToMs(dateStr) {
   if (!dateStr) return null;
@@ -214,6 +214,7 @@ export default function AdminDriverDetails() {
 
       // 1. Generate PDF Blob
       // We pass a special flag to get the blob
+      const { generateDriverInvoicePdf } = await import("../lib/pdfGenerator");
       const pdfBlob = generateDriverInvoicePdf({ ...driver, returnBlob: true }, completedOrders, periodLabel, computeDriverPay);
 
       if (!pdfBlob) throw new Error("Erreur génération PDF");
@@ -265,9 +266,10 @@ export default function AdminDriverDetails() {
     }
   };
 
-  const handleDownloadListing = () => {
+  const handleDownloadListing = async () => {
     const periodLabel = from ? new Date(from).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' }) : "Période globale";
     const completedOrders = rows.filter(r => r.status === "delivered");
+    const { generateDriverStatementPdf } = await import("../lib/pdfGenerator");
     generateDriverStatementPdf(driver, completedOrders, periodLabel, computeDriverPay);
   };
 
