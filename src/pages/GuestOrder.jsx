@@ -340,12 +340,41 @@ export default function GuestOrder() {
                             <div className="mt-1 text-sm text-slate-500">Adresse : <span className="font-medium text-slate-900">{form.billingAddress}</span></div>
                         </div>
                     </div>
-                    <button
-                        onClick={() => navigate('/')}
-                        className="mt-8 w-full rounded-full bg-slate-900 py-4 text-sm font-bold text-white transition-all hover:bg-slate-800"
-                    >
-                        Retour à l'accueil
-                    </button>
+                    <div className="mt-8 flex flex-col gap-3">
+                        <button
+                            onClick={async () => {
+                                const { generateOrderPdf } = await import("../lib/pdfGenerator");
+                                const dummyOrder = {
+                                    id: success,
+                                    created_at: new Date().toISOString(),
+                                    pickup_address: form.pickup,
+                                    pickup_name: form.pickupName,
+                                    pickup_phone: form.pickupPhone,
+                                    delivery_address: form.delivery,
+                                    delivery_name: form.deliveryName,
+                                    vehicle_type: form.vehicle,
+                                    service_level: form.service,
+                                    price_ht: price,
+                                    package_type: form.packageType === "Autre" ? form.packageTypeOther : form.packageType,
+                                    package_description: form.packageDesc,
+                                    weight: form.packageWeight,
+                                    notes: `Email: ${form.guestEmail}. Phone: ${form.contactPhone}. Billing: ${form.billingName} | ${form.billingCompany} | ${form.billingAddress}`,
+                                };
+                                generateOrderPdf(dummyOrder, {});
+                            }}
+                            className="flex w-full items-center justify-center gap-2 rounded-full bg-slate-900 py-4 text-sm font-bold text-white shadow-xl shadow-slate-900/20 active:scale-95 transition-all"
+                        >
+                            <Truck size={18} />
+                            TÉLÉCHARGER LE BON (PDF)
+                        </button>
+
+                        <button
+                            onClick={() => navigate('/')}
+                            className="w-full py-2 text-xs font-bold text-slate-400 hover:text-slate-600 transition-colors"
+                        >
+                            Retour à l'accueil
+                        </button>
+                    </div>
                 </div>
             </div>
         );

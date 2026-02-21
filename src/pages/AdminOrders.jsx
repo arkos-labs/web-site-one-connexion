@@ -517,6 +517,15 @@ export default function AdminOrders() {
                     <td className="py-4 font-semibold text-slate-900">{Number(o.total || 0).toFixed(2)}€</td>
                     <td className="py-4">
                       <div className="flex justify-end gap-2">
+                        <button
+                          onClick={() => {
+                            const fullClient = clients.find(c => c.id === o.client_id);
+                            downloadOrderPdf(o, fullClient || {});
+                          }}
+                          className="rounded-full bg-slate-100 px-3 py-1.5 text-[11px] font-bold text-slate-700 hover:bg-slate-200"
+                        >
+                          PDF
+                        </button>
                         <button onClick={() => duplicateOrder(o)} className="rounded-full bg-slate-100 px-3 py-1.5 text-[11px] font-bold text-slate-700 hover:bg-slate-200">Dupliquer</button>
                         <button onClick={() => navigate(`/admin/orders/${o.id}`)} className="rounded-full bg-slate-900 px-3 py-1.5 text-[11px] font-bold text-white">Détails</button>
                       </div>
@@ -604,6 +613,18 @@ export default function AdminOrders() {
                         {(['in_progress', 'picked_up', 'dispatched', 'driver_accepted'].includes(o.status)) && (
                           <button onClick={() => completeOrder(o.id)} className="rounded-full bg-orange-500 px-3 py-1 text-[10px] font-bold text-white">Terminer</button>
                         )}
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            const fullClient = clients.find(c => c.id === o.client_id);
+                            downloadOrderPdf(o, fullClient || {});
+                          }}
+                          className="rounded-full bg-slate-100 px-3 py-1 text-[10px] font-bold text-slate-700 hover:bg-slate-200"
+                        >
+                          PDF BC
+                        </button>
                       </div>
                     </div>
                   ))}

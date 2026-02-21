@@ -220,10 +220,7 @@ export default function AdminOrderDetails() {
           <div className="rounded-full bg-slate-100 px-3 py-1 text-[10px] font-bold uppercase tracking-wide text-slate-900 ring-1 ring-slate-200">{order.status}</div>
 
           <button
-            onClick={async () => {
-              const { generateOrderPdf } = await import("../lib/pdfGenerator");
-              generateOrderPdf(order, client);
-            }}
+            onClick={() => generateOrderPdf(order, client)}
             className="rounded-full bg-slate-100 px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-200 transition-colors"
           >
             Bon de commande (PDF)

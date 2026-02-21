@@ -45,7 +45,7 @@ export default function OrderDetails() {
   const fetchClient = async () => {
     setLoading(true);
     const { data } = await supabase.from('profiles').select('*').eq('id', order.client_id).single();
-    if (data) setClient(data.details || {});
+    if (data) setClient(data);
     setLoading(false);
   };
 
@@ -144,9 +144,9 @@ export default function OrderDetails() {
             <div className="grid gap-3 sm:grid-cols-2">
               <div className="rounded-2xl bg-slate-50 p-4">
                 <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Client / Expéditeur</div>
-                <div className="mt-2 text-sm font-bold text-slate-900">{client?.company || order.client?.name || order.pickup_name || "—"}</div>
-                <div className="text-xs text-slate-500">{client?.email || order.client?.email || "—"}</div>
-                <div className="text-xs text-slate-500">{client?.phone || order.client?.phone || "—"}</div>
+                <div className="mt-2 text-sm font-bold text-slate-900">{client?.details?.company || order.client?.name || order.pickup_name || "—"}</div>
+                <div className="text-xs text-slate-500">{client?.details?.email || order.client?.email || "—"}</div>
+                <div className="text-xs text-slate-500">{client?.details?.phone || order.client?.phone || "—"}</div>
               </div>
               <div className="rounded-2xl bg-slate-50 p-4 border border-slate-100">
                 <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Poids & Dimensions</div>

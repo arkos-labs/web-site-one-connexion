@@ -66,6 +66,7 @@ function statusColor(status) {
 export default function Orders() {
   const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
+  const [profile, setProfile] = useState(null);
   const [loadingOrders, setLoadingOrders] = useState(true);
 
   const [open, setOpen] = useState(false);
@@ -139,6 +140,10 @@ export default function Orders() {
   const fetchOrders = async () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
+
+    // Fetch profile
+    const { data: pData } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+    if (pData) setProfile(pData);
 
     setLoadingOrders(true);
     const { data, error } = await supabase
@@ -573,13 +578,7 @@ export default function Orders() {
                       onClick={(e) => {
                         e.stopPropagation();
                         // Generate BC logic
-                        const profileDetails = {
-                          company: "One paris",
-                          contact_person: "giko",
-                          email: "cherkinicolas@gmail.com",
-                          phone: "0797545037",
-                        };
-                        import("../lib/pdfGenerator").then(m => m.generateOrderPdf(order, profileDetails));
+                        import("../lib/pdfGenerator").then(m => m.generateOrderPdf(order, profile || {}));
                       }}
                       className="flex items-center gap-2 rounded-full bg-slate-900 px-3 py-1.5 text-[10px] font-bold text-white shadow-sm ring-1 ring-slate-900 transition-all hover:bg-white hover:text-slate-900 active:scale-95"
                     >
@@ -594,6 +593,6 @@ export default function Orders() {
         )}
       </div>
 
-    </div>
+    </div >
   );
 }
