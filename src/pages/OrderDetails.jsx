@@ -4,16 +4,26 @@ import { supabase } from "../lib/supabase";
 import { generateOrderPdf } from "../lib/pdfGenerator";
 import { Loader2 } from "lucide-react";
 
-function clientStatusLabel(status) {
+function clientStatusLabel(order) {
+  const status = typeof order === 'string' ? order : order.status;
+  const driverId = typeof order === 'string' ? null : order.driver_id;
+
   switch (status) {
-    case "Assignée":
-      return "En attente validation";
-    case "À dispatcher":
-      return "Chauffeur assigné";
-    case "En cours":
+    case "pending_acceptance":
+    case "pending":
+      return "En attente";
+    case "accepted":
+    case "assigned":
+      return driverId ? "Dispatchée" : "Acceptée";
+    case "dispatched":
+    case "driver_accepted":
+    case "in_progress":
+    case "picked_up":
       return "En cours";
-    case "Terminée":
+    case "delivered":
       return "Terminée";
+    case "cancelled":
+      return "Annulée";
     default:
       return status || "—";
   }
@@ -72,7 +82,7 @@ export default function OrderDetails() {
         </div>
         <div className="flex items-center gap-2">
           <div className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wide ${order.status === 'delivered' ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-900 text-white'}`}>
-            {clientStatusLabel(order.status) || "—"}
+            {clientStatusLabel(order) || "—"}
           </div>
           <button
             onClick={downloadPdf}
@@ -151,7 +161,7 @@ export default function OrderDetails() {
           <div className="text-xs text-slate-400 mt-1 font-semibold">{Number(order.price_ht).toFixed(2)}€ HT</div>
           <div className="mt-6 rounded-2xl bg-slate-50 p-4">
             <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Statut</div>
-            <div className="mt-2 text-sm font-semibold text-slate-900">{order.status || "En cours"}</div>
+            <div className="mt-2 text-sm font-semibold text-slate-900">{clientStatusLabel(order)}</div>
           </div>
         </div>
       </div>
