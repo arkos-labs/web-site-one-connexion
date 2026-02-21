@@ -27,7 +27,20 @@ export default function Profile() {
     if (user) {
       const { data } = await supabase.from('profiles').select('details').eq('id', user.id).single();
       if (data && data.details) {
-        setForm({ ...form, ...data.details, email: user.email }); // Prefer user email, merge with details
+        const d = data.details;
+        setForm({
+          ...form,
+          company: d.company || "",
+          contact: d.contact || d.full_name || d.contact_name || "",
+          phone: d.phone || d.phone_number || "",
+          address: d.address || "",
+          city: d.city || "",
+          zip: d.zip || d.postal_code || "",
+          siret: d.siret || "",
+          tva: d.tva || "",
+          iban: d.iban || "",
+          email: user.email
+        });
       } else {
         setForm({ ...form, email: user.email });
       }
@@ -96,16 +109,16 @@ export default function Profile() {
           ) : (
             <form onSubmit={save} className="mt-8 grid gap-4">
               <div className="grid gap-4 md:grid-cols-2">
-                <Field label="Nom société" value={form.company} onChange={(v) => setForm({ ...form, company: v })} disabled />
+                <Field label="Nom société" value={form.company} onChange={(v) => setForm({ ...form, company: v })} />
                 <Field label="Contact" value={form.contact} onChange={(v) => setForm({ ...form, contact: v })} />
-                <Field label="Email" value={form.email} onChange={(v) => setForm({ ...form, email: v })} />
+                <Field label="Email" value={form.email} onChange={(v) => setForm({ ...form, email: v })} disabled />
                 <Field label="Téléphone" value={form.phone} onChange={(v) => setForm({ ...form, phone: v })} />
-                <Field label="SIRET" value={form.siret} onChange={(v) => setForm({ ...form, siret: v })} disabled />
-                <Field label="TVA" value={form.tva} onChange={(v) => setForm({ ...form, tva: v })} disabled />
-                <Field label="Adresse" value={form.address} onChange={(v) => setForm({ ...form, address: v })} disabled />
+                <Field label="SIRET" value={form.siret} onChange={(v) => setForm({ ...form, siret: v })} />
+                <Field label="TVA" value={form.tva} onChange={(v) => setForm({ ...form, tva: v })} />
+                <Field label="Adresse" value={form.address} onChange={(v) => setForm({ ...form, address: v })} />
                 <div className="grid gap-4 md:grid-cols-2">
-                  <Field label="Code postal" value={form.zip} onChange={(v) => setForm({ ...form, zip: v })} disabled />
-                  <Field label="Ville" value={form.city} onChange={(v) => setForm({ ...form, city: v })} disabled />
+                  <Field label="Code postal" value={form.zip} onChange={(v) => setForm({ ...form, zip: v })} />
+                  <Field label="Ville" value={form.city} onChange={(v) => setForm({ ...form, city: v })} />
                 </div>
                 <div className="md:col-span-2">
                   <Field label="IBAN (optionnel)" value={form.iban} onChange={(v) => setForm({ ...form, iban: v })} />

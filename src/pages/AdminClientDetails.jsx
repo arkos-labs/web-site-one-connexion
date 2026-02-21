@@ -258,6 +258,22 @@ export default function AdminClientDetails() {
                 isEditing={isEditing}
                 onChange={handleDetailChange}
               />
+              <div className="grid grid-cols-2 gap-2">
+                <EditableInfo
+                  label="CP"
+                  name="zip"
+                  value={client.details?.zip || client.details?.postal_code || ""}
+                  isEditing={isEditing}
+                  onChange={handleDetailChange}
+                />
+                <EditableInfo
+                  label="Ville"
+                  name="city"
+                  value={client.details?.city || ""}
+                  isEditing={isEditing}
+                  onChange={handleDetailChange}
+                />
+              </div>
               <EditableInfo
                 label="SIRET"
                 name="siret"
@@ -315,8 +331,9 @@ export default function AdminClientDetails() {
                         if (error) {
                           alert("Erreur lors de la suppression du profil : " + error.message);
                         } else {
-                          // Note: La suppression de l'utilisateur Auth doit se faire via l'API Admin de Supabase ou manuellement dans le dashboard
-                          alert("Profil supprimé de la base de données publique.");
+                          // Grâce au trigger SQL 'on_profile_deleted', la suppression du profil
+                          // entraîne automatiquement la suppression du compte dans Supabase Auth.
+                          alert("Compte utilisateur entièrement supprimé. L'accès est désormais révoqué.");
                           navigate("/admin/clients");
                         }
                       }

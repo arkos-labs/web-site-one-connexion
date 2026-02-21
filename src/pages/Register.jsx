@@ -18,6 +18,8 @@ export default function Register() {
         password: "",
         confirmPassword: "",
         billingAddress: "",
+        zip: "",
+        city: "",
         acceptTerms: false,
     });
 
@@ -49,7 +51,10 @@ export default function Register() {
                         contact_name: form.contactName,
                         full_name: form.contactName,
                         phone: form.phone,
+                        phone_number: form.phone,
                         address: form.billingAddress,
+                        zip: form.zip,
+                        city: form.city,
                     }
                 }
             });
@@ -237,10 +242,35 @@ export default function Register() {
                                     <input
                                         required
                                         type="text"
-                                        placeholder="Adresse complète, Code postal, Ville"
+                                        placeholder="Numéro et nom de rue"
                                         value={form.billingAddress}
                                         onChange={(e) => setForm({ ...form, billingAddress: e.target.value })}
                                         className="w-full rounded-2xl border border-slate-200 bg-slate-50 py-3.5 pl-11 pr-4 text-sm font-medium placeholder:text-slate-400 focus:border-slate-900 focus:bg-white focus:outline-none focus:ring-4 focus:ring-slate-900/5 transition-all"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="grid gap-6 md:grid-cols-2">
+                                <div className="space-y-1.5">
+                                    <label className="text-sm font-medium text-slate-700">Code postal</label>
+                                    <input
+                                        required
+                                        type="text"
+                                        placeholder="Ex: 75001"
+                                        value={form.zip}
+                                        onChange={(e) => setForm({ ...form, zip: e.target.value })}
+                                        className="w-full rounded-2xl border border-slate-200 bg-slate-50 py-3.5 px-4 text-sm font-medium placeholder:text-slate-400 focus:border-slate-900 focus:bg-white focus:outline-none focus:ring-4 focus:ring-slate-900/5 transition-all"
+                                    />
+                                </div>
+                                <div className="space-y-1.5">
+                                    <label className="text-sm font-medium text-slate-700">Ville</label>
+                                    <input
+                                        required
+                                        type="text"
+                                        placeholder="Ex: Paris"
+                                        value={form.city}
+                                        onChange={(e) => setForm({ ...form, city: e.target.value })}
+                                        className="w-full rounded-2xl border border-slate-200 bg-slate-50 py-3.5 px-4 text-sm font-medium placeholder:text-slate-400 focus:border-slate-900 focus:bg-white focus:outline-none focus:ring-4 focus:ring-slate-900/5 transition-all"
                                     />
                                 </div>
                             </div>
