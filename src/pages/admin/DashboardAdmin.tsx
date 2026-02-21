@@ -228,11 +228,11 @@ const DashboardAdmin = () => {
 
 
   return (
-    <div className="space-y-8 pb-12 font-sans">
+    <div className="space-y-6 sm:space-y-8 pb-8 sm:pb-12 font-sans">
       {/* Header */}
       <div className="flex flex-col xl:flex-row xl:items-end xl:justify-between gap-6 border-b border-gray-200 pb-6">
         <div>
-          <h1 className="text-4xl font-serif font-bold text-[#0B1525] mb-2 tracking-tight">
+          <h1 className="text-2xl sm:text-4xl font-serif font-bold text-[#0B1525] mb-2 tracking-tight">
             Administration
           </h1>
           <p className="text-gray-500">
@@ -240,11 +240,11 @@ const DashboardAdmin = () => {
           </p>
         </div>
 
-        <div className="flex flex-col sm:flex-row items-center gap-3">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full xl:w-auto">
           {/* Filters */}
-          <div className="flex items-center gap-2 bg-white p-1 rounded-xl border border-gray-200 shadow-sm">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 bg-white p-1 rounded-xl border border-gray-200 shadow-sm w-full sm:w-auto">
             <Select value={filterPeriod} onValueChange={(v: any) => setFilterPeriod(v)}>
-              <SelectTrigger className="w-[140px] border-0 focus:ring-0 h-9 font-medium text-gray-700">
+              <SelectTrigger className="w-full sm:w-[140px] border-0 focus:ring-0 h-9 font-medium text-gray-700">
                 <SelectValue placeholder="Période" />
               </SelectTrigger>
               <SelectContent>
@@ -258,26 +258,26 @@ const DashboardAdmin = () => {
             </Select>
 
             {filterPeriod === 'custom' && (
-              <div className="flex items-center gap-2 px-2 border-l border-gray-100">
+              <div className="flex flex-col sm:flex-row items-center gap-2 px-2 sm:border-l border-gray-100">
                 <Input
                   type="date"
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
-                  className="h-8 w-32 text-xs border-0 focus-visible:ring-0"
+                  className="h-8 w-full sm:w-32 text-xs border-0 focus-visible:ring-0"
                 />
                 <span className="text-gray-400 text-xs">-</span>
                 <Input
                   type="date"
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
-                  className="h-8 w-32 text-xs border-0 focus-visible:ring-0"
+                  className="h-8 w-full sm:w-32 text-xs border-0 focus-visible:ring-0"
                 />
               </div>
             )}
           </div>
 
           <Button
-            className="bg-[#D4AF37] hover:bg-[#b5952f] text-white font-medium px-4 h-11 shadow-md hover:shadow-lg transition-all rounded-xl"
+            className="bg-[#D4AF37] hover:bg-[#b5952f] text-white font-medium px-4 h-11 shadow-md hover:shadow-lg transition-all rounded-xl w-full sm:w-auto"
             onClick={handleOpenModal}
           >
             <Plus className="h-5 w-5 mr-2" />
@@ -287,7 +287,7 @@ const DashboardAdmin = () => {
       </div>
 
       {/* Main Metrics */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         {loading ? (
           <>
             <StatCardSkeleton />
@@ -299,7 +299,7 @@ const DashboardAdmin = () => {
           mainMetrics.map((metric, index) => (
             <Card
               key={index}
-              className="p-6 border-0 shadow-sm hover:shadow-md transition-all duration-300 bg-white group cursor-pointer"
+              className="p-4 sm:p-6 border-0 shadow-sm hover:shadow-md transition-all duration-300 bg-white group cursor-pointer"
               onClick={() => navigate(metric.path)}
             >
               <div className="flex justify-between items-start mb-4">
@@ -315,7 +315,7 @@ const DashboardAdmin = () => {
               </div>
               <div>
                 <h3 className="text-gray-500 text-sm font-medium mb-1">{metric.title}</h3>
-                <p className="text-3xl font-bold text-[#0B1525]">{metric.value}</p>
+                <p className="text-2xl sm:text-3xl font-bold text-[#0B1525]">{metric.value}</p>
                 <p className="text-xs text-gray-400 mt-1">{metric.delta}</p>
               </div>
             </Card>
@@ -326,7 +326,7 @@ const DashboardAdmin = () => {
       <div className="grid lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-8">
           {/* Operational Flow */}
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <div className="bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-gray-100">
             <h2 className="text-lg font-serif font-bold text-[#0B1525] mb-6">Flux opérationnel</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {loading ? (
@@ -356,7 +356,7 @@ const DashboardAdmin = () => {
                       }`}>
                       <item.icon className="h-5 w-5" />
                     </div>
-                    <span className="text-3xl font-bold text-[#0B1525] mb-1">
+                    <span className="text-2xl sm:text-3xl font-bold text-[#0B1525] mb-1">
                       {item.count}
                     </span>
                     <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">{item.label}</p>
@@ -367,7 +367,7 @@ const DashboardAdmin = () => {
           </div>
 
           {/* Team Status */}
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <div className="bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-gray-100">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-serif font-bold text-[#0B1525]">
                 État de l'équipe
@@ -388,7 +388,7 @@ const DashboardAdmin = () => {
                 teamMembers.map((member, index) => (
                   <div
                     key={index}
-                    className="flex items-center justify-between p-4 rounded-xl border border-gray-100 hover:border-[#D4AF37]/20 transition-all group bg-gray-50/50 hover:bg-white hover:shadow-sm"
+                    className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-xl border border-gray-100 hover:border-[#D4AF37]/20 transition-all group bg-gray-50/50 hover:bg-white hover:shadow-sm"
                   >
                     <div className="flex items-center gap-4">
                       <div className="w-10 h-10 rounded-full bg-[#0B1525] flex items-center justify-center text-white font-serif font-bold text-sm">
@@ -399,7 +399,7 @@ const DashboardAdmin = () => {
                         <p className="text-xs text-gray-500 uppercase tracking-wider">{member.status}</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 self-start sm:self-auto">
                       <Badge
                         variant="outline"
                         className={`border-0 ${member.available
@@ -448,7 +448,7 @@ const DashboardAdmin = () => {
           </div>
 
           {/* System Alerts */}
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <div className="bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-gray-100">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-serif font-bold text-[#0B1525]">
                 Alertes système
@@ -502,7 +502,7 @@ const DashboardAdmin = () => {
           </div>
 
           {/* Activity Timeline */}
-          <Card className="p-6 shadow-sm border-0">
+          <Card className="p-4 sm:p-6 shadow-sm border-0">
             <h2 className="text-lg font-serif font-bold text-[#0B1525] mb-6">
               Activité récente
             </h2>

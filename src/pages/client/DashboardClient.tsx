@@ -291,7 +291,7 @@ const DashboardClient = () => {
   }
 
   return (
-    <div className="space-y-8 font-sans pb-10">
+    <div className="space-y-6 sm:space-y-8 font-sans pb-8 sm:pb-10">
       {/* Account Alerts */}
       {profile?.status === 'suspended' && (
         <Alert variant="destructive" className="bg-red-50 border-red-200">
@@ -303,7 +303,7 @@ const DashboardClient = () => {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-gray-200 pb-6">
         <div>
-          <h1 className="text-4xl font-serif font-bold text-[#0B1525] tracking-tight">
+          <h1 className="text-2xl sm:text-4xl font-serif font-bold text-[#0B1525] tracking-tight">
             Tableau de bord
           </h1>
           <p className="text-gray-500 mt-2 flex items-center gap-2">
@@ -312,7 +312,7 @@ const DashboardClient = () => {
           </p>
         </div>
         <Button
-          className="bg-[#D4AF37] hover:bg-[#b5952f] text-white font-medium px-4 h-11 shadow-md hover:shadow-lg transition-all rounded-xl"
+          className="bg-[#D4AF37] hover:bg-[#b5952f] text-white font-medium px-4 h-11 shadow-md hover:shadow-lg transition-all rounded-xl w-full sm:w-auto"
           onClick={handleOpenModal}
         >
           <Plus className="h-5 w-5 mr-2" />
@@ -321,7 +321,7 @@ const DashboardClient = () => {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         {statsLoading ? (
           <>
             <StatCardSkeleton />
@@ -333,7 +333,7 @@ const DashboardClient = () => {
           statsCards.map((stat, index) => (
             <Card
               key={index}
-              className="p-6 border-0 shadow-sm hover:shadow-md transition-all duration-300 bg-white group"
+              className="p-4 sm:p-6 border-0 shadow-sm hover:shadow-md transition-all duration-300 bg-white group"
             >
               <div className="flex justify-between items-start mb-4">
                 <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${stat.bgColor} group-hover:scale-110 transition-transform duration-300`}>
@@ -347,7 +347,7 @@ const DashboardClient = () => {
               </div>
               <div>
                 <h3 className="text-gray-500 text-sm font-medium mb-1">{stat.title}</h3>
-                <p className="text-3xl font-bold text-[#0B1525]">{stat.value}</p>
+                <p className="text-2xl sm:text-3xl font-bold text-[#0B1525]">{stat.value}</p>
               </div>
             </Card>
           ))
@@ -358,7 +358,7 @@ const DashboardClient = () => {
         {/* Main Content (Recent Orders) */}
         <div className="lg:col-span-2 space-y-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-serif font-bold text-[#0B1525]">Commandes récentes</h2>
+            <h2 className="text-xl sm:text-2xl font-serif font-bold text-[#0B1525]">Commandes récentes</h2>
             <Button variant="ghost" size="sm" className="text-[#D4AF37] hover:bg-[#D4AF37]/10" onClick={() => navigate('/client/commandes')}>
               Voir tout <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
@@ -367,13 +367,13 @@ const DashboardClient = () => {
           <Card className="border-0 shadow-sm bg-white overflow-hidden">
             <div className="divide-y divide-gray-100">
               {isLoadingOrders ? (
-                <div className="p-6 space-y-4">
+                <div className="p-4 sm:p-6 space-y-4">
                   <OrderCardSkeleton />
                   <OrderCardSkeleton />
                   <OrderCardSkeleton />
                 </div>
               ) : recentOrders.length === 0 ? (
-                <div className="p-12 text-center">
+                <div className="p-8 sm:p-12 text-center">
                   <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
                     <Package className="h-8 w-8 text-gray-300" />
                   </div>
@@ -384,10 +384,10 @@ const DashboardClient = () => {
                 recentOrders.map((order) => (
                   <div
                     key={order.id}
-                    className="p-6 hover:bg-gray-50 transition-colors cursor-pointer group"
+                    className="p-4 sm:p-6 hover:bg-gray-50 transition-colors cursor-pointer group"
                     onClick={() => navigate(`/client/commandes/${order.id}`)}
                   >
-                    <div className="flex justify-between items-start mb-3">
+                    <div className="flex flex-col sm:flex-row sm:items-start gap-3 mb-3">
                       <div className="flex items-center gap-3">
                         <div className="h-10 w-10 bg-[#0B1525]/5 rounded-lg flex items-center justify-center text-[#0B1525] font-bold text-xs">
                           {order.delivery_type === 'express' ? 'EXP' : 'STD'}
@@ -397,11 +397,11 @@ const DashboardClient = () => {
                           <p className="text-xs text-gray-400">{new Date(order.created_at).toLocaleDateString()}</p>
                         </div>
                       </div>
-                      <Badge className={`border-0 font-medium px-3 py-1 ${getStatusColor(order.status)}`}>
+                      <Badge className={`border-0 font-medium px-3 py-1 self-start sm:self-auto ${getStatusColor(order.status)}`}>
                         {getStatusLabel(order.status)}
                       </Badge>
                     </div>
-                    <div className="flex items-center gap-6 mt-4 pl-13">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 mt-4 pl-4 sm:pl-8">
                       <div className="flex-1 relative">
                         <div className="absolute left-0 top-1 bottom-1 w-0.5 bg-gray-200"></div>
                         <div className="space-y-4">
@@ -415,7 +415,7 @@ const DashboardClient = () => {
                           </div>
                         </div>
                       </div>
-                      <div className="text-right min-w-[80px]">
+                      <div className="text-left sm:text-right w-full sm:w-auto min-w-[80px]">
                         <p className="text-lg font-bold text-[#0B1525]">{order.price}€</p>
                       </div>
                     </div>
@@ -450,7 +450,7 @@ const DashboardClient = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6">
             <h2 className="text-lg font-serif font-bold text-[#0B1525] mb-4">Activité récente</h2>
             {profile?.id ? (
               <ActivityTimeline clientId={profile.id} limit={5} />
