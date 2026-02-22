@@ -15,10 +15,10 @@ const COMPANY = {
  * @param {Object} client The client data/profile details
  */
 export function generateOrderPdf(order, client = {}) {
-    const doc = new jsPDF({ unit: "pt", format: "a4" });
-    const pageW = 595;
-    const pageH = 842;
-    const margin = 40;
+    const doc = new jsPDF({ unit: "pt", format: "a4", orientation: "landscape" });
+    const pageW = doc.internal.pageSize.getWidth();
+    const pageH = doc.internal.pageSize.getHeight();
+    const margin = 30;
     const contentW = pageW - margin * 2;
     let y = 0;
 
@@ -39,24 +39,24 @@ export function generateOrderPdf(order, client = {}) {
     doc.text(COMPANY.email, margin, 110);
 
     // Document Title Badge
-    doc.setFillColor(30, 41, 59); // slate-800 for consistency
-    doc.roundedRect(pageW - margin - 200, 35, 200, 75, 10, 10, "F");
+    doc.setFillColor(30, 41, 59); // slate-800
+    doc.roundedRect(pageW - margin - 220, 35, 220, 75, 10, 10, "F");
 
     doc.setTextColor(255, 255, 255);
     doc.setFont("helvetica", "bold");
     doc.setFontSize(10);
-    doc.text("BON DE COMMANDE", pageW - margin - 185, 55);
+    doc.text("BON DE COMMANDE", pageW - margin - 205, 55);
 
-    doc.setFontSize(14); // Order Date or Status could go here if needed, but keeping # ID
-    doc.text("COMMANDE EN COURS", pageW - margin - 185, 75);
+    doc.setFontSize(14);
+    doc.text("COMMANDE", pageW - margin - 205, 75);
 
-    doc.setFontSize(11);
-    const refBC = `N° BC-${String(order.id).slice(0, 8).toUpperCase()}`;
-    const badgeW = doc.getTextWidth(refBC) + 20;
-    doc.setFillColor(255, 255, 255, 0.1);
-    doc.roundedRect(pageW - margin - 185 - 5, 83, badgeW, 20, 3, 3, "F");
-    doc.setTextColor(249, 115, 22); // orange-500
-    doc.text(refBC, pageW - margin - 185, 97);
+    doc.setFontSize(9);
+    const refBC = `BC-${String(order.id).slice(0, 8).toUpperCase()}`;
+    const badgeW = doc.getTextWidth(refBC) + 16;
+    doc.setFillColor(255, 255, 255, 0.05);
+    doc.roundedRect(pageW - margin - 205 - 4, 84, badgeW, 14, 2, 2, "F");
+    doc.setTextColor(148, 163, 184);
+    doc.text(refBC, pageW - margin - 205, 94);
 
     y = 180;
 
@@ -474,14 +474,14 @@ export function generateOrderPdf(order, client = {}) {
  * @param {Object} client The client data
  */
 export function generateInvoicePdf(invoice, orders = [], client = {}) {
-    const doc = new jsPDF({ unit: "pt", format: "a4" });
-    const pageW = 595;
-    const pageH = 842;
-    const margin = 40;
+    const doc = new jsPDF({ unit: "pt", format: "a4", orientation: "landscape" });
+    const pageW = doc.internal.pageSize.getWidth();
+    const pageH = doc.internal.pageSize.getHeight();
+    const margin = 30;
     const contentW = pageW - margin * 2;
     let y = 0;
 
-    // Header Background
+    // Header Background (same style as listing)
     doc.setFillColor(15, 23, 42);
     doc.rect(0, 0, pageW, 140, "F");
 
@@ -498,24 +498,24 @@ export function generateInvoicePdf(invoice, orders = [], client = {}) {
     doc.text(COMPANY.email, margin, 110);
 
     // Document Title Badge
-    doc.setFillColor(30, 41, 59); // slate-800
-    doc.roundedRect(pageW - margin - 200, 35, 200, 75, 10, 10, "F");
+    doc.setFillColor(30, 41, 59);
+    doc.roundedRect(pageW - margin - 220, 35, 220, 75, 10, 10, "F");
 
     doc.setTextColor(255, 255, 255);
     doc.setFont("helvetica", "bold");
     doc.setFontSize(10);
-    doc.text("FACTURE CLIENT", pageW - margin - 185, 55);
+    doc.text("FACTURE CLIENT", pageW - margin - 205, 55);
 
     doc.setFontSize(14);
-    doc.text(String(invoice.period || "MENSUELLE").toUpperCase(), pageW - margin - 185, 75);
+    doc.text(String(invoice.period || "MENSUELLE").toUpperCase(), pageW - margin - 205, 75);
 
-    doc.setFontSize(11);
-    const refFC = `N° FAC-${String(invoice.id).slice(0, 8).toUpperCase()}`;
-    const badgeW = doc.getTextWidth(refFC) + 20;
-    doc.setFillColor(255, 255, 255, 0.1);
-    doc.roundedRect(pageW - margin - 185 - 5, 83, badgeW, 20, 3, 3, "F");
-    doc.setTextColor(16, 185, 129); // emerald-500
-    doc.text(refFC, pageW - margin - 185, 97);
+    doc.setFontSize(9);
+    const refFC = `FAC-${String(invoice.id).slice(0, 8).toUpperCase()}`;
+    const badgeW = doc.getTextWidth(refFC) + 16;
+    doc.setFillColor(255, 255, 255, 0.05);
+    doc.roundedRect(pageW - margin - 205 - 4, 84, badgeW, 14, 2, 2, "F");
+    doc.setTextColor(148, 163, 184);
+    doc.text(refFC, pageW - margin - 205, 94);
 
     y = 180;
 
@@ -637,45 +637,72 @@ export function generateInvoicePdf(invoice, orders = [], client = {}) {
 
     y = Math.max(leftY + 40, rightY + 60);
 
-    // Table Header
-    doc.setFillColor(241, 245, 249); // slate-100
-    doc.rect(margin, y, contentW, 25, "F");
-    doc.setTextColor(71, 85, 105); // slate-600
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(9);
-    doc.text("COMMANDE", margin + 10, y + 16);
-    doc.text("DATE", margin + 100, y + 16);
-    doc.text("TRAJET / DESCRIPTION", margin + 180, y + 16);
-    doc.text("MONTANT HT", pageW - margin - 80, y + 16);
+    // Table Header (listing style)
+    const colX = {
+        date: margin + 8,
+        ref: margin + 80,
+        from: margin + 170,
+        to: margin + 360,
+        km: margin + 560,
+        status: margin + 620,
+        amount: pageW - margin - 10
+    };
 
-    y += 35;
+    doc.setFillColor(15, 23, 42);
+    doc.rect(margin, y, contentW, 26, "F");
+    doc.setTextColor(255, 255, 255);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(9.5);
+    doc.text("DATE", colX.date, y + 17);
+    doc.text("RÉF", colX.ref, y + 17);
+    doc.text("ORIGINE", colX.from, y + 17);
+    doc.text("DESTINATION", colX.to, y + 17);
+    doc.text("KM", colX.km, y + 17, { align: "right" });
+    doc.text("STATUT", colX.status, y + 17);
+    doc.text("MONTANT HT", colX.amount, y + 17, { align: "right" });
+
+    y += 34;
     doc.setTextColor(15, 23, 42);
     doc.setFont("helvetica", "normal");
+    doc.setFontSize(9.5);
 
     // Items
-    orders.forEach((o, i) => {
+    orders.forEach((o, idx) => {
         if (y > pageH - 120) {
             doc.addPage();
             y = 40;
         }
-        const price = typeof o.total === "number" ? o.total : parseFloat(o.total || o.price_ht || 0);
-        doc.text(`#${String(o.id).slice(0, 8).toUpperCase()}`, margin + 10, y);
+        const price = typeof o.total === "number" ? o.total : parseFloat(o.total || o.price_ht || o.price || 0);
 
-        // Fix: Use created_at if date is missing
-        const orderDate =
-            o.date || (o.created_at ? new Date(o.created_at).toLocaleDateString("fr-FR") : new Date().toLocaleDateString("fr-FR"));
-        doc.text(orderDate, margin + 100, y);
+        if (idx % 2 === 0) {
+            doc.setFillColor(248, 250, 252);
+            doc.rect(margin, y - 12, contentW, 22, "F");
+        }
 
-        const route = o.route || (o.pickup_city && o.delivery_city ? `${o.pickup_city} > ${o.delivery_city}` : "—");
-        doc.text(route, margin + 180, y);
-        doc.text(`${price.toFixed(2)}€`, pageW - margin - 50, y, { align: "right" });
+        const orderDate = o.date || (o.created_at ? new Date(o.created_at).toLocaleDateString("fr-FR") : new Date().toLocaleDateString("fr-FR"));
+        const ref = `#${String(o.id).slice(0, 8).toUpperCase()}`;
+        const from = (o.pickup_city || o.pickup_address || "—").toString().slice(0, 24);
+        const to = (o.delivery_city || o.delivery_address || "—").toString().slice(0, 24);
+        const km = o.distance_km ? Number(o.distance_km).toFixed(1) : "—";
 
-        doc.setDrawColor(241, 245, 249);
-        doc.line(margin, y + 5, pageW - margin, y + 5);
-        y += 20;
+        let statusLabel = "En cours";
+        if (o.status === "delivered") statusLabel = "Livrée";
+        else if (o.status === "driver_accepted") statusLabel = "Acceptée";
+        else if (o.status === "assigned") statusLabel = "À accepter";
+        else if (o.status === "accepted") statusLabel = "À dispatcher";
+
+        doc.text(orderDate, colX.date, y);
+        doc.text(ref, colX.ref, y);
+        doc.text(from, colX.from, y);
+        doc.text(to, colX.to, y);
+        doc.text(km, colX.km, y, { align: "right" });
+        doc.text(statusLabel, colX.status, y);
+        doc.setFont("helvetica", "bold");
+        doc.text(`${price.toFixed(2)} €`, colX.amount, y, { align: "right" });
+        doc.setFont("helvetica", "normal");
+
+        y += 22;
     });
-
-    y += 20;
 
     y += 20;
 
