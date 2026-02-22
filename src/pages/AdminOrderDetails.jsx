@@ -148,12 +148,14 @@ export default function AdminOrderDetails() {
       updates.scheduled_at = `${datePart}T${edit.pickupTime}:00`;
     }
 
-    // If driver is set, we can auto-update status to assigned
-    // - pending -> assigned
-    // - assigned/in_progress + driver change -> reassign to assigned
+    // Si un chauffeur est assigné, passer en 'assigned' pour que le chauffeur voie la commande
+    // - pending / accepted → assigned (dispatch)
+    // - assigned / driver_accepted / in_progress + changement chauffeur → reassign
     if (updates.driver_id) {
       const driverChanged = updates.driver_id !== order.driver_id;
-      if (order.status === 'pending' || ((order.status === 'assigned' || order.status === 'in_progress') && driverChanged)) {
+      const canAssign = ['pending', 'pending_acceptance', 'accepted'].includes(order.status);
+      const canReassign = ['assigned', 'driver_accepted', 'in_progress'].includes(order.status) && driverChanged;
+      if (canAssign || canReassign) {
         updates.status = 'assigned';
       }
     }
