@@ -182,8 +182,10 @@ export function generateOrderPdf(order, client = {}) {
     doc.setFont("helvetica", "bold");
     doc.text("Passée le:", margin + contentW / 2 + 20, rightY);
     doc.setFont("helvetica", "normal");
-    const createdDateObj = order.created_at ? new Date(order.created_at) : (order.date ? new Date(order.date) : new Date());
-    const displayDate = createdDateObj.toLocaleDateString("fr-FR") + " " + createdDateObj.toLocaleTimeString("fr-FR", { hour: '2-digit', minute: '2-digit' });
+    const createdDateObj = order.created_at ? new Date(order.created_at) : (order.date ? new Date(order.date) : null);
+    const displayDate = createdDateObj && !isNaN(createdDateObj.getTime())
+        ? createdDateObj.toLocaleDateString("fr-FR") + " " + createdDateObj.toLocaleTimeString("fr-FR", { hour: '2-digit', minute: '2-digit' })
+        : "—";
     doc.text(displayDate, margin + contentW / 2 + 100, rightY);
 
     doc.setFont("helvetica", "bold");
@@ -637,14 +639,11 @@ export function generateInvoicePdf(invoice, orders = [], client = {}) {
 
     y = Math.max(leftY + 40, rightY + 60);
 
-    // Table Header (listing style)
+    // Table Header (client invoice: minimal)
     const colX = {
         date: margin + 8,
-        ref: margin + 80,
-        from: margin + 170,
-        to: margin + 360,
-        km: margin + 560,
-        status: margin + 620,
+        ref: margin + 110,
+        desc: margin + 230,
         amount: pageW - margin - 10
     };
 
@@ -655,10 +654,7 @@ export function generateInvoicePdf(invoice, orders = [], client = {}) {
     doc.setFontSize(9.5);
     doc.text("DATE", colX.date, y + 17);
     doc.text("RÉF", colX.ref, y + 17);
-    doc.text("ORIGINE", colX.from, y + 17);
-    doc.text("DESTINATION", colX.to, y + 17);
-    doc.text("KM", colX.km, y + 17, { align: "right" });
-    doc.text("STATUT", colX.status, y + 17);
+    doc.text("DESCRIPTION", colX.desc, y + 17);
     doc.text("MONTANT HT", colX.amount, y + 17, { align: "right" });
 
     y += 34;
@@ -679,24 +675,20 @@ export function generateInvoicePdf(invoice, orders = [], client = {}) {
             doc.rect(margin, y - 12, contentW, 22, "F");
         }
 
-        const orderDate = o.date || (o.created_at ? new Date(o.created_at).toLocaleDateString("fr-FR") : new Date().toLocaleDateString("fr-FR"));
-        const ref = `#${String(o.id).slice(0, 8).toUpperCase()}`;
-        const from = (o.pickup_city || o.pickup_address || "—").toString().slice(0, 24);
-        const to = (o.delivery_city || o.delivery_address || "—").toString().slice(0, 24);
-        const km = o.distance_km ? Number(o.distance_km).toFixed(1) : "—";
+        const rawDate = o.created_at || o.date;
+        const parsedDate = rawDate ? new Date(rawDate) : null;
+        const orderDate = parsedDate && !isNaN(parsedDate.getTime())
+            ? parsedDate.toLocaleDateString("fr-FR")
+            : "—";
 
-        let statusLabel = "En cours";
-        if (o.status === "delivered") statusLabel = "Livrée";
-        else if (o.status === "driver_accepted") statusLabel = "Acceptée";
-        else if (o.status === "assigned") statusLabel = "À accepter";
-        else if (o.status === "accepted") statusLabel = "À dispatcher";
+        const ref = `#${String(o.id).slice(0, 8).toUpperCase()}`;
+        const from = (o.pickup_city || o.pickup_address || "—").toString().slice(0, 20);
+        const to = (o.delivery_city || o.delivery_address || "—").toString().slice(0, 20);
+        const desc = `Course ${from} → ${to}`;
 
         doc.text(orderDate, colX.date, y);
         doc.text(ref, colX.ref, y);
-        doc.text(from, colX.from, y);
-        doc.text(to, colX.to, y);
-        doc.text(km, colX.km, y, { align: "right" });
-        doc.text(statusLabel, colX.status, y);
+        doc.text(desc, colX.desc, y);
         doc.setFont("helvetica", "bold");
         doc.text(`${price.toFixed(2)} €`, colX.amount, y, { align: "right" });
         doc.setFont("helvetica", "normal");
