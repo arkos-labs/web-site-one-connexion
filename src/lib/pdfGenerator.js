@@ -675,15 +675,17 @@ export function generateInvoicePdf(invoice, orders = [], client = {}) {
             doc.rect(margin, y - 12, contentW, 22, "F");
         }
 
-        const rawDate = o.created_at || o.date;
+        const rawDate = o.created_at || o.scheduled_at || o.date;
         const parsedDate = rawDate ? new Date(rawDate) : null;
         const orderDate = parsedDate && !isNaN(parsedDate.getTime())
             ? parsedDate.toLocaleDateString("fr-FR")
             : "—";
 
         const ref = `#${String(o.id).slice(0, 8).toUpperCase()}`;
-        const from = (o.pickup_city || o.pickup_address || "—").toString().slice(0, 20);
-        const to = (o.delivery_city || o.delivery_address || "—").toString().slice(0, 20);
+        const fromRaw = o.pickup_address || o.pickup_city || o.pickup || "—";
+        const toRaw = o.delivery_address || o.delivery_city || o.delivery || "—";
+        const from = String(fromRaw).replace(/\s+/g, " ").trim().slice(0, 28);
+        const to = String(toRaw).replace(/\s+/g, " ").trim().slice(0, 28);
         const desc = `Course ${from} → ${to}`;
 
         doc.text(orderDate, colX.date, y);
