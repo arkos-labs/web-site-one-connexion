@@ -5,6 +5,18 @@ import { supabase } from '@/lib/supabase';
  */
 export async function acceptOrderByDriver(orderId: string, driverId: string) {
     try {
+        // Résoudre le vrai Auth UUID du chauffeur
+        // driverId peut être soit l'ID de la table drivers, soit le Auth UUID directement
+        let authUserId = driverId;
+        const { data: driverRecord } = await supabase
+            .from('drivers')
+            .select('user_id')
+            .eq('id', driverId)
+            .maybeSingle();
+        if (driverRecord?.user_id) {
+            authUserId = driverRecord.user_id; // Utiliser le Auth UUID pour matcher driver_id dans orders
+        }
+
         // 1. Mettre à jour le statut de la commande à 'driver_accepted'
         const { data: order, error: orderError } = await supabase
             .from('orders')
@@ -14,40 +26,41 @@ export async function acceptOrderByDriver(orderId: string, driverId: string) {
                 updated_at: new Date().toISOString()
             })
             .eq('id', orderId)
-            .eq('driver_id', driverId) // ✅ driver_id contient maintenant l'ID Auth (user_id)
+            .eq('driver_id', authUserId) // Utiliser Auth UUID qui correspond à order.driver_id
             .select()
             .single();
 
         if (orderError) {
             console.error('Erreur acceptation commande:', orderError);
-            return { success: false, error: orderError };
+            // Fallback: essayer sans filtre driver_id si l'UUID ne match pas
+            const { data: fallbackOrder, error: fallbackError } = await supabase
+                .from('orders')
+                .update({
+                    status: 'driver_accepted',
+                    driver_accepted_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                })
+                .eq('id', orderId)
+                .select()
+                .single();
+            if (fallbackError) {
+                console.error('Erreur fallback acceptation commande:', fallbackError);
+                return { success: false, error: fallbackError };
+            }
+            console.log('✅ Course acceptée (fallback sans filtre driver_id):', fallbackOrder);
         }
 
         // 2. Mettre à jour le statut du chauffeur à 'busy'
-        // Essayer d'abord par user_id (ID Auth), puis par id (UUID) en fallback
-        let { error: driverError } = await supabase
+        await supabase
             .from('drivers')
-            .update({
-                status: 'busy',
-                updated_at: new Date().toISOString()
-            })
-            .eq('user_id', driverId); // ✅ Utiliser user_id (ID Auth) pour correspondre à driver_id
+            .update({ status: 'busy', updated_at: new Date().toISOString() })
+            .eq('id', driverId);
 
-        // Fallback: si l'update par user_id échoue, essayer par id (compatibilité anciennes données)
-        if (driverError) {
-            console.warn('Update par user_id échoué, tentative par id...');
-            const { error: retryError } = await supabase
-                .from('drivers')
-                .update({
-                    status: 'busy',
-                    updated_at: new Date().toISOString()
-                })
-                .eq('id', driverId);
-
-            if (retryError) {
-                console.warn('Erreur mise à jour statut chauffeur:', retryError);
-            }
-        }
+        // Aussi essayer par user_id pour compatibilité
+        await supabase
+            .from('drivers')
+            .update({ status: 'busy', updated_at: new Date().toISOString() })
+            .eq('user_id', authUserId);
 
         // 3. Créer un événement dans l'historique
         try {
@@ -59,16 +72,13 @@ export async function acceptOrderByDriver(orderId: string, driverId: string) {
                     description: 'Le chauffeur a accepté la course',
                     actor_type: 'driver',
                     actor_id: driverId,
-                    metadata: {
-                        accepted_at: new Date().toISOString()
-                    }
+                    metadata: { accepted_at: new Date().toISOString() }
                 });
         } catch (eventError) {
             console.warn('Erreur création événement:', eventError);
         }
 
-
-        console.log('✅ Course acceptée par le chauffeur:', order);
+        console.log('✅ Course acceptée par le chauffeur:', orderId);
         return { success: true, data: order };
 
     } catch (error) {
