@@ -125,9 +125,11 @@ export default function AdminOrders() {
           }
 
           const hasDriver = !!(o.driver_id || o.assigned_driver_id);
+          const acceptedByDriver = !!(o.driver_accepted_at || (o.dispatched_at && o.updated_at && o.updated_at !== o.dispatched_at));
+          const pickedUp = !!(o.picked_up_at || o.pickup_time_at);
           const normalizedStatus = (o.status === 'accepted' && hasDriver) ? 'assigned'
-            : (o.status === 'assigned' && o.driver_accepted_at) ? 'driver_accepted'
-            : (o.status === 'assigned' && o.picked_up_at) ? 'in_progress'
+            : (o.status === 'assigned' && acceptedByDriver) ? 'driver_accepted'
+            : (o.status === 'assigned' && pickedUp) ? 'in_progress'
             : (o.status === 'picked_up' || o.status === 'arrived_pickup') ? 'in_progress'
             : o.status;
 
