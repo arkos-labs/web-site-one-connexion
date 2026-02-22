@@ -730,10 +730,10 @@ export function generateInvoicePdf(invoice, orders = [], client = {}) {
  * @param {Function} computePay Function to compute pay for an order
  */
 export function generateDriverStatementPdf(driver, orders = [], period = "—", computePay) {
-    const doc = new jsPDF({ unit: "pt", format: "a4" });
-    const pageW = 595;
-    const pageH = 842;
-    const margin = 40;
+    const doc = new jsPDF({ unit: "pt", format: "a4", orientation: "landscape" });
+    const pageW = doc.internal.pageSize.getWidth();
+    const pageH = doc.internal.pageSize.getHeight();
+    const margin = 30;
     const contentW = pageW - margin * 2;
     let y = 0;
 
@@ -834,25 +834,36 @@ export function generateDriverStatementPdf(driver, orders = [], period = "—", 
     y += 40;
 
     // Missions Table
-    doc.setFillColor(248, 250, 252); // slate-50
-    doc.rect(margin, y, contentW, 25, "F");
-    doc.setTextColor(71, 85, 105); // slate-600
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(9);
-    doc.text("DATE", margin + 10, y + 16);
-    doc.text("MISSION ID", margin + 80, y + 16);
-    doc.text("TRAJET", margin + 160, y + 16);
-    doc.text("ENLÈV.", margin + 350, y + 16);
-    doc.text("LIVR.", margin + 400, y + 16);
-    doc.text("MONTANT HT", pageW - margin - 10, y + 16, { align: "right" });
+    const colX = {
+        date: margin + 8,
+        ref: margin + 80,
+        from: margin + 170,
+        to: margin + 360,
+        km: margin + 560,
+        status: margin + 620,
+        amount: pageW - margin - 10
+    };
 
-    y += 35;
+    doc.setFillColor(15, 23, 42); // slate-900
+    doc.rect(margin, y, contentW, 26, "F");
+    doc.setTextColor(255, 255, 255);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(9.5);
+    doc.text("DATE", colX.date, y + 17);
+    doc.text("RÉF", colX.ref, y + 17);
+    doc.text("ORIGINE", colX.from, y + 17);
+    doc.text("DESTINATION", colX.to, y + 17);
+    doc.text("KM", colX.km, y + 17, { align: "right" });
+    doc.text("STATUT", colX.status, y + 17);
+    doc.text("MONTANT HT", colX.amount, y + 17, { align: "right" });
+
+    y += 34;
     doc.setTextColor(15, 23, 42);
-    doc.setFontSize(9);
+    doc.setFontSize(9.5);
     doc.setFont("helvetica", "normal");
 
     let totalGain = 0;
-    orders.forEach((o) => {
+    orders.forEach((o, idx) => {
         if (y > pageH - 80) {
             doc.addPage();
             y = 40;
@@ -860,33 +871,39 @@ export function generateDriverStatementPdf(driver, orders = [], period = "—", 
         const gain = computePay(o);
         totalGain += gain;
 
+        if (idx % 2 === 0) {
+            doc.setFillColor(248, 250, 252);
+            doc.rect(margin, y - 12, contentW, 22, "F");
+        }
+
         const dateStr = o.scheduled_at
-            ? new Date(o.scheduled_at).toLocaleDateString()
+            ? new Date(o.scheduled_at).toLocaleDateString("fr-FR")
             : o.created_at
-                ? new Date(o.created_at).toLocaleDateString()
+                ? new Date(o.created_at).toLocaleDateString("fr-FR")
                 : "—";
-        doc.text(dateStr, margin + 10, y);
-        doc.text(`#${String(o.id).slice(0, 8).toUpperCase()}`, margin + 80, y);
+        const ref = `#${String(o.id).slice(0, 8).toUpperCase()}`;
+        const from = (o.pickup_city || o.pickup_address || "—").toString().slice(0, 24);
+        const to = (o.delivery_city || o.delivery_address || "—").toString().slice(0, 24);
+        const km = o.distance_km ? Number(o.distance_km).toFixed(1) : "—";
 
-        const route = `${o.pickup_city || ""} > ${o.delivery_city || ""}`.slice(0, 35);
-        doc.text(route, margin + 160, y);
+        let statusLabel = "En cours";
+        if (o.status === "delivered") statusLabel = "Livrée";
+        else if (o.status === "driver_accepted") statusLabel = "Acceptée";
+        else if (o.status === "assigned") statusLabel = "À accepter";
+        else if (o.status === "accepted") statusLabel = "À dispatcher";
 
-        const pTime = o.picked_up_at ? new Date(o.picked_up_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "—";
-        const dTime =
-            o.status === "delivered" && o.updated_at
-                ? new Date(o.updated_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-                : "—";
-
-        doc.text(pTime, margin + 350, y);
-        doc.text(dTime, margin + 400, y);
+        doc.text(dateStr, colX.date, y);
+        doc.text(ref, colX.ref, y);
+        doc.text(from, colX.from, y);
+        doc.text(to, colX.to, y);
+        doc.text(km, colX.km, y, { align: "right" });
+        doc.text(statusLabel, colX.status, y);
 
         doc.setFont("helvetica", "bold");
-        doc.text(`${gain.toFixed(2)} €`, pageW - margin - 10, y, { align: "right" });
+        doc.text(`${gain.toFixed(2)} €`, colX.amount, y, { align: "right" });
         doc.setFont("helvetica", "normal");
 
-        doc.setDrawColor(241, 245, 249);
-        doc.line(margin, y + 5, pageW - margin, y + 5);
-        y += 20;
+        y += 22;
     });
 
     // Summary Box
@@ -1036,39 +1053,47 @@ export function generateDriverInvoicePdf(driver, orders = [], period = "—", co
     // Body
     doc.setDrawColor(241, 245, 249);
     doc.line(margin, y, pageW - margin, y);
-    y += 40;
-
-    doc.setFontSize(11);
-    doc.setFont("helvetica", "bold");
-    doc.text("DESCRIPTION DES SERVICES", margin, y);
-    doc.text("MONTANT HT", pageW - margin, y, { align: "right" });
-
     y += 30;
-    doc.setFont("helvetica", "normal");
-    doc.text(`Prestations de transport de colis - Période: ${period}`, margin, y);
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(12);
-    doc.text(`${totalGain.toFixed(2)} €`, pageW - margin, y, { align: "right" });
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(11);
 
+    doc.setFontSize(11);
+    doc.setFont("helvetica", "bold");
+    doc.text("DÉTAIL DES PRESTATIONS", margin, y);
+    doc.text("QTÉ", pageW - margin - 140, y, { align: "right" });
+    doc.text("PU HT", pageW - margin - 70, y, { align: "right" });
+    doc.text("TOTAL HT", pageW - margin, y, { align: "right" });
+
+    y += 26;
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.text(`Prestations de transport de colis - Période: ${period}`, margin, y);
+
+    const qty = orders.length || 0;
+    const unit = qty ? (totalGain / qty) : 0;
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(11);
+    doc.text(String(qty), pageW - margin - 140, y, { align: "right" });
+    doc.text(`${unit.toFixed(2)} €`, pageW - margin - 70, y, { align: "right" });
+    doc.text(`${totalGain.toFixed(2)} €`, pageW - margin, y, { align: "right" });
+
+    doc.setFont("helvetica", "normal");
     doc.setFontSize(9);
     doc.setTextColor(100, 116, 139);
     doc.text(`(${orders.length} missions effectuées sur la période)`, margin, y + 15);
 
-    y += 100;
+    y += 90;
 
     // Totals Box
     doc.setFillColor(15, 23, 42);
-    doc.roundedRect(pageW - margin - 200, y, 200, 100, 10, 10, "F");
+    doc.roundedRect(pageW - margin - 220, y, 220, 110, 10, 10, "F");
 
     doc.setTextColor(255, 255, 255);
-    doc.setFontSize(12);
-    doc.text("TOTAL NET À PAYER", pageW - margin - 180, y + 40);
+    doc.setFontSize(11);
+    doc.text("TOTAL NET À PAYER", pageW - margin - 200, y + 40);
 
     doc.setFont("helvetica", "bold");
     doc.setFontSize(28);
-    doc.text(`${totalGain.toFixed(2)} €`, pageW - margin - 20, y + 80, { align: "right" });
+    doc.text(`${totalGain.toFixed(2)} €`, pageW - margin - 20, y + 82, { align: "right" });
 
     // Footer
     const footerY = pageH - 60;
