@@ -709,14 +709,14 @@ export default function DashboardAdmin() {
                             <div className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider ${o.status.includes('pending') ? "bg-rose-50 text-rose-600" :
                               (o.status === "accepted") ? "bg-indigo-50 text-indigo-600" :
                                 (o.status === "assigned") ? "bg-amber-50 text-amber-600" :
-                                  (o.status === "driver_accepted") ? "bg-blue-50 text-blue-600" :
-                                    (o.status === "in_progress") ? "bg-purple-50 text-purple-600" :
-                                      (o.status === "delivered") ? "bg-emerald-50 text-emerald-600" :
+                                  (o.status === "driver_accepted") ? "bg-emerald-50 text-emerald-600" :
+                                    (o.status === "in_progress") ? "bg-blue-50 text-blue-600" :
+                                      (o.status === "delivered") ? "bg-slate-100 text-slate-600" :
                                         "bg-slate-50 text-slate-500"
                               }`}>
                               {o.status.includes('pending') ? 'Nouveau' :
                                 o.status === 'accepted' ? 'Validé' :
-                                  o.status === 'assigned' ? 'Attente chauffeur' :
+                                  o.status === 'assigned' ? 'En attente acceptation' :
                                     o.status === 'driver_accepted' ? 'Accepté' :
                                       o.status === 'in_progress' ? 'Enlevée' :
                                         o.status === 'delivered' ? 'Livrée' :
