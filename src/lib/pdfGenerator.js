@@ -951,66 +951,71 @@ export function generateDriverStatementPdf(driver, orders = [], period = "—", 
  * Generates a simplified Driver Invoice (Facture sans détails)
  */
 export function generateDriverInvoicePdf(driver, orders = [], period = "—", computePay) {
-    const doc = new jsPDF({ unit: "pt", format: "a4" });
-    const pageW = 595;
-    const pageH = 842;
-    const margin = 60;
+    const doc = new jsPDF({ unit: "pt", format: "a4", orientation: "landscape" });
+    const pageW = doc.internal.pageSize.getWidth();
+    const pageH = doc.internal.pageSize.getHeight();
+    const margin = 30;
     const contentW = pageW - margin * 2;
     let y = 0;
 
     const details = driver.details || {};
     const totalGain = orders.reduce((sum, o) => sum + computePay(o), 0);
 
-    // Header Background
-    doc.setFillColor(15, 23, 42);
-    doc.rect(0, 0, pageW, 160, "F");
+    // Header Background (same style as listing)
+    doc.setFillColor(15, 23, 42); // slate-900
+    doc.rect(0, 0, pageW, 140, "F");
 
     doc.setTextColor(255, 255, 255);
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(28);
-    doc.text(COMPANY.name.toUpperCase(), margin, 70);
+    doc.setFontSize(24);
+    doc.text(COMPANY.name.toUpperCase(), margin, 60);
 
     doc.setFontSize(10);
     doc.setFont("helvetica", "normal");
-    doc.text(COMPANY.address, margin, 90);
-    doc.text(`SIRET: ${COMPANY.siret}`, margin, 105);
-    doc.text(`Email: ${COMPANY.email}`, margin, 120);
+    doc.text(COMPANY.address, margin, 80);
+    doc.text(`Email: ${COMPANY.email}`, margin, 95);
 
-    // Box Header
-    doc.setFillColor(30, 41, 59);
-    doc.roundedRect(pageW - margin - 200, 35, 200, 75, 10, 10, "F");
+    // Document Title
+    doc.setFillColor(30, 41, 59); // slate-800
+    doc.roundedRect(pageW - margin - 220, 35, 220, 75, 10, 10, "F");
 
     doc.setTextColor(255, 255, 255);
     doc.setFont("helvetica", "bold");
     doc.setFontSize(10);
-    doc.text("FACTURE PRESTATAIRE", pageW - margin - 185, 55);
+    doc.text("FACTURE PRESTATAIRE", pageW - margin - 205, 55);
 
     doc.setFontSize(14);
-    doc.text(period.toUpperCase(), pageW - margin - 185, 75);
+    doc.text(period.toUpperCase(), pageW - margin - 205, 75);
 
-    doc.setFontSize(11);
-    const refFP = `N° FP-${String(driver.id).slice(0, 4).toUpperCase()}-${new Date().getFullYear()}${String(
+    doc.setFontSize(9);
+    const refFP = `FP-${String(driver.id).slice(0, 4).toUpperCase()}-${new Date().getFullYear()}${String(
         new Date().getMonth() + 1
     ).padStart(2, "0")}`;
-    const badgeW = doc.getTextWidth(refFP) + 20;
-    doc.setFillColor(255, 255, 255, 0.1);
-    doc.roundedRect(pageW - margin - 185 - 5, 83, badgeW, 20, 3, 3, "F");
-    doc.setTextColor(249, 115, 22); // orange-500 for the REF number
-    doc.text(refFP, pageW - margin - 185, 97);
+    const badgeW = doc.getTextWidth(refFP) + 16;
+    doc.setFillColor(255, 255, 255, 0.05);
+    doc.roundedRect(pageW - margin - 205 - 4, 84, badgeW, 14, 2, 2, "F");
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(148, 163, 184);
+    doc.text(refFP, pageW - margin - 205, 94);
 
-    y = 220;
+    y = 180;
+
+    // Info Grid (same style as listing)
+    const drawDivider = (x, yPos, w) => {
+        doc.setDrawColor(226, 232, 240);
+        doc.line(x, yPos, x + w, yPos);
+    };
 
     // Col 1: Driver Identity
     doc.setTextColor(100, 116, 139);
     doc.setFontSize(9);
     doc.setFont("helvetica", "bold");
-    doc.text("FACTURE À :", margin, y);
-    doc.setDrawColor(226, 232, 240);
-    doc.line(margin, y + 5, margin + contentW / 2 - 20, y + 5);
+    doc.text("FACTURE À", margin, y);
+    drawDivider(margin, y + 5, contentW / 2 - 20);
 
     y += 25;
     doc.setTextColor(15, 23, 42);
-    doc.setFontSize(12);
+    doc.setFontSize(11);
     doc.setFont("helvetica", "bold");
     doc.text(details.full_name || "Chauffeur", margin, y);
 
@@ -1024,8 +1029,8 @@ export function generateDriverInvoicePdf(driver, orders = [], period = "—", co
     let col2X = margin + contentW / 2 + 20;
     doc.setTextColor(100, 116, 139);
     doc.setFont("helvetica", "bold");
-    doc.text("SOCIÉTÉ & VÉHICULE :", col2X, y - 25);
-    doc.line(col2X, y - 20, col2X + contentW / 2 - 20, y - 20);
+    doc.text("SOCIÉTÉ & VÉHICULE", col2X, y - 25);
+    drawDivider(col2X, y - 20, contentW / 2 - 20);
 
     doc.setTextColor(15, 23, 42);
     doc.setFont("helvetica", "normal");
@@ -1034,13 +1039,13 @@ export function generateDriverInvoicePdf(driver, orders = [], period = "—", co
     doc.text(`Véhicule: ${details.vehicle_model || "—"}`, col2X, y + 24);
     doc.text(`Immat: ${details.vehicle_plate || "—"} (${details.vehicle_type || "—"})`, col2X, y + 36);
 
-    y += 75;
+    y += 60;
 
     // Bank info row
     doc.setTextColor(100, 116, 139);
     doc.setFont("helvetica", "bold");
-    doc.text("INFORMATIONS POUR LE RÈGLEMENT :", margin, y);
-    doc.line(margin, y + 5, margin + contentW, y + 5);
+    doc.text("INFORMATIONS BANCAIRES", margin, y);
+    drawDivider(margin, y + 5, contentW);
 
     y += 20;
     doc.setTextColor(15, 23, 42);
@@ -1048,48 +1053,49 @@ export function generateDriverInvoicePdf(driver, orders = [], period = "—", co
     doc.text(`IBAN: ${details.iban || "—"}`, margin, y);
     doc.text(`BIC: ${details.bic || "—"}`, margin + 250, y);
 
-    y += 40;
-
-    // Body
-    doc.setDrawColor(241, 245, 249);
-    doc.line(margin, y, pageW - margin, y);
     y += 30;
 
-    doc.setFontSize(11);
+    // Body (table style like listing)
+    doc.setFillColor(15, 23, 42);
+    doc.rect(margin, y, contentW, 26, "F");
+    doc.setTextColor(255, 255, 255);
     doc.setFont("helvetica", "bold");
-    doc.text("DÉTAIL DES PRESTATIONS", margin, y);
-    doc.text("QTÉ", pageW - margin - 140, y, { align: "right" });
-    doc.text("PU HT", pageW - margin - 70, y, { align: "right" });
-    doc.text("TOTAL HT", pageW - margin, y, { align: "right" });
+    doc.setFontSize(9.5);
+    doc.text("DESCRIPTION", margin + 10, y + 17);
+    doc.text("QTÉ", pageW - margin - 160, y + 17, { align: "right" });
+    doc.text("PU HT", pageW - margin - 90, y + 17, { align: "right" });
+    doc.text("TOTAL HT", pageW - margin - 10, y + 17, { align: "right" });
 
-    y += 26;
+    y += 34;
+    doc.setTextColor(15, 23, 42);
     doc.setFont("helvetica", "normal");
     doc.setFontSize(10);
-    doc.text(`Prestations de transport de colis - Période: ${period}`, margin, y);
 
     const qty = orders.length || 0;
     const unit = qty ? (totalGain / qty) : 0;
 
+    doc.setFillColor(248, 250, 252);
+    doc.rect(margin, y - 12, contentW, 22, "F");
+    doc.text(`Prestations de transport de colis - Période: ${period}`, margin + 10, y);
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(11);
-    doc.text(String(qty), pageW - margin - 140, y, { align: "right" });
-    doc.text(`${unit.toFixed(2)} €`, pageW - margin - 70, y, { align: "right" });
-    doc.text(`${totalGain.toFixed(2)} €`, pageW - margin, y, { align: "right" });
+    doc.text(String(qty), pageW - margin - 160, y, { align: "right" });
+    doc.text(`${unit.toFixed(2)} €`, pageW - margin - 90, y, { align: "right" });
+    doc.text(`${totalGain.toFixed(2)} €`, pageW - margin - 10, y, { align: "right" });
 
     doc.setFont("helvetica", "normal");
     doc.setFontSize(9);
     doc.setTextColor(100, 116, 139);
-    doc.text(`(${orders.length} missions effectuées sur la période)`, margin, y + 15);
+    doc.text(`(${orders.length} missions effectuées sur la période)`, margin + 10, y + 16);
 
-    y += 90;
+    y += 70;
 
     // Totals Box
     doc.setFillColor(15, 23, 42);
-    doc.roundedRect(pageW - margin - 220, y, 220, 110, 10, 10, "F");
+    doc.roundedRect(pageW - margin - 240, y, 240, 110, 10, 10, "F");
 
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(11);
-    doc.text("TOTAL NET À PAYER", pageW - margin - 200, y + 40);
+    doc.text("TOTAL NET À PAYER", pageW - margin - 220, y + 40);
 
     doc.setFont("helvetica", "bold");
     doc.setFontSize(28);
