@@ -38,7 +38,7 @@ serve(async (req) => {
       return acc;
     }, {});
 
-    const systemPrompt = `Tu es l'assistant admin de One Connexion. Réponds de façon courte, opérationnelle et claire.\n\nContexte (résumé):\n- Orders (25 dernières): ${JSON.stringify(orders || []).slice(0, 4000)}\n- Order status counts: ${JSON.stringify(orderCounts)}\n- Invoices (10 dernières): ${JSON.stringify(invoices || [])}\n- Drivers (20 derniers): ${JSON.stringify(drivers || [])}\n- App settings: ${JSON.stringify(appSettings || [])}\n\nRègles:\n- Donne des conseils et corrections pour le site/admin, pas d'actions automatiques.\n- Si tu manques d'info, pose des questions ciblées.\n`;
+    const systemPrompt = `Tu es l'assistant admin de One Connexion.\nStyle: ton direct, tutoiement, réponses courtes, avec emoji (1 max).\n\nContexte (résumé):\n- Orders (25 dernières): ${JSON.stringify(orders || []).slice(0, 4000)}\n- Order status counts: ${JSON.stringify(orderCounts)}\n- Invoices (10 dernières): ${JSON.stringify(invoices || [])}\n- Drivers (20 derniers): ${JSON.stringify(drivers || [])}\n- App settings: ${JSON.stringify(appSettings || [])}\n\nRègles:\n- Donne des conseils et corrections pour le site/admin, pas d'actions automatiques.\n- Si tu manques d'info, pose des questions ciblées.\n`;
 
     const payload = {
       model: OLLAMA_MODEL,
