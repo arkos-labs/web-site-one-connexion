@@ -178,9 +178,10 @@ export function generateOrderPdf(order, client = {}) {
     doc.setTextColor(15, 23, 42);
     doc.setFontSize(10);
     doc.setFont("helvetica", "bold");
-    doc.text("Date:", margin + contentW / 2 + 20, rightY);
+    doc.text("Passée le:", margin + contentW / 2 + 20, rightY);
     doc.setFont("helvetica", "normal");
-    const displayDate = order.created_at ? new Date(order.created_at).toLocaleDateString("fr-FR") : order.date || new Date().toLocaleDateString("fr-FR");
+    const createdDateObj = order.created_at ? new Date(order.created_at) : (order.date ? new Date(order.date) : new Date());
+    const displayDate = createdDateObj.toLocaleDateString("fr-FR") + " " + createdDateObj.toLocaleTimeString("fr-FR", { hour: '2-digit', minute: '2-digit' });
     doc.text(displayDate, margin + contentW / 2 + 100, rightY);
 
     doc.setFont("helvetica", "bold");
@@ -204,17 +205,28 @@ export function generateOrderPdf(order, client = {}) {
 
     // Itinerary Section
     y = drawSection("Itinéraire / Instructions", margin, y, contentW);
+
+    const schedDateObj = order.scheduled_at ? new Date(order.scheduled_at) : (order.date ? new Date(order.date) : new Date());
+    const scheduledDateForDisplay = schedDateObj.toLocaleDateString("fr-FR");
+
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(15, 23, 42);
+    doc.text(`Prévue le : ${scheduledDateForDisplay}`, margin + 15, y);
+    y += 15;
+
     doc.setFontSize(9);
     doc.setTextColor(15, 23, 42);
 
     // Pickup
     const pickupName = order.pickup_name || nEntreprisePick || nContactPick || "—";
     const pickupAddr = order.pickup_address || order.pickup || "—";
-    const pCode = order.pickup_access_code || notesStr.match(/Code : ([\w\d]+)/)?.[1] || notesStr.match(/Code: ([\w\d]+)/)?.[1];
+    const pCode = order.pickup_access_code || notesStr.match(/(?:Code Enlev:|Code :|Code:)\s?([^.]+)/)?.[1]?.trim();
     const pEmail = nEmailEnlev;
     const pPhone = order.pickup_phone || nPhonePick || notesStr.match(/Phone: ([\d\s]+)/)?.[1];
 
     let pickupBoxH = 65;
+    if (order.scheduled_at) pickupBoxH += 15;
     if (nPNote && nPNote !== "—") pickupBoxH += 15;
     if (pCode) pickupBoxH += 15;
     if (pEmail || pPhone) pickupBoxH += 15;
@@ -228,6 +240,18 @@ export function generateOrderPdf(order, client = {}) {
     doc.text(pickupAddr, margin + 120, y + 35);
 
     let currentY = y + 50;
+
+    let displayPTime = "";
+    if (order.scheduled_at) {
+        displayPTime = new Date(order.scheduled_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+    }
+
+    if (displayPTime) {
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(249, 115, 22); // Orange pour attirer l'attention
+        doc.text(`Heure Départ : ${displayPTime}`, margin + 120, currentY);
+        currentY += 15;
+    }
 
     if (pEmail || pPhone) {
         doc.setFontSize(8);
@@ -255,10 +279,11 @@ export function generateOrderPdf(order, client = {}) {
     // Delivery
     const deliveryName = order.delivery_name || nEntrepriseDeliv || nContactDeliv || "—";
     const deliveryAddr = order.delivery_address || order.delivery || "—";
-    const dCode = order.delivery_access_code || notesStr.match(/Code Deliv: ([\w\d]+)/)?.[1];
+    const dCode = order.delivery_access_code || notesStr.match(/(?:Code Dest:|Code Deliv:)\s?([^.]+)/)?.[1]?.trim();
     const dPhone = order.delivery_phone || nPhoneDeliv;
 
     let deliveryBoxH = 65;
+    if (order.delivery_deadline) deliveryBoxH += 15;
     if (nDNote && nDNote !== "—") deliveryBoxH += 15;
     if (dCode) deliveryBoxH += 15;
     if (dPhone) deliveryBoxH += 15;
@@ -272,6 +297,18 @@ export function generateOrderPdf(order, client = {}) {
     doc.text(deliveryAddr, margin + 120, y + 35);
 
     currentY = y + 50;
+
+    let displayDTime = "";
+    if (order.delivery_deadline) {
+        displayDTime = new Date(order.delivery_deadline).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+    }
+
+    if (displayDTime) {
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(249, 115, 22); // Orange
+        doc.text(`Heure Livraison : ${displayDTime}`, margin + 120, currentY);
+        currentY += 15;
+    }
 
     if (dPhone) {
         doc.setFontSize(8);
@@ -333,6 +370,9 @@ export function generateOrderPdf(order, client = {}) {
         .replace(/Email Enlev:.*?(?=\.|$)\.?\s?/g, "")
         .replace(/Phone Pick:.*?(?=\.|$)\.?\s?/g, "")
         .replace(/Phone Deliv:.*?(?=\.|$)\.?\s?/g, "")
+        .replace(/Code Enlev:.*?(?=\.|$)\.?\s?/g, "")
+        .replace(/Code Dest:.*?(?=\.|$)\.?\s?/g, "")
+        .replace(/Code Deliv:.*?(?=\.|$)\.?\s?/g, "")
         .replace(/Instructions:.*?(?=\.|$)\.?\s?/g, "")
         .replace(/Contact:.*?\)\.\s?/g, "")
         .replace(/Instructions :.*?\.\s?/g, "")

@@ -108,7 +108,8 @@ export default function Orders() {
     deliveryContact: "",
     deliveryPhone: "",
     deliveryInstructions: "",
-    accessCode: "", // legacy (now in delivery code)
+    pickupAccessCode: "",
+    deliveryAccessCode: "",
     contactPhone: "", // legacy
   });
 
@@ -243,7 +244,7 @@ export default function Orders() {
       pickup_postal_code: form.pickupPostcode || getPostcode(form.pickup),
       pickup_name: form.pickupName,
       pickup_phone: form.pickupPhone || form.contactPhone,
-      pickup_access_code: form.accessCode,
+      pickup_access_code: form.pickupAccessCode,
       delivery_address: form.delivery,
       delivery_city: form.deliveryCity || form.delivery.split(',').find(p => p.trim().match(/^\d{5}\s/))?.trim().split(' ').slice(1).join(' ') || form.delivery.split(',').pop()?.trim(),
       delivery_postal_code: form.deliveryPostcode || getPostcode(form.delivery),
@@ -257,7 +258,7 @@ export default function Orders() {
       package_type: form.packageType === "Autre" ? (form.packageTypeOther || "Autre") : form.packageType,
       package_description: form.packageDesc || form.packageSize,
       weight: parseFloat(String(form.packageWeight).replace(',', '.')) || null,
-      notes: `Entreprise Pick: ${form.pickupName}. Contact Pick: ${form.pickupContact}. Phone Pick: ${form.pickupPhone || form.contactPhone}. Email Enlev: ${form.pickupEmail}. Entreprise Deliv: ${form.deliveryName}. Contact Deliv: ${form.deliveryContact}. Phone Deliv: ${form.deliveryPhone}. Instructions: ${form.pickupInstructions} / ${form.deliveryInstructions}`,
+      notes: `Entreprise Pick: ${form.pickupName}. Contact Pick: ${form.pickupContact}. Phone Pick: ${form.pickupPhone || form.contactPhone}. Code Enlev: ${form.pickupAccessCode}. Email Enlev: ${form.pickupEmail}. Entreprise Deliv: ${form.deliveryName}. Contact Deliv: ${form.deliveryContact}. Phone Deliv: ${form.deliveryPhone}. Code Dest: ${form.deliveryAccessCode}. Instructions: ${form.pickupInstructions} / ${form.deliveryInstructions}`,
     });
 
     if (error) {
@@ -331,10 +332,14 @@ export default function Orders() {
                           <input className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm bg-white" placeholder="Ex: Jean" value={form.pickupContact} onChange={(e) => setForm({ ...form, pickupContact: e.target.value })} />
                         </div>
                       </div>
-                      <div className="grid grid-cols-1 gap-4">
+                      <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-1">
                           <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Téléphone</label>
                           <input className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm bg-white" placeholder="01..." value={form.pickupPhone} onChange={(e) => setForm({ ...form, pickupPhone: e.target.value })} />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Code / Étage</label>
+                          <input className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm bg-white" placeholder="Bâtiment 2..." value={form.pickupAccessCode} onChange={(e) => setForm({ ...form, pickupAccessCode: e.target.value })} />
                         </div>
                       </div>
                       <div className="space-y-1 relative">
@@ -396,7 +401,7 @@ export default function Orders() {
                         </div>
                         <div className="space-y-1">
                           <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Code / Étage</label>
-                          <input className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm bg-white" placeholder="Bâtiment 2..." value={form.accessCode} onChange={(e) => setForm({ ...form, accessCode: e.target.value })} />
+                          <input className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm bg-white" placeholder="Bâtiment 2..." value={form.deliveryAccessCode} onChange={(e) => setForm({ ...form, deliveryAccessCode: e.target.value })} />
                         </div>
                       </div>
                       <div className="space-y-1 relative">
