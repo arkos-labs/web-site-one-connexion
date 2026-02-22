@@ -661,12 +661,18 @@ export default function AdminOrders() {
                         <div className="flex flex-col">
                           <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">BC-{o.id.slice(0, 8)}</span>
                           <h4 className="text-base font-black text-slate-900 group-hover:text-orange-500 transition-colors line-clamp-1">{o.client}</h4>
-                          <span className="mt-1 text-[10px] font-black uppercase tracking-widest text-slate-400">
-                            {o.status === "assigned" ? "En cours (à accepter)" :
-                             o.status === "driver_accepted" ? "Chauffeur a accepté" :
-                             o.status === "in_progress" ? "Chauffeur a enlevé" :
-                             o.status === "accepted" ? "À dispatcher" :
-                             o.status === "delivered" ? "Livrée" : o.status}
+                          <span className={`mt-2 inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-black uppercase tracking-widest ${
+                            o.status === "assigned" ? "bg-amber-50 text-amber-700" :
+                            o.status === "driver_accepted" ? "bg-blue-50 text-blue-700" :
+                            o.status === "in_progress" ? "bg-purple-50 text-purple-700" :
+                            o.status === "delivered" ? "bg-emerald-50 text-emerald-700" :
+                            o.status === "accepted" ? "bg-indigo-50 text-indigo-700" : "bg-slate-50 text-slate-500"
+                          }`}>
+                            {o.status === "assigned" ? "À ACCEPTER" :
+                             o.status === "driver_accepted" ? "ACCEPTÉE" :
+                             o.status === "in_progress" ? "ENLEVÉE" :
+                             o.status === "delivered" ? "LIVRÉE" :
+                             o.status === "accepted" ? "À DISPATCHER" : o.status}
                           </span>
                         </div>
                         {o.isGuest && (
