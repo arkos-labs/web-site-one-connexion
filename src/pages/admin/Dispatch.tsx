@@ -719,24 +719,22 @@ export default function Dispatch() {
                                         d.id === order.assigned_driver_id
                                     );
 
-                                    // Calcul simplifié pour UI
                                     let statusLabel = "En route";
                                     let statusColor = "text-blue-600 bg-blue-50";
                                     let distance = 0;
 
-                                    if (driver?.current_lat && driver?.current_lng) {
-                                        if (order.status === 'accepted' || order.status === 'driver_accepted') {
-                                            statusLabel = "Vers Retrait";
-                                            statusColor = "text-orange-600 bg-orange-50";
+                                    if (order.status === 'assigned') {
+                                        statusLabel = "Attente Chauffeur";
+                                        statusColor = "text-amber-600 bg-amber-50";
+                                    } else if (order.status === 'driver_accepted') {
+                                        statusLabel = "Accepté";
+                                        statusColor = "text-emerald-600 bg-emerald-50";
+                                        if (driver?.current_lat) {
                                             distance = calculateDistance(driver.current_lat, driver.current_lng, order.pickup_lat || 0, order.pickup_lng || 0);
-                                        } else if (order.status === 'in_progress') {
-                                            statusLabel = "Sur Place";
-                                            statusColor = "text-purple-600 bg-purple-50";
-                                        } else if (order.status === 'in_progress') {
-                                            statusLabel = "Vers Livraison";
-                                            statusColor = "text-green-600 bg-green-50";
-                                            distance = calculateDistance(driver.current_lat, driver.current_lng, order.delivery_lat || 0, order.delivery_lng || 0);
                                         }
+                                    } else if (order.status === 'in_progress') {
+                                        statusLabel = "En cours";
+                                        statusColor = "text-blue-600 bg-blue-50";
                                     }
 
                                     return (

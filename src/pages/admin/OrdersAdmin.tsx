@@ -391,13 +391,12 @@ const OrdersAdmin = () => {
 
   // ==================== HELPERS ====================
 
-  const getStatusBadgeVariant = (status: string): "default" | "secondary" | "destructive" | "outline" | "pending" | "accepted" | "assigned" | "driver_accepted" | "in_progress" | "delivered" | "cancelled" => {
+  const getStatusBadgeVariant = (status: string): any => {
     const variants: Record<string, any> = {
       pending_acceptance: 'pending',
       accepted: 'accepted',
       assigned: 'assigned',
       driver_accepted: 'driver_accepted',
-      in_progress: 'driver_accepted',
       in_progress: 'in_progress',
       delivered: 'delivered',
       cancelled: 'cancelled',
@@ -409,10 +408,9 @@ const OrdersAdmin = () => {
     const labels: Record<string, string> = {
       pending_acceptance: 'En attente',
       accepted: 'Acceptée',
-      assigned: 'Dispatchée',
-      driver_accepted: 'Chauffeur a accepté',
-      in_progress: 'Arrivé sur place',
-      in_progress: 'En route vers livraison',
+      assigned: 'Attente chauffeur',
+      driver_accepted: 'Accepté',
+      in_progress: 'En livraison',
       delivered: 'Livrée',
       cancelled: 'Annulée',
     };
