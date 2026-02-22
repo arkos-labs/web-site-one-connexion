@@ -200,6 +200,57 @@ export default function AdminOrderDetails() {
     { label: "Terminée", value: order.status === "Terminée" ? (order.completedAt ? new Date(order.completedAt).toLocaleString("fr-FR") : "OK") : "—" },
   ];
 
+  // ======================
+  // Parse order.notes for precise data rendering
+  // ======================
+  const notesStr = order.notes || "";
+  const nEntreprisePick = notesStr.match(/Entreprise Pick: (.*?)(\.|$|Contact)/)?.[1]?.trim();
+  const nContactPick = notesStr.match(/Contact Pick: (.*?)(\.|$|Phone|Email)/)?.[1]?.trim();
+  const nPhonePick = notesStr.match(/Phone Pick: (.*?)(\.|$|Email|Code)/)?.[1]?.trim();
+  const nEmailEnlev = notesStr.match(/Email Enlev: (.*?)(\.|$|Entreprise|Contact|Instructions)/)?.[1]?.trim();
+  const pCode = order.pickup_access_code || notesStr.match(/(?:Code Enlev:|Code :|Code:)\s?([^.]+)/)?.[1]?.trim();
+
+  const nEntrepriseDeliv = notesStr.match(/Entreprise Deliv: (.*?)(\.|$|Contact)/)?.[1]?.trim();
+  const nContactDeliv = notesStr.match(/Contact Deliv: (.*?)(\.|$|Phone|Instructions)/)?.[1]?.trim();
+  const nPhoneDeliv = notesStr.match(/Phone Deliv: (.*?)(\.|$|Code|Instructions)/)?.[1]?.trim();
+  const dCode = order.delivery_access_code || notesStr.match(/(?:Code Dest:|Code Deliv:)\s?([^.]+)/)?.[1]?.trim();
+
+  const nInstructions = notesStr.match(/Instructions:\s*(.*?)(?:\.|$)/)?.[1]?.trim();
+  const nPNote = notesStr.match(/Instructions:\s*(.*?)\s*\//)?.[1]?.trim() || (nInstructions && !nInstructions.includes('/') ? nInstructions : null);
+  const nDNote = notesStr.match(/Instructions:\s*(.*?)\s*\/\s*(.*)(?:\.|$)/)?.[2]?.trim();
+
+  // Guest order parsing
+  const gBillingMatch = notesStr.match(/Billing: (.*?) \| (.*?) \| (.*?)$/);
+  const gBillingName = gBillingMatch?.[1]?.trim();
+  const gBillingCompany = gBillingMatch?.[2]?.trim();
+  const gBillingAddress = gBillingMatch?.[3]?.trim();
+  const gEmail = notesStr.match(/Email: ([^\s]+)/)?.[1]?.trim();
+  const gPhone = notesStr.match(/Phone: ([\d\s]+)/)?.[1]?.trim();
+  const gContact = notesStr.match(/Contact: ([^(]+)/)?.[1]?.trim();
+
+  // Pick/Deliv computed values
+  const pickupName = order.pickup_name || nEntreprisePick || nContactPick || "—";
+  const pickupPhone = order.pickup_phone || nPhonePick || gPhone || "—";
+
+  const deliveryName = order.delivery_name || nEntrepriseDeliv || nContactDeliv || "—";
+  const deliveryPhone = order.delivery_phone || nPhoneDeliv || "—";
+
+  // Unified display values for Client/Expediteur
+  const displayCompany = client?.details?.company || order.expediteur?.nom || gBillingCompany || nEntreprisePick || "";
+  const displayContactName = client?.details?.contact || client?.details?.full_name || order.nom_client || gBillingName || gContact || nContactPick || pickupName || "—";
+  const displayEmail = client?.details?.email || order.email_client || order.expediteur?.email || gEmail || nEmailEnlev || "—";
+  const displayPhone = client?.details?.phone || order.telephone_client || order.expediteur?.telephone || gPhone || pickupPhone || "—";
+  const displayAddress = client?.details?.address || order.facturation?.adresse || gBillingAddress || order.pickup_address || "—";
+  const displayTopName = String(displayCompany || displayContactName);
+
+  // Package computed values
+  const packageNature = order.package_type || order.delivery_type || order.notes?.split(' - ')?.[0] || "—";
+  const gWeight = notesStr.match(/Poids: ([\d\w\s,.<>]+)/)?.[1];
+  const packageWeight = order.weight ? String(`${order.weight} kg`) : String(gWeight && gWeight !== "undefined" ? gWeight : "—");
+  const gDims = notesStr.match(/Dims: ([\d\w\sxX]+)/)?.[1] || notesStr.match(/Dimensions: ([^.]+)/)?.[1];
+  const packageDims = order.package_description || String(gDims && gDims !== "undefined" ? gDims : "");
+
+
   return (
     <div className="grid gap-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -207,8 +258,8 @@ export default function AdminOrderDetails() {
           <div className="text-xs font-semibold uppercase tracking-wider text-slate-400">Commande</div>
           <h1 className="text-2xl font-bold text-slate-900">#{order.id.slice(0, 8)}</h1>
           <div className="text-sm text-slate-500">
-            {client?.details?.company || client?.details?.full_name || order.pickup_name || "Client"}
-            {!client?.id && (
+            {displayTopName}
+            {!client?.id && !order.user_id && (
               <span className="ml-2 inline-block px-1.5 py-0.5 rounded text-[10px] font-bold bg-orange-100 text-orange-600 border border-orange-200 uppercase">
                 Invité (Pas de compte)
               </span>
@@ -264,98 +315,36 @@ export default function AdminOrderDetails() {
           <div className="mt-4 grid gap-4">
             <div className="rounded-2xl bg-slate-50 p-4 border border-slate-100">
               <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Enlèvement</div>
-              <div className="mt-2 text-sm font-bold text-slate-900 leading-none mb-1">{order.pickup_name || "—"}</div>
-              <div className="text-xs text-slate-500 leading-snug">{order.pickup_address || "—"}</div>
+              <div className="mt-2 text-sm font-bold text-slate-900 leading-none mb-1">{pickupName}</div>
+              <div className="text-xs text-slate-500 leading-snug mb-2">{order.pickup_address || "—"}</div>
+              <div className="text-xs font-semibold text-slate-900">
+                {pCode && <span className="font-bold mr-2 text-orange-600">Code: {pCode}</span>}
+                {nPNote && nPNote !== "—" ? nPNote : "—"}
+              </div>
             </div>
             <div className="rounded-2xl bg-slate-50 p-4 border border-slate-100">
               <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Livraison</div>
-              <div className="mt-2 text-sm font-bold text-slate-900 leading-none mb-1">{order.delivery_name || "—"}</div>
-              <div className="text-xs text-slate-500 leading-snug">{order.delivery_address || "—"}</div>
+              <div className="mt-2 text-sm font-bold text-slate-900 leading-none mb-1">{deliveryName}</div>
+              <div className="text-xs text-slate-500 leading-snug mb-2">{order.delivery_address || "—"}</div>
+              <div className="text-xs font-semibold text-slate-900">
+                {dCode && <span className="font-bold mr-2 text-orange-600">Code: {dCode}</span>}
+                {nDNote && nDNote !== "—" ? nDNote : "—"}
+              </div>
             </div>
-
             <div className="grid gap-3 sm:grid-cols-2">
               <div className="rounded-2xl bg-slate-50 p-4">
-                <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Véhicule / formule</div>
-                <div className="mt-2 text-sm font-semibold text-slate-900 capitalize">
-                  {order.vehicle_type || "—"} {order.service_level ? `• ${order.service_level}` : ""}
+                <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Formule</div>
+                <div className="mt-2 text-sm font-semibold text-slate-900 uppercase">
+                  {order.vehicle_type || "—"} {order.service_level ? `${order.service_level}` : ""}
                 </div>
               </div>
               <div className="rounded-2xl bg-slate-50 p-4">
-                <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Date</div>
-                <div className="mt-2 text-sm font-semibold text-slate-900">{new Date(order.created_at).toLocaleDateString() || "—"}</div>
-              </div>
-            </div>
-
-            <div className="rounded-2xl bg-slate-50 p-4 border border-slate-100">
-              <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Détails du Colis</div>
-              <div className="mt-3 grid grid-cols-2 md:grid-cols-3 gap-4">
-                <div>
-                  <div className="text-[10px] font-bold text-slate-400 uppercase">Nature</div>
-                  <div className="text-sm font-bold text-slate-900">
-                    {order.package_type || order.notes?.split(' - ')?.[0] || "—"}
-                  </div>
-                </div>
-                <div>
-                  <div className="text-[10px] font-bold text-slate-400 uppercase">Poids</div>
-                  <div className="text-sm font-bold text-slate-900">
-                    {order.weight ? `${order.weight} kg` : (order.notes?.match(/Poids: ([\d\w\s,.<>]+)/)?.[1] || "—")}
-                  </div>
-                </div>
-                <div>
-                  <div className="text-[10px] font-bold text-slate-400 uppercase">Taille / Dimensions</div>
-                  <div className="text-sm font-bold text-slate-900">
-                    {order.package_description || order.notes?.match(/Dims: ([\d\w\sxX]+)/)?.[1] || order.notes?.match(/Dimensions: ([^.]+)/)?.[1] || "—"}
-                  </div>
+                <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Programmation</div>
+                <div className="mt-2 text-sm font-semibold text-slate-900">
+                  {order.scheduled_at ? new Date(order.scheduled_at).toLocaleString('fr-FR') : "Immédiat"}
                 </div>
               </div>
             </div>
-
-            {/* NEW: Instructions & Notes Section */}
-            {(order.notes || order.pickup_instructions || order.delivery_instructions) && (
-              <div className="rounded-2xl bg-slate-50 p-4 border border-slate-100">
-                <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400 mb-3">Instructions & Notes</div>
-                <div className="grid gap-3">
-                  {/* Instructions parsing for guest orders */}
-                  {(() => {
-                    const instructMatch = order.notes?.match(/Instructions : (.*?) \/ (.*?)\./) || order.notes?.match(/Instructions: (.*?) \/ (.*?)\./);
-                    const pI = order.pickup_instructions || (instructMatch?.[1] && instructMatch[1] !== "—" ? instructMatch[1] : null);
-                    const dI = order.delivery_instructions || (instructMatch?.[2] && instructMatch[2] !== "—" ? instructMatch[2] : null);
-
-                    const cleanNote = order.notes
-                      ?.replace(/Guest Order\.\s?/g, "")
-                      .replace(/Contact:.*?\)\.\s?/g, "")
-                      .replace(/Instructions :?.*?\.\s?/g, "")
-                      .replace(/Email:.*?\.\s?/g, "")
-                      .replace(/Phone:.*?\.\s?/g, "")
-                      .replace(/Billing:.*$/g, "")
-                      .trim();
-
-                    return (
-                      <>
-                        {pI && (
-                          <div className="text-xs">
-                            <span className="font-bold text-slate-900">Enlèvement : </span>
-                            <span className="text-slate-600 italic">"{pI}"</span>
-                          </div>
-                        )}
-                        {dI && (
-                          <div className="text-xs">
-                            <span className="font-bold text-slate-900">Livraison : </span>
-                            <span className="text-slate-600 italic">"{dI}"</span>
-                          </div>
-                        )}
-                        {cleanNote && cleanNote !== "—" && cleanNote !== "/" && cleanNote.length > 2 && (
-                          <div className="mt-1 rounded-xl bg-white p-3 border border-slate-200 text-xs text-slate-700 leading-relaxed shadow-sm">
-                            <div className="font-bold text-slate-400 uppercase text-[9px] mb-1">Note Client</div>
-                            {cleanNote}
-                          </div>
-                        )}
-                      </>
-                    );
-                  })()}
-                </div>
-              </div>
-            )}
 
             <div className="grid gap-3 sm:grid-cols-2">
               <div className="rounded-2xl bg-slate-50 p-4">
@@ -371,56 +360,107 @@ export default function AdminOrderDetails() {
             <div className="grid gap-3 sm:grid-cols-2">
               <div className="rounded-2xl bg-slate-50 p-4">
                 <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Tél. Enlèvement</div>
-                <div className="mt-2 text-sm font-semibold text-slate-900">{order.pickup_phone || order.contactPhone || edit.contactPhone || "—"}</div>
+                <div className="mt-2 text-sm font-semibold text-slate-900">
+                  {pickupPhone}
+                </div>
               </div>
               <div className="rounded-2xl bg-slate-50 p-4">
                 <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Tél. Livraison</div>
-                <div className="mt-2 text-sm font-semibold text-slate-900">{order.delivery_phone || order.notes?.match(/Phone Deliv: ([\d\s]+)/)?.[1] || "—"}</div>
+                <div className="mt-2 text-sm font-semibold text-slate-900">
+                  {deliveryPhone}
+                </div>
               </div>
             </div>
 
-            <div className="rounded-2xl bg-slate-50 p-4">
-              <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Code / accès / instructions livraison</div>
-              <div className="mt-2 text-sm font-semibold text-slate-900">{order.delivery_instructions || order.pickup_access_code || order.accessCode || edit.accessCode || "—"}</div>
+            <div className="grid gap-3">
+              <div className="rounded-2xl bg-slate-50 p-4 border border-slate-100">
+                <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400 mb-3">Détails du Colis</div>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  <div>
+                    <div className="text-[10px] font-bold text-slate-400 uppercase">Nature</div>
+                    <div className="text-sm font-bold text-slate-900">
+                      {packageNature}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-[10px] font-bold text-slate-400 uppercase">Poids</div>
+                    <div className="text-sm font-bold text-slate-900">
+                      {packageWeight}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-[10px] font-bold text-slate-400 uppercase">Contenu</div>
+                    <div className="text-sm font-bold text-slate-900">
+                      {packageDims || "—"}
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <div className="rounded-2xl bg-slate-50 p-4">
-              <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Instructions Enlèvement</div>
-              <div className="mt-2 text-sm font-semibold text-slate-900">{order.pickup_instructions || "—"}</div>
-            </div>
+            {/* Note Client Optionnel */}
+            {(() => {
+              const cleanNote = notesStr
+                .replace(/Guest Order\.\s?/g, "")
+                .replace(/Entreprise Pick:.*?(?=\.|$)\.?\s?/g, "")
+                .replace(/Entreprise Deliv:.*?(?=\.|$)\.?\s?/g, "")
+                .replace(/Contact Pick:.*?(?=\.|$)\.?\s?/g, "")
+                .replace(/Contact Deliv:.*?(?=\.|$)\.?\s?/g, "")
+                .replace(/Email Enlev:.*?(?=\.|$)\.?\s?/g, "")
+                .replace(/Phone Pick:.*?(?=\.|$)\.?\s?/g, "")
+                .replace(/Phone Deliv:.*?(?=\.|$)\.?\s?/g, "")
+                .replace(/Code Enlev:.*?(?=\.|$)\.?\s?/g, "")
+                .replace(/Code Dest:.*?(?=\.|$)\.?\s?/g, "")
+                .replace(/Instructions :?.*?(?=\.|$)\.?\s?/g, "")
+                .replace(/Email:.*?(?=\.|$)\.?\s?/g, "")
+                .replace(/Phone:.*?(?=\.|$)\.?\s?/g, "")
+                .replace(/Billing:.*$/g, "")
+                .trim();
+              if (cleanNote && cleanNote !== "—" && cleanNote !== "/" && cleanNote.length > 2) {
+                return (
+                  <div className="rounded-2xl bg-slate-50 p-4 border border-slate-100">
+                    <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400 mb-2">Note Client Complémentaire</div>
+                    <div className="text-sm font-semibold text-slate-800 leading-relaxed italic">
+                      "{cleanNote}"
+                    </div>
+                  </div>
+                );
+              }
+              return null;
+            })()}
 
             <div className="rounded-2xl bg-slate-50 p-4">
-              <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Client / Facturation</div>
+              <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Client / Expéditeur</div>
               <div className="mt-2 text-sm font-semibold text-slate-900 leading-snug flex items-center gap-2">
-                {client?.details?.company || client?.details?.full_name || order.pickup_name || "—"}
-                {!client?.id && (
+                {displayTopName}
+                {!client?.id && !order.user_id && (
                   <span className="inline-block px-1.5 py-0.5 rounded text-[9px] font-bold bg-orange-100 text-orange-600 border border-orange-200 uppercase">
                     Invité
                   </span>
                 )}
               </div>
-
-              {/* Billing Address */}
               <div className="mt-1 text-xs text-slate-500">
                 <span className="font-bold text-slate-400">Facturation: </span>
-                {client?.details?.address || order.pickup_address || "—"}
+                {displayAddress}
               </div>
-
               <div className="mt-3 space-y-1">
                 <div className="text-xs text-slate-500">
-                  <span className="font-bold text-slate-400">Contact: </span>
-                  {client?.details?.contact || client?.details?.full_name || order.notes?.match(/Contact Pick: ([^.]+)/)?.[1]?.trim() || order.notes?.match(/Contact: ([^(]+)/)?.[1]?.trim() || "—"}
+                  <span className="font-bold text-slate-400">Email: </span>
+                  {displayEmail}
                 </div>
-                {order.notes?.match(/Entreprise Pick: ([^.]+)/) && (
+                {displayCompany && (
                   <div className="text-xs text-slate-500">
                     <span className="font-bold text-slate-400 uppercase text-[9px]">Enseigne: </span>
-                    <span className="font-semibold text-slate-900">{order.notes?.match(/Entreprise Pick: ([^.]+)/)?.[1]}</span>
+                    <span className="font-semibold text-slate-900">{displayCompany}</span>
                   </div>
                 )}
-
+                <div className="text-xs text-slate-500">
+                  <span className="font-bold text-slate-400">Contact: </span>
+                  {displayContactName !== displayCompany ? displayContactName : "—"}
+                </div>
                 <div className="text-xs text-slate-500">
                   <span className="font-bold text-slate-400">Tél: </span>
-                  {client?.details?.phone || order.notes?.match(/Phone Pick: ([\d\s]+)/)?.[1] || order.notes?.match(/Phone Deliv: ([\d\s]+)/)?.[1] || order.notes?.match(/Phone: ([\d\s]+)/)?.[1] || order.pickup_phone || "—"}
+                  {displayPhone}
                 </div>
               </div>
             </div>

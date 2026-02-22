@@ -73,7 +73,7 @@ export function generateOrderPdf(order, client = {}) {
     };
 
     // Client Info (Left)
-    let leftY = drawSection("Destinataire / Client", margin, y, contentW / 2 - 20);
+    let leftY = drawSection("Client facturé", margin, y, contentW / 2 - 20);
     doc.setTextColor(15, 23, 42);
     doc.setFontSize(11);
     doc.setFont("helvetica", "bold");
@@ -113,8 +113,10 @@ export function generateOrderPdf(order, client = {}) {
     const nContactDeliv = notesStr.match(/Contact Deliv: (.*?)(\.|$|Phone|Instructions)/)?.[1]?.trim();
     const nPhoneDeliv = notesStr.match(/Phone Deliv: (.*?)(\.|$|Instructions)/)?.[1]?.trim();
 
-    const nInstructions = notesStr.match(/Instructions: (.*?)(\.|$)/)?.[1]?.trim();
-    const [nPNote, nDNote] = nInstructions ? nInstructions.split('/').map(s => s.trim()) : [null, null];
+    const nInstructions = notesStr.match(/Instructions:\s*(.*?)(?:\.|$)/)?.[1]?.trim();
+    // Les instructions sont enregistrées format: "Instructions: pick_instr / deliv_instr"
+    const nPNote = notesStr.match(/Instructions:\s*(.*?)\s*\//)?.[1]?.trim() || (nInstructions && !nInstructions.includes('/') ? nInstructions : null);
+    const nDNote = notesStr.match(/Instructions:\s*(.*?)\s*\/\s*(.*)(?:\.|$)/)?.[2]?.trim();
 
     const gContact = order.pickup_contact || nContactPick || gBillingName || notesStr.match(/Contact: ([^/]+)/)?.[1]?.trim();
     const gEmail = order.pickup_email || nEmailEnlev || notesStr.match(/Email: ([^\s]+)/)?.[1];
@@ -198,22 +200,15 @@ export function generateOrderPdf(order, client = {}) {
 
     y = Math.max(leftY, rightY + 60) + 30;
 
-    // Extract instructions for itinerary if present (guest order format)
-    const instructionsMatch = notesStr.match(/Instructions : (.*?) \/ (.*?)\./) || notesStr.match(/Instructions: (.*?) \/ (.*?)\./);
-    const pInstruct = instructionsMatch?.[1] && instructionsMatch[1] !== "—" ? instructionsMatch[1] : null;
-    const dInstruct = instructionsMatch?.[2] && instructionsMatch[2] !== "—" ? instructionsMatch[2] : null;
-
-    // Itinerary Section
-    y = drawSection("Itinéraire / Instructions", margin, y, contentW);
-
+    // Extraction des instructions dates
     const schedDateObj = order.scheduled_at ? new Date(order.scheduled_at) : (order.date ? new Date(order.date) : new Date());
     const scheduledDateForDisplay = schedDateObj.toLocaleDateString("fr-FR");
 
+    // ===== SECTION ENLÈVEMENT =====
     doc.setFontSize(10);
     doc.setFont("helvetica", "bold");
     doc.setTextColor(15, 23, 42);
-    doc.text(`Prévue le : ${scheduledDateForDisplay}`, margin + 15, y);
-    y += 15;
+    y = drawSection(`Enlèvement`, margin, y, contentW);
 
     doc.setFontSize(9);
     doc.setTextColor(15, 23, 42);
@@ -230,16 +225,27 @@ export function generateOrderPdf(order, client = {}) {
     if (nPNote && nPNote !== "—") pickupBoxH += 15;
     if (pCode) pickupBoxH += 15;
     if (pEmail || pPhone) pickupBoxH += 15;
+    pickupBoxH += 15; // Pour la date
 
     doc.setFillColor(248, 250, 252);
     doc.roundedRect(margin, y, contentW, pickupBoxH, 5, 5, "F");
-    doc.setFont("helvetica", "bold");
-    doc.text("ENLÈVEMENT :", margin + 15, y + 20);
-    doc.text(pickupName, margin + 120, y + 20);
-    doc.setFont("helvetica", "normal");
-    doc.text(pickupAddr, margin + 120, y + 35);
 
-    let currentY = y + 50;
+    let boxY = y + 20;
+
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(15, 23, 42);
+    doc.text(`Prévu le : ${scheduledDateForDisplay}`, margin + 15, boxY);
+    boxY += 15;
+
+    doc.setFont("helvetica", "bold");
+    doc.text(pickupName, margin + 15, boxY);
+    boxY += 15;
+
+    doc.setFont("helvetica", "normal");
+    doc.text(pickupAddr, margin + 15, boxY);
+    boxY += 15;
+
+    let currentY = boxY;
 
     let displayPTime = "";
     if (order.scheduled_at) {
@@ -249,14 +255,14 @@ export function generateOrderPdf(order, client = {}) {
     if (displayPTime) {
         doc.setFont("helvetica", "bold");
         doc.setTextColor(249, 115, 22); // Orange pour attirer l'attention
-        doc.text(`Heure Départ : ${displayPTime}`, margin + 120, currentY);
+        doc.text(`Heure Départ : ${displayPTime}`, margin + 15, currentY);
         currentY += 15;
     }
 
     if (pEmail || pPhone) {
         doc.setFontSize(8);
         doc.setTextColor(100, 116, 139);
-        doc.text(`${pPhone || ""} ${pEmail ? "• " + pEmail : ""}`, margin + 120, currentY);
+        doc.text(`${pPhone || ""} ${pEmail ? "• " + pEmail : ""}`, margin + 15, currentY);
         currentY += 12;
         doc.setFontSize(9);
         doc.setTextColor(15, 23, 42);
@@ -264,19 +270,23 @@ export function generateOrderPdf(order, client = {}) {
 
     if (pCode) {
         doc.setFont("helvetica", "bold");
-        doc.text(`CODE ACCÈS : ${pCode}`, margin + 120, currentY);
+        doc.text(`CODE ACCÈS : ${pCode}`, margin + 15, currentY);
         currentY += 15;
     }
     if (nPNote && nPNote !== "—") {
         doc.setFont("helvetica", "oblique");
         doc.setTextColor(100, 116, 139);
-        doc.text(`Instructions : ${nPNote}`, margin + 120, currentY);
+        doc.text(`Instructions : ${nPNote}`, margin + 15, currentY);
     }
     doc.setTextColor(15, 23, 42);
 
     y += pickupBoxH + 10;
 
-    // Delivery
+    // ===== SECTION LIVRAISON =====
+    const dSchedDateObj = order.delivery_deadline ? new Date(order.delivery_deadline) : (order.date ? new Date(order.date) : new Date());
+    const dScheduledDateForDisplay = dSchedDateObj.toLocaleDateString("fr-FR");
+    y = drawSection(`Livraison`, margin, y, contentW);
+
     const deliveryName = order.delivery_name || nEntrepriseDeliv || nContactDeliv || "—";
     const deliveryAddr = order.delivery_address || order.delivery || "—";
     const dCode = order.delivery_access_code || notesStr.match(/(?:Code Dest:|Code Deliv:)\s?([^.]+)/)?.[1]?.trim();
@@ -287,16 +297,27 @@ export function generateOrderPdf(order, client = {}) {
     if (nDNote && nDNote !== "—") deliveryBoxH += 15;
     if (dCode) deliveryBoxH += 15;
     if (dPhone) deliveryBoxH += 15;
+    deliveryBoxH += 15; // Pour la date
 
     doc.setFillColor(248, 250, 252);
     doc.roundedRect(margin, y, contentW, deliveryBoxH, 5, 5, "F");
-    doc.setFont("helvetica", "bold");
-    doc.text("LIVRAISON :", margin + 15, y + 20);
-    doc.text(deliveryName, margin + 120, y + 20);
-    doc.setFont("helvetica", "normal");
-    doc.text(deliveryAddr, margin + 120, y + 35);
 
-    currentY = y + 50;
+    let dBoxY = y + 20;
+
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(15, 23, 42);
+    doc.text(`Prévu le : ${dScheduledDateForDisplay}`, margin + 15, dBoxY);
+    dBoxY += 15;
+
+    doc.setFont("helvetica", "bold");
+    doc.text(deliveryName, margin + 15, dBoxY);
+    dBoxY += 15;
+
+    doc.setFont("helvetica", "normal");
+    doc.text(deliveryAddr, margin + 15, dBoxY);
+    dBoxY += 15;
+
+    currentY = dBoxY;
 
     let displayDTime = "";
     if (order.delivery_deadline) {
@@ -306,14 +327,14 @@ export function generateOrderPdf(order, client = {}) {
     if (displayDTime) {
         doc.setFont("helvetica", "bold");
         doc.setTextColor(249, 115, 22); // Orange
-        doc.text(`Heure Livraison : ${displayDTime}`, margin + 120, currentY);
+        doc.text(`Heure Livraison : ${displayDTime}`, margin + 15, currentY);
         currentY += 15;
     }
 
     if (dPhone) {
         doc.setFontSize(8);
         doc.setTextColor(100, 116, 139);
-        doc.text(`Tél: ${dPhone}`, margin + 120, currentY);
+        doc.text(`Tél: ${dPhone}`, margin + 15, currentY);
         currentY += 12;
         doc.setFontSize(9);
         doc.setTextColor(15, 23, 42);
@@ -321,13 +342,13 @@ export function generateOrderPdf(order, client = {}) {
 
     if (dCode) {
         doc.setFont("helvetica", "bold");
-        doc.text(`CODE ACCÈS : ${dCode}`, margin + 120, currentY);
+        doc.text(`CODE ACCÈS : ${dCode}`, margin + 15, currentY);
         currentY += 15;
     }
     if (nDNote && nDNote !== "—") {
         doc.setFont("helvetica", "oblique");
         doc.setTextColor(100, 116, 139);
-        doc.text(`Instructions : ${nDNote}`, margin + 120, currentY);
+        doc.text(`Instructions : ${nDNote}`, margin + 15, currentY);
     }
     doc.setTextColor(15, 23, 42);
 
@@ -353,10 +374,14 @@ export function generateOrderPdf(order, client = {}) {
         doc.text(String(value), xPos + 10, y + 30);
     };
 
-    const boxW = (contentW - 20) / 3;
+    const boxW = (contentW - 30) / 4;
     drawInfoBox("Nature", pType, margin, boxW);
     drawInfoBox("Poids", String(pWeight).includes("kg") ? String(pWeight) : `${pWeight} kg`, margin + boxW + 10, boxW);
     drawInfoBox("Description", pDims, margin + (boxW + 10) * 2, boxW);
+
+    // Add Price Box
+    const priceDisplay = order.price_ht || order.price ? `${Number(order.price_ht || order.price).toFixed(2)} € HT` : "Sur Devis";
+    drawInfoBox("Prix Total", priceDisplay, margin + (boxW + 10) * 3, boxW);
 
     y += 60;
 
@@ -388,7 +413,7 @@ export function generateOrderPdf(order, client = {}) {
         doc.setFont("helvetica", "bold");
         doc.setFontSize(10);
         doc.setTextColor(100, 116, 139);
-        doc.text("NOTES COMPLÉMENTAIRES:", margin, y);
+        doc.text("INSTRUCTIONS CHAUFFEUR:", margin, y);
 
         y += 10;
         const cleanNotesLines = doc.splitTextToSize(displayNotes, contentW - 30);

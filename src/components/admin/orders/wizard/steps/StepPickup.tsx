@@ -477,13 +477,13 @@ export const StepPickup = ({ formData, updateFormData, onNext, clients, mode, on
 
                     <div className="space-y-1">
                         <Label htmlFor="pickupInstructions" className="flex items-center gap-2 mb-1 text-xs text-gray-500 uppercase font-semibold">
-                            Instructions Chauffeur (Départ)
+                            Code, Étage, Instructions
                         </Label>
                         <Textarea
                             id="pickupInstructions"
                             value={formData.pickupInstructions}
                             onChange={(e) => updateFormData({ pickupInstructions: e.target.value })}
-                            placeholder="Ex: Sonner à l'interphone 'Bureau 4'..."
+                            placeholder="Ex: Code A, Étage 2, Sonner à l'interphone..."
                             className="text-sm focus-visible:ring-[#0B1525] min-h-[60px]"
                         />
                     </div>

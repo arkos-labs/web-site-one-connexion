@@ -652,6 +652,22 @@ const OrdersAdmin = () => {
                           </Button>
                         )}
 
+                        {/* Télécharger PDF */}
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          title="Télécharger Bon de Commande"
+                          onClick={async () => {
+                            const { generateOrderPdf } = await import('@/lib/pdfGenerator');
+                            // Le tableau des clients dans OrdersAdmin est limité. 
+                            // Si le client manque d'info, pdfGenerator utilise les facturation/client de la commande
+                            generateOrderPdf(order, order.clients || order.facturation || {});
+                          }}
+                          className="text-slate-500 hover:text-slate-900"
+                        >
+                          <Truck className="h-4 w-4" />
+                        </Button>
+
                         {/* Annuler */}
                         {canCancelOrder(order) && (
                           <Button

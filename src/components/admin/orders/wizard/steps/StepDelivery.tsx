@@ -84,7 +84,7 @@ export const StepDelivery = ({ formData, updateFormData, onNext, onBack }: StepD
                     </div>
                     <div className="space-y-1">
                         <Label htmlFor="deliveryInstructions" className="flex items-center gap-2 mb-1.5 text-xs text-gray-500 uppercase font-semibold">
-                            Instructions (Code, Étage...)
+                            Code, Étage, Instructions
                         </Label>
                         <Input
                             id="deliveryInstructions"

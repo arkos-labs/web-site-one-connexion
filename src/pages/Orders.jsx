@@ -338,8 +338,8 @@ export default function Orders() {
                           <input className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm bg-white" placeholder="01..." value={form.pickupPhone} onChange={(e) => setForm({ ...form, pickupPhone: e.target.value })} />
                         </div>
                         <div className="space-y-1">
-                          <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Code / Étage</label>
-                          <input className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm bg-white" placeholder="Bâtiment 2..." value={form.pickupAccessCode} onChange={(e) => setForm({ ...form, pickupAccessCode: e.target.value })} />
+                          <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Code, Étage, Instructions</label>
+                          <input className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm bg-white" placeholder="Bât. A, 2ème étage..." value={form.pickupInstructions} onChange={(e) => setForm({ ...form, pickupInstructions: e.target.value })} />
                         </div>
                       </div>
                       <div className="space-y-1 relative">
@@ -400,8 +400,8 @@ export default function Orders() {
                           <input className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm bg-white" placeholder="06..." value={form.deliveryPhone} onChange={(e) => setForm({ ...form, deliveryPhone: e.target.value })} />
                         </div>
                         <div className="space-y-1">
-                          <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Code / Étage</label>
-                          <input className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm bg-white" placeholder="Bâtiment 2..." value={form.deliveryAccessCode} onChange={(e) => setForm({ ...form, deliveryAccessCode: e.target.value })} />
+                          <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Code, Étage, Instructions</label>
+                          <input className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm bg-white" placeholder="Bât. B, code 1234..." value={form.deliveryInstructions} onChange={(e) => setForm({ ...form, deliveryInstructions: e.target.value })} />
                         </div>
                       </div>
                       <div className="space-y-1 relative">
@@ -480,20 +480,19 @@ export default function Orders() {
                     >
                       {["Pli", "Colis", "Palette", "Sac", "Matériel", "Autre"].map(t => <option key={t} value={t}>{t}</option>)}
                     </select>
-                    <input className="rounded-xl border border-slate-200 px-3 py-2 text-sm bg-white" placeholder="Poids (kg)" value={form.packageWeight} onChange={(e) => setForm({ ...form, packageWeight: e.target.value })} />
+                    <select
+                      className="rounded-xl border border-slate-200 px-3 py-2 text-sm bg-white"
+                      value={form.packageWeight}
+                      onChange={(e) => setForm({ ...form, packageWeight: e.target.value })}
+                    >
+                      <option value="" disabled>Poids (kg)</option>
+                      {Array.from({ length: 30 }, (_, i) => i + 1).map(w => (
+                        <option key={w} value={w}>{w} kg</option>
+                      ))}
+                      <option value="+30">+ de 30 kg</option>
+                    </select>
                   </div>
                   <input className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm bg-white" placeholder="Contenu (ex: Documents d'audit)" value={form.packageDesc} onChange={(e) => setForm({ ...form, packageDesc: e.target.value })} />
-                </div>
-                <div className="space-y-4">
-                  <h3 className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Instructions Chauffeur</h3>
-                  <textarea
-                    rows={1}
-                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm bg-white min-h-[42px]"
-                    placeholder="Ex: Demander le Bureau 4 au RDC..."
-                    value={form.pickupInstructions}
-                    onChange={(e) => setForm({ ...form, pickupInstructions: e.target.value })}
-                  />
-                  <div className="text-[10px] text-slate-400 italic">Ces informations sont transmises en temps réel au chauffeur.</div>
                 </div>
               </div>
 

@@ -461,17 +461,7 @@ export default function GuestOrder() {
                                         </div>
                                     </div>
 
-                                    <div className="grid gap-6 md:grid-cols-1">
-                                        <div className="space-y-1.5">
-                                            <label className="text-xs font-bold uppercase tracking-widest text-slate-400">Code / Étage</label>
-                                            <input
-                                                placeholder="Ex: 1234, 2ème étage"
-                                                className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-3.5 text-sm font-medium focus:bg-white focus:outline-none focus:ring-4 focus:ring-slate-100 transition-all"
-                                                value={form.pickupCode}
-                                                onChange={(e) => setForm({ ...form, pickupCode: e.target.value })}
-                                            />
-                                        </div>
-                                    </div>
+                                    {/* Code / Étage field removed */}
 
                                     <div className="relative space-y-1.5">
                                         <label className="text-xs font-bold uppercase tracking-widest text-slate-400">Adresse exacte</label>
@@ -525,9 +515,9 @@ export default function GuestOrder() {
                                     </div>
 
                                     <div className="space-y-1.5">
-                                        <label className="text-xs font-bold uppercase tracking-widest text-slate-400">Instructions chauffeur</label>
+                                        <label className="text-xs font-bold uppercase tracking-widest text-slate-400">Code, Étage, Instructions</label>
                                         <input
-                                            placeholder="Ex: devant la porte"
+                                            placeholder="Ex: Bâtiment A, 2ème étage, devant la porte..."
                                             className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-3.5 text-sm font-medium focus:bg-white focus:outline-none focus:ring-4 focus:ring-slate-100 transition-all"
                                             value={form.pickupInstructions}
                                             onChange={(e) => setForm({ ...form, pickupInstructions: e.target.value })}
@@ -621,9 +611,9 @@ export default function GuestOrder() {
                                             />
                                         </div>
                                         <div className="space-y-1.5">
-                                            <label className="text-xs font-bold uppercase tracking-widest text-slate-400">Instructions</label>
+                                            <label className="text-xs font-bold uppercase tracking-widest text-slate-400">Code, Étage, Instructions</label>
                                             <input
-                                                placeholder="Ex: Sonner à l'accueil"
+                                                placeholder="Ex: Code 1234, Bâtiment B..."
                                                 className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-3.5 text-sm font-medium focus:bg-white focus:outline-none focus:ring-4 focus:ring-slate-100 transition-all"
                                                 value={form.deliveryInstructions}
                                                 onChange={(e) => setForm({ ...form, deliveryInstructions: e.target.value })}
@@ -672,11 +662,10 @@ export default function GuestOrder() {
                                             onChange={(e) => setForm({ ...form, packageWeight: e.target.value })}
                                         >
                                             <option value="">Sélectionner</option>
-                                            <option value="< 1kg">Moins de 1kg</option>
-                                            <option value="1kg - 5kg">1kg - 5kg</option>
-                                            <option value="5kg - 10kg">5kg - 10kg</option>
-                                            <option value="10kg - 30kg">10kg - 30kg</option>
-                                            <option value="+ 30kg">Plus de 30kg</option>
+                                            {Array.from({ length: 30 }, (_, i) => i + 1).map(w => (
+                                                <option key={w} value={w}>{w} kg</option>
+                                            ))}
+                                            <option value="+30">+ de 30 kg</option>
                                         </select>
                                     </div>
                                     <div className="md:col-span-2 space-y-1.5">

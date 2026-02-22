@@ -49,15 +49,20 @@ export const StepPackage = ({ formData, updateFormData, onNext, onBack }: StepPa
 
                         <div>
                             <Label htmlFor="weight" className="mb-2 block text-[#0B1525] font-medium">Poids estimé (kg)</Label>
-                            <Input
-                                id="weight"
-                                type="number"
-                                min="0"
-                                step="0.1"
-                                value={formData.weight}
-                                onChange={(e) => updateFormData({ weight: parseFloat(e.target.value) || 0 })}
-                                className="focus-visible:ring-[#0B1525]"
-                            />
+                            <Select
+                                value={String(formData.weight || "")}
+                                onValueChange={(value) => updateFormData({ weight: parseFloat(value) || 0 })}
+                            >
+                                <SelectTrigger className="focus:ring-[#0B1525]" id="weight">
+                                    <SelectValue placeholder="Sélectionner un poids" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {Array.from({ length: 30 }, (_, i) => i + 1).map(w => (
+                                        <SelectItem key={w} value={String(w)}>{w} kg</SelectItem>
+                                    ))}
+                                    <SelectItem value="30.1">+ de 30 kg</SelectItem>
+                                </SelectContent>
+                            </Select>
                         </div>
 
                         <div>
@@ -72,16 +77,6 @@ export const StepPackage = ({ formData, updateFormData, onNext, onBack }: StepPa
                         </div>
                     </div>
 
-                    <div>
-                        <Label htmlFor="notes" className="mb-2 block text-gray-600">Notes de livraison</Label>
-                        <Textarea
-                            id="notes"
-                            placeholder="Instructions spéciales, code d'accès, étage..."
-                            className="h-[200px] resize-none focus-visible:ring-[#0B1525]"
-                            value={formData.notes}
-                            onChange={(e) => updateFormData({ notes: e.target.value })}
-                        />
-                    </div>
                 </div>
             </div>
 
