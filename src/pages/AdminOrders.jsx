@@ -210,7 +210,10 @@ export default function AdminOrders() {
     return sortOrders(list);
   }, [historyOrders, statusFilter, sortMode]);
 
-  const kanbanList = useMemo(() => sortOrders(activeOrders), [activeOrders, sortMode]);
+  const kanbanList = useMemo(
+    () => sortOrders(baseList.filter((o) => o.status !== "cancelled")),
+    [baseList, sortMode]
+  );
 
   const openDecision = (order, type) => {
     if (!order) return;
@@ -657,6 +660,13 @@ export default function AdminOrders() {
                         <div className="flex flex-col">
                           <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">BC-{o.id.slice(0, 8)}</span>
                           <h4 className="text-base font-black text-slate-900 group-hover:text-orange-500 transition-colors line-clamp-1">{o.client}</h4>
+                          <span className="mt-1 text-[10px] font-black uppercase tracking-widest text-slate-400">
+                            {o.status === "assigned" ? "En cours (à accepter)" :
+                             o.status === "driver_accepted" ? "Chauffeur a accepté" :
+                             o.status === "in_progress" ? "Chauffeur a enlevé" :
+                             o.status === "accepted" ? "À dispatcher" :
+                             o.status === "delivered" ? "Livrée" : o.status}
+                          </span>
                         </div>
                         {o.isGuest && (
                           <div className="h-2 w-2 rounded-full bg-rose-500 animate-pulse shadow-[0_0_8px_rgba(244,63,94,0.5)]"></div>
