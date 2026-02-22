@@ -47,6 +47,19 @@ export default function AdminOrders() {
   useEffect(() => {
     fetchData();
 
+    // Realtime: Orders updates (accept / picked_up / delivered)
+    const ordersChannel = supabase
+      .channel('admin-orders-realtime')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'orders' },
+        () => {
+          // Refresh instantly when driver updates status
+          fetchOrders();
+        }
+      )
+      .subscribe();
+
     // Subscribe to profile changes (online/offline status)
     const profileChannel = supabase
       .channel('profile-status-updates-' + Date.now()) // Use unique name
@@ -81,6 +94,7 @@ export default function AdminOrders() {
       .subscribe();
 
     return () => {
+      supabase.removeChannel(ordersChannel);
       supabase.removeChannel(profileChannel);
     };
   }, []);
