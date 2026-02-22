@@ -15,8 +15,9 @@ function clientStatusLabel(order) {
     case "accepted":
       return "Acceptée";
     case "assigned":
-      return "Dispatchée";
+      return "En attente acceptation";
     case "driver_accepted":
+      return "Accepté";
     case "in_progress":
       return "En cours";
     case "delivered":
@@ -153,7 +154,12 @@ export default function OrderDetails() {
             <h1 className="text-2xl font-bold text-slate-900">#{String(order.id || "").slice(0, 8)}</h1>
           </div>
           <div className="flex items-center gap-2">
-            <div className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wide ${order.status === 'delivered' ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-900 text-white'}`}>
+            <div className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wide ${order.status === 'delivered' ? 'bg-slate-100 text-slate-600' :
+                order.status === 'driver_accepted' ? 'bg-emerald-50 text-emerald-600' :
+                  order.status === 'assigned' ? 'bg-amber-50 text-amber-600' :
+                    order.status === 'in_progress' ? 'bg-blue-50 text-blue-600' :
+                      'bg-slate-900 text-white'
+              }`}>
               {clientStatusLabel(order) || "—"}
             </div>
             <button

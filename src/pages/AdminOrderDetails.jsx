@@ -268,7 +268,22 @@ export default function AdminOrderDetails() {
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <div className="rounded-full bg-slate-100 px-3 py-1 text-[10px] font-bold uppercase tracking-wide text-slate-900 ring-1 ring-slate-200">{order.status}</div>
+          {(() => {
+            const statusConfig = {
+              "pending": { label: "Nouveau", color: "bg-rose-50 text-rose-600 ring-rose-200" },
+              "accepted": { label: "Validé", color: "bg-indigo-50 text-indigo-600 ring-indigo-200" },
+              "assigned": { label: "En attente acceptation", color: "bg-amber-50 text-amber-600 ring-amber-200" },
+              "driver_accepted": { label: "Accepté", color: "bg-emerald-50 text-emerald-600 ring-emerald-200" },
+              "in_progress": { label: "Enlevée", color: "bg-blue-50 text-blue-600 ring-blue-200" },
+              "delivered": { label: "Livrée", color: "bg-slate-100 text-slate-600 ring-slate-200" }
+            };
+            const config = statusConfig[order.status] || { label: order.status, color: "bg-slate-100 text-slate-900 ring-slate-200" };
+            return (
+              <div className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wide ring-1 ${config.color}`}>
+                {config.label}
+              </div>
+            );
+          })()}
 
           <button
             onClick={() => generateOrderPdf(order, client)}
@@ -472,7 +487,12 @@ export default function AdminOrderDetails() {
           <div className="mt-3 text-4xl font-bold text-slate-900">{Number(order.price_ht || 0).toFixed(2)}€</div>
           <div className="mt-6 rounded-2xl bg-slate-50 p-4">
             <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Statut</div>
-            <div className="mt-2 text-sm font-semibold text-slate-900">{order.status}</div>
+            <div className="mt-2 text-sm font-semibold text-slate-900">
+              {{
+                "pending": "Nouveau", "accepted": "Validé", "assigned": "En attente acceptation",
+                "driver_accepted": "Accepté", "in_progress": "Enlevée", "delivered": "Livrée"
+              }[order.status] || order.status}
+            </div>
           </div>
           <div className="mt-4 rounded-2xl bg-slate-50 p-4">
             <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Infos chauffeur & accès</div>

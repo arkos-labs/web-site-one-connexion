@@ -12,8 +12,8 @@ function clientStatusLabel(order) {
     case "pending_acceptance":
     case "pending": return "En attente";
     case "accepted": return "Acceptée";
-    case "assigned": return "Dispatchée";
-    case "driver_accepted":
+    case "assigned": return "En attente acceptation";
+    case "driver_accepted": return "Accepté";
     case "in_progress": return "En cours";
     case "delivered": return "Terminée";
     case "cancelled": return "Annulée";
@@ -25,11 +25,11 @@ function statusColor(status) {
   switch (status) {
     case "pending_acceptance":
     case "pending": return "bg-slate-100 text-slate-600";
-    case "accepted":
-    case "assigned": return "bg-blue-50 text-blue-600";
-    case "driver_accepted":
-    case "in_progress": return "bg-orange-50 text-orange-600";
-    case "delivered": return "bg-emerald-50 text-emerald-600";
+    case "accepted": return "bg-indigo-50 text-indigo-600";
+    case "assigned": return "bg-amber-50 text-amber-600";
+    case "driver_accepted": return "bg-emerald-50 text-emerald-600";
+    case "in_progress": return "bg-blue-50 text-blue-600";
+    case "delivered": return "bg-slate-100 text-slate-600";
     case "cancelled": return "bg-red-50 text-red-600";
     default: return "bg-slate-100";
   }
