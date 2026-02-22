@@ -43,32 +43,42 @@ export default function AdminAssistant() {
   return (
     <div className="fixed bottom-6 right-6 z-50">
       {!open ? (
-        <Button onClick={() => setOpen(true)} className="rounded-full h-12 w-12 p-0 shadow-lg">
+        <Button
+          onClick={() => setOpen(true)}
+          className="rounded-full h-12 w-12 p-0 shadow-xl bg-slate-900 hover:bg-slate-800"
+        >
           <MessageCircle className="h-5 w-5" />
         </Button>
       ) : (
-        <Card className="w-[360px] h-[480px] flex flex-col shadow-2xl">
-          <div className="p-4 border-b flex items-center justify-between">
-            <div className="font-bold">Assistant Admin</div>
-            <Button variant="ghost" size="sm" onClick={() => setOpen(false)}>Fermer</Button>
+        <Card className="w-[380px] h-[520px] flex flex-col shadow-2xl border border-white/10 bg-slate-900/90 text-white backdrop-blur-xl">
+          <div className="p-4 border-b border-white/10 flex items-center justify-between">
+            <div className="font-black tracking-tight">Assistant Admin</div>
+            <Button variant="ghost" size="sm" onClick={() => setOpen(false)} className="text-white/70 hover:text-white">Fermer</Button>
           </div>
-          <div className="flex-1 p-4 overflow-y-auto space-y-3 bg-slate-50">
+          <div className="flex-1 p-4 overflow-y-auto space-y-3 bg-transparent">
             {messages.map((m, i) => (
               <div key={i} className={m.role === "user" ? "text-right" : "text-left"}>
-                <div className={`inline-block px-3 py-2 rounded-2xl text-sm ${m.role === "user" ? "bg-slate-900 text-white" : "bg-white text-slate-900 border"}`}>
+                <div
+                  className={`inline-block px-3 py-2 rounded-2xl text-sm ${
+                    m.role === "user"
+                      ? "bg-orange-500 text-white"
+                      : "bg-white/10 text-white border border-white/10"
+                  }`}
+                >
                   {m.content}
                 </div>
               </div>
             ))}
           </div>
-          <div className="p-3 border-t flex gap-2">
+          <div className="p-3 border-t border-white/10 flex gap-2">
             <Input
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Écris ici..."
+              className="bg-white/10 border-white/10 text-white placeholder:text-white/50"
               onKeyDown={(e) => e.key === "Enter" && sendMessage()}
             />
-            <Button onClick={sendMessage} disabled={loading}>
+            <Button onClick={sendMessage} disabled={loading} className="bg-orange-500 hover:bg-orange-600">
               {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Envoyer"}
             </Button>
           </div>

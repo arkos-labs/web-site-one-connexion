@@ -3,7 +3,6 @@ import { useEffect, useMemo, useState, useRef } from "react";
 import { supabase } from "../lib/supabase";
 import { Search, X, MapPin, BookOpen, Bell, Activity, Truck, Shield, CheckCircle as CheckIcon } from "lucide-react";
 import { autocompleteAddress } from "../lib/autocomplete";
-import AdminAssistant from "@/components/admin/AdminAssistant";
 
 const LOCATIONIQ_KEY = import.meta.env.VITE_LOCATIONIQ_API_KEY;
 const LOCATIONIQ_URL = "https://api.locationiq.com/v1/autocomplete";
@@ -643,7 +642,6 @@ export default function DashboardAdmin() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 stagger">
-        <AdminAssistant />
             <div className="lg:col-span-3 bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden flex flex-col min-h-[600px]">
               <div className="px-8 py-6 border-b border-slate-50 flex flex-wrap items-center justify-between gap-4">
                 <div>

@@ -6,6 +6,7 @@ import { Menu } from "lucide-react";
 import { useState } from "react";
 import { useNewOrderNotifications } from "@/hooks/useNewOrderNotifications";
 import { useNavigate } from "react-router-dom";
+import AdminAssistant from "@/components/admin/AdminAssistant";
 
 interface DashboardLayoutProps {
   type: "client" | "admin";
@@ -67,6 +68,7 @@ const DashboardLayout = ({ type }: DashboardLayoutProps) => {
           <div className="container mx-auto px-4 py-6 md:px-8 md:py-8 max-w-7xl">
             <Outlet />
           </div>
+          {type === "admin" && <AdminAssistant />}
         </main>
       </div>
     </div>

@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { OrderWizardModal } from "@/components/admin/orders/wizard/OrderWizardModal";
 import { AdminActivityTimeline } from "@/components/admin/AdminActivityTimeline";
-import AdminAssistant from "@/components/admin/AdminAssistant";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -230,7 +229,6 @@ const DashboardAdmin = () => {
 
   return (
     <div className="space-y-6 sm:space-y-8 pb-8 sm:pb-12 font-sans">
-      <AdminAssistant />
       {/* Header */}
       <div className="flex flex-col xl:flex-row xl:items-end xl:justify-between gap-6 border-b border-gray-200 pb-6">
         <div>

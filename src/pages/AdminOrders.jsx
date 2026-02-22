@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import { downloadOrderPdf } from "./adminPdf.js";
-import AdminAssistant from "@/components/admin/AdminAssistant";
 import { Loader2, Search, X, FileText, Check, MoreVertical, Phone, Video, Send } from "lucide-react";
 
 export default function AdminOrders() {
@@ -428,7 +427,6 @@ export default function AdminOrders() {
 
   return (
     <div className="space-y-8 pb-20">
-      <AdminAssistant />
       <header className="flex flex-wrap items-center justify-between gap-6">
         <div className="animate-in fade-in slide-in-from-left-4 duration-700">
           <h2 className="text-4xl font-black tracking-tight text-slate-900">Missions Fleet</h2>
