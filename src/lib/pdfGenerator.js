@@ -216,13 +216,15 @@ export function generateOrderPdf(order, client = {}) {
     // Pickup
     const pickupName = order.pickup_name || nEntreprisePick || nContactPick || "—";
     const pickupAddr = order.pickup_address || order.pickup || "—";
-    const pCode = order.pickup_access_code || notesStr.match(/(?:Code Enlev:|Code :|Code:)\s?([^.]+)/)?.[1]?.trim();
+    const pCode = order.pickup_access_code
+        || notesStr.match(/(?:Code Enlev:|Code Enlèv:|Code :|Code:|Code\/étage:|Code\/etage:|Accès:|Acces:)\s?([^.]+)/i)?.[1]?.trim();
     const pEmail = nEmailEnlev;
     const pPhone = order.pickup_phone || nPhonePick || notesStr.match(/Phone: ([\d\s]+)/)?.[1];
+    const pNote = order.pickup_instructions || nPNote;
 
     let pickupBoxH = 65;
     if (order.scheduled_at) pickupBoxH += 15;
-    if (nPNote && nPNote !== "—") pickupBoxH += 15;
+    if (pNote && pNote !== "—") pickupBoxH += 15;
     if (pCode) pickupBoxH += 15;
     if (pEmail || pPhone) pickupBoxH += 15;
     pickupBoxH += 15; // Pour la date
@@ -273,10 +275,10 @@ export function generateOrderPdf(order, client = {}) {
         doc.text(`CODE ACCÈS : ${pCode}`, margin + 15, currentY);
         currentY += 15;
     }
-    if (nPNote && nPNote !== "—") {
+    if (pNote && pNote !== "—") {
         doc.setFont("helvetica", "oblique");
         doc.setTextColor(100, 116, 139);
-        doc.text(`Instructions : ${nPNote}`, margin + 15, currentY);
+        doc.text(`Instructions : ${pNote}`, margin + 15, currentY);
     }
     doc.setTextColor(15, 23, 42);
 
@@ -289,12 +291,14 @@ export function generateOrderPdf(order, client = {}) {
 
     const deliveryName = order.delivery_name || nEntrepriseDeliv || nContactDeliv || "—";
     const deliveryAddr = order.delivery_address || order.delivery || "—";
-    const dCode = order.delivery_access_code || notesStr.match(/(?:Code Dest:|Code Deliv:)\s?([^.]+)/)?.[1]?.trim();
+    const dCode = order.delivery_access_code
+        || notesStr.match(/(?:Code Dest:|Code Deliv:|Code :|Code:|Code\/étage:|Code\/etage:|Accès:|Acces:)\s?([^.]+)/i)?.[1]?.trim();
     const dPhone = order.delivery_phone || nPhoneDeliv;
+    const dNote = order.delivery_instructions || nDNote;
 
     let deliveryBoxH = 65;
     if (order.delivery_deadline) deliveryBoxH += 15;
-    if (nDNote && nDNote !== "—") deliveryBoxH += 15;
+    if (dNote && dNote !== "—") deliveryBoxH += 15;
     if (dCode) deliveryBoxH += 15;
     if (dPhone) deliveryBoxH += 15;
     deliveryBoxH += 15; // Pour la date
@@ -345,10 +349,10 @@ export function generateOrderPdf(order, client = {}) {
         doc.text(`CODE ACCÈS : ${dCode}`, margin + 15, currentY);
         currentY += 15;
     }
-    if (nDNote && nDNote !== "—") {
+    if (dNote && dNote !== "—") {
         doc.setFont("helvetica", "oblique");
         doc.setTextColor(100, 116, 139);
-        doc.text(`Instructions : ${nDNote}`, margin + 15, currentY);
+        doc.text(`Instructions : ${dNote}`, margin + 15, currentY);
     }
     doc.setTextColor(15, 23, 42);
 
