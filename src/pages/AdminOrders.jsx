@@ -110,8 +110,11 @@ export default function AdminOrders() {
             isGuest = true;
           }
 
+          const normalizedStatus = (o.status === 'accepted' && o.driver_id) ? 'assigned' : o.status;
+
           return {
             ...o,
+            status: normalizedStatus,
             client: clientName,
             isGuest,
             total: o.price_ht,
