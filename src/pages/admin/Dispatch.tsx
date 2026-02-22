@@ -79,8 +79,7 @@ export default function Dispatch() {
     // Listes séparées pour l'affichage Drag & Drop (simulé ici par colonnes)
     const [pendingOrders, setPendingOrders] = useState<Order[]>([]);
     const [acceptedOrders, setAcceptedOrders] = useState<Order[]>([]); // "À Dispatcher" (Acceptée par Admin)
-    const [dispatchedOrders, setDispatchedOrders] = useState<Order[]>([]); // "En Attribution" (Envoyée au chauffeur)
-    const [driverAcceptedOrders, setDriverAcceptedOrders] = useState<Order[]>([]); // "Acceptée par Chauffeur" (En cours)
+    const [driverAcceptedOrders, setDriverAcceptedOrders] = useState<Order[]>([]); // "En cours" (dispatché / accepté / en livraison)
     const [inProgressOrders, setInProgressOrders] = useState<Order[]>([]); // "En Livraison"
 
     const [drivers, setDrivers] = useState<Driver[]>([]);
@@ -119,7 +118,7 @@ export default function Dispatch() {
 
         // Cas 1.2: Commande assignée (assigned) qui revient à 'accepted' (probablement désassignée manuellement)
         if (updatedOrder.status === 'accepted' && oldOrder?.status === 'assigned') {
-            setDispatchedOrders(prev => prev.filter(o => o.id !== updatedOrder.id));
+            setDriverAcceptedOrders(prev => prev.filter(o => o.id !== updatedOrder.id));
             setAcceptedOrders(prev => {
                 const exists = prev.find(o => o.id === updatedOrder.id);
                 if (exists) return prev.map(o => o.id === updatedOrder.id ? updatedOrder : o);
@@ -187,9 +186,9 @@ export default function Dispatch() {
                 }
             );
 
-            // Retirer de accepted et ajouter à assigned/assigned
+            // Retirer de accepted et ajouter à "En cours"
             setAcceptedOrders(prev => prev.filter(o => o.id !== updatedOrder.id));
-            setDispatchedOrders(prev => {
+            setDriverAcceptedOrders(prev => {
                 const exists = prev.find(o => o.id === updatedOrder.id);
                 if (exists) return prev.map(o => o.id === updatedOrder.id ? updatedOrder : o);
                 return [...prev, updatedOrder];
@@ -211,8 +210,7 @@ export default function Dispatch() {
                 }
             );
 
-            // Retirer de "En Attribution" et ajouter à "Acceptées"
-            setDispatchedOrders(prev => prev.filter(o => o.id !== updatedOrder.id));
+            // Mettre à jour dans "En cours"
             setDriverAcceptedOrders(prev => {
                 const exists = prev.find(o => o.id === updatedOrder.id);
                 if (exists) return prev.map(o => o.id === updatedOrder.id ? updatedOrder : o);
@@ -236,7 +234,6 @@ export default function Dispatch() {
                 { duration: 3000 }
             );
 
-            setDispatchedOrders(prev => prev.filter(o => o.id !== updatedOrder.id));
             setDriverAcceptedOrders(prev => prev.filter(o => o.id !== updatedOrder.id));
             setInProgressOrders(prev => prev.filter(o => o.id !== updatedOrder.id));
             setAcceptedOrders(prev => prev.filter(o => o.id !== updatedOrder.id));
@@ -262,15 +259,12 @@ export default function Dispatch() {
                 }
             );
 
-            // Retirer la commande des colonnes "Acceptées par chauffeur" et "En Cours" et "Acceptées"
+            // Retirer la commande des colonnes "Acceptées" et "En Cours"
             setAcceptedOrders(prev => prev.filter(o => o.id !== updatedOrder.id));
-            setDriverAcceptedOrders(prev => prev.filter(o => o.id !== updatedOrder.id));
             setInProgressOrders(prev => prev.filter(o => o.id !== updatedOrder.id));
 
-            // Remettre la commande dans "En Attribution" avec le statut actuel (driver_refused)
-            // Cela permet à l'admin de voir clairement que cette course a été refusée et doit être réattribuée
-            // Ajouter à la colonne "En Attribution" pour réassignation
-            setDispatchedOrders(prev => {
+            // Garder la commande dans "En cours" pour réassignation
+            setDriverAcceptedOrders(prev => {
                 const filtered = prev.filter(o => o.id !== updatedOrder.id);
                 return [...filtered, updatedOrder];
             });
@@ -454,7 +448,6 @@ export default function Dispatch() {
 
         const orders = data || [];
         const accepted: Order[] = [];
-        const assigned: Order[] = [];
         const driverAccepted: Order[] = [];
         const inProgress: Order[] = [];
         const deliveriesMap: Record<string, Order> = {};
@@ -463,10 +456,7 @@ export default function Dispatch() {
             switch (order.status) {
                 case 'accepted': accepted.push(order); break;
                 case 'assigned':
-                case 'driver_refused': // Les commandes refusées sont aussi affichées dans "En Attribution"
-                    assigned.push(order);
-                    if (order.driver_id) deliveriesMap[order.driver_id] = order;
-                    break;
+                case 'driver_refused':
                 case 'driver_accepted':
                 case 'in_progress':
                     driverAccepted.push(order);
@@ -485,7 +475,6 @@ export default function Dispatch() {
         };
 
         setAcceptedOrders(sortOrders(accepted));
-        setDispatchedOrders(assigned);
         setDriverAcceptedOrders(driverAccepted);
         setInProgressOrders(inProgress);
         setActiveDeliveries(deliveriesMap);
@@ -549,7 +538,7 @@ export default function Dispatch() {
 
                 // Optimistic + cohérent avec la DB
                 setAcceptedOrders(prev => prev.filter(o => o.id !== orderId));
-                setDispatchedOrders(prev => {
+                setDriverAcceptedOrders(prev => {
                     const exists = prev.find(o => o.id === orderId);
                     if (exists) return prev.map(o => o.id === orderId ? { ...o, status: 'assigned', driver_id: driverUserId } : o);
                     const moved = acceptedOrders.find(o => o.id === orderId);
@@ -641,7 +630,7 @@ export default function Dispatch() {
 
             {/* KANBAN BOARD */}
             <div className="flex-1 p-6 overflow-hidden">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 h-full">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
 
                     {/* COLONNE 1 : À TRAITER */}
                     <div className="flex flex-col h-full bg-slate-100/50 rounded-xl border border-slate-200">
@@ -707,90 +696,7 @@ export default function Dispatch() {
                         </ScrollArea>
                     </div>
 
-                    {/* COLONNE 2 : EN ATTENTE REPONSE */}
-                    <div className="flex flex-col h-full bg-slate-100/50 rounded-xl border border-slate-200">
-                        <div className="p-3 border-b bg-white rounded-t-xl flex justify-between items-center sticky top-0">
-                            <h3 className="font-semibold text-slate-700 flex items-center gap-2">
-                                <div className="w-2 h-2 rounded-full bg-blue-500" />
-                                En Attente
-                            </h3>
-                            <Badge variant="secondary" className="bg-slate-100">{dispatchedOrders.length}</Badge>
-                        </div>
-
-                        <ScrollArea className="flex-1 p-3">
-                            <div className="space-y-3">
-                                {dispatchedOrders.length === 0 && (
-                                    <div className="text-center py-12 text-slate-400 text-sm">Aucune attente</div>
-                                )}
-                                {dispatchedOrders.map(order => {
-                                    // Robust driver lookup
-                                    const driver = availableDrivers.find(d =>
-                                        d.id === order.driver_id ||
-                                        d.user_id === order.driver_id ||
-                                        d.id === order.assigned_driver_id
-                                    );
-                                    const isRefused = order.status === 'driver_refused';
-                                    const refusalCount = orderRefusals.get(order.id)?.refusalCount || 0;
-
-                                    return (
-                                        <Card key={order.id} className={`p-3 border-l-4 ${isRefused ? 'border-l-red-500 bg-red-50/50' : 'border-l-blue-500 bg-white'}`}>
-                                            <div className="flex justify-between items-center mb-3">
-                                                <span className="font-mono text-xs font-medium text-slate-500">{order.reference}</span>
-                                                {isRefused ? (
-                                                    <Badge variant="destructive" className="h-5 text-[10px]">Refusé ({refusalCount})</Badge>
-                                                ) : (
-                                                    <span className="text-[10px] text-blue-600 font-medium animate-pulse flex items-center gap-1">
-                                                        <Clock className="w-3 h-3" />
-                                                        Réponse...
-                                                    </span>
-                                                )}
-                                            </div>
-
-                                            <div className="space-y-1.5 mb-3 text-xs border-b pb-2 border-slate-100">
-                                                <div className="flex items-start gap-2 text-slate-700">
-                                                    <div className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-1.5 shrink-0" />
-                                                    <span className="line-clamp-2">{order.pickup_address}</span>
-                                                </div>
-                                                <div className="pl-0.5 ml-[3px] border-l border-slate-200 h-2" />
-                                                <div className="flex items-start gap-2 text-slate-700">
-                                                    <div className="w-1.5 h-1.5 rounded-full bg-slate-900 mt-1.5 shrink-0" />
-                                                    <span className="line-clamp-2">{order.delivery_address}</span>
-                                                </div>
-                                            </div>
-
-                                            <div className="flex items-center gap-3 mb-3">
-                                                <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-600">
-                                                    {driver ? `${driver.first_name?.[0] || ''}${(driver.last_name?.[0]) || ''}`.toUpperCase() : "?"}
-                                                </div>
-                                                <div className="min-w-0">
-                                                    <p className="text-sm font-medium truncate">
-                                                        {driver ? `${driver.first_name} ${driver.last_name || ''}`.trim() : 'Chauffeur inconnu'}
-                                                    </p>
-                                                    <p className="text-xs text-slate-500">
-                                                        {isRefused ? "A refusé la course" : "Doit accepter"}
-                                                    </p>
-                                                </div>
-                                            </div>
-
-                                            {isRefused ? (
-                                                <Button size="sm" variant="destructive" className="w-full h-7 text-xs"
-                                                    onClick={() => { setSelectedOrder(order); setIsAssignDialogOpen(true); }}>
-                                                    Réassigner
-                                                </Button>
-                                            ) : (
-                                                <Button size="sm" variant="ghost" className="w-full h-7 text-xs text-slate-400 hover:text-red-600 hover:bg-red-50"
-                                                    onClick={() => order.driver_id && handleUnassign(order.driver_id, order.id)}>
-                                                    Annuler
-                                                </Button>
-                                            )}
-                                        </Card>
-                                    );
-                                })}
-                            </div>
-                        </ScrollArea>
-                    </div>
-
-                    {/* COLONNE 3 : EN COURS */}
+                    {/* COLONNE 2 : EN COURS */}
                     <div className="flex flex-col h-full bg-slate-100/50 rounded-xl border border-slate-200">
                         <div className="p-3 border-b bg-white rounded-t-xl flex justify-between items-center sticky top-0">
                             <h3 className="font-semibold text-slate-700 flex items-center gap-2">
@@ -870,6 +776,11 @@ export default function Dispatch() {
                                                     )}
                                                 </div>
                                             </div>
+
+                                            <Button size="sm" variant="outline" className="w-full h-7 text-xs mb-2"
+                                                onClick={() => { setSelectedOrder(order); setIsAssignDialogOpen(true); }}>
+                                                Réassigner
+                                            </Button>
 
                                             <div className="text-[10px] text-right text-slate-400">
                                                 Maj: {new Date(order.updated_at).toLocaleTimeString()}
