@@ -642,8 +642,7 @@ export function generateInvoicePdf(invoice, orders = [], client = {}) {
     // Table Header (client invoice: minimal)
     const colX = {
         datetime: margin + 8,
-        from: margin + 230,
-        to: margin + 420,
+        cities: margin + 260,
         amount: pageW - margin - 10
     };
 
@@ -653,8 +652,7 @@ export function generateInvoicePdf(invoice, orders = [], client = {}) {
     doc.setFont("helvetica", "bold");
     doc.setFontSize(9.5);
     doc.text("DATE & HEURE", colX.datetime, y + 17);
-    doc.text("DÉPART (VILLE)", colX.from, y + 17);
-    doc.text("LIVRAISON (VILLE)", colX.to, y + 17);
+    doc.text("VILLE → VILLE", colX.cities, y + 17);
     doc.text("MONTANT HT", colX.amount, y + 17, { align: "right" });
 
     y += 34;
@@ -681,12 +679,12 @@ export function generateInvoicePdf(invoice, orders = [], client = {}) {
             ? `${parsedDate.toLocaleDateString("fr-FR")} ${parsedDate.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}`
             : "—";
 
-        const fromCity = (o.pickup_city || "—").toString().replace(/\s+/g, " ").trim().slice(0, 20);
-        const toCity = (o.delivery_city || "—").toString().replace(/\s+/g, " ").trim().slice(0, 20);
+        const fromCity = (o.pickup_city || "—").toString().replace(/\s+/g, " ").trim();
+        const toCity = (o.delivery_city || "—").toString().replace(/\s+/g, " ").trim();
+        const cities = `${fromCity} → ${toCity}`.slice(0, 40);
 
         doc.text(orderDate, colX.datetime, y);
-        doc.text(fromCity, colX.from, y);
-        doc.text(toCity, colX.to, y);
+        doc.text(cities, colX.cities, y);
         doc.setFont("helvetica", "bold");
         doc.text(`${price.toFixed(2)} €`, colX.amount, y, { align: "right" });
         doc.setFont("helvetica", "normal");
