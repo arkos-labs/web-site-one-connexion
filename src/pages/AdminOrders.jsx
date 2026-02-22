@@ -111,7 +111,9 @@ export default function AdminOrders() {
           }
 
           const hasDriver = !!(o.driver_id || o.assigned_driver_id);
-          const normalizedStatus = (o.status === 'accepted' && hasDriver) ? 'assigned' : o.status;
+          const normalizedStatus = (o.status === 'accepted' && hasDriver) ? 'assigned'
+            : (o.status === 'picked_up' || o.status === 'arrived_pickup') ? 'in_progress'
+            : o.status;
 
           return {
             ...o,
