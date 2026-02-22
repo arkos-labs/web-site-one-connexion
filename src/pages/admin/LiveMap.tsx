@@ -124,7 +124,7 @@ const LiveMap = () => {
             company_name
           )
         `)
-                .in("status", ["accepted", "dispatched", "in_progress"])
+                .in("status", ["accepted", "assigned", "in_progress"])
                 .or("pickup_lat.not.is.null,delivery_lat.not.is.null");
 
             if (error) throw error;
@@ -405,3 +405,5 @@ const LiveMap = () => {
 };
 
 export default LiveMap;
+
+

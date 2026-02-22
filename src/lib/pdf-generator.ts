@@ -110,7 +110,7 @@ export const generateOrderPDF = (order: Order, clientInfo: ClientInfo) => {
             statusText = 'En attente';
             statusColor = [255, 193, 7]; // Orange
             break;
-        case 'dispatched':
+        case 'assigned':
         case 'in_progress':
             statusText = 'En cours';
             statusColor = [33, 150, 243]; // Bleu
@@ -509,3 +509,5 @@ export const generateInvoicePDF = (invoice: Invoice, clientInfo: ClientInfo) => 
     // Télécharger le PDF
     doc.save(`facture-${invoice.reference}.pdf`);
 };
+
+

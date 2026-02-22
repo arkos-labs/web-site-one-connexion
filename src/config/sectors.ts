@@ -14,3 +14,5 @@ export const SECTOR_COLORS: Record<string, string> = {
     "Automobile": "#6366F1", // Indigo 500
     "Autre": "#9CA3AF", // Gray 400
 };
+
+

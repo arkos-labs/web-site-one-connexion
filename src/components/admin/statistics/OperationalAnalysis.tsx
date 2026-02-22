@@ -50,3 +50,5 @@ export const OperationalAnalysis = ({ data }: OperationalAnalysisProps) => {
         </Card>
     );
 };
+
+

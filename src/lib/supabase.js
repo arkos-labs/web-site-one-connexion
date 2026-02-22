@@ -13,3 +13,5 @@ export const supabase = createClient(
 );
 
 console.log("Supabase Client initialized:", supabaseUrl ? "OK" : "MISSING CONFIG");
+
+

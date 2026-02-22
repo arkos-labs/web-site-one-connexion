@@ -233,7 +233,7 @@ export default function DriverDashboard() {
 
     const getStatusBadge = (status: string) => {
         const variants: Record<string, { label: string; className: string }> = {
-            dispatched: { label: 'Nouvelle', className: 'bg-orange-100 text-orange-700 border-orange-200' },
+            assigned: { label: 'Nouvelle', className: 'bg-orange-100 text-orange-700 border-orange-200' },
             driver_accepted: { label: 'Acceptée', className: 'bg-teal-100 text-teal-700 border-teal-200' },
             in_progress: { label: 'En cours', className: 'bg-blue-100 text-blue-700 border-blue-200' },
         };
@@ -306,7 +306,7 @@ export default function DriverDashboard() {
                             </div>
 
                             <div className="flex gap-2 pt-4 border-t">
-                                {order.status === 'dispatched' && (
+                                {order.status === 'assigned' && (
                                     <>
                                         <Button
                                             onClick={() => handleDeclineOrder(order.id)}
@@ -381,3 +381,5 @@ export default function DriverDashboard() {
         </div>
     );
 }
+
+

@@ -185,7 +185,7 @@ export default function AdminDriverDetails() {
           clientName: 'Client',
           route: `${o.pickup_city || ''} → ${o.delivery_city || ''}`,
           displayDate: o.scheduled_at ? new Date(o.scheduled_at).toLocaleDateString() : '—',
-          displayStatus: o.status === 'delivered' ? 'Terminée' : (['picked_up', 'in_progress', 'dispatched', 'driver_accepted'].includes(o.status) ? 'En cours' : o.status),
+          displayStatus: o.status === 'delivered' ? 'Terminée' : (['assigned', 'driver_accepted', 'in_progress'].includes(o.status) ? 'En cours' : o.status),
           pickupTime: pickupInfo,
           deliveryTime: deliveryInfo
         };
@@ -693,4 +693,6 @@ export default function AdminDriverDetails() {
     </div>
   );
 }
+
+
 

@@ -52,7 +52,6 @@ export default function GuestOrder() {
         pickupCity: "",
         pickupPostcode: "",
         pickupEmail: "",
-        pickupEmail: "",
         delivery: "",
         deliveryName: "",
         deliveryContact: "",
@@ -984,3 +983,5 @@ export default function GuestOrder() {
         </div >
     );
 }
+
+

@@ -42,3 +42,5 @@ export const updateMultipleTariffMetadata = async (settings: Record<string, stri
 
   if (error) throw error;
 };
+
+

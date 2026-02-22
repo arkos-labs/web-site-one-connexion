@@ -1,4 +1,4 @@
-Ôªøimport { useState } from "react";
+import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -32,24 +32,24 @@ const AssignDriverModal = ({
 
   const handleAssign = () => {
     if (!selectedDriverId) {
-      toast.error("Veuillez s√©lectionner un chauffeur");
+      toast.error("Veuillez sÈlectionner un chauffeur");
       return;
     }
     const driver = mockDrivers.find((d) => d.id === selectedDriverId);
-    toast.success(`Commande assign√©e √† ${driver?.name}`);
+    toast.success(`Commande assignÈe ‡ ${driver?.name}`);
     onAssign();
     onClose();
   };
 
   const handleDownloadDeliveryNote = () => {
     if (!selectedDriverId) {
-      toast.error("Veuillez d'abord s√©lectionner un chauffeur");
+      toast.error("Veuillez d'abord sÈlectionner un chauffeur");
       return;
     }
 
     const driver = mockDrivers.find((d) => d.id === selectedDriverId);
     
-    // Cr√©er le contenu PDF en HTML
+    // CrÈer le contenu PDF en HTML
     const htmlContent = `
       <!DOCTYPE html>
       <html>
@@ -87,29 +87,29 @@ const AssignDriverModal = ({
 
           <div class="order-info">
             <div class="info-block">
-              <h3>üìç Chauffeur Assign√©</h3>
+              <h3>?? Chauffeur AssignÈ</h3>
               <p><strong>Nom :</strong> ${driver?.name}</p>
               <p><strong>Statut :</strong> <span class="status">${driver?.status === "online" ? "En ligne" : "Hors ligne"}</span></p>
-              <p><strong>Note :</strong> ${driver?.rating}‚≠ê / 5</p>
+              <p><strong>Note :</strong> ${driver?.rating}? / 5</p>
               <p><strong>Livraisons :</strong> ${driver?.deliveries} courses</p>
             </div>
             
             <div class="info-block">
-              <h3>üì¶ Commande</h3>
-              <p><strong>N¬∞ Commande :</strong> ${orderId}</p>
+              <h3>?? Commande</h3>
+              <p><strong>N∞ Commande :</strong> ${orderId}</p>
               <p><strong>Date :</strong> ${new Date().toLocaleDateString("fr-FR")}</p>
               <p><strong>Heure :</strong> ${new Date().toLocaleTimeString("fr-FR")}</p>
-              <p><strong>Priorit√© :</strong> Standard</p>
+              <p><strong>PrioritÈ :</strong> Standard</p>
             </div>
           </div>
 
           <div class="delivery-instructions">
-            <h3>‚ö†Ô∏è Instructions de Livraison</h3>
-            <p>‚Ä¢ V√©rifier l'identit√© du destinataire</p>
-            <p>‚Ä¢ Demander une signature de r√©ception</p>
-            <p>‚Ä¢ Prendre une photo de la livraison</p>
-            <p>‚Ä¢ Faire remplir le bon par le client</p>
-            <p>‚Ä¢ Retourner ce document sign√©</p>
+            <h3>?? Instructions de Livraison</h3>
+            <p>ï VÈrifier l'identitÈ du destinataire</p>
+            <p>ï Demander une signature de rÈception</p>
+            <p>ï Prendre une photo de la livraison</p>
+            <p>ï Faire remplir le bon par le client</p>
+            <p>ï Retourner ce document signÈ</p>
           </div>
 
           <div class="signature-area">
@@ -118,15 +118,15 @@ const AssignDriverModal = ({
           </div>
 
           <div class="footer">
-            <p>Ce document doit √™tre retourn√© sign√© apr√®s livraison | This document must be returned signed after delivery</p>
-            <p>One Connexion Express ¬© 2025 - Tous droits r√©serv√©s</p>
+            <p>Ce document doit Ítre retournÈ signÈ aprËs livraison | This document must be returned signed after delivery</p>
+            <p>One Connexion Express © 2025 - Tous droits rÈservÈs</p>
           </div>
         </div>
       </body>
       </html>
     `;
 
-    // Cr√©er un blob et t√©l√©charger
+    // CrÈer un blob et tÈlÈcharger
     const element = document.createElement("a");
     element.href = "data:text/html;charset=utf-8," + encodeURIComponent(htmlContent);
     element.download = `bon-commande-${orderId}.html`;
@@ -134,7 +134,7 @@ const AssignDriverModal = ({
     element.click();
     document.body.removeChild(element);
 
-    toast.success(`Bon de commande t√©l√©charg√© : bon-commande-${orderId}.html`);
+    toast.success(`Bon de commande tÈlÈchargÈ : bon-commande-${orderId}.html`);
   };
 
   return (
@@ -152,9 +152,9 @@ const AssignDriverModal = ({
             </p>
           </div>
 
-          {/* S√©lection chauffeur */}
+          {/* SÈlection chauffeur */}
           <div className="space-y-2">
-            <label className="text-sm font-medium">S√©lectionner un chauffeur</label>
+            <label className="text-sm font-medium">SÈlectionner un chauffeur</label>
             <Select value={selectedDriverId} onValueChange={setSelectedDriverId}>
               <SelectTrigger>
                 <SelectValue placeholder="Choisir un chauffeur..." />
@@ -168,7 +168,7 @@ const AssignDriverModal = ({
                         variant="outline"
                         className={driver.status === "online" ? "bg-green-100" : "bg-gray-100"}
                       >
-                        {driver.status === "online" ? "üü¢ Libre" : "üî¥ Occup√©"}
+                        {driver.status === "online" ? "?? Libre" : "?? OccupÈ"}
                       </Badge>
                     </div>
                   </SelectItem>
@@ -177,20 +177,20 @@ const AssignDriverModal = ({
             </Select>
           </div>
 
-          {/* Info chauffeur s√©lectionn√© */}
+          {/* Info chauffeur sÈlectionnÈ */}
           {selectedDriverId && (
             <div className="bg-green-50 p-4 rounded-lg border border-green-200 space-y-2">
               {mockDrivers.find((d) => d.id === selectedDriverId) && (
                 <>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium">Chauffeur s√©lectionn√©</span>
+                    <span className="text-sm font-medium">Chauffeur sÈlectionnÈ</span>
                     <CheckCircle className="w-4 h-4 text-green-600" />
                   </div>
                   <p className="text-sm text-green-900">
                     <strong>{mockDrivers.find((d) => d.id === selectedDriverId)?.name}</strong>
                   </p>
                   <div className="text-xs text-green-800 space-y-1">
-                    <p>Note: {mockDrivers.find((d) => d.id === selectedDriverId)?.rating}‚≠ê</p>
+                    <p>Note: {mockDrivers.find((d) => d.id === selectedDriverId)?.rating}?</p>
                     <p>
                       Livraisons: {mockDrivers.find((d) => d.id === selectedDriverId)?.deliveries}
                     </p>
@@ -211,7 +211,7 @@ const AssignDriverModal = ({
             </Button>
           </div>
 
-          {/* Bouton t√©l√©charger bon */}
+          {/* Bouton tÈlÈcharger bon */}
           {selectedDriverId && (
             <Button
               onClick={handleDownloadDeliveryNote}
@@ -219,7 +219,7 @@ const AssignDriverModal = ({
               className="w-full gap-2"
             >
               <Download size={16} />
-              T√©l√©charger le bon de commande
+              TÈlÈcharger le bon de commande
             </Button>
           )}
         </div>
@@ -229,3 +229,5 @@ const AssignDriverModal = ({
 };
 
 export default AssignDriverModal;
+
+

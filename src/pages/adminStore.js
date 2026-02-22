@@ -106,3 +106,5 @@ export function upsertMonthlyInvoiceFromOrder(order, { status = "À payer" } = {
   setAdminInvoices(next);
   return invoice;
 }
+
+

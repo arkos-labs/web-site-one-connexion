@@ -117,9 +117,9 @@ export const AdminActivityTimeline = ({ limit = 10 }: AdminActivityTimelineProps
                         // Dispatch
                         if (order.dispatched_at) {
                             events.push({
-                                id: `order-dispatched-${order.id}`,
+                                id: `order-assigned-${order.id}`,
                                 type: 'order',
-                                title: 'Commande dispatchée',
+                                title: 'Commande assignée',
                                 description: `${order.reference} - Chauffeur assigné`,
                                 timestamp: order.dispatched_at,
                                 icon: Truck,
@@ -274,3 +274,5 @@ export const AdminActivityTimeline = ({ limit = 10 }: AdminActivityTimelineProps
         </div>
     );
 };
+
+

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import { downloadOrderPdf } from "./adminPdf.js";
-import { Loader2, Search, X } from "lucide-react";
+import { Loader2, Search, X, FileText, Check, MoreVertical, Phone, Video, Send } from "lucide-react";
 
 export default function AdminOrders() {
   const navigate = useNavigate();
@@ -154,13 +154,13 @@ export default function AdminOrders() {
     };
 
     const isLate = (o) => {
-      if (o.status !== "picked_up") return false;
+      if (o.status !== "in_progress") return false;
       const ms = parseDeadlineMs(o);
       return ms != null && Date.now() > ms;
     };
 
     const missingInfo = (o) => {
-      const inOps = o.status === "assigned" || o.status === "picked_up";
+      const inOps = o.status === "assigned" || o.status === "in_progress";
       if (!inOps) return false;
       return !o.contact_phone && (!o.notes || !o.notes.includes('Contact:'));
     };
@@ -339,7 +339,7 @@ export default function AdminOrders() {
     }
 
     const { error } = await supabase.from('orders').update({
-      status: 'dispatched', // New schema status for "Assigned to driver"
+      status: 'assigned', // New schema status for "Assigned to driver"
       driver_id: dispatchDriver,
       notes: `${dispatchOrder.notes || ''} | Note dispatch: ${dispatchNote}`
     }).eq('id', dispatchOrder.id);
@@ -400,11 +400,60 @@ export default function AdminOrders() {
   if (loading) return <div className="flex justify-center p-20"><Loader2 className="animate-spin text-slate-400" size={32} /></div>;
 
   return (
-    <div className="p-8">
-      <header className="mb-6">
-        <h1 className="text-4xl font-extrabold text-slate-900">Gestion des Commandes 📦</h1>
-        <p className="mt-2 text-base font-medium text-slate-500">Gérez, attribuez et optimisez vos livraisons en temps réel.</p>
+    <div className="space-y-8 pb-20">
+      <header className="flex flex-wrap items-center justify-between gap-6">
+        <div className="animate-in fade-in slide-in-from-left-4 duration-700">
+          <h2 className="text-4xl font-black tracking-tight text-slate-900">Missions Fleet</h2>
+          <p className="mt-2 text-base font-medium text-slate-500 max-w-2xl">
+            Supervisez l'ensemble des courses et gérez le dispatch en temps réel.
+          </p>
+        </div>
+
+        <div className="flex items-center gap-3 animate-in fade-in slide-in-from-right-4 duration-700">
+          <div className="flex bg-slate-100 p-1.5 rounded-2xl border border-slate-200/50">
+            <button
+              onClick={() => setView("dispatch")}
+              className={`px-6 py-2.5 rounded-xl text-xs font-black transition-all ${view === "dispatch" ? "bg-white text-slate-900 shadow-xl shadow-slate-200/50 scale-[1.02]" : "text-slate-400 hover:text-slate-600"
+                }`}
+            >
+              DISPATCH
+            </button>
+            <button
+              onClick={() => setView("history")}
+              className={`px-6 py-2.5 rounded-xl text-xs font-black transition-all ${view === "history" ? "bg-white text-slate-900 shadow-xl shadow-slate-200/50 scale-[1.02]" : "text-slate-400 hover:text-slate-600"
+                }`}
+            >
+              HISTORIQUE
+            </button>
+          </div>
+          <button
+            onClick={exportCsv}
+            className="hidden sm:flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-xs font-black text-slate-600 shadow-sm hover:bg-slate-50 hover:border-slate-300 transition-all"
+          >
+            EXPORT CSV
+          </button>
+        </div>
       </header>
+
+      {/* Stats Bar */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
+        {[
+          { label: "En attente", count: activeOrders.filter(o => o.status.includes('pending')).length, color: "text-rose-600", bg: "bg-rose-50", icon: "🚨" },
+          { label: "À Assigner", count: activeOrders.filter(o => o.status === 'accepted').length, color: "text-indigo-600", bg: "bg-indigo-50", icon: "🧭" },
+          { label: "En mission", count: activeOrders.filter(o => ['assigned', 'in_progress'].includes(o.status)).length, color: "text-amber-600", bg: "bg-amber-50", icon: "🚚" },
+          { label: "Total Livrées", count: historyOrders.filter(o => o.status === 'delivered').length, color: "text-emerald-600", bg: "bg-emerald-50", icon: "💰" },
+        ].map((stat, i) => (
+          <div key={i} className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex items-center justify-between group hover:shadow-xl transition-all duration-300">
+            <div className="flex flex-col">
+              <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">{stat.label}</span>
+              <span className={`text-3xl font-black ${stat.color}`}>{stat.count}</span>
+            </div>
+            <div className={`h-12 w-12 rounded-2xl ${stat.bg} flex items-center justify-center text-xl group-hover:scale-110 transition-transform duration-300`}>
+              {stat.icon}
+            </div>
+          </div>
+        ))}
+      </div>
 
       <div className="rounded-3xl bg-white p-6 shadow-sm">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
@@ -474,158 +523,204 @@ export default function AdminOrders() {
         </div>
 
         {view === "history" ? (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead>
-                <tr className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                  <th className="py-2">Bon</th>
-                  <th className="py-2">Client</th>
-                  <th className="py-2">Trajet</th>
-                  <th className="py-2">Date</th>
-                  <th className="py-2">Statut</th>
-                  <th className="py-2">Total</th>
-                  <th className="py-2 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {historyFiltered.map((o) => (
-                  <tr key={o.id} className="hover:bg-slate-50/60 align-top">
-                    <td className="py-4 font-semibold text-slate-900">
-                      <span className="inline-flex items-center rounded-lg bg-orange-50 px-3 py-1.5 text-sm font-black text-orange-600 border border-orange-100 uppercase tracking-tight shadow-sm">
-                        BC-{o.id.slice(0, 8)}
-                      </span>
-                    </td>
-                    <td className="py-4 text-slate-700">
-                      <div className="font-semibold text-slate-900 flex items-center gap-2">
-                        {o.client}
-                        {o.isGuest && <span className="inline-block px-1.5 py-0.5 rounded text-[10px] font-bold bg-orange-100 text-orange-600 border border-orange-200 uppercase">Invité</span>}
-                      </div>
-                    </td>
-                    <td className="py-4 text-slate-700">
-                      <div className="font-semibold text-slate-900">{o.route}</div>
-                      <div className="mt-1 text-xs text-slate-500 line-clamp-1">{o.pickup}</div>
-                      <div className="text-xs text-slate-500 line-clamp-1">{o.delivery}</div>
-                    </td>
-                    <td className="py-4 text-slate-600">
-                      <div className="text-sm font-semibold text-slate-900">{o.date}</div>
-                    </td>
-                    <td className="py-4">
-                      <span className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wide ${o.status.includes('pending') ? 'bg-emerald-50 text-emerald-600' : (['accepted', 'assigned'].includes(o.status) ? 'bg-blue-50 text-blue-600' : 'bg-slate-100 text-slate-600')}`}>
-                        {o.status.includes('pending') ? 'À Accepter' : ((['accepted', 'assigned'].includes(o.status)) ? (o.driver_id ? 'Dispatchée' : 'Acceptée') : (['delivered'].includes(o.status) ? 'Terminée' : (['in_progress', 'picked_up', 'dispatched'].includes(o.status) ? 'En cours' : o.status)))}
-                      </span>
-                    </td>
-                    <td className="py-4 font-semibold text-slate-900">{Number(o.total || 0).toFixed(2)}€</td>
-                    <td className="py-4">
-                      <div className="flex justify-end gap-2">
-                        <button
-                          onClick={() => {
-                            const fullClient = clients.find(c => c.id === o.client_id);
-                            downloadOrderPdf(o, fullClient || {});
-                          }}
-                          className="rounded-full bg-slate-100 px-3 py-1.5 text-[11px] font-bold text-slate-700 hover:bg-slate-200"
-                        >
-                          PDF
-                        </button>
-                        <button onClick={() => duplicateOrder(o)} className="rounded-full bg-slate-100 px-3 py-1.5 text-[11px] font-bold text-slate-700 hover:bg-slate-200">Dupliquer</button>
-                        <button onClick={() => navigate(`/admin/orders/${o.id}`)} className="rounded-full bg-slate-900 px-3 py-1.5 text-[11px] font-bold text-white">Détails</button>
-                      </div>
-                    </td>
-                  </tr>
+          <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden flex flex-col min-h-[600px]">
+            <div className="p-8 border-b border-slate-50 bg-slate-50/30 flex flex-wrap items-center justify-between gap-4">
+              <div className="relative flex-1 max-w-md">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                <input
+                  type="text"
+                  placeholder="Rechercher une mission, un client..."
+                  className="w-full bg-slate-100 border-none rounded-2xl pl-12 pr-4 py-3.5 text-sm font-medium focus:ring-2 focus:ring-slate-900 transition-all shadow-inner"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                />
+              </div>
+
+              <div className="flex items-center gap-2">
+                {[{ label: "Toutes", status: "Tous" }, { label: "Terminées", status: "delivered" }, { label: "Refusées", status: "cancelled" }].map(({ label, status }) => (
+                  <button
+                    key={status}
+                    onClick={() => setSearchParams({ status })}
+                    className={`rounded-xl px-5 py-2.5 text-xs font-black uppercase tracking-widest transition-all ${statusFilter === status
+                      ? "bg-slate-900 text-white shadow-lg shadow-slate-900/10"
+                      : "bg-slate-100 text-slate-400 hover:text-slate-600"
+                      }`}
+                  >
+                    {label}
+                  </button>
                 ))}
-              </tbody>
-            </table>
+                <div className="h-8 w-px bg-slate-200 mx-2"></div>
+                <div className="text-[10px] font-black uppercase tracking-widest text-slate-300">{historyFiltered.length} Résultats</div>
+              </div>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm">
+                <thead className="bg-slate-50/50">
+                  <tr className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                    <th className="px-8 py-5">Référence</th>
+                    <th className="px-8 py-5">Client</th>
+                    <th className="px-8 py-5">Trajet</th>
+                    <th className="px-8 py-5">Date</th>
+                    <th className="px-8 py-5">Statut</th>
+                    <th className="px-8 py-5">Montant</th>
+                    <th className="px-8 py-5 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-50">
+                  {historyFiltered.map((o) => (
+                    <tr key={o.id} className="hover:bg-slate-50/80 transition-all cursor-pointer" onClick={() => navigate(`/admin/orders/${o.id}`)}>
+                      <td className="px-8 py-6">
+                        <span className="text-xs font-black text-slate-400">#{o.id.slice(0, 8)}</span>
+                      </td>
+                      <td className="px-8 py-6">
+                        <div className="flex flex-col">
+                          <span className="text-sm font-black text-slate-900">{o.client}</span>
+                          {o.isGuest && <span className="text-[9px] font-black text-rose-500 uppercase tracking-tighter mt-0.5">Invité</span>}
+                        </div>
+                      </td>
+                      <td className="px-8 py-6">
+                        <div className="flex items-center gap-2 text-xs font-black text-slate-600 line-clamp-1">
+                          {o.pickup_city} <span className="text-slate-300">→</span> {o.delivery_city}
+                        </div>
+                      </td>
+                      <td className="px-8 py-6">
+                        <span className="text-xs font-black text-slate-500">{o.date}</span>
+                      </td>
+                      <td className="px-8 py-6">
+                        <span className={`px-2.5 py-1 rounded-md text-[9px] font-black uppercase tracking-widest ${o.status === "delivered" ? "bg-emerald-50 text-emerald-600" : "bg-slate-100 text-slate-400"
+                          }`}>
+                          {o.status === "delivered" ? "Livrée" : "Annulée"}
+                        </span>
+                      </td>
+                      <td className="px-8 py-6 font-black text-slate-900">{o.total}€</td>
+                      <td className="px-8 py-6">
+                        <div className="flex justify-end gap-2">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              const fullClient = clients.find(c => c.id === o.client_id);
+                              downloadOrderPdf(o, fullClient || {});
+                            }}
+                            className="h-8 w-8 flex items-center justify-center rounded-lg bg-slate-100 text-slate-400 hover:bg-slate-900 hover:text-white transition-all"
+                          >
+                            <FileText size={14} />
+                          </button>
+                          <button
+                            onClick={(e) => { e.stopPropagation(); navigate(`/admin/orders/${o.id}`); }}
+                            className="px-4 py-1.5 rounded-lg bg-slate-900 text-white text-[10px] font-black uppercase tracking-widest shadow-lg shadow-slate-900/10 hover:bg-slate-800 transition-all"
+                          >
+                            Détails
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         ) : (
-          <div className="grid gap-4 lg:grid-cols-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {[
-              { label: "À Accepter", statuses: ["pending_acceptance", "pending"] },
-              { label: "Dispatcher", statuses: ["accepted", "assigned"] },
-              { label: "En cours", statuses: ["dispatched", "driver_accepted", "in_progress", "picked_up"] },
-              { label: "Terminées", statuses: ["delivered"] },
+              { label: "Nouveaux", statuses: ["pending_acceptance", "pending"], color: "bg-rose-500", light: "bg-rose-50", text: "text-rose-600" },
+              { label: "Dispatch", statuses: ["accepted", "assigned"], color: "bg-indigo-500", light: "bg-indigo-50", text: "text-indigo-600" },
+              { label: "En cours", statuses: ["assigned", "driver_accepted", "in_progress", "in_progress"], color: "bg-amber-500", light: "bg-amber-50", text: "text-amber-600" },
+              { label: "Livrées", statuses: ["delivered"], color: "bg-emerald-500", light: "bg-emerald-50", text: "text-emerald-600" },
             ].map((col) => (
-              <div key={col.label} className="rounded-3xl bg-white p-4 border border-slate-100">
-                <div className="mb-3 text-xs font-bold uppercase tracking-wider text-slate-400">{col.label}</div>
-                <div className="space-y-3">
-                  {kanbanList.filter((o) => col.statuses.includes(o.status)).map((o) => (
-                    <div key={o.id} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-                      <div className="mb-2">
-                        <span className="inline-flex items-center rounded-lg bg-orange-50 px-3 py-1.5 text-sm font-black text-orange-600 border border-orange-100 uppercase tracking-tight shadow-sm">
-                          BC-{o.id.slice(0, 8)}
-                        </span>
-                      </div>
-                      <div className="mt-1 text-sm font-semibold text-slate-800">{o.route}</div>
+              <div key={col.label} className="flex flex-col gap-4">
+                <div className="flex items-center justify-between px-2">
+                  <div className="flex items-center gap-2">
+                    <div className={`h-2 w-2 rounded-full ${col.color}`}></div>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">{col.label}</span>
+                  </div>
+                  <span className={`text-[10px] font-black ${col.light} ${col.text} px-2 py-0.5 rounded-md`}>
+                    {kanbanList.filter((o) => col.statuses.includes(o.status)).length}
+                  </span>
+                </div>
 
-                      {/* Driver info if assigned */}
+                <div className="space-y-4">
+                  {kanbanList.filter((o) => col.statuses.includes(o.status)).length === 0 ? (
+                    <div className="p-8 rounded-[2rem] border border-dashed border-slate-200 text-center opacity-50">
+                      <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Vide</span>
+                    </div>
+                  ) : kanbanList.filter((o) => col.statuses.includes(o.status)).map((o) => (
+                    <div
+                      key={o.id}
+                      className="bg-white rounded-[2rem] border border-slate-100 p-6 shadow-sm hover:shadow-xl transition-all duration-300 group cursor-pointer relative overflow-hidden"
+                      onClick={() => navigate(`/admin/orders/${o.id}`)}
+                    >
+                      <div className="flex justify-between items-start mb-4">
+                        <div className="flex flex-col">
+                          <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">BC-{o.id.slice(0, 8)}</span>
+                          <h4 className="text-base font-black text-slate-900 group-hover:text-orange-500 transition-colors line-clamp-1">{o.client}</h4>
+                        </div>
+                        {o.isGuest && (
+                          <div className="h-2 w-2 rounded-full bg-rose-500 animate-pulse shadow-[0_0_8px_rgba(244,63,94,0.5)]"></div>
+                        )}
+                      </div>
+
+                      <div className="space-y-3 mb-6">
+                        <div className="flex items-start gap-3">
+                          <div className="mt-1 flex flex-col items-center gap-1">
+                            <div className="h-1.5 w-1.5 rounded-full bg-slate-300"></div>
+                            <div className="h-4 w-px bg-slate-100"></div>
+                            <div className="h-1.5 w-1.5 rounded-full bg-orange-500"></div>
+                          </div>
+                          <div className="flex flex-col min-w-0">
+                            <span className="text-[10px] text-slate-400 font-bold uppercase truncate">{o.pickup_city || 'Départ'}</span>
+                            <span className="text-[10px] text-slate-900 font-black uppercase truncate">{o.delivery_city || 'Arrivée'}</span>
+                          </div>
+                        </div>
+                      </div>
+
                       {o.driver_id && (
-                        <div className="mt-2 text-xs bg-slate-50 p-2 rounded-lg text-slate-600 font-medium flex items-center gap-1">
-                          <span className="text-lg">👮</span>
-                          {drivers.find(d => d.id === o.driver_id)?.name || "Chauffeur inconnu"}
+                        <div className="flex items-center gap-2 p-2 bg-slate-50 rounded-xl mb-4 border border-slate-100">
+                          <div className="h-6 w-6 rounded-lg bg-slate-900 flex items-center justify-center text-[10px] text-white font-black uppercase">
+                            {drivers.find(d => d.id === o.driver_id)?.name?.slice(0, 1) || '?'}
+                          </div>
+                          <span className="text-[10px] font-black text-slate-600 truncate">
+                            {drivers.find(d => d.id === o.driver_id)?.name || "Chauffeur"}
+                          </span>
                         </div>
                       )}
 
-                      <div className="mt-3 flex flex-wrap gap-2 relative z-20">
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            navigate(`/admin/orders/${o.id}`);
-                          }}
-                          className="rounded-full bg-slate-100 px-3 py-1 text-[10px] font-bold text-slate-700 hover:bg-slate-200"
-                        >
-                          Détails
-                        </button>
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            duplicateOrder(o);
-                          }}
-                          className="rounded-full bg-slate-100 px-3 py-1 text-[10px] font-bold text-slate-700 hover:bg-slate-200"
-                        >
-                          Dupliquer
-                        </button>
-
-                        {(['pending_acceptance', 'pending'].includes(o.status)) && (
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              console.log("CLICK: Accepter button kanban", o.id);
-                              openDecision(o, "accept");
-                            }}
-                            className="inline-flex items-center justify-center rounded-full bg-emerald-600 px-5 py-2 text-[11px] font-bold text-white shadow-lg shadow-emerald-500/20 hover:bg-emerald-700 active:scale-95 transition-all cursor-pointer ring-2 ring-emerald-100"
-                            title="Accepter la commande"
-                          >
-                            Accepter
-                          </button>
-                        )}
-
-                        {/* Only show Dispatch button if in 'accepted' or 'assigned' state (À dispatcher) */}
-                        {(['accepted', 'assigned'].includes(o.status)) && (
-                          <button onClick={() => openDispatch(o)} className="rounded-full bg-slate-900 px-4 py-1.5 text-[11px] font-bold text-white shadow-lg shadow-slate-900/20 hover:bg-slate-800 transition-all active:scale-95">
-                            {o.driver_id ? "Réassigner" : "Dispatcher"}
-                          </button>
-                        )}
-
-                        {(['in_progress', 'picked_up', 'dispatched', 'driver_accepted'].includes(o.status)) && (
-                          <button onClick={() => completeOrder(o.id)} className="rounded-full bg-orange-500 px-3 py-1 text-[10px] font-bold text-white">Terminer</button>
-                        )}
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            const fullClient = clients.find(c => c.id === o.client_id);
-                            downloadOrderPdf(o, fullClient || {});
-                          }}
-                          className="rounded-full bg-slate-100 px-3 py-1 text-[10px] font-bold text-slate-700 hover:bg-slate-200"
-                        >
-                          PDF BC
-                        </button>
+                      <div className="flex items-center justify-between pt-4 border-t border-slate-50">
+                        <div className="flex gap-2 relative z-20">
+                          {col.label === "Nouveaux" ? (
+                            <button
+                              onClick={(e) => { e.stopPropagation(); openDecision(o, "accept"); }}
+                              className="rounded-xl bg-slate-900 px-4 py-2 text-[10px] font-black text-white hover:bg-slate-800 transition-all uppercase tracking-widest shadow-lg shadow-slate-900/10 active:scale-95"
+                            >
+                              ACCEPTER
+                            </button>
+                          ) : col.label === "Dispatch" ? (
+                            <button
+                              onClick={(e) => { e.stopPropagation(); openDispatch(o); }}
+                              className="rounded-xl bg-orange-500 px-4 py-2 text-[10px] font-black text-white hover:bg-orange-600 transition-all uppercase tracking-widest shadow-lg shadow-orange-500/10 active:scale-95"
+                            >
+                              {o.driver_id ? 'RÉASSIGNER' : 'DISPATCH'}
+                            </button>
+                          ) : col.label === "En cours" ? (
+                            <button
+                              onClick={(e) => { e.stopPropagation(); completeOrder(o.id); }}
+                              className="rounded-xl bg-emerald-600 px-4 py-2 text-[10px] font-black text-white hover:bg-emerald-700 transition-all uppercase tracking-widest shadow-lg shadow-emerald-600/10 active:scale-95"
+                            >
+                              TERMINER
+                            </button>
+                          ) : (
+                            <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">LIVRÉ ✓</span>
+                          )}
+                        </div>
+                        <div className="flex flex-col items-end">
+                          <span className="text-[11px] font-black text-slate-900">{o.total}€ HT</span>
+                          <span className="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">{o.vehicle_type}</span>
+                        </div>
                       </div>
+
+                      {derived.isLate(o) && (
+                        <div className="absolute top-0 right-0 h-1 w-full bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.5)]"></div>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -635,67 +730,101 @@ export default function AdminOrders() {
         )}
       </div>
 
-      {decisionOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn">
-          <div className="w-full max-w-md bg-white rounded-[2.5rem] p-8 shadow-2xl animate-scaleIn">
-            <h3 className="text-xl font-bold text-slate-900 mb-2">Accepter la commande</h3>
-            <p className="text-sm text-slate-500 mb-6 font-medium">Voulez-vous valider cette mission ? Vous pourrez ensuite l'assigner à un chauffeur.</p>
+      {
+        decisionOpen && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={() => setDecisionOpen(false)}></div>
+            <div className="w-full max-w-md bg-white rounded-[2.5rem] p-10 shadow-2xl relative z-10 animate-in fade-in zoom-in-95 duration-300">
+              <div className="h-16 w-16 rounded-2xl bg-slate-900 flex items-center justify-center text-3xl mb-8 shadow-xl shadow-slate-900/20">
+                🤝
+              </div>
+              <h3 className="text-2xl font-black text-slate-900 mb-2">Accepter la mission ?</h3>
+              <p className="text-sm font-medium text-slate-500 mb-8 leading-relaxed">
+                Une fois acceptée, vous pourrez dispatcher cette mission à un livreur de votre flotte.
+              </p>
 
-            <label className="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-2 px-1">Note interne (optionnel)</label>
-            <textarea
-              className="w-full rounded-2xl border border-slate-100 bg-slate-50 p-4 text-sm mb-6 focus:ring-4 focus:ring-slate-100 outline-none transition-all"
-              placeholder="Ex: Urgent, fragile..."
-              value={reason}
-              onChange={(e) => setReason(e.target.value)}
-              rows={3}
-            />
-            <div className="flex justify-end gap-3">
-              <button
-                onClick={() => setDecisionOpen(false)}
-                className="px-6 py-3 text-sm font-bold text-slate-400 hover:text-slate-900 transition-colors"
-              >
-                Annuler
-              </button>
-              <button
-                onClick={confirmDecision}
-                className="bg-slate-900 text-white rounded-2xl px-8 py-3 text-sm font-bold shadow-lg shadow-slate-900/20 hover:bg-slate-800 transition-all active:scale-95"
-              >
-                Confirmer
-              </button>
+              <div className="space-y-6">
+                <div>
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Note Interne</label>
+                  <textarea
+                    className="w-full rounded-2xl border-none bg-slate-100 p-5 text-sm font-medium focus:ring-2 focus:ring-slate-900 transition-all shadow-inner"
+                    placeholder="Ex: Client VIP, adresse difficile..."
+                    value={reason}
+                    onChange={(e) => setReason(e.target.value)}
+                    rows={3}
+                  />
+                </div>
+
+                <div className="flex gap-4 pt-4">
+                  <button
+                    onClick={() => setDecisionOpen(false)}
+                    className="flex-1 py-4 text-xs font-black text-slate-400 hover:text-slate-900 transition-colors uppercase tracking-widest border border-slate-100 rounded-2xl"
+                  >
+                    Annuler
+                  </button>
+                  <button
+                    onClick={confirmDecision}
+                    className="flex-1 bg-slate-900 text-white rounded-2xl py-4 text-xs font-black uppercase tracking-widest shadow-xl shadow-slate-900/20 hover:bg-slate-800 transition-all active:scale-95"
+                  >
+                    Confirmer
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )
+      }
 
       {dispatchOpen && (
-        <div className="fixed inset-0 z-[110] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn">
-          <div className="w-full max-w-md bg-white rounded-[2.5rem] p-8 shadow-2xl animate-scaleIn">
-            <h3 className="text-xl font-bold text-slate-900 mb-2">Dispatcher la course</h3>
-            <p className="text-sm text-slate-500 mb-6 font-medium">Sélectionnez le chauffeur qui effectuera cette livraison.</p>
+        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={() => setDispatchOpen(false)}></div>
+          <div className="w-full max-w-md bg-white rounded-[2.5rem] p-10 shadow-2xl relative z-10 animate-in fade-in zoom-in-95 duration-300">
+            <div className="h-16 w-16 rounded-2xl bg-orange-500 flex items-center justify-center text-3xl mb-8 shadow-xl shadow-orange-500/20">
+              🧭
+            </div>
+            <h3 className="text-2xl font-black text-slate-900 mb-2">Dispatch Mission</h3>
+            <p className="text-sm font-medium text-slate-500 mb-8 leading-relaxed">
+              Sélectionnez un livreur disponible pour prendre en charge cette course.
+            </p>
 
-            <label className="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-2 px-1">Chauffeur disponible</label>
-            <select
-              className="w-full rounded-2xl border border-slate-100 bg-slate-50 p-4 text-sm mb-6 focus:ring-4 focus:ring-slate-100 outline-none transition-all appearance-none cursor-pointer font-bold"
-              value={dispatchDriver}
-              onChange={(e) => setDispatchDriver(e.target.value)}
-            >
-              <option value="">— Sélectionner —</option>
-              {drivers.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
-            </select>
+            <div className="space-y-6">
+              <div>
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Livreur Connecté</label>
+                <select
+                  className="w-full rounded-2xl border-none bg-slate-100 p-5 text-sm font-black focus:ring-2 focus:ring-slate-900 transition-all shadow-inner appearance-none cursor-pointer"
+                  value={dispatchDriver}
+                  onChange={(e) => setDispatchDriver(e.target.value)}
+                >
+                  <option value="">— Sélectionner —</option>
+                  {drivers.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
+                </select>
+              </div>
 
-            <div className="flex justify-end gap-3">
-              <button
-                onClick={() => setDispatchOpen(false)}
-                className="px-6 py-3 text-sm font-bold text-slate-400 hover:text-slate-900 transition-colors"
-              >
-                Annuler
-              </button>
-              <button
-                onClick={confirmDispatch}
-                className="bg-slate-900 text-white rounded-2xl px-8 py-3 text-sm font-bold shadow-lg shadow-slate-900/20 hover:bg-slate-800 transition-all active:scale-95"
-              >
-                Assigner
-              </button>
+              <div>
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Note pour le livreur (optionnel)</label>
+                <textarea
+                  className="w-full rounded-2xl border-none bg-slate-100 p-5 text-sm font-medium focus:ring-2 focus:ring-slate-900 transition-all shadow-inner"
+                  placeholder="Ex: Demander signature, code 1234..."
+                  value={dispatchNote}
+                  onChange={(e) => setDispatchNote(e.target.value)}
+                  rows={2}
+                />
+              </div>
+
+              <div className="flex gap-4 pt-4">
+                <button
+                  onClick={() => setDispatchOpen(false)}
+                  className="flex-1 py-4 text-xs font-black text-slate-400 hover:text-slate-900 transition-colors uppercase tracking-widest border border-slate-100 rounded-2xl"
+                >
+                  Annuler
+                </button>
+                <button
+                  onClick={confirmDispatch}
+                  className="flex-1 bg-slate-900 text-white rounded-2xl py-4 text-xs font-black uppercase tracking-widest shadow-xl shadow-slate-900/20 hover:bg-slate-800 transition-all active:scale-95"
+                >
+                  Assigner
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -703,5 +832,7 @@ export default function AdminOrders() {
     </div>
   );
 }
+
+
 
 

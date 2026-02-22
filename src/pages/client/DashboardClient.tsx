@@ -273,7 +273,7 @@ const DashboardClient = () => {
     switch (status) {
       case ORDER_STATUS.PENDING_ACCEPTANCE: return 'bg-yellow-100 text-yellow-800 border-yellow-200';
       case ORDER_STATUS.ACCEPTED: return 'bg-blue-100 text-blue-800 border-blue-200';
-      case ORDER_STATUS.DISPATCHED: return 'bg-purple-100 text-purple-800 border-purple-200';
+      case ORDER_STATUS.assigned: return 'bg-purple-100 text-purple-800 border-purple-200';
       case ORDER_STATUS.IN_PROGRESS: return 'bg-indigo-100 text-indigo-800 border-indigo-200';
       case ORDER_STATUS.DELIVERED: return 'bg-green-100 text-green-800 border-green-200';
       case 'cancelled': return 'bg-red-100 text-red-800 border-red-200';
@@ -498,4 +498,6 @@ const DashboardClient = () => {
 };
 
 export default DashboardClient;
+
+
 

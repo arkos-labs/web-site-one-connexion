@@ -95,72 +95,107 @@ export default function AdminClients() {
   if (loading) return <div className="flex justify-center p-20"><Loader2 className="animate-spin text-slate-400" /></div>;
 
   return (
-    <div className="p-8">
-      <header className="mb-6">
-        <h1 className="text-4xl font-extrabold text-slate-900">Vos Clients Partenaires 🤝</h1>
-        <p className="mt-2 text-base font-medium text-slate-500">Développez vos relations et suivez l'activité de vos comptes clés.</p>
-      </header>
+    <div className="space-y-8 pb-20">
+      <header className="flex flex-wrap items-center justify-between gap-6">
+        <div className="animate-in fade-in slide-in-from-left-4 duration-700">
+          <h2 className="text-4xl font-black tracking-tight text-slate-900">Portefeuille Clients</h2>
+          <p className="mt-2 text-base font-medium text-slate-500 max-w-2xl">
+            Gérez vos relations commerciales et surveillez la solvabilité de vos partenaires.
+          </p>
+        </div>
 
-      <div className="rounded-3xl bg-white p-6 shadow-sm">
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-          <div className="text-sm font-bold text-slate-900">Liste des clients ({clients.length})</div>
-          <div className="flex items-center gap-2">
-            {query || isSearching ? (
-              <div className="relative animate-fadeIn">
-                <input
-                  autoFocus
-                  className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 outline-none focus:ring-4 focus:ring-slate-100"
-                  placeholder="Rechercher..."
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  onBlur={() => !query && setIsSearching(false)}
-                />
-                {query && (
-                  <button onClick={() => setQuery("")} className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400">
-                    <X size={14} />
-                  </button>
-                )}
-              </div>
-            ) : (
-              <button
-                onClick={() => setIsSearching(true)}
-                className="rounded-full bg-slate-50 border border-slate-100 p-2 text-slate-400 hover:text-slate-600 transition-colors"
-              >
-                <Search size={18} />
-              </button>
-            )}
+        <div className="flex items-center gap-3 animate-in fade-in slide-in-from-right-4 duration-700">
+          <div className="bg-white px-6 py-3 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-3">
+            <span className="text-[10px] font-black uppercase text-slate-400">Total Clients</span>
+            <span className="text-xl font-black text-slate-900">{clients.length}</span>
           </div>
         </div>
+      </header>
+
+      <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden min-h-[600px] animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <div className="p-8 border-b border-slate-50 bg-slate-50/30 flex flex-wrap items-center justify-between gap-4">
+          <div className="relative flex-1 max-w-md">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+            <input
+              type="text"
+              placeholder="Rechercher une entreprise, un SIRET..."
+              className="w-full bg-slate-100 border-none rounded-2xl pl-12 pr-4 py-3.5 text-sm font-medium focus:ring-2 focus:ring-slate-900 transition-all shadow-inner"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+            />
+          </div>
+
+          <div className="flex items-center gap-4">
+            <div className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+              {rows.length} COMPTES ACTIFS
+            </div>
+          </div>
+        </div>
+
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
-            <thead>
-              <tr className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                <th className="py-2">Client</th>
-                <th className="py-2">SIRET</th>
-                <th className="py-2">Dépenses</th>
-                <th className="py-2">Courses</th>
-                <th className="py-2">Score</th>
-                <th className="py-2">Dernière course</th>
-                <th className="py-2 text-right">Action</th>
+            <thead className="bg-slate-50/50">
+              <tr className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                <th className="px-8 py-5">Partenaire</th>
+                <th className="px-8 py-5">Identifiant SIRET</th>
+                <th className="px-8 py-5">Volume d'affaires</th>
+                <th className="px-8 py-5">Missions</th>
+                <th className="px-8 py-5">Indice de Risque</th>
+                <th className="px-8 py-5 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-slate-50">
               {rows.map((c) => (
-                <tr key={c.id} className="hover:bg-slate-50/60">
-                  <td className="py-3 font-semibold text-slate-900">{c.name}</td>
-                  <td className="py-3 text-slate-500">{c.siret}</td>
-                  <td className="py-3 font-semibold text-slate-900">{c.spend.toFixed(2)}€</td>
-                  <td className="py-3 text-slate-700">{c.courses}</td>
-                  <td className="py-3">
-                    <span className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wide ${c.risk.level === "Élevé" ? "bg-rose-50 text-rose-600" : c.risk.level === "Moyen" ? "bg-amber-50 text-amber-600" : "bg-emerald-50 text-emerald-600"}`}>
-                      Risque {c.risk.level} • {c.risk.score}/100
+                <tr key={c.id} className="hover:bg-slate-50/80 transition-all cursor-pointer group" onClick={() => navigate(`/admin/clients/${c.id}`)}>
+                  <td className="px-8 py-6">
+                    <div className="flex items-center gap-4">
+                      <div className="h-10 w-10 rounded-xl bg-slate-900 flex items-center justify-center text-white font-black text-xs shadow-lg">
+                        {c.name.slice(0, 1).toUpperCase()}
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-sm font-black text-slate-900 group-hover:text-orange-500 transition-colors uppercase tracking-tight">{c.name}</span>
+                        <span className="text-[10px] font-bold text-slate-400 uppercase">Compte Certifié</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-8 py-6">
+                    <span className="text-xs font-black text-slate-400 tracking-tighter">{c.siret}</span>
+                  </td>
+                  <td className="px-8 py-6">
+                    <span className="text-sm font-black text-slate-900">{c.spend.toFixed(2)}€</span>
+                  </td>
+                  <td className="px-8 py-6">
+                    <span className="inline-flex items-center justify-center min-w-[2.5rem] px-2 py-1 rounded-lg bg-slate-100 text-[10px] font-black text-slate-600">
+                      {c.courses}
                     </span>
                   </td>
-                  <td className="py-3 text-slate-500">{c.last}</td>
-                  <td className="py-3">
-                    <div className="flex justify-end">
-                      <button onClick={() => navigate(`/admin/clients/${c.id}`)} className="rounded-full bg-slate-900 px-3 py-1.5 text-[11px] font-bold text-white">Détails</button>
+                  <td className="px-8 py-6">
+                    <div className="flex flex-col gap-1">
+                      <span className={`inline-flex items-center gap-1.5 text-[9px] font-black uppercase tracking-widest ${c.risk.level === "Élevé" ? "text-rose-600" :
+                          c.risk.level === "Moyen" ? "text-amber-600" :
+                            "text-emerald-600"
+                        }`}>
+                        <span className={`h-1.5 w-1.5 rounded-full ${c.risk.level === "Élevé" ? "bg-rose-600 animate-pulse" :
+                            c.risk.level === "Moyen" ? "bg-amber-600" :
+                              "bg-emerald-600"
+                          }`}></span>
+                        {c.risk.level}
+                      </span>
+                      <div className="w-24 h-1 bg-slate-100 rounded-full overflow-hidden">
+                        <div className={`h-full rounded-full ${c.risk.level === "Élevé" ? "bg-rose-500" :
+                            c.risk.level === "Moyen" ? "bg-amber-500" :
+                              "bg-emerald-500"
+                          }`} style={{ width: `${c.risk.score}%` }}></div>
+                      </div>
                     </div>
+                  </td>
+                  <td className="px-8 py-6 text-right">
+                    <button
+                      onClick={(e) => { e.stopPropagation(); navigate(`/admin/clients/${c.id}`); }}
+                      className="px-5 py-2.5 rounded-xl bg-slate-900 text-white text-[10px] font-black uppercase tracking-widest shadow-xl shadow-slate-900/10 hover:bg-slate-800 transition-all active:scale-95"
+                    >
+                      DOSSIER
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -171,5 +206,7 @@ export default function AdminClients() {
     </div>
   );
 }
+
+
 
 

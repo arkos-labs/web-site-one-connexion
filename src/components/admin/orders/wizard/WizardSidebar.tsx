@@ -59,3 +59,5 @@ export const WizardSidebar = ({ steps, currentStep, completedSteps, onStepClick 
         </div>
     );
 };
+
+

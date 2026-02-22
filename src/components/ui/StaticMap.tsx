@@ -90,3 +90,5 @@ const StaticMap = ({ center, zoom = 13, address = "Paris" }: StaticMapProps) => 
 };
 
 export default StaticMap;
+
+

@@ -39,7 +39,7 @@ export async function assignOrderToDriver(params: AssignOrderParams) {
             .from('orders')
             .select('*', { count: 'exact', head: true })
             .eq('driver_id', driverUserId)
-            .in('status', ['dispatched', 'driver_accepted', 'arrived_pickup', 'in_progress']);
+            .in('status', ['assigned', 'driver_accepted', 'in_progress']);
 
         if (activeOrdersCount === 0) {
             // Le chauffeur est libre selon les commandes, on ignore son statut 'busy'
@@ -57,7 +57,7 @@ export async function assignOrderToDriver(params: AssignOrderParams) {
         // 1. Mettre à jour la commande
         const updateData = {
             driver_id: driverUserId,
-            status: 'dispatched',
+            status: 'assigned',
             dispatched_at: new Date().toISOString(),
             updated_at: new Date().toISOString()
         };
@@ -118,7 +118,7 @@ export async function assignOrderToDriver(params: AssignOrderParams) {
         // 4. Événement
         await supabase.from('order_events').insert({
             order_id: orderId,
-            event_type: 'dispatched',
+            event_type: 'assigned',
             description: `Assignée par admin`,
             actor_type: 'admin',
             actor_id: adminId,
@@ -211,3 +211,5 @@ export async function unassignOrder(orderId: string, reason?: string) {
         return { success: false, error };
     }
 }
+
+

@@ -180,7 +180,7 @@ const ClientDetail = () => {
                 .reduce<number>((sum, i) => sum + (i.amount_ttc || 0), 0);
 
             const activeOrdersCount = clientOrders
-                .filter(o => ['pending_acceptance', 'assigned', 'in_progress', 'dispatched'].includes(o.status))
+                .filter(o => ['pending_acceptance', 'assigned', 'in_progress', 'assigned'].includes(o.status))
                 .length;
 
             setStats({
@@ -307,7 +307,7 @@ const ClientDetail = () => {
         const colors: Record<string, string> = {
             pending_acceptance: 'bg-orange-500',
             accepted: 'bg-blue-500',
-            dispatched: 'bg-purple-500',
+            assigned: 'bg-purple-500',
             in_progress: 'bg-indigo-500',
             delivered: 'bg-green-500',
             cancelled: 'bg-red-500',
@@ -851,4 +851,6 @@ const ClientDetail = () => {
 };
 
 export default ClientDetail;
+
+
 

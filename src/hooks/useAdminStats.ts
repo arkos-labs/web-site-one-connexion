@@ -210,7 +210,7 @@ export const useAdminStats = (filter: StatsFilter = { period: 'day' }) => {
                 // 5. Orders by Status
                 supabase.from('orders').select('*', { count: 'exact', head: true }).eq('status', 'pending_acceptance'),
                 supabase.from('orders').select('*', { count: 'exact', head: true }).eq('status', 'accepted'),
-                supabase.from('orders').select('*', { count: 'exact', head: true }).eq('status', 'dispatched'),
+                supabase.from('orders').select('*', { count: 'exact', head: true }).eq('status', 'assigned'),
                 supabase.from('orders').select('*', { count: 'exact', head: true }).eq('status', 'delivered').gte('updated_at', currentStart.toISOString()).lte('updated_at', currentEnd.toISOString()),
                 supabase.from('orders').select('*', { count: 'exact', head: true }).eq('status', 'cancelled').gte('updated_at', currentStart.toISOString()).lte('updated_at', currentEnd.toISOString()),
 
@@ -252,7 +252,7 @@ export const useAdminStats = (filter: StatsFilter = { period: 'day' }) => {
                     .from('orders')
                     .select('driver_id')
                     .in('driver_id', driverIds)
-                    .in('status', ['dispatched', 'in_progress']);
+                    .in('status', ['assigned', 'in_progress']);
 
                 const deliveryCounts = (activeDeliveries || []).reduce((acc, curr) => {
                     acc[curr.driver_id] = (acc[curr.driver_id] || 0) + 1;
@@ -423,3 +423,5 @@ export const useAdminStats = (filter: StatsFilter = { period: 'day' }) => {
 
     return stats;
 };
+
+

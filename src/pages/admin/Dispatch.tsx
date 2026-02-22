@@ -117,8 +117,8 @@ export default function Dispatch() {
             setAcceptedOrders(prev => [...prev, updatedOrder]);
         }
 
-        // Cas 1.2: Commande assignée (dispatched) qui revient à 'accepted' (probablement désassignée manuellement)
-        if (updatedOrder.status === 'accepted' && oldOrder?.status === 'dispatched') {
+        // Cas 1.2: Commande assignée (assigned) qui revient à 'accepted' (probablement désassignée manuellement)
+        if (updatedOrder.status === 'accepted' && oldOrder?.status === 'assigned') {
             setDispatchedOrders(prev => prev.filter(o => o.id !== updatedOrder.id));
             setAcceptedOrders(prev => {
                 const exists = prev.find(o => o.id === updatedOrder.id);
@@ -129,7 +129,7 @@ export default function Dispatch() {
         }
 
         // Cas 1.5: Chauffeur ARRIVÉ au point de retrait
-        if (updatedOrder.status === 'arrived_pickup') {
+        if (updatedOrder.status === 'in_progress') {
             toast.info(
                 `📍 CHAUFFEUR ARRIVÉ AU RETRAIT (${updatedOrder.reference})`,
                 {
@@ -175,7 +175,7 @@ export default function Dispatch() {
         }
 
         // Cas 3: Commande dispatchée (envoyée au chauffeur)
-        if (updatedOrder.status === 'dispatched') { // dispatched peut venir de accepted ou driver_refused
+        if (updatedOrder.status === 'assigned') { // assigned peut venir de accepted ou driver_refused
             toast(
                 `📤 Commande ${updatedOrder.reference} envoyée au chauffeur`,
                 {
@@ -187,7 +187,7 @@ export default function Dispatch() {
                 }
             );
 
-            // Retirer de accepted et ajouter à assigned/dispatched
+            // Retirer de accepted et ajouter à assigned/assigned
             setAcceptedOrders(prev => prev.filter(o => o.id !== updatedOrder.id));
             setDispatchedOrders(prev => {
                 const exists = prev.find(o => o.id === updatedOrder.id);
@@ -341,7 +341,7 @@ export default function Dispatch() {
                     event: 'UPDATE',
                     schema: 'public',
                     table: 'orders',
-                    filter: "status=in.(accepted,dispatched,driver_accepted,arrived_pickup,in_progress,driver_refused,delivered,completed,cancelled)"
+                    filter: "status=in.(accepted,assigned,driver_accepted,in_progress,in_progress,driver_refused,delivered,completed,cancelled)"
                 },
                 handleOrderUpdate
             )
@@ -444,7 +444,7 @@ export default function Dispatch() {
         const { data, error } = await supabase
             .from('orders')
             .select('*')
-            .in('status', ['accepted', 'dispatched', 'driver_accepted', 'arrived_pickup', 'in_progress', 'driver_refused'])
+            .in('status', ['accepted', 'assigned', 'driver_accepted', 'in_progress', 'driver_refused'])
             .order('created_at', { ascending: true });
 
         if (error) {
@@ -454,7 +454,7 @@ export default function Dispatch() {
 
         const orders = data || [];
         const accepted: Order[] = [];
-        const dispatched: Order[] = [];
+        const assigned: Order[] = [];
         const driverAccepted: Order[] = [];
         const inProgress: Order[] = [];
         const deliveriesMap: Record<string, Order> = {};
@@ -462,13 +462,12 @@ export default function Dispatch() {
         orders.forEach((order: Order) => {
             switch (order.status) {
                 case 'accepted': accepted.push(order); break;
-                case 'dispatched':
+                case 'assigned':
                 case 'driver_refused': // Les commandes refusées sont aussi affichées dans "En Attribution"
-                    dispatched.push(order);
+                    assigned.push(order);
                     if (order.driver_id) deliveriesMap[order.driver_id] = order;
                     break;
                 case 'driver_accepted':
-                case 'arrived_pickup':
                 case 'in_progress':
                     driverAccepted.push(order);
                     if (order.driver_id) deliveriesMap[order.driver_id] = order;
@@ -486,7 +485,7 @@ export default function Dispatch() {
         };
 
         setAcceptedOrders(sortOrders(accepted));
-        setDispatchedOrders(dispatched);
+        setDispatchedOrders(assigned);
         setDriverAcceptedOrders(driverAccepted);
         setInProgressOrders(inProgress);
         setActiveDeliveries(deliveriesMap);
@@ -545,16 +544,22 @@ export default function Dispatch() {
             if (result.success) {
                 toast.success(`✅ Course dispatchée avec succès !`);
 
-                // Optimistic
+                const updatedOrder = (result as any)?.order;
+                const driverUserId = driver.user_id || driverId;
+
+                // Optimistic + cohérent avec la DB
                 setAcceptedOrders(prev => prev.filter(o => o.id !== orderId));
                 setDispatchedOrders(prev => {
                     const exists = prev.find(o => o.id === orderId);
-                    if (exists) return prev;
-                    // fetch one to be sure, but for now push dummy
+                    if (exists) return prev.map(o => o.id === orderId ? { ...o, status: 'assigned', driver_id: driverUserId } : o);
                     const moved = acceptedOrders.find(o => o.id === orderId);
-                    return moved ? [...prev, { ...moved, status: 'dispatched', driver_id: driverId }] : prev;
+                    if (updatedOrder) return [...prev, updatedOrder];
+                    return moved ? [...prev, { ...moved, status: 'assigned', driver_id: driverUserId }] : prev;
                 });
                 setAvailableDrivers(prev => prev.map(d => d.id === driverId ? { ...d, status: 'busy' } : d));
+
+                // Hard refresh pour éviter tout état bloqué
+                fetchAllOrders();
 
                 setIsAssignDialogOpen(false);
                 setSelectedOrder(null);
@@ -818,7 +823,7 @@ export default function Dispatch() {
                                             statusLabel = "Vers Retrait";
                                             statusColor = "text-orange-600 bg-orange-50";
                                             distance = calculateDistance(driver.current_lat, driver.current_lng, order.pickup_lat || 0, order.pickup_lng || 0);
-                                        } else if (order.status === 'arrived_pickup') {
+                                        } else if (order.status === 'in_progress') {
                                             statusLabel = "Sur Place";
                                             statusColor = "text-purple-600 bg-purple-50";
                                         } else if (order.status === 'in_progress') {
@@ -857,7 +862,7 @@ export default function Dispatch() {
                                                     <p className="text-sm font-medium truncate">
                                                         {driver ? `${driver.first_name} ${driver.last_name || ''}`.trim() : '...'}
                                                     </p>
-                                                    {driver?.current_lat && order.status !== 'arrived_pickup' && (
+                                                    {driver?.current_lat && order.status !== 'in_progress' && (
                                                         <div className="flex items-center gap-2 text-xs text-slate-500">
                                                             <span>🚀 {formatDistance(distance)}</span>
                                                             <span>⏱ {estimateTime(distance)}</span>
@@ -993,3 +998,5 @@ export default function Dispatch() {
         </div>
     );
 }
+
+

@@ -82,3 +82,5 @@ const AuthToggle = ({ activeMode }: AuthToggleProps) => {
 
 export default AuthToggle;
 
+
+

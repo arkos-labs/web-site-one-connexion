@@ -26,3 +26,5 @@ export const sendEmail = async ({ to, subject, html, attachmentUrl }: EmailOptio
     // Simulation de succès
     return true;
 };
+
+

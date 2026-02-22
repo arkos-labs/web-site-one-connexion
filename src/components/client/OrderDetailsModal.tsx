@@ -22,7 +22,7 @@ const OrderDetailsModal = ({ order, isOpen, onClose }: OrderDetailsModalProps) =
             pending: { label: 'En attente', className: 'bg-orange-500 hover:bg-orange-600' },
             pending_acceptance: { label: 'En attente', className: 'bg-orange-500 hover:bg-orange-600' },
             accepted: { label: 'Acceptée', className: 'bg-blue-500 hover:bg-blue-600' },
-            dispatched: { label: 'En cours', className: 'bg-blue-600 hover:bg-blue-700' },
+            assigned: { label: 'En cours', className: 'bg-blue-600 hover:bg-blue-700' },
             in_progress: { label: 'En cours', className: 'bg-blue-600 hover:bg-blue-700' },
             delivered: { label: 'Livrée', className: 'bg-green-500 hover:bg-green-600' },
             cancelled: { label: 'Annulée', className: 'bg-red-500 hover:bg-red-600' },
@@ -173,3 +173,5 @@ const OrderDetailsModal = ({ order, isOpen, onClose }: OrderDetailsModalProps) =
 };
 
 export default OrderDetailsModal;
+
+

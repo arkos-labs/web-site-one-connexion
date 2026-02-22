@@ -85,7 +85,7 @@ export const ActivityTimeline = ({ clientId, limit = 10 }: ActivityTimelineProps
                         // Événement de dispatch
                         if (order.dispatched_at) {
                             events.push({
-                                id: `order-dispatched-${order.id}`,
+                                id: `order-assigned-${order.id}`,
                                 type: 'status_change',
                                 title: 'Chauffeur assigné',
                                 description: `Commande ${order.reference} prise en charge`,
@@ -250,3 +250,5 @@ export const ActivityTimeline = ({ clientId, limit = 10 }: ActivityTimelineProps
         </div>
     );
 };
+
+

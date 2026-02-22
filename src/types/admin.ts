@@ -19,3 +19,5 @@ export type AdminStatus = 'active' | 'suspended' | 'deleted';
 export interface AdminProfile extends Admin {
     // Propriétés supplémentaires si nécessaire
 }
+
+

@@ -88,3 +88,5 @@ export const RevenueChart = ({ data }: RevenueChartProps) => {
         </Card>
     );
 };
+
+

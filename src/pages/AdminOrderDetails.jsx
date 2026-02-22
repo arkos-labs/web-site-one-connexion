@@ -150,10 +150,10 @@ export default function AdminOrderDetails() {
 
     // If driver is set, we can auto-update status to assigned
     // - pending -> assigned
-    // - assigned/picked_up + driver change -> reassign to assigned
+    // - assigned/in_progress + driver change -> reassign to assigned
     if (updates.driver_id) {
       const driverChanged = updates.driver_id !== order.driver_id;
-      if (order.status === 'pending' || ((order.status === 'assigned' || order.status === 'picked_up') && driverChanged)) {
+      if (order.status === 'pending' || ((order.status === 'assigned' || order.status === 'in_progress') && driverChanged)) {
         updates.status = 'assigned';
       }
     }
@@ -289,7 +289,7 @@ export default function AdminOrderDetails() {
 
           {order.status === "assigned" && (
             <button
-              onClick={() => updateStatus('picked_up')}
+              onClick={() => updateStatus('in_progress')}
               disabled={saving}
               className="rounded-full bg-slate-900 px-4 py-2 text-xs font-bold text-white hover:bg-slate-800 transition-colors disabled:opacity-50"
             >
@@ -297,7 +297,7 @@ export default function AdminOrderDetails() {
             </button>
           )}
 
-          {order.status === "picked_up" && (
+          {order.status === "in_progress" && (
             <button
               onClick={() => updateStatus('delivered')}
               disabled={saving}
@@ -593,4 +593,6 @@ export default function AdminOrderDetails() {
     </div>
   );
 }
+
+
 

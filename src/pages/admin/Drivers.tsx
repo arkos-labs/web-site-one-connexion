@@ -125,8 +125,8 @@ const Drivers = () => {
 
           const totalDeliveries = driverOrders.filter((o: any) => o.status === 'delivered').length;
           const cancelledDeliveries = driverOrders.filter((o: any) => o.status === 'cancelled').length;
-          // Active orders: dispatched (assigned) or in_progress (picked up)
-          const pendingDeliveries = driverOrders.filter((o: any) => ['dispatched', 'in_progress', 'driver_accepted', 'arrived_pickup'].includes(o.status)).length;
+          // Active orders: assigned (assigned) or in_progress (picked up)
+          const pendingDeliveries = driverOrders.filter((o: any) => ['assigned', 'in_progress', 'driver_accepted', 'in_progress'].includes(o.status)).length;
           const totalEarnings = driverOrders
             .filter((o: any) => o.status === 'delivered')
             .reduce((sum: number, o: any) => sum + (o.price || 0), 0);
@@ -464,4 +464,6 @@ const Drivers = () => {
 };
 
 export default Drivers;
+
+
 

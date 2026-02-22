@@ -31,7 +31,7 @@ export interface Order {
     delivery_address: string;
     delivery_type: string;
     price: number;
-    status: 'pending_acceptance' | 'accepted' | 'dispatched' | 'driver_accepted' | 'in_progress' | 'delivered' | 'cancelled';
+    status: 'pending_acceptance' | 'accepted' | 'assigned' | 'driver_accepted' | 'driver_refused' | 'in_progress' | 'delivered' | 'cancelled';
     created_at: string;
     updated_at: string;
     driver_id?: string;
@@ -179,3 +179,5 @@ export const getClientInvoices = async (clientId: string): Promise<Invoice[]> =>
         return [];
     }
 };
+
+

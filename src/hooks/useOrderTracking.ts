@@ -4,7 +4,7 @@ import { subscribeToOrderUpdates } from '@/services/supabaseQueries';
 
 export interface OrderTracking {
     orderId: string;
-    status: 'pending_acceptance' | 'accepted' | 'dispatched' | 'in_progress' | 'delivered' | 'cancelled';
+    status: 'pending_acceptance' | 'accepted' | 'assigned' | 'driver_accepted' | 'in_progress' | 'delivered' | 'cancelled';
     driver: {
         id: string;
         name: string;
@@ -65,10 +65,9 @@ export const useOrderTracking = (orderId: string | null) => {
         switch (order.status) {
             case 'pending_acceptance': progress = 10; break;
             case 'accepted': progress = 20; break;
-            case 'dispatched': progress = 30; break;
             case 'assigned': progress = 40; break;
-            case 'pickup': progress = 50; break;
-            case 'in_progress': progress = 75; break;
+            case 'driver_accepted': progress = 60; break;
+            case 'in_progress': progress = 80; break;
             case 'delivered': progress = 100; break;
             default: progress = 0;
         }
@@ -162,7 +161,7 @@ export const useOrderTracking = (orderId: string | null) => {
         const interval = setInterval(() => {
             const status = trackingRef.current?.status;
             // Rafraîchir si la commande est active
-            if (status && ['accepted', 'dispatched', 'in_progress'].includes(status)) {
+            if (status && ['accepted', 'assigned', 'driver_accepted', 'in_progress'].includes(status)) {
                 fetchTracking(true);
             }
         }, 1000); // Rafraîchissement toutes les secondes
@@ -224,3 +223,5 @@ export const useActiveOrders = (clientId?: string) => {
 
     return { orders, loading };
 };
+
+

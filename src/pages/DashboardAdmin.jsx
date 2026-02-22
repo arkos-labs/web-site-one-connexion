@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useMemo, useState, useRef } from "react";
 import { supabase } from "../lib/supabase";
-import { Search, X, MapPin, BookOpen } from "lucide-react";
+import { Search, X, MapPin, BookOpen, Bell, Activity, Truck, Shield, CheckCircle as CheckIcon } from "lucide-react";
 import { autocompleteAddress } from "../lib/autocomplete";
 
 const LOCATIONIQ_KEY = import.meta.env.VITE_LOCATIONIQ_API_KEY;
@@ -9,6 +9,13 @@ const LOCATIONIQ_URL = "https://api.locationiq.com/v1/autocomplete";
 
 // Simulation de la date (pour test)
 const SIMULATED_NOW = new Date('2026-03-01T10:00:00');
+
+function computeDriverPay(order) {
+  const total = Number(order?.price_ht || 0);
+  if (!total) return 0;
+  const share = total <= 10 ? 0.5 : 0.4;
+  return total * share;
+}
 
 
 export default function DashboardAdmin() {
@@ -216,26 +223,26 @@ export default function DashboardAdmin() {
   const handleQuickAccept = async (orderId) => {
     if (!orderId) return;
     try {
-      console.log("DEBUG: handleQuickAccept started", orderId);
-      // Optional: set a local loading state for this specific order
+      // 1. Mise à jour locale immédiate (Optimiste)
+      setOrdersAll(prev => prev.map(o => o.id === orderId ? { ...o, status: 'accepted' } : o));
 
-      const { data, error } = await supabase
+      // 2. Changement de vue immédiat
+      setOperationView('accepted');
+
+      // 3. Appel API
+      const { error } = await supabase
         .from('orders')
         .update({ status: 'accepted' })
-        .eq('id', orderId)
-        .select();
+        .eq('id', orderId);
 
       if (error) throw error;
 
-      console.log("DEBUG: handleQuickAccept success", data);
+      // 4. Rafraîchissement complet en arrière-plan
+      await fetchOrders();
 
-      // Provide immediate visual feedback
-      alert('Commande acceptée avec succès');
-      setOperationView('accepted');
-      fetchOrders();
     } catch (err) {
-      console.error("DEBUG: handleQuickAccept error", err);
-      alert("Erreur lors de l'acceptation : " + (err.message || "Erreur inconnue"));
+      console.error("Error during quick accept:", err);
+      fetchOrders(); // Rollback en rafraîchissant
     }
   };
 
@@ -302,37 +309,59 @@ export default function DashboardAdmin() {
   }, [form.pickup, form.delivery, form.vehicle, form.service]);
 
   const kpis = useMemo(() => {
-    const toAccept = ordersAll.filter((o) => o.status === "pending_acceptance" || o.status === "pending").length;
-    const toDispatch = ordersAll.filter((o) => o.status === "accepted" || o.status === "assigned").length;
-    const active = ordersAll.filter((o) => o.status === "in_progress" || o.status === "picked_up" || o.status === "dispatched").length;
+    const toAcceptCount = ordersAll.filter(o => ["pending_acceptance", "pending"].includes(o.status)).length;
+    const toDispatchCount = ordersAll.filter(o => ["accepted", "assigned"].includes(o.status)).length;
+    const activeMissionsCount = ordersAll.filter(o => ["assigned", "driver_accepted", "in_progress", "in_progress"].includes(o.status)).length;
 
-    const revenueOps = ordersAll.filter(o => ['pending_acceptance', 'pending', 'accepted', 'assigned', 'dispatched', 'in_progress', 'picked_up'].includes(o.status)).reduce((acc, o) => acc + (Number(o.price_ht) || 0), 0);
-    const totalDelivered = ordersAll.filter(o => o.status === 'delivered').reduce((acc, o) => acc + (Number(o.price_ht) || 0), 0);
-    const revenuePaid = invoicesAll.filter(i => i.status === 'paid').reduce((acc, i) => acc + (Number(i.total_ht) || 0), 0);
+    // CA Opérations : Tout ce qui est validé mais pas encore fini
+    const revenueOps = ordersAll
+      .filter(o => ["accepted", "assigned", "assigned", "driver_accepted", "in_progress", "in_progress"].includes(o.status))
+      .reduce((acc, o) => acc + (Number(o.price_ht) || 0), 0);
 
-    // À recouvrer = Tout ce qui est livré mais pas encore payé (facturé ou non)
-    const revenueToRecoup = Math.max(0, totalDelivered - revenuePaid);
+    // --- Cycle Paiements Clients ---
+    const deliveredOrders = ordersAll.filter(o => o.status === 'delivered');
+    const totalDeliveredHT = deliveredOrders.reduce((acc, o) => acc + (Number(o.price_ht) || 0), 0);
+    const revenuePaidHT = invoicesAll
+      .filter(i => i.status === 'paid')
+      .reduce((acc, i) => acc + (Number(i.total_ht) || 0), 0);
 
-    // Détails Encaissements
+    // À Recouvrer Total
+    const totalToRecoup = Math.max(0, totalDeliveredHT - revenuePaidHT);
+
+    // Retards Spécifiques (Basé sur les factures)
+    const overdueInvoices = invoicesAll.filter(i => i.status !== 'paid' && i.due_date && new Date(i.due_date) < SIMULATED_NOW);
+    const overdueAmount = overdueInvoices.reduce((acc, i) => acc + (Number(i.total_ttc) || 0), 0);
+    const debtorClientsCount = new Set(invoicesAll.filter(i => i.status !== 'paid').map(i => i.client_id)).size;
+
+    // --- Cycle Reversement Chauffeurs ---
+    const totalDriverPayRequired = deliveredOrders.reduce((acc, o) => acc + computeDriverPay(o), 0);
     const driverPayPaid = driverPaymentsAll.filter(p => p.status === 'paid').reduce((acc, p) => acc + (Number(p.amount) || 0), 0);
-    const netProfitPaid = revenuePaid - driverPayPaid;
+    const driverPayOutstanding = Math.max(0, totalDriverPayRequired - driverPayPaid);
+
+    // Profit Net One Connection (Sur livrées)
+    const netProfit = totalDeliveredHT - totalDriverPayRequired;
 
     return {
-      toAccept,
-      toDispatch,
-      active,
-      overdueInvoices: invoicesAll.filter(i => i.status !== 'paid' && i.due_date && new Date(i.due_date) < SIMULATED_NOW).length,
-      revenueOps,
-      revenuePaid,
-      revenueToRecoup,
-      driverPayPaid,
-      netProfitPaid
+      dispatchLive: (toAcceptCount || 0) + (toDispatchCount || 0) + (activeMissionsCount || 0),
+      toAccept: toAcceptCount || 0,
+      toDispatch: toDispatchCount || 0,
+      active: activeMissionsCount || 0,
+      revenueOps: revenueOps || 0,
+      totalToRecoup: totalToRecoup || 0,
+      revenuePaidHT: revenuePaidHT || 0,
+      overdueAmount: overdueAmount || 0,
+      debtorClientsCount: debtorClientsCount || 0,
+      totalDeliveredHT: totalDeliveredHT || 0,
+      totalDriverPayRequired: totalDriverPayRequired || 0,
+      driverPayOutstanding: driverPayOutstanding || 0,
+      netProfit: netProfit || 0,
+      deliveredCount: deliveredOrders.length || 0
     };
   }, [ordersAll, invoicesAll, driverPaymentsAll]);
 
   const driverRows = useMemo(() => {
     return drivers.map((d) => {
-      const activeOrder = ordersAll.find((o) => o.driver_id === d.id && (o.status === "in_progress" || o.status === "picked_up"));
+      const activeOrder = ordersAll.find((o) => o.driver_id === d.id && (o.status === "in_progress" || o.status === "in_progress"));
       const status = activeOrder ? "EN MISSION" : "À VIDE";
       const cls = activeOrder ? "bg-amber-100 text-amber-700" : "bg-emerald-100 text-emerald-700";
       return { ...d, status, cls };
@@ -468,31 +497,47 @@ export default function DashboardAdmin() {
 
   return (
     <div className="p-8 pt-0 space-y-8">
-      <header className="pt-8 stagger">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-4xl font-extrabold tracking-tight text-slate-900">Ravi de vous revoir ! 👋</h2>
-            <p className="mt-2 text-base font-medium text-slate-500">Prêt à superviser votre flotte et exploser les performances aujourd'hui ?</p>
+      <header className="pt-8">
+        <div className="flex flex-wrap items-center justify-between gap-6">
+          <div className="animate-in fade-in slide-in-from-left-4 duration-700">
+            <div className="flex items-center gap-3 mb-2">
+              <span className="inline-flex items-center rounded-full bg-slate-900 px-2.5 py-1 text-[10px] font-black text-white uppercase tracking-widest shadow-lg shadow-slate-900/20">
+                Aujourd'hui
+              </span>
+              <span className="text-xs font-bold text-slate-400">Dimanche 1er Mars 2026</span>
+            </div>
+            <h2 className="text-4xl font-black tracking-tight text-slate-900 lg:text-5xl">
+              Ravi de vous revoir ! 👋
+            </h2>
+            <p className="mt-3 text-lg font-medium text-slate-500 max-w-2xl">
+              Votre flotte One Connexion est prête. Voici un aperçu de l'activité en temps réel.
+            </p>
           </div>
-          <div className="flex items-center gap-3">
+
+          <div className="flex items-center gap-4 animate-in fade-in slide-in-from-right-4 duration-700">
             <button
               onClick={() => {
                 triggerNewOrderAlert({
-                  id: 'test',
-                  pickup_city: 'Paris (Test)',
-                  delivery_city: 'Lyon (Test)'
+                  id: 'test-' + Date.now(),
+                  pickup_city: 'Paris (Simulation)',
+                  delivery_city: 'Boulogne (Simulation)',
+                  price_ht: 25.50
                 });
               }}
-              className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-bold text-slate-600 hover:bg-slate-50 transition-colors"
+              className="group flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-600 shadow-sm transition-all hover:bg-slate-50 hover:border-slate-300"
             >
-              🔔 Test Alerte
+              <Bell size={18} className="text-slate-400 group-hover:rotate-12 transition-transform" />
+              Tester l'alerte
             </button>
-            <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-100">
-              <span className="flex h-2 w-2 relative">
+
+            <div className="h-10 w-px bg-slate-200 hidden sm:block"></div>
+
+            <div className="hidden sm:flex items-center gap-2 px-5 py-3 rounded-2xl bg-white border border-slate-200 shadow-sm">
+              <div className="relative flex h-2.5 w-2.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-              </span>
-              <span className="text-xs font-bold text-emerald-600">Système opérationnel</span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+              </div>
+              <span className="text-xs font-black text-slate-900 uppercase tracking-widest">Système Opérationnel</span>
             </div>
           </div>
         </div>
@@ -502,180 +547,304 @@ export default function DashboardAdmin() {
         <div className="text-center py-20">Chargement...</div>
       ) : (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 stagger">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
             {[
-              { label: "À Accepter", value: kpis.toAccept, tone: "text-emerald-600", bg: "bg-emerald-50", icon: "🚨" },
-              { label: "À Dispatcher", value: kpis.toDispatch, tone: "text-blue-600", bg: "bg-blue-50", icon: "🧭" },
-              { label: "Courses actives", value: kpis.active, tone: "text-amber-600", bg: "bg-amber-50", icon: "🚚" },
-              { label: "CA Opérationnel", value: `${kpis.revenueOps.toFixed(2)}€`, tone: "text-slate-500", bg: "bg-slate-50", icon: "🛠️" },
-              { label: "CA à Recouvrer (Livrées)", value: `${kpis.revenueToRecoup.toFixed(2)}€`, tone: "text-rose-600", bg: "bg-rose-50", icon: "⏳" },
               {
-                label: "CA Encaissé (Réglé)",
-                value: `${kpis.revenuePaid.toFixed(2)}€`,
-                tone: "text-emerald-700",
-                bg: "bg-emerald-100",
-                icon: "💰",
+                label: "Flux Opérationnel",
+                value: kpis.dispatchLive,
+                icon: "🚨",
+                color: "from-slate-800 to-slate-900",
+                light: "bg-slate-50",
+                text: "text-slate-900",
                 details: [
-                  { label: "Encaissé Client", value: `${kpis.revenuePaid.toFixed(2)}€` },
-                  { label: "À régler Chauffeur", value: `-${kpis.driverPayPaid.toFixed(2)}€`, cls: "text-rose-500" },
-                  { label: "Reste / Marge", value: `${kpis.netProfitPaid.toFixed(2)}€`, cls: "text-emerald-600" },
+                  { label: "À Valider", value: kpis.toAccept, cls: "text-rose-500" },
+                  { label: "À Dispatcher", value: kpis.toDispatch, cls: "text-indigo-500" },
+                  { label: "En Mission", value: kpis.active, cls: "text-amber-500" }
+                ]
+              },
+              {
+                label: "CA Opérations",
+                value: `${(kpis.revenueOps || 0).toFixed(0)}€`,
+                icon: "🛠️",
+                color: "from-indigo-500 to-indigo-600",
+                light: "bg-indigo-50",
+                text: "text-indigo-600",
+                details: [{ label: "En cours de livraison", value: "", cls: "" }]
+              },
+              {
+                label: "Relances Clients",
+                value: `${(kpis.totalToRecoup || 0).toFixed(0)}€`,
+                icon: "⌛",
+                color: (kpis.overdueAmount || 0) > 0 ? "from-rose-500 to-rose-600" : "from-orange-500 to-orange-600",
+                light: (kpis.overdueAmount || 0) > 0 ? "bg-rose-50" : "bg-orange-50",
+                text: (kpis.overdueAmount || 0) > 0 ? "text-rose-600" : "text-orange-600",
+                details: [
+                  { label: "DÉJÀ ENCAISSÉ", value: `${(kpis.revenuePaidHT || 0).toFixed(0)}€`, cls: "text-emerald-600" },
+                  { label: "DONT EN RETARD", value: `${(kpis.overdueAmount || 0).toFixed(0)}€`, cls: "text-rose-600 font-black" },
+                  { label: "Clients à relancer", value: kpis.debtorClientsCount || 0, cls: "text-slate-600" }
+                ]
+              },
+              {
+                label: "Dû Chauffeurs",
+                value: `${(kpis.driverPayOutstanding || 0).toFixed(0)}€`,
+                icon: "👤",
+                color: "from-amber-500 to-amber-600",
+                light: "bg-amber-50",
+                text: "text-amber-600",
+                details: [{ label: "À régler (Missions livrées)", value: "", cls: "" }]
+              },
+              {
+                label: "Profit One (Est.)",
+                value: `${(kpis.netProfit || 0).toFixed(0)}€`,
+                icon: "💰",
+                color: "from-emerald-600 to-emerald-700",
+                light: "bg-emerald-50",
+                text: "text-emerald-700",
+                details: [
+                  { label: "Base CA Livré", value: `${(kpis.totalDeliveredHT || 0).toFixed(0)}€`, cls: "text-slate-400" },
+                  { label: "Missions Terminées", value: kpis.deliveredCount || 0, cls: "text-emerald-600" },
                 ]
               },
             ].map((k, i) => (
-              <div key={i} className={`group relative overflow-hidden bg-white p-6 rounded-[1.5rem] border border-slate-100 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] transition-all hover:-translate-y-1 hover:shadow-lg ${k.pulse ? "ring-2 ring-red-100" : ""}`}>
-                <div className="flex justify-between items-start">
-                  <div>
-                    <div className="text-xs font-bold uppercase tracking-wider text-slate-400">{k.label}</div>
-                    <h3 className="text-4xl font-bold tracking-tight text-slate-900 mt-2">{k.value}</h3>
+              <div key={i} className="group relative overflow-hidden bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm transition-all hover:shadow-xl hover:-translate-y-1 duration-300">
+                <div className="flex justify-between items-start mb-4">
+                  <div className={`h-12 w-12 flex items-center justify-center rounded-2xl ${k.light} transition-transform group-hover:scale-110 duration-300`}>
+                    <span className="text-xl">{k.icon}</span>
                   </div>
-                  <div className={`h-10 w-10 flex items-center justify-center rounded-xl text-xl ${k.bg} transition-transform group-hover:scale-110`}>
-                    {k.icon}
-                  </div>
+                  {k.value > 10 && k.label === "À Accepter" && (
+                    <span className="flex h-2 w-2 rounded-full bg-rose-500 animate-ping"></span>
+                  )}
+                </div>
+
+                <div className="space-y-1">
+                  <h3 className="text-3xl font-black tracking-tight text-slate-900">{k.value}</h3>
+                  <div className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-400">{k.label}</div>
                 </div>
 
                 {k.details && (
-                  <div className="mt-4 space-y-2 border-t border-slate-50 pt-3">
-                    {k.details.map((d, id) => (
-                      <div key={id} className="flex justify-between items-center text-[10px] font-bold">
-                        <span className="text-slate-400 uppercase tracking-tighter">{d.label}</span>
-                        <span className={d.cls || "text-slate-900"}>{d.value}</span>
+                  <div className="mt-4 pt-4 border-t border-slate-50 flex justify-between items-center">
+                    {k.details.map((d, idx) => (
+                      <div key={idx} className="flex flex-col">
+                        <span className="text-[8px] font-black uppercase tracking-widest text-slate-300">{d.label}</span>
+                        <span className={`text-xs font-black ${d.cls}`}>{d.value}</span>
                       </div>
                     ))}
+                    <div className="h-6 w-6 rounded-lg bg-emerald-50 flex items-center justify-center">
+                      <Shield size={12} className="text-emerald-500" />
+                    </div>
                   </div>
                 )}
 
-                {k.pulse && (
-                  <p className={`mt-4 text-xs font-bold flex items-center gap-1 ${k.tone}`}>
-                    <span className="animate-pulse">●</span>
-                    Action requise
-                  </p>
-                )}
+                {/* Background Decor */}
+                <div className={`absolute -right-4 -bottom-4 h-24 w-24 rounded-full opacity-[0.03] transition-transform group-hover:scale-150 duration-700 bg-slate-900`}></div>
               </div>
             ))}
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 stagger">
-            <div className="lg:col-span-3 bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden flex flex-col">
-              <div className="p-6 border-b border-slate-50 bg-slate-50/50 flex items-center justify-between">
-                <h4 className="font-bold text-xs uppercase tracking-wider text-slate-500">Opérations en cours</h4>
-                <div className="flex bg-slate-100 p-1 rounded-xl">
-                  {['pending_acceptance', 'accepted', 'in_progress'].map(s => (
+            <div className="lg:col-span-3 bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden flex flex-col min-h-[600px]">
+              <div className="px-8 py-6 border-b border-slate-50 flex flex-wrap items-center justify-between gap-4">
+                <div>
+                  <h4 className="text-lg font-black tracking-tight text-slate-900">Suivi des Missions</h4>
+                  <p className="text-xs font-medium text-slate-400 uppercase tracking-widest mt-1">Live Dispatch Center</p>
+                </div>
+
+                <div className="flex bg-slate-100/80 p-1.5 rounded-2xl border border-slate-200/50">
+                  {[
+                    { id: 'pending_acceptance', label: 'À Accepter', icon: Bell, statuses: ['pending_acceptance', 'pending'] },
+                    { id: 'accepted', label: 'À Dispatcher', icon: MapPin, statuses: ['accepted', 'assigned'] },
+                    { id: 'in_progress', label: 'En cours', icon: Truck, statuses: ['assigned', 'driver_accepted', 'in_progress'] },
+                    { id: 'delivered', label: 'Terminées', icon: CheckIcon, statuses: ['delivered'] }
+                  ].map(tab => (
                     <button
-                      key={s}
-                      onClick={() => setOperationView(s)}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${operationView === s ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                      key={tab.id}
+                      onClick={() => setOperationView(tab.id)}
+                      className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black transition-all duration-300 ${operationView === tab.id
+                        ? 'bg-white text-slate-900 shadow-xl shadow-slate-200/50 scale-[1.02]'
+                        : 'text-slate-400 hover:text-slate-600 border border-transparent'
+                        }`}
                     >
-                      {s === 'pending_acceptance' ? 'Accepter' : s === 'accepted' ? 'Assigner' : 'En cours'}
+                      <tab.icon size={14} className={operationView === tab.id ? "text-orange-500" : ""} />
+                      {tab.label}
                     </button>
                   ))}
                 </div>
               </div>
               <div className="divide-y divide-slate-50 min-h-[300px]">
-                {ordersAll.filter((o) => (operationView === 'pending_acceptance' ? (o.status === 'pending_acceptance' || o.status === 'pending') : o.status === operationView)).length === 0 ? (
-                  <div className="p-12 text-sm text-slate-500 text-center flex flex-col items-center gap-3">
-                    <span className="text-3xl text-slate-200 opacity-50">📋</span>
-                    Aucune commande {operationView === 'pending_acceptance' ? 'à accepter' : operationView === 'accepted' ? 'à assigner' : 'en cours'}.
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-px bg-slate-50">
-                    {ordersAll.filter((o) => (operationView === 'pending_acceptance' ? (o.status === 'pending_acceptance' || o.status === 'pending') : o.status === operationView)).map((o) => (
-                      <div
-                        key={o.id}
-                        onClick={() => navigate(operationView === 'accepted' ? `/admin/orders?status=assigned` : `/admin/orders/${o.id}`)}
-                        className="p-5 bg-white hover:bg-slate-50 transition-all group cursor-pointer"
-                      >
-                        <div className="flex justify-between items-start mb-3">
-                          <div>
-                            <span className="text-xs font-bold text-slate-400 block mb-1 uppercase tracking-tighter">#{o.id.slice(0, 8)}</span>
-                            <span className="text-sm font-bold text-slate-900 group-hover:text-slate-700 transition-colors line-clamp-1">{o.clientName}</span>
-                          </div>
-                          <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide ${o.status.includes('pending') ? "bg-emerald-50 text-emerald-600" : (o.status === "accepted" || o.status === "assigned") ? "bg-blue-50 text-blue-600" : "bg-amber-50 text-amber-600"}`}>
-                            {o.status.includes('pending') ? 'À Accepter' : ((o.status === 'accepted' || o.status === 'assigned') ? (o.driver_id ? 'Dispatchée' : 'Acceptée') : (['in_progress', 'picked_up', 'dispatched'].includes(o.status) ? 'En cours' : o.status))}
-                          </span>
-                        </div>
-                        <div className="text-xs font-semibold text-slate-500 leading-relaxed mb-3 line-clamp-2">
-                          {o.pickup_city || o.pickup_address.split(',')[0]} → {o.delivery_city || o.delivery_address.split(',')[0]}
-                        </div>
-                        <div className="flex items-center justify-between pt-2 border-t border-slate-50 relative z-20">
-                          <div className="flex gap-2">
-                            {(o.status === 'pending_acceptance' || o.status === 'pending') && (
-                              <button
-                                type="button"
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  handleQuickAccept(o.id);
-                                }}
-                                className="rounded-full bg-emerald-600 px-4 py-2 text-[11px] font-bold text-white shadow-lg shadow-emerald-500/20 hover:bg-emerald-700 active:scale-95 transition-all cursor-pointer"
-                              >
-                                Accepter
-                              </button>
-                            )}
-                            {(o.status === 'accepted' || o.status === 'assigned') && (
-                              <button
-                                type="button"
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  navigate(`/admin/orders?status=assigned`);
-                                }}
-                                className="rounded-full bg-slate-900 px-4 py-2 text-[11px] font-bold text-white shadow-lg shadow-slate-900/20 hover:bg-slate-800 transition-all cursor-pointer"
-                              >
-                                Dispatcher
-                              </button>
-                            )}
-                          </div>
-                          <span className="text-[10px] font-bold text-slate-400">Détails →</span>
-                        </div>
+                {(() => {
+                  const tabConfig = {
+                    pending_acceptance: ['pending_acceptance', 'pending'],
+                    accepted: ['accepted', 'assigned'],
+                    in_progress: ['assigned', 'driver_accepted', 'in_progress'],
+                    delivered: ['delivered']
+                  };
+                  const filtered = ordersAll.filter(o => tabConfig[operationView].includes(o.status));
+
+                  if (filtered.length === 0) {
+                    return (
+                      <div className="p-12 text-sm text-slate-500 text-center flex flex-col items-center gap-3">
+                        <span className="text-3xl text-slate-200 opacity-50">📋</span>
+                        Aucune commande pour cette catégorie.
                       </div>
-                    ))}
-                  </div>
-                )}
+                    );
+                  }
+
+                  return (
+                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-px bg-slate-100">
+                      {filtered.map((o) => (
+                        <div
+                          key={o.id}
+                          onClick={() => navigate(operationView === 'accepted' ? `/admin/orders?status=assigned` : `/admin/orders/${o.id}`)}
+                          className="p-6 bg-white hover:bg-slate-50 transition-all group cursor-pointer relative"
+                        >
+                          <div className="flex justify-between items-start mb-4">
+                            <div className="flex flex-col">
+                              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">
+                                BC-{o.id.slice(0, 8)}
+                              </span>
+                              <span className="text-base font-black text-slate-900 group-hover:text-orange-500 transition-colors line-clamp-1">
+                                {o.clientName}
+                              </span>
+                            </div>
+                            <div className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider ${o.status.includes('pending') ? "bg-rose-50 text-rose-600" :
+                              (o.status === "accepted" || o.status === "assigned") ? "bg-indigo-50 text-indigo-600" :
+                                "bg-amber-50 text-amber-600"
+                              }`}>
+                              {o.status.includes('pending') ? 'Nouveau' : o.status === 'accepted' ? 'Validé' : 'En cours'}
+                            </div>
+                          </div>
+
+                          <div className="space-y-3 mb-6">
+                            <div className="flex items-start gap-3">
+                              <div className="mt-1 flex flex-col items-center gap-1">
+                                <div className="h-1.5 w-1.5 rounded-full bg-slate-300"></div>
+                                <div className="h-4 w-px bg-slate-200"></div>
+                                <div className="h-1.5 w-1.5 rounded-full bg-orange-500"></div>
+                              </div>
+                              <div className="flex flex-col min-w-0">
+                                <span className="text-[10px] text-slate-400 font-bold uppercase truncate">{o.pickup_city || 'Départ'}</span>
+                                <span className="text-[10px] text-slate-900 font-bold uppercase truncate">{o.delivery_city || 'Arrivée'}</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center justify-between pt-4 border-t border-slate-50 relative z-20">
+                            <div className="flex items-center gap-2">
+                              {(o.status === 'pending_acceptance' || o.status === 'pending') && (
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    handleQuickAccept(o.id);
+                                  }}
+                                  className="rounded-xl bg-slate-900 px-4 py-2 text-[10px] font-black text-white shadow-lg shadow-slate-900/10 hover:bg-slate-800 active:scale-95 transition-all"
+                                >
+                                  ACCEPTER
+                                </button>
+                              )}
+                              {(o.status === 'accepted' || o.status === 'assigned') && (
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    navigate(`/admin/orders?status=assigned`);
+                                  }}
+                                  className="rounded-xl bg-orange-500 px-4 py-2 text-[10px] font-black text-white shadow-lg shadow-orange-500/10 hover:bg-orange-600 active:scale-95 transition-all"
+                                >
+                                  DISPATCHER
+                                </button>
+                              )}
+                              <span className="text-[10px] font-black text-slate-900 ml-1">{o.price_ht}€ HT</span>
+                            </div>
+                            <div className="flex -space-x-2">
+                              {/* Small avatar or vehicle icon */}
+                              <div className="h-6 w-6 rounded-full bg-slate-100 border border-white flex items-center justify-center text-[8px] font-bold text-slate-500">
+                                {o.vehicle_type?.[0].toUpperCase() || 'M'}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )
+                })()}
               </div>
             </div>
 
             <div className="flex flex-col gap-6">
-              <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm p-6 flex flex-col">
-                <h3 className="font-bold text-slate-900 text-sm mb-4">Actions rapides</h3>
-                <div className="space-y-3">
-                  <button onClick={() => setOpen(true)} className="w-full group flex items-center justify-between p-4 bg-slate-900 text-white rounded-2xl shadow-xl shadow-slate-900/10 transition-all hover:scale-[1.02] hover:bg-slate-800">
-                    <span className="text-sm font-bold">Nouvelle course</span>
-                    <span className="bg-white/20 p-1.5 rounded-lg group-hover:bg-white/30 transition-colors">+</span>
-                  </button>
-                  <button onClick={() => navigate("/admin/orders?status=pending")} className="w-full group flex items-center justify-between p-4 bg-white border border-slate-100 text-slate-700 rounded-2xl hover:border-slate-300 transition-all">
-                    <span className="text-sm font-bold">Gérer les commandes</span>
-                    <span className="text-slate-400 group-hover:translate-x-1 transition-transform">→</span>
-                  </button>
+              <div className="bg-slate-900 rounded-[2.5rem] p-8 text-white shadow-2xl shadow-slate-900/20 overflow-hidden relative group">
+                <div className="relative z-10">
+                  <h3 className="text-lg font-black tracking-tight mb-2">Actions Rapides</h3>
+                  <p className="text-xs font-medium text-slate-400 mb-6">Gérez vos opérations en un clic.</p>
+
+                  <div className="space-y-3">
+                    <button
+                      onClick={() => setOpen(true)}
+                      className="w-full flex items-center justify-between p-4 bg-white text-slate-900 rounded-2xl font-black text-sm transition-all hover:scale-[1.03] active:scale-95 shadow-xl"
+                    >
+                      Nouvelle Mission
+                      <div className="h-6 w-6 rounded-lg bg-orange-500 text-white flex items-center justify-center">+</div>
+                    </button>
+                    <button
+                      onClick={() => navigate("/admin/orders")}
+                      className="w-full flex items-center justify-between p-4 bg-white/10 text-white border border-white/10 rounded-2xl font-black text-sm transition-all hover:bg-white/20 active:scale-95"
+                    >
+                      Toutes les Missions
+                      <span className="text-white/40">→</span>
+                    </button>
+                  </div>
                 </div>
+                {/* Decor */}
+                <div className="absolute -top-10 -right-10 h-32 w-32 bg-orange-500/10 rounded-full blur-3xl group-hover:bg-orange-500/20 transition-all"></div>
               </div>
 
-              <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden flex flex-col">
-                <div className="p-6 border-b border-slate-50 bg-slate-50/50 flex items-center justify-between">
-                  <h4 className="font-bold text-xs uppercase tracking-wider text-slate-500"> des Paiements</h4>
-                  <button onClick={() => navigate("/admin/invoices")} className="text-[10px] font-bold text-blue-600 hover:underline">Voir tout</button>
+              <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden flex flex-col">
+                <div className="px-6 py-5 border-b border-slate-50 flex items-center justify-between">
+                  <div>
+                    <h4 className="text-xs font-black uppercase tracking-widest text-slate-900">Solvabilité</h4>
+                    <p className="text-[9px] font-bold text-slate-400 uppercase mt-0.5">Statut Facturation</p>
+                  </div>
+                  <button onClick={() => navigate("/admin/invoices")} className="text-[10px] font-black text-orange-500 hover:orange-600 uppercase tracking-tighter">Tout voir</button>
                 </div>
-                <div className="divide-y divide-slate-50 overflow-y-auto max-h-[220px]">
-                  {clientPaymentRows.length === 0 ? <div className="p-4 text-xs text-slate-400 text-center">Aucun client.</div> : clientPaymentRows.map((c) => (
-                    <div key={c.id} className="p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
-                      <span className="text-xs font-bold text-slate-700 truncate max-w-[120px]">{c.name}</span>
-                      <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full ${c.cls}`}>{c.status}</span>
+                <div className="divide-y divide-slate-50 overflow-y-auto max-h-[250px] custom-scrollbar">
+                  {clientPaymentRows.length === 0 ? (
+                    <div className="p-8 text-xs text-slate-400 text-center italic">Aucun client actif.</div>
+                  ) : clientPaymentRows.map((c) => (
+                    <div key={c.id} className="p-4 flex items-center justify-between hover:bg-slate-50/80 transition-colors">
+                      <div className="flex flex-col min-w-0">
+                        <span className="text-xs font-black text-slate-700 truncate">{c.name}</span>
+                      </div>
+                      <span className={`text-[8px] font-black px-2 py-1 rounded-md uppercase tracking-widest ${c.cls} shadow-sm border border-black/5`}>
+                        {c.status}
+                      </span>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden flex flex-col flex-1">
-                <div className="p-6 border-b border-slate-50 bg-slate-50/50">
-                  <h4 className="font-bold text-xs uppercase tracking-wider text-slate-500">Chauffeurs</h4>
+              <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden flex flex-col">
+                <div className="px-6 py-5 border-b border-slate-50">
+                  <h4 className="text-xs font-black uppercase tracking-widest text-slate-900">Fleet Live</h4>
+                  <p className="text-[9px] font-bold text-slate-400 uppercase mt-0.5">{driverRows.length} Livreurs Actifs</p>
                 </div>
-                <div className="divide-y divide-slate-50 overflow-y-auto max-h-[200px]">
-                  {driverRows.length === 0 ? <div className="p-4 text-xs text-slate-400 text-center">Aucun chauffeur trouvé.</div> : driverRows.map((c) => (
+                <div className="divide-y divide-slate-50 overflow-y-auto max-h-[250px] custom-scrollbar">
+                  {driverRows.length === 0 ? (
+                    <div className="p-8 text-xs text-slate-400 text-center italic">Aucun livreur en ligne.</div>
+                  ) : driverRows.map((c) => (
                     <div key={c.id} className="p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center font-bold text-[10px] text-slate-600">{c.name.slice(0, 2).toUpperCase()}</div>
-                        <span className="text-xs font-bold text-slate-700">{c.name}</span>
+                        <div className="w-8 h-8 rounded-xl bg-slate-900 flex items-center justify-center font-black text-[10px] text-white shadow-lg overflow-hidden">
+                          {c.name.slice(0, 1).toUpperCase()}
+                        </div>
+                        <span className="text-xs font-black text-slate-700">{c.name}</span>
                       </div>
-                      <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full ${c.cls}`}>{c.status}</span>
+                      <div className="flex flex-col items-end">
+                        <span className={`text-[8px] font-black px-2 py-1 rounded-md uppercase tracking-widest border border-black/5 ${c.cls}`}>
+                          {c.status}
+                        </span>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -1011,4 +1180,6 @@ function Field({ label, value, onChange }) {
     </div>
   );
 }
+
+
 

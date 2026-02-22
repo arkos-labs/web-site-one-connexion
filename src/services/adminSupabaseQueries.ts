@@ -153,7 +153,7 @@ export const updateOrderStatus = async (
     // Ajouter timestamp selon le statut
     if (status === 'accepted' && !updateData.accepted_at) {
         updateData.accepted_at = new Date().toISOString();
-    } else if (status === 'dispatched' && !updateData.dispatched_at) {
+    } else if (status === 'assigned' && !updateData.dispatched_at) {
         updateData.dispatched_at = new Date().toISOString();
     } else if (status === 'delivered' && !updateData.delivered_at) {
         updateData.delivered_at = new Date().toISOString();
@@ -179,7 +179,7 @@ export const assignDriverToOrder = async (orderId: string, driverId: string) => 
         .from('orders')
         .update({
             driver_id: driverId,
-            status: 'dispatched',
+            status: 'assigned',
             updated_at: new Date().toISOString(),
         })
         .eq('id', orderId);
@@ -198,7 +198,7 @@ export const cancelOrder = async (orderId: string, cancellationReason: string) =
     if (fetchError) throw fetchError;
 
     // Calculer les frais d'annulation (8€ si dispatchée)
-    const cancellationFee = (order.status === 'dispatched' || order.status === 'in_progress') ? 8.00 : 0;
+    const cancellationFee = (order.status === 'assigned' || order.status === 'in_progress') ? 8.00 : 0;
 
     const { error } = await supabase
         .from('orders')
@@ -694,7 +694,7 @@ export const getClientStatsBatch = async (clientIds: string[]) => {
                 delivered_orders: clientOrders.filter(o => o.status === 'delivered').length,
                 cancelled_orders: clientOrders.filter(o => o.status === 'cancelled').length,
                 pending_orders: clientOrders.filter(o => ['pending', 'accepted'].includes(o.status)).length,
-                in_progress_orders: clientOrders.filter(o => ['dispatched', 'in_progress'].includes(o.status)).length,
+                in_progress_orders: clientOrders.filter(o => ['assigned', 'in_progress'].includes(o.status)).length,
             },
             billing: {
                 total_invoiced: totalInvoiced,
@@ -804,7 +804,7 @@ export const getGlobalOrderStats = async () => {
     // We can use the existing getAdminStats but maybe simplified if we only need counts
     const { count: total } = await supabase.from('orders').select('*', { count: 'exact', head: true });
     const { count: pending } = await supabase.from('orders').select('*', { count: 'exact', head: true }).eq('status', 'pending_acceptance');
-    const { count: inProgress } = await supabase.from('orders').select('*', { count: 'exact', head: true }).in('status', ['dispatched', 'in_progress']);
+    const { count: inProgress } = await supabase.from('orders').select('*', { count: 'exact', head: true }).in('status', ['assigned', 'in_progress']);
     const { count: delivered } = await supabase.from('orders').select('*', { count: 'exact', head: true }).eq('status', 'delivered');
     const { count: cancelled } = await supabase.from('orders').select('*', { count: 'exact', head: true }).eq('status', 'cancelled');
 
@@ -1049,7 +1049,7 @@ export const getAdminStats = async () => {
         total: orders?.length || 0,
         pending: orders?.filter(o => o.status === 'pending_acceptance').length || 0,
         accepted: orders?.filter(o => o.status === 'accepted').length || 0,
-        dispatched: orders?.filter(o => o.status === 'dispatched').length || 0,
+        assigned: orders?.filter(o => o.status === 'assigned').length || 0,
         in_progress: orders?.filter(o => o.status === 'in_progress').length || 0,
         delivered: orders?.filter(o => o.status === 'delivered').length || 0,
         cancelled: orders?.filter(o => o.status === 'cancelled').length || 0,
@@ -1524,6 +1524,8 @@ export const sendInvoiceByEmail = async (invoiceId: string) => {
         });
     }
 };
+
+
 
 
 

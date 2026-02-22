@@ -15,7 +15,7 @@ const badgeVariants = cva(
         // Status Variants
         pending: "border-transparent bg-status-pending text-status-pending-foreground hover:bg-status-pending/80",
         accepted: "border-transparent bg-status-accepted text-status-accepted-foreground hover:bg-status-accepted/80",
-        dispatched: "border-transparent bg-status-dispatched text-status-dispatched-foreground hover:bg-status-dispatched/80",
+        assigned: "border-transparent bg-status-assigned text-status-assigned-foreground hover:bg-status-assigned/80",
         in_progress: "border-transparent bg-status-in_progress text-status-in_progress-foreground hover:bg-status-in_progress/80",
         delivered: "border-transparent bg-status-delivered text-status-delivered-foreground hover:bg-status-delivered/80",
         cancelled: "border-transparent bg-status-cancelled text-status-cancelled-foreground hover:bg-status-cancelled/80",
@@ -35,3 +35,5 @@ function Badge({ className, variant, ...props }: BadgeProps) {
 }
 
 export { Badge, badgeVariants };
+
+

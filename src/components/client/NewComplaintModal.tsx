@@ -120,3 +120,5 @@ export const NewComplaintModal = ({ isOpen, onClose, onComplaintSent }: NewCompl
         </UniversalModal>
     );
 };
+
+

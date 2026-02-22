@@ -157,3 +157,5 @@ export const getDriverStatusBadgeColor = (status: DriverStatus): string => {
     };
     return colors[status];
 };
+
+

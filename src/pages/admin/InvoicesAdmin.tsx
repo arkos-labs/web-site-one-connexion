@@ -1,4 +1,4 @@
-ï»¿import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -77,9 +77,9 @@ const InvoicesAdmin = () => {
     fetchInvoices();
   }, []);
 
-  // Relancer les impayÃ©s
+  // Relancer les impayés
   const handleSendReminders = async () => {
-    if (!confirm("Envoyer une relance Ã  tous les clients avec des factures impayÃ©es ?")) {
+    if (!confirm("Envoyer une relance à tous les clients avec des factures impayées ?")) {
       return;
     }
 
@@ -87,9 +87,9 @@ const InvoicesAdmin = () => {
       setIsSendingReminders(true);
       const result = await sendBulkPaymentReminders();
 
-      toast.success(`Relance envoyÃ©e Ã  ${result.successCount} client(s)`, {
+      toast.success(`Relance envoyée à ${result.successCount} client(s)`, {
         description: result.errorCount > 0
-          ? `${result.errorCount} erreur(s) rencontrÃ©e(s)`
+          ? `${result.errorCount} erreur(s) rencontrée(s)`
           : undefined
       });
     } catch (error: any) {
@@ -105,7 +105,7 @@ const InvoicesAdmin = () => {
     const month = now.getMonth() + 1; // 1-indexed
     const year = now.getFullYear();
 
-    if (!confirm(`GÃ©nÃ©rer les factures pour tous les clients ayant des livraisons en ${month}/${year} ?`)) {
+    if (!confirm(`Générer les factures pour tous les clients ayant des livraisons en ${month}/${year} ?`)) {
       return;
     }
 
@@ -113,16 +113,16 @@ const InvoicesAdmin = () => {
       setIsGenerating(true);
       const result = await generateAllMonthlyInvoices(month, year);
       if (result.success > 0) {
-        toast.success(`${result.success} facture(s) gÃ©nÃ©rÃ©e(s) sur ${result.total} client(s) Ã©ligible(s).`);
+        toast.success(`${result.success} facture(s) générée(s) sur ${result.total} client(s) éligible(s).`);
         fetchInvoices();
       } else if (result.total > 0) {
-        toast.info("Toutes les factures pour ce mois ont dÃ©jÃ  Ã©tÃ© gÃ©nÃ©rÃ©es.");
+        toast.info("Toutes les factures pour ce mois ont déjà été générées.");
       } else {
-        toast.warning("Aucune commande livrÃ©e ce mois-ci pour gÃ©nÃ©rer des factures.");
+        toast.warning("Aucune commande livrée ce mois-ci pour générer des factures.");
       }
     } catch (error: any) {
       console.error(error);
-      toast.error("Erreur durant la gÃ©nÃ©ration des factures");
+      toast.error("Erreur durant la génération des factures");
     } finally {
       setIsGenerating(false);
     }
@@ -132,7 +132,7 @@ const InvoicesAdmin = () => {
     if (invoice.pdf_url) {
       window.open(invoice.pdf_url, '_blank');
     } else {
-      // GÃ©nÃ©rer Ã  la volÃ©e
+      // Générer à la volée
       try {
         const clientInfo = {
           name: invoice.clients?.company_name || invoice.clients?.full_name || invoice.facturation?.nom_complet || invoice.billing_name || "Client",
@@ -150,30 +150,30 @@ const InvoicesAdmin = () => {
         };
 
         generateInvoicePDF(invoiceData, clientInfo);
-        toast.success("PDF gÃ©nÃ©rÃ© localement");
+        toast.success("PDF généré localement");
       } catch (error) {
-        console.error("Erreur gÃ©nÃ©ration PDF:", error);
-        toast.error("Impossible de gÃ©nÃ©rer le PDF");
+        console.error("Erreur génération PDF:", error);
+        toast.error("Impossible de générer le PDF");
       }
     }
   };
 
   const handleMarkAsPaid = async (invoiceId: string) => {
-    if (!confirm("Marquer cette facture comme payÃ©e ? Cela enverra une confirmation au client.")) return;
+    if (!confirm("Marquer cette facture comme payée ? Cela enverra une confirmation au client.")) return;
     try {
       await markInvoiceAsPaid(invoiceId);
-      toast.success("Facture marquÃ©e comme payÃ©e");
+      toast.success("Facture marquée comme payée");
       fetchInvoices();
     } catch (error) {
       console.error(error);
-      toast.error("Erreur lors de la mise Ã  jour");
+      toast.error("Erreur lors de la mise à jour");
     }
   };
 
   const handleSendEmail = async (invoiceId: string) => {
     try {
       await sendInvoiceByEmail(invoiceId);
-      toast.success("Facture envoyÃ©e par email");
+      toast.success("Facture envoyée par email");
     } catch (error) {
       console.error(error);
       toast.error("Erreur lors de l'envoi");
@@ -204,7 +204,7 @@ const InvoicesAdmin = () => {
             Gestion des factures
           </h1>
           <p className="text-muted-foreground">
-            GÃ©rez les factures et relancez les impayÃ©s
+            Gérez les factures et relancez les impayés
           </p>
         </div>
         <div className="flex gap-2">
@@ -219,7 +219,7 @@ const InvoicesAdmin = () => {
             className="bg-orange-500 hover:bg-orange-600"
           >
             <Bell className={`h-4 w-4 mr-2 ${isSendingReminders ? 'animate-pulse' : ''}`} />
-            {isSendingReminders ? 'Envoi en cours...' : `Relancer les impayÃ©s (${unpaidCount})`}
+            {isSendingReminders ? 'Envoi en cours...' : `Relancer les impayés (${unpaidCount})`}
           </Button>
           <Button
             variant="cta"
@@ -228,7 +228,7 @@ const InvoicesAdmin = () => {
             className="gap-2"
           >
             {isGenerating ? <Loader2 className="h-4 w-4 animate-spin" /> : <FileText className="h-4 w-4" />}
-            GÃ©nÃ©rer les factures
+            Générer les factures
           </Button>
         </div>
       </div>
@@ -253,8 +253,8 @@ const InvoicesAdmin = () => {
               <FileText className="h-6 w-6 text-green-600" />
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Montant payÃ©</p>
-              <p className="text-2xl font-bold text-green-600">{paidAmount.toFixed(2)}â‚¬</p>
+              <p className="text-sm text-muted-foreground">Montant payé</p>
+              <p className="text-2xl font-bold text-green-600">{paidAmount.toFixed(2)}€</p>
             </div>
           </div>
         </Card>
@@ -266,7 +266,7 @@ const InvoicesAdmin = () => {
             </div>
             <div>
               <p className="text-sm text-muted-foreground">En attente</p>
-              <p className="text-2xl font-bold text-orange-600">{pendingAmount.toFixed(2)}â‚¬</p>
+              <p className="text-2xl font-bold text-orange-600">{pendingAmount.toFixed(2)}€</p>
             </div>
           </div>
         </Card>
@@ -278,7 +278,7 @@ const InvoicesAdmin = () => {
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Total</p>
-              <p className="text-2xl font-bold text-purple-600">{totalAmount.toFixed(2)}â‚¬</p>
+              <p className="text-2xl font-bold text-purple-600">{totalAmount.toFixed(2)}€</p>
             </div>
           </div>
         </Card>
@@ -289,7 +289,7 @@ const InvoicesAdmin = () => {
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Rechercher par numÃ©ro de facture ou client..."
+            placeholder="Rechercher par numéro de facture ou client..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10"
@@ -302,7 +302,7 @@ const InvoicesAdmin = () => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>NÂ° Facture</TableHead>
+              <TableHead>N° Facture</TableHead>
               <TableHead>Client</TableHead>
               <TableHead>Montant TTC</TableHead>
               <TableHead>Statut</TableHead>
@@ -320,7 +320,7 @@ const InvoicesAdmin = () => {
             ) : filteredInvoices.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={6} className="text-center py-8">
-                  Aucune facture trouvÃ©e
+                  Aucune facture trouvée
                 </TableCell>
               </TableRow>
             ) : (
@@ -336,16 +336,16 @@ const InvoicesAdmin = () => {
                           invoice.facturation?.societe ||
                           'Client inconnu'}
                       </span>
-                      {/* Badge "InvitÃ©" si pas de client liÃ© */}
+                      {/* Badge "Invité" si pas de client lié */}
                       {!invoice.client_id && (
                         <Badge variant="outline" className="text-xs bg-orange-50 text-orange-700 border-orange-200">
-                          InvitÃ©
+                          Invité
                         </Badge>
                       )}
                     </div>
                   </TableCell>
                   <TableCell className="font-semibold">
-                    {invoice.amount_ttc?.toFixed(2)}â‚¬
+                    {invoice.amount_ttc?.toFixed(2)}€
                   </TableCell>
                   <TableCell>
                     <Badge
@@ -357,7 +357,7 @@ const InvoicesAdmin = () => {
                         } text-white border-0`}
                     >
                       {invoice.status === 'paid'
-                        ? 'PayÃ©e'
+                        ? 'Payée'
                         : invoice.status === 'overdue'
                           ? 'En retard'
                           : 'En attente'}
@@ -373,7 +373,7 @@ const InvoicesAdmin = () => {
                           variant="ghost"
                           size="sm"
                           onClick={() => handleMarkAsPaid(invoice.id)}
-                          title="Marquer comme payÃ©e"
+                          title="Marquer comme payée"
                           className="text-green-600 hover:text-green-700 hover:bg-green-50"
                         >
                           <CheckCircle className="h-4 w-4" />
@@ -392,7 +392,7 @@ const InvoicesAdmin = () => {
                         variant="ghost"
                         size="icon"
                         onClick={() => handleDownloadPDF(invoice)}
-                        title="TÃ©lÃ©charger"
+                        title="Télécharger"
                       >
                         <Download className="h-4 w-4" />
                       </Button>
@@ -409,3 +409,5 @@ const InvoicesAdmin = () => {
 };
 
 export default InvoicesAdmin;
+
+

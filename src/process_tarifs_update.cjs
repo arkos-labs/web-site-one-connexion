@@ -56,3 +56,5 @@ const newContent = header + generatedArray + "\n\n// ===========================
 
 fs.writeFileSync(originalPath, newContent, 'utf8');
 console.log("Updated tarifs_idf.ts successfully with " + items.length + " cities.");
+
+

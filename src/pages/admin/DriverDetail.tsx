@@ -285,7 +285,7 @@ export default function DriverDetail() {
                                         <SelectItem value="all">Toutes les commandes</SelectItem>
                                         <SelectItem value="delivered">Livrées</SelectItem>
                                         <SelectItem value="in_progress">En cours</SelectItem>
-                                        <SelectItem value="dispatched">Dispatchées</SelectItem>
+                                        <SelectItem value="assigned">Dispatchées</SelectItem>
                                         <SelectItem value="cancelled">Annulées</SelectItem>
                                     </SelectContent>
                                 </Select>
@@ -332,7 +332,7 @@ export default function DriverDetail() {
                                                 <td className="py-3 text-right">
                                                     <Badge variant="outline" className="capitalize">
                                                         {order.status === 'in_progress' ? 'En cours' :
-                                                            order.status === 'dispatched' ? 'Dispatchée' :
+                                                            order.status === 'assigned' ? 'Dispatchée' :
                                                                 order.status === 'delivered' ? 'Livrée' :
                                                                     order.status}
                                                     </Badge>
@@ -355,4 +355,6 @@ export default function DriverDetail() {
         </div>
     );
 }
+
+
 

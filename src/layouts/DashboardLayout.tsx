@@ -75,3 +75,5 @@ const DashboardLayout = ({ type }: DashboardLayoutProps) => {
 
 export default DashboardLayout;
 
+
+

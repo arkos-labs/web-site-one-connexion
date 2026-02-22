@@ -82,7 +82,7 @@ export default function DashboardDriver() {
             .from('orders')
             .select('*')
             .eq('driver_id', id)
-            .in('status', ['assigned', 'dispatched', 'driver_accepted', 'in_progress', 'picked_up'])
+            .in('status', ['assigned', 'driver_accepted', 'in_progress'])
             .order('created_at', { ascending: true });
 
         if (!error) {
@@ -104,7 +104,7 @@ export default function DashboardDriver() {
                     const wasCancelledOrReassigned = lost.some(o =>
                         o.driver_id !== id || // Reassigned
                         o.status === 'cancelled' || // Cancelled
-                        o.status === 'pending' // Unassigned
+                        o.status === 'pending_acceptance' // Unassigned
                     );
 
                     if (wasCancelledOrReassigned) {
@@ -139,7 +139,7 @@ export default function DashboardDriver() {
     const updateStatus = async (orderId, newStatus) => {
         // Map new status if needed
         let statusToSave = newStatus;
-        if (newStatus === 'picked_up') statusToSave = 'in_progress';
+        if (newStatus === 'in_progress') statusToSave = 'in_progress';
 
         const { error } = await supabase
             .from('orders')
@@ -258,9 +258,9 @@ export default function DashboardDriver() {
 
                                 {/* Actions */}
                                 <div className="pt-2">
-                                    {(['assigned', 'dispatched', 'accepted', 'driver_accepted'].includes(task.status)) ? (
+                                    {(['assigned', 'driver_accepted'].includes(task.status)) ? (
                                         <button
-                                            onClick={() => updateStatus(task.id, 'picked_up')}
+                                            onClick={() => updateStatus(task.id, 'in_progress')}
                                             className="w-full rounded-2xl bg-slate-900 py-4 text-center font-bold text-white shadow-xl shadow-slate-900/20 active:scale-[0.98] transition-all"
                                         >
                                             CONFIRMER PRISE EN CHARGE 📦
@@ -282,3 +282,5 @@ export default function DashboardDriver() {
         </div>
     );
 }
+
+

@@ -1080,3 +1080,5 @@ export function generateDriverInvoicePdf(driver, orders = [], period = "—", co
 
     doc.save(`facture-chauffeur-${details.full_name?.replace(/\s+/g, "-") || "facture"}-${period.replace(/\s+/g, "-")}.pdf`);
 }
+
+

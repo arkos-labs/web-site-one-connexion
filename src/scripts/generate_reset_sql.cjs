@@ -94,3 +94,5 @@ ${cities.join(',\n')};
 
 fs.writeFileSync(path.resolve(__dirname, '../../SUPABASE_RESET_TABLE.sql'), sql, 'utf8');
 console.log(`✅ Fichier SQL généré : SUPABASE_RESET_TABLE.sql`);
+
+

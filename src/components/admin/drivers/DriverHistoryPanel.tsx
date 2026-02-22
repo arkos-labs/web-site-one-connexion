@@ -1,4 +1,4 @@
-ï»¿import { Card } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from "recharts";
 
@@ -102,11 +102,11 @@ export function DriverHistoryPanel({ driverId, driverName }: DriverHistoryPanelP
         </Card>
         <Card className="p-4">
           <p className="text-sm text-gray-500 mb-1">Revenus totaux</p>
-          <p className="text-2xl font-bold text-green-600">{totalEarnings}â‚¬</p>
+          <p className="text-2xl font-bold text-green-600">{totalEarnings}€</p>
         </Card>
         <Card className="p-4">
           <p className="text-sm text-gray-500 mb-1">Moyenne par course</p>
-          <p className="text-2xl font-bold">{averageEarnings}â‚¬</p>
+          <p className="text-2xl font-bold">{averageEarnings}€</p>
         </Card>
       </div>
 
@@ -135,8 +135,8 @@ export function DriverHistoryPanel({ driverId, driverName }: DriverHistoryPanelP
                   <p className="font-medium">{delivery.destination}</p>
                   <p className="text-sm text-gray-500">{delivery.date}</p>
                 </div>
-                <Badge className="bg-green-500">{delivery.status === "completed" ? "ComplÃ©tÃ©e" : "En cours"}</Badge>
-                <p className="font-bold ml-4">{delivery.amount}â‚¬</p>
+                <Badge className="bg-green-500">{delivery.status === "completed" ? "Complétée" : "En cours"}</Badge>
+                <p className="font-bold ml-4">{delivery.amount}€</p>
               </div>
             ))
           ) : (
@@ -149,3 +149,5 @@ export function DriverHistoryPanel({ driverId, driverName }: DriverHistoryPanelP
 }
 
 export default DriverHistoryPanel;
+
+

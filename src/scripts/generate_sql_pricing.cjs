@@ -60,3 +60,5 @@ DO UPDATE SET
 
 fs.writeFileSync(path.resolve(__dirname, '../../SUPABASE_UPDATE_PRICING.sql'), sql, 'utf8');
 console.log(`✅ Fichier SQL généré : SUPABASE_UPDATE_PRICING.sql (${cities.length} villes)`);
+
+

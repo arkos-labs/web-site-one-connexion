@@ -197,3 +197,5 @@ const EditClientModal = ({ isOpen, onClose, client, onSuccess }: EditClientModal
 };
 
 export default EditClientModal;
+
+

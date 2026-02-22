@@ -353,7 +353,7 @@ export async function getDriverOrders(driverId: string) {
             .from('orders')
             .select('*')
             .eq('driver_id', driverId) // driverId est l'ID Auth (user_id)
-            .in('status', ['assigned', 'driver_accepted', 'in_progress']) // ✅ Utiliser 'assigned' au lieu de 'dispatched'
+            .in('status', ['assigned', 'driver_accepted', 'in_progress']) // ✅ Utiliser 'assigned' au lieu de 'assigned'
             .order('created_at', { ascending: false });
 
         if (error) {
@@ -367,3 +367,5 @@ export async function getDriverOrders(driverId: string) {
         return { success: false, error, data: [] };
     }
 }
+
+

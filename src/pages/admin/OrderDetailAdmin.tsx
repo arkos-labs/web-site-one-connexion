@@ -601,9 +601,9 @@ export default function OrderDetailAdmin() {
         const labels: Record<string, string> = {
             pending_acceptance: 'En attente',
             accepted: 'Acceptée',
-            dispatched: 'Dispatchée',
+            assigned: 'Dispatchée',
             driver_accepted: 'Chauffeur a accepté',
-            arrived_pickup: 'Arrivé sur place',
+            in_progress: 'Arrivé sur place',
             in_progress: 'En route vers livraison',
             delivered: 'Livrée',
             cancelled: 'Annulée',
@@ -778,7 +778,7 @@ export default function OrderDetailAdmin() {
 
 
 
-                    {(order.status === "dispatched" || order.status === "in_progress") && (
+                    {(order.status === "assigned" || order.status === "in_progress") && (
                         <Button
                             onClick={handleMarkAsDelivered}
                             disabled={actionLoading}
@@ -1069,4 +1069,6 @@ export default function OrderDetailAdmin() {
         </div>
     );
 }
+
+
 

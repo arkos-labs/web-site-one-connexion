@@ -76,3 +76,5 @@ const ErrorPage = ({ error, resetErrorBoundary }: ErrorPageProps) => {
 };
 
 export default ErrorPage;
+
+

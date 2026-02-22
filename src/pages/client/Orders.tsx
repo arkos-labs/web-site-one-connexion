@@ -124,7 +124,7 @@ const Orders = () => {
     const matchesStatus = (() => {
       if (statusFilter === "all") return true;
       if (statusFilter === "pending") return ["pending", "pending_acceptance"].includes(order.status);
-      if (statusFilter === "in_progress") return ["accepted", "dispatched", "in_progress"].includes(order.status);
+      if (statusFilter === "in_progress") return ["accepted", "assigned", "in_progress"].includes(order.status);
       return order.status === statusFilter;
     })();
 
@@ -151,7 +151,7 @@ const Orders = () => {
       pending: { label: 'En attente', className: 'bg-status-pending text-status-pending-foreground hover:bg-status-pending/90' },
       pending_acceptance: { label: 'En attente', className: 'bg-status-pending text-status-pending-foreground hover:bg-status-pending/90' },
       accepted: { label: 'Acceptée', className: 'bg-status-accepted text-status-accepted-foreground hover:bg-status-accepted/90' },
-      dispatched: { label: 'En cours', className: 'bg-status-dispatched text-status-dispatched-foreground hover:bg-status-dispatched/90' },
+      assigned: { label: 'En cours', className: 'bg-status-assigned text-status-assigned-foreground hover:bg-status-assigned/90' },
       in_progress: { label: 'En cours', className: 'bg-status-in_progress text-status-in_progress-foreground hover:bg-status-in_progress/90' },
       delivered: { label: 'Livrée', className: 'bg-status-delivered text-status-delivered-foreground hover:bg-status-delivered/90' },
       cancelled: { label: 'Annulée', className: 'bg-status-cancelled text-status-cancelled-foreground hover:bg-status-cancelled/90' },
@@ -358,4 +358,6 @@ const Orders = () => {
 };
 
 export default Orders;
+
+
 

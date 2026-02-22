@@ -30,7 +30,7 @@ export const CancelOrderModal = ({
     const [reason, setReason] = useState('');
 
     // Déterminer si des frais s'appliquent
-    const isDispatched = orderStatus === 'dispatched' || orderStatus === 'in_progress';
+    const isDispatched = orderStatus === 'assigned' || orderStatus === 'in_progress';
     const cancellationFee = isDispatched ? 8.00 : 0;
 
     const handleConfirm = async () => {
@@ -128,3 +128,5 @@ export const CancelOrderModal = ({
         </Dialog>
     );
 };
+
+

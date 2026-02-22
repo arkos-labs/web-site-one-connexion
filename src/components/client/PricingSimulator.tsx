@@ -384,3 +384,4 @@ const PricingSimulator = ({ variant = "default" }: { variant?: "default" | "comp
 };
 
 export default PricingSimulator;
+

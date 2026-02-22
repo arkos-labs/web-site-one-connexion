@@ -60,3 +60,5 @@ export const Forecasts = ({ data }: ForecastsProps) => {
         </Card>
     );
 };
+
+

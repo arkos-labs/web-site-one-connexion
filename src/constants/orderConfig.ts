@@ -32,3 +32,5 @@ export const ORDER_CONFIG = {
  * Type helper pour garantir la cohérence des types
  */
 export type OrderConfig = typeof ORDER_CONFIG;
+
+

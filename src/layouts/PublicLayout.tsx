@@ -23,3 +23,5 @@ const PublicLayout = ({ children }: PublicLayoutProps) => {
 };
 
 export default PublicLayout;
+
+

@@ -267,3 +267,5 @@ const DriversMap = ({ drivers, onDriverClick }: DriversMapProps) => {
 };
 
 export default DriversMap;
+
+

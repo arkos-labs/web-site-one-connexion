@@ -1,4 +1,4 @@
-ï»¿import { useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -68,7 +68,7 @@ export function CreateDriverForm({ onSubmit, onCancel }: CreateDriverFormProps) 
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="phone">TÃ©lÃ©phone</Label>
+        <Label htmlFor="phone">Téléphone</Label>
         <Input
           id="phone"
           name="phone"
@@ -96,10 +96,12 @@ export function CreateDriverForm({ onSubmit, onCancel }: CreateDriverFormProps) 
         <Button type="button" variant="outline" onClick={onCancel}>
           Annuler
         </Button>
-        <Button type="submit">CrÃ©er chauffeur</Button>
+        <Button type="submit">Créer chauffeur</Button>
       </div>
     </form>
   );
 }
 
 export default CreateDriverForm;
+
+

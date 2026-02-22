@@ -13,12 +13,11 @@ function clientStatusLabel(order) {
     case "pending":
       return "En attente";
     case "accepted":
+      return "Acceptée";
     case "assigned":
-      return driverId ? "Dispatchée" : "Acceptée";
-    case "dispatched":
+      return "Dispatchée";
     case "driver_accepted":
     case "in_progress":
-    case "picked_up":
       return "En cours";
     case "delivered":
       return "Terminée";
@@ -297,3 +296,5 @@ export default function OrderDetails() {
     );
   }
 }
+
+

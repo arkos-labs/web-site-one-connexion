@@ -71,7 +71,7 @@ const OrderDetail = () => {
         setCancelling(true);
         try {
             // Vérifier si la commande est dispatchée
-            const isDispatched = ["dispatched", "in_progress"].includes(order.status);
+            const isDispatched = ["assigned", "in_progress"].includes(order.status);
             const cancellationFee = isDispatched ? 8 : 0;
 
             // Calculer le montant à rembourser
@@ -146,7 +146,7 @@ const OrderDetail = () => {
             pending: { label: "En attente", className: "bg-warning hover:bg-warning/90", icon: Clock },
             pending_acceptance: { label: "En attente", className: "bg-warning hover:bg-warning/90", icon: Clock },
             accepted: { label: "Acceptée", className: "bg-info hover:bg-info/90", icon: CheckCircle },
-            dispatched: { label: "En cours", className: "bg-info hover:bg-info/90", icon: Truck },
+            assigned: { label: "En cours", className: "bg-info hover:bg-info/90", icon: Truck },
             in_progress: { label: "En cours", className: "bg-info hover:bg-info/90", icon: Truck },
             delivered: { label: "Livrée", className: "bg-success hover:bg-success/90", icon: CheckCircle },
             cancelled: { label: "Annulée", className: "bg-destructive hover:bg-destructive/90", icon: XCircle },
@@ -176,13 +176,13 @@ const OrderDetail = () => {
             {
                 label: "Commande acceptée",
                 date: order.accepted_at,
-                completed: ["accepted", "dispatched", "in_progress", "delivered"].includes(order.status),
+                completed: ["accepted", "assigned", "in_progress", "delivered"].includes(order.status),
                 icon: CheckCircle,
             },
             {
                 label: "Chauffeur en route",
                 date: order.pickup_time,
-                completed: ["dispatched", "in_progress", "delivered"].includes(order.status),
+                completed: ["assigned", "in_progress", "delivered"].includes(order.status),
                 icon: Truck,
             },
             {
@@ -211,7 +211,7 @@ const OrderDetail = () => {
     const getCancellationMessage = () => {
         if (!order) return "";
 
-        const isDispatched = ["dispatched", "in_progress"].includes(order.status);
+        const isDispatched = ["assigned", "in_progress"].includes(order.status);
 
         if (isDispatched) {
             const refundAmount = order.price - 8;
@@ -221,7 +221,7 @@ const OrderDetail = () => {
         return `Êtes-vous sûr de vouloir annuler cette commande ? Vous serez remboursé intégralement de ${order.price.toFixed(2)}€.`;
     };
 
-    const canShowMap = order && ["accepted", "dispatched", "in_progress", "delivered"].includes(order.status);
+    const canShowMap = order && ["accepted", "assigned", "in_progress", "delivered"].includes(order.status);
     const hasDriverLocation = order?.driver?.location;
 
     if (loading) {
@@ -593,4 +593,6 @@ const OrderDetail = () => {
 };
 
 export default OrderDetail;
+
+
 

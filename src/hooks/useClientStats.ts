@@ -77,9 +77,9 @@ export const useClientStats = (clientId: string | undefined) => {
                 let averageDeliveryTime = '-';
                 if (deliveredOrdersWithTime.length > 0) {
                     const totalMinutes = deliveredOrdersWithTime.reduce((acc, order) => {
-                        const dispatched = new Date(order.dispatched_at);
+                        const assigned = new Date(order.dispatched_at);
                         const delivered = new Date(order.delivered_at);
-                        const diffMs = delivered.getTime() - dispatched.getTime();
+                        const diffMs = delivered.getTime() - assigned.getTime();
                         const diffMinutes = Math.floor(diffMs / 60000);
                         return acc + diffMinutes;
                     }, 0);
@@ -150,3 +150,5 @@ export const useClientStats = (clientId: string | undefined) => {
 
     return { stats, loading };
 };
+
+

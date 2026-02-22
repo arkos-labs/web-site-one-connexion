@@ -40,3 +40,5 @@ try {
 } catch (e) {
     document.body.innerHTML = `<div style="color:red;padding:20px"><h1>Startup Error</h1><pre>${e}</pre></div>`;
 }
+
+

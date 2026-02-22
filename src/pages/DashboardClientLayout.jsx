@@ -19,7 +19,7 @@ export default function DashboardClientLayout() {
           .from('orders')
           .select('*', { count: 'exact', head: true })
           .eq('client_id', user.id)
-          .in('status', ['pending', 'assigned', 'picked_up']);
+          .in('status', ['pending', 'assigned', 'in_progress']);
 
         setActiveCount(count || 0);
       }
@@ -103,4 +103,6 @@ function NavItem({ icon: Icon, label, active, badge, to }) {
     </Link>
   );
 }
+
+
 

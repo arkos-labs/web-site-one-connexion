@@ -89,7 +89,7 @@ export default function AdminClientDetails() {
     if (filter === "Tous") return ordersAll;
     return ordersAll.filter((o) => {
       if (filter === "Terminée") return o.status === "delivered";
-      if (filter === "En cours") return o.status === "picked_up";
+      if (filter === "En cours") return o.status === "in_progress";
       if (filter === "À dispatcher") return o.status === "assigned";
       return o.status === filter;
     });
@@ -506,5 +506,7 @@ function EditableInfo({ label, name, value, isEditing, onChange }) {
     </div>
   );
 }
+
+
 
 

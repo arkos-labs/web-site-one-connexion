@@ -124,3 +124,5 @@ const SocialLink = ({ href, icon }: { href: string; icon: React.ReactNode }) => 
 
 export default Footer;
 
+
+

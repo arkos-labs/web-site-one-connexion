@@ -62,7 +62,7 @@ const Tracking = () => {
     const statusMap: Record<string, string> = {
       pending_acceptance: 'En attente',
       accepted: 'Acceptée',
-      dispatched: 'En acheminement',
+      assigned: 'En acheminement',
       in_progress: 'En cours',
       delivered: 'Livré',
       cancelled: 'Annulée',
@@ -75,7 +75,7 @@ const Tracking = () => {
     const colorMap: Record<string, string> = {
       pending_acceptance: 'bg-warning',
       accepted: 'bg-info',
-      dispatched: 'bg-info',
+      assigned: 'bg-info',
       in_progress: 'bg-accent-main',
       delivered: 'bg-success',
       cancelled: 'bg-destructive',
@@ -118,7 +118,7 @@ const Tracking = () => {
       {
         label: 'Commande acceptée',
         icon: CheckCircle,
-        status: ['accepted', 'dispatched', 'in_progress', 'delivered'].includes(status) ? 'completed' : 'pending',
+        status: ['accepted', 'assigned', 'in_progress', 'delivered'].includes(status) ? 'completed' : 'pending',
         time: formatDate(accepted_at),
         date: accepted_at,
         description: 'La commande a été validée par nos équipes',
@@ -127,7 +127,7 @@ const Tracking = () => {
       {
         label: 'Chauffeur en route',
         icon: Truck,
-        status: ['dispatched', 'in_progress', 'delivered'].includes(status) ? 'completed' : 'pending',
+        status: ['assigned', 'in_progress', 'delivered'].includes(status) ? 'completed' : 'pending',
         time: formatDate(dispatched_at),
         date: dispatched_at,
         description: driver ? `${driver.name} est en route vers le point de retrait` : 'Recherche d\'un chauffeur...',
@@ -136,7 +136,7 @@ const Tracking = () => {
       {
         label: 'Colis récupéré',
         icon: MapPin,
-        status: ['in_progress', 'delivered'].includes(status) ? 'completed' : status === 'dispatched' ? 'active' : 'pending',
+        status: ['in_progress', 'delivered'].includes(status) ? 'completed' : status === 'assigned' ? 'active' : 'pending',
         time: formatDate(pickup_time),
         date: pickup_time,
         description: 'Le chauffeur a récupéré le colis',
@@ -195,7 +195,7 @@ const Tracking = () => {
 
   // Vérifier si la commande a un chauffeur assigné et des coordonnées GPS
   const hasDriverLocation = tracking?.driver?.location !== null;
-  const canShowMap = tracking?.status === 'accepted' || tracking?.status === 'dispatched' || tracking?.status === 'in_progress';
+  const canShowMap = tracking?.status === 'accepted' || tracking?.status === 'assigned' || tracking?.status === 'in_progress';
   const isCancelled = tracking?.status === 'cancelled';
   const isDelivered = tracking?.status === 'delivered';
 
@@ -440,4 +440,6 @@ const Tracking = () => {
 };
 
 export default Tracking;
+
+
 

@@ -28,3 +28,5 @@ const NavLink = ({ to, label, isScrolled }: NavLinkProps) => {
 };
 
 export default NavLink;
+
+

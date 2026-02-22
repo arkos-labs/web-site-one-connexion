@@ -71,3 +71,5 @@ export const SectorChart = ({ data }: SectorChartProps) => {
     );
 };
 
+
+

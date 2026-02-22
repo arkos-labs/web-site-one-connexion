@@ -198,7 +198,7 @@ const OrdersAdmin = () => {
 
   // Marquer comme livrée - ouvrir le modal de confirmation
   const openDeliveryConfirm = (order: OrderWithDetails) => {
-    if (order.status !== 'dispatched' && order.status !== 'in_progress') {
+    if (order.status !== 'assigned' && order.status !== 'in_progress') {
       toast.error("Seules les commandes dispatchées peuvent être marquées comme livrées");
       return;
     }
@@ -391,13 +391,13 @@ const OrdersAdmin = () => {
 
   // ==================== HELPERS ====================
 
-  const getStatusBadgeVariant = (status: string): "default" | "secondary" | "destructive" | "outline" | "pending" | "accepted" | "dispatched" | "driver_accepted" | "in_progress" | "delivered" | "cancelled" => {
+  const getStatusBadgeVariant = (status: string): "default" | "secondary" | "destructive" | "outline" | "pending" | "accepted" | "assigned" | "driver_accepted" | "in_progress" | "delivered" | "cancelled" => {
     const variants: Record<string, any> = {
       pending_acceptance: 'pending',
       accepted: 'accepted',
-      dispatched: 'dispatched',
+      assigned: 'assigned',
       driver_accepted: 'driver_accepted',
-      arrived_pickup: 'driver_accepted',
+      in_progress: 'driver_accepted',
       in_progress: 'in_progress',
       delivered: 'delivered',
       cancelled: 'cancelled',
@@ -409,9 +409,9 @@ const OrdersAdmin = () => {
     const labels: Record<string, string> = {
       pending_acceptance: 'En attente',
       accepted: 'Acceptée',
-      dispatched: 'Dispatchée',
+      assigned: 'Dispatchée',
       driver_accepted: 'Chauffeur a accepté',
-      arrived_pickup: 'Arrivé sur place',
+      in_progress: 'Arrivé sur place',
       in_progress: 'En route vers livraison',
       delivered: 'Livrée',
       cancelled: 'Annulée',
@@ -428,7 +428,7 @@ const OrdersAdmin = () => {
   };
 
   const canMarkAsDelivered = (order: OrderWithDetails) => {
-    return order.status === 'dispatched' || order.status === 'in_progress';
+    return order.status === 'assigned' || order.status === 'in_progress';
   };
 
   const canCancelOrder = (order: OrderWithDetails) => {
@@ -484,7 +484,7 @@ const OrdersAdmin = () => {
               <SelectItem value="all">Tous les statuts</SelectItem>
               <SelectItem value="pending_acceptance">En attente</SelectItem>
               <SelectItem value="accepted">Acceptée</SelectItem>
-              <SelectItem value="dispatched">Dispatchée</SelectItem>
+              <SelectItem value="assigned">Dispatchée</SelectItem>
               <SelectItem value="driver_accepted">Chauffeur a accepté</SelectItem>
               <SelectItem value="in_progress">En cours</SelectItem>
               <SelectItem value="delivered">Livrée</SelectItem>
@@ -840,4 +840,6 @@ const OrdersAdmin = () => {
 };
 
 export default OrdersAdmin;
+
+
 
