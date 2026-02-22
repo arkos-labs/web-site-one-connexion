@@ -10,6 +10,7 @@ export async function acceptOrderByDriver(orderId: string, driverId: string) {
             .from('orders')
             .update({
                 status: 'driver_accepted',
+                driver_accepted_at: new Date().toISOString(),
                 updated_at: new Date().toISOString()
             })
             .eq('id', orderId)
