@@ -58,24 +58,29 @@ export function generateOrderPdf(order, client = {}) {
     doc.setTextColor(249, 115, 22); // orange-500
     doc.text(refBC, pageW - margin - 185, 97);
 
+    // Issuance Timestamp
+    doc.setFontSize(8);
+    doc.setTextColor(255, 255, 255);
+    doc.text(`Émis le ${new Date().toLocaleDateString("fr-FR")} à ${new Date().toLocaleTimeString("fr-FR", { hour: '2-digit', minute: '2-digit' })}`, pageW - margin - 185, 115);
+
     y = 180;
 
     // Info Grid (Two Columns)
     const drawSection = (title, x, yPos, w) => {
         doc.setFont("helvetica", "bold");
         doc.setFontSize(10);
-        doc.setTextColor(100, 116, 139); // slate-400
+        doc.setTextColor(51, 65, 85); // slate-700 (darker than 400)
         doc.text(title.toUpperCase(), x, yPos);
 
-        doc.setDrawColor(226, 232, 240); // slate-200
+        doc.setDrawColor(203, 213, 225); // slate-300
         doc.line(x, yPos + 5, x + w, yPos + 5);
         return yPos + 25;
     };
 
     // Client Info (Left)
     let leftY = drawSection("Client facturé", margin, y, contentW / 2 - 20);
-    doc.setTextColor(15, 23, 42);
-    doc.setFontSize(11);
+    doc.setTextColor(2, 6, 23); // slate-950
+    doc.setFontSize(12);
     doc.setFont("helvetica", "bold");
 
     // LOGIC: If 'client' object is empty or minimal, try to parse guest info from order columns/notes
@@ -97,13 +102,29 @@ export function generateOrderPdf(order, client = {}) {
 
     const notesStr = order.notes || "";
 
-    // Helper to get guest fields from regex or direct columns if they exist
-    const gBillingMatch = notesStr.match(/Billing: (.*?) \| (.*?) \| (.*?)$/);
-    const gBillingName = gBillingMatch?.[1];
-    const gBillingCompany = gBillingMatch?.[2];
-    const gBillingAddress = gBillingMatch?.[3];
+    // Helper to extract fields from instructions text (Code, Etage)
+    const extractDetails = (text) => {
+        if (!text) return { code: null, floor: null, instructions: null };
 
-    // Extract detailed fields from notes if they exist (common for both guest and client now)
+        const codePattern = /(?:Code|Digicode|Digi|Accès|Acces)\s?[:\/-]?\s*([A-Z0-9 ]+)(?:\.|$|,)/i;
+        const floorPattern = /(?:Etage|Étage|Niveau|Floor)\s?[:\/-]?\s*([0-9A-Z ]+)(?:\.|$|,)/i;
+
+        const codeMatch = text.match(codePattern);
+        const floorMatch = text.match(floorPattern);
+
+        let cleaned = text;
+        if (codeMatch) cleaned = cleaned.replace(codeMatch[0], '');
+        if (floorMatch) cleaned = cleaned.replace(floorMatch[0], '');
+        cleaned = cleaned.replace(/^[\s,;.-]+|[\s,;.-]+$/g, '').trim();
+
+        return {
+            code: codeMatch ? codeMatch[1].trim() : null,
+            floor: floorMatch ? floorMatch[1].trim() : null,
+            instructions: cleaned.length > 2 ? cleaned : null
+        };
+    };
+
+    // Extract detailed fields from notes
     const nEntreprisePick = notesStr.match(/Entreprise Pick: (.*?)(\.|$|Contact)/)?.[1]?.trim();
     const nContactPick = notesStr.match(/Contact Pick: (.*?)(\.|$|Phone|Email)/)?.[1]?.trim();
     const nPhonePick = notesStr.match(/Phone Pick: (.*?)(\.|$|Email)/)?.[1]?.trim();
@@ -112,9 +133,9 @@ export function generateOrderPdf(order, client = {}) {
     const nEntrepriseDeliv = notesStr.match(/Entreprise Deliv: (.*?)(\.|$|Contact)/)?.[1]?.trim();
     const nContactDeliv = notesStr.match(/Contact Deliv: (.*?)(\.|$|Phone|Instructions)/)?.[1]?.trim();
     const nPhoneDeliv = notesStr.match(/Phone Deliv: (.*?)(\.|$|Instructions)/)?.[1]?.trim();
+    const nContenu = notesStr.match(/Contenu: (.*?)(\.|$|Instructions)/)?.[1]?.trim();
 
     const nInstructions = notesStr.match(/Instructions:\s*(.*?)(?:\.|$)/)?.[1]?.trim();
-    // Les instructions sont enregistrées format: "Instructions: pick_instr / deliv_instr"
     const nPNoteRaw = notesStr.match(/Instructions:\s*(.*?)\s*\//)?.[1]?.trim();
     const nDNoteRaw = notesStr.match(/Instructions:\s*(.*?)\s*\/\s*(.*)(?:\.|$)/)?.[2]?.trim();
 
@@ -132,270 +153,243 @@ export function generateOrderPdf(order, client = {}) {
     const nPNote = nPNoteRaw || (nInstructions && !nInstructions.includes('/') ? nInstructions : null);
     const nDNote = nDNoteRaw || (nInstructions && nInstructions.includes('/') ? nInstructions.split('/').pop()?.trim() : null);
 
-    const gContact = order.pickup_contact || nContactPick || gBillingName || notesStr.match(/Contact: ([^/]+)/)?.[1]?.trim();
-    const gEmail = order.pickup_email || nEmailEnlev || notesStr.match(/Email: ([^\s]+)/)?.[1];
-    const gPhone = order.pickup_phone || notesStr.match(/Phone: ([\d\s]+)/)?.[1];
+    // Simplified extraction helpers
+    const nCoPick = notesStr.match(/Contact Pick: (.*?)(\.|$|Phone|Email|Entreprise)/)?.[1]?.trim();
+    const nPhPick = notesStr.match(/Phone Pick: (.*?)(\.|$|Email|Entreprise|Code)/)?.[1]?.trim();
+    const nEmPick = notesStr.match(/Email Enlev: (.*?)(\.|$|Entreprise|Instructions)/)?.[1]?.trim();
+    const nEnPick = notesStr.match(/Entreprise Pick: (.*?)(\.|$|Contact)/)?.[1]?.trim();
 
-    const displayContact = client.contact || client.details?.contact || client.contact_person || client.details?.contact_person || client.full_name || client.details?.full_name || gContact;
-    const displayEmail = client.email || client.details?.email || gEmail;
-    const displayPhone = client.phone || client.details?.phone || client.phone_number || client.details?.phone_number || gPhone;
-    const displayAddress = client.address || client.details?.address || client.billing_address || client.details?.billing_address || gBillingAddress || order.pickup_address; // Fallback to pickup
+    const displayContact = client.company || client.details?.company || client.name || client.details?.name || client.full_name || client.details?.full_name || nCoPick || order.pickup_contact || "—";
+    const displayEmail = client.email || client.details?.email || nEmPick || order.pickup_email || "—";
+    const displayPhone = client.phone || client.details?.phone || nPhPick || order.pickup_phone || "—";
+    const displayAddress = client.address || client.details?.address || client.billing_address || order.pickup_address || "—";
 
-    if (displayContact) {
+    doc.setTextColor(2, 6, 23); // slate-950
+    if (displayContact && displayContact !== "—") {
+        doc.setFont("helvetica", "bold");
         doc.text(`Contact: ${displayContact}`, margin, detailY);
         detailY += 12;
     }
-    if (gBillingCompany && gBillingCompany !== clientName) {
-        doc.text(`Société: ${gBillingCompany}`, margin, detailY);
-        detailY += 12;
-    }
-    if (displayEmail) {
+    doc.setFont("helvetica", "normal");
+    if (displayEmail && displayEmail !== "—") {
         doc.text(`Email: ${displayEmail}`, margin, detailY);
         detailY += 12;
     }
-    if (displayPhone) {
+    if (displayPhone && displayPhone !== "—") {
+        doc.setFont("helvetica", "bold");
         doc.text(`Tél: ${displayPhone}`, margin, detailY);
         detailY += 12;
     }
-    if (displayAddress) {
-        // Simple word wrap for address
+    doc.setFont("helvetica", "normal");
+    if (displayAddress && displayAddress !== "—") {
+        doc.setFont("helvetica", "bold");
         const addrLines = doc.splitTextToSize(displayAddress, contentW / 2 - 30);
         doc.text(addrLines, margin, detailY);
         detailY += (12 * addrLines.length);
     }
+    doc.setFont("helvetica", "normal");
 
     const zip = client.zip || client.details?.zip;
     const city = client.city || client.details?.city;
-    const siret = client.siret || client.details?.siret;
-    const tvaNum = client.tva || client.details?.tva;
-    const ibanNum = client.iban || client.details?.iban;
-
     if (zip || city) {
         doc.text(`${zip || ""} ${city || ""}`, margin, detailY);
         detailY += 12;
     }
-    if (siret) {
-        doc.text(`SIRET: ${siret}`, margin, detailY);
-        detailY += 12;
-    }
-    if (tvaNum) {
-        doc.text(`TVA: ${tvaNum}`, margin, detailY);
-        detailY += 12;
-    }
-    if (ibanNum) {
-        doc.text(`IBAN: ${ibanNum}`, margin, detailY);
+    if (client.siret) {
+        doc.text(`SIRET: ${client.siret}`, margin, detailY);
         detailY += 12;
     }
 
     leftY = detailY;
 
+    // Date/Time Robust Formatting
+    const safeDateStr = (val) => {
+        if (!val) return "—";
+        const d = new Date(val);
+        if (isNaN(d.getTime())) return String(val || "—");
+        return d.toLocaleDateString("fr-FR");
+    };
+    const safeTimeStr = (val) => {
+        if (!val) return "—";
+        const d = new Date(val);
+        if (isNaN(d.getTime())) {
+            if (typeof val === 'string' && val.match(/^\d{1,2}:\d{2}$/)) return val;
+            return "—";
+        }
+        return d.toLocaleTimeString("fr-FR", { hour: '2-digit', minute: '2-digit' });
+    };
+
     // Order Info (Right)
-    let rightY = drawSection("Détails Commande", margin + contentW / 2 + 20, y, contentW / 2 - 20);
+    let rightY = drawSection("Détails Mission", margin + contentW / 2 + 20, y, contentW / 2 - 20);
     doc.setTextColor(15, 23, 42);
     doc.setFontSize(10);
-    doc.setFont("helvetica", "bold");
-    doc.text("Passée le:", margin + contentW / 2 + 20, rightY);
-    doc.setFont("helvetica", "normal");
-    const createdDateObj = order.created_at ? new Date(order.created_at) : (order.date ? new Date(order.date) : new Date());
-    const displayDate = createdDateObj.toLocaleDateString("fr-FR") + " " + createdDateObj.toLocaleTimeString("fr-FR", { hour: '2-digit', minute: '2-digit' });
-    doc.text(displayDate, margin + contentW / 2 + 100, rightY);
 
-    doc.setFont("helvetica", "bold");
-    doc.text("Véhicule:", margin + contentW / 2 + 20, rightY + 15);
-    doc.setFont("helvetica", "normal");
-    doc.text(String(order.vehicle_type || order.vehicle || "—").toUpperCase(), margin + contentW / 2 + 100, rightY + 15);
+    const drawRow = (lbl, val, yPos) => {
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(71, 85, 105); // slate-600
+        doc.text(lbl, margin + contentW / 2 + 20, yPos);
+        doc.setTextColor(2, 6, 23); // slate-950
+        doc.text(String(val || "—"), margin + contentW / 2 + 100, yPos);
+    };
 
-    doc.setFont("helvetica", "bold");
-    doc.text("Service:", margin + contentW / 2 + 20, rightY + 30);
-    doc.setFont("helvetica", "normal");
-    doc.text(String(order.service_level || order.service || "Normal").toUpperCase(), margin + contentW / 2 + 100, rightY + 30);
+    drawRow("Date:", safeDateStr(order.scheduled_at || order.date), rightY);
+    drawRow("Départ:", safeTimeStr(order.scheduled_at), rightY + 15);
+    drawRow("Deadline:", safeTimeStr(order.delivery_deadline), rightY + 30);
+    drawRow("Véhicule:", (order.vehicle_type || order.vehicle || "—").toUpperCase(), rightY + 45);
+    drawRow("Formule:", (order.service_level || order.service || "Standard").toUpperCase(), rightY + 60);
 
-
-
-    y = Math.max(leftY, rightY + 60) + 30;
-
-    // Extraction des instructions dates
-    const schedDateObj = order.scheduled_at ? new Date(order.scheduled_at) : (order.date ? new Date(order.date) : new Date());
-    const scheduledDateForDisplay = schedDateObj.toLocaleDateString("fr-FR");
+    y = Math.max(leftY, rightY + 80) + 30;
 
     // ===== SECTION ENLÈVEMENT =====
-    doc.setFontSize(10);
-    doc.setFont("helvetica", "bold");
-    doc.setTextColor(15, 23, 42);
-    y = drawSection(`Enlèvement`, margin, y, contentW);
+    const schedDateObjForHeader = order.scheduled_at ? new Date(order.scheduled_at) : (order.date ? new Date(order.date) : new Date());
+    const sDateDisp = schedDateObjForHeader.toLocaleDateString("fr-FR");
+    const sTimeDisp = schedDateObjForHeader.toLocaleTimeString("fr-FR", { hour: '2-digit', minute: '2-digit' });
 
-    doc.setFontSize(9);
-    doc.setTextColor(15, 23, 42);
+    y = drawSection(`Point d'enlèvement`, margin, y, contentW);
 
-    // Pickup
-    const pickupName = order.pickup_name || nEntreprisePick || nContactPick || "—";
-    const pickupAddr = order.pickup_address || order.pickup || "—";
-    const pCode = order.pickup_access_code
-        || notesStr.match(/(?:Code Enlev:|Code Enlèv:|Code :|Code:|Code\/étage:|Code\/etage:|Accès:|Acces:)\s?([^.]+)/i)?.[1]?.trim();
-    const pEmail = nEmailEnlev;
-    const pPhone = order.pickup_phone || nPhonePick || notesStr.match(/Phone: ([\d\s]+)/)?.[1];
-    const pNote = cleanNote(order.pickup_instructions ?? nPNote);
+    const pDetails = extractDetails(cleanNote(order.pickup_instructions ?? nPNote));
+    const pickupName = order.pickup_name || nEnPick || nCoPick || "—";
+    const pCode = order.pickup_access_code || pDetails.code;
+    const pFloor = pDetails.floor;
+    const pInstr = pDetails.instructions;
+    const pPhone = order.pickup_phone || nPhPick || "—";
 
-    let pickupBoxH = 65;
-    if (order.scheduled_at) pickupBoxH += 15;
-    if (pNote && pNote !== "—") pickupBoxH += 15;
-    if (pCode) pickupBoxH += 15;
-    if (pEmail || pPhone) pickupBoxH += 15;
-    pickupBoxH += 15; // Pour la date
+    let pBoxH = 75;
+    if (pCode) pBoxH += 15;
+    if (pFloor) pBoxH += 15;
+    if (pInstr) pBoxH += 15;
+    if (pPhone) pBoxH += 12;
 
     doc.setFillColor(248, 250, 252);
-    doc.roundedRect(margin, y, contentW, pickupBoxH, 5, 5, "F");
+    doc.roundedRect(margin, y, contentW, pBoxH, 5, 5, "F");
 
-    let boxY = y + 20;
-
+    let bY = y + 22;
+    doc.setFontSize(10);
     doc.setFont("helvetica", "bold");
-    doc.setTextColor(15, 23, 42);
-    doc.text(`Prévu le : ${scheduledDateForDisplay}`, margin + 15, boxY);
-    boxY += 15;
+    doc.setTextColor(249, 115, 22); // Orange highlight for timing
+    doc.text(`PRÉVU LE : ${safeDateStr(order.scheduled_at)} à ${safeTimeStr(order.scheduled_at)}`, margin + 15, bY);
+    bY += 18;
+    doc.setTextColor(2, 6, 23); // slate-950
+    doc.text(pickupName, margin + 15, bY);
+    bY += 15;
+    doc.setFont("helvetica", "bold"); // Bold address too
+    doc.text(order.pickup_address || "—", margin + 15, bY);
+    bY += 15;
 
-    doc.setFont("helvetica", "bold");
-    doc.text(pickupName, margin + 15, boxY);
-    boxY += 15;
-
-    doc.setFont("helvetica", "normal");
-    doc.text(pickupAddr, margin + 15, boxY);
-    boxY += 15;
-
-    let currentY = boxY;
-
-    let displayPTime = "";
-    if (order.scheduled_at) {
-        displayPTime = new Date(order.scheduled_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
-    }
-
-    if (displayPTime) {
-        doc.setFont("helvetica", "bold");
-        doc.setTextColor(249, 115, 22); // Orange pour attirer l'attention
-        doc.text(`Heure Départ : ${displayPTime}`, margin + 15, currentY);
-        currentY += 15;
-    }
-
-    if (pEmail || pPhone) {
+    if (pPhone) {
         doc.setFontSize(8);
         doc.setTextColor(100, 116, 139);
-        doc.text(`${pPhone || ""} ${pEmail ? "• " + pEmail : ""}`, margin + 15, currentY);
-        currentY += 12;
+        doc.text(`Tél: ${pPhone}`, margin + 15, bY);
+        bY += 12;
         doc.setFontSize(9);
         doc.setTextColor(15, 23, 42);
     }
 
     if (pCode) {
         doc.setFont("helvetica", "bold");
-        doc.text(`CODE ACCÈS : ${pCode}`, margin + 15, currentY);
-        currentY += 15;
+        doc.text(`CODE ACCÈS : ${pCode}`, margin + 15, bY);
+        bY += 15;
     }
-    if (pNote && pNote !== "—") {
+    if (pFloor) {
+        doc.setFont("helvetica", "bold");
+        doc.text(`ÉTAGE : ${pFloor}`, margin + 15, bY);
+        bY += 15;
+    }
+    if (pInstr) {
         doc.setFont("helvetica", "oblique");
         doc.setTextColor(100, 116, 139);
-        doc.text(`Instructions : ${pNote}`, margin + 15, currentY);
+        doc.text(`Instructions : ${pInstr}`, margin + 15, bY);
+        doc.setTextColor(15, 23, 42);
     }
-    doc.setTextColor(15, 23, 42);
 
-    y += pickupBoxH + 10;
+    y += pBoxH + 20;
 
     // ===== SECTION LIVRAISON =====
-    const dSchedDateObj = order.delivery_deadline ? new Date(order.delivery_deadline) : (order.date ? new Date(order.date) : new Date());
-    const dScheduledDateForDisplay = dSchedDateObj.toLocaleDateString("fr-FR");
-    y = drawSection(`Livraison`, margin, y, contentW);
+    const nEnDeliv = notesStr.match(/Entreprise Deliv: (.*?)(\.|$|Contact)/)?.[1]?.trim();
+    const nCoDeliv = notesStr.match(/Contact Deliv: (.*?)(\.|$|Phone|Instructions)/)?.[1]?.trim();
+    const nPhDeliv = notesStr.match(/Phone Deliv: (.*?)(\.|$|Instructions)/)?.[1]?.trim();
 
-    const deliveryName = order.delivery_name || nEntrepriseDeliv || nContactDeliv || "—";
-    const deliveryAddr = order.delivery_address || order.delivery || "—";
-    const dCode = order.delivery_access_code
-        || notesStr.match(/(?:Code Dest:|Code Deliv:|Code :|Code:|Code\/étage:|Code\/etage:|Accès:|Acces:)\s?([^.]+)/i)?.[1]?.trim();
-    const dPhone = order.delivery_phone || nPhoneDeliv;
-    const dNote = cleanNote(order.delivery_instructions ?? nDNote);
+    y = drawSection(`Destination`, margin, y, contentW);
 
-    let deliveryBoxH = 65;
-    if (order.delivery_deadline) deliveryBoxH += 15;
-    if (dNote && dNote !== "—") deliveryBoxH += 15;
-    if (dCode) deliveryBoxH += 15;
-    if (dPhone) deliveryBoxH += 15;
-    deliveryBoxH += 15; // Pour la date
+    const dDetails = extractDetails(cleanNote(order.delivery_instructions ?? nDNote));
+    const deliveryName = order.delivery_name || nEnDeliv || nCoDeliv || "—";
+    const dCode = order.delivery_access_code || dDetails.code;
+    const dFloor = dDetails.floor;
+    const dInstr = dDetails.instructions;
+    const dPhone = order.delivery_phone || nPhDeliv || "—";
+
+    let dBoxH = 75;
+    if (dCode) dBoxH += 15;
+    if (dFloor) dBoxH += 15;
+    if (dInstr) dBoxH += 15;
+    if (dPhone) dBoxH += 12;
 
     doc.setFillColor(248, 250, 252);
-    doc.roundedRect(margin, y, contentW, deliveryBoxH, 5, 5, "F");
+    doc.roundedRect(margin, y, contentW, dBoxH, 5, 5, "F");
 
-    let dBoxY = y + 20;
-
+    bY = y + 22;
+    doc.setFontSize(10);
     doc.setFont("helvetica", "bold");
-    doc.setTextColor(15, 23, 42);
-    doc.text(`Prévu le : ${dScheduledDateForDisplay}`, margin + 15, dBoxY);
-    dBoxY += 15;
-
+    doc.setTextColor(249, 115, 22); // Orange highlight
+    doc.text(`DEADLINE : ${safeDateStr(order.delivery_deadline)} à ${safeTimeStr(order.delivery_deadline)}`, margin + 15, bY);
+    bY += 18;
+    doc.setTextColor(2, 6, 23);
+    doc.text(deliveryName, margin + 15, bY);
+    bY += 15;
     doc.setFont("helvetica", "bold");
-    doc.text(deliveryName, margin + 15, dBoxY);
-    dBoxY += 15;
-
-    doc.setFont("helvetica", "normal");
-    doc.text(deliveryAddr, margin + 15, dBoxY);
-    dBoxY += 15;
-
-    currentY = dBoxY;
-
-    let displayDTime = "";
-    if (order.delivery_deadline) {
-        displayDTime = new Date(order.delivery_deadline).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
-    }
-
-    if (displayDTime) {
-        doc.setFont("helvetica", "bold");
-        doc.setTextColor(249, 115, 22); // Orange
-        doc.text(`Heure Livraison : ${displayDTime}`, margin + 15, currentY);
-        currentY += 15;
-    }
+    doc.text(order.delivery_address || "—", margin + 15, bY);
+    bY += 15;
 
     if (dPhone) {
         doc.setFontSize(8);
         doc.setTextColor(100, 116, 139);
-        doc.text(`Tél: ${dPhone}`, margin + 15, currentY);
-        currentY += 12;
+        doc.text(`Tél: ${dPhone}`, margin + 15, bY);
+        bY += 12;
         doc.setFontSize(9);
         doc.setTextColor(15, 23, 42);
     }
 
     if (dCode) {
         doc.setFont("helvetica", "bold");
-        doc.text(`CODE ACCÈS : ${dCode}`, margin + 15, currentY);
-        currentY += 15;
+        doc.text(`CODE ACCÈS : ${dCode}`, margin + 15, bY);
+        bY += 15;
     }
-    if (dNote && dNote !== "—") {
+    if (dFloor) {
+        doc.setFont("helvetica", "bold");
+        doc.text(`ÉTAGE : ${dFloor}`, margin + 15, bY);
+        bY += 15;
+    }
+    if (dInstr) {
         doc.setFont("helvetica", "oblique");
         doc.setTextColor(100, 116, 139);
-        doc.text(`Instructions : ${dNote}`, margin + 15, currentY);
+        doc.text(`Instructions : ${dInstr}`, margin + 15, bY);
+        doc.setTextColor(15, 23, 42);
     }
-    doc.setTextColor(15, 23, 42);
 
-    y += deliveryBoxH + 25;
+    y += dBoxH + 25;
 
     // Package Info Section
-    y = drawSection("Informations Colis", margin, y, contentW);
-
-    const pType = order.package_type || notesStr.split(" - ")?.[0] || order.packageType || "—";
+    const pType = order.package_type || order.delivery_type || notesStr.split(" - ")?.[0] || order.packageType || "Standard";
     const pWeight = order.weight || notesStr.match(/Poids: ([\d\w\s]+)/)?.[1] || "—";
-    const pDims = order.package_description || notesStr.match(/Dimensions: ([^.]+)/)?.[1] || notesStr.match(/Dims: ([\d\w\sx]+)/)?.[1] || "—";
+    const pContenu = nContenu || order.package_description || notesStr.match(/Contenu: (.*?)(\.|$)/)?.[1] || "—";
 
     const drawInfoBox = (label, value, xPos, width) => {
         doc.setFillColor(248, 250, 252);
         doc.roundedRect(xPos, y, width, 40, 5, 5, "F");
         doc.setFontSize(8);
-        doc.setTextColor(100, 116, 139);
+        doc.setTextColor(71, 85, 105); // slate-600
         doc.setFont("helvetica", "bold");
         doc.text(label.toUpperCase(), xPos + 10, y + 15);
         doc.setFontSize(10);
-        doc.setTextColor(15, 23, 42);
-        doc.setFont("helvetica", "normal");
+        doc.setTextColor(2, 6, 23); // slate-950
+        doc.setFont("helvetica", "bold"); // Bold value too
         doc.text(String(value), xPos + 10, y + 30);
     };
 
     const boxW = (contentW - 30) / 4;
-    drawInfoBox("Nature", pType, margin, boxW);
+    drawInfoBox("Nature", pType.toUpperCase(), margin, boxW);
     drawInfoBox("Poids", String(pWeight).includes("kg") ? String(pWeight) : `${pWeight} kg`, margin + boxW + 10, boxW);
-    drawInfoBox("Description", pDims, margin + (boxW + 10) * 2, boxW);
+    drawInfoBox("Contenu", String(pContenu).length > 25 ? String(pContenu).slice(0, 22) + '...' : pContenu, margin + (boxW + 10) * 2, boxW);
 
     // Add Price Box
     const priceDisplay = order.price_ht || order.price ? `${Number(order.price_ht || order.price).toFixed(2)} € HT` : "Sur Devis";
@@ -403,24 +397,18 @@ export function generateOrderPdf(order, client = {}) {
 
     y += 60;
 
-    // Clean displayNotes (remove internal guest metadata & technical chunks)
+    // Remaining Notes
     let displayNotes = notesStr
-        .replace(/Guest Order\.\s?/g, "")
         .replace(/Entreprise Pick:.*?(?=\.|$)\.?\s?/g, "")
-        .replace(/Entreprise Deliv:.*?(?=\.|$)\.?\s?/g, "")
         .replace(/Contact Pick:.*?(?=\.|$)\.?\s?/g, "")
-        .replace(/Contact Deliv:.*?(?=\.|$)\.?\s?/g, "")
-        .replace(/Email Enlev:.*?(?=\.|$)\.?\s?/g, "")
         .replace(/Phone Pick:.*?(?=\.|$)\.?\s?/g, "")
+        .replace(/Email Enlev:.*?(?=\.|$)\.?\s?/g, "")
+        .replace(/Entreprise Deliv:.*?(?=\.|$)\.?\s?/g, "")
+        .replace(/Contact Deliv:.*?(?=\.|$)\.?\s?/g, "")
         .replace(/Phone Deliv:.*?(?=\.|$)\.?\s?/g, "")
-        .replace(/Code Enlev:.*?(?=\.|$)\.?\s?/g, "")
-        .replace(/Code Dest:.*?(?=\.|$)\.?\s?/g, "")
-        .replace(/Code Deliv:.*?(?=\.|$)\.?\s?/g, "")
         .replace(/Instructions:.*?(?=\.|$)\.?\s?/g, "")
-        .replace(/Contact:.*?\)\.\s?/g, "")
-        .replace(/Instructions :.*?\.\s?/g, "")
-        .replace(/Email:.*?\.\s?/g, "")
-        .replace(/Phone:.*?\.\s?/g, "")
+        .replace(/Contenu:.*?(?=\.|$)\.?\s?/g, "")
+        .replace(/Billing:.*$/g, "")
         .replace(/\|?\s*Decision\s*:?[^|]*/gi, "")
         .replace(/\|?\s*Contact\s*:?[^|]*/gi, "")
         .replace(/\|?\s*Code\s*:?[^|]*/gi, "")
