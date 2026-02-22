@@ -624,8 +624,8 @@ export default function AdminOrders() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {[
               { label: "Nouveaux", statuses: ["pending_acceptance", "pending"], color: "bg-rose-500", light: "bg-rose-50", text: "text-rose-600" },
-              { label: "Dispatch", statuses: ["accepted", "assigned"], color: "bg-indigo-500", light: "bg-indigo-50", text: "text-indigo-600" },
-              { label: "En cours", statuses: ["assigned", "driver_accepted", "in_progress", "in_progress"], color: "bg-amber-500", light: "bg-amber-50", text: "text-amber-600" },
+              { label: "Dispatch", statuses: ["accepted"], color: "bg-indigo-500", light: "bg-indigo-50", text: "text-indigo-600" },
+              { label: "En cours", statuses: ["assigned", "driver_accepted", "in_progress"], color: "bg-amber-500", light: "bg-amber-50", text: "text-amber-600" },
               { label: "Livrées", statuses: ["delivered"], color: "bg-emerald-500", light: "bg-emerald-50", text: "text-emerald-600" },
             ].map((col) => (
               <div key={col.label} className="flex flex-col gap-4">
@@ -699,14 +699,14 @@ export default function AdminOrders() {
                               onClick={(e) => { e.stopPropagation(); openDispatch(o); }}
                               className="rounded-xl bg-orange-500 px-4 py-2 text-[10px] font-black text-white hover:bg-orange-600 transition-all uppercase tracking-widest shadow-lg shadow-orange-500/10 active:scale-95"
                             >
-                              {o.driver_id ? 'RÉASSIGNER' : 'DISPATCH'}
+                              DISPATCH
                             </button>
                           ) : col.label === "En cours" ? (
                             <button
-                              onClick={(e) => { e.stopPropagation(); completeOrder(o.id); }}
-                              className="rounded-xl bg-emerald-600 px-4 py-2 text-[10px] font-black text-white hover:bg-emerald-700 transition-all uppercase tracking-widest shadow-lg shadow-emerald-600/10 active:scale-95"
+                              onClick={(e) => { e.stopPropagation(); openDispatch(o); }}
+                              className="rounded-xl bg-slate-900 px-4 py-2 text-[10px] font-black text-white hover:bg-slate-800 transition-all uppercase tracking-widest shadow-lg shadow-slate-900/10 active:scale-95"
                             >
-                              TERMINER
+                              RÉASSIGNER
                             </button>
                           ) : (
                             <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">LIVRÉ ✓</span>
