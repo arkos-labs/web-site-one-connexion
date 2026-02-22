@@ -707,10 +707,20 @@ export default function DashboardAdmin() {
                               </span>
                             </div>
                             <div className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider ${o.status.includes('pending') ? "bg-rose-50 text-rose-600" :
-                              (o.status === "accepted" || o.status === "assigned") ? "bg-indigo-50 text-indigo-600" :
-                                "bg-amber-50 text-amber-600"
+                              (o.status === "accepted") ? "bg-indigo-50 text-indigo-600" :
+                              (o.status === "assigned") ? "bg-amber-50 text-amber-600" :
+                              (o.status === "driver_accepted") ? "bg-blue-50 text-blue-600" :
+                              (o.status === "in_progress") ? "bg-purple-50 text-purple-600" :
+                              (o.status === "delivered") ? "bg-emerald-50 text-emerald-600" :
+                                "bg-slate-50 text-slate-500"
                               }`}>
-                              {o.status.includes('pending') ? 'Nouveau' : o.status === 'accepted' ? 'Validé' : 'En cours'}
+                              {o.status.includes('pending') ? 'Nouveau' :
+                                o.status === 'accepted' ? 'Validé' :
+                                o.status === 'assigned' ? 'À accepter' :
+                                o.status === 'driver_accepted' ? 'Acceptée' :
+                                o.status === 'in_progress' ? 'Enlevée' :
+                                o.status === 'delivered' ? 'Livrée' :
+                                o.status}
                             </div>
                           </div>
 
