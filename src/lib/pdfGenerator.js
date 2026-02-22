@@ -115,8 +115,8 @@ export function generateOrderPdf(order, client = {}) {
 
     const nInstructions = notesStr.match(/Instructions:\s*(.*?)(?:\.|$)/)?.[1]?.trim();
     // Les instructions sont enregistrées format: "Instructions: pick_instr / deliv_instr"
-    const nPNote = notesStr.match(/Instructions:\s*(.*?)\s*\//)?.[1]?.trim() || (nInstructions && !nInstructions.includes('/') ? nInstructions : null);
-    const nDNote = notesStr.match(/Instructions:\s*(.*?)\s*\/\s*(.*)(?:\.|$)/)?.[2]?.trim();
+    const nPNoteRaw = notesStr.match(/Instructions:\s*(.*?)\s*\//)?.[1]?.trim();
+    const nDNoteRaw = notesStr.match(/Instructions:\s*(.*?)\s*\/\s*(.*)(?:\.|$)/)?.[2]?.trim();
 
     const cleanNote = (val) => {
         if (!val) return val;
@@ -128,6 +128,9 @@ export function generateOrderPdf(order, client = {}) {
             .replace(/\s*\|\s*$/g, "")
             .trim();
     };
+
+    const nPNote = nPNoteRaw || (nInstructions && !nInstructions.includes('/') ? nInstructions : null);
+    const nDNote = nDNoteRaw || (nInstructions && nInstructions.includes('/') ? nInstructions.split('/').pop()?.trim() : null);
 
     const gContact = order.pickup_contact || nContactPick || gBillingName || notesStr.match(/Contact: ([^/]+)/)?.[1]?.trim();
     const gEmail = order.pickup_email || nEmailEnlev || notesStr.match(/Email: ([^\s]+)/)?.[1];
@@ -231,7 +234,7 @@ export function generateOrderPdf(order, client = {}) {
         || notesStr.match(/(?:Code Enlev:|Code Enlèv:|Code :|Code:|Code\/étage:|Code\/etage:|Accès:|Acces:)\s?([^.]+)/i)?.[1]?.trim();
     const pEmail = nEmailEnlev;
     const pPhone = order.pickup_phone || nPhonePick || notesStr.match(/Phone: ([\d\s]+)/)?.[1];
-    const pNote = cleanNote(order.pickup_instructions || nPNote);
+    const pNote = cleanNote(order.pickup_instructions ?? nPNote);
 
     let pickupBoxH = 65;
     if (order.scheduled_at) pickupBoxH += 15;
@@ -305,7 +308,7 @@ export function generateOrderPdf(order, client = {}) {
     const dCode = order.delivery_access_code
         || notesStr.match(/(?:Code Dest:|Code Deliv:|Code :|Code:|Code\/étage:|Code\/etage:|Accès:|Acces:)\s?([^.]+)/i)?.[1]?.trim();
     const dPhone = order.delivery_phone || nPhoneDeliv;
-    const dNote = cleanNote(order.delivery_instructions || nDNote);
+    const dNote = cleanNote(order.delivery_instructions ?? nDNote);
 
     let deliveryBoxH = 65;
     if (order.delivery_deadline) deliveryBoxH += 15;
