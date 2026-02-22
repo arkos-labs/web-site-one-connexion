@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 // pdfGenerator loaded dynamically
 import { Loader2 } from "lucide-react";
@@ -32,24 +32,47 @@ function clientStatusLabel(order) {
 export default function OrderDetails() {
   const navigate = useNavigate();
   const { state } = useLocation();
-  const order = state?.order;
+  const { id } = useParams();
+  const [order, setOrder] = useState(state?.order || null);
   const [client, setClient] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
-    if (order?.client_id) {
-      fetchClient();
+    // If we have an order ID but the object lacks full details (like pickup_address)
+    // we must fetch the complete order data. This happens when coming from Dashboard stats.
+    if ((!order || !order.pickup_address) && (id || order?.id)) {
+      fetchFullOrder();
+    } else if (order?.client_id) {
+      fetchClient(order.client_id);
     }
-  }, [order]);
+  }, [id, order?.id, order?.pickup_address, order?.client_id]);
 
-  const fetchClient = async () => {
+  const fetchFullOrder = async () => {
     setLoading(true);
-    const { data } = await supabase.from('profiles').select('*').eq('id', order.client_id).single();
+    const orderId = id || order?.id;
+    const { data } = await supabase.from('orders').select('*').eq('id', orderId).single();
+    if (data) setOrder(data);
+    else setNotFound(true);
+    setLoading(false);
+  };
+
+  const fetchClient = async (clientId) => {
+    setLoading(true);
+    const { data } = await supabase.from('profiles').select('*').eq('id', clientId).single();
     if (data) setClient(data);
     setLoading(false);
   };
 
-  if (!order) {
+  if (loading && !order?.pickup_address) {
+    return (
+      <div className="flex justify-center p-20">
+        <Loader2 className="h-8 w-8 animate-spin text-slate-400" />
+      </div>
+    );
+  }
+
+  if (!order || notFound) {
     return (
       <div className="rounded-3xl bg-white p-6 shadow-sm">
         <div className="mb-3 text-lg font-bold text-slate-900">Commande introuvable</div>
