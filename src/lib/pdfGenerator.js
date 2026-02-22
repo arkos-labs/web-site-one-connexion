@@ -641,9 +641,8 @@ export function generateInvoicePdf(invoice, orders = [], client = {}) {
 
     // Table Header (client invoice: minimal)
     const colX = {
-        date: margin + 8,
-        ref: margin + 110,
-        desc: margin + 230,
+        datetime: margin + 8,
+        cities: margin + 260,
         amount: pageW - margin - 10
     };
 
@@ -652,9 +651,8 @@ export function generateInvoicePdf(invoice, orders = [], client = {}) {
     doc.setTextColor(255, 255, 255);
     doc.setFont("helvetica", "bold");
     doc.setFontSize(9.5);
-    doc.text("DATE", colX.date, y + 17);
-    doc.text("RÉF", colX.ref, y + 17);
-    doc.text("DESCRIPTION", colX.desc, y + 17);
+    doc.text("DATE & HEURE", colX.datetime, y + 17);
+    doc.text("VILLE → VILLE", colX.cities, y + 17);
     doc.text("MONTANT HT", colX.amount, y + 17, { align: "right" });
 
     y += 34;
@@ -678,19 +676,15 @@ export function generateInvoicePdf(invoice, orders = [], client = {}) {
         const rawDate = o.created_at || o.scheduled_at || o.date;
         const parsedDate = rawDate ? new Date(rawDate) : null;
         const orderDate = parsedDate && !isNaN(parsedDate.getTime())
-            ? parsedDate.toLocaleDateString("fr-FR")
+            ? `${parsedDate.toLocaleDateString("fr-FR")} ${parsedDate.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}`
             : "—";
 
-        const ref = `#${String(o.id).slice(0, 8).toUpperCase()}`;
-        const fromRaw = o.pickup_address || o.pickup_city || o.pickup || "—";
-        const toRaw = o.delivery_address || o.delivery_city || o.delivery || "—";
-        const from = String(fromRaw).replace(/\s+/g, " ").trim().slice(0, 28);
-        const to = String(toRaw).replace(/\s+/g, " ").trim().slice(0, 28);
-        const desc = `Course ${from} → ${to}`;
+        const fromCity = (o.pickup_city || "—").toString().replace(/\s+/g, " ").trim();
+        const toCity = (o.delivery_city || "—").toString().replace(/\s+/g, " ").trim();
+        const cities = `${fromCity} → ${toCity}`.slice(0, 40);
 
-        doc.text(orderDate, colX.date, y);
-        doc.text(ref, colX.ref, y);
-        doc.text(desc, colX.desc, y);
+        doc.text(orderDate, colX.datetime, y);
+        doc.text(cities, colX.cities, y);
         doc.setFont("helvetica", "bold");
         doc.text(`${price.toFixed(2)} €`, colX.amount, y, { align: "right" });
         doc.setFont("helvetica", "normal");
