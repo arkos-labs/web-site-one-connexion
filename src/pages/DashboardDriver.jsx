@@ -137,13 +137,20 @@ export default function DashboardDriver() {
     };
 
     const updateStatus = async (orderId, newStatus) => {
-        // Map new status if needed
-        let statusToSave = newStatus;
-        if (newStatus === 'in_progress') statusToSave = 'in_progress';
+        const updateData = {
+            status: newStatus,
+            updated_at: new Date().toISOString()
+        };
+
+        if (newStatus === 'driver_accepted') {
+            updateData.driver_accepted_at = new Date().toISOString();
+        } else if (newStatus === 'delivered') {
+            updateData.delivered_at = new Date().toISOString();
+        }
 
         const { error } = await supabase
             .from('orders')
-            .update({ status: statusToSave })
+            .update(updateData)
             .eq('id', orderId);
 
         if (!error) {
@@ -257,8 +264,17 @@ export default function DashboardDriver() {
                                 </div>
 
                                 {/* Actions */}
-                                <div className="pt-2">
-                                    {(['assigned', 'driver_accepted'].includes(task.status)) ? (
+                                <div className="pt-2 flex gap-3">
+                                    {task.status === 'assigned' ? (
+                                        <>
+                                            <button
+                                                onClick={() => updateStatus(task.id, 'driver_accepted')}
+                                                className="flex-1 rounded-2xl bg-emerald-500 py-4 text-center font-bold text-white shadow-xl shadow-emerald-500/20 active:scale-[0.98] transition-all"
+                                            >
+                                                ACCEPTER LA MISSION ✅
+                                            </button>
+                                        </>
+                                    ) : task.status === 'driver_accepted' ? (
                                         <button
                                             onClick={() => updateStatus(task.id, 'in_progress')}
                                             className="w-full rounded-2xl bg-slate-900 py-4 text-center font-bold text-white shadow-xl shadow-slate-900/20 active:scale-[0.98] transition-all"
