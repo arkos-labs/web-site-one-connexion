@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import PublicHeader from "../components/PublicHeader.jsx";
 import PublicFooter from "../components/PublicFooter.jsx";
-import { ArrowUpRight, Package, FileText, MessageSquare, CreditCard, Stethoscope, Scale, Calendar, Car, Plus, Facebook, Twitter, Instagram, Linkedin, ShoppingCart, Star } from "lucide-react";
+import { ArrowUpRight, Package, FileText, MessageSquare, CreditCard, Stethoscope, Scale, Calendar, Car, Plus, Facebook, Twitter, Instagram, Linkedin, ShoppingCart, Star, CheckCircle2 } from "lucide-react";
 
 const benefits = [
   { title: "Bon de commande & Suivi", desc: <span>Génération automatique PDF et traçabilité complète de chaque envoi. <Link to="/inscription" className="underline decoration-orange-500/30 hover:decoration-orange-500">Ouvrir un compte</Link></span> },
@@ -63,7 +63,7 @@ const faqs = [
 
 export default function Landing() {
   return (
-    <div className="bg-white text-slate-900">
+    <div className="bg-slate-50 text-slate-700 font-sans selection:bg-orange-500/30 selection:text-orange-900">
       {/* Header */}
       <PublicHeader />
 
@@ -76,7 +76,7 @@ export default function Landing() {
             alt="Livraison professionnelle : remise de colis et documents"
             className="h-full w-full object-cover opacity-60"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/60 to-slate-900/40" />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-slate-900/20" />
         </div>
 
         {/* Content */}
@@ -84,10 +84,10 @@ export default function Landing() {
 
           <h1 className="mb-8 font-serif text-5xl font-medium tracking-tight text-white md:text-7xl">
             Envoyez vos colis & marchandises <br className="hidden md:block" />
-            dans <span className="italic text-orange-500">tout Paris</span> et l’Île‑de‑France
+            dans <span className="italic text-orange-400">tout Paris</span> et l’Île‑de‑France
           </h1>
 
-          <p className="mx-auto mb-10 max-w-3xl text-xl leading-relaxed text-slate-200">
+          <p className="mx-auto mb-10 max-w-3xl text-xl leading-relaxed text-slate-100">
             Messagerie B2B et coursier express à Paris & Île‑de‑France : envois rapides, plis urgents,
             colis sensibles et tournées régulières avec facturation claire.
             <br className="hidden md:block" /> Idéal pour dentistes, opticiens, juridique, santé, événementiel et automobile.
@@ -100,86 +100,88 @@ export default function Landing() {
                 <ArrowUpRight size={16} />
               </div>
             </Link>
-            <Link to="/guest-order" className="group relative flex items-center gap-3 rounded-full border border-white/20 bg-white/5 px-8 py-4 text-white backdrop-blur-sm transition-all hover:bg-white/10">
+            <Link to="/guest-order" className="group relative flex items-center gap-3 rounded-full border border-white/40 bg-white/10 px-8 py-4 text-white backdrop-blur-sm transition-all hover:bg-white/20">
               <span className="text-base font-bold">Commander sans compte</span>
-              <ShoppingCart size={18} className="text-orange-400" />
+              <ShoppingCart size={18} className="text-orange-300" />
             </Link>
           </div>
 
-          <div className="mt-16 flex flex-wrap justify-center gap-8 text-sm font-medium text-slate-400">
-            <div className="flex items-center gap-2 rounded-full bg-white/5 px-4 py-2 backdrop-blur-md border border-white/5">
-              <Package className="text-orange-500" size={18} />
+          <div className="mt-16 flex flex-wrap justify-center gap-8 text-sm font-medium text-slate-100">
+            <div className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 backdrop-blur-md border border-white/20">
+              <Package className="text-orange-400" size={18} />
               <span>Commandes 24/7</span>
             </div>
-            <div className="flex items-center gap-2 rounded-full bg-white/5 px-4 py-2 backdrop-blur-md border border-white/5">
-              <CreditCard className="text-orange-500" size={18} />
+            <div className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 backdrop-blur-md border border-white/20">
+              <CreditCard className="text-orange-400" size={18} />
               <span>Facturation Mensuelle</span>
             </div>
-            <div className="flex items-center gap-2 rounded-full bg-white/5 px-4 py-2 backdrop-blur-md border border-white/5">
-              <MessageSquare className="text-orange-500" size={18} />
-              <span> des étapes</span>
+            <div className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 backdrop-blur-md border border-white/20">
+              <MessageSquare className="text-orange-400" size={18} />
+              <span>Suivi des étapes</span>
             </div>
           </div>
         </div>
       </section>
 
       {/* Benefits */}
-      <section id="features" className="bg-slate-50 py-16 md:py-24">
-        <div className="mx-auto max-w-6xl px-4 md:px-8">
-          <div className="mb-16 text-center">
-            <h2 className="font-serif text-3xl font-medium text-slate-900 md:text-5xl">
+      <section id="features" className="bg-white py-16 md:py-32 relative border-t border-slate-100">
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-[0.03]"></div>
+        <div className="mx-auto max-w-6xl px-4 md:px-8 relative z-10">
+          <div className="mb-20 text-center">
+            <h2 className="text-3xl font-black tracking-tight text-slate-900 md:text-5xl">
               Pourquoi choisir One Connexion ?
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-slate-500">
-              Des solutions de transport sur-mesure pour les professionnels exigeants. Fiabilité, transparence et réactivité pour accompagner le développement de votre activité.
+            <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-600">
+              Des solutions de transport sur-mesure pour les professionnels exigeants. Fiabilité, transparence et réactivité pour accompagner de bout en bout votre activité.
             </p>
           </div>
 
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {benefits.map((b, i) => (
-              <div key={i} className="group relative rounded-3xl bg-white p-8 shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl">
-                <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-orange-50 text-orange-500 group-hover:bg-orange-500 group-hover:text-white transition-colors">
-                  {i === 0 && <FileText size={24} />}
-                  {i === 1 && <CreditCard size={24} />}
-                  {i === 2 && <MessageSquare size={24} />}
-                  {i === 3 && <Package size={24} />}
+              <div key={i} className="group relative rounded-3xl bg-white p-8 shadow-xl shadow-slate-200/50 border border-slate-100 hover:bg-slate-50 transition-all hover:-translate-y-2 hover:border-orange-500/30">
+                <div className="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-50 text-orange-500 group-hover:bg-orange-500 group-hover:text-white transition-all transform group-hover:scale-110">
+                  {i === 0 && <FileText size={26} />}
+                  {i === 1 && <CreditCard size={26} />}
+                  {i === 2 && <MessageSquare size={26} />}
+                  {i === 3 && <Package size={26} />}
                 </div>
-                <h3 className="mb-3 font-serif text-xl font-bold text-slate-900">{b.title}</h3>
-                <p className="text-sm leading-relaxed text-slate-500">{b.desc}</p>
+                <h3 className="mb-4 text-xl font-bold tracking-tight text-slate-900">{b.title}</h3>
+                <p className="text-[15px] leading-relaxed text-slate-600 group-hover:text-slate-700 transition-colors">{b.desc}</p>
               </div>
             ))}
           </div>
 
-          <div className="mt-16 text-center">
-            <button className="rounded-full bg-gradient-to-r from-slate-900 to-slate-800 px-8 py-4 text-sm font-bold text-white shadow-lg transition-transform hover:scale-105">
-              Découvrir toutes les fonctionnalités →
-            </button>
+          <div className="mt-20 text-center">
+            <Link to="/guest-order" className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-8 py-4 text-sm font-bold text-white uppercase tracking-widest shadow-xl shadow-slate-900/10 transition-transform hover:scale-105 hover:bg-orange-500">
+              Estimer votre première course &rarr;
+            </Link>
           </div>
         </div>
       </section>
 
       {/* Expertises */}
-      <section id="expertises" className="bg-white py-16 md:py-24">
-        <div className="mx-auto max-w-6xl px-4 md:px-8">
-          <div className="mb-16 text-center">
-            <h2 className="font-serif text-3xl font-medium text-slate-900 md:text-5xl">Nos Expertises</h2>
-            <p className="mx-auto mt-4 max-w-2xl text-slate-500">
-              Des solutions sur-mesure pour chaque secteur d'activité exigeant.
+      <section id="expertises" className="bg-slate-50 py-16 md:py-32 relative border-t border-slate-100">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-orange-500/10 blur-[150px] rounded-full point-events-none"></div>
+        <div className="mx-auto max-w-6xl px-4 md:px-8 relative z-10">
+          <div className="mb-20 text-center">
+            <h2 className="text-3xl font-black tracking-tight text-slate-900 md:text-5xl">Nos Expertises Sectorielles</h2>
+            <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-600">
+              Des solutions logistiques chirurgicales pensées pour les contraintes de chaque métier d'exigence.
             </p>
           </div>
 
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {expertises.map((e, i) => (
-              <div key={i} className="group flex flex-col items-center rounded-3xl bg-white p-8 text-center shadow-lg ring-1 ring-slate-100 transition-all hover:-translate-y-1 hover:shadow-xl">
-                <div className="mb-6 rounded-full bg-amber-50 p-4 text-amber-500 group-hover:bg-amber-500 group-hover:text-white transition-colors">
-                  <e.icon size={32} strokeWidth={1.5} />
+              <div key={i} className="group flex flex-col items-center rounded-3xl bg-white p-10 text-center shadow-xl shadow-slate-200/40 border border-slate-100 transition-all hover:-translate-y-2 hover:bg-white hover:border-orange-500/20">
+                <div className="mb-8 rounded-full bg-orange-50 p-5 text-orange-500 group-hover:bg-orange-500 group-hover:text-white transition-all transform group-hover:rotate-12">
+                  <e.icon size={36} strokeWidth={1.5} />
                 </div>
-                <h3 className="mb-4 font-serif text-xl font-bold text-slate-900">{e.title}</h3>
-                <p className="mb-8 text-sm leading-relaxed text-slate-500">
+                <h3 className="mb-4 text-xl font-bold tracking-tight text-slate-900">{e.title}</h3>
+                <p className="mb-10 text-[15px] leading-relaxed text-slate-600">
                   {e.desc}
                 </p>
-                <Link to={e.link} className="mt-auto rounded-full bg-amber-50 px-6 py-2 text-xs font-bold uppercase tracking-wide text-amber-900 transition-colors hover:bg-amber-100">
-                  En savoir plus
+                <Link to={e.link} className="mt-auto px-6 py-2.5 text-xs font-bold uppercase tracking-widest text-orange-600 hover:text-white hover:bg-orange-500 rounded-full border border-orange-500/30 transition-all">
+                  Découvrir
                 </Link>
               </div>
             ))}
@@ -188,32 +190,36 @@ export default function Landing() {
       </section>
 
       {/* Workflow */}
-      <section id="workflow" className="bg-slate-50 py-16 md:py-24">
+      <section id="workflow" className="bg-white py-16 md:py-32 border-t border-slate-100">
         <div className="mx-auto max-w-6xl px-4 md:px-8">
-          <div className="mb-16 text-center">
-            <h2 className="font-serif text-3xl font-medium text-slate-900 md:text-5xl">
-              Un parcours maîtrisé, de la commande à la facturation
+          <div className="mb-20 text-center">
+            <h2 className="text-3xl font-black tracking-tight text-slate-900 md:text-5xl">
+              Un workflow maîtrisé de A à Z
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-slate-500">
-              4 étapes structurées pour une logistique fiable, conforme et transparente — avec un seul interlocuteur.
+            <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-600">
+              4 étapes structurées pour une logistique infaillible. Le contrôle direct à chaque instant.
             </p>
-            <p className="mt-2 text-xs font-medium uppercase tracking-wider text-orange-600">
-              Service opérationnel 24/7
-            </p>
+            <div className="mt-8 inline-flex items-center gap-2 rounded-full border border-orange-500/20 bg-orange-50 px-4 py-2 text-xs font-bold uppercase tracking-widest text-orange-600">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span>
+              </span>
+              Dispatch Actif 24/7
+            </div>
           </div>
 
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {steps.map((s) => (
-              <div key={s.num} className="group relative flex flex-col rounded-3xl bg-white p-8 shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl">
+              <div key={s.num} className="group relative flex flex-col rounded-3xl bg-slate-50 p-8 shadow-lg shadow-slate-200/50 border border-slate-100 transition-all hover:-translate-y-2 hover:bg-white hover:border-slate-200 hover:shadow-xl">
                 <div className="mb-8 flex items-start justify-between">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-orange-50 text-sm font-bold text-orange-600 group-hover:bg-orange-600 group-hover:text-white transition-colors">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-orange-100 text-lg font-black text-orange-600 group-hover:bg-orange-500 group-hover:text-white transition-colors shadow-sm">
                     {s.num}
                   </div>
-                  <span className="text-xs font-bold uppercase tracking-widest text-slate-300">Étape</span>
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Étape</span>
                 </div>
 
-                <h3 className="mb-3 font-serif text-xl font-bold text-slate-900">{s.title}</h3>
-                <p className="text-sm leading-relaxed text-slate-500">{s.desc}</p>
+                <h3 className="mb-4 text-xl font-bold tracking-tight text-slate-900">{s.title}</h3>
+                <p className="text-[15px] leading-relaxed text-slate-600 group-hover:text-slate-700 transition-colors">{s.desc}</p>
               </div>
             ))}
           </div>
@@ -222,35 +228,38 @@ export default function Landing() {
 
       {/* Testimonials */}
       {/* Testimonials */}
-      <section className="bg-white py-16 md:py-24">
-        <div className="mx-auto max-w-6xl px-4 md:px-8">
-          <div className="mb-16 text-center">
-            <h2 className="font-serif text-3xl font-medium text-slate-900 md:text-5xl">
-              Ils nous font confiance
+      <section className="bg-slate-50 py-16 md:py-32 relative overflow-hidden border-t border-slate-200">
+        <div className="absolute top-0 right-[-10%] w-[500px] h-[500px] bg-blue-100 blur-[150px] rounded-full point-events-none"></div>
+        <div className="mx-auto max-w-6xl px-4 md:px-8 relative z-10">
+          <div className="mb-20 text-center">
+            <h2 className="text-3xl font-black tracking-tight text-slate-900 md:text-5xl">
+              L'excellence validée par le terrain
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-slate-500">
-              Des retours d'expérience concrets de nos partenaires logistiques.
+            <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-600">
+              Ce que les professionnels du dernier kilomètre et nos clients historiques disent de nous.
             </p>
           </div>
 
           <div className="grid gap-8 md:grid-cols-3">
             {testimonials.map((t, i) => (
-              <div key={i} className="flex flex-col rounded-2xl border border-slate-100 bg-white p-8 shadow-sm transition-all hover:shadow-xl hover:-translate-y-1">
-                <div className="mb-6 flex gap-1 text-orange-400">
+              <div key={i} className="flex flex-col rounded-3xl border border-slate-200 bg-white/60 backdrop-blur-sm p-10 shadow-xl shadow-slate-200/50 transition-all hover:border-slate-300 hover:bg-white hover:-translate-y-2">
+                <div className="mb-8 flex gap-1.5 text-orange-400">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} size={16} fill="currentColor" />
+                    <Star key={i} size={18} fill="currentColor" />
                   ))}
                 </div>
-                <p className="mb-8 flex-1 text-lg leading-relaxed text-slate-600 italic">
-                  “{t.text}”
+                <p className="mb-10 flex-1 text-lg leading-relaxed text-slate-700 font-medium">
+                  "{t.text}"
                 </p>
-                <div className="flex items-center gap-4 pt-6 border-t border-slate-50">
-                  <div className={`flex h-10 w-10 items-center justify-center rounded-full text-sm font-bold text-white shadow-md ${i === 0 ? 'bg-slate-900' : i === 1 ? 'bg-orange-500' : 'bg-slate-700'}`}>
+                <div className="flex items-center gap-4 pt-6 border-t border-slate-100">
+                  <div className={`flex h-12 w-12 items-center justify-center rounded-xl text-base font-black text-white shadow-lg ${i === 0 ? 'bg-indigo-500' : i === 1 ? 'bg-orange-500' : 'bg-emerald-500'}`}>
                     {t.name.substring(0, 2).toUpperCase()}
                   </div>
                   <div>
-                    <div className="font-bold text-slate-900">{t.name}</div>
-                    <div className="text-xs font-medium uppercase tracking-wide text-slate-400">Client Vérifié</div>
+                    <div className="font-bold text-slate-900 tracking-wide">{t.name}</div>
+                    <div className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mt-0.5 flex items-center gap-1.5">
+                      <CheckCircle2 size={12} className="text-orange-500" /> Client Certifié
+                    </div>
                   </div>
                 </div>
               </div>
@@ -260,23 +269,23 @@ export default function Landing() {
       </section>
 
       {/* FAQ */}
-      <section id="faq" className="bg-white py-12 md:py-16">
-        <div className="mx-auto max-w-3xl px-4">
-          <div className="mb-16 text-center">
-            <h2 className="font-serif text-3xl font-medium text-slate-900 md:text-5xl">Questions fréquentes</h2>
-            <p className="mt-4 text-slate-500">Tout ce que vous devez savoir pour démarrer avec One Connexion.</p>
+      <section id="faq" className="bg-white py-16 md:py-32 border-t border-slate-200">
+        <div className="mx-auto max-w-4xl px-4">
+          <div className="mb-20 text-center">
+            <h2 className="text-3xl font-black tracking-tight text-slate-900 md:text-5xl">Questions fréquentes</h2>
+            <p className="mt-6 text-lg text-slate-600">Tout ce que vous devez savoir pour démarrer ou optimiser vos processus logistiques.</p>
           </div>
           <div className="space-y-4">
             {faqs.map((f, i) => (
-              <details key={i} className="group rounded-2xl bg-slate-50 p-1 [&_summary::-webkit-details-marker]:hidden">
-                <summary className="flex cursor-pointer items-center justify-between rounded-xl px-6 py-4 font-medium text-slate-900 transition-colors hover:bg-slate-100">
-                  <span className="text-lg">{f.q}</span>
-                  <div className="grid h-8 w-8 place-items-center rounded-full bg-white text-slate-400 shadow-sm transition-transform group-open:rotate-45">
+              <details key={i} className="group rounded-3xl bg-slate-50 p-2 shadow-sm border border-slate-200 [&_summary::-webkit-details-marker]:hidden transition-all hover:border-slate-300">
+                <summary className="flex cursor-pointer items-center justify-between rounded-2xl px-8 py-6 font-bold tracking-tight text-slate-900 transition-colors hover:bg-slate-100">
+                  <span className="text-lg pr-4">{f.q}</span>
+                  <div className="grid h-10 w-10 flex-shrink-0 place-items-center rounded-full bg-white border border-slate-200 text-slate-400 transition-all group-open:rotate-45 group-open:bg-orange-500 group-open:border-orange-500 group-open:text-white group-hover:bg-orange-50 group-hover:text-orange-500 group-open:group-hover:text-white">
                     <Plus size={20} />
                   </div>
                 </summary>
-                <div className="px-6 pb-4 pt-2 text-slate-600">
-                  <p className="leading-relaxed">{f.a}</p>
+                <div className="px-8 pb-8 pt-2 text-[15px] font-medium leading-relaxed text-slate-600">
+                  {f.a}
                 </div>
               </details>
             ))}

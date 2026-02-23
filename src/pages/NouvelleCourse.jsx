@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import { autocompleteAddress } from "../lib/autocomplete";
+import { sendTelegramMessage } from "../lib/telegram";
 import { ArrowLeft, ArrowRight, Truck, MapPin, Package, Clock, ShieldCheck, CheckCircle2, Loader2, Info } from "lucide-react";
 
 const VEHICLES = ["Moto", "Voiture"];
@@ -152,6 +153,16 @@ export default function NouvelleCourse() {
         if (error) {
             alert("Erreur lors de la validation : " + error.message);
         } else {
+            // Notification Telegram (Non bloquante)
+            sendTelegramMessage(
+                `📦 <b>NOUVELLE COMMANDE !</b>\n\n` +
+                `<b>Client :</b> ${profile?.full_name || 'Client Web'}\n` +
+                `<b>Départ :</b> ${form.pickupCity || form.pickup}\n` +
+                `<b>Arrivée :</b> ${form.deliveryCity || form.delivery}\n` +
+                `<b>Véhicule :</b> ${form.vehicle}\n` +
+                `<b>Prix estimé :</b> ${Number(price).toFixed(2)}€ HT`
+            );
+
             navigate('/dashboard-client/orders', { state: { flash: "Course validée avec succès !" } });
         }
     };

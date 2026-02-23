@@ -2,15 +2,15 @@ import { Link } from "react-router-dom";
 
 export default function PublicFooter() {
   return (
-    <footer className="bg-white px-4 pb-10 pt-12">
-      <div className="rounded-[2.5rem] bg-[#0b0f16] px-8 py-12 text-white shadow-2xl md:px-12">
+    <footer className="bg-slate-900 text-white pt-16 pb-10 w-full mt-auto">
+      <div className="mx-auto max-w-7xl px-6 md:px-12">
         <div className="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
           <div className="max-w-2xl">
-            <div className="flex items-center gap-3">
-              <div className="grid h-10 w-10 place-items-center rounded-xl bg-orange-500 text-white font-bold text-xl">OC</div>
-              <span className="text-xl font-bold tracking-tight">One Connexion</span>
+            <div className="flex items-center gap-4">
+              <div className="grid h-12 w-12 place-items-center rounded-xl bg-orange-500 text-white font-black text-xl shadow-lg shadow-orange-500/20">OC</div>
+              <span className="text-2xl font-black tracking-tight">One Connexion</span>
             </div>
-            <p className="mt-4 text-sm text-slate-300">
+            <p className="mt-6 text-[15px] leading-relaxed text-slate-400">
               Notre mission est de simplifier la logistique B2B pour les entreprises, en offrant une solution rapide, fiable et 100% digitalisée.
             </p>
           </div>

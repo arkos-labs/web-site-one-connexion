@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { supabase } from "../lib/supabase";
+import { sendTelegramMessage } from "../lib/telegram";
 import { MapPin, Navigation, Phone, CheckCircle, Clock, Truck, Package } from "lucide-react";
 
 export default function DashboardDriver() {
@@ -154,6 +155,26 @@ export default function DashboardDriver() {
             .eq('id', orderId);
 
         if (!error) {
+            const currentTask = tasks.find(t => t.id === orderId);
+            if (currentTask) {
+                if (newStatus === 'driver_accepted') {
+                    sendTelegramMessage(
+                        `🚀 <b>COURSE ACCEPTÉE !</b>\n\n` +
+                        `<b>Coursier :</b> ${user?.user_metadata?.first_name || 'Un coursier'}\n` +
+                        `<b>Commande :</b> #${orderId.slice(0, 8)}\n` +
+                        `<b>Départ :</b> ${currentTask.pickup_city}\n` +
+                        `<b>Arrivée :</b> ${currentTask.delivery_city}`
+                    );
+                } else if (newStatus === 'delivered') {
+                    sendTelegramMessage(
+                        `✅ <b>COURSE LIVRÉE !</b>\n\n` +
+                        `<b>Coursier :</b> ${user?.user_metadata?.first_name || 'Un coursier'}\n` +
+                        `<b>Commande :</b> #${orderId.slice(0, 8)}\n` +
+                        `Livrable déposé avec succès à ${currentTask.delivery_city}.`
+                    );
+                }
+            }
+
             fetchMyTasks();
         }
     };

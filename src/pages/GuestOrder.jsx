@@ -889,11 +889,15 @@ export default function GuestOrder() {
                                 </button>
                             </div>
 
-                            <div className="mt-8 flex items-start gap-3 rounded-2xl bg-white/5 p-4">
-                                <Info size={16} className="mt-0.5 shrink-0 text-orange-500" />
+                            <div className="mt-8 flex flex-col gap-3 rounded-2xl bg-white/5 p-4 border border-white/10">
+                                <div className="flex items-start gap-3">
+                                    <Info size={16} className="mt-0.5 shrink-0 text-orange-500" />
+                                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-300">
+                                        Facturation à 30 jours
+                                    </p>
+                                </div>
                                 <p className="text-[10px] leading-relaxed text-slate-400">
-                                    En validant cette commande, vous acceptez nos conditions générales de transport.
-                                    Un coursier sera notifié dès validation du paiement (simulation).
+                                    Aucun paiement immédiat n'est requis. En validant cette commande, votre course sera immédiatement prise en charge par nos équipes. Vous recevrez une facture récapitulative payable à 30 jours (Net 30).
                                 </p>
                             </div>
                         </div>

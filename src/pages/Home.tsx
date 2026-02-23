@@ -17,7 +17,6 @@ import {
 import heroImage from "@/assets/hero-courier-front.png";
 import PricingSimulator from "@/components/client/PricingSimulator";
 import SEO from "@/components/SEO";
-import { motion } from "framer-motion";
 
 const Home = () => {
   const expertises = [
@@ -76,68 +75,55 @@ const Home = () => {
       <Header />
 
       {/* Hero Section */}
-      <section className="relative min-h-[90vh] flex items-center bg-[#0B1525] overflow-hidden">
-        {/* Background Image with Overlay */}
-        <div className="absolute inset-0 z-0">
-          <div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: `url(${heroImage})` }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0B1525] via-[#0B1525]/80 to-[#0B1525]/30" />
+      <section className="relative min-h-[90vh] flex items-center overflow-hidden bg-slate-900 pt-20 border-b border-slate-800">
+        {/* Background Animation & Gradients */}
+        <div className="absolute inset-0 z-0 overflow-hidden">
+          <div className="absolute -top-[30%] -right-[10%] h-[800px] w-[800px] rounded-full bg-orange-500/20 blur-[120px] mix-blend-screen animate-pulse" style={{ animationDuration: '10s' }} />
+          <div className="absolute -bottom-[20%] -left-[10%] h-[600px] w-[600px] rounded-full bg-blue-500/20 blur-[100px] mix-blend-screen animate-pulse" style={{ animationDuration: '7s', animationDelay: '2s' }} />
+          <div className="absolute inset-0 bg-slate-900/80 [mask-image:linear-gradient(to_bottom,white,transparent)] z-10" />
         </div>
 
-        <div className="container mx-auto px-4 relative z-10 pt-20">
+        <div className="container mx-auto px-4 relative z-20">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             {/* Left Content */}
-            <div className="space-y-8 max-w-2xl">
-              <div>
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/20 text-[#D4AF37] text-sm font-medium mb-6">
+            <div className="space-y-8 max-w-2xl py-10 lg:py-0">
+              <div className="animate-fade-in-up">
+                <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-white/5 px-4 py-2 text-xs font-bold uppercase tracking-widest text-orange-400 backdrop-blur-md border border-white/10 shadow-xl shadow-orange-500/10 transition-transform hover:scale-105">
                   <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#D4AF37] opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-[#D4AF37]"></span>
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span>
                   </span>
-                  Disponible 24/7 en Île-de-France
+                  Logistique B2B en temps réel
                 </div>
 
-                <h1 className="text-5xl md:text-7xl font-serif text-white leading-[1.1] mb-6">
-                  L'excellence du <br />
-                  transport <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] to-[#F3D576]">urgents</span>
+                <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-white leading-[1.1] mb-6 tracking-tight">
+                  La vitesse au service de votre <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-orange-600 block sm:inline">business.</span>
                 </h1>
 
-                <p className="text-lg text-gray-300 max-w-lg leading-relaxed font-light mb-8">
-                  La référence premium pour vos livraisons critiques.
-                  <span className="text-white font-medium"> Fiabilité absolue</span>,
-                  <span className="text-white font-medium"> confidentialité</span> et
-                  <span className="text-white font-medium"> prestige</span> pour chaque kilomètre parcouru.
+                <p className="text-lg md:text-xl text-slate-400 max-w-lg leading-relaxed font-medium mb-8">
+                  One Connexion réinvente la livraison professionnelle. Suivi GPS direct, facturation automatisée et coursiers dédiés disponibles 24/7 en Île-de-France.
                 </p>
 
                 <div className="flex flex-col sm:flex-row items-center gap-4">
                   <Link to="/commande-sans-compte" className="w-full sm:w-auto">
-                    <Button
-                      size="lg"
-                      className="w-full sm:w-auto h-14 bg-gradient-to-r from-[#C5A028] to-[#E5C558] hover:from-[#B08D1F] hover:to-[#D4B346] text-white border-0 font-medium px-8 text-lg rounded-full shadow-[0_0_20px_rgba(212,175,55,0.3)] hover:shadow-[0_0_30px_rgba(212,175,55,0.5)] transition-all duration-300 transform hover:-translate-y-1"
-                    >
-                      Commander un course
-                    </Button>
+                    <button className="w-full sm:w-auto h-14 bg-white hover:bg-slate-100 text-slate-900 font-bold px-8 text-[15px] uppercase tracking-wider rounded-full shadow-xl shadow-white/10 hover:shadow-white/20 hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-2 whitespace-nowrap">
+                      Commander une course <ArrowRight size={18} />
+                    </button>
                   </Link>
-                  <Link to="/tarifs" className="w-full sm:w-auto">
-                    <Button
-                      variant="outline"
-                      size="lg"
-                      className="w-full sm:w-auto h-14 bg-white/5 backdrop-blur-sm border-white/20 text-white hover:bg-white/10 hover:border-white/40 px-8 text-lg rounded-full transition-all duration-300"
-                    >
-                      Estimer un tarif
-                    </Button>
+                  <Link to="/auth" className="w-full sm:w-auto">
+                    <button className="w-full sm:w-auto h-14 bg-slate-800/50 backdrop-blur-sm border border-slate-700 text-white hover:bg-slate-800 px-8 text-[15px] uppercase tracking-wider font-bold rounded-full transition-all duration-300 flex items-center justify-center whitespace-nowrap">
+                      Espace Client
+                    </button>
                   </Link>
                 </div>
 
-                <div className="mt-10 flex items-center gap-8 text-sm text-gray-400">
+                <div className="mt-10 flex flex-wrap items-center gap-6 text-xs font-bold text-slate-500 uppercase tracking-widest">
                   <div className="flex items-center gap-2">
-                    <Clock className="w-5 h-5 text-[#D4AF37]" />
-                    <span>Intervention &lt; 1h</span>
+                    <Clock className="w-5 h-5 text-emerald-400" />
+                    <span>Enlèvement &lt; 45min</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Shield className="w-5 h-5 text-[#D4AF37]" />
+                    <Shield className="w-5 h-5 text-blue-400" />
                     <span>Assurance incluse</span>
                   </div>
                 </div>
@@ -145,8 +131,8 @@ const Home = () => {
             </div>
 
             {/* Right Content - Simulator */}
-            <div className="lg:pl-8 relative">
-              <div className="relative">
+            <div className="lg:pl-8 relative z-30">
+              <div className="relative transform hover:scale-[1.02] transition-transform duration-500">
                 <PricingSimulator variant="compact" />
               </div>
             </div>
