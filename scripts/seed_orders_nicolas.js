@@ -1,7 +1,12 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = 'https://wbwxhmpjxwmsybpxycog.supabase.co';
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indid3hobXBqeHdtc3licHh5Y29nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEwODkzMzAsImV4cCI6MjA4NjY2NTMzMH0.Cp2b6pU-fFrfwcVY08OQp4ng9tO3mCiX8U8VyCC37bg';
+const supabaseUrl = process.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseAnonKey) {
+    console.error('Missing SUPABASE env vars. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.');
+    process.exit(1);
+}
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
@@ -16,7 +21,6 @@ async function seed() {
     }
 
     const cities = ['Paris', 'Saint-Prix', 'Puteaux', 'Nanterre', 'Boulogne-Billancourt', 'Saint-Denis', 'Montreuil', 'Argenteuil'];
-    const statusList = ['delivered']; // We want them in the history likely, or 'picked_up' for active.
     // The user asked to "créer des courses", usually means historical or current.
     // I'll make them 'delivered' so they show up in statistics.
 

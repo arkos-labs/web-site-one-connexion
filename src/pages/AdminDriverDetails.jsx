@@ -80,7 +80,7 @@ export default function AdminDriverDetails() {
         'postgres_changes',
         { event: '*', schema: 'public', table: 'profiles', filter: `id=eq.${id}` },
         (payload) => {
-          console.log("Realtime Profile Change:", payload);
+          // Realtime: profile changed
           fetchData(true);
         }
       )
@@ -88,7 +88,7 @@ export default function AdminDriverDetails() {
         'postgres_changes',
         { event: '*', schema: 'public', table: 'orders', filter: `driver_id=eq.${id}` },
         (payload) => {
-          console.log("Realtime Order Change:", payload);
+          // Realtime: order changed
           fetchData(true);
         }
       )
@@ -158,7 +158,7 @@ export default function AdminDriverDetails() {
       const ms = parseOrderDateToMs(order?.updated_at || order?.scheduled_at || order?.created_at);
 
       if (ms == null) {
-        console.log("Order missing date info:", order.id);
+        // Order missing date info — skipping filter
         return true;
       }
 
@@ -205,66 +205,6 @@ export default function AdminDriverDetails() {
     setTo(fmt(lastDay));
   };
 
-  const handleSaveInvoice = async () => {
-    if (!confirm("Voulez-vous générer et sauvegarder cette facture dans Supabase ?")) return;
-    setSaving(true);
-    try {
-      const periodLabel = from ? new Date(from).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' }) : "Période globale";
-      const completedOrders = rows.filter(r => r.status === "delivered");
-
-      // 1. Generate PDF Blob
-      // We pass a special flag to get the blob
-      const { generateDriverInvoicePdf } = await import("../lib/pdfGenerator");
-      const pdfBlob = generateDriverInvoicePdf({ ...driver, returnBlob: true }, completedOrders, periodLabel, computeDriverPay);
-
-      if (!pdfBlob) throw new Error("Erreur génération PDF");
-
-      // 2. Upload to Storage
-      const fileName = `facture_${driver.id}_${Date.now()}.pdf`;
-      const { data: uploadData, error: uploadError } = await supabase.storage
-        .from('driver-invoices')
-        .upload(fileName, pdfBlob, {
-          contentType: 'application/pdf',
-          upsert: true
-        });
-
-      if (uploadError) throw uploadError;
-
-      // 3. Get Public URL
-      const { data: publicUrlData } = supabase.storage.from('driver-invoices').getPublicUrl(fileName);
-      const documentUrl = publicUrlData.publicUrl;
-
-      // 4. Save Record in DB
-      const totalAmount = completedOrders.reduce((sum, o) => sum + computeDriverPay(o), 0);
-
-      const { error: dbError } = await supabase.from('driver_payments').insert({
-        driver_id: driver.id,
-        period: periodLabel,
-        amount: totalAmount,
-        status: 'pending',
-        document_url: documentUrl,
-        created_at: new Date().toISOString()
-      });
-
-      if (dbError) throw dbError;
-
-      alert("Facture sauvegardée avec succès !");
-
-      // 5. Download for user
-      const url = URL.createObjectURL(pdfBlob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = fileName;
-      a.click();
-      URL.revokeObjectURL(url);
-
-    } catch (err) {
-      console.error("Erreur sauvegarde facture:", err);
-      alert("Erreur lors de la sauvegarde : " + err.message);
-    } finally {
-      setSaving(false);
-    }
-  };
 
   const handleDownloadListing = async () => {
     const periodLabel = from ? new Date(from).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' }) : "Période globale";
@@ -334,7 +274,7 @@ export default function AdminDriverDetails() {
                   .update({ is_online: false })
                   .eq('id', driver.id)
                   .select();
-                console.log("FORCE_OFFLINE_DETAILS", { id: driver.id, data, error });
+                // Force offline operation executed
                 if (error) alert(error.message);
                 else {
                   alert("Chauffeur déconnecté (mis hors ligne).");
@@ -585,16 +525,7 @@ export default function AdminDriverDetails() {
                   <FileText size={16} className="text-blue-500" />
                   Listing
                 </button>
-                <button
-                  type="button"
-                  onClick={handleSaveInvoice}
-                  disabled={rows.filter(r => r.status === "delivered").length === 0}
-                  className="flex items-center gap-2 rounded-2xl bg-slate-900 px-5 py-3 text-sm font-bold text-white transition-all hover:bg-slate-800 hover:shadow-xl disabled:opacity-50"
-                  title="Générer et sauvegarder la facture sur Supabase"
-                >
-                  <Download size={16} className="text-emerald-400" />
-                  Générer Facture
-                </button>
+
               </div>
             </div>
 

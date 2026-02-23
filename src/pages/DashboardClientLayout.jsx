@@ -40,14 +40,19 @@ export default function DashboardClientLayout() {
   }, []);
 
   return (
-    <div className="flex h-screen bg-[#F2F3F7] font-sans text-slate-900 overflow-hidden">
-      {/* Sidebar */}
-      <aside className="hidden w-72 flex-col justify-between bg-white px-6 py-8 shadow-xl shadow-slate-200/50 lg:flex rounded-r-[2rem] z-20">
+    <div className="flex h-screen bg-[#f8fafc] font-sans text-slate-900 overflow-hidden selection:bg-orange-500/30 selection:text-orange-900">
+      {/* Sidebar - Premium Design */}
+      <aside className="hidden w-[280px] flex-col justify-between border-r border-slate-200/60 bg-white/80 px-6 py-8 backdrop-blur-3xl lg:flex z-20">
         <div>
-          {/* Logo */}
-          <Link to="/" className="mb-12 flex items-center gap-3 px-2">
-            <div className="grid h-10 w-10 place-items-center rounded-xl bg-orange-500 text-white font-bold shadow-lg shadow-orange-500/20">OC</div>
-            <span className="text-xl font-bold tracking-tight">One Connexion</span>
+          {/* Logo Area */}
+          <Link to="/" className="group mb-12 flex items-center gap-3 px-2">
+            <div className="grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br from-orange-400 to-orange-600 text-white font-black shadow-lg shadow-orange-500/20 transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3">
+              OC
+            </div>
+            <div className="flex flex-col">
+              <span className="text-xl font-black tracking-tight text-slate-900">One Connexion</span>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Entreprise</span>
+            </div>
           </Link>
 
           {/* Navigation */}
@@ -71,15 +76,30 @@ export default function DashboardClientLayout() {
           </nav>
         </div>
 
-        {/* Logout */}
-        <Link to="/connexion" className="group flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-slate-500 transition-all hover:bg-slate-50 hover:text-red-500">
-          <LogOut size={20} className="transition-transform group-hover:-translate-x-1" />
-          <span>Déconnexion</span>
-        </Link>
+        {/* Bottom Actions */}
+        <div className="space-y-4">
+          <div className="rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 p-5 text-white shadow-xl shadow-slate-900/10">
+            <div className="mb-2 flex items-center gap-2">
+              <div className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></div>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-300">Support Premium</span>
+            </div>
+            <p className="text-xs font-medium leading-relaxed text-slate-400 mb-4">Un expert logistique dédié à votre écoute 24/7.</p>
+            <button className="w-full rounded-xl bg-white/10 py-2.5 text-xs font-bold text-white transition-colors hover:bg-white hover:text-slate-900">
+              Contacter
+            </button>
+          </div>
+
+          <Link to="/connexion" className="group flex w-full items-center justify-between rounded-xl px-4 py-3 text-sm font-bold text-slate-500 transition-all hover:bg-rose-50 hover:text-rose-600">
+            <div className="flex items-center gap-3">
+              <LogOut size={18} className="transition-transform group-hover:-translate-x-1" />
+              <span>Déconnexion</span>
+            </div>
+          </Link>
+        </div>
       </aside>
 
-      {/* Main Content */}
-      <main className="flex-1 overflow-y-auto p-4 md:p-8">
+      {/* Main Content Area */}
+      <main className="flex-1 overflow-y-auto">
         <Outlet />
       </main>
     </div>
@@ -87,16 +107,20 @@ export default function DashboardClientLayout() {
 }
 
 function NavItem({ icon: Icon, label, active, badge, to }) {
-  const classes = `group flex w-full items-center justify-between rounded-2xl px-4 py-3.5 text-sm font-bold transition-all ${active ? "bg-slate-900 text-white shadow-lg shadow-slate-900/20" : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"}`;
+  const classes = `group relative flex w-full items-center justify-between rounded-2xl px-4 py-3 text-sm font-bold transition-all duration-300 ${active
+    ? "bg-slate-900 text-white shadow-lg shadow-slate-900/20"
+    : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+    }`;
 
   return (
     <Link to={to} className={classes}>
-      <div className="flex items-center gap-4">
-        <Icon size={20} className={`transition-transform ${!active && "group-hover:scale-110"}`} />
+      {active && <div className="absolute left-0 top-1/2 h-8 w-1 -translate-y-1/2 rounded-r-full bg-orange-500" />}
+      <div className="flex items-center gap-3">
+        <Icon size={20} className={`transition-transform duration-300 ${!active && "group-hover:scale-110 group-hover:text-orange-500"}`} strokeWidth={active ? 2.5 : 2} />
         <span>{label}</span>
       </div>
       {badge && (
-        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-orange-500 text-[10px] text-white">
+        <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-orange-500 px-1.5 text-[10px] font-black text-white shadow-sm ring-2 ring-white">
           {badge}
         </span>
       )}

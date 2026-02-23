@@ -8,7 +8,7 @@ export default function Settings() {
   const [cardMasked, setCardMasked] = useState("**** **** **** 1234");
 
   return (
-    <div>
+    <div className="pt-4 md:pt-6">
       <header className="mb-6">
         <h1 className="text-4xl font-extrabold text-slate-900">Paramètres ⚙️</h1>
         <p className="mt-2 text-base font-medium text-slate-500">Personnalisez votre expérience One Connexion.</p>

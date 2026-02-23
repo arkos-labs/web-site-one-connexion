@@ -288,13 +288,13 @@ export default function Orders() {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen pt-4">
       <header className="mb-8 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-4xl font-extrabold text-slate-900">Mes Expéditions 📦</h1>
           <p className="mt-2 text-base font-medium text-slate-500">Gérez vos livraisons professionnelles en temps réel.</p>
         </div>
-        <button onClick={() => setOpen(true)} className="rounded-full bg-slate-900 px-5 py-3 text-sm font-bold text-white shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5">
+        <button onClick={() => navigate('/dashboard-client/nouvelle-course')} className="rounded-full bg-slate-900 px-5 py-3 text-sm font-bold text-white shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5">
           Nouvelle commande
         </button>
       </header>

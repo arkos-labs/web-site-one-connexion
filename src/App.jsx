@@ -5,6 +5,7 @@ import ProtectedRoute from "./components/ProtectedRoute.jsx";
 const Landing = lazy(() => import("./pages/Landing.jsx"));
 const DashboardClient = lazy(() => import("./pages/DashboardClient.jsx"));
 const DashboardClientLayout = lazy(() => import("./pages/DashboardClientLayout.jsx"));
+const NouvelleCourse = lazy(() => import("./pages/NouvelleCourse.jsx"));
 const Orders = lazy(() => import("./pages/Orders.jsx"));
 const OrderDetails = lazy(() => import("./pages/OrderDetails.jsx"));
 const Invoices = lazy(() => import("./pages/Invoices.jsx"));
@@ -83,6 +84,7 @@ export default function App() {
             }
           >
             <Route index element={<DashboardClient />} />
+            <Route path="nouvelle-course" element={<NouvelleCourse />} />
             <Route path="orders" element={<Orders />} />
             <Route path="orders/:id" element={<OrderDetails />} />
             <Route path="invoices" element={<Invoices />} />

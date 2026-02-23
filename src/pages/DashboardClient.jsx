@@ -114,126 +114,167 @@ export default function DashboardClient() {
   };
 
   return (
-    <div>
-      <div className="space-y-8">
-        {/* Header */}
-        <header className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between stagger">
-          <div className="flex items-center gap-6">
-            <div>
-              <h1 className="text-4xl font-extrabold tracking-tight text-slate-900">
-                Ravi de vous revoir{profile?.full_name ? `, ${profile.full_name.split(' ')[0]}` : ''} ! 👋
+    <div className="min-h-screen bg-[#f8fafc] md:p-4">
+      <div className="mx-auto max-w-7xl space-y-10">
+
+        {/* Header - Premium Animated Introduction */}
+        <header className="relative overflow-hidden rounded-[2.5rem] bg-slate-900 p-10 text-white shadow-2xl md:p-14">
+          <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-orange-500 opacity-20 blur-3xl mix-blend-screen animate-pulse"></div>
+          <div className="absolute -bottom-32 -left-20 h-80 w-80 rounded-full bg-blue-500 opacity-20 blur-3xl mix-blend-screen animate-pulse" style={{ animationDelay: '2s' }}></div>
+
+          <div className="relative z-10 flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
+            <div className="animate-fade-in-up">
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-orange-400 backdrop-blur-md border border-white/5">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span>
+                </span>
+                Espace Client Premium
+              </div>
+              <h1 className="text-4xl font-black tracking-tight md:text-5xl lg:text-6xl text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400">
+                Bonjour, {profile?.full_name ? profile.full_name.split(' ')[0] : 'Partenaire'}.
               </h1>
-              <p className="mt-2 text-base font-medium text-slate-500">
-                Prêt à propulser votre logistique aujourd'hui ?
+              <p className="mt-4 text-lg font-medium text-slate-400 max-w-xl leading-relaxed">
+                Votre tableau de bord logistique intelligent. Suivez vos expéditions en temps réel et gérez votre facturation en un clic.
               </p>
             </div>
-          </div>
 
-          <div className="flex items-center gap-4">
-            <button className="relative flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-slate-500 shadow-sm ring-1 ring-slate-200 transition-all hover:scale-105 hover:bg-slate-50 hover:text-slate-900">
-              <Bell size={20} />
-            </button>
-            <div className="h-11 w-11 overflow-hidden rounded-2xl border-2 border-white shadow-sm ring-1 ring-slate-200 bg-slate-900 text-white flex items-center justify-center font-bold text-xs">
-              {(profile?.full_name || profile?.company || 'ME').substring(0, 2).toUpperCase()}
+            <div className="flex shrink-0 items-center gap-4">
+              <button className="group relative flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 text-white shadow-sm ring-1 ring-white/20 backdrop-blur-md transition-all duration-300 hover:scale-105 hover:bg-white hover:text-slate-900 focus:outline-none focus:ring-4 focus:ring-orange-500/30">
+                <Bell size={24} className="transition-transform group-hover:rotate-12" strokeWidth={2} />
+                {stats.activeCount > 0 && (
+                  <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-orange-500 text-[9px] font-bold ring-2 ring-slate-900">
+                    {stats.activeCount}
+                  </span>
+                )}
+              </button>
+              <button
+                onClick={() => navigate('/dashboard-client/nouvelle-course')}
+                className="group flex h-14 items-center gap-3 rounded-2xl bg-gradient-to-r from-orange-500 to-orange-600 px-6 font-bold text-white shadow-xl shadow-orange-500/20 transition-all duration-300 hover:scale-105 hover:shadow-orange-500/40"
+              >
+                Commander
+                <ArrowUpRight size={20} className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+              </button>
             </div>
           </div>
         </header>
 
         {loading ? (
-          <div className="flex justify-center py-20"><Loader2 className="animate-spin text-slate-400" size={32} /></div>
+          <div className="flex h-64 items-center justify-center rounded-[2.5rem] bg-white shadow-sm"><Loader2 className="animate-spin text-orange-500" size={40} /></div>
         ) : (
           <>
-            {/* Widgets Grid */}
-            <div className="grid gap-6 lg:grid-cols-3 stagger">
-              {/* Stats Card 1 */}
-              <div className="group relative overflow-hidden rounded-[2rem] bg-white p-8 shadow-[0_2px_20px_-4px_rgba(0,0,0,0.05)] ring-1 ring-slate-100 transition-all hover:-translate-y-1 hover:shadow-xl">
-                <div className="flex items-start justify-between">
+            {/* KPI Widgets Grid */}
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {/* Widget 1: Courses Actives */}
+              <div className="group relative overflow-hidden rounded-[2.5rem] bg-white p-8 shadow-sm ring-1 ring-slate-100 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-orange-500/10 hover:ring-orange-100">
+                <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-orange-50 transition-transform duration-500 group-hover:scale-150"></div>
+                <div className="relative z-10 flex items-start justify-between">
                   <div>
-                    <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Total Courses</p>
-                    <div className="mt-3 text-5xl font-bold tracking-tight text-slate-900">{stats.count}</div>
+                    <h3 className="text-sm font-bold uppercase tracking-wider text-slate-400">Missions en cours</h3>
+                    <div className="mt-4 flex items-end gap-3">
+                      <span className="text-5xl font-black tracking-tight text-slate-900">{stats.activeCount}</span>
+                      <span className="mb-1 text-sm font-bold text-orange-500">actives</span>
+                    </div>
                   </div>
-                  <div className="rounded-2xl bg-slate-50 p-4 text-slate-500 transition-colors group-hover:scale-110 group-hover:rotate-3 group-hover:bg-slate-900 group-hover:text-white">
-                    <Truck size={28} strokeWidth={1.5} />
+                  <div className="rounded-3xl bg-orange-100/50 p-4 text-orange-600 shadow-inner transition-transform duration-500 group-hover:rotate-12 group-hover:scale-110">
+                    <Clock size={32} strokeWidth={2} />
                   </div>
                 </div>
               </div>
 
-              {/* Stats Card 2 */}
-              <div className="group relative overflow-hidden rounded-[2rem] bg-white p-8 shadow-[0_2px_20px_-4px_rgba(0,0,0,0.05)] ring-1 ring-slate-100 transition-all hover:-translate-y-1 hover:shadow-xl">
-                <div className="flex items-start justify-between z-10 relative">
+              {/* Widget 2: Total Courses */}
+              <div className="group relative overflow-hidden rounded-[2.5rem] bg-white p-8 shadow-sm ring-1 ring-slate-100 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-500/10 hover:ring-blue-100">
+                <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-blue-50 transition-transform duration-500 group-hover:scale-150"></div>
+                <div className="relative z-10 flex items-start justify-between">
                   <div>
-                    <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Dépenses</p>
-                    <div className="mt-3">
-                      <div className="flex items-baseline gap-2">
-                        <span className="text-4xl font-bold tracking-tight text-slate-900">{stats.totalPaid.toFixed(2)}€</span>
-                        <span className="text-xs font-bold text-emerald-500 uppercase">Facturé</span>
+                    <h3 className="text-sm font-bold uppercase tracking-wider text-slate-400">Total Historique</h3>
+                    <div className="mt-4 flex items-end gap-3">
+                      <span className="text-5xl font-black tracking-tight text-slate-900">{stats.count}</span>
+                      <span className="mb-1 text-sm font-bold text-blue-500">réussies</span>
+                    </div>
+                  </div>
+                  <div className="rounded-3xl bg-blue-100/50 p-4 text-blue-600 shadow-inner transition-transform duration-500 group-hover:-rotate-12 group-hover:scale-110">
+                    <Check size={32} strokeWidth={2} />
+                  </div>
+                </div>
+              </div>
+
+              {/* Widget 3: Facturation */}
+              <div className="group relative overflow-hidden rounded-[2.5rem] bg-white p-8 shadow-sm ring-1 ring-slate-100 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-emerald-500/10 hover:ring-emerald-100">
+                <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-emerald-50 transition-transform duration-500 group-hover:scale-150"></div>
+                <div className="relative z-10 flex items-start justify-between">
+                  <div>
+                    <h3 className="text-sm font-bold uppercase tracking-wider text-slate-400">Volume Facturé HT</h3>
+                    <div className="mt-4 flex items-end gap-2">
+                      <span className="text-4xl font-black tracking-tight text-slate-900">{stats.totalPaid.toFixed(2)}</span>
+                      <span className="mb-1 text-lg font-bold text-slate-400">€</span>
+                    </div>
+                    {stats.totalPending > 0 && (
+                      <div className="mt-2 inline-flex items-center gap-1.5 rounded-lg bg-slate-50 px-2 py-1 text-xs font-bold text-slate-500">
+                        <span className="text-amber-500">En attente :</span> {stats.totalPending.toFixed(2)}€
                       </div>
-                      {stats.totalPending > 0 && (
-                        <div className="mt-1 flex items-baseline gap-2">
-                          <span className="text-lg font-bold text-slate-400">{stats.totalPending || 0}€</span>
-                          <span className="text-[10px] font-bold text-orange-400 uppercase">En cours</span>
-                        </div>
-                      )}
-                    </div>
+                    )}
                   </div>
-                </div>
-                {/* Decoration */}
-                <div className="absolute bottom-0 right-0 p-4 opacity-5">
-                  <FileText size={120} />
-                </div>
-              </div>
-
-              {/* Active Orders Card */}
-              <div className="group relative overflow-hidden rounded-[2rem] bg-amber-50 p-8 shadow-[0_2px_20px_-4px_rgba(0,0,0,0.05)] ring-1 ring-amber-100 transition-all hover:-translate-y-1 hover:shadow-xl">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <div className="flex items-center gap-2 mb-3">
-                      <span className="relative flex h-2 w-2">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
-                      </span>
-                      <p className="text-xs font-bold uppercase tracking-wider text-amber-700/70">Courses Actives</p>
-                    </div>
-                    <div className="text-5xl font-bold tracking-tight text-amber-900">{stats.activeCount || 0}</div>
-                    <p className="mt-2 text-xs font-medium text-amber-700/60">En cours de traitement</p>
-                  </div>
-                  <div className="rounded-2xl bg-white p-4 text-amber-500 shadow-sm transition-transform group-hover:scale-110 group-hover:rotate-6">
-                    <Clock size={28} strokeWidth={2} />
+                  <div className="rounded-3xl bg-emerald-100/50 p-4 text-emerald-600 shadow-inner transition-transform duration-500 group-hover:rotate-12 group-hover:scale-110">
+                    <FileText size={32} strokeWidth={2} />
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Recent Deliveries */}
-            <div className="grid gap-8 lg:grid-cols-[1fr_2fr] stagger">
-              <div className="flex flex-col gap-6" id="orders">
+            {/* Lists Section */}
+            <div className="grid gap-8 lg:grid-cols-[1.5fr_1fr]">
+              {/* Recent Orders List */}
+              <div className="flex flex-col gap-6">
                 <div className="flex items-center justify-between px-2">
-                  <h2 className="text-xl font-bold text-slate-900">Dernières courses</h2>
-                  <button onClick={() => navigate('/dashboard-client/orders')} className="text-xs font-bold text-orange-500 hover:text-orange-600">VOIR TOUT</button>
+                  <h2 className="text-2xl font-black text-slate-900">Activité Récente</h2>
+                  <button onClick={() => navigate('/dashboard-client/orders')} className="group flex items-center gap-2 text-sm font-bold text-orange-500 transition-colors hover:text-orange-600">
+                    Gérer
+                    <ArrowUpRight size={16} className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+                  </button>
                 </div>
 
                 <div className="flex flex-col gap-4">
                   {recentOrders.length === 0 ? (
-                    <div className="text-center py-10 text-slate-400 bg-white rounded-[2rem]">Aucune course récente.</div>
+                    <div className="flex flex-col items-center justify-center rounded-[2.5rem] bg-white py-16 text-center shadow-sm border border-slate-100 min-h-[300px]">
+                      <div className="mb-6 rounded-full bg-slate-50 p-6 ring-4 ring-slate-50">
+                        <Truck size={40} className="text-slate-300" />
+                      </div>
+                      <h3 className="text-lg font-bold text-slate-900">Aucune commande</h3>
+                      <p className="mt-2 text-sm text-slate-500 max-w-xs">Votre historique est vide. Lancez votre première expédition dès maintenant.</p>
+                      <button onClick={() => navigate('/dashboard-client/nouvelle-course')} className="mt-6 rounded-2xl bg-slate-900 px-6 py-3 font-bold text-white transition-all hover:bg-orange-500 hover:shadow-lg hover:shadow-orange-500/20">
+                        Créer une course
+                      </button>
+                    </div>
                   ) : (
                     recentOrders.map((d, i) => (
                       <div
                         key={i}
                         onClick={() => navigate(`/dashboard-client/orders/${d.id}`, { state: { order: d } })}
-                        className="group relative flex cursor-pointer items-center justify-between overflow-hidden rounded-[1.5rem] bg-white p-5 shadow-sm transition-all hover:shadow-md hover:scale-[1.02]"
+                        className="group relative flex cursor-pointer items-center justify-between overflow-hidden rounded-[2rem] bg-white p-6 shadow-sm ring-1 ring-slate-100 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200"
                       >
-                        <div className="absolute left-0 top-0 h-full w-1 bg-orange-500 opacity-0 transition-opacity group-hover:opacity-100" />
-                        <div className="flex items-center gap-4">
-                          <div className={`grid h-12 w-12 place-items-center rounded-full transition-colors ${statusColor(d.status)}`}>
-                            <Clock size={20} />
+                        <div className="absolute left-0 top-0 h-full w-1.5 bg-gradient-to-b from-orange-400 to-orange-600 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+
+                        <div className="flex items-center gap-6">
+                          <div className={`grid h-14 w-14 shrink-0 place-items-center rounded-3xl transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-6 ${statusColor(d.status).replace('text-', 'bg-').replace('bg-', 'bg-opacity-20 text-')}`}>
+                            <Truck size={24} className={statusColor(d.status).split(' ')[1]} />
                           </div>
                           <div>
-                            <div className="font-bold text-slate-900">{d.pickup_city} → {d.delivery_city || 'Destination inconnue'}</div>
-                            <div className="text-xs font-bold text-slate-400 mt-0.5">#{d.id.slice(0, 8)} • {new Date(d.created_at).toLocaleDateString()}</div>
+                            <div className="flex items-center gap-3">
+                              <span className="font-bold text-slate-900 md:text-lg">{d.pickup_city || 'Départ'}</span>
+                              <span className="text-slate-300">→</span>
+                              <span className="font-bold text-slate-900 md:text-lg">{d.delivery_city || 'Arrivée'}</span>
+                            </div>
+                            <div className="mt-1.5 flex flex-wrap items-center gap-2 text-xs font-semibold text-slate-400">
+                              <span className="rounded-md bg-slate-100 px-2 py-0.5">#{d.id.slice(0, 8).toUpperCase()}</span>
+                              <span>•</span>
+                              <span>{new Date(d.created_at).toLocaleDateString()}</span>
+                            </div>
                           </div>
                         </div>
-                        <div className="flex items-center gap-3">
-                          <span className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wide ${statusColor(d.status)}`}>
+
+                        <div className="flex flex-col items-end gap-3">
+                          <span className={`rounded-xl px-3 py-1 text-[11px] font-bold uppercase tracking-wide border ${statusColor(d.status).replace('bg-', 'border-').replace('50', '200')}`}>
                             {clientStatusLabel(d)}
                           </span>
                           <button
@@ -241,9 +282,9 @@ export default function DashboardClient() {
                               e.stopPropagation();
                               downloadOrder(d);
                             }}
-                            className="rounded-full bg-slate-100 p-2 text-slate-600 hover:bg-slate-900 hover:text-white transition-all"
+                            className="flex items-center gap-1.5 text-xs font-bold text-slate-400 opacity-0 transition-all duration-300 hover:text-slate-900 group-hover:opacity-100"
                           >
-                            <Truck size={16} />
+                            <FileText size={14} /> PDF
                           </button>
                         </div>
                       </div>
@@ -252,57 +293,41 @@ export default function DashboardClient() {
                 </div>
               </div>
 
-              {/* Mock Invoices (Keeping static for now as requested tables didn't include real invoices yet but can be easily plugged later) */}
-              <div className="rounded-[2.5rem] bg-white p-8 shadow-sm" id="invoices">
-                <div className="mb-8 flex items-center justify-between">
-                  <h2 className="text-xl font-bold text-slate-900">Dernières factures</h2>
-                  <button className="rounded-xl bg-slate-50 p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-900 transition-colors">
+              {/* Invoices List */}
+              <div className="flex flex-col gap-6">
+                <div className="flex items-center justify-between px-2">
+                  <h2 className="text-2xl font-black text-slate-900">Factures</h2>
+                  <button className="rounded-xl bg-slate-100 p-2 text-slate-500 transition-colors hover:bg-slate-200 hover:text-slate-900">
                     <MoreHorizontal size={20} />
                   </button>
                 </div>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left">
-                    <thead>
-                      <tr className="text-xs font-bold uppercase tracking-wider text-slate-400 border-b border-slate-100">
-                        <th className="pb-4 pl-4">Référence</th>
-                        <th className="pb-4">Date</th>
-                        <th className="pb-4">Montant</th>
-                        <th className="pb-4">Statut</th>
-                        <th className="pb-4 pr-4 text-right">Action</th>
-                      </tr>
-                    </thead>
-                    <tbody className="text-sm">
-                      {invoices.length === 0 ? (
-                        <tr>
-                          <td colSpan="5" className="py-8 text-center text-slate-400 italic">Aucune facture disponible.</td>
-                        </tr>
-                      ) : (
-                        invoices.map((inv) => (
-                          <tr key={inv.id} className="border-b border-slate-50 hover:bg-slate-50 transition-colors last:border-0">
-                            <td className="py-4 pl-4 font-bold text-slate-900">
-                              {new Date(inv.period_start).toLocaleDateString(undefined, { month: 'long', year: 'numeric' })}
-                            </td>
-                            <td className="py-4 text-slate-500">{new Date(inv.created_at).toLocaleDateString()}</td>
-                            <td className="py-4 font-bold text-slate-900">{Number(inv.total_ttc).toFixed(2)}€</td>
-                            <td className="py-4">
-                              <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${inv.status === 'paid' ? 'bg-emerald-50 text-emerald-700' : 'bg-orange-50 text-orange-700'
-                                }`}>
-                                {inv.status === 'paid' ? 'Payée' : 'En attente'}
-                              </span>
-                            </td>
-                            <td className="py-4 pr-4 text-right">
-                              <button
-                                onClick={() => downloadInvoice(inv)}
-                                className="text-xs font-bold text-slate-900 hover:text-orange-500 transition-colors"
-                              >
-                                PDF
-                              </button>
-                            </td>
-                          </tr>
-                        ))
-                      )}
-                    </tbody>
-                  </table>
+
+                <div className="overflow-hidden rounded-[2.5rem] bg-white shadow-sm ring-1 ring-slate-100 p-2">
+                  {invoices.length === 0 ? (
+                    <div className="py-16 text-center text-sm font-bold text-slate-400">Aucune facture émise.</div>
+                  ) : (
+                    <div className="divide-y divide-slate-50">
+                      {invoices.map((inv) => (
+                        <div key={inv.id} className="group flex items-center justify-between p-4 transition-colors hover:bg-slate-50 rounded-2xl">
+                          <div className="flex items-center gap-4">
+                            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-500">
+                              <FileText size={20} />
+                            </div>
+                            <div>
+                              <div className="font-bold text-slate-900">{new Date(inv.period_start).toLocaleDateString(undefined, { month: 'long', year: 'numeric' })}</div>
+                              <div className="text-xs font-semibold text-slate-400 mt-0.5 uppercase tracking-wider">{Number(inv.total_ttc).toFixed(2)}€ TTC</div>
+                            </div>
+                          </div>
+                          <button
+                            onClick={() => downloadInvoice(inv)}
+                            className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-slate-600 transition-all hover:bg-slate-900 hover:text-white"
+                          >
+                            <ArrowUpRight size={18} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

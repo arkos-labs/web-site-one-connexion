@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import { Loader2 } from "lucide-react";
 import AdminClientInvoicesPanel from "./AdminClientInvoicesPanel.jsx";
@@ -57,6 +57,7 @@ function computeClientRisk(invoices) {
 
 export default function AdminClientDetails() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [client, setClient] = useState(null);
   const [ordersAll, setOrdersAll] = useState([]);
   const [invoicesAll, setInvoicesAll] = useState([]);

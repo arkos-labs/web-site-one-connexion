@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+﻿import { useNavigate } from "react-router-dom";
 import { useEffect, useMemo, useState, useRef } from "react";
 import { supabase } from "../lib/supabase";
 import { Search, X, MapPin, BookOpen, Bell, Activity, Truck, Shield, CheckCircle as CheckIcon } from "lucide-react";
@@ -156,7 +156,7 @@ export default function DashboardAdmin() {
 
   const fetchOrders = async () => {
     try {
-      // Pour être sûr à 100%, on récupère les commandes et les profils séparément
+      // Pour ├¬tre s├╗r ├á 100%, on r├®cup├¿re les commandes et les profils s├®par├®ment
       const [oRes, pRes] = await Promise.all([
         supabase.from('orders').select('*').order('created_at', { ascending: false }),
         supabase.from('profiles').select('id, details')
@@ -171,7 +171,7 @@ export default function DashboardAdmin() {
         setOrdersAll(oRes.data.map(o => {
           const profile = pRes.data.find(p => p.id === o.client_id);
           const cDetails = profile?.details || {};
-          const clientName = cDetails.company || cDetails.full_name || o.pickup_name || 'Prospect Invité';
+          const clientName = cDetails.company || cDetails.full_name || o.pickup_name || 'Prospect Invit├®';
 
           return {
             ...o,
@@ -224,10 +224,10 @@ export default function DashboardAdmin() {
   const handleQuickAccept = async (orderId) => {
     if (!orderId) return;
     try {
-      // 1. Mise à jour locale immédiate (Optimiste)
+      // 1. Mise ├á jour locale imm├®diate (Optimiste)
       setOrdersAll(prev => prev.map(o => o.id === orderId ? { ...o, status: 'accepted' } : o));
 
-      // 2. Changement de vue immédiat
+      // 2. Changement de vue imm├®diat
       setOperationView('accepted');
 
       // 3. Appel API
@@ -238,12 +238,12 @@ export default function DashboardAdmin() {
 
       if (error) throw error;
 
-      // 4. Rafraîchissement complet en arrière-plan
+      // 4. Rafra├«chissement complet en arri├¿re-plan
       await fetchOrders();
 
     } catch (err) {
       console.error("Error during quick accept:", err);
-      fetchOrders(); // Rollback en rafraîchissant
+      fetchOrders(); // Rollback en rafra├«chissant
     }
   };
 
@@ -259,7 +259,7 @@ export default function DashboardAdmin() {
     let end = new Date(SIMULATED_NOW);
     end.setHours(dh, dm, 0, 0);
 
-    // Ajustement si minuit est dépassé
+    // Ajustement si minuit est d├®pass├®
     if (end < start) end.setDate(end.getDate() + 1);
 
     const diffMinutes = (end - start) / (1000 * 60);
@@ -270,7 +270,7 @@ export default function DashboardAdmin() {
       autoService = "Normal";
     } else if (diffMinutes <= 90) {
       autoService = "Super";
-    } else if (diffMinutes <= 180) { // Jusqu'à 3h -> Exclu
+    } else if (diffMinutes <= 180) { // Jusqu'├á 3h -> Exclu
       autoService = "Exclu";
     } else {
       autoService = "Normal";
@@ -314,7 +314,7 @@ export default function DashboardAdmin() {
     const toDispatchCount = ordersAll.filter(o => ["accepted", "assigned"].includes(o.status)).length;
     const activeMissionsCount = ordersAll.filter(o => ["assigned", "driver_accepted", "in_progress", "in_progress"].includes(o.status)).length;
 
-    // CA Opérations : Tout ce qui est validé mais pas encore fini
+    // CA Op├®rations : Tout ce qui est valid├® mais pas encore fini
     const revenueOps = ordersAll
       .filter(o => ["accepted", "assigned", "assigned", "driver_accepted", "in_progress", "in_progress"].includes(o.status))
       .reduce((acc, o) => acc + (Number(o.price_ht) || 0), 0);
@@ -326,10 +326,10 @@ export default function DashboardAdmin() {
       .filter(i => i.status === 'paid')
       .reduce((acc, i) => acc + (Number(i.total_ht) || 0), 0);
 
-    // À Recouvrer Total
+    // ├Ç Recouvrer Total
     const totalToRecoup = Math.max(0, totalDeliveredHT - revenuePaidHT);
 
-    // Retards Spécifiques (Basé sur les factures)
+    // Retards Sp├®cifiques (Bas├® sur les factures)
     const overdueInvoices = invoicesAll.filter(i => i.status !== 'paid' && i.due_date && new Date(i.due_date) < SIMULATED_NOW);
     const overdueAmount = overdueInvoices.reduce((acc, i) => acc + (Number(i.total_ttc) || 0), 0);
     const debtorClientsCount = new Set(invoicesAll.filter(i => i.status !== 'paid').map(i => i.client_id)).size;
@@ -339,7 +339,7 @@ export default function DashboardAdmin() {
     const driverPayPaid = driverPaymentsAll.filter(p => p.status === 'paid').reduce((acc, p) => acc + (Number(p.amount) || 0), 0);
     const driverPayOutstanding = Math.max(0, totalDriverPayRequired - driverPayPaid);
 
-    // Profit Net One Connection (Sur livrées)
+    // Profit Net One Connection (Sur livr├®es)
     const netProfit = totalDeliveredHT - totalDriverPayRequired;
 
     return {
@@ -363,7 +363,7 @@ export default function DashboardAdmin() {
   const driverRows = useMemo(() => {
     return drivers.map((d) => {
       const activeOrder = ordersAll.find((o) => o.driver_id === d.id && (o.status === "in_progress" || o.status === "in_progress"));
-      const status = activeOrder ? "EN MISSION" : "À VIDE";
+      const status = activeOrder ? "EN MISSION" : "├Ç VIDE";
       const cls = activeOrder ? "bg-amber-100 text-amber-700" : "bg-emerald-100 text-emerald-700";
       return { ...d, status, cls };
     });
@@ -372,7 +372,7 @@ export default function DashboardAdmin() {
   const clientPaymentRows = useMemo(() => {
     return clients.map(c => {
       const cInvoices = invoicesAll.filter(i => i.client_id === c.id);
-      // On prend la facture la plus récente
+      // On prend la facture la plus r├®cente
       const latest = cInvoices.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))[0];
 
       let status = "SANS FACTURE";
@@ -380,10 +380,10 @@ export default function DashboardAdmin() {
 
       if (latest) {
         if (latest.status === 'paid') {
-          status = "À JOUR";
+          status = "├Ç JOUR";
           cls = "bg-emerald-100 text-emerald-700";
         } else {
-          status = "À PAYER";
+          status = "├Ç PAYER";
           cls = "bg-amber-100 text-amber-700";
         }
       }
@@ -485,14 +485,14 @@ export default function DashboardAdmin() {
       price_ht: form.price,
       scheduled_at: form.date && form.pickupTime ? `${form.date}T${form.pickupTime}:00` : null,
       // Keep minimal fallback in notes for backward compat or extra info
-      notes: `Dimensions: ${form.packageSize || '—'}. ${form.packageDesc || ''}`,
+      notes: `Dimensions: ${form.packageSize || 'ÔÇö'}. ${form.packageDesc || ''}`,
     });
 
     if (!error) {
       fetchOrders(); // Refresh
       setOpen(false);
     } else {
-      alert('Erreur lors de la création de la commande');
+      alert('Erreur lors de la cr├®ation de la commande');
     }
   };
 
@@ -508,10 +508,10 @@ export default function DashboardAdmin() {
               <span className="text-xs font-bold text-slate-400">Dimanche 1er Mars 2026</span>
             </div>
             <h2 className="text-4xl font-black tracking-tight text-slate-900 lg:text-5xl">
-              Ravi de vous revoir ! 👋
+              Ravi de vous revoir ! ­ƒæï
             </h2>
             <p className="mt-3 text-lg font-medium text-slate-500 max-w-2xl">
-              Votre flotte One Connexion est prête. Voici un aperçu de l'activité en temps réel.
+              Votre flotte One Connexion est pr├¬te. Voici un aper├ºu de l'activit├® en temps r├®el.
             </p>
           </div>
 
@@ -538,7 +538,7 @@ export default function DashboardAdmin() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
               </div>
-              <span className="text-xs font-black text-slate-900 uppercase tracking-widest">Système Opérationnel</span>
+              <span className="text-xs font-black text-slate-900 uppercase tracking-widest">Syst├¿me Op├®rationnel</span>
             </div>
           </div>
         </div>
@@ -551,22 +551,22 @@ export default function DashboardAdmin() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
             {[
               {
-                label: "Flux Opérationnel",
+                label: "Flux Op├®rationnel",
                 value: kpis.dispatchLive,
-                icon: "🚨",
+                icon: "­ƒÜ¿",
                 color: "from-slate-800 to-slate-900",
                 light: "bg-slate-50",
                 text: "text-slate-900",
                 details: [
-                  { label: "À Valider", value: kpis.toAccept, cls: "text-rose-500" },
-                  { label: "À Dispatcher", value: kpis.toDispatch, cls: "text-indigo-500" },
+                  { label: "├Ç Valider", value: kpis.toAccept, cls: "text-rose-500" },
+                  { label: "├Ç Dispatcher", value: kpis.toDispatch, cls: "text-indigo-500" },
                   { label: "En Mission", value: kpis.active, cls: "text-amber-500" }
                 ]
               },
               {
-                label: "CA Opérations",
-                value: `${(kpis.revenueOps || 0).toFixed(0)}€`,
-                icon: "🛠️",
+                label: "CA Op├®rations",
+                value: `${(kpis.revenueOps || 0).toFixed(0)}Ôé¼`,
+                icon: "­ƒøá´©Å",
                 color: "from-indigo-500 to-indigo-600",
                 light: "bg-indigo-50",
                 text: "text-indigo-600",
@@ -574,36 +574,36 @@ export default function DashboardAdmin() {
               },
               {
                 label: "Relances Clients",
-                value: `${(kpis.totalToRecoup || 0).toFixed(0)}€`,
-                icon: "⌛",
+                value: `${(kpis.totalToRecoup || 0).toFixed(0)}Ôé¼`,
+                icon: "Ôîø",
                 color: (kpis.overdueAmount || 0) > 0 ? "from-rose-500 to-rose-600" : "from-orange-500 to-orange-600",
                 light: (kpis.overdueAmount || 0) > 0 ? "bg-rose-50" : "bg-orange-50",
                 text: (kpis.overdueAmount || 0) > 0 ? "text-rose-600" : "text-orange-600",
                 details: [
-                  { label: "DÉJÀ ENCAISSÉ", value: `${(kpis.revenuePaidHT || 0).toFixed(0)}€`, cls: "text-emerald-600" },
-                  { label: "DONT EN RETARD", value: `${(kpis.overdueAmount || 0).toFixed(0)}€`, cls: "text-rose-600 font-black" },
-                  { label: "Clients à relancer", value: kpis.debtorClientsCount || 0, cls: "text-slate-600" }
+                  { label: "D├ëJ├Ç ENCAISS├ë", value: `${(kpis.revenuePaidHT || 0).toFixed(0)}Ôé¼`, cls: "text-emerald-600" },
+                  { label: "DONT EN RETARD", value: `${(kpis.overdueAmount || 0).toFixed(0)}Ôé¼`, cls: "text-rose-600 font-black" },
+                  { label: "Clients ├á relancer", value: kpis.debtorClientsCount || 0, cls: "text-slate-600" }
                 ]
               },
               {
-                label: "Dû Chauffeurs",
-                value: `${(kpis.driverPayOutstanding || 0).toFixed(0)}€`,
-                icon: "👤",
+                label: "D├╗ Chauffeurs",
+                value: `${(kpis.driverPayOutstanding || 0).toFixed(0)}Ôé¼`,
+                icon: "­ƒæñ",
                 color: "from-amber-500 to-amber-600",
                 light: "bg-amber-50",
                 text: "text-amber-600",
-                details: [{ label: "À régler (Missions livrées)", value: "", cls: "" }]
+                details: [{ label: "├Ç r├®gler (Missions livr├®es)", value: "", cls: "" }]
               },
               {
                 label: "Profit One (Est.)",
-                value: `${(kpis.netProfit || 0).toFixed(0)}€`,
-                icon: "💰",
+                value: `${(kpis.netProfit || 0).toFixed(0)}Ôé¼`,
+                icon: "­ƒÆ░",
                 color: "from-emerald-600 to-emerald-700",
                 light: "bg-emerald-50",
                 text: "text-emerald-700",
                 details: [
-                  { label: "Base CA Livré", value: `${(kpis.totalDeliveredHT || 0).toFixed(0)}€`, cls: "text-slate-400" },
-                  { label: "Missions Terminées", value: kpis.deliveredCount || 0, cls: "text-emerald-600" },
+                  { label: "Base CA Livr├®", value: `${(kpis.totalDeliveredHT || 0).toFixed(0)}Ôé¼`, cls: "text-slate-400" },
+                  { label: "Missions Termin├®es", value: kpis.deliveredCount || 0, cls: "text-emerald-600" },
                 ]
               },
             ].map((k, i) => (
@@ -612,7 +612,7 @@ export default function DashboardAdmin() {
                   <div className={`h-12 w-12 flex items-center justify-center rounded-2xl ${k.light} transition-transform group-hover:scale-110 duration-300`}>
                     <span className="text-xl">{k.icon}</span>
                   </div>
-                  {k.value > 10 && k.label === "À Accepter" && (
+                  {k.value > 10 && k.label === "├Ç Accepter" && (
                     <span className="flex h-2 w-2 rounded-full bg-rose-500 animate-ping"></span>
                   )}
                 </div>
@@ -653,10 +653,10 @@ export default function DashboardAdmin() {
 
                 <div className="flex bg-slate-100/80 p-1.5 rounded-2xl border border-slate-200/50">
                   {[
-                    { id: 'pending_acceptance', label: 'À Accepter', icon: Bell, statuses: ['pending_acceptance', 'pending'] },
-                    { id: 'accepted', label: 'À Dispatcher', icon: MapPin, statuses: ['accepted', 'assigned'] },
+                    { id: 'pending_acceptance', label: '├Ç Accepter', icon: Bell, statuses: ['pending_acceptance', 'pending'] },
+                    { id: 'accepted', label: '├Ç Dispatcher', icon: MapPin, statuses: ['accepted', 'assigned'] },
                     { id: 'in_progress', label: 'En cours', icon: Truck, statuses: ['assigned', 'driver_accepted', 'in_progress'] },
-                    { id: 'delivered', label: 'Terminées', icon: CheckIcon, statuses: ['delivered'] }
+                    { id: 'delivered', label: 'Termin├®es', icon: CheckIcon, statuses: ['delivered'] }
                   ].map(tab => (
                     <button
                       key={tab.id}
@@ -685,8 +685,8 @@ export default function DashboardAdmin() {
                   if (filtered.length === 0) {
                     return (
                       <div className="p-12 text-sm text-slate-500 text-center flex flex-col items-center gap-3">
-                        <span className="text-3xl text-slate-200 opacity-50">📋</span>
-                        Aucune commande pour cette catégorie.
+                        <span className="text-3xl text-slate-200 opacity-50">­ƒôï</span>
+                        Aucune commande pour cette cat├®gorie.
                       </div>
                     );
                   }
@@ -717,11 +717,11 @@ export default function DashboardAdmin() {
                                         "bg-slate-50 text-slate-500"
                               }`}>
                               {o.status.includes('pending') ? 'Nouveau' :
-                                o.status === 'accepted' ? 'Validé' :
+                                o.status === 'accepted' ? 'Valid├®' :
                                   o.status === 'assigned' ? 'En attente acceptation' :
-                                    o.status === 'driver_accepted' ? 'Accepté' :
-                                      o.status === 'in_progress' ? 'Enlevée' :
-                                        o.status === 'delivered' ? 'Livrée' :
+                                    o.status === 'driver_accepted' ? 'Accept├®' :
+                                      o.status === 'in_progress' ? 'Enlev├®e' :
+                                        o.status === 'delivered' ? 'Livr├®e' :
                                           o.status}
                             </div>
                           </div>
@@ -734,8 +734,8 @@ export default function DashboardAdmin() {
                                 <div className="h-1.5 w-1.5 rounded-full bg-orange-500"></div>
                               </div>
                               <div className="flex flex-col min-w-0">
-                                <span className="text-[10px] text-slate-400 font-bold uppercase truncate">{o.pickup_city || 'Départ'}</span>
-                                <span className="text-[10px] text-slate-900 font-bold uppercase truncate">{o.delivery_city || 'Arrivée'}</span>
+                                <span className="text-[10px] text-slate-400 font-bold uppercase truncate">{o.pickup_city || 'D├®part'}</span>
+                                <span className="text-[10px] text-slate-900 font-bold uppercase truncate">{o.delivery_city || 'Arriv├®e'}</span>
                               </div>
                             </div>
                           </div>
@@ -768,7 +768,7 @@ export default function DashboardAdmin() {
                                   DISPATCHER
                                 </button>
                               )}
-                              <span className="text-[10px] font-black text-slate-900 ml-1">{o.price_ht}€ HT</span>
+                              <span className="text-[10px] font-black text-slate-900 ml-1">{o.price_ht}Ôé¼ HT</span>
                             </div>
                             <div className="flex -space-x-2">
                               {/* Small avatar or vehicle icon */}
@@ -789,7 +789,7 @@ export default function DashboardAdmin() {
               <div className="bg-slate-900 rounded-[2.5rem] p-8 text-white shadow-2xl shadow-slate-900/20 overflow-hidden relative group">
                 <div className="relative z-10">
                   <h3 className="text-lg font-black tracking-tight mb-2">Actions Rapides</h3>
-                  <p className="text-xs font-medium text-slate-400 mb-6">Gérez vos opérations en un clic.</p>
+                  <p className="text-xs font-medium text-slate-400 mb-6">G├®rez vos op├®rations en un clic.</p>
 
                   <div className="space-y-3">
                     <button
@@ -804,7 +804,7 @@ export default function DashboardAdmin() {
                       className="w-full flex items-center justify-between p-4 bg-white/10 text-white border border-white/10 rounded-2xl font-black text-sm transition-all hover:bg-white/20 active:scale-95"
                     >
                       Toutes les Missions
-                      <span className="text-white/40">→</span>
+                      <span className="text-white/40">ÔåÆ</span>
                     </button>
                   </div>
                 </div>
@@ -815,7 +815,7 @@ export default function DashboardAdmin() {
               <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden flex flex-col">
                 <div className="px-6 py-5 border-b border-slate-50 flex items-center justify-between">
                   <div>
-                    <h4 className="text-xs font-black uppercase tracking-widest text-slate-900">Solvabilité</h4>
+                    <h4 className="text-xs font-black uppercase tracking-widest text-slate-900">Solvabilit├®</h4>
                     <p className="text-[9px] font-bold text-slate-400 uppercase mt-0.5">Statut Facturation</p>
                   </div>
                   <button onClick={() => navigate("/admin/invoices")} className="text-[10px] font-black text-orange-500 hover:orange-600 uppercase tracking-tighter">Tout voir</button>
@@ -872,12 +872,12 @@ export default function DashboardAdmin() {
         <div className="fixed bottom-8 right-8 z-[100] animate-slideUp">
           <div className="bg-slate-900 text-white p-6 rounded-2xl shadow-2xl flex items-center gap-4 max-w-sm border border-slate-700">
             <div className="h-12 w-12 rounded-full bg-emerald-500 flex items-center justify-center text-2xl animate-pulse">
-              🔔
+              ­ƒöö
             </div>
             <div>
               <h4 className="font-bold text-lg">Nouvelle commande !</h4>
               <p className="text-sm text-slate-300 mt-1">
-                {newOrderAlert.pickup_city || 'Ville inconnue'} → {newOrderAlert.delivery_city || 'Ville inconnue'}
+                {newOrderAlert.pickup_city || 'Ville inconnue'} ÔåÆ {newOrderAlert.delivery_city || 'Ville inconnue'}
               </p>
               <div className="mt-3 flex gap-2">
                 <button
@@ -905,13 +905,13 @@ export default function DashboardAdmin() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-2">
           <div className="w-full max-w-5xl max-h-[92vh] overflow-y-auto rounded-3xl bg-white p-4 shadow-2xl">
             <div className="mb-3 flex items-center justify-between">
-              <div className="text-sm font-bold text-slate-900">Créer une commande (Admin)</div>
-              <button onClick={() => setOpen(false)} className="text-slate-400 hover:text-slate-900">✕</button>
+              <div className="text-sm font-bold text-slate-900">Cr├®er une commande (Admin)</div>
+              <button onClick={() => setOpen(false)} className="text-slate-400 hover:text-slate-900">Ô£ò</button>
             </div>
             <div className="grid gap-3">
               <div>
                 <label className="text-xs font-bold uppercase tracking-wider text-slate-400">Client</label>
-                <div className="mt-2 text-xs text-slate-500 mb-2">Sélectionnez un client existant pour cette commande.</div>
+                <div className="mt-2 text-xs text-slate-500 mb-2">S├®lectionnez un client existant pour cette commande.</div>
 
                 <select
                   className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm focus:outline-none focus:ring-4 focus:ring-slate-100"
@@ -927,7 +927,7 @@ export default function DashboardAdmin() {
 
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="relative">
-                  <label className="text-xs font-bold uppercase tracking-wider text-slate-400">Lieu d'enlèvement</label>
+                  <label className="text-xs font-bold uppercase tracking-wider text-slate-400">Lieu d'enl├¿vement</label>
                   <div className="mt-2 flex items-center gap-2">
                     <input
                       className="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm focus:outline-none focus:ring-4 focus:ring-slate-100"
@@ -941,7 +941,7 @@ export default function DashboardAdmin() {
                     />
                   </div>
                   {loadingPickup && (
-                    <div className="mt-2 text-xs text-slate-400">Recherche…</div>
+                    <div className="mt-2 text-xs text-slate-400">RechercheÔÇª</div>
                   )}
                   {pickupSuggestions.length > 0 && (
                     <div className="absolute z-20 mt-2 w-full rounded-2xl border border-slate-200 bg-white p-2 shadow-lg">
@@ -971,7 +971,7 @@ export default function DashboardAdmin() {
                           onClick={() => fillAddress(addr, 'pickup')}
                           className="rounded-full bg-slate-100 px-3 py-1 text-[10px] font-bold text-slate-600 hover:bg-slate-200"
                         >
-                          📍 {addr.name}
+                          ­ƒôì {addr.name}
                         </button>
                       ))}
                     </div>
@@ -1003,7 +1003,7 @@ export default function DashboardAdmin() {
                     />
                   </div>
                   {loadingDelivery && (
-                    <div className="mt-2 text-xs text-slate-400">Recherche…</div>
+                    <div className="mt-2 text-xs text-slate-400">RechercheÔÇª</div>
                   )}
                   {deliverySuggestions.length > 0 && (
                     <div className="absolute z-20 mt-2 w-full rounded-2xl border border-slate-200 bg-white p-2 shadow-lg">
@@ -1033,7 +1033,7 @@ export default function DashboardAdmin() {
                           onClick={() => fillAddress(addr, 'delivery')}
                           className="rounded-full bg-slate-100 px-3 py-1 text-[10px] font-bold text-slate-600 hover:bg-slate-200"
                         >
-                          🏁 {addr.name}
+                          ­ƒÅü {addr.name}
                         </button>
                       ))}
                     </div>
@@ -1061,7 +1061,7 @@ export default function DashboardAdmin() {
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-bold uppercase tracking-wider text-slate-400">Heure d’enlèvement</label>
+                  <label className="text-xs font-bold uppercase tracking-wider text-slate-400">Heure dÔÇÖenl├¿vement</label>
                   <input
                     type="time"
                     className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm focus:outline-none focus:ring-4 focus:ring-slate-100"
@@ -1079,7 +1079,7 @@ export default function DashboardAdmin() {
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-bold uppercase tracking-wider text-slate-400">Véhicule</label>
+                  <label className="text-xs font-bold uppercase tracking-wider text-slate-400">V├®hicule</label>
                   <select
                     className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm focus:outline-none focus:ring-4 focus:ring-slate-100"
                     value={form.vehicle}
@@ -1093,7 +1093,7 @@ export default function DashboardAdmin() {
                 <div>
                   <label className="text-xs font-bold uppercase tracking-wider text-slate-400">Formule (Auto)</label>
                   <div className={`mt-2 w-full rounded-2xl border px-4 py-3 text-sm font-bold bg-slate-50 ${form.service === 'Super' ? 'text-rose-600 border-rose-100' : form.service === 'Exclu' ? 'text-blue-600 border-blue-100' : 'text-emerald-600 border-emerald-100'}`}>
-                    {form.service || '—'}
+                    {form.service || 'ÔÇö'}
                   </div>
                 </div>
               </div>
@@ -1115,7 +1115,7 @@ export default function DashboardAdmin() {
                   <label className="text-xs font-bold uppercase tracking-wider text-slate-400">Description</label>
                   <input
                     className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm focus:outline-none focus:ring-4 focus:ring-slate-100"
-                    placeholder="Ex: Documents, matériel..."
+                    placeholder="Ex: Documents, mat├®riel..."
                     value={form.packageDesc}
                     onChange={(e) => setForm({ ...form, packageDesc: e.target.value })}
                   />
@@ -1135,7 +1135,7 @@ export default function DashboardAdmin() {
 
               <div className="grid gap-4 md:grid-cols-2">
                 <div>
-                  <label className="text-xs font-bold uppercase tracking-wider text-slate-400">Téléphone sur place</label>
+                  <label className="text-xs font-bold uppercase tracking-wider text-slate-400">T├®l├®phone sur place</label>
                   <input
                     className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm focus:outline-none focus:ring-4 focus:ring-slate-100"
                     placeholder="Ex: 06 12 34 56 78"
@@ -1155,9 +1155,9 @@ export default function DashboardAdmin() {
               </div>
 
               <div className="text-center rounded-2xl bg-slate-50 p-4">
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-400">Prix HT Calculé</label>
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-400">Prix HT Calcul├®</label>
                 <div className="text-3xl font-bold text-slate-900 mt-1">
-                  {calculatingPrice ? '...' : (form.price ? `${Number(form.price).toFixed(2)}€` : '—')}
+                  {calculatingPrice ? '...' : (form.price ? `${Number(form.price).toFixed(2)}Ôé¼` : 'ÔÇö')}
                 </div>
               </div>
 
@@ -1168,7 +1168,7 @@ export default function DashboardAdmin() {
                   disabled={!form.price || calculatingPrice}
                   className="rounded-full bg-slate-900 px-5 py-2 text-xs font-bold text-white disabled:opacity-50"
                 >
-                  Créer la commande
+                  Cr├®er la commande
                 </button>
               </div>
             </div>

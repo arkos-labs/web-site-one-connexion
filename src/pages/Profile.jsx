@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { User, Mail, Phone, Building2, MapPin, FileText, BadgeCheck, CreditCard, Loader2 } from "lucide-react";
 import { supabase } from "../lib/supabase";
+import { fetchSiret } from "../lib/siret.js";
 
 export default function Profile() {
   const [loading, setLoading] = useState(true);
@@ -58,9 +59,15 @@ export default function Profile() {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
+    let autoSiret = form.siret;
+    if (!autoSiret && form.company) {
+      autoSiret = await fetchSiret(form.company, form.zip || form.city);
+    }
+    const updatedForm = { ...form, siret: autoSiret };
+
     // Save details to 'profiles'
     const { error } = await supabase.from('profiles').update({
-      details: form
+      details: updatedForm
     }).eq('id', user.id);
 
     if (!error) {
@@ -71,7 +78,7 @@ export default function Profile() {
   };
 
   return (
-    <div>
+    <div className="pt-4 md:pt-6">
       <header className="mb-6">
         <h1 className="text-4xl font-extrabold text-slate-900">Mon Profil 👤</h1>
         <p className="mt-2 text-base font-medium text-slate-500">Gérez vos informations personnelles et préférences de compte.</p>
@@ -113,7 +120,7 @@ export default function Profile() {
                 <Field label="Contact" value={form.contact} onChange={(v) => setForm({ ...form, contact: v })} />
                 <Field label="Email" value={form.email} onChange={(v) => setForm({ ...form, email: v })} disabled />
                 <Field label="Téléphone" value={form.phone} onChange={(v) => setForm({ ...form, phone: v })} />
-                <Field label="SIRET" value={form.siret} onChange={(v) => setForm({ ...form, siret: v })} />
+                <Field label="SIRET (Auto)" value={form.siret} onChange={(v) => setForm({ ...form, siret: v })} disabled />
                 <Field label="TVA" value={form.tva} onChange={(v) => setForm({ ...form, tva: v })} />
                 <Field label="Adresse" value={form.address} onChange={(v) => setForm({ ...form, address: v })} />
                 <div className="grid gap-4 md:grid-cols-2">

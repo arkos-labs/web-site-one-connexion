@@ -257,8 +257,23 @@ export default function DashboardDriver() {
                                 <div className="rounded-2xl bg-slate-50 p-4 border border-slate-100">
                                     <div className="flex items-start gap-3">
                                         <Package className="text-slate-400 shrink-0" size={20} />
-                                        <div className="text-sm text-slate-600 font-medium leading-relaxed">
-                                            {task.notes || "Aucune note particulière."}
+                                        <div className="text-sm text-slate-600 font-medium leading-relaxed w-full">
+                                            {(() => {
+                                                const notes = task.notes || "Aucune note particulière.";
+                                                // Intelligent parsing to spot codes (Digicode, Code, etc.)
+                                                const hasCode = /code|digicode|acces/i.test(notes);
+                                                if (hasCode) {
+                                                    return (
+                                                        <div className="flex flex-col gap-2">
+                                                            <div className="inline-flex items-center gap-2 bg-orange-100/50 border border-orange-200 text-orange-800 px-3 py-1.5 rounded-lg text-xs font-black w-max">
+                                                                🔑 ATTENTION CODE D'ACCÈS INCLUS
+                                                            </div>
+                                                            <span className="whitespace-pre-line">{notes}</span>
+                                                        </div>
+                                                    );
+                                                }
+                                                return <span className="whitespace-pre-line">{notes}</span>;
+                                            })()}
                                         </div>
                                     </div>
                                 </div>

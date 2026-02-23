@@ -70,7 +70,7 @@ export default function AdminDrivers() {
         schema: 'public',
         table: 'profiles'
       }, (payload) => {
-        console.log("🔔 REALTIME: Profile changed", payload);
+        // Realtime: profile changed
         setLastUpdate(new Date());
         fetchData(true);
       })
@@ -79,12 +79,12 @@ export default function AdminDrivers() {
         schema: 'public',
         table: 'orders'
       }, (payload) => {
-        console.log("🔔 REALTIME: Order changed", payload);
+        // Realtime: order changed
         setLastUpdate(new Date());
         fetchData(true);
       })
       .subscribe((status, err) => {
-        console.log("📡 fleet_realtime Status:", status);
+        // Fleet realtime channel status update
         if (err) console.error("📡 Realtime Error:", err);
         setRtStatus(status);
         if (status === "SUBSCRIBED") {

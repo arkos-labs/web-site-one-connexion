@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, CheckCircle2, Building2, User, Mail, Phone, Lock, ArrowRight, MapPin, CreditCard } from "lucide-react";
 import { useState } from "react";
 import { supabase } from "../lib/supabase.js";
+import { fetchSiret } from "../lib/siret.js";
 import PublicHeader from "../components/PublicHeader.jsx";
 
 export default function Register() {
@@ -40,6 +41,12 @@ export default function Register() {
         setLoading(true);
 
         try {
+            // Intelligent SIRET Fetch in the background
+            let autoSiret = "";
+            if (form.companyName) {
+                autoSiret = await fetchSiret(form.companyName, form.zip);
+            }
+
             // 1. Sign up user with all metadata for the public.profiles trigger
             const { data: authData, error: authError } = await supabase.auth.signUp({
                 email: form.email,
@@ -55,6 +62,7 @@ export default function Register() {
                         address: form.billingAddress,
                         zip: form.zip,
                         city: form.city,
+                        siret: autoSiret,
                     }
                 }
             });

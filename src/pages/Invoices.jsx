@@ -107,7 +107,7 @@ export default function Invoices() {
   }
 
   return (
-    <div>
+    <div className="pt-4 md:pt-6">
       <header className="mb-6">
         <h1 className="text-4xl font-extrabold text-slate-900">Mes Factures 📄</h1>
         <p className="mt-2 text-base font-medium text-slate-500">Consultez et téléchargez vos documents comptables simplement.</p>

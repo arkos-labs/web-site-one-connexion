@@ -84,12 +84,12 @@ export default function ClientChat() {
             })
             .on('broadcast', { event: 'new_message' }, (payload) => {
                 const msg = payload.payload;
-                console.log("Client: Broadcast message received:", msg);
+                // Broadcast message received from admin
                 setMessages(prev => (prev.some(m => m.id === msg.id) ? prev : [...prev, msg]));
             })
             .subscribe((status) => {
                 if (status === 'SUBSCRIBED') {
-                    console.log("Client subscribed to typing and broadcast");
+                    // Chat channel subscribed
                 }
             });
 
@@ -182,7 +182,7 @@ export default function ClientChat() {
     if (loading) return <div className="flex justify-center p-20"><Loader2 className="animate-spin text-slate-400" /></div>;
 
     return (
-        <div className="flex flex-col h-[calc(100vh-120px)]">
+        <div className="flex flex-col h-[calc(100vh-120px)] pt-4 md:pt-6">
             <header className="mb-8">
                 <h1 className="text-4xl font-extrabold text-slate-900">
                     {profile?.role === 'courier' ? 'Messagerie Chauffeur' : 'Support Client'}

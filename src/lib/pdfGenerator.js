@@ -106,8 +106,8 @@ export function generateOrderPdf(order, client = {}) {
     const extractDetails = (text) => {
         if (!text) return { code: null, floor: null, instructions: null };
 
-        const codePattern = /(?:Code|Digicode|Digi|Accès|Acces)\s?[:\/-]?\s*([A-Z0-9 ]+)(?:\.|$|,)/i;
-        const floorPattern = /(?:Etage|Étage|Niveau|Floor)\s?[:\/-]?\s*([0-9A-Z ]+)(?:\.|$|,)/i;
+        const codePattern = /(?:Code|Digicode|Digi|Accès|Acces)\s?[:/-]?\s*([A-Z0-9 ]+)(?:\.|$|,)/i;
+        const floorPattern = /(?:Etage|Étage|Niveau|Floor)\s?[:/-]?\s*([0-9A-Z ]+)(?:\.|$|,)/i;
 
         const codeMatch = text.match(codePattern);
         const floorMatch = text.match(floorPattern);
@@ -725,6 +725,17 @@ export function generateInvoicePdf(invoice, orders = [], client = {}) {
     doc.setFont("helvetica", "normal");
     doc.text(`IBAN: ${COMPANY.iban}`, margin, y + 15);
     doc.text("Merci de préciser le numéro de facture dans l'objet du virement.", margin, y + 30);
+
+    // Mentions obligatoires B2B
+    y = pageH - 50;
+    doc.setFontSize(7);
+    doc.setTextColor(148, 163, 184); // slate-400
+    doc.setFont("helvetica", "normal");
+    const legalText1 = `One Connexion SAS - Capital social : 10 000€ - Siège social : ${COMPANY.address} - SIRET : ${COMPANY.siret} - TVA Intracommunautaire : ${COMPANY.tva}`;
+    const legalText2 = "En cas de retard de paiement, indemnité forfaitaire pour frais de recouvrement de 40€ selon l'art. D.441-5 du Code de Commerce. Taux des pénalités de retard : 3 fois le taux d'intérêt légal. Escompte pour paiement anticipé : néant. Facture émise sous un format compatible aux normes de facturation électronique B2B applicables en France.";
+
+    doc.text(legalText1, pageW / 2, y, { align: "center" });
+    doc.text(doc.splitTextToSize(legalText2, contentW), pageW / 2, y + 10, { align: "center" });
 
     if (invoice.returnBlob) {
         return doc.output("blob");

@@ -12,6 +12,6 @@ export const supabase = createClient(
     supabaseAnonKey || "placeholder-key"
 );
 
-console.log("Supabase Client initialized:", supabaseUrl ? "OK" : "MISSING CONFIG");
+// Supabase client initialized
 
 

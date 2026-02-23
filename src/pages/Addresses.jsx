@@ -154,7 +154,7 @@ export default function Addresses() {
   };
 
   return (
-    <div className="p-8 pt-0 space-y-8">
+    <div className="p-4 md:p-8 pt-4 md:pt-6 space-y-8">
       <header className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <header className="mb-6">
           <h1 className="text-4xl font-extrabold text-slate-900">Carnet d'Adresses 📍</h1>
