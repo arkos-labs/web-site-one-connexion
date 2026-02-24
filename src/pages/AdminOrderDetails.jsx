@@ -105,14 +105,16 @@ export default function AdminOrderDetails() {
       ...(edit.deliveryDeadline ? { delivery_deadline: `${datePart}T${edit.deliveryDeadline}:00` } : {}),
     };
     if (edit.driverId) {
-      const driverChanged = edit.driverId !== order.driver_id;
+      const driverChanged = String(edit.driverId) !== String(order.driver_id);
       const canAssign = ['pending', 'pending_acceptance', 'accepted'].includes(order.status);
       const canReassign = ['assigned', 'driver_accepted', 'in_progress'].includes(order.status) && driverChanged;
-      if (canAssign || canReassign) {
+      if (canAssign || canReassign || (!order.driver_id && edit.driverId)) {
         updates.status = 'assigned';
+        updates.driver_id = edit.driverId;
         // Notification Telegram — mission assignée à un chauffeur
-        const driverName = drivers.find(d => d.id === edit.driverId)?.name || 'Chauffeur';
-        notifyOrderAssigned({ ...order, ...updates }, driverName);
+        const driverName = drivers.find(d => String(d.id) === String(edit.driverId))?.name || 'Chauffeur';
+        // Send async, don't wait for it
+        notifyOrderAssigned({ ...order, ...updates, id: order.id }, driverName);
       }
     }
     const { error } = await supabase.from('orders').update(updates).eq('id', order.id);
