@@ -149,12 +149,18 @@ export default function DashboardDriver() {
             updateData.delivered_at = new Date().toISOString();
         }
 
-        const { error, data: updatedOrder } = await supabase
+        const { error, data: updatedOrders } = await supabase
             .from('orders')
             .update(updateData)
             .eq('id', orderId)
-            .select()
-            .single();
+            .select();
+
+        if (error) {
+            console.error('Update Order Error:', error);
+            alert("Erreur: " + error.message);
+        }
+
+        const updatedOrder = updatedOrders && updatedOrders.length > 0 ? updatedOrders[0] : null;
 
         if (!error && updatedOrder) {
             let driverName = user?.user_metadata?.full_name || user?.user_metadata?.first_name || 'Chauffeur';
@@ -169,6 +175,9 @@ export default function DashboardDriver() {
             if (newStatus === 'in_progress') notifyPickupDone(updatedOrder, driverName);
             if (newStatus === 'delivered') notifyDelivered(updatedOrder, driverName);
 
+            fetchMyTasks();
+        } else if (!error) {
+            // Updated silently but not returned, fallback
             fetchMyTasks();
         }
     };

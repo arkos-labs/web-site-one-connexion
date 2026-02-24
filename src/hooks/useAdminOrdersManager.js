@@ -297,18 +297,31 @@ export default function useAdminOrdersManager(searchParams) {
         if (decisionEdit.pickup !== decisionOrder.pickup) updatePayload.pickup_address = decisionEdit.pickup;
         if (decisionEdit.delivery !== decisionOrder.delivery) updatePayload.delivery_address = decisionEdit.delivery;
 
-        const { error } = await supabase
+        const { error, data } = await supabase
             .from('orders')
             .update(updatePayload)
-            .eq('id', decisionOrder.id);
+            .eq('id', decisionOrder.id)
+            .select();
 
         if (error) {
             console.error("Error confirming decision:", error);
             alert("Erreur lors de la validation : " + error.message);
-        } else {
-            fetchOrders();
-            setDecisionOpen(false);
+            return;
         }
+
+        if (!data || data.length === 0) {
+            alert("Opération échouée silencieusement. Vérifiez vos permissions (RLS).");
+            return;
+        }
+
+        if (decisionType === 'accept') {
+            import("../lib/telegram").then(({ notifyOrderAccepted }) => {
+                notifyOrderAccepted(data[0], data[0].clientName || 'Client');
+            });
+        }
+
+        fetchOrders();
+        setDecisionOpen(false);
     };
 
     const confirmDispatch = async () => {
@@ -324,25 +337,31 @@ export default function useAdminOrdersManager(searchParams) {
             }
         }
 
-        const { error } = await supabase.from('orders').update({
+        const { error, data } = await supabase.from('orders').update({
             status: 'assigned',
             driver_id: dispatchDriver,
             notes: `${dispatchOrder.notes || ''} | Note dispatch: ${dispatchNote}`
-        }).eq('id', dispatchOrder.id);
+        }).eq('id', dispatchOrder.id).select();
 
-        if (!error) {
-            const driverName = drivers.find(d => String(d.id) === String(dispatchDriver))?.name || 'Chauffeur';
-            notifyOrderAssigned({ ...dispatchOrder, status: 'assigned', driver_id: dispatchDriver }, driverName);
-            fetchOrders();
-            setDispatchOpen(false);
-        } else {
+        if (error) {
             console.error("Dispatch Error", error);
             if (error.message && error.message.toLowerCase().includes("foreign key")) {
                 alert("ERREUR CRITIQUE : Ce profil chauffeur est invalide (ID orphelin).\n\nCela arrive quand le chauffeur a été créé avec l'ancien système.\n\nSOLUTION : Allez dans l'onglet 'Chauffeurs', supprimez ce chauffeur, et recréez-le via l'admin Dispatch One Connexion.");
             } else {
                 alert("Erreur: " + error.message);
             }
+            return;
         }
+
+        if (!data || data.length === 0) {
+            alert("L'assignation a échouée silencieusement. Vérifiez vos permissions administrateur (RLS).");
+            return;
+        }
+
+        const driverName = drivers.find(d => String(d.id) === String(dispatchDriver))?.name || 'Chauffeur';
+        notifyOrderAssigned({ ...dispatchOrder, status: 'assigned', driver_id: dispatchDriver }, driverName);
+        fetchOrders();
+        setDispatchOpen(false);
     };
 
     const exportCsv = () => {

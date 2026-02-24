@@ -62,20 +62,26 @@ export default function DashboardAdmin() {
       alert("Veuillez sélectionner un chauffeur.");
       return;
     }
-    const { error } = await supabase.from('orders').update({
+    const { error, data } = await supabase.from('orders').update({
       status: 'assigned',
       driver_id: dispatchDriver,
       notes: dispatchNote ? `${dispatchOrder.notes || ''} | Note dispatch: ${dispatchNote}` : dispatchOrder.notes
-    }).eq('id', dispatchOrder.id);
+    }).eq('id', dispatchOrder.id).select();
 
-    if (!error) {
-      setDispatchOpen(false);
-      const driverName = drivers.find(d => String(d.id) === String(dispatchDriver))?.name || 'Chauffeur';
-      notifyOrderAssigned({ ...dispatchOrder, status: 'assigned', driver_id: dispatchDriver }, driverName);
-      fetchOrders();
-    } else {
+    if (error) {
       alert("Erreur lors de l'assignation: " + error.message);
+      return;
     }
+
+    if (!data || data.length === 0) {
+      alert("L'assignation a échouée silencieusement. Vérifiez vos permissions administrateur (RLS).");
+      return;
+    }
+
+    setDispatchOpen(false);
+    const driverName = drivers.find(d => String(d.id) === String(dispatchDriver))?.name || 'Chauffeur';
+    notifyOrderAssigned({ ...dispatchOrder, status: 'assigned', driver_id: dispatchDriver }, driverName);
+    fetchOrders();
   };
 
   // ── Data fetching ──
@@ -162,8 +168,12 @@ export default function DashboardAdmin() {
   const handleQuickAccept = async (orderId) => {
     setOrdersAll(prev => prev.map(o => o.id === orderId ? { ...o, status: 'accepted' } : o));
     setOperationView('accepted');
-    const { error } = await supabase.from('orders').update({ status: 'accepted' }).eq('id', orderId);
-    if (error) { fetchOrders(); return; }
+    const { error, data } = await supabase.from('orders').update({ status: 'accepted' }).eq('id', orderId).select();
+    if (error || !data || data.length === 0) {
+      alert("Echec de l'acceptation.");
+      fetchOrders();
+      return;
+    }
     // Notification Telegram — commande acceptée
     const order = ordersAll.find(o => o.id === orderId);
     if (order) notifyOrderAccepted(order, order.clientName || 'Client');
