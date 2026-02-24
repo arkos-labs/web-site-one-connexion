@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { supabase } from "../lib/supabase";
-import { sendTelegramMessage } from "../lib/telegram";
+import { sendTelegramMessage, notifyDriverAccepted, notifyPickupDone, notifyDelivered } from "../lib/telegram";
 import { MapPin, Navigation, Phone, CheckCircle, Clock, Truck, Package } from "lucide-react";
 
 export default function DashboardDriver() {
@@ -149,31 +149,25 @@ export default function DashboardDriver() {
             updateData.delivered_at = new Date().toISOString();
         }
 
-        const { error } = await supabase
+        const { error, data: updatedOrder } = await supabase
             .from('orders')
             .update(updateData)
-            .eq('id', orderId);
+            .eq('id', orderId)
+            .select()
+            .single();
 
-        if (!error) {
-            const currentTask = tasks.find(t => t.id === orderId);
-            if (currentTask) {
-                if (newStatus === 'driver_accepted') {
-                    sendTelegramMessage(
-                        `🚀 <b>COURSE ACCEPTÉE !</b>\n\n` +
-                        `<b>Coursier :</b> ${user?.user_metadata?.first_name || 'Un coursier'}\n` +
-                        `<b>Commande :</b> #${orderId.slice(0, 8)}\n` +
-                        `<b>Départ :</b> ${currentTask.pickup_city}\n` +
-                        `<b>Arrivée :</b> ${currentTask.delivery_city}`
-                    );
-                } else if (newStatus === 'delivered') {
-                    sendTelegramMessage(
-                        `✅ <b>COURSE LIVRÉE !</b>\n\n` +
-                        `<b>Coursier :</b> ${user?.user_metadata?.first_name || 'Un coursier'}\n` +
-                        `<b>Commande :</b> #${orderId.slice(0, 8)}\n` +
-                        `Livrable déposé avec succès à ${currentTask.delivery_city}.`
-                    );
+        if (!error && updatedOrder) {
+            let driverName = user?.user_metadata?.full_name || user?.user_metadata?.first_name || 'Chauffeur';
+            if (user?.id) {
+                const { data: profile } = await supabase.from('profiles').select('details').eq('id', user.id).single();
+                if (profile?.details?.full_name || profile?.details?.first_name) {
+                    driverName = profile.details.full_name || profile.details.first_name;
                 }
             }
+
+            if (newStatus === 'driver_accepted') notifyDriverAccepted(updatedOrder, driverName);
+            if (newStatus === 'in_progress') notifyPickupDone(updatedOrder, driverName);
+            if (newStatus === 'delivered') notifyDelivered(updatedOrder, driverName);
 
             fetchMyTasks();
         }

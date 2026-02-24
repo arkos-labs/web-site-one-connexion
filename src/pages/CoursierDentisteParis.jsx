@@ -1,43 +1,49 @@
-import PublicHeader from "../components/PublicHeader.jsx";
-import PublicFooter from "../components/PublicFooter.jsx";
+import SEOPageLayout from "../components/SEOPageLayout";
 
 export default function CoursierDentisteParis() {
   return (
-    <div className="bg-white text-slate-900">
-      <PublicHeader />
-      <main className="blog-page">
-        <h1 className="text-3xl font-bold">Coursier dentiste Paris</h1>
-        <p className="mt-2 text-sm text-slate-500">Publié le 10/02/2026 • Par One Connexion</p>
-        <p className="mt-6 text-slate-600">
-          Transport urgent de prothèses et dossiers dentaires entre cabinets et laboratoires. Service
-          rapide, sécurisé et traçable pour les professionnels de santé.
-        </p>
-      
-        <section className="mt-10">
-          <h2 className="text-xl font-semibold">Pourquoi choisir One Connexion ?</h2>
-          <ul className="mt-4 list-disc pl-6 space-y-2"><li className="text-slate-600">Transport sécurisé de prothèses et dossiers médicaux.</li><li className="text-slate-600">Livraisons urgentes entre cabinets et laboratoires.</li><li className="text-slate-600">Service discret et traçable.</li></ul>
-          <p className="mt-4 text-slate-600">Contactez-nous pour un devis rapide et une prise en charge immédiate.</p>
-        </section>
-        <section className="mt-8">
-          <h2 className="text-xl font-semibold">Cas d’usage B2B</h2>
-          <p className="mt-3 text-slate-600">Nos clients utilisent le service pour la messagerie quotidienne, les urgences et les tournées régulières. Nous adaptons les véhicules et les délais à chaque besoin.</p>
-        </section>
-      
-        <section className="mt-8"><p className="mt-3 text-slate-600">Les cabinets dentaires exigent une précision logistique pour les prothèses et dossiers. Notre messagerie garantit sécurité, confidentialité et ponctualité.</p><p className="mt-3 text-slate-600">Nous proposons également des navettes entre laboratoires et cabinets pour sécuriser les délais.</p>
-        </section>
+    <SEOPageLayout
+      title="Coursier Dentiste & Prothésiste Paris"
+      subtitle="Transport express de prothèses dentaires, empreintes et matériel de santé entre cabinets et laboratoires."
+      heroImage="https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&q=80"
+      description={`
+        La logistique dentaire exige une rigueur absolue. One Connexion accompagne les chirurgiens-dentistes et les laboratoires de prothèses dans toute l'Île-de-France pour assurer des transferts rapides et hygiéniques.
 
-        <section className="mt-8">
-          <h2 className="text-xl font-semibold">Questions fréquentes</h2>
-          <div className="mt-3 space-y-3 text-slate-600">
-            <p><strong>Quels délais ?</strong> De l’urgent immédiat aux créneaux planifiés selon vos besoins.</p>
-            <p><strong>Preuve de livraison ?</strong> POD numérique horodaté, consultable par votre équipe.</p>
-            <p><strong>Facturation ?</strong> Mensuelle et claire, avec récapitulatif détaillé.</p>
-          </div>
-        </section>
-      </main>
-      <PublicFooter />
-    </div>
+        Nous comprenons que chaque minute compte pour vos rendez-vous patients. C'est pourquoi nos coursiers sont formés à la gestion des empreintes fraîches et des travaux de prothèse finis, garantissant une livraison sans accroc.
+      `}
+      benefits={[
+        "Respect strict des horaires de rendez-vous",
+        "Transport sécurisé et hygiénique",
+        "Coursiers professionnels et discrets",
+        "Suivi GPS en temps réel des plis",
+        "Service disponible dès 8h le matin"
+      ]}
+      useCases={[
+        "Ramassage d'empreintes matinales",
+        "Livraison de prothèses (fixes ou mobiles)",
+        "Dépannage urgent de petit matériel",
+        "Navettes inter-cabinets ou multi-sites"
+      ]}
+      seoText={(
+        <>
+          <p>Le métier de <strong>dentiste à Paris</strong> ou de laboratoires de prothèses nécessite une réactivité sans faille. En externalisant vos courses à One Connexion, vous gagnez en sérénité et pouvez vous concentrer sur le soin de vos patients.</p>
+          <p>Nos solutions de <strong>messagerie dentaire</strong> sont pensées pour fluidifier vos échanges quotidiens avec vos partenaires techniques.</p>
+        </>
+      )}
+      faqs={[
+        {
+          q: "Pouvez-vous passer tous les matins à la même heure ?",
+          a: "Absolument. Nous mettons en place des tournées régulières pour le ramassage des empreintes ou la livraison des travaux du jour."
+        },
+        {
+          q: "Comment garantissez-vous que les colis ne sont pas écrasés ?",
+          a: "Nos coursiers utilisent des bagageries rigides et compartimentées pour éviter tout choc sur les moulages ou les travaux de précision."
+        },
+        {
+          q: "Couvrez-vous la banlieue proche ?",
+          a: "Oui, nous desservons tout Paris ainsi que la petite et grande couronne (92, 93, 94, 77, 78, 91, 95)."
+        }
+      ]}
+    />
   );
 }
-
-

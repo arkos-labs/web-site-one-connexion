@@ -1,47 +1,49 @@
-import PublicHeader from "../components/PublicHeader.jsx";
-import PublicFooter from "../components/PublicFooter.jsx";
+import SEOPageLayout from "../components/SEOPageLayout";
 
 export default function TarifsCoursierParis() {
   return (
-    <div className="bg-white text-slate-900">
-      <PublicHeader />
-      <main className="blog-page">
-        <h1 className="text-3xl font-bold">Tarifs coursier Paris</h1>
-        <p className="mt-2 text-sm text-slate-500">Publié le 04/02/2026 • Par One Connexion</p>
-        <p className="mt-6 text-slate-600">
-          Les tarifs d’un coursier à Paris dépendent du véhicule, de la distance, du niveau d’urgence
-          et de la plage horaire. Nous appliquons une tarification claire et maîtrisée.
-        </p>
-        <p className="mt-4 text-slate-600">
-          Pour les entreprises B2B, des forfaits mensuels et des remises volume sont disponibles.
-          Demandez un devis pour optimiser vos coûts logistiques.
-        </p>
-      
-        <section className="mt-10">
-          <h2 className="text-xl font-semibold">Pourquoi choisir One Connexion ?</h2>
-          <ul className="mt-4 list-disc pl-6 space-y-2"><li className="text-slate-600">Tarification claire basée sur la distance et le niveau d’urgence.</li><li className="text-slate-600">Remises volume et forfaits B2B disponibles.</li><li className="text-slate-600">Comparables aux standards du marché parisien.</li></ul>
-          <p className="mt-4 text-slate-600">Contactez-nous pour un devis rapide et une prise en charge immédiate.</p>
-        </section>
-        <section className="mt-8">
-          <h2 className="text-xl font-semibold">Cas d’usage B2B</h2>
-          <p className="mt-3 text-slate-600">Nos clients utilisent le service pour la messagerie quotidienne, les urgences et les tournées régulières. Nous adaptons les véhicules et les délais à chaque besoin.</p>
-        </section>
-      
-        <section className="mt-8"><p className="mt-3 text-slate-600">Nos tarifs sont alignés sur les standards du marché parisien tout en garantissant un niveau de service premium. Les coûts sont transparents et détaillés.</p><p className="mt-3 text-slate-600">Les clients réguliers bénéficient d’optimisations via des tournées planifiées et des remises volume.</p>
-        </section>
+    <SEOPageLayout
+      title="Tarifs Coursier Paris & Île-de-France"
+      subtitle="Une tarification transparente, sans frais cachés, adaptée aux volumes des professionnels."
+      heroImage="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&q=80"
+      description={`
+        Chez One Connexion, nous croyons que la clarté tarifaire est la base d'un partenariat B2B durable. Nos tarifs sont calculés de manière équitable en fonction de la distance réelle, du type de véhicule requis et du degré d'urgence de la mission.
 
-        <section className="mt-8">
-          <h2 className="text-xl font-semibold">Questions fréquentes</h2>
-          <div className="mt-3 space-y-3 text-slate-600">
-            <p><strong>Quels délais ?</strong> De l’urgent immédiat aux créneaux planifiés selon vos besoins.</p>
-            <p><strong>Preuve de livraison ?</strong> POD numérique horodaté, consultable par votre équipe.</p>
-            <p><strong>Facturation ?</strong> Mensuelle et claire, avec récapitulatif détaillé.</p>
-          </div>
-        </section>
-      </main>
-      <PublicFooter />
-    </div>
+        Pas de frais de dossier, pas d'abonnement obligatoire. Vous payez ce que vous consommez, avec la garantie d'un service premium et d'une traçabilité totale incluse dans chaque course.
+      `}
+      benefits={[
+        "Prix ferme annoncé avant la commande",
+        "Pas de frais d'ouverture de compte",
+        "Remises automatiques selon votre volume mensuel",
+        "Facturation consolidée en fin de mois",
+        "Assurance ad valorem incluse par défaut"
+      ]}
+      useCases={[
+        "Courses en urgence immédiate (Paris intra-muros)",
+        "Livraisons programmées à l'avance",
+        "Tournées de distribution multi-points",
+        "Liaisons régulières banlieue-banlieue"
+      ]}
+      seoText={(
+        <>
+          <p>Le <strong>prix d'un coursier à Paris</strong> varie selon plusieurs critères logistiques. One Connexion s'engage à offrir le meilleur rapport qualité/prix du marché B2B en optimisant les trajets de ses chauffeurs pour réduire les coûts et l'empreinte carbone.</p>
+          <p>Découvrez nos solutions de <strong>messagerie économique</strong> pour vos envois moins urgents et optimisez votre budget transport dès aujourd'hui.</p>
+        </>
+      )}
+      faqs={[
+        {
+          q: "Comment est calculé le prix d'une course ?",
+          a: "Notre algorithme prend en compte la distance via Google Maps, le type de véhicule (moto, voiture, utilitaire) et le délai choisi (Normal, Urgent, Flash)."
+        },
+        {
+          q: "Y a-t-il des majorations de nuit ou le week-end ?",
+          a: "Oui, une majoration s'applique pour les interventions en dehors des heures de bureau (8h-19h) et les jours fériés, afin de garantir la disponibilité de nos coursiers."
+        },
+        {
+          q: "Proposez-vous une facturation au forfait ?",
+          a: "Absolument. Pour les tournées régulières ou les navettes quotidiennes, nous établissons un forfait fixe mensuel très avantageux."
+        }
+      ]}
+    />
   );
 }
-
-

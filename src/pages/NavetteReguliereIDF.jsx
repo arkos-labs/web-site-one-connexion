@@ -1,43 +1,49 @@
-import PublicHeader from "../components/PublicHeader.jsx";
-import PublicFooter from "../components/PublicFooter.jsx";
+import SEOPageLayout from "../components/SEOPageLayout";
 
 export default function NavetteReguliereIDF() {
   return (
-    <div className="bg-white text-slate-900">
-      <PublicHeader />
-      <main className="blog-page">
-        <h1 className="text-3xl font-bold">Navette régulière Île‑de‑France</h1>
-        <p className="mt-2 text-sm text-slate-500">Publié le 29/01/2026 • Par One Connexion</p>
-        <p className="mt-6 text-slate-600">
-          Mettez en place des tournées régulières entre vos sites en Île‑de‑France. Créneaux fixes,
-          itinéraires optimisés et facturation mensuelle simplifiée.
-        </p>
-      
-        <section className="mt-10">
-          <h2 className="text-xl font-semibold">Pourquoi choisir One Connexion ?</h2>
-          <ul className="mt-4 list-disc pl-6 space-y-2"><li className="text-slate-600">Tournées programmées et créneaux récurrents pour vos flux internes.</li><li className="text-slate-600">Optimisation des coûts avec itinéraires planifiés.</li><li className="text-slate-600">Un interlocuteur dédié pour ajuster le planning.</li></ul>
-          <p className="mt-4 text-slate-600">Contactez-nous pour un devis rapide et une prise en charge immédiate.</p>
-        </section>
-        <section className="mt-8">
-          <h2 className="text-xl font-semibold">Cas d’usage B2B</h2>
-          <p className="mt-3 text-slate-600">Nos clients utilisent le service pour la messagerie quotidienne, les urgences et les tournées régulières. Nous adaptons les véhicules et les délais à chaque besoin.</p>
-        </section>
-      
-        <section className="mt-8"><p className="mt-3 text-slate-600">Les navettes régulières sont idéales pour les flux quotidiens : courrier, dossiers, échantillons, petites marchandises. Nous planifions des tournées optimisées et un passage à heure fixe.</p><p className="mt-3 text-slate-600">Chaque tournée est e en  et peut être ajustée en fonction de vos pics d’activité. La facturation est mensuelle et prévisible.</p>
-        </section>
+    <SEOPageLayout
+      title="Navettes Régulières & Tournées Paris"
+      subtitle="Optimisez vos flux internes avec des liaisons programmées à heures fixes dans toute l'Île-de-France."
+      heroImage="https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&q=80"
+      description={`
+        La mise en place de navettes régulières est la solution idéale pour les entreprises multisites souhaitant stabiliser leurs coûts logistiques et garantir une fluidité totale de leurs échanges internes.
 
-        <section className="mt-8">
-          <h2 className="text-xl font-semibold">Questions fréquentes</h2>
-          <div className="mt-3 space-y-3 text-slate-600">
-            <p><strong>Quels délais ?</strong> De l’urgent immédiat aux créneaux planifiés selon vos besoins.</p>
-            <p><strong>Preuve de livraison ?</strong> POD numérique horodaté, consultable par votre équipe.</p>
-            <p><strong>Facturation ?</strong> Mensuelle et claire, avec récapitulatif détaillé.</p>
-          </div>
-        </section>
-      </main>
-      <PublicFooter />
-    </div>
+        One Connexion conçoit pour vous des itinéraires sur-mesure, avec des passages programmés (quotidiens, hebdomadaires ou bi-hebdomadaires) pour le transport de votre courrier, de vos dossiers, de vos échantillons ou de vos petites marchandises.
+      `}
+      benefits={[
+        "Réduction significative des coûts de transport",
+        "Passages à heures fixes garantis",
+        "Chauffeurs dédiés connaissant vos procédures",
+        "Planification flexible selon vos besoins",
+        "Facturation mensuelle forfaitaire simplifiée"
+      ]}
+      useCases={[
+        "Liaisons siège social <-> Sites de production",
+        "Tournées de ramassage de courrier interne",
+        "Approvisionnement régulier de points de vente",
+        "Transferts de documents comptables et RH"
+      ]}
+      seoText={(
+        <>
+          <p>Le service de <strong>navette régulière en Île-de-France</strong> permet de transformer une logistique subie en un flux maîtrisé. One Connexion devient le trait d'union permanent entre vos différentes implantations géographiques, assurant une continuité de service irréprochable.</p>
+          <p>Confiez-nous la gestion de vos <strong>tournées logistiques programmées</strong> pour gagner en efficacité opérationnelle.</p>
+        </>
+      )}
+      faqs={[
+        {
+          q: "Pouvons-nous modifier la fréquence des passages ?",
+          a: "Oui, notre service est évolutif. Vous pouvez augmenter ou réduire le nombre de passages par semaine avec un simple préavis de 48 heures."
+        },
+        {
+          q: "Est-ce le même chauffeur qui intervient à chaque fois ?",
+          a: "Dans la mesure du possible, nous assignons un chauffeur attitré à vos tournées régulières pour garantir une parfaite connaissance de vos accès et de vos interlocuteurs."
+        },
+        {
+          q: "Comment sont calculés les forfaits ?",
+          a: "Le tarif est basé sur la distance totale de la tournée, le temps de mise à disposition et le type de véhicule requis. C'est la solution la plus économique pour les flux récurrents."
+        }
+      ]}
+    />
   );
 }
-
-

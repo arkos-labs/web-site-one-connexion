@@ -1,48 +1,49 @@
-import PublicHeader from "../components/PublicHeader.jsx";
-import PublicFooter from "../components/PublicFooter.jsx";
+import SEOPageLayout from "../components/SEOPageLayout";
 
 export default function MessagerieExpressIDF() {
   return (
-    <div className="bg-white text-slate-900">
-      <PublicHeader />
-      <main className="blog-page">
-        <h1 className="text-3xl font-bold">Messagerie express Île‑de‑France</h1>
-        <p className="mt-2 text-sm text-slate-500">Publié le 26/01/2026 • Par One Connexion</p>
-        <p className="mt-6 text-slate-600">
-          One Connexion propose une messagerie express B2B en Île‑de‑France : livraisons rapides,
-          POD et facturation mensuelle claire. Idéal pour les plis urgents, échantillons,
-          pièces techniques et marchandises sensibles.
-        </p>
-        <p className="mt-4 text-slate-600">
-          Nos équipes optimisent vos trajets pour réduire les délais et les coûts, avec des créneaux adaptés
-          à vos contraintes opérationnelles.
-        </p>
-      
-        <section className="mt-10">
-          <h2 className="text-xl font-semibold">Pourquoi choisir One Connexion ?</h2>
-          <ul className="mt-4 list-disc pl-6 space-y-2"><li className="text-slate-600">Transport express de plis, colis, échantillons et pièces sensibles.</li><li className="text-slate-600">Service B2B conçu pour la réactivité et la traçabilité.</li><li className="text-slate-600">Option de créneaux fixes pour une organisation régulière.</li></ul>
-          <p className="mt-4 text-slate-600">Contactez-nous pour un devis rapide et une prise en charge immédiate.</p>
-        </section>
-        <section className="mt-8">
-          <h2 className="text-xl font-semibold">Cas d’usage B2B</h2>
-          <p className="mt-3 text-slate-600">Nos clients utilisent le service pour la messagerie quotidienne, les urgences et les tournées régulières. Nous adaptons les véhicules et les délais à chaque besoin.</p>
-        </section>
-      
-        <section className="mt-8"><p className="mt-3 text-slate-600">Notre messagerie express cible les entreprises ayant besoin de fiabilité et d’une traçabilité complète. Les envois sont sécurisés, les livraisons confirmées par POD et les incidents gérés.</p><p className="mt-3 text-slate-600">Des options de créneaux fixes et de priorisation garantissent la continuité d’activité. Vous bénéficiez d’un interlocuteur dédié pour ajuster le planning.</p>
-        </section>
+    <SEOPageLayout
+      title="Messagerie Express Paris & IDF"
+      subtitle="Service de livraison ultra-rapide pour vos plis, colis et marchandises critiques en Île-de-France."
+      heroImage="https://images.unsplash.com/photo-1566576721346-d4a3b4eaad5b?auto=format&fit=crop&q=80"
+      description={`
+        La messagerie express One Connexion est conçue pour les entreprises qui ne peuvent pas attendre. Nous offrons une solution de transport point-à-point sans rupture de charge, garantissant l'intégrité de vos envois et le respect strict de vos impératifs horaires.
 
-        <section className="mt-8">
-          <h2 className="text-xl font-semibold">Questions fréquentes</h2>
-          <div className="mt-3 space-y-3 text-slate-600">
-            <p><strong>Quels délais ?</strong> De l’urgent immédiat aux créneaux planifiés selon vos besoins.</p>
-            <p><strong>Preuve de livraison ?</strong> POD numérique horodaté, consultable par votre équipe.</p>
-            <p><strong>Facturation ?</strong> Mensuelle et claire, avec récapitulatif détaillé.</p>
-          </div>
-        </section>
-      </main>
-      <PublicFooter />
-    </div>
+        De l'enlèvement immédiat à la remise en mains propres, notre service de messagerie allie technologie de suivi de pointe et savoir-faire logistique pour une expérience client irréprochable.
+      `}
+      benefits={[
+        "Enlèvement prioritaire en moins de 30 minutes",
+        "Zéro rupture de charge pour une sécurité maximale",
+        "Traçabilité GPS de l'enlèvement à la livraison",
+        "Accès à tous types de véhicules (Motos à Camions)",
+        "Assurance transport ad valorem disponible"
+      ]}
+      useCases={[
+        "Envois de documents originaux signés",
+        "Expédition d'échantillons commerciaux",
+        "Logistique de pièces détachées urgentes",
+        "Livraisons VIP pour clients stratégiques"
+      ]}
+      seoText={(
+        <>
+          <p>Opter pour une <strong>messagerie express à Paris</strong> avec One Connexion, c'est choisir la tranquillité d'esprit. Nos processus sont optimisés pour les flux <strong>B2B urgents</strong>, vous permettant de suivre chaque étape de la mission via notre plateforme digitale dédiée.</p>
+          <p>Nous intervenons sur tous les secteurs d'activité nécessitant une distribution rapide et fiable en région parisienne.</p>
+        </>
+      )}
+      faqs={[
+        {
+          q: "Quelle est la taille maximale des colis ?",
+          a: "Nous pouvons transporter tout type d'envoi, du simple pli jusqu'à la palette européenne (80x120), grâce à notre flotte variée."
+        },
+        {
+          q: "Assurez-vous des livraisons le samedi ?",
+          a: "Oui, notre service de messagerie express est opérationnel 7 jours sur 7 pour répondre aux besoins de continuité de nos clients pro."
+        },
+        {
+          q: "Comment obtenir une preuve de livraison ?",
+          a: "Dès que le colis est livré, vous recevez instantanément par email la preuve de livraison (POD) avec signature et nom du réceptionnaire."
+        }
+      ]}
+    />
   );
 }
-
-

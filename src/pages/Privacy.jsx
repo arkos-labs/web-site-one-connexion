@@ -1,51 +1,96 @@
 import PublicHeader from "../components/PublicHeader.jsx";
 import PublicFooter from "../components/PublicFooter.jsx";
+import { Shield, Lock, Eye, FileText } from "lucide-react";
 
 export default function Privacy() {
   return (
-    <div className="bg-white text-slate-900">
+    <div className="min-h-screen bg-slate-50 font-sans">
       <PublicHeader />
-      <main className="blog-page">
-        <p className="text-xs text-slate-500">Publié le <time dateTime="2026-01-26">26/01/2026</time> • Par One Connexion</p>
-        <h1>Politique de confidentialité</h1>
-        <p>
-          La protection de vos données est une priorité. One Connexion collecte uniquement les informations
-          nécessaires au traitement des commandes, à la communication et à la facturation.
-        </p>
 
-        <h2>Données collectées</h2>
-        <ul>
-          <li>Données d'identification (nom, email, téléphone).</li>
-          <li>Données liées aux livraisons (adresses, créneaux, POD).</li>
-          <li>Données de facturation (entreprise, références, montants).</li>
-        </ul>
+      <section className="pt-32 pb-16 md:pt-48 md:pb-24 bg-white border-b border-slate-100">
+        <div className="mx-auto max-w-4xl px-6">
+          <div className="flex items-center gap-4 mb-6">
+            <div className="h-12 w-12 bg-orange-50 rounded-2xl flex items-center justify-center text-orange-500">
+              <Shield size={24} />
+            </div>
+            <h1 className="text-3xl font-black text-slate-900 md:text-5xl tracking-tight">
+              Confidentialité & Données
+            </h1>
+          </div>
+          <p className="text-xl text-slate-600 leading-relaxed font-light">
+            Chez One Connexion, la sécurité de vos informations professionnelles est fondamentale.
+            Découvrez comment nous protégeons et utilisons vos données dans le cadre de nos services logistiques.
+          </p>
+        </div>
+      </section>
 
-        <h2>Finalités</h2>
-        <p>
-          Ces données permettent d'assurer la prise en charge et la preuve de livraison, ainsi que la
-          facturation mensuelle. Elles ne sont jamais revendues.
-        </p>
+      <main className="mx-auto max-w-4xl px-6 py-20">
+        <div className="space-y-16">
+          <section>
+            <div className="flex items-center gap-3 mb-6 text-slate-900">
+              <Eye size={20} className="text-orange-500" />
+              <h2 className="text-2xl font-black uppercase tracking-tight">Transparence de la Collecte</h2>
+            </div>
+            <div className="prose prose-slate max-w-none text-slate-600 leading-relaxed space-y-4">
+              <p>Nous collectons uniquement les informations essentielles à la fourniture de nos services de transport express :</p>
+              <ul className="list-disc pl-6 space-y-2">
+                <li><strong>Identification :</strong> Nom, prénom, email professionnel et numéro de téléphone.</li>
+                <li><strong>Logistique :</strong> Adresses de prise en charge et de destination, instructions spécifiques de livraison.</li>
+                <li><strong>Facturation :</strong> Coordonnées de l'entreprise, numéro de SIRET et références bancaires pour les virements.</li>
+              </ul>
+            </div>
+          </section>
 
-        <h2>Durée de conservation</h2>
-        <p>
-          Les données opérationnelles sont conservées selon les obligations légales. Vous pouvez demander
-          la suppression ou la rectification de vos données à tout moment.
-        </p>
+          <section>
+            <div className="flex items-center gap-3 mb-6 text-slate-900">
+              <Lock size={20} className="text-orange-500" />
+              <h2 className="text-2xl font-black uppercase tracking-tight">Sécurité des Échanges</h2>
+            </div>
+            <p className="text-slate-600 leading-relaxed mb-4">
+              Toutes les données transitant par notre plateforme sont chiffrées (SSL/TLS). Nos bases de données sont hébergées sur des serveurs hautement sécurisés, conformes aux standards européens les plus rigoureux.
+            </p>
+            <div className="bg-slate-100 p-6 rounded-2xl border border-slate-200 italic text-sm text-slate-500">
+              "Nous ne vendons ni n'échangeons jamais vos données à des tiers à des fins commerciales. Vos informations servent exclusivement au bon déroulement de vos courses."
+            </div>
+          </section>
 
-        <h2>Vos droits</h2>
-        <p>
-          Conformément au RGPD, vous disposez d'un droit d'accès, de rectification et de suppression.
-          Vous pouvez aussi demander la portabilité de vos données.
-        </p>
+          <section>
+            <div className="flex items-center gap-3 mb-6 text-slate-900">
+              <FileText size={20} className="text-orange-500" />
+              <h2 className="text-2xl font-black uppercase tracking-tight">Vos Droits & Contrôle</h2>
+            </div>
+            <p className="text-slate-600 leading-relaxed mb-6">
+              Conformément au RGPD, vous disposez d'un contrôle total sur vos données personnelles :
+            </p>
+            <div className="grid md:grid-cols-2 gap-4">
+              {[
+                "Droit d'accès et de consultation",
+                "Droit de rectification immédiate",
+                "Droit à l'effacement (Droit à l'oubli)",
+                "Droit à la portabilité des données"
+              ].map((right, idx) => (
+                <div key={idx} className="flex items-center gap-3 p-4 bg-white rounded-xl border border-slate-200">
+                  <div className="h-2 w-2 bg-orange-500 rounded-full" />
+                  <span className="text-sm font-bold text-slate-700">{right}</span>
+                </div>
+              ))}
+            </div>
+          </section>
 
-        <h2>Contact</h2>
-        <p>
-          Pour toute demande liée à la confidentialité : contact@oneconnexion.fr
-        </p>
+          <footer className="pt-12 border-t border-slate-200">
+            <p className="text-sm text-slate-500">
+              Pour toute question relative à vos données personnelles, contactez notre délégué à la protection des données (DPO) :
+              <a href="mailto:privacy@oneconnexion.fr" className="text-orange-600 font-bold ml-1 hover:underline">privacy@oneconnexion.fr</a>
+            </p>
+            <p className="text-xs text-slate-400 mt-4 italic">Dernière mise à jour : 23 février 2026</p>
+          </footer>
+        </div>
       </main>
+
       <PublicFooter />
     </div>
   );
 }
+
 
 

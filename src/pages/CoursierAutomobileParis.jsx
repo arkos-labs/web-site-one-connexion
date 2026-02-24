@@ -1,43 +1,49 @@
-import PublicHeader from "../components/PublicHeader.jsx";
-import PublicFooter from "../components/PublicFooter.jsx";
+import SEOPageLayout from "../components/SEOPageLayout";
 
 export default function CoursierAutomobileParis() {
   return (
-    <div className="bg-white text-slate-900">
-      <PublicHeader />
-      <main className="blog-page">
-        <h1 className="text-3xl font-bold">Coursier automobile Paris</h1>
-        <p className="mt-2 text-sm text-slate-500">Publié le 19/02/2026 • Par One Connexion</p>
-        <p className="mt-6 text-slate-600">
-          Livraison critique de pièces détachées pour garages et concessions. Réactivité maximale pour
-          éviter l’immobilisation de véhicules (AOG/VOG).
-        </p>
-      
-        <section className="mt-10">
-          <h2 className="text-xl font-semibold">Pourquoi choisir One Connexion ?</h2>
-          <ul className="mt-4 list-disc pl-6 space-y-2"><li className="text-slate-600">Livraison de pièces pour éviter l’immobilisation de véhicules.</li><li className="text-slate-600">Courses urgentes entre fournisseurs et garages.</li><li className="text-slate-600"> en  pour coordination atelier.</li></ul>
-          <p className="mt-4 text-slate-600">Contactez-nous pour un devis rapide et une prise en charge immédiate.</p>
-        </section>
-        <section className="mt-8">
-          <h2 className="text-xl font-semibold">Cas d’usage B2B</h2>
-          <p className="mt-3 text-slate-600">Nos clients utilisent le service pour la messagerie quotidienne, les urgences et les tournées régulières. Nous adaptons les véhicules et les délais à chaque besoin.</p>
-        </section>
-      
-        <section className="mt-8"><p className="mt-3 text-slate-600">Pour éviter l’immobilisation de véhicules, nous livrons pièces et documents en urgence entre fournisseurs, garages et concessions.</p><p className="mt-3 text-slate-600"> en  et coordination atelier pour une meilleure planification.</p>
-        </section>
+    <SEOPageLayout
+      title="Coursier Automobile Paris"
+      subtitle="Livraison critique de pièces détachées, cartes grises et documents pour concessions et garages."
+      heroImage="https://images.unsplash.com/photo-1492144534655-ad79c964c9d7?auto=format&fit=crop&q=80"
+      description={`
+        Dans l'industrie automobile, l'immobilisation d'un véhicule est un coût majeur. One Connexion propose un service de coursier spécialisé pour les concessions, les garages et les carrosseries à Paris et en Île-de-France. 
 
-        <section className="mt-8">
-          <h2 className="text-xl font-semibold">Questions fréquentes</h2>
-          <div className="mt-3 space-y-3 text-slate-600">
-            <p><strong>Quels délais ?</strong> De l’urgent immédiat aux créneaux planifiés selon vos besoins.</p>
-            <p><strong>Preuve de livraison ?</strong> POD numérique horodaté, consultable par votre équipe.</p>
-            <p><strong>Facturation ?</strong> Mensuelle et claire, avec récapitulatif détaillé.</p>
-          </div>
-        </section>
-      </main>
-      <PublicFooter />
-    </div>
+        Nous assurons l'approvisionnement ultra-rapide en pièces de rechange (mécanique, carrosserie) et le transport sécurisé de documents administratifs comme les cartes grises ou les dossiers de financement.
+      `}
+      benefits={[
+        "Réaction flash pour pièces de rechange critiques",
+        "Prise en charge de pièces lourdes ou encombrantes",
+        "Livraison sécurisée de documents administratifs",
+        "Suivi en temps réel pour coordination d'atelier",
+        "Couverture totale des pôles automobiles d'IDF"
+      ]}
+      useCases={[
+        "Transfert urgent de pièces (optiques, calculateurs)",
+        "Récupération de dossiers de vente originaux",
+        "Échanges entre concessions d'un même groupe",
+        "Livraison de doubles de clés en urgence"
+      ]}
+      seoText={(
+        <>
+          <p>Le <strong>coursier automobile à Paris</strong> doit répondre à des impératifs de flux tendus. Que vous soyez un agent de marque ou une concession indépendante, One Connexion fluidifie votre logistique amont en réduisant les temps d'attente de vos techniciens d'atelier.</p>
+          <p>Réduisez le temps d'immobilisation de vos clients grâce à notre <strong>messagerie automobile express</strong> disponible 7j/7.</p>
+        </>
+      )}
+      faqs={[
+        {
+          q: "Pouvez-vous transporter des pièces volumineuses comme des pare-chocs ?",
+          a: "Oui, nous disposons de fourgonnettes et de camions équipés pour transporter des pièces de carrosserie ou de mécanique de grand format."
+        },
+        {
+          q: "Livrez-vous les documents d'immatriculation en mains propres ?",
+          a: "Absolument. Les documents sensibles (cartes grises, WW) sont traités avec la plus grande sécurité et remis contre signature obligatoire."
+        },
+        {
+          q: "Quels sont vos tarifs pour les tournées inter-garages ?",
+          a: "Nous proposons des forfaits dégressifs pour les groupes automobiles ayant besoin de navettes régulières entre leurs différents sites."
+        }
+      ]}
+    />
   );
 }
-
-

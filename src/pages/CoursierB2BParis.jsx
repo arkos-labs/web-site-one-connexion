@@ -1,53 +1,49 @@
-import PublicHeader from "../components/PublicHeader.jsx";
-import PublicFooter from "../components/PublicFooter.jsx";
+import SEOPageLayout from "../components/SEOPageLayout";
 
 export default function CoursierB2BParis() {
   return (
-    <div className="bg-white text-slate-900">
-      <PublicHeader />
-      <main className="blog-page">
-        <h1 className="text-3xl font-bold">Coursier B2B à Paris</h1>
-        <p className="mt-2 text-sm text-slate-500">Publié le 20/01/2026 • Par One Connexion</p>
-        <p className="mt-6 text-slate-600">
-          One Connexion accompagne les entreprises parisiennes avec un service de messagerie B2B rapide,
-          fiable et traçable. Notre flotte 2‑roues et véhicules adaptés permet d’acheminer plis, colis
-          et marchandises urgentes dans Paris intra‑muros avec preuve de livraison (POD).
-        </p>
-        <p className="mt-4 text-slate-600">
-          Les secteurs optique, dentaire, juridique, santé, événementiel et automobile ont des contraintes
-          spécifiques (délais serrés, documents sensibles, pièces critiques). Nous proposons des courses
-          urgentes à la demande, des navettes régulières, et des circuits optimisés pour limiter les coûts.
-        </p>
-        <p className="mt-4 text-slate-600">
-          Demandez un devis instantané ou planifiez vos tournées récurrentes. Nous couvrons Paris et l’Île‑de‑France
-          avec une prise en charge rapide et une facturation claire.
-        </p>
-      
-        <section className="mt-10">
-          <h2 className="text-xl font-semibold">Pourquoi choisir One Connexion ?</h2>
-          <ul className="mt-4 list-disc pl-6 space-y-2"><li className="text-slate-600">Délais courts, prise en charge rapide et délais maîtrisés pour vos flux critiques.</li><li className="text-slate-600">POD numérique et facturation mensuelle claire pour simplifier l’administratif.</li><li className="text-slate-600">Flotte adaptée : moto, voiture, utilitaire selon le gabarit et l’urgence.</li></ul>
-          <p className="mt-4 text-slate-600">Contactez-nous pour un devis rapide et une prise en charge immédiate.</p>
-        </section>
-        <section className="mt-8">
-          <h2 className="text-xl font-semibold">Cas d’usage B2B</h2>
-          <p className="mt-3 text-slate-600">Nos clients utilisent le service pour la messagerie quotidienne, les urgences et les tournées régulières. Nous adaptons les véhicules et les délais à chaque besoin.</p>
-        </section>
-      
-        <section className="mt-8"><p className="mt-3 text-slate-600">En cœur de ville, chaque minute compte. Nous proposons des créneaux immédiats, un dispatch optimisé et un pilotage centralisé pour les directions logistiques et services administratifs. La preuve de livraison est horodatée et centralisée.</p><p className="mt-3 text-slate-600">Nous opérons sur l’ensemble de Paris intra‑muros et adaptons la prise en charge selon la criticité : course urgente, envoi planifié, ou navette récurrente. Vous gardez la maîtrise de vos coûts avec une facturation mensuelle claire.</p>
-        </section>
+    <SEOPageLayout
+      title="Coursier B2B Paris & IDF"
+      subtitle="Solution de transport express et messagerie dédiée aux entreprises parisiennes."
+      heroImage="https://images.unsplash.com/photo-1580674285054-bed31e145f59?auto=format&fit=crop&q=80"
+      description={`
+        One Connexion est le partenaire logistique privilégié des entreprises à Paris et en Île-de-France. Nous comprenons que chaque envoi B2B porte un enjeu commercial, juridique ou opérationnel majeur. 
 
-        <section className="mt-8">
-          <h2 className="text-xl font-semibold">Questions fréquentes</h2>
-          <div className="mt-3 space-y-3 text-slate-600">
-            <p><strong>Quels délais ?</strong> De l’urgent immédiat aux créneaux planifiés selon vos besoins.</p>
-            <p><strong>Preuve de livraison ?</strong> POD numérique horodaté, consultable par votre équipe.</p>
-            <p><strong>Facturation ?</strong> Mensuelle et claire, avec récapitulatif détaillé.</p>
-          </div>
-        </section>
-      </main>
-      <PublicFooter />
-    </div>
+        C'est pourquoi nous avons conçu une offre de messagerie flexible, capable de s'adapter à vos pics d'activité comme à vos besoins récurrents, avec une exigence de fiabilité absolue.
+      `}
+      benefits={[
+        "Réactivité record : Enlèvement en moins de 20 min",
+        "Preuve de livraison (POD) numérique instantanée",
+        "Facturation mensuelle consolidée pour les pros",
+        "Flotte multi-véhicules (Moto, Auto, Camion)",
+        "Service client dédié aux comptes entreprises"
+      ]}
+      useCases={[
+        "Livraison urgente de plis et colis",
+        "Optimisation de tournées de distribution",
+        "Navettes inter-filiales programmées",
+        "Gestion des retours et SAV clients"
+      ]}
+      seoText={(
+        <>
+          <p>Le <strong>transport B2B à Paris</strong> exige une connaissance parfaite du terrain. Nos coursiers sont des professionnels aguerris qui représentent votre image de marque lors de chaque livraison. En choisissant One Connexion, vous optez pour une <strong>logistique urbaine</strong> performante et décarbonée.</p>
+          <p>De la petite PME au grand groupe international, nous accompagnons tous les acteurs économiques de la région parisienne dans leurs défis quotidiens.</p>
+        </>
+      )}
+      faqs={[
+        {
+          q: "Comment ouvrir un compte professionnel ?",
+          a: "L'ouverture se fait en quelques clics. Vous bénéficierez alors d'une interface de gestion dédiée et d'une facturation mensuelle à 30 jours."
+        },
+        {
+          q: "Quelles zones couvrez-vous ?",
+          a: "Nous intervenons sur l'ensemble de Paris intra-muros et dans tous les départements d'Île-de-France (75, 77, 78, 91, 92, 93, 94, 95)."
+        },
+        {
+          q: "Gérez-vous la traçabilité des envois ?",
+          a: "Oui, chaque course est suivie en temps réel. Vous recevez une notification dès que le destinataire a signé la preuve de réception numérique."
+        }
+      ]}
+    />
   );
 }
-
-

@@ -1,620 +1,463 @@
 import { useState, useEffect } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import { generateOrderPdf } from "../lib/pdfGenerator";
-import { Loader2 } from "lucide-react";
+import {
+  notifyOrderAccepted, notifyOrderAssigned, notifyDelivered, notifyOrderCancelled
+} from "../lib/telegram";
+import {
+  Loader2, ArrowLeft, MapPin, Clock, Package, User, Phone,
+  FileText, CheckCircle2, Truck, AlertTriangle, Save, ChevronRight
+} from "lucide-react";
+import AdminPageHeader from "../components/admin/AdminPageHeader";
+
+const STATUS_CONFIG = {
+  pending_acceptance: { label: "Nouveau", cls: "bg-rose-50 text-rose-700 border-rose-200", step: 0 },
+  pending: { label: "En attente", cls: "bg-rose-50 text-rose-700 border-rose-200", step: 0 },
+  accepted: { label: "Validé", cls: "bg-indigo-50 text-indigo-700 border-indigo-200", step: 1 },
+  assigned: { label: "Assigné", cls: "bg-amber-50 text-amber-700 border-amber-200", step: 2 },
+  driver_accepted: { label: "Accepté chauffeur", cls: "bg-emerald-50 text-emerald-700 border-emerald-200", step: 3 },
+  in_progress: { label: "Enlevée", cls: "bg-blue-50 text-blue-700 border-blue-200", step: 4 },
+  delivered: { label: "Livrée ✓", cls: "bg-slate-100 text-slate-700 border-slate-300", step: 5 },
+  cancelled: { label: "Annulée", cls: "bg-red-50 text-red-600 border-red-200", step: -1 },
+};
+
+const PIPELINE = [
+  { key: "pending_acceptance", label: "Nouveau" },
+  { key: "accepted", label: "Validé" },
+  { key: "assigned", label: "Assigné" },
+  { key: "driver_accepted", label: "Accepté" },
+  { key: "in_progress", label: "Enlevé" },
+  { key: "delivered", label: "Livré" },
+];
 
 export default function AdminOrderDetails() {
   const navigate = useNavigate();
   const { id } = useParams();
-
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [client, setClient] = useState(null);
   const [drivers, setDrivers] = useState([]);
   const [edit, setEdit] = useState({
-    pickupTime: "",
-    deliveryDeadline: "",
-    contactPhone: "",
-    accessCode: "",
-    dispatchNote: "",
-    etaMinutes: "",
-    driverId: "",
-    serviceLevel: "",
+    pickupTime: "", deliveryDeadline: "", contactPhone: "",
+    accessCode: "", dispatchNote: "", driverId: "", serviceLevel: "",
   });
 
-  // Auto-calculate delivery time based on formula in Admin
   useEffect(() => {
     if (!edit.pickupTime || !edit.serviceLevel) return;
-
     const [h, m] = edit.pickupTime.split(':').map(Number);
     if (isNaN(h) || isNaN(m)) return;
-
-    // Add delay based on formula
-    const delays = {
-      super: 90,   // 1h30
-      exclu: 180,  // 3h
-      normal: 240  // 4h
-    };
-
-    const totalMinutes = (h * 60) + m + (delays[edit.serviceLevel] || 240);
-    const newH = Math.floor(totalMinutes / 60) % 24;
-    const newM = totalMinutes % 60;
-
-    const newTime = `${String(newH).padStart(2, '0')}:${String(newM).padStart(2, '0')}`;
-
-    if (edit.deliveryDeadline !== newTime) {
-      setEdit(prev => ({ ...prev, deliveryDeadline: newTime }));
-    }
+    const delays = { super: 90, exclu: 180, normal: 240 };
+    const total = (h * 60) + m + (delays[edit.serviceLevel] || 240);
+    const newTime = `${String(Math.floor(total / 60) % 24).padStart(2, '0')}:${String(total % 60).padStart(2, '0')}`;
+    if (edit.deliveryDeadline !== newTime) setEdit(p => ({ ...p, deliveryDeadline: newTime }));
   }, [edit.pickupTime, edit.serviceLevel]);
 
-  useEffect(() => {
-    fetchOrder();
-    fetchDrivers();
-  }, [id]);
+  useEffect(() => { fetchOrder(); fetchDrivers(); }, [id]);
 
-  const fetchDrivers = async (idToKeep = null) => {
+  const fetchDrivers = async (keepId = null) => {
     const { data } = await supabase.from('profiles').select('id, details, is_online').eq('role', 'courier');
     if (data) {
-      const currentId = idToKeep || edit.driverId || order?.driver_id;
-      const filtered = data
-        .filter(d => d.is_online === true || d.id === currentId)
-        .map(d => ({
-          id: d.id,
-          name: d.details?.full_name || d.details?.company || 'Chauffeur inconnu',
-          isOnline: d.is_online
-        }));
-      setDrivers(filtered);
+      const currentId = keepId || edit.driverId || order?.driver_id;
+      setDrivers(data.filter(d => d.is_online || d.id === currentId).map(d => ({
+        id: d.id,
+        name: d.details?.full_name || d.details?.company || 'Chauffeur',
+        isOnline: d.is_online
+      })));
     }
   };
 
   const fetchOrder = async () => {
-    try {
-      setLoading(true);
-      const { data: ord, error } = await supabase.from('orders').select('*').eq('id', id).single();
-
-      if (error) {
-        console.error("Error loading order:", error);
-        setLoading(false);
-        return;
-      }
-
-      if (ord) {
-        setOrder(ord);
-        // Fetch Client
-        if (ord.client_id) {
-          const { data: profile } = await supabase.from('profiles').select('*').eq('id', ord.client_id).single();
-          if (profile) setClient(profile);
-        }
-
-        const safeTime = (dateStr) => {
-          if (!dateStr) return "";
-          try {
-            const d = new Date(dateStr);
-            if (isNaN(d.getTime())) return "";
-            return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-          } catch {
-            return "";
-          }
-        };
-
-        const dDeadline = safeTime(ord.delivery_deadline);
-        const pTime = ord.scheduled_at ? new Date(ord.scheduled_at).toLocaleTimeString().slice(0, 5) : "";
-
-        setEdit({
-          pickupTime: pTime,
-          deliveryDeadline: dDeadline || ord.notes?.match(/Deadline: ([\d:]+)/)?.[1] || "",
-          contactPhone: ord.pickup_phone || ord.notes?.match(/Contact: ([\d\s]+)/)?.[1] || "",
-          accessCode: ord.pickup_access_code || ord.notes?.match(/Code: (\w+)/)?.[1] || "",
-          dispatchNote: ord.notes?.match(/Note: (.*)/)?.[1] || "",
-          etaMinutes: "",
-          driverId: ord.driver_id || "",
-          serviceLevel: ord.service_level || "normal",
-        });
-        fetchDrivers(ord.driver_id);
-      }
-    } catch (e) {
-      console.error("Crash during fetchOrder:", e);
-    } finally {
-      setLoading(false);
+    setLoading(true);
+    const { data: ord, error } = await supabase.from('orders').select('*').eq('id', id).single();
+    if (error || !ord) { setLoading(false); return; }
+    setOrder(ord);
+    if (ord.client_id) {
+      const { data: profile } = await supabase.from('profiles').select('*').eq('id', ord.client_id).single();
+      if (profile) setClient(profile);
     }
+    const safeTime = (d) => { if (!d) return ""; try { return new Date(d).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); } catch { return ""; } };
+    setEdit({
+      pickupTime: ord.scheduled_at ? new Date(ord.scheduled_at).toLocaleTimeString().slice(0, 5) : "",
+      deliveryDeadline: safeTime(ord.delivery_deadline),
+      contactPhone: ord.pickup_phone || "",
+      accessCode: ord.pickup_access_code || "",
+      dispatchNote: ord.notes?.match(/Dispatch: (.*)/)?.[1] || "",
+      driverId: ord.driver_id || "",
+      serviceLevel: ord.service_level || "normal",
+    });
+    fetchDrivers(ord.driver_id);
+    setLoading(false);
   };
 
   const saveEdits = async () => {
     if (!order) return;
     setSaving(true);
-
+    const datePart = (order.scheduled_at || order.created_at).split('T')[0];
     const updates = {
       pickup_phone: edit.contactPhone,
       pickup_access_code: edit.accessCode,
-      notes: `${order.notes || ''} | Dispatch: ${edit.dispatchNote}`,
-      driver_id: edit.driverId || null, // Update driver
+      service_level: edit.serviceLevel,
+      driver_id: edit.driverId || null,
+      notes: `${(order.notes || '').split(' | Dispatch:')[0]} | Dispatch: ${edit.dispatchNote}`,
+      ...(edit.pickupTime ? { scheduled_at: `${datePart}T${edit.pickupTime}:00` } : {}),
+      ...(edit.deliveryDeadline ? { delivery_deadline: `${datePart}T${edit.deliveryDeadline}:00` } : {}),
     };
-
-    // Attempt to update deadline if provided
-    if (edit.deliveryDeadline && order.created_at) {
-      const datePart = order.scheduled_at ? order.scheduled_at.split('T')[0] : order.created_at.split('T')[0];
-      updates.delivery_deadline = `${datePart}T${edit.deliveryDeadline}:00`;
-    }
-
-    if (edit.serviceLevel) {
-      updates.service_level = edit.serviceLevel;
-    }
-
-    // Attempt to update pickup time
-    if (edit.pickupTime && order.created_at) {
-      const datePart = order.scheduled_at ? order.scheduled_at.split('T')[0] : order.created_at.split('T')[0];
-      updates.scheduled_at = `${datePart}T${edit.pickupTime}:00`;
-    }
-
-    // Si un chauffeur est assigné, passer en 'assigned' pour que le chauffeur voie la commande
-    // - pending / accepted → assigned (dispatch)
-    // - assigned / driver_accepted / in_progress + changement chauffeur → reassign
-    if (updates.driver_id) {
-      const driverChanged = updates.driver_id !== order.driver_id;
+    if (edit.driverId) {
+      const driverChanged = edit.driverId !== order.driver_id;
       const canAssign = ['pending', 'pending_acceptance', 'accepted'].includes(order.status);
       const canReassign = ['assigned', 'driver_accepted', 'in_progress'].includes(order.status) && driverChanged;
       if (canAssign || canReassign) {
         updates.status = 'assigned';
+        // Notification Telegram — mission assignée à un chauffeur
+        const driverName = drivers.find(d => d.id === edit.driverId)?.name || 'Chauffeur';
+        notifyOrderAssigned({ ...order, ...updates }, driverName);
       }
     }
-
     const { error } = await supabase.from('orders').update(updates).eq('id', order.id);
-
-    if (!error) {
-      fetchOrder();
-      alert("Enregistré avec succès");
-    } else {
-      console.error(error);
-      alert("Erreur sauvegarde: " + error.message);
-    }
+    if (!error) { await fetchOrder(); } else alert("Erreur: " + error.message);
     setSaving(false);
   };
-
-  // ...
 
   const updateStatus = async (newStatus) => {
     setSaving(true);
-    const { error } = await supabase.from('orders').update({ status: newStatus }).eq('id', id);
-    if (!error) {
-      await fetchOrder();
+    const clientName = client?.details?.company || client?.details?.full_name || 'Client';
+    const driverName = drivers.find(d => d.id === order.driver_id)?.name || 'Chauffeur';
+
+    // Vérifier la session avant la mise à jour
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      alert("⚠️ Votre session a expiré. Veuillez vous reconnecter.");
+      setSaving(false);
+      return;
     }
+
+    // Utiliser .select() pour confirmer que la ligne a bien été modifiée
+    const { data: updated, error } = await supabase
+      .from('orders')
+      .update({ status: newStatus })
+      .eq('id', id)
+      .select('id, status');
+
+    if (error) {
+      console.error('updateStatus error:', error);
+      alert(`Erreur mise à jour statut: ${error.message}`);
+      setSaving(false);
+      return;
+    }
+
+    // Vérifier que l'update a bien eu lieu (RLS peut bloquer silencieusement)
+    if (!updated || updated.length === 0) {
+      alert("⚠️ Session admin expirée — veuillez vous déconnecter et vous reconnecter.");
+      setSaving(false);
+      return;
+    }
+
+    // ✅ Mise à jour confirmée → envoyer les notifications Telegram
+    if (newStatus === 'accepted') notifyOrderAccepted(order, clientName);
+    if (newStatus === 'assigned') notifyOrderAssigned(order, driverName);
+    if (newStatus === 'delivered') notifyDelivered(order, driverName);
+    if (newStatus === 'cancelled') notifyOrderCancelled(order, 'Admin');
+
+    await fetchOrder();
     setSaving(false);
   };
 
-  if (loading) return <div className="flex justify-center p-20"><Loader2 className="animate-spin text-slate-400" /></div>;
 
-  if (!order) {
-    return (
-      <div className="rounded-3xl bg-white p-6 shadow-sm">
-        <div className="mb-3 text-lg font-bold text-slate-900">Commande introuvable</div>
-        <p className="text-sm text-slate-500">L’identifiant {id} n’existe pas.</p>
-        <Link to="/admin/orders" className="mt-4 inline-flex rounded-full bg-slate-900 px-4 py-2 text-xs font-bold text-white">Retour</Link>
-      </div>
-    );
-  }
+  if (loading) return (
+    <div className="flex items-center justify-center py-32 gap-3 text-slate-400">
+      <Loader2 className="animate-spin" size={24} />
+      <span className="text-sm font-bold">Chargement…</span>
+    </div>
+  );
 
-  const timeline = [
-    { label: "Commande créée", value: order.date },
-    { label: "Dispatch chauffeur", value: order.dispatchedAt ? new Date(order.dispatchedAt).toLocaleString("fr-FR") : "—" },
-    { label: "En cours (au compteur)", value: order.status === "En cours" || order.status === "Terminée" ? "OK" : "—" },
-    { label: "Terminée", value: order.status === "Terminée" ? (order.completedAt ? new Date(order.completedAt).toLocaleString("fr-FR") : "OK") : "—" },
-  ];
+  if (!order) return (
+    <div className="text-center py-20">
+      <div className="text-2xl font-black text-slate-300 mb-3">Commande introuvable</div>
+      <button onClick={() => navigate('/admin/orders')} className="text-sm font-bold text-orange-500 hover:underline">← Retour aux missions</button>
+    </div>
+  );
 
-  // ======================
-  // Parse order.notes for precise data rendering
-  // ======================
+  const sc = STATUS_CONFIG[order.status] || STATUS_CONFIG.pending;
+  const currentStep = sc.step;
   const notesStr = order.notes || "";
-  const nEntreprisePick = notesStr.match(/Entreprise Pick: (.*?)(\.|$|Contact)/)?.[1]?.trim();
-  const nContactPick = notesStr.match(/Contact Pick: (.*?)(\.|$|Phone|Email)/)?.[1]?.trim();
-  const nPhonePick = notesStr.match(/Phone Pick: (.*?)(\.|$|Email|Code)/)?.[1]?.trim();
-  const nEmailEnlev = notesStr.match(/Email Enlev: (.*?)(\.|$|Entreprise|Contact|Instructions)/)?.[1]?.trim();
   const pCode = order.pickup_access_code || notesStr.match(/(?:Code Enlev:|Code :|Code:)\s?([^.]+)/)?.[1]?.trim();
-
-  const nEntrepriseDeliv = notesStr.match(/Entreprise Deliv: (.*?)(\.|$|Contact)/)?.[1]?.trim();
-  const nContactDeliv = notesStr.match(/Contact Deliv: (.*?)(\.|$|Phone|Instructions)/)?.[1]?.trim();
-  const nPhoneDeliv = notesStr.match(/Phone Deliv: (.*?)(\.|$|Code|Instructions)/)?.[1]?.trim();
   const dCode = order.delivery_access_code || notesStr.match(/(?:Code Dest:|Code Deliv:)\s?([^.]+)/)?.[1]?.trim();
-
-  const nInstructions = notesStr.match(/Instructions:\s*(.*?)(?:\.|$)/)?.[1]?.trim();
-  const nPNote = notesStr.match(/Instructions:\s*(.*?)\s*\//)?.[1]?.trim() || (nInstructions && !nInstructions.includes('/') ? nInstructions : null);
-  const nDNote = notesStr.match(/Instructions:\s*(.*?)\s*\/\s*(.*)(?:\.|$)/)?.[2]?.trim();
-
-  // Guest order parsing
-  const gBillingMatch = notesStr.match(/Billing: (.*?) \| (.*?) \| (.*?)$/);
-  const gBillingName = gBillingMatch?.[1]?.trim();
-  const gBillingCompany = gBillingMatch?.[2]?.trim();
-  const gBillingAddress = gBillingMatch?.[3]?.trim();
-  const gEmail = notesStr.match(/Email: ([^\s]+)/)?.[1]?.trim();
-  const gPhone = notesStr.match(/Phone: ([\d\s]+)/)?.[1]?.trim();
-  const gContact = notesStr.match(/Contact: ([^(]+)/)?.[1]?.trim();
-
-  // Pick/Deliv computed values
-  const pickupName = order.pickup_name || nEntreprisePick || nContactPick || "—";
-  const pickupPhone = order.pickup_phone || nPhonePick || gPhone || "—";
-
-  const deliveryName = order.delivery_name || nEntrepriseDeliv || nContactDeliv || "—";
-  const deliveryPhone = order.delivery_phone || nPhoneDeliv || "—";
-
-  // Unified display values for Client/Expediteur
-  const displayCompany = client?.details?.company || order.expediteur?.nom || gBillingCompany || nEntreprisePick || "";
-  const displayContactName = client?.details?.contact || client?.details?.full_name || order.nom_client || gBillingName || gContact || nContactPick || pickupName || "—";
-  const displayEmail = client?.details?.email || order.email_client || order.expediteur?.email || gEmail || nEmailEnlev || "—";
-  const displayPhone = client?.details?.phone || order.telephone_client || order.expediteur?.telephone || gPhone || pickupPhone || "—";
-  const displayAddress = client?.details?.address || order.facturation?.adresse || gBillingAddress || order.pickup_address || "—";
-  const displayTopName = String(displayCompany || displayContactName);
-
-  // Package computed values
-  const packageNature = order.package_type || order.delivery_type || order.notes?.split(' - ')?.[0] || "—";
-  const gWeight = notesStr.match(/Poids: ([\d\w\s,.<>]+)/)?.[1];
-  const packageWeight = order.weight ? String(`${order.weight} kg`) : String(gWeight && gWeight !== "undefined" ? gWeight : "—");
-  const gDims = notesStr.match(/Dims: ([\d\w\sxX]+)/)?.[1] || notesStr.match(/Dimensions: ([^.]+)/)?.[1];
-  const packageDims = order.package_description || String(gDims && gDims !== "undefined" ? gDims : "");
-
+  const nInstructions = notesStr.match(/Instructions:\s*(.*?)(?:\.|$)/)?.[1]?.trim() || "";
+  const nPNote = nInstructions.split('/')?.[0]?.trim();
+  const nDNote = nInstructions.split('/')?.[1]?.trim();
+  const pickupName = order.pickup_name || notesStr.match(/(?:Entreprise Pick|Contact Pick):\s*(.*?)(?:\.|$)/)?.[1]?.trim() || "—";
+  const deliveryName = order.delivery_name || notesStr.match(/(?:Entreprise Deliv|Contact Deliv):\s*(.*?)(?:\.|$)/)?.[1]?.trim() || "—";
+  const pickupPhone = order.pickup_phone || notesStr.match(/Phone Pick:\s*(.*?)(?:\.|$)/)?.[1]?.trim() || "—";
+  const deliveryPhone = order.delivery_phone || notesStr.match(/Phone Deliv:\s*(.*?)(?:\.|$)/)?.[1]?.trim() || "—";
+  const displayCompany = client?.details?.company || "";
+  const displayEmail = client?.details?.email || "—";
+  const packageNature = order.package_type || "—";
+  const packageWeight = order.weight ? `${order.weight} kg` : "—";
+  const assignedDriver = drivers.find(d => d.id === order.driver_id);
 
   return (
-    <div className="grid gap-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <div className="text-xs font-semibold uppercase tracking-wider text-slate-400">Commande</div>
-          <h1 className="text-2xl font-bold text-slate-900">#{order.id.slice(0, 8)}</h1>
-          <div className="text-sm text-slate-500">
-            {displayTopName}
-            {!client?.id && !order.user_id && (
-              <span className="ml-2 inline-block px-1.5 py-0.5 rounded text-[10px] font-bold bg-orange-100 text-orange-600 border border-orange-200 uppercase">
-                Invité (Pas de compte)
-              </span>
+    <div className="space-y-6 pb-20">
+      <AdminPageHeader
+        title={`Commande #${order.id.slice(0, 8)}`}
+        subtitle={`${order.pickup_city || '—'} → ${order.delivery_city || '—'} · ${displayCompany || pickupName}`}
+        backTo="/admin/orders"
+        actions={
+          <div className="flex items-center gap-3 flex-wrap">
+            <span className={`inline-flex items-center rounded-xl border px-3 py-1.5 text-xs font-black uppercase tracking-widest ${sc.cls}`}>
+              {sc.label}
+            </span>
+            <button
+              onClick={() => generateOrderPdf(order, client)}
+              className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-all shadow-sm"
+            >
+              <FileText size={14} /> Bon de commande PDF
+            </button>
+            {['pending_acceptance', 'pending'].includes(order.status) && (
+              <button onClick={() => updateStatus('accepted')} disabled={saving} className="rounded-xl bg-slate-900 px-5 py-2.5 text-xs font-black text-white hover:bg-orange-500 transition-all disabled:opacity-50">ACCEPTER</button>
             )}
-            • {order.pickup_city} &gt; {order.delivery_city}
+            {order.status === 'accepted' && (
+              <button onClick={() => {
+                const el = document.getElementById('driver-select');
+                if (el) {
+                  el.focus();
+                  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+              }} disabled={saving} className="rounded-xl bg-indigo-600 px-5 py-2.5 text-xs font-black text-white hover:bg-indigo-700 transition-all disabled:opacity-50">DISPATCHER</button>
+            )}
+            {order.status === 'in_progress' && (
+              <button onClick={() => updateStatus('delivered')} disabled={saving} className="rounded-xl bg-emerald-600 px-5 py-2.5 text-xs font-black text-white hover:bg-emerald-700 transition-all disabled:opacity-50">MARQUER LIVRÉE</button>
+            )}
+            {!['delivered', 'cancelled'].includes(order.status) && (
+              <button onClick={() => { if (confirm('Annuler cette commande ?')) updateStatus('cancelled'); }} disabled={saving} className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-2.5 text-xs font-black text-rose-600 hover:bg-rose-100 transition-all disabled:opacity-50">ANNULER</button>
+            )}
           </div>
-        </div>
-        <div className="flex flex-wrap items-center gap-2">
-          {(() => {
-            const statusConfig = {
-              "pending": { label: "Nouveau", color: "bg-rose-50 text-rose-600 ring-rose-200" },
-              "accepted": { label: "Validé", color: "bg-indigo-50 text-indigo-600 ring-indigo-200" },
-              "assigned": { label: "En attente acceptation", color: "bg-amber-50 text-amber-600 ring-amber-200" },
-              "driver_accepted": { label: "Accepté", color: "bg-emerald-50 text-emerald-600 ring-emerald-200" },
-              "in_progress": { label: "Enlevée", color: "bg-blue-50 text-blue-600 ring-blue-200" },
-              "delivered": { label: "Livrée", color: "bg-slate-100 text-slate-600 ring-slate-200" }
-            };
-            const config = statusConfig[order.status] || { label: order.status, color: "bg-slate-100 text-slate-900 ring-slate-200" };
+        }
+      />
+
+      {/* Pipeline */}
+      <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm p-6">
+        <div className="flex items-center gap-0 overflow-x-auto">
+          {PIPELINE.map((step, i) => {
+            const done = currentStep >= step.key === order.status ? true : PIPELINE.findIndex(s => s.key === order.status) >= i;
+            const isDone = PIPELINE.findIndex(s => s.key === order.status) >= i;
+            const isCurrent = order.status === step.key;
             return (
-              <div className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wide ring-1 ${config.color}`}>
-                {config.label}
+              <div key={step.key} className="flex items-center flex-1 min-w-0">
+                <div className="flex flex-col items-center gap-1.5 flex-1">
+                  <div className={`h-7 w-7 rounded-full flex items-center justify-center text-[10px] font-black border-2 transition-all ${isCurrent ? 'bg-orange-500 border-orange-500 text-white scale-110' : isDone ? 'bg-slate-900 border-slate-900 text-white' : 'bg-white border-slate-200 text-slate-400'}`}>
+                    {isDone && !isCurrent ? <CheckCircle2 size={14} /> : i + 1}
+                  </div>
+                  <span className={`text-[9px] font-black uppercase tracking-widest text-center ${isCurrent ? 'text-orange-500' : isDone ? 'text-slate-700' : 'text-slate-300'}`}>{step.label}</span>
+                </div>
+                {i < PIPELINE.length - 1 && (
+                  <div className={`h-px flex-1 mx-1 ${PIPELINE.findIndex(s => s.key === order.status) > i ? 'bg-slate-900' : 'bg-slate-200'}`} />
+                )}
               </div>
             );
-          })()}
-
-          <button
-            onClick={() => generateOrderPdf(order, client)}
-            className="rounded-full bg-slate-100 px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-200 transition-colors"
-          >
-            Bon de commande (PDF)
-          </button>
-
-          {order.status === "pending" && (
-            <button
-              onClick={() => updateStatus('assigned')}
-              disabled={saving}
-              className="rounded-full bg-emerald-600 px-4 py-2 text-xs font-bold text-white hover:bg-emerald-700 transition-colors disabled:opacity-50"
-            >
-              Accepter / Assigner
-            </button>
-          )}
-
-          {order.status === "assigned" && (
-            <button
-              onClick={() => updateStatus('in_progress')}
-              disabled={saving}
-              className="rounded-full bg-slate-900 px-4 py-2 text-xs font-bold text-white hover:bg-slate-800 transition-colors disabled:opacity-50"
-            >
-              Dispatcher (En cours)
-            </button>
-          )}
-
-          {order.status === "in_progress" && (
-            <button
-              onClick={() => updateStatus('delivered')}
-              disabled={saving}
-              className="rounded-full bg-orange-500 px-4 py-2 text-xs font-bold text-white hover:bg-orange-600 transition-colors disabled:opacity-50"
-            >
-              Terminer (livrée)
-            </button>
-          )}
+          })}
         </div>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
-        <div className="rounded-3xl border border-slate-100 bg-white p-6 shadow-sm">
-          <div className="text-xs font-bold uppercase tracking-wider text-slate-400">Itinéraire</div>
-          <div className="mt-4 grid gap-4">
-            <div className="rounded-2xl bg-slate-50 p-4 border border-slate-100">
-              <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Enlèvement</div>
-              <div className="mt-2 text-sm font-bold text-slate-900 leading-none mb-1">{pickupName}</div>
-              <div className="text-xs text-slate-500 leading-snug mb-2">{order.pickup_address || "—"}</div>
-              <div className="text-xs font-semibold text-slate-900">
-                {pCode && <span className="font-bold mr-2 text-orange-600">Code: {pCode}</span>}
-                {nPNote && nPNote !== "—" ? nPNote : "—"}
-              </div>
-            </div>
-            <div className="rounded-2xl bg-slate-50 p-4 border border-slate-100">
-              <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Livraison</div>
-              <div className="mt-2 text-sm font-bold text-slate-900 leading-none mb-1">{deliveryName}</div>
-              <div className="text-xs text-slate-500 leading-snug mb-2">{order.delivery_address || "—"}</div>
-              <div className="text-xs font-semibold text-slate-900">
-                {dCode && <span className="font-bold mr-2 text-orange-600">Code: {dCode}</span>}
-                {nDNote && nDNote !== "—" ? nDNote : "—"}
-              </div>
-            </div>
-            <div className="grid gap-3 sm:grid-cols-2">
-              <div className="rounded-2xl bg-slate-50 p-4">
-                <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Formule</div>
-                <div className="mt-2 text-sm font-semibold text-slate-900 uppercase">
-                  {order.vehicle_type || "—"} {order.service_level ? `${order.service_level}` : ""}
+      {/* Main grid */}
+      <div className="grid xl:grid-cols-[1fr_420px] gap-6">
+        {/* Left — order info */}
+        <div className="space-y-5">
+          {/* Route */}
+          <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm p-6">
+            <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-5">Itinéraire</div>
+            <div className="space-y-4">
+              {/* Pickup */}
+              <div className="rounded-2xl bg-slate-50 border border-slate-100 p-5">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="h-6 w-6 rounded-full bg-slate-900 flex items-center justify-center"><MapPin size={12} className="text-white" /></div>
+                  <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">Enlèvement</span>
+                </div>
+                <div className="font-black text-slate-900 text-sm">{pickupName}</div>
+                <div className="text-xs text-slate-500 mt-1">{order.pickup_address || "—"}</div>
+                {pCode && <div className="mt-2 inline-flex items-center rounded-lg bg-orange-50 border border-orange-100 px-2.5 py-1 text-xs font-black text-orange-600">🔑 Code: {pCode}</div>}
+                {nPNote && <div className="mt-2 text-xs text-slate-600 italic bg-amber-50 rounded-xl px-3 py-2 border border-amber-100">📝 {nPNote}</div>}
+                <div className="mt-3 flex gap-4 text-xs text-slate-500">
+                  {pickupPhone !== "—" && <span className="flex items-center gap-1"><Phone size={11} /> {pickupPhone}</span>}
                 </div>
               </div>
-              <div className="rounded-2xl bg-slate-50 p-4">
-                <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Programmation</div>
-                <div className="mt-2 text-sm font-semibold text-slate-900">
-                  {order.scheduled_at ? new Date(order.scheduled_at).toLocaleString('fr-FR') : "Immédiat"}
-                </div>
-              </div>
-            </div>
 
-            <div className="grid gap-3 sm:grid-cols-2">
-              <div className="rounded-2xl bg-slate-50 p-4">
-                <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Heure d’enlèvement</div>
-                <div className="mt-2 text-sm font-semibold text-slate-900">{order.pickupTime || order.time || edit.pickupTime || "—"}</div>
-              </div>
-              <div className="rounded-2xl bg-slate-50 p-4">
-                <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Heure de livraison max</div>
-                <div className="mt-2 text-sm font-semibold text-slate-900">{order.deliveryDeadline || edit.deliveryDeadline || "—"}</div>
-              </div>
-            </div>
-
-            <div className="grid gap-3 sm:grid-cols-2">
-              <div className="rounded-2xl bg-slate-50 p-4">
-                <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Tél. Enlèvement</div>
-                <div className="mt-2 text-sm font-semibold text-slate-900">
-                  {pickupPhone}
+              {/* Delivery */}
+              <div className="rounded-2xl bg-slate-50 border border-slate-100 p-5">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="h-6 w-6 rounded-full bg-orange-500 flex items-center justify-center"><MapPin size={12} className="text-white" /></div>
+                  <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">Livraison</span>
                 </div>
+                <div className="font-black text-slate-900 text-sm">{deliveryName}</div>
+                <div className="text-xs text-slate-500 mt-1">{order.delivery_address || "—"}</div>
+                {dCode && <div className="mt-2 inline-flex items-center rounded-lg bg-orange-50 border border-orange-100 px-2.5 py-1 text-xs font-black text-orange-600">🔑 Code: {dCode}</div>}
+                {nDNote && <div className="mt-2 text-xs text-slate-600 italic bg-amber-50 rounded-xl px-3 py-2 border border-amber-100">📝 {nDNote}</div>}
+                {deliveryPhone !== "—" && <div className="mt-3 flex items-center gap-1 text-xs text-slate-500"><Phone size={11} /> {deliveryPhone}</div>}
               </div>
-              <div className="rounded-2xl bg-slate-50 p-4">
-                <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Tél. Livraison</div>
-                <div className="mt-2 text-sm font-semibold text-slate-900">
-                  {deliveryPhone}
-                </div>
-              </div>
-            </div>
 
-            <div className="grid gap-3">
-              <div className="rounded-2xl bg-slate-50 p-4 border border-slate-100">
-                <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400 mb-3">Détails du Colis</div>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  <div>
-                    <div className="text-[10px] font-bold text-slate-400 uppercase">Nature</div>
-                    <div className="text-sm font-bold text-slate-900">
-                      {packageNature}
-                    </div>
-                  </div>
-                  <div>
-                    <div className="text-[10px] font-bold text-slate-400 uppercase">Poids</div>
-                    <div className="text-sm font-bold text-slate-900">
-                      {packageWeight}
-                    </div>
-                  </div>
-                  <div>
-                    <div className="text-[10px] font-bold text-slate-400 uppercase">Contenu</div>
-                    <div className="text-sm font-bold text-slate-900">
-                      {packageDims || "—"}
-                    </div>
-                  </div>
+              {/* Timing row */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="rounded-2xl bg-slate-50 border border-slate-100 p-4">
+                  <div className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">Enlèvement</div>
+                  <div className="text-sm font-black text-slate-900">{order.scheduled_at ? new Date(order.scheduled_at).toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' }) : "Immédiat"}</div>
+                </div>
+                <div className="rounded-2xl bg-slate-50 border border-slate-100 p-4">
+                  <div className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">Deadline</div>
+                  <div className="text-sm font-black text-slate-900">{order.delivery_deadline ? new Date(order.delivery_deadline).toLocaleTimeString('fr-FR', { timeStyle: 'short' }) : "—"}</div>
                 </div>
               </div>
             </div>
+          </div>
 
-            {/* Note Client Optionnel */}
-            {(() => {
-              const cleanNote = notesStr
-                .replace(/Guest Order\.\s?/g, "")
-                .replace(/Entreprise Pick:.*?(?=\.|$)\.?\s?/g, "")
-                .replace(/Entreprise Deliv:.*?(?=\.|$)\.?\s?/g, "")
-                .replace(/Contact Pick:.*?(?=\.|$)\.?\s?/g, "")
-                .replace(/Contact Deliv:.*?(?=\.|$)\.?\s?/g, "")
-                .replace(/Email Enlev:.*?(?=\.|$)\.?\s?/g, "")
-                .replace(/Phone Pick:.*?(?=\.|$)\.?\s?/g, "")
-                .replace(/Phone Deliv:.*?(?=\.|$)\.?\s?/g, "")
-                .replace(/Code Enlev:.*?(?=\.|$)\.?\s?/g, "")
-                .replace(/Code Dest:.*?(?=\.|$)\.?\s?/g, "")
-                .replace(/Instructions :?.*?(?=\.|$)\.?\s?/g, "")
-                .replace(/Email:.*?(?=\.|$)\.?\s?/g, "")
-                .replace(/Phone:.*?(?=\.|$)\.?\s?/g, "")
-                .replace(/Billing:.*$/g, "")
-                .trim();
-              if (cleanNote && cleanNote !== "—" && cleanNote !== "/" && cleanNote.length > 2) {
-                return (
-                  <div className="rounded-2xl bg-slate-50 p-4 border border-slate-100">
-                    <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400 mb-2">Note Client Complémentaire</div>
-                    <div className="text-sm font-semibold text-slate-800 leading-relaxed italic">
-                      "{cleanNote}"
-                    </div>
-                  </div>
-                );
-              }
-              return null;
-            })()}
-
-            <div className="rounded-2xl bg-slate-50 p-4">
-              <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Client / Expéditeur</div>
-              <div className="mt-2 text-sm font-semibold text-slate-900 leading-snug flex items-center gap-2">
-                {displayTopName}
-                {!client?.id && !order.user_id && (
-                  <span className="inline-block px-1.5 py-0.5 rounded text-[9px] font-bold bg-orange-100 text-orange-600 border border-orange-200 uppercase">
-                    Invité
-                  </span>
-                )}
-              </div>
-              <div className="mt-1 text-xs text-slate-500">
-                <span className="font-bold text-slate-400">Facturation: </span>
-                {displayAddress}
-              </div>
-              <div className="mt-3 space-y-1">
-                <div className="text-xs text-slate-500">
-                  <span className="font-bold text-slate-400">Email: </span>
-                  {displayEmail}
+          {/* Package */}
+          <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm p-6">
+            <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">Colis & Formule</div>
+            <div className="grid grid-cols-3 gap-4">
+              {[
+                { label: "Type", value: packageNature },
+                { label: "Poids", value: packageWeight },
+                { label: "Contenu", value: order.package_description || "—" },
+                { label: "Véhicule", value: order.vehicle_type?.toUpperCase() || "—" },
+                { label: "Formule", value: order.service_level?.toUpperCase() || "—" },
+              ].map((item, i) => (
+                <div key={i} className="rounded-xl bg-slate-50 p-3">
+                  <div className="text-[8px] font-black uppercase tracking-widest text-slate-400">{item.label}</div>
+                  <div className="text-sm font-black text-slate-900 mt-0.5">{item.value}</div>
                 </div>
-                {displayCompany && (
-                  <div className="text-xs text-slate-500">
-                    <span className="font-bold text-slate-400 uppercase text-[9px]">Enseigne: </span>
-                    <span className="font-semibold text-slate-900">{displayCompany}</span>
-                  </div>
-                )}
-                <div className="text-xs text-slate-500">
-                  <span className="font-bold text-slate-400">Contact: </span>
-                  {displayContactName !== displayCompany ? displayContactName : "—"}
-                </div>
-                <div className="text-xs text-slate-500">
-                  <span className="font-bold text-slate-400">Tél: </span>
-                  {displayPhone}
-                </div>
-              </div>
+              ))}
             </div>
+          </div>
+
+          {/* Client */}
+          <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="text-[10px] font-black uppercase tracking-widest text-slate-400">Client / Expéditeur</div>
+              {!client?.id && <span className="rounded-lg bg-orange-50 border border-orange-100 px-2 py-0.5 text-[9px] font-black text-orange-600 uppercase">Invité</span>}
+            </div>
+            <div className="grid grid-cols-2 gap-3 text-sm">
+              {[
+                { label: "Entreprise", value: displayCompany || pickupName },
+                { label: "Email", value: displayEmail },
+                { label: "Téléphone", value: client?.details?.phone || pickupPhone },
+                { label: "Adresse fact.", value: client?.details?.address || "—" },
+              ].map((item, i) => (
+                <div key={i} className="rounded-xl bg-slate-50 p-3">
+                  <div className="text-[8px] font-black uppercase tracking-widest text-slate-400">{item.label}</div>
+                  <div className="font-bold text-slate-800 truncate mt-0.5">{item.value || "—"}</div>
+                </div>
+              ))}
+            </div>
+            {client?.id && (
+              <button onClick={() => navigate(`/admin/clients/${client.id}`)} className="mt-4 flex items-center gap-1.5 text-xs font-black text-orange-500 hover:underline">
+                Voir le dossier client <ChevronRight size={13} />
+              </button>
+            )}
           </div>
         </div>
 
-        <div className="rounded-3xl border border-slate-100 bg-white p-6 shadow-sm">
-          <div className="text-xs font-bold uppercase tracking-wider text-slate-400">Prix HT</div>
-          <div className="mt-3 text-4xl font-bold text-slate-900">{Number(order.price_ht || 0).toFixed(2)}€</div>
-          <div className="mt-6 rounded-2xl bg-slate-50 p-4">
-            <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Statut</div>
-            <div className="mt-2 text-sm font-semibold text-slate-900">
-              {{
-                "pending": "Nouveau", "accepted": "Validé", "assigned": "En attente acceptation",
-                "driver_accepted": "Accepté", "in_progress": "Enlevée", "delivered": "Livrée"
-              }[order.status] || order.status}
+        {/* Right — Dispatch panel */}
+        <div className="space-y-5">
+          {/* Price */}
+          <div className="bg-slate-900 text-white rounded-[2rem] p-6 shadow-xl relative overflow-hidden">
+            <div className="absolute -top-8 -right-8 h-24 w-24 bg-orange-500/10 rounded-full blur-2xl" />
+            <div className="relative z-10">
+              <div className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">Montant HT</div>
+              <div className="text-5xl font-black tabular-nums">{Number(order.price_ht || 0).toFixed(2)}€</div>
+              <div className="text-xs text-slate-500 mt-1">+20% TVA = {(Number(order.price_ht || 0) * 1.2).toFixed(2)}€ TTC</div>
+              {assignedDriver && (
+                <div className="mt-4 pt-4 border-t border-white/10">
+                  <div className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">Livreur assigné</div>
+                  <div className="flex items-center gap-2">
+                    <div className="h-7 w-7 rounded-xl bg-emerald-500/20 text-emerald-400 text-[10px] font-black grid place-items-center">{assignedDriver.name[0]}</div>
+                    <span className="text-sm font-black">{assignedDriver.name}</span>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
-          <div className="mt-4 rounded-2xl bg-slate-50 p-4">
-            <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Infos chauffeur & accès</div>
 
-            <div className="mt-2 grid gap-3">
+          {/* Edit dispatch panel */}
+          <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm p-6">
+            <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-5">Dispatch & Édition</div>
+            <div className="space-y-4">
               <div>
-                <label className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Chauffeur assigné</label>
+                <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1.5 block">Chauffeur assigné</label>
                 <select
-                  className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-slate-100"
+                  id="driver-select"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-slate-900/5 focus:border-slate-900 transition-all"
                   value={edit.driverId}
-                  onChange={(e) => setEdit(p => ({ ...p, driverId: e.target.value }))}
+                  onChange={e => setEdit(p => ({ ...p, driverId: e.target.value }))}
                 >
                   <option value="">-- Aucun chauffeur --</option>
-                  {drivers.map(d => (
-                    <option key={d.id} value={d.id}>{d.name}</option>
-                  ))}
+                  {drivers.map(d => <option key={d.id} value={d.id}>{d.name}{d.isOnline ? ' 🟢' : ' ⚫'}</option>)}
                 </select>
               </div>
 
-              <div className="grid gap-3 sm:grid-cols-3">
+              <div className="grid grid-cols-3 gap-3">
                 <div>
-                  <label className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Formule</label>
-                  <select
-                    className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-slate-100"
-                    value={edit.serviceLevel}
-                    onChange={(e) => setEdit(p => ({ ...p, serviceLevel: e.target.value }))}
-                  >
-                    <option value="normal">Normal (4h)</option>
+                  <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1.5 block">Formule</label>
+                  <select className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-slate-900/5 transition-all" value={edit.serviceLevel} onChange={e => setEdit(p => ({ ...p, serviceLevel: e.target.value }))}>
+                    <option value="normal">Normal(4h)</option>
                     <option value="exclu">Exclu (3h)</option>
-                    <option value="super">Super (1h30)</option>
+                    <option value="super">Super(1h30)</option>
                   </select>
                 </div>
                 <div>
-                  <label className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Heure d’enlèvement</label>
-                  <input
-                    className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-4 focus:ring-slate-100"
-                    placeholder="Ex: 14:30"
-                    value={edit.pickupTime}
-                    onChange={(e) => setEdit((p) => ({ ...p, pickupTime: e.target.value }))}
-                  />
+                  <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1.5 block">Enlèvement</label>
+                  <input type="time" className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-slate-900/5 transition-all" value={edit.pickupTime} onChange={e => setEdit(p => ({ ...p, pickupTime: e.target.value }))} />
                 </div>
                 <div>
-                  <label className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Livraison max (Auto)</label>
-                  <input
-                    className="mt-1 w-full rounded-xl border border-slate-100 bg-slate-50 px-3 py-2 text-sm font-bold text-slate-400 cursor-not-allowed"
-                    readOnly
-                    value={edit.deliveryDeadline}
-                  />
+                  <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1.5 block">Deadline (auto)</label>
+                  <input readOnly className="w-full rounded-xl border border-slate-100 bg-slate-100 px-3 py-3 text-sm font-black text-slate-500 cursor-not-allowed" value={edit.deliveryDeadline} />
                 </div>
               </div>
 
-              <div className="grid gap-3 sm:grid-cols-2">
+              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Téléphone sur place</label>
-                  <input
-                    className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-4 focus:ring-slate-100"
-                    placeholder="Ex: 06 12 34 56 78"
-                    value={edit.contactPhone}
-                    onChange={(e) => setEdit((p) => ({ ...p, contactPhone: e.target.value }))}
-                  />
+                  <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1.5 block">Tél. sur place</label>
+                  <input className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-sm focus:outline-none focus:ring-4 focus:ring-slate-900/5 transition-all" placeholder="06 12 34 56 78" value={edit.contactPhone} onChange={e => setEdit(p => ({ ...p, contactPhone: e.target.value }))} />
                 </div>
                 <div>
-                  <label className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Code / infos d’accès</label>
-                  <input
-                    className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-4 focus:ring-slate-100"
-                    placeholder="Ex: digicode 1234, 3e étage"
-                    value={edit.accessCode}
-                    onChange={(e) => setEdit((p) => ({ ...p, accessCode: e.target.value }))}
-                  />
+                  <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1.5 block">Code d'accès</label>
+                  <input className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-sm focus:outline-none focus:ring-4 focus:ring-slate-900/5 transition-all" placeholder="Digicode…" value={edit.accessCode} onChange={e => setEdit(p => ({ ...p, accessCode: e.target.value }))} />
                 </div>
               </div>
 
-              <div className="grid gap-3 sm:grid-cols-2">
-                <div className="sm:col-span-2">
-                  <label className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Note dispatch</label>
-                  <input
-                    className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-4 focus:ring-slate-100"
-                    placeholder="Ex: prioritaire, fragile, etc."
-                    value={edit.dispatchNote}
-                    onChange={(e) => setEdit((p) => ({ ...p, dispatchNote: e.target.value }))}
-                  />
-                </div>
+              <div>
+                <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1.5 block">Note dispatch</label>
+                <input className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-sm focus:outline-none focus:ring-4 focus:ring-slate-900/5 transition-all" placeholder="Prioritaire, fragile, appeler avant…" value={edit.dispatchNote} onChange={e => setEdit(p => ({ ...p, dispatchNote: e.target.value }))} />
               </div>
 
-              <div className="flex justify-end">
-                <button
-                  onClick={saveEdits}
-                  className="rounded-full bg-slate-900 px-4 py-2 text-xs font-bold text-white"
-                >
-                  Enregistrer
-                </button>
-              </div>
+              <button
+                onClick={saveEdits}
+                disabled={saving}
+                className="w-full flex items-center justify-center gap-2 rounded-xl bg-slate-900 py-3.5 text-sm font-black text-white hover:bg-orange-500 transition-all disabled:opacity-50"
+              >
+                {saving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
+                Enregistrer les modifications
+              </button>
             </div>
           </div>
-        </div>
-      </div>
 
-      <div className="rounded-3xl border border-slate-100 bg-white p-6 shadow-sm">
-        <div className="mb-6 flex items-center justify-between">
-          <div className="text-xs font-bold uppercase tracking-wider text-slate-400">Historique de la commande</div>
-        </div>
-        <div className="relative grid gap-6">
-          <div className="absolute left-3 top-1 h-full w-px bg-slate-200" />
-          {timeline.map((t, idx) => (
-            <div key={t.label} className="relative flex items-start gap-4">
-              <div className={`mt-1 h-3 w-3 rounded-full ${t.value !== "—" ? "bg-slate-900" : "bg-slate-200"}`} />
-              {idx < timeline.length - 1 && (
-                <div className="absolute left-[5px] top-4 h-full w-px bg-slate-200" />
-              )}
-              <div className="flex w-full items-center justify-between rounded-2xl bg-slate-50 px-4 py-3">
-                <div className="text-sm font-semibold text-slate-900">{t.label}</div>
-                <div className="text-xs font-bold text-slate-500">{t.value}</div>
-              </div>
+          {/* Meta */}
+          <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm p-6">
+            <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">Informations</div>
+            <div className="space-y-2.5">
+              {[
+                { label: "ID Commande", value: `#${order.id.slice(0, 8)}` },
+                { label: "Créée le", value: new Date(order.created_at).toLocaleString('fr-FR', { dateStyle: 'medium', timeStyle: 'short' }) },
+                { label: "Statut actuel", value: sc.label },
+              ].map((item, i) => (
+                <div key={i} className="flex items-center justify-between py-2 border-b border-slate-50 last:border-0">
+                  <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">{item.label}</span>
+                  <span className="text-xs font-black text-slate-900">{item.value}</span>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
       </div>
     </div>
   );
 }
-
-
-

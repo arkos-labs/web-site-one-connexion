@@ -1,48 +1,49 @@
-import PublicHeader from "../components/PublicHeader.jsx";
-import PublicFooter from "../components/PublicFooter.jsx";
+import SEOPageLayout from "../components/SEOPageLayout";
 
 export default function CoursierIDF() {
   return (
-    <div className="bg-white text-slate-900">
-      <PublicHeader />
-      <main className="blog-page">
-        <h1 className="text-3xl font-bold">Coursier Île-de-France</h1>
-        <p className="mt-2 text-sm text-slate-500">Publié le 23/01/2026 • Par One Connexion</p>
-        <p className="mt-6 text-slate-600">
-          Besoin d'un coursier express en Île-de-France ? One Connexion assure vos livraisons B2B
-          entre Paris, la petite et la grande couronne. Nos solutions couvrent les envois urgents,
-          les tournées régulières et les transferts inter-sites.
-        </p>
-        <p className="mt-4 text-slate-600">
-          Nous adaptons le véhicule (moto, voiture, utilitaire) selon le gabarit et l'urgence, avec 
-          preuve de livraison. Idéal pour les entreprises multisites et les flux quotidiens.
-        </p>
+    <SEOPageLayout
+      title="Coursier Île-de-France"
+      subtitle="Transport express et logistique B2B sur toute la région parisienne, du 75 au 95."
+      heroImage="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&q=80"
+      description={`
+        La logistique régionale à l'échelle de l'Île-de-France nécessite une expertise particulière et une flotte diversifiée. One Connexion assure vos livraisons B2B entre Paris, la petite couronne et la grande couronne avec une efficacité constante.
 
-        <section className="mt-10">
-          <h2 className="text-xl font-semibold">Pourquoi choisir One Connexion ?</h2>
-          <ul className="mt-4 list-disc pl-6 space-y-2"><li className="text-slate-600">Couverture Paris + petite/grande couronne avec itinéraires optimisés.</li><li className="text-slate-600">Courses ponctuelles ou navettes régulières entre sites.</li><li className="text-slate-600">Notifications et preuve de livraison.</li></ul>
-          <p className="mt-4 text-slate-600">Contactez-nous pour un devis rapide et une prise en charge immédiate.</p>
-        </section>
-        <section className="mt-8">
-          <h2 className="text-xl font-semibold">Cas d'usage B2B</h2>
-          <p className="mt-3 text-slate-600">Nos clients utilisent le service pour la messagerie quotidienne, les urgences et les tournées régulières. Nous adaptons les véhicules et les délais à chaque besoin.</p>
-        </section>
-
-        <section className="mt-8"><p className="mt-3 text-slate-600">La région Île‑de‑France impose des délais variables et des distances plus longues. Nos algorithmes d’itinéraires et notre flotte multi‑véhicules permettent une qualité de service homogène sur toute la zone.</p><p className="mt-3 text-slate-600">Nous gérons vos flux inter‑sites (siège → entrepôt → point de vente) et proposons des tournées régulières pour stabiliser les coûts. Les équipes disposent de notifications d'arrivée.</p>
-        </section>
-
-        <section className="mt-8">
-          <h2 className="text-xl font-semibold">Questions fréquentes</h2>
-          <div className="mt-3 space-y-3 text-slate-600">
-            <p><strong>Quels délais ?</strong> De l'urgent immédiat aux créneaux planifiés selon vos besoins.</p>
-            <p><strong>Preuve de livraison ?</strong> POD numérique horodaté, consultable par votre équipe.</p>
-            <p><strong>Facturation ?</strong> Mensuelle et claire, avec récapitulatif détaillé.</p>
-          </div>
-        </section>
-      </main>
-      <PublicFooter />
-    </div>
+        Que vos sites soient basés à La Défense, Marne-la-Vallée, Évry ou Cergy, nos coursiers optimisent leurs trajets pour garantir des délais maîtrisés malgré les contraintes de trafic de la région capitale.
+      `}
+      benefits={[
+        "Couverture totale des 8 départements d'IDF",
+        "Véhicules adaptés aux trajets longue distance",
+        "Optimisation d'itinéraires anti-bouchons",
+        "Disponibilité étendue pour vos flux régionaux",
+        "Tarification zonale transparente et sans surprise"
+      ]}
+      useCases={[
+        "Liaisons quotidiennes Siège-Entrepôt",
+        "Distribution multi-points en Île-de-France",
+        "Livraison express vers les pôles d'activités",
+        "Transferts de stocks urgents entre magasins"
+      ]}
+      seoText={(
+        <>
+          <p>Le <strong>coursier en Île-de-France</strong> est le trait d'union entre vos différents centres opérationnels. One Connexion réduit les distances en proposant des solutions de <strong>messagerie régionale</strong> performantes, adaptées aux besoins des entreprises multisites.</p>
+          <p>Nous desservons quotidiennement les départements du 77, 78, 91, 92, 93, 94 et 95, en complément de nos services intra-muros à Paris.</p>
+        </>
+      )}
+      faqs={[
+        {
+          q: "Combien de temps faut-il pour une livraison Paris-Grande Couronne ?",
+          a: "Pour une course express, nous visons une livraison en 90 à 120 minutes selon la destination finale et les conditions de circulation."
+        },
+        {
+          q: "Proposez-vous des utilitaires pour les gros volumes ?",
+          a: "Oui, notre flotte comprend des breaks, des fourgonnettes et des camions 14m3 pour vos envois volumineux à travers toute l'IDF."
+        },
+        {
+          q: "Gérez-vous les tournées régulières en banlieue ?",
+          a: "C'est l'une de nos spécialités. Nous pouvons mettre en place des chauffeurs dédiés pour vos navettes quotidiennes ou hebdomadaires."
+        }
+      ]}
+    />
   );
 }
-
-

@@ -28,6 +28,8 @@ const Login = lazy(() => import("./pages/Login.jsx"));
 const RegisterDriver = lazy(() => import("./pages/RegisterDriver.jsx"));
 const Register = lazy(() => import("./pages/Register.jsx"));
 const GuestOrder = lazy(() => import("./pages/GuestOrder.jsx"));
+const ForgotPassword = lazy(() => import("./pages/ForgotPassword.jsx"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword.jsx"));
 const Contact = lazy(() => import("./pages/Contact.jsx"));
 const About = lazy(() => import("./pages/About.jsx"));
 const Privacy = lazy(() => import("./pages/Privacy.jsx"));
@@ -42,6 +44,7 @@ const CoursierJuridiqueParis = lazy(() => import("./pages/CoursierJuridiqueParis
 const CoursierEvenementielParis = lazy(() => import("./pages/CoursierEvenementielParis.jsx"));
 const CoursierAutomobileParis = lazy(() => import("./pages/CoursierAutomobileParis.jsx"));
 const NavetteReguliereIDF = lazy(() => import("./pages/NavetteReguliereIDF.jsx"));
+const MentionsLegales = lazy(() => import("./pages/MentionsLegales.jsx"));
 const DashboardDriver = lazy(() => import("./pages/DashboardDriver.jsx"));
 const DashboardDriverLayout = lazy(() => import("./pages/DashboardDriverLayout.jsx"));
 
@@ -61,9 +64,13 @@ export default function App() {
           <Route path="/inscription" element={<Register />} />
           <Route path="/inscription-driver" element={<RegisterDriver />} />
           <Route path="/guest-order" element={<GuestOrder />} />
+          <Route path="/mot-de-passe-oublie" element={<ForgotPassword />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reinitialiser-mot-de-passe" element={<ResetPassword />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/about" element={<About />} />
           <Route path="/confidentialite" element={<Privacy />} />
+          <Route path="/mentions-legales" element={<MentionsLegales />} />
           <Route path="/coursier-b2b-paris" element={<CoursierB2BParis />} />
           <Route path="/coursier-ile-de-france" element={<CoursierIDF />} />
           <Route path="/messagerie-express-ile-de-france" element={<MessagerieExpressIDF />} />

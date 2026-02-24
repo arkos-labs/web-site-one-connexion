@@ -33,7 +33,7 @@ export default function PublicHeader() {
         <nav className="hidden items-center justify-center gap-10 text-sm font-bold uppercase tracking-wider md:flex text-slate-600">
           <a href="/#features" className="hover:text-orange-500 transition-colors">Avantages</a>
           <a href="/#expertises" className="hover:text-orange-500 transition-colors">Secteurs</a>
-          <a href="/#workflow" className="hover:text-orange-500 transition-colors">Le concept</a>
+          <a href="/#workflow" className="hover:text-orange-500 transition-colors">Solution Logistique</a>
           <Link to="/contact" className="hover:text-orange-500 transition-colors">Contact</Link>
         </nav>
 
@@ -62,7 +62,7 @@ export default function PublicHeader() {
           <nav className="flex flex-col gap-6 text-sm font-bold uppercase tracking-wider text-slate-600">
             <a href="/#features" className="hover:text-orange-500 transition-colors" onClick={() => setIsMenuOpen(false)}>Avantages</a>
             <a href="/#expertises" className="hover:text-orange-500 transition-colors" onClick={() => setIsMenuOpen(false)}>Secteurs</a>
-            <a href="/#workflow" className="hover:text-orange-500 transition-colors" onClick={() => setIsMenuOpen(false)}>Le concept</a>
+            <a href="/#workflow" className="hover:text-orange-500 transition-colors" onClick={() => setIsMenuOpen(false)}>Solution Logistique</a>
             <Link to="/contact" className="hover:text-orange-500 transition-colors" onClick={() => setIsMenuOpen(false)}>Contact</Link>
 
             <hr className="my-2 border-slate-100" />

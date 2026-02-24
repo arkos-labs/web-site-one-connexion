@@ -1,102 +1,63 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
-import { Loader2, Mail, Phone, MapPin, Building2, CreditCard, User, Clock, CheckCircle2, TrendingUp, Calendar, Save, Edit2, X, Truck, Banknote, FileText, Download } from "lucide-react";
-// pdfGenerator loaded dynamically
+import {
+  Loader2, Edit2, Save, X, Truck, CreditCard, FileText,
+  Zap, Clock, TrendingUp, CheckCircle2, Download, Calendar
+} from "lucide-react";
+import AdminPageHeader from "../components/admin/AdminPageHeader";
 
-function parseOrderDateToMs(dateStr) {
-  if (!dateStr) return null;
-  const s = String(dateStr).trim();
-  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) {
-    const d = new Date(`${s}T00:00:00`);
-    return Number.isNaN(d.getTime()) ? null : d.getTime();
-  }
-  const d = new Date(s);
-  return Number.isNaN(d.getTime()) ? null : d.getTime();
+function parseOrderDateToMs(d) {
+  if (!d) return null;
+  const s = String(d).trim();
+  const dt = /^\d{4}-\d{2}-\d{2}$/.test(s) ? new Date(`${s}T00:00:00`) : new Date(s);
+  return Number.isNaN(dt.getTime()) ? null : dt.getTime();
 }
 
 function computeDriverPay(order) {
   const total = Number(order?.price_ht || 0);
   if (!total) return 0;
-  const share = total <= 10 ? 0.5 : 0.4;
-  return total * share;
+  return total * (total <= 10 ? 0.5 : 0.4);
 }
 
 function computeDurationMinutes(order) {
-  if (order?.status === "delivered" && order?.updated_at) {
-    // We prioritize the time between actual pickup and actual delivery
-    const start = order.picked_up_at || order.dispatched_at || order.accepted_at || order.created_at;
-    const end = order.updated_at;
-
-    if (start && end) {
-      const a = new Date(start).getTime();
-      const b = new Date(end).getTime();
-      if (!Number.isNaN(a) && !Number.isNaN(b) && b >= a) {
-        return Math.round((b - a) / 60000);
-      }
-    }
-  }
-  return null;
+  if (order?.status !== "delivered" || !order?.updated_at) return null;
+  const start = order.picked_up_at || order.dispatched_at || order.accepted_at || order.created_at;
+  const end = order.updated_at;
+  if (!start || !end) return null;
+  const a = new Date(start).getTime(), b = new Date(end).getTime();
+  return (!isNaN(a) && !isNaN(b) && b >= a) ? Math.round((b - a) / 60000) : null;
 }
 
 function fmtMinutes(mins) {
   if (mins == null) return "—";
-  const h = Math.floor(mins / 60);
-  const m = mins % 60;
+  const h = Math.floor(mins / 60), m = mins % 60;
   return h > 0 ? `${h}h${String(m).padStart(2, "0")}` : `${m} min`;
 }
 
 export default function AdminDriverDetails() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [driver, setDriver] = useState(null);
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
-
-  // Edit State
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [formData, setFormData] = useState({
-    full_name: "",
-    email: "",
-    phone_number: "",
-    company: "",
-    siret: "",
-    address: "",
-    vehicle_model: "",
-    vehicle_plate: "",
-    vehicle_type: "",
-    iban: "",
-    bic: ""
+    full_name: "", email: "", phone_number: "", company: "", siret: "",
+    address: "", vehicle_model: "", vehicle_plate: "", vehicle_type: "", iban: "", bic: ""
   });
 
   useEffect(() => {
     fetchData();
-
     const channel = supabase
-      .channel(`driver-details-${id}`)
-      .on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table: 'profiles', filter: `id=eq.${id}` },
-        (payload) => {
-          // Realtime: profile changed
-          fetchData(true);
-        }
-      )
-      .on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table: 'orders', filter: `driver_id=eq.${id}` },
-        (payload) => {
-          // Realtime: order changed
-          fetchData(true);
-        }
-      )
+      .channel(`driver-details-v2-${id}`)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'profiles', filter: `id=eq.${id}` }, () => fetchData(true))
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'orders', filter: `driver_id=eq.${id}` }, () => fetchData(true))
       .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    return () => supabase.removeChannel(channel);
   }, [id]);
 
   const fetchData = async (silent = false) => {
@@ -105,23 +66,16 @@ export default function AdminDriverDetails() {
       supabase.from('profiles').select('*').eq('id', id).single(),
       supabase.from('orders').select('*').eq('driver_id', id)
     ]);
-
     if (dRes.data) {
       setDriver(dRes.data);
-      const details = dRes.data.details || {};
-      if (!isEditing) { // Only update form data if not currently editing to avoid overwriting user input
+      if (!isEditing) {
+        const d = dRes.data.details || {};
         setFormData({
-          full_name: details.full_name || "",
-          email: details.email || dRes.data.email || "",
-          phone_number: details.phone_number || "",
-          company: details.company || "",
-          siret: details.siret || "",
-          address: details.address || "",
-          vehicle_model: details.vehicle_model || "",
-          vehicle_plate: details.vehicle_plate || "",
-          vehicle_type: details.vehicle_type || "",
-          iban: details.iban || "",
-          bic: details.bic || ""
+          full_name: d.full_name || "", email: d.email || dRes.data.email || "",
+          phone_number: d.phone_number || "", company: d.company || "",
+          siret: d.siret || "", address: d.address || "",
+          vehicle_model: d.vehicle_model || "", vehicle_plate: d.vehicle_plate || "",
+          vehicle_type: d.vehicle_type || "", iban: d.iban || "", bic: d.bic || ""
         });
       }
     }
@@ -131,80 +85,19 @@ export default function AdminDriverDetails() {
 
   const handleSave = async () => {
     setSaving(true);
-    const { error } = await supabase
-      .from('profiles')
-      .update({
-        details: {
-          ...driver.details,
-          ...formData
-        }
-      })
-      .eq('id', id);
-
-    if (error) {
-      alert("Erreur lors de la sauvegarde : " + error.message);
-    } else {
-      setIsEditing(false);
-      fetchData();
-    }
+    const { error } = await supabase.from('profiles').update({ details: { ...driver.details, ...formData } }).eq('id', id);
+    if (error) alert("Erreur: " + error.message);
+    else { setIsEditing(false); fetchData(); }
     setSaving(false);
   };
-
-  const rows = useMemo(() => {
-    const fromMs = from ? parseOrderDateToMs(from) : null;
-    const toMs = to ? parseOrderDateToMs(to) : null;
-
-    const inRange = (order) => {
-      const ms = parseOrderDateToMs(order?.updated_at || order?.scheduled_at || order?.created_at);
-
-      if (ms == null) {
-        // Order missing date info — skipping filter
-        return true;
-      }
-
-      const isIn = (fromMs == null || ms >= fromMs) && (toMs == null || ms <= (toMs + 86399999));
-      if (!isIn) {
-        // console.log("Order filtered out:", order.id, "Date:", new Date(ms).toLocaleDateString(), "Range:", from, "to", to);
-      }
-      return isIn;
-    };
-
-    return orders
-      .filter(inRange)
-      .map((o) => {
-        const pay = o.status === "delivered" ? computeDriverPay(o) : 0;
-        const mins = o.status === "delivered" ? computeDurationMinutes(o) : null;
-
-        const pickupInfo = o.picked_up_at ? new Date(o.picked_up_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '—';
-        const deliveryInfo = (o.status === 'delivered' && o.updated_at) ? new Date(o.updated_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '—';
-
-        return {
-          ...o,
-          driverPayComputed: pay,
-          durationMinutes: mins,
-          clientName: 'Client',
-          route: `${o.pickup_city || ''} → ${o.delivery_city || ''}`,
-          displayDate: o.scheduled_at ? new Date(o.scheduled_at).toLocaleDateString() : '—',
-          displayStatus: o.status === 'delivered' ? 'Terminée' : (['assigned', 'driver_accepted', 'in_progress'].includes(o.status) ? 'En cours' : o.status),
-          pickupTime: pickupInfo,
-          deliveryTime: deliveryInfo
-        };
-      })
-      .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-  }, [orders, from, to]);
 
   const handleSelectMonth = (monthStr) => {
     if (!monthStr) return;
     const [year, month] = monthStr.split("-").map(Number);
-    const firstDay = new Date(year, month - 1, 1);
-    const lastDay = new Date(year, month, 0); // Day 0 of next month is last day of current
-
-    // Format to YYYY-MM-DD for input[type=date]
-    const fmt = (d) => d.toISOString().split('T')[0];
-    setFrom(fmt(firstDay));
-    setTo(fmt(lastDay));
+    const fmt = d => d.toISOString().split('T')[0];
+    setFrom(fmt(new Date(year, month - 1, 1)));
+    setTo(fmt(new Date(year, month, 0)));
   };
-
 
   const handleDownloadListing = async () => {
     const periodLabel = from ? new Date(from).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' }) : "Période globale";
@@ -213,417 +106,349 @@ export default function AdminDriverDetails() {
     generateDriverStatementPdf(driver, completedOrders, periodLabel, computeDriverPay);
   };
 
+  const rows = useMemo(() => {
+    const fromMs = from ? parseOrderDateToMs(from) : null;
+    const toMs = to ? parseOrderDateToMs(to) : null;
+    return orders
+      .filter(o => {
+        const ms = parseOrderDateToMs(o.updated_at || o.scheduled_at || o.created_at);
+        if (ms == null) return true;
+        return (fromMs == null || ms >= fromMs) && (toMs == null || ms <= (toMs + 86399999));
+      })
+      .map(o => {
+        const pay = o.status === "delivered" ? computeDriverPay(o) : 0;
+        const mins = o.status === "delivered" ? computeDurationMinutes(o) : null;
+        return {
+          ...o,
+          driverPayComputed: pay, durationMinutes: mins,
+          route: `${o.pickup_city || ''} → ${o.delivery_city || ''}`,
+          displayDate: o.scheduled_at ? new Date(o.scheduled_at).toLocaleDateString('fr-FR') : '—',
+          displayStatus: o.status === 'delivered' ? 'Terminée' : o.status,
+          pickupTime: o.picked_up_at ? new Date(o.picked_up_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '—',
+          deliveryTime: (o.status === 'delivered' && o.updated_at) ? new Date(o.updated_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '—',
+        };
+      })
+      .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+  }, [orders, from, to]);
+
   const totals = useMemo(() => {
-    const completedRows = rows.filter((r) => r.status === "delivered");
-    const totalPay = completedRows.reduce((sum, r) => sum + Number(r.driverPayComputed || 0), 0);
-    const totalMins = completedRows.reduce((sum, r) => sum + Number(r.durationMinutes || 0), 0);
-    return { totalPay, totalMins, count: completedRows.length, allCount: rows.length };
+    const done = rows.filter(r => r.status === "delivered");
+    return {
+      count: done.length,
+      allCount: rows.length,
+      totalPay: done.reduce((sum, r) => sum + Number(r.driverPayComputed || 0), 0),
+      totalMins: done.reduce((sum, r) => sum + Number(r.durationMinutes || 0), 0),
+    };
   }, [rows]);
 
-  if (loading) return <div className="flex h-screen items-center justify-center"><Loader2 className="animate-spin text-slate-400" size={40} /></div>;
-  if (!driver) return <div className="p-8 text-center text-slate-500">Chauffeur non trouvé.</div>;
+  if (loading) return (
+    <div className="flex items-center justify-center py-32 gap-3 text-slate-400">
+      <Loader2 className="animate-spin" size={24} />
+      <span className="text-sm font-bold">Chargement…</span>
+    </div>
+  );
+
+  if (!driver) return (
+    <div className="py-20 text-center">
+      <div className="text-2xl font-black text-slate-300 mb-3">Chauffeur introuvable</div>
+      <button onClick={() => navigate('/admin/drivers')} className="text-sm font-bold text-orange-500 hover:underline">← Retour à la flotte</button>
+    </div>
+  );
 
   const driverDetails = driver.details || {};
+  const driverName = driverDetails.full_name || driver.email || "Chauffeur";
+
+  const field = (label, key, type = "text", placeholder = "") => (
+    <div className={`rounded-2xl p-3.5 border ${isEditing ? 'border-slate-200 bg-white shadow-sm' : 'bg-slate-50 border-transparent'} transition-all`}>
+      <div className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">{label}</div>
+      {isEditing ? (
+        type === "select" ? (
+          <select value={formData[key]} onChange={e => setFormData(p => ({ ...p, [key]: e.target.value }))} className="w-full bg-transparent text-sm font-bold text-slate-900 focus:outline-none">
+            <option value="">Sélectionner</option>
+            <option value="velo">Vélo / Électrique</option>
+            <option value="scooter">Scooter / Moto</option>
+            <option value="voiture">Voiture / Van</option>
+            <option value="camion">Camion</option>
+          </select>
+        ) : (
+          <input type={type} className="w-full bg-transparent text-sm font-bold text-slate-900 focus:outline-none" value={formData[key]} onChange={e => setFormData(p => ({ ...p, [key]: e.target.value }))} placeholder={placeholder} />
+        )
+      ) : (
+        <div className="text-sm font-bold text-slate-900">{formData[key] || "—"}</div>
+      )}
+    </div>
+  );
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] p-4 md:p-8 space-y-8">
-      {/* Header Section */}
-      <div className="flex flex-wrap items-center justify-between gap-6 pb-6 border-b border-slate-200">
-        <div className="flex items-center gap-5">
-          <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-slate-900 text-white shadow-xl shadow-slate-900/20">
-            <User size={40} />
-          </div>
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <span className={`h-2.5 w-2.5 rounded-full ${driver.is_online ? "bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" : "bg-slate-300"}`}></span>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">{driver.is_online ? "En ligne" : "Hors ligne"}</span>
+    <div className="space-y-6 pb-20">
+      <AdminPageHeader
+        title={driverName}
+        subtitle={`${driverDetails.company ? driverDetails.company + ' · ' : ''}Membre depuis le ${new Date(driver.created_at).toLocaleDateString('fr-FR')}`}
+        backTo="/admin/drivers"
+        actions={
+          <div className="flex items-center gap-3 flex-wrap">
+            {/* Online status badge */}
+            <div className={`flex items-center gap-2 rounded-2xl border px-4 py-2 ${driver.is_online ? 'bg-emerald-50 border-emerald-100' : 'bg-slate-50 border-slate-200'}`}>
+              <span className={`h-2 w-2 rounded-full ${driver.is_online ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400'}`} />
+              <span className={`text-[10px] font-black uppercase tracking-widest ${driver.is_online ? 'text-emerald-700' : 'text-slate-500'}`}>
+                {driver.is_online ? "En ligne" : "Hors ligne"}
+              </span>
             </div>
-            <h1 className="text-3xl font-extrabold text-slate-900">{driverDetails.full_name || driver.email || 'Nom inconnu'}</h1>
-            <p className="text-sm font-medium text-slate-500 flex items-center gap-1.5 mt-0.5">
-              <Calendar size={14} className="text-slate-400" />
-              Membre depuis le {new Date(driver.created_at).toLocaleDateString()}
-            </p>
-          </div>
-        </div>
-        <div className="flex items-center gap-3">
-          <select
-            value={driver.role}
-            onChange={async (e) => {
-              const newRole = e.target.value;
-              if (confirm(`Changer le rôle de ce membre vers "${newRole}" ?`)) {
-                const { error } = await supabase.from('profiles').update({ role: newRole }).eq('id', driver.id);
-                if (error) alert(error.message);
-                else {
-                  alert("Rôle mis à jour. L'utilisateur devra se reconnecter pour voir les changements.");
-                  fetchData();
-                }
-              }
-            }}
-            className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-bold text-slate-700 shadow-sm focus:border-slate-900 focus:outline-none focus:ring-4 focus:ring-slate-900/10 cursor-pointer"
-          >
-            <option value="courier">Chauffeur</option>
-            <option value="client">Client</option>
-            <option value="admin">Administrateur</option>
-          </select>
 
-          <button
-            onClick={async () => {
-              if (confirm("Voulez-vous déconnecter ce chauffeur (le passer hors ligne) ?")) {
-                const { data, error } = await supabase
-                  .from('profiles')
-                  .update({ is_online: false })
-                  .eq('id', driver.id)
-                  .select();
-                // Force offline operation executed
-                if (error) alert(error.message);
-                else {
-                  alert("Chauffeur déconnecté (mis hors ligne).");
-                  fetchData();
+            {/* Role change */}
+            <select
+              value={driver.role}
+              onChange={async e => {
+                if (confirm(`Changer le rôle vers "${e.target.value}" ?`)) {
+                  const { error } = await supabase.from('profiles').update({ role: e.target.value }).eq('id', driver.id);
+                  if (error) alert(error.message); else fetchData();
                 }
-              }
-            }}
-            className="rounded-2xl bg-rose-50 border border-rose-100 px-4 py-3 text-sm font-bold text-rose-600 transition-all hover:bg-rose-100 hover:shadow-sm"
-            title="Forcer le statut hors ligne"
-          >
-            Déconnecter
-          </button>
-
-          {!isEditing ? (
-            <button
-              onClick={() => setIsEditing(true)}
-              className="flex items-center gap-2 rounded-2xl bg-white border border-slate-200 px-6 py-3 text-sm font-bold text-slate-700 transition-all hover:bg-slate-50 hover:shadow-md"
+              }}
+              className="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-xs font-bold text-slate-700 focus:outline-none shadow-sm"
             >
-              <Edit2 size={16} />
-              Modifier Profil
-            </button>
-          ) : (
-            <div className="flex items-center gap-2">
+              <option value="courier">Chauffeur</option>
+              <option value="client">Client</option>
+              <option value="admin">Admin</option>
+            </select>
+
+            {driver.is_online && (
               <button
-                onClick={() => setIsEditing(false)}
-                className="flex items-center gap-2 rounded-2xl bg-white border border-slate-200 px-6 py-3 text-sm font-bold text-slate-500 transition-all hover:bg-slate-50"
+                onClick={async () => {
+                  if (confirm("Déconnecter ce chauffeur ?")) {
+                    await supabase.from('profiles').update({ is_online: false }).eq('id', driver.id);
+                    fetchData();
+                  }
+                }}
+                className="flex items-center gap-2 rounded-xl bg-rose-50 border border-rose-200 px-4 py-2.5 text-xs font-black text-rose-600 hover:bg-rose-100 transition-all"
               >
-                <X size={16} />
-                Annuler
+                <Zap size={13} /> Déconnecter
               </button>
-              <button
-                onClick={handleSave}
-                disabled={saving}
-                className="flex items-center gap-2 rounded-2xl bg-slate-900 px-6 py-3 text-sm font-bold text-white transition-all hover:bg-slate-800 disabled:opacity-50"
-              >
-                {saving ? <Loader2 className="animate-spin" size={16} /> : <Save size={16} />}
-                Enregistrer
+            )}
+
+            {!isEditing ? (
+              <button onClick={() => setIsEditing(true)} className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-all shadow-sm">
+                <Edit2 size={14} /> Modifier
               </button>
-            </div>
-          )}
-          <Link to="/admin/drivers" className="group flex items-center gap-2 rounded-2xl bg-white border border-slate-200 px-6 py-3 text-sm font-bold text-slate-700 transition-all hover:bg-slate-50">
-            <span className="transition-transform group-hover:-translate-x-1">←</span>
-            Retour
-          </Link>
-        </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <button onClick={() => setIsEditing(false)} className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs font-bold text-slate-500">
+                  <X size={14} /> Annuler
+                </button>
+                <button onClick={handleSave} disabled={saving} className="flex items-center gap-2 rounded-xl bg-slate-900 px-5 py-2.5 text-xs font-black text-white hover:bg-orange-500 transition-all disabled:opacity-50">
+                  {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
+                  Enregistrer
+                </button>
+              </div>
+            )}
+          </div>
+        }
+      />
+
+      {/* KPIs */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {[
+          { icon: <CheckCircle2 size={18} />, iconBg: "bg-emerald-100 text-emerald-600", label: "Courses terminées", value: `${totals.count} / ${totals.allCount}` },
+          { icon: <TrendingUp size={18} />, iconBg: "bg-indigo-100 text-indigo-600", label: "Gains période", value: `${totals.totalPay.toFixed(2)}€` },
+          { icon: <Clock size={18} />, iconBg: "bg-amber-100 text-amber-700", label: "Temps cumulé", value: fmtMinutes(totals.totalMins) },
+          { icon: <Truck size={18} />, iconBg: "bg-slate-100 text-slate-600", label: "Véhicule", value: driverDetails.vehicle_type?.toUpperCase() || "—" },
+        ].map((kpi, i) => (
+          <div key={i} className="bg-white rounded-[2rem] p-5 border border-slate-100 shadow-sm">
+            <div className={`h-9 w-9 rounded-xl mb-3 flex items-center justify-center ${kpi.iconBg}`}>{kpi.icon}</div>
+            <div className="text-xl font-black text-slate-900 tabular-nums">{kpi.value}</div>
+            <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 mt-0.5">{kpi.label}</div>
+          </div>
+        ))}
       </div>
 
-      <div className="grid gap-8 lg:grid-cols-12">
-        {/* Left Column: Form & Info */}
-        <div className="lg:col-span-8 space-y-8">
-          {/* Main Info Form */}
-          <div className="overflow-hidden rounded-[2.5rem] bg-white shadow-sm border border-slate-100 p-8">
-            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-[#94a3b8] mb-8">Informations Personnelles</h3>
-            <div className="grid gap-6 md:grid-cols-2">
-              <div className="space-y-1.5">
-                <label className="text-sm font-semibold text-slate-600 ml-1">Prénom & Nom</label>
-                <input
-                  type="text"
-                  disabled={!isEditing}
-                  value={formData.full_name}
-                  onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
-                  className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/5 disabled:opacity-70 transition-all"
-                  placeholder="Jean Dupont"
-                />
-              </div>
-              <div className="space-y-1.5">
-                <label className="text-sm font-semibold text-slate-600 ml-1">Téléphone</label>
-                <input
-                  type="tel"
-                  disabled={!isEditing}
-                  value={formData.phone_number}
-                  onChange={(e) => setFormData({ ...formData, phone_number: e.target.value })}
-                  className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/5 disabled:opacity-70 transition-all"
-                  placeholder="06 12 34 56 78"
-                />
-              </div>
-              <div className="space-y-1.5 md:col-span-2">
-                <label className="text-sm font-semibold text-slate-600 ml-1">Email</label>
-                <input
-                  type="email"
-                  disabled={!isEditing}
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/5 disabled:opacity-70 transition-all"
-                  placeholder="email@exemple.com"
-                />
-              </div>
-              <div className="space-y-1.5">
-                <label className="text-sm font-semibold text-slate-600 ml-1">Société</label>
-                <input
-                  type="text"
-                  disabled={!isEditing}
-                  value={formData.company}
-                  onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                  className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/5 disabled:opacity-70 transition-all"
-                  placeholder="Ma Société Express"
-                />
-              </div>
-              <div className="space-y-1.5">
-                <label className="text-sm font-semibold text-slate-600 ml-1">SIRET</label>
-                <input
-                  type="text"
-                  disabled={!isEditing}
-                  value={formData.siret}
-                  onChange={(e) => setFormData({ ...formData, siret: e.target.value })}
-                  className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/5 disabled:opacity-70 transition-all"
-                  placeholder="123 456 789 00010"
-                />
-              </div>
-              <div className="space-y-1.5 md:col-span-2">
-                <label className="text-sm font-semibold text-slate-600 ml-1">Adresse</label>
-                <input
-                  type="text"
-                  disabled={!isEditing}
-                  value={formData.address}
-                  onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                  className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/5 disabled:opacity-70 transition-all"
-                  placeholder="123 rue de la livraison, 75000 Paris"
-                />
-              </div>
+      <div className="grid xl:grid-cols-[1fr_360px] gap-6">
+        {/* Left — forms + history */}
+        <div className="space-y-5">
+          {/* Personal info */}
+          <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm p-6">
+            <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-5">Informations personnelles</div>
+            <div className="grid gap-3 md:grid-cols-2">
+              {field("Prénom & Nom", "full_name", "text", "Jean Dupont")}
+              {field("Téléphone", "phone_number", "tel", "06 12 34 56 78")}
+              <div className="md:col-span-2">{field("Email", "email", "email", "email@exemple.com")}</div>
+              {field("Société", "company", "text", "Société Express")}
+              {field("SIRET", "siret", "text", "123 456 789 00010")}
+              <div className="md:col-span-2">{field("Adresse", "address", "text", "123 rue de la livraison, 75000 Paris")}</div>
             </div>
           </div>
 
-          <div className="grid gap-8 md:grid-cols-2">
-            {/* Vehicle Info */}
-            <div className="overflow-hidden rounded-[2.5rem] bg-white shadow-sm border border-slate-100 p-8">
-              <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-[#94a3b8] mb-8 flex items-center gap-2">
-                <Truck size={14} /> Véhicule
-              </h3>
-              <div className="space-y-6">
-                <div className="space-y-1.5">
-                  <label className="text-sm font-semibold text-slate-600 ml-1">Modèle</label>
-                  <input
-                    type="text"
-                    disabled={!isEditing}
-                    value={formData.vehicle_model}
-                    onChange={(e) => setFormData({ ...formData, vehicle_model: e.target.value })}
-                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-5 py-3 text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/5 disabled:opacity-70 transition-all"
-                    placeholder="Renault Master / Scooter"
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <label className="text-sm font-semibold text-slate-600 ml-1">Immatriculation</label>
-                  <input
-                    type="text"
-                    disabled={!isEditing}
-                    value={formData.vehicle_plate}
-                    onChange={(e) => setFormData({ ...formData, vehicle_plate: e.target.value })}
-                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-5 py-3 text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/5 disabled:opacity-70 transition-all"
-                    placeholder="AA-123-BB"
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <label className="text-sm font-semibold text-slate-600 ml-1">Type</label>
-                  <select
-                    disabled={!isEditing}
-                    value={formData.vehicle_type}
-                    onChange={(e) => setFormData({ ...formData, vehicle_type: e.target.value })}
-                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-5 py-3 text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/5 disabled:opacity-70 transition-all appearance-none"
-                  >
-                    <option value="">Sélectionner</option>
-                    <option value="velo">Vélo / Électrique</option>
-                    <option value="scooter">Scooter / Moto</option>
-                    <option value="voiture">Voiture / Van</option>
-                    <option value="camion">Camion</option>
-                  </select>
-                </div>
+          {/* Vehicle + Bank grid */}
+          <div className="grid md:grid-cols-2 gap-5">
+            <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm p-6">
+              <div className="flex items-center gap-2 mb-5">
+                <Truck size={14} className="text-slate-400" />
+                <div className="text-[10px] font-black uppercase tracking-widest text-slate-400">Véhicule</div>
+              </div>
+              <div className="space-y-3">
+                {field("Modèle", "vehicle_model", "text", "Renault Master")}
+                {field("Immatriculation", "vehicle_plate", "text", "AA-123-BB")}
+                {field("Type", "vehicle_type", "select")}
               </div>
             </div>
-
-            {/* Bank Info */}
-            <div className="overflow-hidden rounded-[2.5rem] bg-white shadow-sm border border-slate-100 p-8">
-              <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-[#94a3b8] mb-8 flex items-center gap-2">
-                <Banknote size={14} /> Informations Bancaires
-              </h3>
-              <div className="space-y-6">
-                <div className="space-y-1.5">
-                  <label className="text-sm font-semibold text-slate-600 ml-1">IBAN</label>
-                  <input
-                    type="text"
-                    disabled={!isEditing}
-                    value={formData.iban}
-                    onChange={(e) => setFormData({ ...formData, iban: e.target.value })}
-                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-5 py-3 text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/5 disabled:opacity-70 transition-all"
-                    placeholder="FR76 0000 0000 0000..."
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <label className="text-sm font-semibold text-slate-600 ml-1">BIC</label>
-                  <input
-                    type="text"
-                    disabled={!isEditing}
-                    value={formData.bic}
-                    onChange={(e) => setFormData({ ...formData, bic: e.target.value })}
-                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-5 py-3 text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/5 disabled:opacity-70 transition-all"
-                    placeholder="XXXXXXXX"
-                  />
+            <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm p-6">
+              <div className="flex items-center gap-2 mb-5">
+                <CreditCard size={14} className="text-slate-400" />
+                <div className="text-[10px] font-black uppercase tracking-widest text-slate-400">Coordonnées bancaires</div>
+              </div>
+              <div className="space-y-3">
+                {field("IBAN", "iban", "text", "FR76 0000 0000 0000...")}
+                {field("BIC", "bic", "text", "XXXXXXXX")}
+              </div>
+              <div className="mt-4 rounded-2xl bg-emerald-50 border border-emerald-100 p-4">
+                <div className="flex items-center gap-2 text-xs font-black text-emerald-700">
+                  <CheckCircle2 size={14} /> Profil actif — Virements automatiques
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Missions History */}
-          <div className="overflow-hidden rounded-[2.5rem] bg-white shadow-sm border border-slate-100 p-6">
-            <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-              <div className="space-y-1">
-                <h3 className="text-lg font-bold text-slate-900">Historique des missions</h3>
-                <p className="text-[11px] text-slate-400 font-medium uppercase tracking-wider">Filtrer par période pour générer un listing</p>
+          {/* Missions history */}
+          <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden">
+            <div className="px-6 py-5 border-b border-slate-50 flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <div className="text-[10px] font-black uppercase tracking-widest text-slate-400">Historique des missions</div>
+                <div className="text-xs font-bold text-slate-500 mt-0.5">{rows.length} commande(s) dans la période</div>
               </div>
               <div className="flex flex-wrap items-center gap-3">
-                <div className="flex items-center gap-2 bg-slate-50 p-1.5 rounded-2xl border border-slate-100">
+                <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-xl p-1.5">
+                  <Calendar size={13} className="text-slate-400 ml-1" />
                   <select
-                    onChange={(e) => handleSelectMonth(e.target.value)}
-                    className="bg-transparent text-xs font-bold text-slate-600 px-3 py-1.5 focus:outline-none"
+                    onChange={e => handleSelectMonth(e.target.value)}
+                    className="bg-transparent text-xs font-bold text-slate-700 focus:outline-none pr-1"
                     defaultValue=""
                   >
-                    <option value="">Sélectionner un mois</option>
+                    <option value="">Choisir un mois</option>
                     {Array.from({ length: 12 }).map((_, i) => {
-                      const d = new Date();
-                      d.setMonth(d.getMonth() - i);
+                      const d = new Date(); d.setMonth(d.getMonth() - i);
                       const val = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-                      const label = d.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
-                      return <option key={val} value={val}>{label}</option>;
+                      return <option key={val} value={val}>{d.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })}</option>;
                     })}
                   </select>
-                  <div className="h-4 w-[1px] bg-slate-200 mx-1"></div>
-                  <input
-                    type="date"
-                    value={from}
-                    onChange={(e) => setFrom(e.target.value)}
-                    className="bg-transparent px-2 py-1 text-xs font-semibold text-slate-500 focus:outline-none"
-                  />
-                  <span className="text-slate-300">→</span>
-                  <input
-                    type="date"
-                    value={to}
-                    onChange={(e) => setTo(e.target.value)}
-                    className="bg-transparent px-2 py-1 text-xs font-semibold text-slate-500 focus:outline-none"
-                  />
+                </div>
+                <div className="flex items-center gap-1.5 text-xs text-slate-400 font-bold">
+                  <input type="date" value={from} onChange={e => setFrom(e.target.value)} className="border border-slate-200 rounded-xl px-2 py-1.5 bg-white text-xs font-bold focus:outline-none" />
+                  <span>→</span>
+                  <input type="date" value={to} onChange={e => setTo(e.target.value)} className="border border-slate-200 rounded-xl px-2 py-1.5 bg-white text-xs font-bold focus:outline-none" />
                 </div>
                 <button
-                  type="button"
                   onClick={handleDownloadListing}
-                  disabled={rows.filter(r => r.status === "delivered").length === 0}
-                  className="flex items-center gap-2 rounded-2xl bg-white border border-slate-200 px-5 py-3 text-sm font-bold text-slate-700 transition-all hover:bg-slate-50 hover:shadow-md disabled:opacity-50"
-                  title="Télécharger le relevé détaillé des courses"
+                  disabled={totals.count === 0}
+                  className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-all disabled:opacity-40 shadow-sm"
                 >
-                  <FileText size={16} className="text-blue-500" />
-                  Listing
+                  <FileText size={13} className="text-indigo-500" /> Listing PDF
                 </button>
-
               </div>
             </div>
 
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm">
+              <table className="w-full text-sm">
                 <thead>
-                  <tr className="bg-slate-50/50 text-[10px] font-bold uppercase tracking-widest text-[#94a3b8]">
-                    <th className="px-6 py-4">Commande</th>
-                    <th className="px-6 py-4">Trajet</th>
-                    <th className="px-6 py-4">Date</th>
-                    <th className="px-6 py-4">Enlèvement</th>
-                    <th className="px-6 py-4">Livraison</th>
-                    <th className="px-6 py-4">Durée</th>
-                    <th className="px-6 py-4 text-right">Gain</th>
+                  <tr className="text-[9px] font-black uppercase tracking-[0.12em] text-slate-400 border-b border-slate-50">
+                    <th className="px-6 py-3">Réf.</th>
+                    <th className="px-6 py-3">Trajet</th>
+                    <th className="px-6 py-3">Date</th>
+                    <th className="px-6 py-3">Enlèvement</th>
+                    <th className="px-6 py-3">Livraison</th>
+                    <th className="px-6 py-3">Durée</th>
+                    <th className="px-6 py-3 text-right">Gain</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {rows.map((o) => (
-                    <tr key={o.id} className="transition-colors hover:bg-slate-50/60">
+                <tbody className="divide-y divide-slate-50">
+                  {rows.length === 0 ? (
+                    <tr><td colSpan={7} className="py-12 text-center text-sm font-bold text-slate-300">Aucune mission dans cette période.</td></tr>
+                  ) : rows.map(o => (
+                    <tr key={o.id} className="hover:bg-slate-50/80 transition-all cursor-pointer group" onClick={() => navigate(`/admin/orders/${o.id}`)}>
+                      <td className="px-6 py-4 font-black text-slate-900 group-hover:text-orange-500 transition-colors text-xs font-mono">#{o.id.slice(0, 8)}</td>
+                      <td className="px-6 py-4 text-xs text-slate-600 max-w-[180px] truncate">{o.route}</td>
+                      <td className="px-6 py-4 text-xs text-slate-500">{o.displayDate}</td>
                       <td className="px-6 py-4">
-                        <div className="font-bold text-slate-900">#{o.id.slice(0, 8).toUpperCase()}</div>
+                        <span className="inline-flex items-center rounded-lg bg-slate-100 px-2 py-0.5 text-xs font-bold text-slate-600">{o.pickupTime}</span>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="text-xs font-medium text-slate-700 truncate max-w-[200px]">{o.route}</div>
+                        <span className={`inline-flex items-center rounded-lg px-2 py-0.5 text-xs font-bold ${o.status === 'delivered' ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-50 text-slate-400'}`}>{o.deliveryTime}</span>
                       </td>
-                      <td className="px-6 py-4">
-                        <div className="text-xs text-slate-500 font-medium">{o.displayDate}</div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="text-xs font-bold text-slate-700 bg-slate-100/50 px-2 py-1 rounded-lg inline-block">{o.pickupTime}</div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className={`text-xs font-bold px-2 py-1 rounded-lg inline-block ${o.status === 'delivered' ? 'text-emerald-700 bg-emerald-50' : 'text-slate-400 bg-slate-50'}`}>
-                          {o.deliveryTime}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="text-xs text-slate-700 font-medium">{fmtMinutes(o.durationMinutes)}</div>
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        <div className="font-bold text-slate-900">{o.status === "delivered" ? Number(o.driverPayComputed || 0).toFixed(2) : "—"}€</div>
+                      <td className="px-6 py-4 text-xs font-bold text-slate-700">{fmtMinutes(o.durationMinutes)}</td>
+                      <td className="px-6 py-4 text-right font-black text-slate-900 tabular-nums">
+                        {o.status === "delivered" ? `${Number(o.driverPayComputed || 0).toFixed(2)}€` : "—"}
                       </td>
                     </tr>
                   ))}
                 </tbody>
+                {rows.length > 0 && (
+                  <tfoot>
+                    <tr className="border-t-2 border-slate-900">
+                      <td colSpan={6} className="px-6 py-4 text-[9px] font-black uppercase tracking-widest text-slate-400">Total période ({totals.count} courses)</td>
+                      <td className="px-6 py-4 text-right font-black text-slate-900 tabular-nums">{totals.totalPay.toFixed(2)}€</td>
+                    </tr>
+                  </tfoot>
+                )}
               </table>
             </div>
           </div>
         </div>
 
-        {/* Right Column: Stats & Quick Actions */}
-        <div className="lg:col-span-4 space-y-6">
-          <div className="rounded-[2.5rem] bg-white p-8 shadow-sm border border-slate-100 space-y-8">
-            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-[#94a3b8]">Vue d'ensemble</h3>
-
-            <div className="space-y-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="text-xs font-bold text-slate-400 uppercase tracking-tight">Courses effectuées</div>
-                  <div className="mt-1 text-3xl font-black text-slate-900 tracking-tight">{totals.count} <span className="text-sm font-bold text-slate-400">/ {totals.allCount}</span></div>
-                </div>
-                <div className="h-12 w-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600"><Clock size={24} /></div>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="text-xs font-bold text-slate-400 uppercase tracking-tight">Temps cumulé</div>
-                  <div className="mt-1 text-3xl font-black text-slate-900 tracking-tight">{fmtMinutes(totals.totalMins)}</div>
-                </div>
-                <div className="h-12 w-12 rounded-2xl bg-amber-50 flex items-center justify-center text-amber-600"><TrendingUp size={24} /></div>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="text-xs font-bold text-slate-400 uppercase tracking-tight">Gains totaux (HT)</div>
-                  <div className="mt-1 text-3xl font-black text-slate-900 tracking-tight">{totals.totalPay.toFixed(2)}€</div>
-                </div>
-                <div className="h-12 w-12 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600"><Banknote size={24} /></div>
+        {/* Right — Stats */}
+        <div className="space-y-5">
+          {/* Summary */}
+          <div className="bg-slate-900 text-white rounded-[2rem] p-6 shadow-xl relative overflow-hidden">
+            <div className="absolute -top-8 -right-8 h-28 w-28 bg-orange-500/10 rounded-full blur-3xl" />
+            <div className="relative z-10">
+              <div className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-4">Vue d'ensemble</div>
+              <div className="space-y-5">
+                {[
+                  { label: "Courses terminées", value: `${totals.count} / ${totals.allCount}`, icon: <CheckCircle2 size={18} className="text-emerald-400" /> },
+                  { label: "Temps de livraison", value: fmtMinutes(totals.totalMins), icon: <Clock size={18} className="text-amber-400" /> },
+                  { label: "Gains HT (période)", value: `${totals.totalPay.toFixed(2)}€`, icon: <TrendingUp size={18} className="text-indigo-400" /> },
+                ].map((item, i) => (
+                  <div key={i} className="flex items-center justify-between border-b border-white/5 pb-4 last:border-0 last:pb-0">
+                    <div className="flex items-center gap-3">
+                      {item.icon}
+                      <span className="text-xs font-bold text-slate-400">{item.label}</span>
+                    </div>
+                    <span className="text-sm font-black tabular-nums">{item.value}</span>
+                  </div>
+                ))}
               </div>
             </div>
+          </div>
 
-            <div className="pt-8 border-t border-slate-100">
-              <div className="rounded-2xl bg-slate-900 p-6 text-white">
-                <h4 className="flex items-center gap-2 text-sm font-bold mb-2">
-                  <CheckCircle2 size={18} className="text-emerald-400" />
-                  Statut Administratif
-                </h4>
-                <p className="text-xs text-slate-400 leading-relaxed">
-                  Profil vérifié et actif. Le chauffeur reçoit ses virements automatiquement via les coordonnées IBAN renseignées.
-                </p>
-              </div>
+          {/* Quick info */}
+          <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm p-6">
+            <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">Informations rapides</div>
+            <div className="space-y-3">
+              {[
+                { label: "Téléphone", value: driverDetails.phone_number },
+                { label: "Email", value: driverDetails.email || driver.email },
+                { label: "Véhicule", value: driverDetails.vehicle_model ? `${driverDetails.vehicle_model} · ${driverDetails.vehicle_plate || "—"}` : null },
+                { label: "IBAN", value: driverDetails.iban ? `${driverDetails.iban.slice(0, 8)}…` : null },
+                { label: "Depuis le", value: new Date(driver.created_at).toLocaleDateString('fr-FR', { dateStyle: 'long' }) },
+              ].map((item, i) => item.value ? (
+                <div key={i} className="flex justify-between items-start py-2 border-b border-slate-50 last:border-0">
+                  <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">{item.label}</span>
+                  <span className="text-xs font-bold text-slate-900 text-right max-w-[55%] truncate">{item.value}</span>
+                </div>
+              ) : null)}
             </div>
+          </div>
+
+          {/* Listing export card */}
+          <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm p-6">
+            <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-3">Export</div>
+            <p className="text-xs text-slate-500 mb-4 leading-relaxed">Générez un relevé PDF de toutes les courses sur la période sélectionnée.</p>
+            <button
+              onClick={handleDownloadListing}
+              disabled={totals.count === 0}
+              className="w-full flex items-center justify-center gap-2 rounded-xl bg-indigo-600 py-3 text-xs font-black text-white hover:bg-indigo-700 transition-all disabled:opacity-40"
+            >
+              <Download size={14} /> Télécharger le relevé
+            </button>
           </div>
         </div>
       </div>
     </div>
   );
 }
-
-
-

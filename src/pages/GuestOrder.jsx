@@ -1,121 +1,63 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Package, Truck, Clock, MapPin, Phone, User, ArrowLeft, Loader2, CheckCircle2, ShoppingCart, Info, AlertCircle, Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
+import { Link } from "react-router-dom";
 import { supabase } from "../lib/supabase.js";
-import PublicHeader from "../components/PublicHeader.jsx";
 import { autocompleteAddress } from "../lib/autocomplete";
+import { sendTelegramMessage, notifyNewOrder } from "../lib/telegram";
+import PublicHeader from "../components/PublicHeader.jsx";
+import PublicFooter from "../components/PublicFooter.jsx";
+import {
+    ArrowLeft, ArrowRight, Truck, MapPin, Package, Clock,
+    ShieldCheck, CheckCircle2, Loader2, Info, User, Mail, Phone
+} from "lucide-react";
 
 const VEHICLES = ["Moto", "Voiture"];
-const LOCATIONIQ_KEY = import.meta.env.VITE_LOCATIONIQ_API_KEY;
-const LOCATIONIQ_URL = "https://api.locationiq.com/v1/autocomplete";
 
 const getPostcode = (str = "") => {
     const match = String(str).match(/\b\d{5}\b/);
     return match ? match[0] : "";
 };
 
-const formatAddress = (d) => {
-    // If it's a suggestion from our new service, it already has the label in 'full'
-    if (d.full) return d.full;
-
-    const a = d.address || {};
-    const street = [a.house_number, a.road].filter(Boolean).join(" ");
-    const city = [a.postcode, a.city || a.town || a.village].filter(Boolean).join(" ");
-    if (street && city) return `${street}, ${city}`;
-    return d.display_name;
-};
-
 export default function GuestOrder() {
-    const navigate = useNavigate();
-    const [loading, setLoading] = useState(false);
-    const [success, setSuccess] = useState(null);
-    const [error, setError] = useState("");
-    const [seedIndex, setSeedIndex] = useState(0);
+    const [step, setStep] = useState(1);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [success, setSuccess] = useState(false);
+    const [price, setPrice] = useState(null);
+    const [calculatingPrice, setCalculatingPrice] = useState(false);
 
     const [pickupSuggestions, setPickupSuggestions] = useState([]);
     const [deliverySuggestions, setDeliverySuggestions] = useState([]);
     const [loadingPickup, setLoadingPickup] = useState(false);
     const [loadingDelivery, setLoadingDelivery] = useState(false);
 
-    const [price, setPrice] = useState(null);
-    const [calculatingPrice, setCalculatingPrice] = useState(false);
-
     const [form, setForm] = useState({
-        pickup: "",
-        pickupName: "",
-        pickupContact: "",
-        pickupPhone: "",
-        pickupInstructions: "",
-        pickupDate: new Date().toISOString().split('T')[0],
-        pickupTime: "08:00",
-        pickupCode: "",
-        pickupCity: "",
-        pickupPostcode: "",
-        pickupEmail: "",
-        delivery: "",
-        deliveryName: "",
-        deliveryContact: "",
-        deliveryPhone: "",
-        deliveryInstructions: "",
-        deliveryDate: new Date().toISOString().split('T')[0],
-        deliveryTime: "09:00",
-        deliveryCity: "",
-        deliveryPostcode: "",
+        // Adresses
+        pickup: "", pickupCity: "", pickupPostcode: "",
+        pickupName: "", pickupContact: "", pickupPhone: "", pickupInstructions: "", pickupAccessCode: "",
+        delivery: "", deliveryCity: "", deliveryPostcode: "",
+        deliveryName: "", deliveryContact: "", deliveryPhone: "", deliveryInstructions: "", deliveryAccessCode: "",
+        // Timing
+        date: new Date().toISOString().split('T')[0],
+        pickupTime: "09:00",
+        deliveryDeadline: "12:00",
+        // Transport
         vehicle: "moto",
         service: "normal",
-        packageDesc: "",
-        packageWeight: "",
-        contactPhone: "",
-        guestEmail: "",
-        billingName: "",
-        billingCompany: "",
-        billingAddress: "",
         packageType: "Pli",
-        packageTypeOther: "",
+        packageWeight: "",
+        packageDesc: "",
+        // Contact invité
+        guestName: "",
+        guestEmail: "",
+        guestPhone: "",
+        guestCompany: "",
     });
 
-    // Auto-calculate delivery time based on formula
-    useEffect(() => {
-        if (!form.pickupTime || !form.deliveryTime) return;
-
-        const pickup = new Date(`${form.pickupDate}T${form.pickupTime}:00`);
-        const delivery = new Date(`${form.deliveryDate}T${form.deliveryTime}:00`);
-
-        // Handle case where delivery is next day automatically if time is earlier? 
-        // For now, trust the dates provided.
-
-        const diffMs = delivery - pickup;
-        const diffMinutes = diffMs / (1000 * 60);
-
-        let newService = "normal";
-
-        if (diffMinutes <= 0) {
-            // Invalid time range (delivery before pickup), default to normal or handle error
-            // User feedback: sticky vague hours should default to normal
-            newService = "normal";
-        } else if (diffMinutes <= 90) { // 1h30
-            newService = "super";
-        } else if (diffMinutes <= 180) { // 3h (User: Exclu is 3h)
-            newService = "exclu";
-        } else {
-            newService = "normal";
-        }
-
-        if (form.service !== newService) {
-            setForm(prev => ({ ...prev, service: newService }));
-        }
-    }, [form.pickupTime, form.pickupDate, form.deliveryTime, form.deliveryDate]);
-
-    // Calculate Price logic
+    // Auto-calcul du prix
     useEffect(() => {
         const calc = async () => {
-            const pCode = form.pickupPostcode || getPostcode(form.pickup);
-            const dCode = form.deliveryPostcode || getPostcode(form.delivery);
-
-            if (!pCode || !dCode || !form.vehicle) {
-                setPrice(null);
-                return;
-            }
+            const pCode = getPostcode(form.pickup);
+            const dCode = getPostcode(form.delivery);
+            if (!pCode || !dCode || !form.vehicle) { setPrice(null); return; }
 
             setCalculatingPrice(true);
             const { data, error } = await supabase.rpc('calculate_shipping_cost', {
@@ -124,868 +66,571 @@ export default function GuestOrder() {
                 p_vehicle_type: form.vehicle.toLowerCase(),
                 p_service_level: form.service.toLowerCase()
             });
-
             setCalculatingPrice(false);
-            if (!error) setPrice(data);
+            setPrice(error ? null : data);
         };
-
-        const timer = setTimeout(calc, 500);
+        const timer = setTimeout(calc, 600);
         return () => clearTimeout(timer);
     }, [form.pickup, form.delivery, form.vehicle, form.service]);
 
+    // Auto-détection du niveau de service selon les horaires
+    useEffect(() => {
+        if (!form.pickupTime || !form.deliveryDeadline) return;
+        const [ph, pm] = form.pickupTime.split(':').map(Number);
+        const [dh, dm] = form.deliveryDeadline.split(':').map(Number);
+        let start = new Date(); start.setHours(ph, pm, 0, 0);
+        let end = new Date(); end.setHours(dh, dm, 0, 0);
+        if (end < start) end.setDate(end.getDate() + 1);
+        const diffMinutes = (end - start) / (1000 * 60);
+        let autoService = diffMinutes <= 90 ? "super" : diffMinutes <= 180 ? "exclu" : "normal";
+        if (form.service !== autoService) setForm(prev => ({ ...prev, service: autoService }));
+    }, [form.pickupTime, form.deliveryDeadline]);
+
     const fetchSuggestions = async (query, setSuggestions, setLoading) => {
-        if (query.trim().length < 2) {
-            setSuggestions([]);
-            return;
-        }
+        if (query.trim().length < 3) { setSuggestions([]); return; }
         try {
             setLoading(true);
             const results = await autocompleteAddress(query);
-            const list = results.map(s => ({
-                label: s.full,
-                city: s.city,
-                postcode: s.postcode,
-                street: s.street
-            }));
-            setSuggestions(list);
-        } catch (err) {
-            console.error("Autocomplete error:", err);
-            setSuggestions([]);
-        } finally {
-            setLoading(false);
+            setSuggestions(results.map(s => ({ label: s.full, city: s.city, postcode: s.postcode })));
+        } catch { setSuggestions([]); }
+        finally { setLoading(false); }
+    };
+
+    const submitOrder = async () => {
+        if (!price) return alert("Le prix n'a pas pu être calculé. Vérifiez les codes postaux.");
+        if (!form.guestEmail) return alert("Veuillez renseigner votre email pour recevoir la confirmation.");
+        setIsSubmitting(true);
+
+        const notes = `[COMMANDE SANS COMPTE]\nContact: ${form.guestName} (${form.guestCompany || ''})\nEmail: ${form.guestEmail} | Tél: ${form.guestPhone}\n---\nEnlev: ${form.pickupName} | ${form.pickupContact} | ${form.pickupPhone} | Digicode: ${form.pickupAccessCode}\nInstr Enlev: ${form.pickupInstructions}\nLivr: ${form.deliveryName} | ${form.deliveryContact} | ${form.deliveryPhone} | Digicode: ${form.deliveryAccessCode}\nInstr Livr: ${form.deliveryInstructions}`;
+
+        const { error } = await supabase.from('orders').insert({
+            client_id: null,
+            pickup_address: form.pickup,
+            pickup_city: form.pickupCity || getPostcode(form.pickup),
+            pickup_postal_code: form.pickupPostcode || getPostcode(form.pickup),
+            pickup_name: form.pickupName,
+            pickup_phone: form.pickupPhone,
+            pickup_access_code: form.pickupAccessCode,
+            delivery_address: form.delivery,
+            delivery_city: form.deliveryCity,
+            delivery_postal_code: form.deliveryPostcode || getPostcode(form.delivery),
+            delivery_name: form.deliveryName,
+            vehicle_type: form.vehicle.toLowerCase(),
+            service_level: form.service.toLowerCase(),
+            status: 'pending_acceptance',
+            price_ht: price,
+            scheduled_at: form.date && form.pickupTime ? `${form.date}T${form.pickupTime}:00` : null,
+            delivery_deadline: form.date && form.deliveryDeadline ? `${form.date}T${form.deliveryDeadline}:00` : null,
+            package_type: form.packageType,
+            package_description: form.packageDesc,
+            weight: parseFloat(String(form.packageWeight).replace(',', '.')) || null,
+            notes: notes,
+        });
+
+        setIsSubmitting(false);
+        if (error) {
+            alert("Erreur lors de la soumission : " + error.message);
+        } else {
+            try {
+                notifyNewOrder({
+                    pickup_address: form.pickup,
+                    delivery_address: form.delivery,
+                    pickup_city: form.pickupCity,
+                    delivery_city: form.deliveryCity,
+                    vehicle_type: form.vehicle,
+                    service_level: form.service,
+                    price_ht: price,
+                    scheduled_at: form.date && form.pickupTime ? `${form.date}T${form.pickupTime}:00` : null,
+                    delivery_deadline: form.date && form.deliveryDeadline ? `${form.date}T${form.deliveryDeadline}:00` : null,
+                }, `${form.guestName || 'Invité'} (${form.guestEmail})`);
+            } catch { /* Non-bloquant */ }
+            setSuccess(true);
         }
     };
 
-    const seedSamples = [
-        {
-            pickupName: "Entreprise A",
-            pickupContact: "Camille",
-            pickupPhone: "0600000000",
-            pickupCode: "1234, 2ème étage",
-            pickup: "10 Rue de la Paix, 75002 Paris",
-            pickupInstructions: "devant",
-            pickupDate: "2026-02-16",
-            pickupTime: "08:00",
-            deliveryName: "Cherki",
-            deliveryContact: "edi",
-            deliveryPhone: "0797545037",
-            delivery: "13 Rue de Verdun, 78440 Gargenville",
-            deliveryInstructions: "acc",
-            deliveryDate: "2026-02-16",
-            deliveryTime: "09:00",
-            vehicle: "moto",
-            packageWeight: "< 1kg",
-            packageType: "Pli",
-            packageDesc: "Documents juridiques, enveloppe A4",
-            billingName: "nicolas",
-            billingCompany: "Cherki",
-            billingAddress: "5 Rue Nungesser",
-            guestEmail: "cherkinicolas@gmail.com",
-            contactPhone: "0666026707",
-        },
-        {
-            pickupName: "Entreprise B",
-            pickupContact: "Thomas",
-            pickupPhone: "0612345678",
-            pickupCode: "B2, étage 3",
-            pickup: "5 Rue Nungesser, 78960 Voisins-le-Bretonneux",
-            pickupInstructions: "sonner interphone",
-            pickupDate: "2026-02-16",
-            pickupTime: "09:00",
-            deliveryName: "SRF",
-            deliveryContact: "gigi",
-            deliveryPhone: "0666026707",
-            delivery: "Avenue Daumesnil, 94160 Saint-Mandé",
-            deliveryInstructions: "accueil",
-            deliveryDate: "2026-02-16",
-            deliveryTime: "10:00",
-            vehicle: "moto",
-            packageWeight: "1kg - 5kg",
-            packageType: "Pli",
-            packageDesc: "5 plis",
-            billingName: "Nicolas Cherki",
-            billingCompany: "One Connexion",
-            billingAddress: "5 Rue Nungesser",
-            guestEmail: "nicolas@oneconnexion.fr",
-            contactPhone: "0666026707",
-        }
+    const steps = [
+        { title: "Trajet", icon: MapPin },
+        { title: "Détails", icon: Package },
+        { title: "Contact", icon: User },
+        { title: "Validation", icon: ShieldCheck },
     ];
 
-    const fillTestData = () => {
-        const sample = seedSamples[seedIndex % seedSamples.length];
-        setForm(prev => ({
-            ...prev,
-            ...sample,
-            pickupCity: "",
-            pickupPostcode: "",
-            deliveryCity: "",
-            deliveryPostcode: "",
-            service: "super",
-        }));
-        setSeedIndex((i) => i + 1);
+    const nextStep = () => {
+        if (step === 1 && (!form.pickup || !form.delivery)) return alert("Veuillez renseigner les adresses d'enlèvement et de livraison.");
+        if (step === 3 && !form.guestEmail) return alert("Veuillez renseigner votre email.");
+        setStep(s => Math.min(s + 1, 4));
     };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        if (!price) return setError("Prix non calculé.");
-        setLoading(true);
-        setError("");
-        try {
-            const scheduledAt = `${form.pickupDate}T${form.pickupTime}:00`;
-            const deliveryDeadline = `${form.deliveryDate}T${form.deliveryTime}:00`;
-
-            const { data, error: orderError } = await supabase.from('orders').insert({
-                client_id: null,
-                pickup_address: form.pickup,
-                pickup_city: form.pickupCity || getPostcode(form.pickup),
-                pickup_postal_code: form.pickupPostcode || getPostcode(form.pickup),
-                pickup_name: form.pickupName,
-                pickup_phone: form.pickupPhone,
-                pickup_access_code: form.pickupCode,
-                delivery_address: form.delivery,
-                delivery_city: form.deliveryCity || getPostcode(form.delivery),
-                delivery_postal_code: form.deliveryPostcode || getPostcode(form.delivery),
-                delivery_name: form.deliveryName,
-                vehicle_type: form.vehicle.toLowerCase(),
-                service_level: form.service.toLowerCase(),
-                status: 'pending_acceptance',
-                price_ht: price,
-                package_description: form.packageDesc,
-                weight: parseFloat(form.packageWeight) || 0,
-                scheduled_at: scheduledAt,
-                delivery_deadline: deliveryDeadline,
-                package_type: form.packageType === "Autre" ? (form.packageTypeOther || "Autre") : form.packageType,
-                notes: `Guest Order. Entreprise Pick: ${form.pickupName}. Contact Pick: ${form.pickupContact}. Phone Pick: ${form.pickupPhone}. Email Enlev: ${form.pickupEmail}. Entreprise Deliv: ${form.deliveryName}. Contact Deliv: ${form.deliveryContact}. Phone Deliv: ${form.deliveryPhone || ""}. Instructions: ${form.pickupInstructions} / ${form.deliveryInstructions}. Email Client: ${form.guestEmail}. Phone: ${form.contactPhone}. Billing: ${form.billingName} | ${form.billingCompany} | ${form.billingAddress}`,
-            }).select().single();
-
-            if (orderError) throw orderError;
-            setSuccess(data.id);
-        } catch (err) {
-            setError(err.message);
-        } finally {
-            setLoading(false);
-        }
-    };
+    const prevStep = () => setStep(s => Math.max(s - 1, 1));
 
     if (success) {
         return (
-            <div className="flex min-h-screen items-center justify-center bg-white p-6">
-                <div className="w-full max-w-md text-center">
-                    <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-orange-50 text-orange-500">
-                        <CheckCircle2 size={40} />
-                    </div>
-                    <h1 className="text-3xl font-bold text-slate-900">Commande validée !</h1>
-                    <p className="mt-4 text-slate-500 leading-relaxed">
-                        Votre commande <span className="font-bold text-slate-900">#{success.slice(0, 8)}</span> a été transmise à nos équipes.
-                        Vous recevrez un email de confirmation sous peu.
-                    </p>
-                    <div className="mt-8 rounded-3xl bg-slate-50 p-8 text-left ring-1 ring-slate-100">
-                        <div className="flex items-center justify-between">
-                            <h3 className="text-lg font-bold text-slate-900">Résumé de la course</h3>
-                            <div className="text-xs font-bold uppercase tracking-widest text-slate-400">Commande #{success.slice(0, 8)}</div>
+            <div className="min-h-screen bg-[#f8fafc] flex flex-col">
+                <PublicHeader />
+                <div className="flex-1 flex flex-col items-center justify-center px-4 py-32">
+                    <div className="max-w-lg w-full bg-white rounded-[2.5rem] p-12 shadow-sm ring-1 ring-slate-100 text-center space-y-6">
+                        <div className="inline-flex h-20 w-20 items-center justify-center rounded-3xl bg-emerald-100 text-emerald-500 mx-auto">
+                            <CheckCircle2 size={40} />
                         </div>
-
-                        <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                            <div className="rounded-2xl bg-white p-4 shadow-sm">
-                                <div className="text-xs font-bold uppercase tracking-widest text-slate-400">Véhicule</div>
-                                <div className="mt-2 text-sm font-semibold text-slate-900 uppercase">{form.vehicle}</div>
-                            </div>
-                            <div className="rounded-2xl bg-white p-4 shadow-sm">
-                                <div className="text-xs font-bold uppercase tracking-widest text-slate-400">Formule</div>
-                                <div className="mt-2 text-sm font-semibold text-slate-900">{form.service === 'super' ? 'Super (1h30)' : form.service === 'exclu' ? 'Exclu (3h)' : 'Normal (4h)'}</div>
-                            </div>
-                            <div className="rounded-2xl bg-white p-4 shadow-sm">
-                                <div className="text-xs font-bold uppercase tracking-widest text-slate-400">Colis</div>
-                                <div className="mt-2 text-sm font-semibold text-slate-900">{form.packageType}{form.packageType === "Autre" && form.packageTypeOther ? ` (${form.packageTypeOther})` : ""}</div>
-                                {form.packageWeight && <div className="mt-1 text-xs text-slate-500">Poids : {form.packageWeight}</div>}
-                                {form.packageDesc && <div className="mt-1 text-xs text-slate-500">Contenu : {form.packageDesc}</div>}
-                            </div>
-                            <div className="rounded-2xl bg-white p-4 shadow-sm">
-                                <div className="text-xs font-bold uppercase tracking-widest text-slate-400">Prix</div>
-                                <div className="mt-2 flex items-baseline justify-between">
-                                    <span className="text-sm text-slate-500">HT</span>
-                                    <span className="text-sm font-semibold text-slate-900">{price}€</span>
-                                </div>
-                                <div className="mt-1 flex items-baseline justify-between">
-                                    <span className="text-sm text-slate-500">TTC</span>
-                                    <span className="text-base font-bold text-orange-600">{(price * 1.2).toFixed(2)}€</span>
-                                </div>
-                            </div>
+                        <h2 className="text-2xl font-black text-slate-900">Commande bien reçue !</h2>
+                        <p className="text-slate-500 text-sm leading-relaxed">
+                            Votre demande a été transmise. Un email de confirmation sera envoyé à <strong>{form.guestEmail}</strong>.<br />
+                            Notre équipe de dispatch prend en charge votre mission.
+                        </p>
+                        <div className="bg-slate-50 rounded-2xl p-4 text-sm font-medium text-slate-600 text-left space-y-1">
+                            <div className="flex gap-2"><MapPin size={14} className="text-slate-400 mt-0.5" /><span>{form.pickup} → {form.delivery}</span></div>
+                            <div className="flex gap-2"><Clock size={14} className="text-slate-400 mt-0.5" /><span>Le {new Date(form.date).toLocaleDateString('fr-FR')} de {form.pickupTime} à {form.deliveryDeadline}</span></div>
+                            <div className="flex gap-2"><Truck size={14} className="text-slate-400 mt-0.5" /><span>{form.vehicle.charAt(0).toUpperCase() + form.vehicle.slice(1)} • {Number(price).toFixed(2)}€ HT</span></div>
                         </div>
-
-                        <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                            <div className="rounded-2xl bg-white p-5 shadow-sm">
-                                <div className="text-xs font-bold uppercase tracking-widest text-slate-400">Enlèvement</div>
-                                <div className="mt-2 text-sm font-semibold text-slate-900">{form.pickupName}</div>
-                                <div className="mt-1 text-sm text-slate-500">{form.pickup}</div>
-                                <div className="mt-2 text-sm text-slate-500">{form.pickupDate} • {form.pickupTime}</div>
-                                {form.pickupContact && <div className="mt-2 text-xs text-slate-500">Contact : {form.pickupContact} {form.pickupPhone ? `• ${form.pickupPhone}` : ""}</div>}
-                                {form.pickupCode && <div className="mt-1 text-xs text-slate-500">Code/étage : {form.pickupCode}</div>}
-                                {form.pickupInstructions && <div className="mt-1 text-xs text-slate-500 italic">"{form.pickupInstructions}"</div>}
-                            </div>
-
-                            <div className="rounded-2xl bg-white p-5 shadow-sm">
-                                <div className="text-xs font-bold uppercase tracking-widest text-slate-400">Livraison</div>
-                                <div className="mt-2 text-sm font-semibold text-slate-900">{form.deliveryName}</div>
-                                <div className="mt-1 text-sm text-slate-500">{form.delivery}</div>
-                                <div className="mt-2 text-sm text-slate-500">{form.deliveryDate} • {form.deliveryTime}</div>
-                                {form.deliveryContact && <div className="mt-2 text-xs text-slate-500">Contact : {form.deliveryContact} {form.deliveryPhone ? `• ${form.deliveryPhone}` : ""}</div>}
-                                {form.deliveryInstructions && <div className="mt-1 text-xs text-slate-500 italic">"{form.deliveryInstructions}"</div>}
-                            </div>
+                        <div className="flex flex-col gap-3 pt-2">
+                            <Link to="/" className="w-full rounded-full bg-slate-900 py-3.5 text-sm font-bold text-white text-center hover:bg-orange-500 transition-all">
+                                Retour à l'accueil
+                            </Link>
+                            <Link to="/inscription" className="w-full rounded-full border border-slate-200 py-3.5 text-sm font-bold text-slate-700 text-center hover:bg-slate-50 transition-all">
+                                Créer un compte pro pour plus de fonctionnalités →
+                            </Link>
                         </div>
-
-                        <div className="mt-6 rounded-2xl bg-white p-5 shadow-sm">
-                            <div className="text-xs font-bold uppercase tracking-widest text-slate-400">Infos de facturation</div>
-                            <div className="mt-2 text-sm text-slate-500">Nom : <span className="font-medium text-slate-900">{form.billingName}</span></div>
-                            <div className="mt-1 text-sm text-slate-500">Entreprise : <span className="font-medium text-slate-900">{form.billingCompany}</span></div>
-                            <div className="mt-1 text-sm text-slate-500">Adresse : <span className="font-medium text-slate-900">{form.billingAddress}</span></div>
-                        </div>
-                    </div>
-                    <div className="mt-8 flex flex-col gap-3">
-                        <button
-                            onClick={async () => {
-                                const { generateOrderPdf } = await import("../lib/pdfGenerator");
-                                const dummyOrder = {
-                                    id: success,
-                                    created_at: new Date().toISOString(),
-                                    pickup_address: form.pickup,
-                                    pickup_name: form.pickupName,
-                                    pickup_phone: form.pickupPhone,
-                                    delivery_address: form.delivery,
-                                    delivery_name: form.deliveryName,
-                                    vehicle_type: form.vehicle,
-                                    service_level: form.service,
-                                    price_ht: price,
-                                    package_type: form.packageType === "Autre" ? form.packageTypeOther : form.packageType,
-                                    package_description: form.packageDesc,
-                                    weight: form.packageWeight,
-                                    notes: `Email: ${form.guestEmail}. Phone: ${form.contactPhone}. Billing: ${form.billingName} | ${form.billingCompany} | ${form.billingAddress}`,
-                                };
-                                generateOrderPdf(dummyOrder, {});
-                            }}
-                            className="flex w-full items-center justify-center gap-2 rounded-full bg-slate-900 py-4 text-sm font-bold text-white shadow-xl shadow-slate-900/20 active:scale-95 transition-all"
-                        >
-                            <Truck size={18} />
-                            TÉLÉCHARGER LE BON (PDF)
-                        </button>
-
-                        <button
-                            onClick={() => navigate('/')}
-                            className="w-full py-2 text-xs font-bold text-slate-400 hover:text-slate-600 transition-colors"
-                        >
-                            Retour à l'accueil
-                        </button>
                     </div>
                 </div>
+                <PublicFooter />
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-slate-50">
-            {/* Header */}
+        <div className="min-h-screen bg-[#f8fafc] flex flex-col">
             <PublicHeader />
 
-            <main className="mx-auto w-full max-w-none px-8 py-12">
-                <div className="mb-12 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                    <div>
-                        <h1 className="text-4xl font-bold tracking-tight text-slate-900 md:text-5xl">Commander une course</h1>
-                        <p className="mt-4 text-lg text-slate-500">Pas besoin de compte. Simple, rapide et fiable.</p>
+            <div className="flex-1 px-4 pt-32 pb-20">
+                <div className="mx-auto max-w-4xl space-y-8">
+
+                    {/* Back link */}
+                    <Link to="/" className="inline-flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-slate-900 transition-colors">
+                        <ArrowLeft size={16} /> Retour à l'accueil
+                    </Link>
+
+                    {/* Stepper Header */}
+                    <div className="bg-white rounded-[2.5rem] p-8 shadow-sm ring-1 ring-slate-100 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-orange-500/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none" />
+
+                        <div className="relative z-10 w-full md:w-auto">
+                            <h1 className="text-3xl font-black text-slate-900">Commander sans compte</h1>
+                            <p className="text-sm font-medium text-slate-500 mt-2">Programmez votre expédition en quelques secondes.</p>
+                        </div>
+
+                        <div className="relative z-10 flex w-full md:w-auto items-center justify-between md:gap-10">
+                            {steps.map((s, i) => {
+                                const active = step === i + 1;
+                                const passed = step > i + 1;
+                                return (
+                                    <div key={i} className="flex flex-col items-center gap-2 relative">
+                                        {i < steps.length - 1 && (
+                                            <div className={`hidden md:block absolute top-[18px] left-[50%] w-[160%] h-[2px] transition-colors duration-500 ${passed ? 'bg-orange-500' : 'bg-slate-100'}`} style={{ transform: 'translateX(20px)' }} />
+                                        )}
+                                        <div className={`grid h-10 w-10 place-items-center rounded-2xl font-bold transition-all duration-300 relative z-10
+                      ${active ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/30 scale-110'
+                                                : passed ? 'bg-slate-900 text-white'
+                                                    : 'bg-slate-100 text-slate-400'}`}>
+                                            {passed ? <CheckCircle2 size={20} /> : <s.icon size={20} />}
+                                        </div>
+                                        <span className={`text-[10px] font-bold uppercase tracking-widest ${active ? 'text-orange-500' : passed ? 'text-slate-900' : 'text-slate-400'}`}>
+                                            {s.title}
+                                        </span>
+                                    </div>
+                                );
+                            })}
+                        </div>
                     </div>
-                    <button
-                        type="button"
-                        onClick={fillTestData}
-                        className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-900 shadow-sm hover:bg-slate-50"
-                    >
-                        Remplir avec des données test
-                    </button>
-                </div>
 
-                <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(380px,460px)]">
-                    {/* Form */}
-                    <div className="lg:col-span-1">
-                        <form onSubmit={handleSubmit} className="space-y-8">
-                            {/* Pickup Section */}
-                            <div className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-100">
-                                <div className="mb-6 flex items-center gap-3">
-                                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-50 text-orange-500">
-                                        <MapPin size={24} />
+                    {/* Main Form Content */}
+                    <div className="bg-white rounded-[2.5rem] p-6 md:p-10 shadow-sm ring-1 ring-slate-100 relative overflow-hidden min-h-[500px]">
+
+                        {/* ── Step 1: Trajet ── */}
+                        {step === 1 && (
+                            <div className="space-y-8 animate-fade-in-up">
+                                <div className="grid md:grid-cols-2 gap-8">
+                                    {/* Pickup */}
+                                    <div className="space-y-5 relative">
+                                        <div className="flex items-center gap-3 border-b border-slate-100 pb-3">
+                                            <div className="h-8 w-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold">1</div>
+                                            <h2 className="text-xl font-bold text-slate-900">Enlèvement</h2>
+                                        </div>
+                                        <div className="space-y-4">
+                                            <div>
+                                                <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 block">Adresse de départ *</label>
+                                                <input
+                                                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-orange-500 focus:bg-white transition-all"
+                                                    placeholder="Saisissez l'adresse complète"
+                                                    value={form.pickup}
+                                                    onChange={e => {
+                                                        const val = e.target.value;
+                                                        setForm({ ...form, pickup: val });
+                                                        fetchSuggestions(val, setPickupSuggestions, setLoadingPickup);
+                                                    }}
+                                                />
+                                                {pickupSuggestions.length > 0 && (
+                                                    <div className="absolute z-30 mt-2 w-full rounded-2xl border border-slate-100 bg-white p-2 shadow-xl overflow-hidden">
+                                                        {pickupSuggestions.map((s, i) => (
+                                                            <button key={i} className="w-full text-left px-4 py-3 text-sm font-medium hover:bg-slate-50 rounded-xl transition-colors"
+                                                                onClick={() => {
+                                                                    setForm({ ...form, pickup: s.label, pickupCity: s.city, pickupPostcode: s.postcode });
+                                                                    setPickupSuggestions([]);
+                                                                }}>
+                                                                {s.label}
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div>
+                                                    <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 block">Société</label>
+                                                    <input className="w-full rounded-xl border border-slate-200 px-4 py-2 text-sm focus:outline-none focus:border-slate-900" placeholder="Nom de l'entreprise" value={form.pickupName} onChange={e => setForm({ ...form, pickupName: e.target.value })} />
+                                                </div>
+                                                <div>
+                                                    <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 block">Contact</label>
+                                                    <input className="w-full rounded-xl border border-slate-200 px-4 py-2 text-sm focus:outline-none focus:border-slate-900" placeholder="Nom complet" value={form.pickupContact} onChange={e => setForm({ ...form, pickupContact: e.target.value })} />
+                                                </div>
+                                            </div>
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div>
+                                                    <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 block">Téléphone</label>
+                                                    <input className="w-full rounded-xl border border-slate-200 px-4 py-2 text-sm focus:outline-none focus:border-slate-900" placeholder="06..." value={form.pickupPhone} onChange={e => setForm({ ...form, pickupPhone: e.target.value })} />
+                                                </div>
+                                                <div>
+                                                    <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 block">Digicode / Étage</label>
+                                                    <input className="w-full rounded-xl border border-slate-200 px-4 py-2 text-sm focus:outline-none focus:border-slate-900" placeholder="Ex: B1234" value={form.pickupAccessCode} onChange={e => setForm({ ...form, pickupAccessCode: e.target.value })} />
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 block">Instructions d'enlèvement</label>
+                                                <input className="w-full rounded-xl border border-slate-200 px-4 py-2 text-sm focus:outline-none focus:border-slate-900" placeholder="Infos spécifiques pour le coursier..." value={form.pickupInstructions} onChange={e => setForm({ ...form, pickupInstructions: e.target.value })} />
+                                            </div>
+                                        </div>
                                     </div>
-                                    <h2 className="text-xl font-bold text-slate-900">Enlèvement</h2>
+
+                                    {/* Delivery */}
+                                    <div className="space-y-5 relative">
+                                        <div className="flex items-center gap-3 border-b border-slate-100 pb-3">
+                                            <div className="h-8 w-8 rounded-full bg-orange-500 text-white flex items-center justify-center font-bold">2</div>
+                                            <h2 className="text-xl font-bold text-slate-900">Livraison</h2>
+                                        </div>
+                                        <div className="space-y-4">
+                                            <div>
+                                                <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 block">Adresse d'arrivée *</label>
+                                                <input
+                                                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-orange-500 focus:bg-white transition-all"
+                                                    placeholder="Saisissez l'adresse complète"
+                                                    value={form.delivery}
+                                                    onChange={e => {
+                                                        const val = e.target.value;
+                                                        setForm({ ...form, delivery: val });
+                                                        fetchSuggestions(val, setDeliverySuggestions, setLoadingDelivery);
+                                                    }}
+                                                />
+                                                {deliverySuggestions.length > 0 && (
+                                                    <div className="absolute z-30 mt-2 w-full rounded-2xl border border-slate-100 bg-white p-2 shadow-xl overflow-hidden">
+                                                        {deliverySuggestions.map((s, i) => (
+                                                            <button key={i} className="w-full text-left px-4 py-3 text-sm font-medium hover:bg-slate-50 rounded-xl transition-colors"
+                                                                onClick={() => {
+                                                                    setForm({ ...form, delivery: s.label, deliveryCity: s.city, deliveryPostcode: s.postcode });
+                                                                    setDeliverySuggestions([]);
+                                                                }}>
+                                                                {s.label}
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div>
+                                                    <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 block">Société</label>
+                                                    <input className="w-full rounded-xl border border-slate-200 px-4 py-2 text-sm focus:outline-none focus:border-slate-900" placeholder="Nom de l'entreprise" value={form.deliveryName} onChange={e => setForm({ ...form, deliveryName: e.target.value })} />
+                                                </div>
+                                                <div>
+                                                    <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 block">Contact</label>
+                                                    <input className="w-full rounded-xl border border-slate-200 px-4 py-2 text-sm focus:outline-none focus:border-slate-900" placeholder="Nom complet" value={form.deliveryContact} onChange={e => setForm({ ...form, deliveryContact: e.target.value })} />
+                                                </div>
+                                            </div>
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div>
+                                                    <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 block">Téléphone</label>
+                                                    <input className="w-full rounded-xl border border-slate-200 px-4 py-2 text-sm focus:outline-none focus:border-slate-900" placeholder="06..." value={form.deliveryPhone} onChange={e => setForm({ ...form, deliveryPhone: e.target.value })} />
+                                                </div>
+                                                <div>
+                                                    <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 block">Digicode / Étage</label>
+                                                    <input className="w-full rounded-xl border border-slate-200 px-4 py-2 text-sm focus:outline-none focus:border-slate-900" placeholder="Ex: A4567" value={form.deliveryAccessCode} onChange={e => setForm({ ...form, deliveryAccessCode: e.target.value })} />
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 block">Instructions de livraison</label>
+                                                <input className="w-full rounded-xl border border-slate-200 px-4 py-2 text-sm focus:outline-none focus:border-slate-900" placeholder="Infos spécifiques pour le coursier..." value={form.deliveryInstructions} onChange={e => setForm({ ...form, deliveryInstructions: e.target.value })} />
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="grid gap-6">
-                                    <div className="grid gap-6 md:grid-cols-2">
-                                        <div className="space-y-1.5">
-                                            <label className="text-xs font-bold uppercase tracking-widest text-slate-400">Nom Entreprise</label>
-                                            <input
-                                                required
-                                                placeholder="Ex: Entreprise A"
-                                                className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-3.5 text-sm font-medium focus:bg-white focus:outline-none focus:ring-4 focus:ring-slate-100 transition-all"
-                                                value={form.pickupName}
-                                                onChange={(e) => setForm({ ...form, pickupName: e.target.value })}
-                                            />
-                                        </div>
-                                        <div className="space-y-1.5">
-                                            <label className="text-xs font-bold uppercase tracking-widest text-slate-400">Contact sur place</label>
-                                            <input
-                                                required
-                                                placeholder="Ex: Camille"
-                                                className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-3.5 text-sm font-medium focus:bg-white focus:outline-none focus:ring-4 focus:ring-slate-100 transition-all"
-                                                value={form.pickupContact}
-                                                onChange={(e) => setForm({ ...form, pickupContact: e.target.value })}
-                                            />
-                                        </div>
-                                    </div>
+                            </div>
+                        )}
 
-                                    <div className="grid gap-6 md:grid-cols-2">
-                                        <div className="space-y-1.5">
-                                            <label className="text-xs font-bold uppercase tracking-widest text-slate-400">Téléphone contact</label>
-                                            <input
-                                                required
-                                                placeholder="06 00 00 00 00"
-                                                className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-3.5 text-sm font-medium focus:bg-white focus:outline-none focus:ring-4 focus:ring-slate-100 transition-all"
-                                                value={form.pickupPhone}
-                                                onChange={(e) => setForm({ ...form, pickupPhone: e.target.value })}
-                                            />
+                        {/* ── Step 2: Détails ── */}
+                        {step === 2 && (
+                            <div className="space-y-8 animate-fade-in-up">
+                                <div className="grid md:grid-cols-2 gap-10">
+                                    {/* Planification */}
+                                    <div className="space-y-5">
+                                        <h2 className="text-lg font-bold text-slate-900 border-b border-slate-100 pb-2">Planification</h2>
+                                        <div className="grid grid-cols-3 gap-4">
+                                            <div>
+                                                <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 block">Date</label>
+                                                <input type="date" className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-medium" value={form.date} onChange={e => setForm({ ...form, date: e.target.value })} />
+                                            </div>
+                                            <div>
+                                                <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 block">Enlèvement</label>
+                                                <input type="time" className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-medium outline-none" value={form.pickupTime} onChange={e => setForm({ ...form, pickupTime: e.target.value })} />
+                                            </div>
+                                            <div>
+                                                <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 block">Livraison max</label>
+                                                <input type="time" className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-medium focus:ring-2 focus:ring-orange-500 outline-none" value={form.deliveryDeadline} onChange={e => setForm({ ...form, deliveryDeadline: e.target.value })} />
+                                            </div>
                                         </div>
-                                        <div className="space-y-1.5">
-                                            <label className="text-xs font-bold uppercase tracking-widest text-slate-400">Email contact (Optionnel)</label>
-                                            <input
-                                                type="email"
-                                                placeholder="contact@exemple.com"
-                                                className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-3.5 text-sm font-medium focus:bg-white focus:outline-none focus:ring-4 focus:ring-slate-100 transition-all"
-                                                value={form.pickupEmail}
-                                                onChange={(e) => setForm({ ...form, pickupEmail: e.target.value })}
-                                            />
+                                        <div className="rounded-2xl bg-orange-50 p-4 border border-orange-100 flex items-start gap-3 mt-4">
+                                            <Info className="text-orange-500 shrink-0 mt-0.5" size={18} />
+                                            <p className="text-xs font-medium text-orange-800 leading-relaxed">
+                                                Le niveau de service (Normal, Super, Exclu) est déterminé automatiquement par l'écart entre l'heure d'enlèvement et la deadline de livraison.
+                                            </p>
                                         </div>
-                                    </div>
-
-                                    {/* Code / Étage field removed */}
-
-                                    <div className="relative space-y-1.5">
-                                        <label className="text-xs font-bold uppercase tracking-widest text-slate-400">Adresse exacte</label>
-                                        <input
-                                            required
-                                            placeholder="Ex: 10 Rue de la Paix, 75002 Paris"
-                                            className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-3.5 text-sm font-medium focus:bg-white focus:outline-none focus:ring-4 focus:ring-slate-100 transition-all"
-                                            value={form.pickup}
-                                            onChange={(e) => {
-                                                const val = e.target.value;
-                                                setForm({ ...form, pickup: val, pickupCity: "", pickupPostcode: "" });
-                                                fetchSuggestions(val, setPickupSuggestions, setLoadingPickup);
-                                            }}
-                                        />
-                                        {pickupSuggestions.length > 0 && (
-                                            <div className="absolute z-20 mt-2 w-full rounded-2xl border border-slate-100 bg-white p-2 shadow-xl">
-                                                {pickupSuggestions.map((s, i) => (
-                                                    <button key={i} type="button" className="w-full rounded-xl px-3 py-3 text-left text-sm hover:bg-slate-50 transition-colors"
-                                                        onClick={() => {
-                                                            const city = s.city || s.label.split(",")[0];
-                                                            setForm({ ...form, pickup: s.label, pickupCity: city, pickupPostcode: s.postcode });
-                                                            setPickupSuggestions([]);
-                                                        }}
-                                                    >
-                                                        <span className="font-medium text-slate-900">{s.label}</span>
-                                                    </button>
-                                                ))}
+                                        {price !== null && (
+                                            <div className="rounded-2xl bg-slate-900 p-5 text-white flex items-center justify-between">
+                                                <div>
+                                                    <div className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Prix estimé</div>
+                                                    <div className="text-xs text-slate-400 mt-1">Service : <span className="text-white font-bold capitalize">{form.service}</span></div>
+                                                </div>
+                                                {calculatingPrice ? (
+                                                    <Loader2 className="animate-spin text-slate-400" size={24} />
+                                                ) : (
+                                                    <div className="text-right">
+                                                        <div className="text-3xl font-black tabular-nums">{Number(price).toFixed(2)}€</div>
+                                                        <div className="text-xs text-slate-400">HT</div>
+                                                    </div>
+                                                )}
                                             </div>
                                         )}
                                     </div>
 
-                                    <div className="grid gap-6 md:grid-cols-2">
-                                        <div className="space-y-1.5">
-                                            <label className="text-xs font-bold uppercase tracking-widest text-slate-400">Date enlèvement</label>
-                                            <input
-                                                type="date"
-                                                className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-3.5 text-sm font-bold focus:bg-white focus:outline-none focus:ring-4 focus:ring-slate-100 transition-all"
-                                                value={form.pickupDate}
-                                                onChange={(e) => setForm({ ...form, pickupDate: e.target.value })}
-                                            />
-                                        </div>
-                                        <div className="space-y-1.5">
-                                            <label className="text-xs font-bold uppercase tracking-widest text-slate-400">Heure (A partir de)</label>
-                                            <input
-                                                type="time"
-                                                className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-3.5 text-sm font-bold focus:bg-white focus:outline-none focus:ring-4 focus:ring-slate-100 transition-all"
-                                                value={form.pickupTime}
-                                                onChange={(e) => setForm({ ...form, pickupTime: e.target.value })}
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div className="space-y-1.5">
-                                        <label className="text-xs font-bold uppercase tracking-widest text-slate-400">Code, Étage, Instructions</label>
-                                        <input
-                                            placeholder="Ex: Bâtiment A, 2ème étage, devant la porte..."
-                                            className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-3.5 text-sm font-medium focus:bg-white focus:outline-none focus:ring-4 focus:ring-slate-100 transition-all"
-                                            value={form.pickupInstructions}
-                                            onChange={(e) => setForm({ ...form, pickupInstructions: e.target.value })}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Delivery Section */}
-                            <div className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-100">
-                                <div className="mb-6 flex items-center gap-3">
-                                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-500">
-                                        <Truck size={24} />
-                                    </div>
-                                    <h2 className="text-xl font-bold text-slate-900">Livraison</h2>
-                                </div>
-                                <div className="grid gap-6">
-                                    <div className="grid gap-6 md:grid-cols-2">
-                                        <div className="space-y-1.5">
-                                            <label className="text-xs font-bold uppercase tracking-widest text-slate-400">Nom Entreprise</label>
-                                            <input
-                                                required
-                                                placeholder="Ex: Entreprise B"
-                                                className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-3.5 text-sm font-medium focus:bg-white focus:outline-none focus:ring-4 focus:ring-slate-100 transition-all"
-                                                value={form.deliveryName}
-                                                onChange={(e) => setForm({ ...form, deliveryName: e.target.value })}
-                                            />
-                                        </div>
-                                        <div className="space-y-1.5">
-                                            <label className="text-xs font-bold uppercase tracking-widest text-slate-400">Contact destinataire</label>
-                                            <input
-                                                required
-                                                placeholder="Ex: Thomas"
-                                                className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-3.5 text-sm font-medium focus:bg-white focus:outline-none focus:ring-4 focus:ring-slate-100 transition-all"
-                                                value={form.deliveryContact}
-                                                onChange={(e) => setForm({ ...form, deliveryContact: e.target.value })}
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div className="grid gap-6 md:grid-cols-2">
-                                        <div className="space-y-1.5">
-                                            <label className="text-xs font-bold uppercase tracking-widest text-slate-400">Téléphone contact</label>
-                                            <input
-                                                required
-                                                placeholder="06 00 00 00 00"
-                                                className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-3.5 text-sm font-medium focus:bg-white focus:outline-none focus:ring-4 focus:ring-slate-100 transition-all"
-                                                value={form.deliveryPhone}
-                                                onChange={(e) => setForm({ ...form, deliveryPhone: e.target.value })}
-                                            />
-                                        </div>
-                                        <div className="relative space-y-1.5">
-                                            <label className="text-xs font-bold uppercase tracking-widest text-slate-400">Adresse exacte</label>
-                                            <input
-                                                required
-                                                placeholder="Ex: 1 Avenue des Champs-Élysées, 75008 Paris"
-                                                className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-3.5 text-sm font-medium focus:bg-white focus:outline-none focus:ring-4 focus:ring-slate-100 transition-all"
-                                                value={form.delivery}
-                                                onChange={(e) => {
-                                                    const val = e.target.value;
-                                                    setForm({ ...form, delivery: val, deliveryCity: "", deliveryPostcode: "" });
-                                                    fetchSuggestions(val, setDeliverySuggestions, setLoadingDelivery);
-                                                }}
-                                            />
-                                            {deliverySuggestions.length > 0 && (
-                                                <div className="absolute z-20 mt-2 w-full rounded-2xl border border-slate-100 bg-white p-2 shadow-xl">
-                                                    {deliverySuggestions.map((s, i) => (
-                                                        <button key={i} type="button" className="w-full rounded-xl px-3 py-3 text-left text-sm hover:bg-slate-50 transition-colors"
-                                                            onClick={() => {
-                                                                const city = s.city || s.label.split(",")[0];
-                                                                setForm({ ...form, delivery: s.label, deliveryCity: city, deliveryPostcode: s.postcode });
-                                                                setDeliverySuggestions([]);
-                                                            }}
+                                    {/* Nature du transport */}
+                                    <div className="space-y-5">
+                                        <h2 className="text-lg font-bold text-slate-900 border-b border-slate-100 pb-2">Nature du transport</h2>
+                                        <div className="space-y-4">
+                                            <div>
+                                                <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 block">Type de véhicule</label>
+                                                <div className="flex gap-4">
+                                                    {VEHICLES.map(v => (
+                                                        <button
+                                                            key={v}
+                                                            onClick={() => setForm({ ...form, vehicle: v.toLowerCase() })}
+                                                            className={`flex-1 py-3 px-4 rounded-xl border font-bold text-sm transition-all ${form.vehicle === v.toLowerCase()
+                                                                ? 'border-slate-900 bg-slate-900 text-white shadow-lg'
+                                                                : 'border-slate-200 bg-white text-slate-500 hover:border-slate-300'}`}
                                                         >
-                                                            <span className="font-medium text-slate-900">{s.label}</span>
+                                                            {v}
                                                         </button>
                                                     ))}
                                                 </div>
-                                            )}
-                                        </div>
-                                    </div>
-
-                                    <div className="grid gap-6 md:grid-cols-2">
-                                        <div className="space-y-1.5">
-                                            <label className="text-xs font-bold uppercase tracking-widest text-slate-400">Heure (Avant)</label>
-                                            <input
-                                                type="time"
-                                                className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-3.5 text-sm font-bold focus:bg-white focus:outline-none focus:ring-4 focus:ring-slate-100 transition-all"
-                                                value={form.deliveryTime}
-                                                onChange={(e) => setForm({ ...form, deliveryTime: e.target.value })}
-                                            />
-                                        </div>
-                                        <div className="space-y-1.5">
-                                            <label className="text-xs font-bold uppercase tracking-widest text-slate-400">Code, Étage, Instructions</label>
-                                            <input
-                                                placeholder="Ex: Code 1234, Bâtiment B..."
-                                                className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-3.5 text-sm font-medium focus:bg-white focus:outline-none focus:ring-4 focus:ring-slate-100 transition-all"
-                                                value={form.deliveryInstructions}
-                                                onChange={(e) => setForm({ ...form, deliveryInstructions: e.target.value })}
-                                            />
+                                            </div>
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div>
+                                                    <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 block">Format</label>
+                                                    <select className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-medium" value={form.packageType} onChange={e => setForm({ ...form, packageType: e.target.value })}>
+                                                        {["Pli", "Colis", "Document", "Carton", "Palette"].map(t => <option key={t} value={t}>{t}</option>)}
+                                                    </select>
+                                                </div>
+                                                <div>
+                                                    <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 block">Poids estimé</label>
+                                                    <select className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-medium" value={form.packageWeight} onChange={e => setForm({ ...form, packageWeight: e.target.value })}>
+                                                        <option value="">Non spécifié</option>
+                                                        <option value="1">Moins de 1 kg</option>
+                                                        <option value="5">1 à 5 kg</option>
+                                                        <option value="10">5 à 10 kg</option>
+                                                        <option value="30">10 à 30 kg</option>
+                                                        <option value="99">Plus de 30 kg</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 block">Description du contenu</label>
+                                                <input className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:outline-none focus:border-slate-900" placeholder="Ex: Documents confidentiels, ordinateur portable..." value={form.packageDesc} onChange={e => setForm({ ...form, packageDesc: e.target.value })} />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        )}
 
-                            {/* Package Details */}
-                            <div className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-100">
-                                <div className="mb-6 flex items-center gap-3">
-                                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-50 text-orange-500">
-                                        <Package size={20} />
+                        {/* ── Step 3: Contact invité ── */}
+                        {step === 3 && (
+                            <div className="space-y-8 animate-fade-in-up max-w-xl mx-auto">
+                                <div className="text-center space-y-2">
+                                    <div className="inline-flex h-16 w-16 items-center justify-center rounded-3xl bg-slate-100 text-slate-500 mb-4">
+                                        <User size={32} />
                                     </div>
-                                    <h2 className="text-xl font-bold text-slate-900">Détails de l'envoi</h2>
+                                    <h2 className="text-2xl font-black text-slate-900">Vos coordonnées</h2>
+                                    <p className="text-sm font-medium text-slate-500">Pour vous envoyer la confirmation et le bon de commande.</p>
                                 </div>
-                                <div className="grid gap-6 md:grid-cols-2">
-                                    <div className="space-y-1.5">
-                                        <label className="text-xs font-bold uppercase tracking-widest text-slate-400">Type de véhicule</label>
-                                        <select
-                                            className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-3.5 text-sm font-bold focus:bg-white focus:outline-none focus:ring-4 focus:ring-slate-100 transition-all appearance-none"
-                                            value={form.vehicle}
-                                            onChange={(e) => setForm({ ...form, vehicle: e.target.value })}
-                                        >
-                                            {VEHICLES.map(v => <option key={v} value={v.toLowerCase()}>{v}</option>)}
-                                        </select>
-                                    </div>
-                                    <div className="space-y-1.5">
-                                        <label className="text-xs font-bold uppercase tracking-widest text-slate-400">Formule (Délai)</label>
-                                        <select
-                                            disabled
-                                            className="w-full rounded-2xl border border-slate-200 bg-slate-100 px-4 py-3.5 text-sm font-bold text-slate-500 cursor-not-allowed appearance-none"
-                                            value={form.service}
-                                        >
-                                            <option value="normal">Normal (4h)</option>
-                                            <option value="exclu">Exclu (3h)</option>
-                                            <option value="super">Super (1h30)</option>
-                                        </select>
-                                    </div>
-                                    <div className="space-y-1.5">
-                                        <label className="text-xs font-bold uppercase tracking-widest text-slate-400">Poids approximatif</label>
-                                        <select
-                                            className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-3.5 text-sm font-bold focus:bg-white focus:outline-none focus:ring-4 focus:ring-slate-100 transition-all appearance-none"
-                                            value={form.packageWeight}
-                                            onChange={(e) => setForm({ ...form, packageWeight: e.target.value })}
-                                        >
-                                            <option value="">Sélectionner</option>
-                                            {Array.from({ length: 30 }, (_, i) => i + 1).map(w => (
-                                                <option key={w} value={w}>{w} kg</option>
-                                            ))}
-                                            <option value="+30">+ de 30 kg</option>
-                                        </select>
-                                    </div>
-                                    <div className="md:col-span-2 space-y-1.5">
-                                        <label className="text-xs font-bold uppercase tracking-widest text-slate-400">Type de colis</label>
-                                        <select
-                                            className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-3.5 text-sm font-bold focus:bg-white focus:outline-none focus:ring-4 focus:ring-slate-100 transition-all appearance-none"
-                                            value={form.packageType}
-                                            onChange={(e) => setForm({ ...form, packageType: e.target.value })}
-                                        >
-                                            {["Pli", "Colis", "Palette", "Sac", "Matériel", "Autre"].map(t => <option key={t} value={t}>{t}</option>)}
-                                        </select>
-                                    </div>
-
-                                    {form.packageType === "Autre" && (
-                                        <div className="md:col-span-2 space-y-1.5 animate-fadeIn">
-                                            <label className="text-xs font-bold uppercase tracking-widest text-slate-400">Précisez le type</label>
+                                <div className="space-y-4">
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 block">Prénom & Nom *</label>
                                             <input
-                                                required
-                                                placeholder="Ex: Tapis, Meuble, etc."
-                                                className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-3.5 text-sm font-medium focus:bg-white focus:outline-none focus:ring-4 focus:ring-slate-100 transition-all"
-                                                value={form.packageTypeOther}
-                                                onChange={(e) => setForm({ ...form, packageTypeOther: e.target.value })}
+                                                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-orange-500 focus:bg-white transition-all"
+                                                placeholder="Jean Dupont"
+                                                value={form.guestName}
+                                                onChange={e => setForm({ ...form, guestName: e.target.value })}
                                             />
                                         </div>
-                                    )}
-
-                                    <div className="md:col-span-2 space-y-1.5">
-                                        <label className="text-xs font-bold uppercase tracking-widest text-slate-400">Contenu (Description)</label>
-                                        <textarea
-                                            placeholder="Ex: Documents juridiques, enveloppe A4..."
-                                            rows={2}
-                                            className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-3.5 text-sm font-medium focus:bg-white focus:outline-none focus:ring-4 focus:ring-slate-100 transition-all resize-none"
-                                            value={form.packageDesc}
-                                            onChange={(e) => setForm({ ...form, packageDesc: e.target.value })}
-                                        />
+                                        <div>
+                                            <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 block">Société</label>
+                                            <input
+                                                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-orange-500 focus:bg-white transition-all"
+                                                placeholder="Votre entreprise"
+                                                value={form.guestCompany}
+                                                onChange={e => setForm({ ...form, guestCompany: e.target.value })}
+                                            />
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-
-                            {/* Guest Contact */}
-                            <div className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-100">
-                                <div className="mb-6 flex items-center gap-3">
-                                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-50 text-orange-500">
-                                        <User size={20} />
-                                    </div>
-                                    <h2 className="text-xl font-bold text-slate-900">Vos informations</h2>
-                                </div>
-                                <div className="grid gap-6 md:grid-cols-2">
-                                    <div className="space-y-1.5">
-                                        <label className="text-xs font-bold uppercase tracking-widest text-slate-400">Nom</label>
+                                    <div>
+                                        <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 block">Email *</label>
                                         <input
-                                            required
-                                            placeholder="Prénom Nom"
-                                            className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-3.5 text-sm font-medium focus:bg-white focus:outline-none focus:ring-4 focus:ring-slate-100 transition-all"
-                                            value={form.billingName}
-                                            onChange={(e) => setForm({ ...form, billingName: e.target.value })}
-                                        />
-                                    </div>
-                                    <div className="space-y-1.5">
-                                        <label className="text-xs font-bold uppercase tracking-widest text-slate-400">Nom entreprise</label>
-                                        <input
-                                            required
-                                            placeholder="Nom de l'entreprise"
-                                            className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-3.5 text-sm font-medium focus:bg-white focus:outline-none focus:ring-4 focus:ring-slate-100 transition-all"
-                                            value={form.billingCompany}
-                                            onChange={(e) => setForm({ ...form, billingCompany: e.target.value })}
-                                        />
-                                    </div>
-                                    <div className="space-y-1.5 md:col-span-2">
-                                        <label className="text-xs font-bold uppercase tracking-widest text-slate-400">Adresse de facturation</label>
-                                        <input
-                                            required
-                                            placeholder="Adresse complète"
-                                            className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-3.5 text-sm font-medium focus:bg-white focus:outline-none focus:ring-4 focus:ring-slate-100 transition-all"
-                                            value={form.billingAddress}
-                                            onChange={(e) => setForm({ ...form, billingAddress: e.target.value })}
-                                        />
-                                    </div>
-                                    <div className="space-y-1.5">
-                                        <label className="text-xs font-bold uppercase tracking-widest text-slate-400">Email pour le </label>
-                                        <input
-                                            required
                                             type="email"
-                                            placeholder="votre@email.com"
-                                            className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-3.5 text-sm font-medium focus:bg-white focus:outline-none focus:ring-4 focus:ring-slate-100 transition-all"
+                                            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-orange-500 focus:bg-white transition-all"
+                                            placeholder="vous@entreprise.com"
                                             value={form.guestEmail}
-                                            onChange={(e) => setForm({ ...form, guestEmail: e.target.value })}
+                                            onChange={e => setForm({ ...form, guestEmail: e.target.value })}
                                         />
                                     </div>
-                                    <div className="space-y-1.5">
-                                        <label className="text-xs font-bold uppercase tracking-widest text-slate-400">Téléphone de contact</label>
+                                    <div>
+                                        <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 block">Téléphone</label>
                                         <input
-                                            required
                                             type="tel"
-                                            placeholder="06 00 00 00 00"
-                                            className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-3.5 text-sm font-medium focus:bg-white focus:outline-none focus:ring-4 focus:ring-slate-100 transition-all"
-                                            value={form.contactPhone}
-                                            onChange={(e) => setForm({ ...form, contactPhone: e.target.value })}
+                                            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-orange-500 focus:bg-white transition-all"
+                                            placeholder="06 12 34 56 78"
+                                            value={form.guestPhone}
+                                            onChange={e => setForm({ ...form, guestPhone: e.target.value })}
                                         />
                                     </div>
+                                    <div className="rounded-2xl bg-orange-50 p-4 border border-orange-100 flex items-start gap-3">
+                                        <Info className="text-orange-500 shrink-0 mt-0.5" size={18} />
+                                        <p className="text-xs font-medium text-orange-800 leading-relaxed">
+                                            Vos données ne sont utilisées que pour cette commande et pour envoyer la confirmation. Pour un carnet d'adresses et la facturation mensuelle, <Link to="/inscription" className="underline font-bold">créez un compte professionnel</Link>.
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
-                        </form>
+                        )}
+
+                        {/* ── Step 4: Résumé ── */}
+                        {step === 4 && (
+                            <div className="space-y-8 animate-fade-in-up max-w-2xl mx-auto">
+                                <div className="text-center space-y-2">
+                                    <div className="inline-flex h-16 w-16 items-center justify-center rounded-3xl bg-emerald-100 text-emerald-500 mb-4">
+                                        <ShieldCheck size={32} />
+                                    </div>
+                                    <h2 className="text-2xl font-black text-slate-900">Résumé de la commande</h2>
+                                    <p className="text-sm font-medium text-slate-500">Vérifiez vos informations avant de valider l'expédition.</p>
+                                </div>
+
+                                <div className="rounded-3xl bg-slate-50 border border-slate-100 p-6 space-y-6">
+                                    {/* Prix & service */}
+                                    <div className="flex items-center justify-between border-b border-slate-200 pb-4">
+                                        <div className="flex items-center gap-3">
+                                            <Truck className="text-slate-400" size={24} />
+                                            <div>
+                                                <div className="font-bold text-slate-900">{form.vehicle.charAt(0).toUpperCase() + form.vehicle.slice(1)} • {form.service.charAt(0).toUpperCase() + form.service.slice(1)}</div>
+                                                <div className="text-xs text-slate-500">Le {new Date(form.date).toLocaleDateString('fr-FR')} de {form.pickupTime} à {form.deliveryDeadline}</div>
+                                            </div>
+                                        </div>
+                                        <div className="text-right">
+                                            <div className="text-xs font-bold uppercase text-slate-400 mb-1">Total HT</div>
+                                            {calculatingPrice
+                                                ? <Loader2 className="animate-spin text-slate-400 w-6 h-6 ml-auto" />
+                                                : price
+                                                    ? <div className="text-3xl font-black text-slate-900 tabular-nums">{Number(price).toFixed(2)}€</div>
+                                                    : <div className="text-sm font-bold text-red-500">Prix indisponible</div>
+                                            }
+                                        </div>
+                                    </div>
+
+                                    {/* Adresses */}
+                                    <div className="grid md:grid-cols-2 gap-6 pt-2">
+                                        {[
+                                            { label: "Enlèvement", name: form.pickupName, address: form.pickup, contact: form.pickupContact, phone: form.pickupPhone, info: form.pickupInstructions },
+                                            { label: "Livraison", name: form.deliveryName, address: form.delivery, contact: form.deliveryContact, phone: form.deliveryPhone, info: form.deliveryInstructions }
+                                        ].map((loc, i) => (
+                                            <div key={i} className="space-y-1">
+                                                <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">{loc.label}</div>
+                                                <div className="text-sm font-bold text-slate-900">{loc.name || '—'}</div>
+                                                <div className="text-xs text-slate-600">{loc.address}</div>
+                                                {loc.contact && <div className="text-xs text-slate-700"><span className="font-semibold">Contact:</span> {loc.contact}</div>}
+                                                {loc.phone && <div className="text-xs text-slate-700"><span className="font-semibold">Tél:</span> {loc.phone}</div>}
+                                                {loc.info && <div className="text-xs text-slate-600 mt-2 p-2.5 bg-white rounded-xl border border-slate-200"><span className="font-semibold text-slate-700 block mb-1">Infos:</span> {loc.info}</div>}
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    {/* Colis */}
+                                    <div className="border-t border-slate-200 pt-4 mt-2">
+                                        <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">Colis & Contact</div>
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <Package className="text-slate-400" size={16} />
+                                            <span className="text-sm font-bold text-slate-900">{form.packageType} {form.packageWeight ? `(~${form.packageWeight} kg)` : ''}</span>
+                                        </div>
+                                        {form.packageDesc && <div className="text-xs text-slate-600 ml-6">{form.packageDesc}</div>}
+                                        <div className="mt-3 flex items-center gap-2 text-xs text-slate-600">
+                                            <Mail size={14} className="text-slate-400" />
+                                            <span>Confirmation → <strong>{form.guestEmail}</strong></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </div>
 
-                    {/* Sidebar / Price Card */}
-                    <div className="lg:col-span-1 lg:sticky lg:top-24 h-fit">
-                        <div className="rounded-3xl bg-slate-900 p-8 text-slate-100 shadow-2xl">
-                            <h3 className="text-2xl font-bold">Récapitulatif</h3>
-                            <div className="mt-8 space-y-6 text-lg">
-                                <div>
-                                    <span className="text-base font-bold uppercase tracking-widest text-slate-300">Enlèvement</span>
-                                    <div className="mt-2 space-y-1 text-lg">
-                                        <div className="font-bold text-white">{form.pickupName || "—"}</div>
-                                        <div className="text-base text-slate-200">{form.pickup || "Adresse à renseigner"}</div>
-                                        <div className="text-base text-slate-300">{form.pickupDate} • {form.pickupTime}</div>
-                                        {(form.pickupContact || form.pickupPhone) && (
-                                            <div className="text-base text-slate-300">{form.pickupContact || "Contact"} {form.pickupPhone ? `• ${form.pickupPhone}` : ""}</div>
-                                        )}
-                                        {form.pickupCode && (
-                                            <div className="text-base text-slate-300">Code/étage : {form.pickupCode}</div>
-                                        )}
-                                        {form.pickupInstructions && (
-                                            <div className="text-base text-slate-300 italic">"{form.pickupInstructions}"</div>
-                                        )}
-                                    </div>
-                                </div>
-
-                                <div className="h-px bg-white/10" />
-
-                                <div>
-                                    <span className="text-base font-bold uppercase tracking-widest text-slate-300">Livraison</span>
-                                    <div className="mt-2 space-y-1 text-lg">
-                                        <div className="font-bold text-white">{form.deliveryName || "—"}</div>
-                                        <div className="text-base text-slate-200">{form.delivery || "Adresse à renseigner"}</div>
-                                        <div className="text-base text-slate-300">{form.deliveryDate} • {form.deliveryTime}</div>
-                                        {(form.deliveryContact || form.deliveryPhone) && (
-                                            <div className="text-base text-slate-300">{form.deliveryContact || "Contact"} {form.deliveryPhone ? `• ${form.deliveryPhone}` : ""}</div>
-                                        )}
-                                        {form.deliveryInstructions && (
-                                            <div className="text-base text-slate-300 italic">"{form.deliveryInstructions}"</div>
-                                        )}
-                                    </div>
-                                </div>
-
-                                <div className="h-px bg-white/10" />
-
-                                <div>
-                                    <span className="text-base font-bold uppercase tracking-widest text-slate-300">Véhicule</span>
-                                    <div className="mt-1 flex items-center gap-2 text-lg">
-                                        <Truck size={18} className="text-orange-500" />
-                                        <span className="font-bold uppercase tracking-tight">{form.vehicle}</span>
-                                        <span className="text-base font-medium text-slate-300">• {form.service === 'super' ? '1h30' : form.service === 'exclu' ? '3h' : '4h'}</span>
-                                    </div>
-                                </div>
-                                <div className="h-px bg-white/10" />
-
-                                <div>
-                                    <span className="text-base font-bold uppercase tracking-widest text-slate-300">Colis</span>
-                                    <div className="mt-1 flex flex-col gap-1 text-lg">
-                                        <div className="flex items-center gap-2">
-                                            <Package size={18} className="text-orange-500" />
-                                            <span className="font-bold">{form.packageType}{form.packageType === "Autre" && form.packageTypeOther ? ` (${form.packageTypeOther})` : ""}</span>
-                                        </div>
-                                        {form.packageWeight && <div className="text-base text-slate-200 pl-6">Poids: {form.packageWeight}</div>}
-                                        {form.packageDesc && <div className="text-base text-slate-300 pl-6 italic">"{form.packageDesc}"</div>}
-                                    </div>
-                                </div>
-
-                                <div className="h-px bg-white/10" />
-
-                                <div>
-                                    <span className="text-base font-bold uppercase tracking-widest text-slate-300">Contact</span>
-                                    <div className="mt-1 text-lg">
-                                        <div className="text-base text-slate-200">{form.guestEmail || "Email à renseigner"}</div>
-                                        <div className="text-base text-slate-300">{form.contactPhone || "Téléphone à renseigner"}</div>
-                                    </div>
-                                </div>
-
-                                <div className="h-px bg-white/10" />
-
-                                <div>
-                                    <span className="text-base font-bold uppercase tracking-widest text-slate-300">Total estimé</span>
-                                    <div className="mt-2 flex items-baseline gap-2">
-                                        {calculatingPrice ? (
-                                            <Loader2 className="animate-spin text-orange-500" size={24} />
-                                        ) : price ? (
-                                            <>
-                                                <span className="text-4xl font-bold">{(price * 1.2).toFixed(2)}€</span>
-                                                <span className="text-base font-bold text-slate-200 uppercase">TTC</span>
-                                            </>
-                                        ) : (
-                                            <span className="text-lg font-medium text-slate-200 italic">En attente d'adresses...</span>
-                                        )}
-                                    </div>
-                                    {price && <div className="mt-1 text-base text-slate-200">Soit {price.toFixed(2)}€ HT</div>}
-                                </div>
-
-                                {error && (
-                                    <div className="flex items-center gap-2 rounded-2xl bg-rose-500/10 p-4 text-xs font-bold text-rose-400">
-                                        <AlertCircle size={14} />
-                                        {error}
-                                    </div>
-                                )}
-
-                                <button
-                                    onClick={handleSubmit}
-                                    disabled={!price || loading}
-                                    className="group relative w-full overflow-hidden rounded-full bg-white py-4 text-sm font-black text-slate-900 transition-all hover:bg-orange-500 hover:text-white disabled:opacity-50"
-                                >
-                                    {loading ? (
-                                        <div className="flex items-center justify-center gap-2">
-                                            <Loader2 className="animate-spin" size={18} />
-                                            Validation...
-                                        </div>
-                                    ) : (
-                                        <span className="flex items-center justify-center gap-2">
-                                            <ShoppingCart size={18} />
-                                            VALIDER LA COMMANDE
-                                        </span>
-                                    )}
-                                </button>
-                            </div>
-
-                            <div className="mt-8 flex flex-col gap-3 rounded-2xl bg-white/5 p-4 border border-white/10">
-                                <div className="flex items-start gap-3">
-                                    <Info size={16} className="mt-0.5 shrink-0 text-orange-500" />
-                                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-300">
-                                        Facturation à 30 jours
-                                    </p>
-                                </div>
-                                <p className="text-[10px] leading-relaxed text-slate-400">
-                                    Aucun paiement immédiat n'est requis. En validant cette commande, votre course sera immédiatement prise en charge par nos équipes. Vous recevrez une facture récapitulative payable à 30 jours (Net 30).
-                                </p>
-                            </div>
-                        </div>
-
-                        <div className="mt-6 rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-100">
-                            <h4 className="font-bold text-slate-900">Besoin d'aide ?</h4>
-                            <p className="mt-2 text-xs text-slate-500">Nos équipes sont disponibles 24/7 pour vous accompagner.</p>
-                            <button className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 py-3 text-xs font-bold text-slate-900 hover:bg-slate-50 transition-colors">
-                                <Phone size={14} />
-                                01 89 20 45 67
+                    {/* Footer Actions */}
+                    <div className="flex items-center justify-between pt-4">
+                        {step > 1 ? (
+                            <button onClick={prevStep} className="px-6 py-3 rounded-xl font-bold text-slate-500 hover:bg-white hover:text-slate-900 hover:shadow-sm transition-all border border-transparent hover:border-slate-200">
+                                Retour
                             </button>
-                        </div>
-                    </div>
-                </div >
-            </main >
+                        ) : <div />}
 
-            <footer className="bg-white px-4 pb-6 pt-10">
-                <div className="rounded-[2.5rem] bg-black px-8 py-12 text-white shadow-2xl md:px-12 relative overflow-hidden">
-                    {/* Top Row: Logo & App Buttons */}
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
-                        {/* Logo */}
-                        <div className="flex items-center gap-3">
-                            <div className="grid h-10 w-10 place-items-center rounded-xl bg-orange-500 text-white font-bold text-xl">OC</div>
-                            <span className="text-xl font-bold tracking-tight">One Connexion</span>
-                        </div>
-
-                        {/* App Buttons */}
-                        <div className="flex flex-wrap gap-4">
-                            <a href="#" className="opacity-80 transition-opacity hover:opacity-100">
-                                <img
-                                    src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
-                                    alt="Get it on Google Play"
-                                    className="h-10"
-                                />
-                            </a>
-                            <a href="#" className="opacity-80 transition-opacity hover:opacity-100">
-                                <img
-                                    src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg"
-                                    alt="Download on the App Store"
-                                    className="h-10"
-                                />
-                            </a>
-                        </div>
+                        {step < 4 ? (
+                            <button onClick={nextStep} className="group flex items-center gap-2 px-8 py-3.5 rounded-2xl bg-slate-900 text-white font-bold shadow-xl shadow-slate-900/20 hover:scale-105 transition-all outline-none focus:ring-4 focus:ring-slate-900/30">
+                                Continuer <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
+                            </button>
+                        ) : (
+                            <button
+                                onClick={submitOrder}
+                                disabled={!price || isSubmitting}
+                                className="group flex items-center gap-2 px-10 py-4 rounded-2xl bg-gradient-to-r from-orange-500 to-orange-600 text-white font-black text-lg shadow-xl shadow-orange-500/30 hover:shadow-orange-500/50 hover:scale-105 transition-all outline-none focus:ring-4 focus:ring-orange-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                {isSubmitting ? <Loader2 className="animate-spin" size={24} /> : 'Valider la commande'}
+                            </button>
+                        )}
                     </div>
 
-                    {/* Mission Text */}
-                    <div className="mt-8 max-w-lg">
-                        <p className="text-lg leading-relaxed text-slate-400">
-                            Notre mission est de simplifier la logistique B2B pour les entreprises, en offrant une solution rapide, fiable et 100% digitalisée.
-                        </p>
+                    {/* CTA: créer un compte */}
+                    <div className="rounded-3xl bg-white ring-1 ring-slate-100 shadow-sm p-6 flex flex-col md:flex-row items-center justify-between gap-4">
+                        <div>
+                            <div className="font-bold text-slate-900">Vous commandez souvent ?</div>
+                            <div className="text-sm text-slate-500 mt-1">Un compte pro vous donne accès à la facturation mensuelle, l'historique et le carnet d'adresses.</div>
+                        </div>
+                        <Link to="/inscription" className="shrink-0 rounded-full bg-slate-900 px-8 py-3 text-sm font-bold text-white hover:bg-orange-500 transition-all whitespace-nowrap">
+                            Créer un compte →
+                        </Link>
                     </div>
 
-                    {/* Nav Links */}
-                    <nav className="mt-10 flex flex-wrap gap-8 font-medium text-slate-300">
-                        <a href="#" className="hover:text-white transition-colors">Accueil</a>
-                        <a href="#features" className="hover:text-white transition-colors">Fonctionnalités</a>
-                        <a href="#workflow" className="hover:text-white transition-colors">Services</a>
-                        <a href="#expertises" className="hover:text-white transition-colors">Secteurs</a>
-                        <Link to="/contact" className="hover:text-white transition-colors">Contact</Link>
-                    </nav>
-
-                    {/* Divider */}
-                    <div className="my-10 h-px w-full bg-white/10" />
-
-                    {/* Bottom Row */}
-                    <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-                        <div className="text-slate-500 text-sm">
-                            Copyright 2026 © One Connexion. All Rights Reserved.
-                        </div>
-                        <div className="flex gap-6">
-                            <a href="#" aria-label="Facebook">
-                                <Facebook className="text-slate-500 transition-colors hover:text-white" size={20} />
-                            </a>
-                            <a href="#" aria-label="Twitter">
-                                <Twitter className="text-slate-500 transition-colors hover:text-white" size={20} />
-                            </a>
-                            <a href="#" aria-label="Instagram">
-                                <Instagram className="text-slate-500 transition-colors hover:text-white" size={20} />
-                            </a>
-                            <a href="#" aria-label="LinkedIn">
-                                <Linkedin className="text-slate-500 transition-colors hover:text-white" size={20} />
-                            </a>
-                        </div>
-                    </div>
                 </div>
-            </footer>
-        </div >
+            </div>
+
+            <PublicFooter />
+        </div>
     );
 }
-
-

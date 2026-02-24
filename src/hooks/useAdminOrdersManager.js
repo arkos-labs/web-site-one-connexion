@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "../lib/supabase";
+import { notifyOrderAssigned } from "../lib/telegram";
 
 export default function useAdminOrdersManager(searchParams) {
     const [orders, setOrders] = useState([]);
@@ -330,6 +331,8 @@ export default function useAdminOrdersManager(searchParams) {
         }).eq('id', dispatchOrder.id);
 
         if (!error) {
+            const driverName = drivers.find(d => String(d.id) === String(dispatchDriver))?.name || 'Chauffeur';
+            notifyOrderAssigned({ ...dispatchOrder, status: 'assigned', driver_id: dispatchDriver }, driverName);
             fetchOrders();
             setDispatchOpen(false);
         } else {

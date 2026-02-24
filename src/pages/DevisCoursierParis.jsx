@@ -1,47 +1,49 @@
-import PublicHeader from "../components/PublicHeader.jsx";
-import PublicFooter from "../components/PublicFooter.jsx";
+import SEOPageLayout from "../components/SEOPageLayout";
 
 export default function DevisCoursierParis() {
   return (
-    <div className="bg-white text-slate-900">
-      <PublicHeader />
-      <main className="blog-page">
-        <h1 className="text-3xl font-bold">Devis coursier Paris</h1>
-        <p className="mt-2 text-sm text-slate-500">Publié le 01/02/2026 • Par One Connexion</p>
-        <p className="mt-6 text-slate-600">
-          Obtenez un devis rapide pour une course urgente à Paris. One Connexion calcule le prix selon
-          la distance, le véhicule, l’urgence et le gabarit. Transparence totale, sans surprise.
-        </p>
-        <p className="mt-4 text-slate-600">
-          Pour les entreprises, nous proposons aussi des forfaits mensuels et des navettes régulières.
-          Contactez‑nous pour une estimation personnalisée.
-        </p>
-      
-        <section className="mt-10">
-          <h2 className="text-xl font-semibold">Pourquoi choisir One Connexion ?</h2>
-          <ul className="mt-4 list-disc pl-6 space-y-2"><li className="text-slate-600">Devis rapide selon distance, véhicule, urgence et gabarit.</li><li className="text-slate-600">Possibilité de forfaits mensuels pour entreprises régulières.</li><li className="text-slate-600">Engagement de transparence sur les tarifs.</li></ul>
-          <p className="mt-4 text-slate-600">Contactez-nous pour un devis rapide et une prise en charge immédiate.</p>
-        </section>
-        <section className="mt-8">
-          <h2 className="text-xl font-semibold">Cas d’usage B2B</h2>
-          <p className="mt-3 text-slate-600">Nos clients utilisent le service pour la messagerie quotidienne, les urgences et les tournées régulières. Nous adaptons les véhicules et les délais à chaque besoin.</p>
-        </section>
-      
-        <section className="mt-8"><p className="mt-3 text-slate-600">Le devis intègre la distance réelle, le type de véhicule, le niveau d’urgence et les contraintes de livraison. Vous obtenez un prix clair avant validation.</p><p className="mt-3 text-slate-600">Pour les entreprises avec volumes récurrents, nous proposons des forfaits mensuels et des conditions préférentielles.</p>
-        </section>
+    <SEOPageLayout
+      title="Devis Coursier Express Paris"
+      subtitle="Réponse garantie en moins de 15 minutes pour vos besoins de transport critiques."
+      heroImage="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&q=80"
+      description={`
+        Vous avez un besoin urgent ou récurrent de transport en Île-de-France ? Obtenez une estimation précise et personnalisée pour vos courses professionnelles. One Connexion analyse vos contraintes (volume, fragilité, délais) pour vous proposer la solution la plus efficace.
 
-        <section className="mt-8">
-          <h2 className="text-xl font-semibold">Questions fréquentes</h2>
-          <div className="mt-3 space-y-3 text-slate-600">
-            <p><strong>Quels délais ?</strong> De l’urgent immédiat aux créneaux planifiés selon vos besoins.</p>
-            <p><strong>Preuve de livraison ?</strong> POD numérique horodaté, consultable par votre équipe.</p>
-            <p><strong>Facturation ?</strong> Mensuelle et claire, avec récapitulatif détaillé.</p>
-          </div>
-        </section>
-      </main>
-      <PublicFooter />
-    </div>
+        Que vous soyez une PME ou un grand groupe, nous nous adaptons à vos flux pour optimiser vos coûts logistiques tout en garantissant une qualité de service irréprochable.
+      `}
+      benefits={[
+        "Cotation immédiate via notre simulateur",
+        "Remises automatiques pour les comptes pro",
+        "Accompagnement dédié pour les gros projets",
+        "Zéro surprise : prix TTC tout compris",
+        "Expertise sectorielle (Médical, Luxe, Auto)"
+      ]}
+      useCases={[
+        "Demande de prix pour une course unique",
+        "Simulation de budget pour tournées régulières",
+        "Appel d'offre pour externalisation logistique",
+        "Estimation de transport inter-sites régional"
+      ]}
+      seoText={(
+        <>
+          <p>Obtenir un <strong>devis coursier à Paris</strong> n'a jamais été aussi simple. Grâce à notre interface intuitive, vous pouvez comparer nos différents niveaux de service et choisir celui qui correspond parfaitement à votre urgence et à votre budget.</p>
+          <p>Nos experts logistiques sont également à votre écoute pour établir des <strong>devis sur-mesure</strong> pour vos besoins complexes ou vos missions de longue durée.</p>
+        </>
+      )}
+      faqs={[
+        {
+          q: "Le devis est-il gratuit ?",
+          a: "Absolument. Toutes nos estimations sont gratuites et sans aucun engagement de votre part."
+        },
+        {
+          q: "Combien de temps le devis est-il valable ?",
+          a: "Une cotation pour une course ponctuelle est valable 24 heures. Pour un forfait mensuel, le devis est garanti pendant 3 mois."
+        },
+        {
+          q: "Puis-je modifier ma demande après avoir reçu le devis ?",
+          a: "Bien sûr. Nos conseillers peuvent ajuster les paramètres (véhicule, horaires) à tout moment pour coller au mieux à vos attentes réelles."
+        }
+      ]}
+    />
   );
 }
-
-

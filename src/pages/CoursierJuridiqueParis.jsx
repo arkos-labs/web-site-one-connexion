@@ -1,43 +1,49 @@
-import PublicHeader from "../components/PublicHeader.jsx";
-import PublicFooter from "../components/PublicFooter.jsx";
+import SEOPageLayout from "../components/SEOPageLayout";
 
 export default function CoursierJuridiqueParis() {
   return (
-    <div className="bg-white text-slate-900">
-      <PublicHeader />
-      <main className="blog-page">
-        <h1 className="text-3xl font-bold">Coursier juridique Paris</h1>
-        <p className="mt-2 text-sm text-slate-500">Publié le 13/02/2026 • Par One Connexion</p>
-        <p className="mt-6 text-slate-600">
-          Acheminement sécurisé de documents juridiques, actes et dossiers sensibles. One Connexion
-          garantit confidentialité, délais rapides et preuve de remise.
-        </p>
-      
-        <section className="mt-10">
-          <h2 className="text-xl font-semibold">Pourquoi choisir One Connexion ?</h2>
-          <ul className="mt-4 list-disc pl-6 space-y-2"><li className="text-slate-600">Acheminement de pièces sensibles avec confidentialité.</li><li className="text-slate-600">Respect strict des délais de dépôt.</li><li className="text-slate-600">POD pour preuve de remise.</li></ul>
-          <p className="mt-4 text-slate-600">Contactez-nous pour un devis rapide et une prise en charge immédiate.</p>
-        </section>
-        <section className="mt-8">
-          <h2 className="text-xl font-semibold">Cas d’usage B2B</h2>
-          <p className="mt-3 text-slate-600">Nos clients utilisent le service pour la messagerie quotidienne, les urgences et les tournées régulières. Nous adaptons les véhicules et les délais à chaque besoin.</p>
-        </section>
-      
-        <section className="mt-8"><p className="mt-3 text-slate-600">Le secteur juridique nécessite des délais stricts et une confidentialité totale. Nous assurons la remise de documents avec preuve et horodatage.</p><p className="mt-3 text-slate-600">Service dédié pour cabinets, études notariales et directions juridiques d’entreprise.</p>
-        </section>
+    <SEOPageLayout
+      title="Coursier Juridique Paris"
+      subtitle="Transport sécurisé d'actes, dossiers sensibles et pièces de procédure pour cabinets d'avocats et notaires."
+      heroImage="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&q=80"
+      description={`
+        Dans le domaine juridique, la confidentialité et le respect des délais de procédure sont non-négociables. One Connexion propose un service de coursier spécialisé pour les professionnels du droit à Paris et en Île-de-France. 
 
-        <section className="mt-8">
-          <h2 className="text-xl font-semibold">Questions fréquentes</h2>
-          <div className="mt-3 space-y-3 text-slate-600">
-            <p><strong>Quels délais ?</strong> De l’urgent immédiat aux créneaux planifiés selon vos besoins.</p>
-            <p><strong>Preuve de livraison ?</strong> POD numérique horodaté, consultable par votre équipe.</p>
-            <p><strong>Facturation ?</strong> Mensuelle et claire, avec récapitulatif détaillé.</p>
-          </div>
-        </section>
-      </main>
-      <PublicFooter />
-    </div>
+        Qu'il s'agisse de déposer une assignation au Tribunal de Grande Instance, de transférer des dossiers de plaidoirie ou de faire signer des actes notariés en urgence, nos coursiers garantissent une discrétion absolue et un horodatage précis.
+      `}
+      benefits={[
+        "Confidentialité et discrétion garantie",
+        "Respect strict des délais de procédure (TGI, Palais)",
+        "Preuve de remise avec signature et horodatage",
+        "Coursiers habitués aux lieux institutionnels",
+        "Disponibilité immédiate pour les urgences"
+      ]}
+      useCases={[
+        "Dépôt de dossiers aux Greffes et Tribunaux",
+        "Échanges inter-cabinets d'avocats",
+        "Transport d'actes notariés originaux",
+        "Formalités administratives urgentes"
+      ]}
+      seoText={(
+        <>
+          <p>Le <strong>coursier juridique à Paris</strong> est un maillon essentiel de la chaîne de procédure. One Connexion s'engage à être votre bras droit logistique, vous évitant les déplacements chronophages et sécurisant vos envois les plus critiques.</p>
+          <p>Nous comprenons les enjeux liés aux <strong>délais de rigueur</strong> et mettons tout en œuvre pour que vos documents arrivent à destination, en mains propres, sans délai.</p>
+        </>
+      )}
+      faqs={[
+        {
+          q: "Pouvez-vous déposer des dossiers directement au Palais de Justice ?",
+          a: "Oui, nos coursiers connaissent parfaitement les circuits des tribunaux parisiens et de la région pour effectuer vos dépôts en temps et en heure."
+        },
+        {
+          q: "Comment est garantie la confidentialité ?",
+          a: "Tous nos plis sont transportés dans des sacoches fermées et remis exclusivement au destinataire désigné ou au service habilité, avec une traçabilité complète."
+        },
+        {
+          q: "Gérez-vous les retours de dossiers ?",
+          a: "Absolument, nous pouvons organiser des courses aller-retour pour faire signer des documents et vous les rapporter immédiatement au cabinet."
+        }
+      ]}
+    />
   );
 }
-
-
