@@ -97,7 +97,6 @@ export default function AdminOrderDetails() {
     const datePart = (order.scheduled_at || order.created_at).split('T')[0];
     const updates = {
       pickup_phone: edit.contactPhone,
-      pickup_access_code: edit.accessCode,
       service_level: edit.serviceLevel,
       driver_id: edit.driverId || null,
       notes: `${(order.notes || '').split(' | Dispatch:')[0]} | Dispatch: ${edit.dispatchNote}`,

@@ -239,7 +239,6 @@ export default function Orders() {
       pickup_postal_code: form.pickupPostcode || getPostcode(form.pickup),
       pickup_name: form.pickupName,
       pickup_phone: form.pickupPhone || form.contactPhone,
-      pickup_access_code: form.pickupAccessCode,
       delivery_address: form.delivery,
       delivery_city: form.deliveryCity || form.delivery.split(',').find(p => p.trim().match(/^\d{5}\s/))?.trim().split(' ').slice(1).join(' ') || form.delivery.split(',').pop()?.trim(),
       delivery_postal_code: form.deliveryPostcode || getPostcode(form.delivery),

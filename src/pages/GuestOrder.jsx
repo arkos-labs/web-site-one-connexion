@@ -110,7 +110,6 @@ export default function GuestOrder() {
             pickup_postal_code: form.pickupPostcode || getPostcode(form.pickup),
             pickup_name: form.pickupName,
             pickup_phone: form.pickupPhone,
-            pickup_access_code: form.pickupAccessCode,
             delivery_address: form.delivery,
             delivery_city: form.deliveryCity,
             delivery_postal_code: form.deliveryPostcode || getPostcode(form.delivery),
