@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "../lib/supabase";
-import { notifyOrderAssigned } from "../lib/telegram";
 
 export default function useAdminOrdersManager(searchParams) {
     const [orders, setOrders] = useState([]);
@@ -315,13 +314,7 @@ export default function useAdminOrdersManager(searchParams) {
         }
 
         if (decisionType === 'accept') {
-            import("../lib/telegram").then(({ notifyOrderAccepted }) => {
-                notifyOrderAccepted(data[0], data[0].clientName || 'Client');
-            });
         } else {
-            import("../lib/telegram").then(({ notifyOrderCancelled }) => {
-                notifyOrderCancelled(data[0], 'Admin');
-            });
         }
 
         fetchOrders();
@@ -360,9 +353,7 @@ export default function useAdminOrdersManager(searchParams) {
             return;
         }
 
-        // Notification Telegram
         const driverName = drivers.find(d => String(d.id) === String(dispatchDriver))?.name || 'Un chauffeur';
-        notifyOrderAssigned({ ...dispatchOrder, status: 'driver_accepted', driver_id: dispatchDriver }, driverName);
 
         fetchOrders();
         setDispatchOpen(false);

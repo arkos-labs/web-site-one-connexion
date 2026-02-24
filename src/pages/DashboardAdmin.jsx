@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useMemo, useState, useRef } from "react";
 import { supabase } from "../lib/supabase";
-import { notifyOrderAccepted, notifyOrderAssigned } from "../lib/telegram";
 import {
   MapPin, Bell, Truck,
   CheckCircle2, Loader2, TrendingUp, Users, Package,
@@ -88,7 +87,6 @@ export default function DashboardAdmin() {
 
     setDispatchOpen(false);
     const driverName = drivers.find(d => String(d.id) === String(dispatchDriver))?.name || 'Chauffeur';
-    notifyOrderAssigned({ ...dispatchOrder, status: 'assigned', driver_id: dispatchDriver }, driverName);
     fetchOrders();
   };
 
@@ -182,9 +180,7 @@ export default function DashboardAdmin() {
       fetchOrders();
       return;
     }
-    // Notification Telegram — commande acceptée
     const order = ordersAll.find(o => o.id === orderId);
-    if (order) notifyOrderAccepted(order, order.clientName || 'Client');
     fetchOrders();
   };
 

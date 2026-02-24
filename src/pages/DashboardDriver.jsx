@@ -1,7 +1,13 @@
 import { useEffect, useState, useRef } from "react";
 import { supabase } from "../lib/supabase";
-import { sendTelegramMessage, notifyDriverAccepted, notifyPickupDone, notifyDelivered, notifyDriverDeclined } from "../lib/telegram";
-import { MapPin, Navigation, Phone, CheckCircle, Clock, Truck, Package } from "lucide-react";
+import { MapPin, Navigation, Phone, CheckCircle, Clock, Truck, Package, Loader2 } from "lucide-react";
+import {
+    acceptOrderByDriver,
+    declineOrder,
+    startDelivery,
+    completeDelivery,
+} from "../services/driverOrderActions";
+import ProofModal from "../components/driver/ProofModal";
 
 export default function DashboardDriver() {
     const [tasks, setTasks] = useState([]);
@@ -138,54 +144,43 @@ export default function DashboardDriver() {
     };
 
     const updateStatus = async (orderId, newStatus) => {
-        const updateData = {
-            status: newStatus,
-            updated_at: new Date().toISOString()
-        };
+        if (!user?.id) return;
 
-        if (newStatus === 'driver_accepted') {
-            updateData.driver_accepted_at = new Date().toISOString();
-        } else if (newStatus === 'delivered') {
-            updateData.delivered_at = new Date().toISOString();
-        }
+        try {
+            setLoading(true);
+            let result;
 
-        if (newStatus === 'pending_acceptance' || newStatus === 'accepted') {
-            updateData.driver_id = null; // Unassign
-        }
+            if (newStatus === 'driver_accepted') {
+                result = await acceptOrderByDriver(orderId, user.id);
+            } else if (newStatus === 'in_progress') {
+                result = await startDelivery(orderId, user.id);
+            } else if (newStatus === 'delivered') {
+                result = await completeDelivery(orderId, user.id);
+            } else if (newStatus === 'accepted' || newStatus === 'pending_acceptance') {
+                result = await declineOrder(orderId, user.id);
+            }
 
-        const { error, data: updatedOrders } = await supabase
-            .from('orders')
-            .update(updateData)
-            .eq('id', orderId)
-            .select();
-
-        if (error) {
+            if (result?.success) {
+                fetchMyTasks();
+            } else {
+                alert("Erreur lors de la mise à jour : " + (result?.error || "Inconnu"));
+            }
+        } catch (error) {
             console.error('Update Order Error:', error);
             alert("Erreur: " + error.message);
+        } finally {
+            setLoading(false);
         }
+    };
 
-        const updatedOrder = updatedOrders && updatedOrders.length > 0 ? updatedOrders[0] : null;
-
-        if (!error && updatedOrder) {
-            let driverName = user?.user_metadata?.full_name || user?.user_metadata?.first_name || 'Chauffeur';
-            if (user?.id) {
-                const { data: profile } = await supabase.from('profiles').select('details').eq('id', user.id).single();
-                if (profile?.details?.full_name || profile?.details?.first_name) {
-                    driverName = profile.details.full_name || profile.details.first_name;
-                }
-            }
-
-            if (newStatus === 'driver_accepted') notifyDriverAccepted(updatedOrder, driverName);
-            if (newStatus === 'in_progress') notifyPickupDone(updatedOrder, driverName);
-            if (newStatus === 'delivered') notifyDelivered(updatedOrder, driverName);
-            if (newStatus === 'pending_acceptance' || newStatus === 'accepted') {
-                notifyDriverDeclined(updatedOrder, driverName);
-            }
-
-            fetchMyTasks();
-        } else if (!error) {
-            // Updated silently but not returned, fallback
-            fetchMyTasks();
+    const handleActionWithProof = (orderId, status) => {
+        if (status === 'delivered') {
+            setProofModal({ isOpen: true, orderId, type: 'delivery' });
+        } else if (status === 'in_progress') {
+            // Optionnel: On peut aussi demander une photo au ramassage
+            setProofModal({ isOpen: true, orderId, type: 'pickup' });
+        } else {
+            updateStatus(orderId, status);
         }
     };
 
@@ -363,6 +358,16 @@ export default function DashboardDriver() {
                     ))}
                 </div>
             )}
+            {/* Modal de preuve */}
+            <ProofModal
+                isOpen={proofModal.isOpen}
+                onClose={() => setProofModal({ ...proofModal, isOpen: false })}
+                orderId={proofModal.orderId}
+                type={proofModal.type}
+                onComplete={() => {
+                    updateStatus(proofModal.orderId, proofModal.type === 'pickup' ? 'in_progress' : 'delivered');
+                }}
+            />
         </div>
     );
 }

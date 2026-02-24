@@ -1,8 +1,10 @@
-// ─────────────────────────────────────────────────────────────────
-// lib/telegram.js  –  Notifications Telegram pour One Connexion
-// ─────────────────────────────────────────────────────────────────
-
 const send = async (text) => {
+    const clientEnabled = import.meta.env.VITE_TELEGRAM_CLIENT_ENABLED === "true";
+    if (!clientEnabled) {
+        console.warn("⚠️ Telegram client désactivé (backend only). Définis VITE_TELEGRAM_CLIENT_ENABLED=true pour réactiver.");
+        return;
+    }
+
     const botToken = import.meta.env.VITE_TELEGRAM_BOT_TOKEN;
     const chatId = import.meta.env.VITE_TELEGRAM_CHAT_ID;
 
@@ -12,20 +14,59 @@ const send = async (text) => {
     }
 
     try {
+        console.log("📤 Tentative envoi Telegram...");
         const res = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ chat_id: chatId, text, parse_mode: "HTML" }),
         });
-        if (!res.ok) console.error("Telegram error:", await res.text());
+
+        if (!res.ok) {
+            const err = await res.text();
+            console.error("❌ Telegram API error:", err);
+            // Fallback: send as plain text if HTML fails (stripping tags)
+            await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ chat_id: chatId, text: text.replace(/<[^>]*>/g, "") }),
+            });
+        } else {
+            console.log("✅ Telegram envoyé avec succès.");
+        }
     } catch (e) {
-        console.error("Telegram fetch error:", e);
+        console.error("❌ Telegram fetch error:", e);
     }
 };
 
 // ─── Helpers ──────────────────────────────────────────────────────
-const fmt = (label, value) => value ? `<b>${label} :</b> ${value}\n` : "";
+const esc = (str) => {
+    if (!str) return "";
+    return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+};
+
+const fmt = (label, value) => (value && value !== "null" && value !== "undefined") ? `<b>${label} :</b> ${esc(value)}\n` : "";
 const hr = () => "─────────────────────\n";
+
+const safeDate = (d) => {
+    if (!d) return null;
+    const date = new Date(d);
+    return isNaN(date.getTime()) ? null : date;
+};
+
+const fmtTime = (d) => {
+    const date = safeDate(d);
+    return date ? date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) : null;
+};
+
+const fmtDateTime = (d) => {
+    const date = safeDate(d);
+    return date ? date.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit' }) : null;
+};
+
+const fmtRef = (id) => id ? id.slice(0, 8).toUpperCase() : "NOUVELLE";
 
 const orderBlock = (o) =>
     hr() +
@@ -35,17 +76,19 @@ const orderBlock = (o) =>
     fmt("🚗 Véhicule", o.vehicle_type ? o.vehicle_type.charAt(0).toUpperCase() + o.vehicle_type.slice(1) : null) +
     fmt("⚡ Formule", o.service_level ? o.service_level.toUpperCase() : null) +
     fmt("💰 Prix HT", o.price_ht ? `${Number(o.price_ht).toFixed(2)} €` : null) +
-    fmt("🕐 Enlèvement", o.scheduled_at ? new Date(o.scheduled_at).toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit' }) : null) +
-    fmt("⏰ Deadline", o.delivery_deadline ? new Date(o.delivery_deadline).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) : null) +
+    fmt("🕐 Enlèvement", fmtDateTime(o.scheduled_at)) +
+    fmt("⏰ Deadline", fmtTime(o.delivery_deadline)) +
     hr();
+
+const resolveClient = (o, name) => name || o.client_name || o.client || "Client";
 
 // ─────────────────────────────────────────────────────────────────
 // ÉTAPE 1 — Nouvelle commande (client ou admin)
 // ─────────────────────────────────────────────────────────────────
-export const notifyNewOrder = (order, clientName = "Client") => send(
+export const notifyNewOrder = (order, clientName) => send(
     `📦 <b>NOUVELLE COMMANDE</b>\n\n` +
-    fmt("👤 Client", clientName) +
-    fmt("🆔 Référence", order.id?.slice(0, 8).toUpperCase()) +
+    fmt("👤 Client", resolveClient(order, clientName)) +
+    fmt("🆔 Référence", fmtRef(order.id)) +
     orderBlock(order) +
     `➡️ En attente d'acceptation admin`
 );
@@ -53,10 +96,10 @@ export const notifyNewOrder = (order, clientName = "Client") => send(
 // ─────────────────────────────────────────────────────────────────
 // ÉTAPE 2 — Commande acceptée par l'admin
 // ─────────────────────────────────────────────────────────────────
-export const notifyOrderAccepted = (order, clientName = "Client") => send(
+export const notifyOrderAccepted = (order, clientName) => send(
     `✅ <b>COMMANDE ACCEPTÉE</b>\n\n` +
-    fmt("👤 Client", clientName) +
-    fmt("🆔 Référence", order.id?.slice(0, 8).toUpperCase()) +
+    fmt("👤 Client", resolveClient(order, clientName)) +
+    fmt("🆔 Référence", fmtRef(order.id)) +
     orderBlock(order) +
     `➡️ En attente d'assignation chauffeur`
 );
@@ -67,7 +110,7 @@ export const notifyOrderAccepted = (order, clientName = "Client") => send(
 export const notifyOrderAssigned = (order, driverName = "Chauffeur") => send(
     `🚴 <b>MISSION ASSIGNÉE</b>\n\n` +
     fmt("👷 Chauffeur", driverName) +
-    fmt("🆔 Référence", order.id?.slice(0, 8).toUpperCase()) +
+    fmt("🆔 Référence", fmtRef(order.id)) +
     orderBlock(order) +
     `➡️ En attente d'acceptation du chauffeur`
 );
@@ -78,9 +121,9 @@ export const notifyOrderAssigned = (order, driverName = "Chauffeur") => send(
 export const notifyDriverAccepted = (order, driverName = "Chauffeur") => send(
     `👍 <b>CHAUFFEUR EN ROUTE</b>\n\n` +
     fmt("👷 Chauffeur", driverName) +
-    fmt("🆔 Référence", order.id?.slice(0, 8).toUpperCase()) +
-    fmt("📍 Vers", order.pickup_address) +
-    fmt("📞 Contact enlèvement", order.pickup_phone) +
+    fmt("🆔 Référence", fmtRef(order?.id)) +
+    fmt("📍 Vers Enlèvement", order?.pickup_address || order?.pickup) +
+    fmt("📞 Contact", order?.pickup_phone) +
     hr() +
     `➡️ Le chauffeur se dirige vers le point d'enlèvement`
 );
@@ -91,10 +134,10 @@ export const notifyDriverAccepted = (order, driverName = "Chauffeur") => send(
 export const notifyPickupDone = (order, driverName = "Chauffeur") => send(
     `🔵 <b>COLIS ENLEVÉ — EN LIVRAISON</b>\n\n` +
     fmt("👷 Chauffeur", driverName) +
-    fmt("🆔 Référence", order.id?.slice(0, 8).toUpperCase()) +
-    fmt("📍 Enlèvement", order.pickup_address) +
-    fmt("🏁 Destination", order.delivery_address) +
-    fmt("⏰ Deadline", order.delivery_deadline ? new Date(order.delivery_deadline).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) : null) +
+    fmt("🆔 Référence", fmtRef(order?.id)) +
+    fmt("📍 Enlèvement", order?.pickup_address || order?.pickup) +
+    fmt("🏁 Destination", order?.delivery_address || order?.delivery) +
+    fmt("⏰ Deadline", fmtTime(order?.delivery_deadline)) +
     hr() +
     `➡️ Le colis est en cours de livraison`
 );
@@ -105,9 +148,9 @@ export const notifyPickupDone = (order, driverName = "Chauffeur") => send(
 export const notifyDelivered = (order, driverName = "Chauffeur") => send(
     `✅ <b>LIVRAISON TERMINÉE !</b>\n\n` +
     fmt("👷 Chauffeur", driverName) +
-    fmt("🆔 Référence", order.id?.slice(0, 8).toUpperCase()) +
-    fmt("📍 Livré à", order.delivery_address) +
-    fmt("💰 Montant HT", order.price_ht ? `${Number(order.price_ht).toFixed(2)} €` : null) +
+    fmt("🆔 Référence", fmtRef(order?.id)) +
+    fmt("📍 Livré à", order?.delivery_address || order?.delivery) +
+    fmt("💰 Montant HT", order?.price_ht ? `${Number(order.price_ht).toFixed(2)} €` : null) +
     hr() +
     `🎉 Mission accomplie avec succès`
 );
@@ -118,7 +161,7 @@ export const notifyDelivered = (order, driverName = "Chauffeur") => send(
 export const notifyDriverDeclined = (order, driverName = "Chauffeur") => send(
     `✋ <b>MISSION REFUSÉE / ENLEVÉE</b>\n\n` +
     fmt("👷 Chauffeur", driverName) +
-    fmt("🆔 Référence", order.id?.slice(0, 8).toUpperCase()) +
+    fmt("🆔 Référence", fmtRef(order.id)) +
     orderBlock(order) +
     `⚠️ Le chauffeur a retiré ou refusé la mission. Elle est de nouveau disponible.`
 );
@@ -129,13 +172,13 @@ export const notifyDriverDeclined = (order, driverName = "Chauffeur") => send(
 export const notifyOrderCancelled = (order, byWhom = "Admin") => send(
     `❌ <b>COMMANDE ANNULÉE</b>\n\n` +
     fmt("👤 Annulée par", byWhom) +
-    fmt("🆔 Référence", order.id?.slice(0, 8).toUpperCase()) +
+    fmt("🆔 Référence", fmtRef(order.id)) +
     fmt("📍 Trajet", order.pickup_address && order.delivery_address ? `${order.pickup_address} → ${order.delivery_address}` : null) +
     fmt("💰 Montant HT", order.price_ht ? `${Number(order.price_ht).toFixed(2)} €` : null) +
     hr()
 );
 
 // ─────────────────────────────────────────────────────────────────
-// Compat – ancienne fonction (utilisée dans GuestOrder etc.)
+// Compat – ancienne fonction
 // ─────────────────────────────────────────────────────────────────
 export const sendTelegramMessage = send;

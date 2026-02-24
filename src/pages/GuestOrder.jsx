@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "../lib/supabase.js";
 import { autocompleteAddress } from "../lib/autocomplete";
-import { sendTelegramMessage, notifyNewOrder } from "../lib/telegram";
 import PublicHeader from "../components/PublicHeader.jsx";
 import PublicFooter from "../components/PublicFooter.jsx";
 import {
@@ -131,7 +130,6 @@ export default function GuestOrder() {
             alert("Erreur lors de la soumission : " + error.message);
         } else {
             try {
-                notifyNewOrder({
                     pickup_address: form.pickup,
                     delivery_address: form.delivery,
                     pickup_city: form.pickupCity,

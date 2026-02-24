@@ -139,9 +139,11 @@ export default function AdminInvoices() {
 
   const handleGenerateClients = async () => {
     setLoading(true);
-    const { error } = await supabase.rpc('generate_monthly_invoices', { p_month: '2026-02-01' });
+    // Use the first day of the selected month
+    const targetDate = `${selectedMonth}-01`;
+    const { error } = await supabase.rpc('generate_monthly_invoices', { p_month: targetDate });
     if (error) alert("Erreur : " + error.message);
-    else { alert("Factures générées !"); fetchInvoices(); }
+    else { alert(`Factures générées pour ${getMonthLabel(selectedMonth)} !`); fetchInvoices(); }
     setLoading(false);
   };
 

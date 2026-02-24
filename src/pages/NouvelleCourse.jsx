@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import { autocompleteAddress } from "../lib/autocomplete";
-import { sendTelegramMessage } from "../lib/telegram";
 import { ArrowLeft, ArrowRight, Truck, MapPin, Package, Clock, ShieldCheck, CheckCircle2, Loader2, Info } from "lucide-react";
+import { useProfile } from "../hooks/useProfile";
 
 const VEHICLES = ["Moto", "Voiture"];
 
@@ -19,6 +19,7 @@ export default function NouvelleCourse() {
     const [price, setPrice] = useState(null);
     const [calculatingPrice, setCalculatingPrice] = useState(false);
 
+    const { profile } = useProfile();
     const [pickupSuggestions, setPickupSuggestions] = useState([]);
     const [deliverySuggestions, setDeliverySuggestions] = useState([]);
     const [loadingPickup, setLoadingPickup] = useState(false);
@@ -152,15 +153,14 @@ export default function NouvelleCourse() {
         if (error) {
             alert("Erreur lors de la validation : " + error.message);
         } else {
-            // Notification Telegram (Non bloquante)
-            sendTelegramMessage(
-                `📦 <b>NOUVELLE COMMANDE !</b>\n\n` +
-                `<b>Client :</b> ${profile?.full_name || 'Client Web'}\n` +
-                `<b>Départ :</b> ${form.pickupCity || form.pickup}\n` +
-                `<b>Arrivée :</b> ${form.deliveryCity || form.delivery}\n` +
-                `<b>Véhicule :</b> ${form.vehicle}\n` +
-                `<b>Prix estimé :</b> ${Number(price).toFixed(2)}€ HT`
-            );
+                ...form,
+                id: null, // Sera formaté comme "Nouvelle" ou similaire si id est manquant
+                pickup_address: form.pickup,
+                delivery_address: form.delivery,
+                price_ht: price,
+                scheduled_at: form.date && form.pickupTime ? `${form.date}T${form.pickupTime}:00` : null,
+                delivery_deadline: form.date && form.deliveryDeadline ? `${form.date}T${form.deliveryDeadline}:00` : null,
+            }, profile?.full_name || profile?.company_name || 'Client Web');
 
             navigate('/dashboard-client/orders', { state: { flash: "Course validée avec succès !" } });
         }

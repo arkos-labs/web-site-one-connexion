@@ -115,6 +115,12 @@ export async function assignOrderToDriver(params: AssignOrderParams) {
             console.warn('Erreur notification ignorée:', e);
         }
 
+        try {
+            const { data: driverProf } = await supabase.from('profiles').select('details').eq('id', driverUserId).single();
+            const driverName = driverProf?.details?.full_name || driverProf?.details?.first_name || 'Chauffeur';
+        } catch (tgError) {
+        }
+
         // 4. Événement
         await supabase.from('order_events').insert({
             order_id: orderId,

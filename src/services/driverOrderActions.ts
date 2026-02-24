@@ -1,5 +1,4 @@
 import { supabase } from '@/lib/supabase';
-import { notifyDriverDeclined } from '@/lib/telegram';
 
 /**
  * Le chauffeur accepte une course qui lui a été assignée
@@ -80,6 +79,13 @@ export async function acceptOrderByDriver(orderId: string, driverId: string) {
         }
 
         console.log('✅ Course acceptée par le chauffeur:', orderId);
+
+        try {
+            const { data: profile } = await supabase.from('profiles').select('details').eq('id', authUserId).single();
+            const driverName = profile?.details?.full_name || profile?.details?.first_name || 'Chauffeur';
+        } catch (e) {
+        }
+
         return { success: true, data: order };
 
     } catch (error) {
@@ -167,8 +173,6 @@ export async function declineOrder(orderId: string, driverId: string) {
         console.log(`✅ Refus enregistré: ${driverName} (total: ${newCount} refus)`);
         console.log('📝 Commande après mise à jour:', order);
 
-        // Notification Telegram
-        notifyDriverDeclined(order, driverName);
 
         // 2. Remettre le chauffeur en ligne
         // Essayer d'abord par user_id, puis par id en fallback
@@ -280,6 +284,13 @@ export async function startDelivery(orderId: string, driverId: string) {
         }
 
         console.log('✅ Livraison démarrée:', order);
+
+        try {
+            const { data: profile } = await supabase.from('profiles').select('details').eq('id', driverId).single();
+            const driverName = profile?.details?.full_name || profile?.details?.first_name || 'Chauffeur';
+        } catch (e) {
+        }
+
         return { success: true, data: order };
 
     } catch (error) {
@@ -350,6 +361,13 @@ export async function completeDelivery(orderId: string, driverId: string) {
         }
 
         console.log('✅ Livraison terminée:', order);
+
+        try {
+            const { data: profile } = await supabase.from('profiles').select('details').eq('id', driverId).single();
+            const driverName = profile?.details?.full_name || profile?.details?.first_name || 'Chauffeur';
+        } catch (e) {
+        }
+
         return { success: true, data: order };
 
     } catch (error) {
@@ -382,5 +400,54 @@ export async function getDriverOrders(driverId: string) {
         return { success: false, error, data: [] };
     }
 }
+
+/**
+ * Télécharge une preuve (photo ou signature) vers Supabase Storage
+ */
+export async function uploadProofFile(orderId: string, fileData: Blob | string, type: 'pickup' | 'delivery' | 'signature') {
+    try {
+        const fileExt = type === 'signature' ? 'png' : 'jpg';
+        const fileName = `${orderId}/${type}_${Date.now()}.${fileExt}`;
+        const filePath = `${fileName}`;
+
+        let body: any = fileData;
+        if (typeof fileData === 'string' && fileData.startsWith('data:')) {
+            const res = await fetch(fileData);
+            body = await res.blob();
+        }
+
+        const { error: uploadError } = await supabase.storage
+            .from('delivery-proofs')
+            .upload(filePath, body, { upsert: true });
+
+        if (uploadError) throw uploadError;
+
+        const { data: { publicUrl } } = supabase.storage
+            .from('delivery-proofs')
+            .getPublicUrl(filePath);
+
+        return { success: true, publicUrl };
+    } catch (error) {
+        console.error('Erreur upload preuve:', error);
+        return { success: false, error };
+    }
+}
+
+/**
+ * Enregistre l'URL d'une preuve dans la commande
+ */
+export async function updateOrderProof(orderId: string, proofUrl: string, type: 'pickup' | 'delivery' | 'signature') {
+    const field = type === 'pickup' ? 'pickup_photo_url' :
+        type === 'delivery' ? 'delivery_photo_url' : 'delivery_signature_url';
+
+    const { error } = await supabase
+        .from('orders')
+        .update({ [field]: proofUrl, updated_at: new Date().toISOString() })
+        .eq('id', orderId);
+
+    return { success: !error, error };
+}
+
+
 
 

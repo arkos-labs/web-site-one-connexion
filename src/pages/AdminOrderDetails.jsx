@@ -3,9 +3,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import { generateOrderPdf } from "../lib/pdfGenerator";
 import {
-  notifyOrderAccepted, notifyOrderAssigned, notifyDelivered, notifyOrderCancelled
-} from "../lib/telegram";
-import {
   Loader2, ArrowLeft, MapPin, Clock, Package, User, Phone,
   FileText, CheckCircle2, Truck, AlertTriangle, Save, ChevronRight
 } from "lucide-react";
@@ -117,10 +114,8 @@ export default function AdminOrderDetails() {
         updates.status = 'driver_accepted';
         updates.driver_id = edit.driverId;
         updates.driver_accepted_at = new Date().toISOString();
-        // Notification Telegram — mission assignée à un chauffeur
         const driverName = drivers.find(d => String(d.id) === String(edit.driverId))?.name || 'Chauffeur';
         // Send async, don't wait for it
-        notifyOrderAssigned({ ...order, ...updates, id: order.id }, driverName);
       }
     }
     const { error } = await supabase.from('orders').update(updates).eq('id', order.id);
@@ -166,12 +161,6 @@ export default function AdminOrderDetails() {
       return;
     }
 
-    // ✅ Mise à jour confirmée → envoyer les notifications Telegram
-    if (newStatus === 'accepted') notifyOrderAccepted(order, clientName);
-    if (newStatus === 'driver_accepted' || newStatus === 'assigned') notifyOrderAssigned(order, driverName);
-    if (newStatus === 'picked_up' || newStatus === 'in_progress') notifyPickupDone(order, driverName);
-    if (newStatus === 'delivered') notifyDelivered(order, driverName);
-    if (newStatus === 'cancelled') notifyOrderCancelled(order, 'Admin');
 
     await fetchOrder();
     setSaving(false);
@@ -241,6 +230,16 @@ export default function AdminOrderDetails() {
             )}
             {order.status === 'in_progress' && (
               <button onClick={() => updateStatus('delivered')} disabled={saving} className="rounded-xl bg-emerald-600 px-5 py-2.5 text-xs font-black text-white hover:bg-emerald-700 transition-all disabled:opacity-50">MARQUER LIVRÉE</button>
+            )}
+            {order.status === 'delivered' && (
+              <button
+                onClick={() => {
+                  import("../lib/pdfGenerator").then(m => m.generateIndividualInvoicePdf(order, client));
+                }}
+                className="flex items-center gap-2 rounded-xl border border-indigo-200 bg-indigo-50 px-4 py-2.5 text-xs font-bold text-indigo-700 hover:bg-indigo-100 transition-all shadow-sm"
+              >
+                <TrendingUp size={14} /> Facture PDF
+              </button>
             )}
             {!['delivered', 'cancelled'].includes(order.status) && (
               <button onClick={() => { if (confirm('Annuler cette commande ?')) updateStatus('cancelled'); }} disabled={saving} className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-2.5 text-xs font-black text-rose-600 hover:bg-rose-100 transition-all disabled:opacity-50">ANNULER</button>
@@ -485,3 +484,5 @@ export default function AdminOrderDetails() {
     </div>
   );
 }
+
+

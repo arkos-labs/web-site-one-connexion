@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../../lib/supabase";
 import { autocompleteAddress } from "../../lib/autocomplete";
-import { notifyNewOrder } from "../../lib/telegram";
 import {
     X, Loader2, MapPin, Package, Clock, CheckCircle2, UserPlus,
     Users, ChevronDown, Search, Plus, ArrowRight, ArrowLeft,
@@ -288,18 +287,6 @@ export default function AdminCreateOrderModal({ onClose, onSuccess }) {
 
         setSubmitting(false);
         if (!error) {
-            // Notification Telegram — nouvelle commande créée par l'admin
-            notifyNewOrder({
-                pickup_address: form.pickup,
-                delivery_address: form.delivery,
-                pickup_city: form.pickupCity,
-                delivery_city: form.deliveryCity,
-                vehicle_type: form.vehicle,
-                service_level: form.service,
-                price_ht: finalPrice,
-                scheduled_at: form.date && form.pickupTime ? `${form.date}T${form.pickupTime}:00` : null,
-                delivery_deadline: form.date && form.deliveryDeadline ? `${form.date}T${form.deliveryDeadline}:00` : null,
-            }, selectedClient.name);
             onSuccess?.();
             onClose();
         }
@@ -795,3 +782,5 @@ export default function AdminCreateOrderModal({ onClose, onSuccess }) {
         </div>
     );
 }
+
+

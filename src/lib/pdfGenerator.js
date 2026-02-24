@@ -159,7 +159,7 @@ export function generateOrderPdf(order, client = {}) {
     const nEmPick = notesStr.match(/Email Enlev: (.*?)(\.|$|Entreprise|Instructions)/)?.[1]?.trim();
     const nEnPick = notesStr.match(/Entreprise Pick: (.*?)(\.|$|Contact)/)?.[1]?.trim();
 
-    const displayContact = client.company || client.details?.company || client.name || client.details?.name || client.full_name || client.details?.full_name || nCoPick || order.pickup_contact || "—";
+    const displayContact = client.company || client.details?.company || client.name || client.details?.name || client.full_name || client.details?.full_name || nCoPick || order.pickup_contact || order.pickup_name || "—";
     const displayEmail = client.email || client.details?.email || nEmPick || order.pickup_email || "—";
     const displayPhone = client.phone || client.details?.phone || nPhPick || order.pickup_phone || "—";
     const displayAddress = client.address || client.details?.address || client.billing_address || order.pickup_address || "—";
@@ -476,6 +476,20 @@ export function generateOrderPdf(order, client = {}) {
     doc.text("One Connexion SAS • Tous droits réservés • Ce document n'est pas une facture.", margin, pageH - margin);
 
     doc.save(`bon-commande-${String(order.id).slice(0, 8)}.pdf`);
+}
+
+/**
+ * Generates an Individual Invoice for a single order
+ */
+export function generateIndividualInvoicePdf(order, client = {}) {
+    const invoice = {
+        id: `IND-${String(order.id).slice(0, 8)}`,
+        period: "PONCTUELLE",
+        created_at: new Date().toISOString(),
+        total_ht: order.price_ht || 0,
+        total_ttc: (order.price_ht || 0) * 1.2
+    };
+    return generateInvoicePdf(invoice, [order], client);
 }
 
 /**
