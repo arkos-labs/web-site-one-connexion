@@ -113,6 +113,17 @@ export const notifyDelivered = (order, driverName = "Chauffeur") => send(
 );
 
 // ─────────────────────────────────────────────────────────────────
+// Chauffeur refuse ou enlève la mission
+// ─────────────────────────────────────────────────────────────────
+export const notifyDriverDeclined = (order, driverName = "Chauffeur") => send(
+    `✋ <b>MISSION REFUSÉE / ENLEVÉE</b>\n\n` +
+    fmt("👷 Chauffeur", driverName) +
+    fmt("🆔 Référence", order.id?.slice(0, 8).toUpperCase()) +
+    orderBlock(order) +
+    `⚠️ Le chauffeur a retiré ou refusé la mission. Elle est de nouveau disponible.`
+);
+
+// ─────────────────────────────────────────────────────────────────
 // Annulation
 // ─────────────────────────────────────────────────────────────────
 export const notifyOrderCancelled = (order, byWhom = "Admin") => send(

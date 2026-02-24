@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase';
+import { notifyDriverDeclined } from '@/lib/telegram';
 
 /**
  * Le chauffeur accepte une course qui lui a été assignée
@@ -165,6 +166,9 @@ export async function declineOrder(orderId: string, driverId: string) {
 
         console.log(`✅ Refus enregistré: ${driverName} (total: ${newCount} refus)`);
         console.log('📝 Commande après mise à jour:', order);
+
+        // Notification Telegram
+        notifyDriverDeclined(order, driverName);
 
         // 2. Remettre le chauffeur en ligne
         // Essayer d'abord par user_id, puis par id en fallback

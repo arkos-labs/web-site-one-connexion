@@ -24,8 +24,9 @@ const STATUS_CONFIG = {
   pending: { label: "En attente", cls: "bg-rose-50 text-rose-600 border-rose-100" },
   accepted: { label: "Validé", cls: "bg-indigo-50 text-indigo-600 border-indigo-100" },
   assigned: { label: "Assigné", cls: "bg-amber-50 text-amber-700 border-amber-100" },
-  driver_accepted: { label: "Accepté", cls: "bg-emerald-50 text-emerald-700 border-emerald-100" },
-  in_progress: { label: "En cours", cls: "bg-blue-50 text-blue-600 border-blue-100" },
+  driver_accepted: { label: "Dispatché", cls: "bg-emerald-50 text-emerald-700 border-emerald-100" },
+  picked_up: { label: "Enlevé", cls: "bg-blue-50 text-blue-700 border-blue-100" },
+  in_progress: { label: "Enlevé", cls: "bg-blue-50 text-blue-700 border-blue-100" },
   delivered: { label: "Livré", cls: "bg-slate-100 text-slate-600 border-slate-200" },
   cancelled: { label: "Annulé", cls: "bg-red-50 text-red-500 border-red-100" },
 };
@@ -40,8 +41,12 @@ export default function DashboardAdmin() {
   const [drivers, setDrivers] = useState([]);
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [operationView, setOperationView] = useState("pending_acceptance");
+  const [operationView, setOperationView] = useState(() => localStorage.getItem("adminOperationView") || "pending_acceptance");
   const latestOrderIdRef = useRef(null);
+
+  useEffect(() => {
+    localStorage.setItem("adminOperationView", operationView);
+  }, [operationView]);
 
   // Dispatch modal state
   const [dispatchOpen, setDispatchOpen] = useState(false);
@@ -62,9 +67,12 @@ export default function DashboardAdmin() {
       alert("Veuillez sélectionner un chauffeur.");
       return;
     }
+    const now = new Date().toISOString();
     const { error, data } = await supabase.from('orders').update({
-      status: 'assigned',
+      status: 'driver_accepted',
       driver_id: dispatchDriver,
+      driver_accepted_at: now,
+      updated_at: now,
       notes: dispatchNote ? `${dispatchOrder.notes || ''} | Note dispatch: ${dispatchNote}` : dispatchOrder.notes
     }).eq('id', dispatchOrder.id).select();
 
@@ -188,31 +196,50 @@ export default function DashboardAdmin() {
 
   // ── KPIs ──
   const kpis = useMemo(() => {
+    // 1. Flux Opérationnel
     const toAcceptCount = ordersAll.filter(o => ['pending_acceptance', 'pending'].includes(o.status)).length;
     const toDispatchCount = ordersAll.filter(o => ['accepted'].includes(o.status)).length;
-    const activeMissionsCount = ordersAll.filter(o => ['assigned', 'driver_accepted', 'in_progress'].includes(o.status)).length;
+    const activeMissionsCount = ordersAll.filter(o => ['assigned', 'driver_accepted', 'in_progress', 'picked_up'].includes(o.status)).length;
+
+    // 2. Chiffre d'Affaires & Recouvrement
     const deliveredOrders = ordersAll.filter(o => o.status === 'delivered');
     const totalDeliveredHT = deliveredOrders.reduce((acc, o) => acc + (Number(o.price_ht) || 0), 0);
-    const revenuePaidHT = invoicesAll.filter(i => i.status === 'paid').reduce((acc, i) => acc + (Number(i.total_ht) || 0), 0);
-    const overdueInvoices = invoicesAll.filter(i => i.status !== 'paid' && i.due_date && new Date(i.due_date) < SIMULATED_NOW);
-    const overdueAmount = overdueInvoices.reduce((acc, i) => acc + (Number(i.total_ttc) || 0), 0);
+
+    // Identifier les commandes payées via leurs factures
+    const paidInvoiceIds = new Set(invoicesAll.filter(i => i.status === 'paid').map(i => i.id));
+    const paidOrders = deliveredOrders.filter(o => paidInvoiceIds.has(o.invoice_id));
+    const paidRevenueHT = paidOrders.reduce((acc, o) => acc + (Number(o.price_ht) || 0), 0);
+
+    const totalToRecoup = Math.max(0, totalDeliveredHT - paidRevenueHT);
+
+    // 3. CA en cours (Missions actives)
+    const revenueOps = ordersAll.filter(o => ['accepted', 'assigned', 'driver_accepted', 'in_progress'].includes(o.status)).reduce((acc, o) => acc + (Number(o.price_ht) || 0), 0);
+
+    // 4. Profit Net (Uniquement sur ce qui est encaissé)
+    const paidDriverCost = paidOrders.reduce((acc, o) => acc + computeDriverPay(o), 0);
+    const netProfit = paidRevenueHT - paidDriverCost;
+
+    // 5. Dû Chauffeurs (Tout ce qui est livré mais pas encore réglé aux chauffeurs)
     const totalDriverPayRequired = deliveredOrders.reduce((acc, o) => acc + computeDriverPay(o), 0);
     const driverPayPaid = driverPaymentsAll.filter(p => p.status === 'paid').reduce((acc, p) => acc + (Number(p.amount) || 0), 0);
     const driverPayOutstanding = Math.max(0, totalDriverPayRequired - driverPayPaid);
-    const netProfit = totalDeliveredHT - totalDriverPayRequired;
-    const revenueOps = ordersAll.filter(o => ['accepted', 'assigned', 'driver_accepted', 'in_progress'].includes(o.status)).reduce((acc, o) => acc + (Number(o.price_ht) || 0), 0);
+
     return {
-      toAccept: toAcceptCount, toDispatch: toDispatchCount, active: activeMissionsCount,
-      revenueOps, totalDeliveredHT, revenuePaidHT,
-      totalToRecoup: Math.max(0, totalDeliveredHT - revenuePaidHT),
-      overdueAmount, debtorClientsCount: new Set(invoicesAll.filter(i => i.status !== 'paid').map(i => i.client_id)).size,
-      totalDriverPayRequired, driverPayOutstanding, netProfit, deliveredCount: deliveredOrders.length,
+      toAccept: toAcceptCount,
+      toDispatch: toDispatchCount,
+      active: activeMissionsCount,
+      revenueOps,
+      totalDeliveredHT,
+      totalToRecoup,
+      netProfit,
+      deliveredCount: deliveredOrders.length,
+      driverPayOutstanding
     };
   }, [ordersAll, invoicesAll, driverPaymentsAll]);
 
   const driverRows = useMemo(() => drivers.map(d => {
-    const activeOrder = ordersAll.find(o => o.driver_id === d.id && ['in_progress', 'driver_accepted', 'assigned'].includes(o.status));
-    return { ...d, status: activeOrder ? "EN MISSION" : "DISPONIBLE", cls: activeOrder ? "bg-amber-100 text-amber-700" : "bg-emerald-100 text-emerald-700" };
+    const activeOrder = ordersAll.find(o => o.driver_id === d.id && ['in_progress', 'driver_accepted', 'assigned', 'picked_up'].includes(o.status));
+    return { ...d, status: activeOrder ? (activeOrder.status === 'in_progress' || activeOrder.status === 'picked_up' ? "ENLEVÉ" : "EN MISSION") : "DISPONIBLE", cls: activeOrder ? "bg-amber-100 text-amber-700" : "bg-emerald-100 text-emerald-700" };
   }), [ordersAll, drivers]);
 
   const clientPaymentRows = useMemo(() => clients.map(c => {
@@ -226,7 +253,7 @@ export default function DashboardAdmin() {
   const TAB_CONFIG = {
     pending_acceptance: { label: 'À Accepter', icon: Bell, statuses: ['pending_acceptance', 'pending'], count: kpis.toAccept },
     accepted: { label: 'À Dispatcher', icon: MapPin, statuses: ['accepted'], count: kpis.toDispatch },
-    in_progress: { label: 'En Mission', icon: Truck, statuses: ['assigned', 'driver_accepted', 'in_progress'], count: kpis.active },
+    in_progress: { label: 'En Mission', icon: Truck, statuses: ['assigned', 'driver_accepted', 'in_progress', 'picked_up'], count: kpis.active },
     delivered: { label: 'Terminées', icon: CheckCircle2, statuses: ['delivered'], count: kpis.deliveredCount },
   };
 
@@ -307,22 +334,21 @@ export default function DashboardAdmin() {
             {/* CA En cours */}
             <KpiCard icon={<TrendingUp size={18} />} iconBg="bg-indigo-100 text-indigo-600" label="CA En cours" value={`${kpis.revenueOps.toFixed(0)}€`} sub="HT sur missions actives" trend="indigo" />
 
-            {/* Relances */}
+            {/* À Recouvrer */}
             <KpiCard
               icon={<AlertTriangle size={18} />}
-              iconBg={kpis.overdueAmount > 0 ? "bg-rose-100 text-rose-600" : "bg-amber-100 text-amber-600"}
+              iconBg="bg-rose-100 text-rose-600"
               label="À Recouvrer"
               value={`${kpis.totalToRecoup.toFixed(0)}€`}
-              sub={kpis.overdueAmount > 0 ? `dont ${kpis.overdueAmount.toFixed(0)}€ en retard` : "Aucun retard"}
-              trend={kpis.overdueAmount > 0 ? "rose" : "amber"}
-              alert={kpis.overdueAmount > 0}
+              sub="Factures non encaissées"
+              trend="rose"
             />
 
             {/* Chauffeurs */}
             <KpiCard icon={<Users size={18} />} iconBg="bg-amber-100 text-amber-600" label="Dû Chauffeurs" value={`${kpis.driverPayOutstanding.toFixed(0)}€`} sub={`${drivers.length} livreur(s) en ligne`} trend="amber" />
 
             {/* Profit net */}
-            <KpiCard icon={<BarChart3 size={18} />} iconBg="bg-emerald-100 text-emerald-600" label="Profit Net (Est.)" value={`${kpis.netProfit.toFixed(0)}€`} sub={`${kpis.deliveredCount} livraison(s)`} trend="emerald" />
+            <KpiCard icon={<BarChart3 size={18} />} iconBg="bg-emerald-100 text-emerald-600" label="Profit Net (Encais.)" value={`${kpis.netProfit.toFixed(0)}€`} sub={`${kpis.deliveredCount} livraison(s)`} trend="emerald" />
           </div>
 
           {/* ── MAIN CONTENT ── */}

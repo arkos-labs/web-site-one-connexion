@@ -272,6 +272,8 @@ export default function AdminCreateOrderModal({ onClose, onSuccess }) {
             delivery_postal_code: form.deliveryPostcode || getPostcode(form.delivery),
             delivery_name: form.deliveryName,
             delivery_phone: form.deliveryPhone,
+            pickup_access_code: form.pickupAccessCode,
+            delivery_access_code: form.deliveryAccessCode,
             vehicle_type: form.vehicle.toLowerCase(),
             service_level: form.service.toLowerCase(),
             status: 'pending_acceptance',

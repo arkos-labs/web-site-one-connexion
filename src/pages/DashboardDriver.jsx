@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { supabase } from "../lib/supabase";
-import { sendTelegramMessage, notifyDriverAccepted, notifyPickupDone, notifyDelivered } from "../lib/telegram";
+import { sendTelegramMessage, notifyDriverAccepted, notifyPickupDone, notifyDelivered, notifyDriverDeclined } from "../lib/telegram";
 import { MapPin, Navigation, Phone, CheckCircle, Clock, Truck, Package } from "lucide-react";
 
 export default function DashboardDriver() {
@@ -83,7 +83,7 @@ export default function DashboardDriver() {
             .from('orders')
             .select('*')
             .eq('driver_id', id)
-            .in('status', ['assigned', 'driver_accepted', 'in_progress'])
+            .in('status', ['accepted', 'assigned', 'driver_accepted', 'in_progress'])
             .order('created_at', { ascending: true });
 
         if (!error) {
@@ -149,6 +149,10 @@ export default function DashboardDriver() {
             updateData.delivered_at = new Date().toISOString();
         }
 
+        if (newStatus === 'pending_acceptance' || newStatus === 'accepted') {
+            updateData.driver_id = null; // Unassign
+        }
+
         const { error, data: updatedOrders } = await supabase
             .from('orders')
             .update(updateData)
@@ -174,6 +178,9 @@ export default function DashboardDriver() {
             if (newStatus === 'driver_accepted') notifyDriverAccepted(updatedOrder, driverName);
             if (newStatus === 'in_progress') notifyPickupDone(updatedOrder, driverName);
             if (newStatus === 'delivered') notifyDelivered(updatedOrder, driverName);
+            if (newStatus === 'pending_acceptance' || newStatus === 'accepted') {
+                notifyDriverDeclined(updatedOrder, driverName);
+            }
 
             fetchMyTasks();
         } else if (!error) {
@@ -304,7 +311,7 @@ export default function DashboardDriver() {
 
                                 {/* Actions */}
                                 <div className="pt-2 flex gap-3">
-                                    {task.status === 'assigned' ? (
+                                    {task.status === 'assigned' || task.status === 'accepted' ? (
                                         <>
                                             <button
                                                 onClick={() => updateStatus(task.id, 'driver_accepted')}
@@ -312,14 +319,36 @@ export default function DashboardDriver() {
                                             >
                                                 ACCEPTER LA MISSION ✅
                                             </button>
+                                            <button
+                                                onClick={() => {
+                                                    if (confirm("Refuser cette mission ?")) {
+                                                        updateStatus(task.id, 'accepted');
+                                                    }
+                                                }}
+                                                className="px-4 rounded-2xl bg-slate-100 text-slate-400 font-bold hover:bg-red-50 hover:text-red-500 transition-all"
+                                            >
+                                                ✕
+                                            </button>
                                         </>
                                     ) : task.status === 'driver_accepted' ? (
-                                        <button
-                                            onClick={() => updateStatus(task.id, 'in_progress')}
-                                            className="w-full rounded-2xl bg-slate-900 py-4 text-center font-bold text-white shadow-xl shadow-slate-900/20 active:scale-[0.98] transition-all"
-                                        >
-                                            CONFIRMER PRISE EN CHARGE 📦
-                                        </button>
+                                        <div className="flex gap-2 w-full">
+                                            <button
+                                                onClick={() => updateStatus(task.id, 'in_progress')}
+                                                className="flex-1 rounded-2xl bg-slate-900 py-4 text-center font-bold text-white shadow-xl shadow-slate-900/20 active:scale-[0.98] transition-all"
+                                            >
+                                                CONFIRMER PRISE EN CHARGE 📦
+                                            </button>
+                                            <button
+                                                onClick={() => {
+                                                    if (confirm("Se désister de cette mission ?")) {
+                                                        updateStatus(task.id, 'accepted');
+                                                    }
+                                                }}
+                                                className="px-4 rounded-2xl bg-slate-100 text-slate-400 font-bold hover:bg-red-50 hover:text-red-500 transition-all"
+                                            >
+                                                ✕
+                                            </button>
+                                        </div>
                                     ) : (
                                         <button
                                             onClick={() => updateStatus(task.id, 'delivered')}

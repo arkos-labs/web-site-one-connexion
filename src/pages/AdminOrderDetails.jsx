@@ -17,6 +17,7 @@ const STATUS_CONFIG = {
   accepted: { label: "Validé", cls: "bg-indigo-50 text-indigo-700 border-indigo-200", step: 1 },
   assigned: { label: "Assigné", cls: "bg-amber-50 text-amber-700 border-amber-200", step: 2 },
   driver_accepted: { label: "Accepté chauffeur", cls: "bg-emerald-50 text-emerald-700 border-emerald-200", step: 3 },
+  picked_up: { label: "Enlevée", cls: "bg-blue-50 text-blue-700 border-blue-200", step: 4 },
   in_progress: { label: "Enlevée", cls: "bg-blue-50 text-blue-700 border-blue-200", step: 4 },
   delivered: { label: "Livrée ✓", cls: "bg-slate-100 text-slate-700 border-slate-300", step: 5 },
   cancelled: { label: "Annulée", cls: "bg-red-50 text-red-600 border-red-200", step: -1 },
@@ -25,7 +26,6 @@ const STATUS_CONFIG = {
 const PIPELINE = [
   { key: "pending_acceptance", label: "Nouveau" },
   { key: "accepted", label: "Validé" },
-  { key: "assigned", label: "Assigné" },
   { key: "driver_accepted", label: "Accepté" },
   { key: "in_progress", label: "Enlevé" },
   { key: "delivered", label: "Livré" },
@@ -41,7 +41,8 @@ export default function AdminOrderDetails() {
   const [drivers, setDrivers] = useState([]);
   const [edit, setEdit] = useState({
     pickupTime: "", deliveryDeadline: "", contactPhone: "",
-    accessCode: "", dispatchNote: "", driverId: "", serviceLevel: "",
+    accessCode: "", deliveryPhone: "", deliveryAccessCode: "",
+    dispatchNote: "", driverId: "", serviceLevel: "",
   });
 
   useEffect(() => {
@@ -83,6 +84,8 @@ export default function AdminOrderDetails() {
       deliveryDeadline: safeTime(ord.delivery_deadline),
       contactPhone: ord.pickup_phone || "",
       accessCode: ord.pickup_access_code || "",
+      deliveryPhone: ord.delivery_phone || "",
+      deliveryAccessCode: ord.delivery_access_code || "",
       dispatchNote: ord.notes?.match(/Dispatch: (.*)/)?.[1] || "",
       driverId: ord.driver_id || "",
       serviceLevel: ord.service_level || "normal",
@@ -97,6 +100,9 @@ export default function AdminOrderDetails() {
     const datePart = (order.scheduled_at || order.created_at).split('T')[0];
     const updates = {
       pickup_phone: edit.contactPhone,
+      pickup_access_code: edit.accessCode,
+      delivery_phone: edit.deliveryPhone,
+      delivery_access_code: edit.deliveryAccessCode,
       service_level: edit.serviceLevel,
       driver_id: edit.driverId || null,
       notes: `${(order.notes || '').split(' | Dispatch:')[0]} | Dispatch: ${edit.dispatchNote}`,
@@ -108,8 +114,9 @@ export default function AdminOrderDetails() {
       const canAssign = ['pending', 'pending_acceptance', 'accepted'].includes(order.status);
       const canReassign = ['assigned', 'driver_accepted', 'in_progress'].includes(order.status) && driverChanged;
       if (canAssign || canReassign || (!order.driver_id && edit.driverId)) {
-        updates.status = 'assigned';
+        updates.status = 'driver_accepted';
         updates.driver_id = edit.driverId;
+        updates.driver_accepted_at = new Date().toISOString();
         // Notification Telegram — mission assignée à un chauffeur
         const driverName = drivers.find(d => String(d.id) === String(edit.driverId))?.name || 'Chauffeur';
         // Send async, don't wait for it
@@ -134,10 +141,14 @@ export default function AdminOrderDetails() {
       return;
     }
 
+    const now = new Date().toISOString();
+    const patch = { status: newStatus, updated_at: now };
+    if (newStatus === 'driver_accepted') patch.driver_accepted_at = now;
+
     // Utiliser .select() pour confirmer que la ligne a bien été modifiée
     const { data: updated, error } = await supabase
       .from('orders')
-      .update({ status: newStatus })
+      .update(patch)
       .eq('id', id)
       .select('id, status');
 
@@ -157,7 +168,8 @@ export default function AdminOrderDetails() {
 
     // ✅ Mise à jour confirmée → envoyer les notifications Telegram
     if (newStatus === 'accepted') notifyOrderAccepted(order, clientName);
-    if (newStatus === 'assigned') notifyOrderAssigned(order, driverName);
+    if (newStatus === 'driver_accepted' || newStatus === 'assigned') notifyOrderAssigned(order, driverName);
+    if (newStatus === 'picked_up' || newStatus === 'in_progress') notifyPickupDone(order, driverName);
     if (newStatus === 'delivered') notifyDelivered(order, driverName);
     if (newStatus === 'cancelled') notifyOrderCancelled(order, 'Admin');
 
@@ -216,7 +228,7 @@ export default function AdminOrderDetails() {
               <FileText size={14} /> Bon de commande PDF
             </button>
             {['pending_acceptance', 'pending'].includes(order.status) && (
-              <button onClick={() => updateStatus('accepted')} disabled={saving} className="rounded-xl bg-slate-900 px-5 py-2.5 text-xs font-black text-white hover:bg-orange-500 transition-all disabled:opacity-50">ACCEPTER</button>
+              <button onClick={() => updateStatus(order.driver_id || edit.driverId ? 'driver_accepted' : 'accepted')} disabled={saving} className="rounded-xl bg-slate-900 px-5 py-2.5 text-xs font-black text-white hover:bg-orange-500 transition-all disabled:opacity-50 tracking-widest uppercase">ACCEPTER</button>
             )}
             {order.status === 'accepted' && (
               <button onClick={() => {
@@ -241,9 +253,9 @@ export default function AdminOrderDetails() {
       <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm p-6">
         <div className="flex items-center gap-0 overflow-x-auto">
           {PIPELINE.map((step, i) => {
-            const done = currentStep >= step.key === order.status ? true : PIPELINE.findIndex(s => s.key === order.status) >= i;
-            const isDone = PIPELINE.findIndex(s => s.key === order.status) >= i;
-            const isCurrent = order.status === step.key;
+            const currentStepIdx = STATUS_CONFIG[order.status]?.step ?? 0;
+            const isDone = currentStepIdx >= i;
+            const isCurrent = currentStepIdx === i;
             return (
               <div key={step.key} className="flex items-center flex-1 min-w-0">
                 <div className="flex flex-col items-center gap-1.5 flex-1">
@@ -416,12 +428,23 @@ export default function AdminOrderDetails() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1.5 block">Tél. sur place</label>
-                  <input className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-sm focus:outline-none focus:ring-4 focus:ring-slate-900/5 transition-all" placeholder="06 12 34 56 78" value={edit.contactPhone} onChange={e => setEdit(p => ({ ...p, contactPhone: e.target.value }))} />
+                  <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1.5 block">Tél. Enlèvement</label>
+                  <input className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-sm focus:outline-none focus:ring-4 focus:ring-slate-900/5 transition-all" placeholder="06…" value={edit.contactPhone} onChange={e => setEdit(p => ({ ...p, contactPhone: e.target.value }))} />
                 </div>
                 <div>
-                  <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1.5 block">Code d'accès</label>
+                  <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1.5 block">Code d'accès Pick.</label>
                   <input className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-sm focus:outline-none focus:ring-4 focus:ring-slate-900/5 transition-all" placeholder="Digicode…" value={edit.accessCode} onChange={e => setEdit(p => ({ ...p, accessCode: e.target.value }))} />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1.5 block">Tél. Livraison</label>
+                  <input className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-sm focus:outline-none focus:ring-4 focus:ring-slate-900/5 transition-all" placeholder="06…" value={edit.deliveryPhone} onChange={e => setEdit(p => ({ ...p, deliveryPhone: e.target.value }))} />
+                </div>
+                <div>
+                  <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1.5 block">Code d'accès Dest.</label>
+                  <input className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-sm focus:outline-none focus:ring-4 focus:ring-slate-900/5 transition-all" placeholder="Digicode…" value={edit.deliveryAccessCode} onChange={e => setEdit(p => ({ ...p, deliveryAccessCode: e.target.value }))} />
                 </div>
               </div>
 

@@ -119,7 +119,7 @@ export default function useAdminOrdersManager(searchParams) {
                         isGuest = true;
                     }
 
-                    const hasDriver = !!(o.driver_id || o.assigned_driver_id);
+                    const hasDriver = !!o.driver_id;
                     const pickedUp = !!(o.picked_up_at || o.pickup_time_at);
                     // Ne pas écraser driver_accepted - c'est le vrai statut Supabase
                     const normalizedStatus = (o.status === 'accepted' && hasDriver) ? 'assigned'
@@ -318,6 +318,10 @@ export default function useAdminOrdersManager(searchParams) {
             import("../lib/telegram").then(({ notifyOrderAccepted }) => {
                 notifyOrderAccepted(data[0], data[0].clientName || 'Client');
             });
+        } else {
+            import("../lib/telegram").then(({ notifyOrderCancelled }) => {
+                notifyOrderCancelled(data[0], 'Admin');
+            });
         }
 
         fetchOrders();
@@ -337,9 +341,12 @@ export default function useAdminOrdersManager(searchParams) {
             }
         }
 
+        const now = new Date().toISOString();
         const { error, data } = await supabase.from('orders').update({
-            status: 'assigned',
+            status: 'driver_accepted',
             driver_id: dispatchDriver,
+            driver_accepted_at: now,
+            updated_at: now,
             notes: `${dispatchOrder.notes || ''} | Note dispatch: ${dispatchNote}`
         }).eq('id', dispatchOrder.id).select();
 
@@ -353,13 +360,10 @@ export default function useAdminOrdersManager(searchParams) {
             return;
         }
 
-        if (!data || data.length === 0) {
-            alert("L'assignation a échouée silencieusement. Vérifiez vos permissions administrateur (RLS).");
-            return;
-        }
+        // Notification Telegram
+        const driverName = drivers.find(d => String(d.id) === String(dispatchDriver))?.name || 'Un chauffeur';
+        notifyOrderAssigned({ ...dispatchOrder, status: 'driver_accepted', driver_id: dispatchDriver }, driverName);
 
-        const driverName = drivers.find(d => String(d.id) === String(dispatchDriver))?.name || 'Chauffeur';
-        notifyOrderAssigned({ ...dispatchOrder, status: 'assigned', driver_id: dispatchDriver }, driverName);
         fetchOrders();
         setDispatchOpen(false);
     };

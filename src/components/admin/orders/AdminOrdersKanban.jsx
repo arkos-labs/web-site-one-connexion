@@ -11,7 +11,7 @@ export default function AdminOrdersKanban({
             {[
                 { label: "Nouveaux", statuses: ["pending_acceptance", "pending"], color: "bg-rose-500", light: "bg-rose-50", text: "text-rose-600" },
                 { label: "Dispatch", statuses: ["accepted"], color: "bg-indigo-500", light: "bg-indigo-50", text: "text-indigo-600" },
-                { label: "En cours", statuses: ["assigned", "driver_accepted", "in_progress"], color: "bg-amber-500", light: "bg-amber-50", text: "text-amber-600" },
+                { label: "En cours", statuses: ["assigned", "driver_accepted", "in_progress", "picked_up"], color: "bg-amber-500", light: "bg-amber-50", text: "text-amber-600" },
                 { label: "Livrées", statuses: ["delivered"], color: "bg-emerald-500", light: "bg-emerald-50", text: "text-emerald-600" },
             ].map((col) => (
                 <div key={col.label} className="flex flex-col gap-4">
@@ -46,9 +46,9 @@ export default function AdminOrdersKanban({
                                                     o.status === "delivered" ? "bg-slate-100 text-slate-600" :
                                                         o.status === "accepted" ? "bg-indigo-50 text-indigo-700" : "bg-slate-50 text-slate-500"
                                             }`}>
-                                            {o.status === "assigned" ? "EN ATTENTE ACCEPTATION" :
-                                                o.status === "driver_accepted" ? "ACCEPTÉ ✅" :
-                                                    o.status === "in_progress" ? "ENLEVÉE" :
+                                            {o.status === "assigned" ? "EN ATTENTE" :
+                                                o.status === "driver_accepted" ? "DISPATCHÉ ✅" :
+                                                    (o.status === "in_progress" || o.status === "picked_up") ? "ENLEVÉE" :
                                                         o.status === "delivered" ? "LIVRÉE" :
                                                             o.status === "accepted" ? "À DISPATCHER" : o.status}
                                         </span>
