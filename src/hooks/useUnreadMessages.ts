@@ -72,16 +72,17 @@ export const useUnreadMessages = (userType: 'admin' | 'client', clientId?: strin
                 },
                 (payload) => {
                     fetchUnreadCount();
-                    // Play sound and alert if we are admin and it's an incoming message
                     const newMsg = payload.new as any;
-                    if (userType === 'admin' && newMsg.sender_type !== 'admin') {
+                    const isNewMessageForMe =
+                        (userType === 'admin' && newMsg.sender_type !== 'admin') ||
+                        (userType === 'client' && newMsg.sender_type === 'admin' && newMsg.client_id === clientId);
+
+                    if (isNewMessageForMe) {
                         try {
                             const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
-                            audio.play().catch(e => console.error("Audio play failed", e));
-                            // We could also show a toast here if we imported it, but the Sidebar doesn't typically show toasts for messages, 
-                            // usually it just updates the badge. However the user requested "alerte message sonore des 2 cote".
+                            audio.play().catch(e => console.debug("Audio play blocked", e));
                         } catch (e) {
-                            console.error("Audio error", e);
+                            console.debug("Audio error", e);
                         }
                     }
                 }

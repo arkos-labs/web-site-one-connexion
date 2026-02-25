@@ -5,8 +5,9 @@ import { supabase } from '@/lib/supabase';
  */
 export async function acceptOrderByDriver(orderId: string, driverId: string) {
     try {
+        console.log('🚀 Accepting mission...', orderId);
+
         // Résoudre le vrai Auth UUID du chauffeur
-        // driverId peut être soit l'ID de la table drivers, soit le Auth UUID directement
         let authUserId = driverId;
         const { data: driverRecord } = await supabase
             .from('drivers')
@@ -44,10 +45,12 @@ export async function acceptOrderByDriver(orderId: string, driverId: string) {
                 .select()
                 .single();
             if (fallbackError) {
-                console.error('Erreur fallback acceptation commande:', fallbackError);
+                console.error('❌ Erreur fallback acceptation commande:', fallbackError);
                 return { success: false, error: fallbackError };
             }
-            console.log('✅ Course acceptée (fallback sans filtre driver_id):', fallbackOrder);
+            console.log('✅ Update success (fallback):', fallbackOrder);
+        } else {
+            console.log('✅ Update success:', order);
         }
 
         // 2. Mettre à jour le statut du chauffeur à 'busy'
@@ -149,7 +152,24 @@ export async function declineOrder(orderId: string, driverId: string) {
 
         console.log(`📊 Compteur refus: ${currentCount} → ${newCount} (commande: ${currentOrder?.reference})`);
 
-        // 1. Mettre à jour la commande avec le compteur de refus incrémenté
+        // 1. Créer un événement d'abord (pendant que driver_id est encore associé dans orders pour le RLS)
+        try {
+            console.log('📝 Création événement de refus...', orderId);
+            await supabase
+                .from('order_events')
+                .insert({
+                    order_id: orderId,
+                    event_type: 'driver_declined',
+                    description: 'Le chauffeur a refusé la course',
+                    actor_type: 'driver',
+                    actor_id: driverId,
+                    metadata: { declined_at: new Date().toISOString() }
+                });
+        } catch (eventError) {
+            console.warn('⚠️ Erreur (non-fatale) création événement:', eventError);
+        }
+
+        // 2. Mettre à jour la commande (va mettre driver_id à null)
         const { data: order, error: orderError } = await supabase
             .from('orders')
             .update({
@@ -161,20 +181,22 @@ export async function declineOrder(orderId: string, driverId: string) {
                 updated_at: new Date().toISOString()
             })
             .eq('id', orderId)
-            .eq('driver_id', driverId) // ✅ driver_id contient l'ID Auth (user_id)
+            .eq('driver_id', driverId)
             .select()
             .single();
 
         if (orderError) {
-            console.error('❌ Erreur refus commande:', orderError);
+            console.error('❌ Update error (RLS or other):', orderError);
             return { success: false, error: orderError };
         }
+
+        console.log('✅ Update success (refusal):', order);
 
         console.log(`✅ Refus enregistré: ${driverName} (total: ${newCount} refus)`);
         console.log('📝 Commande après mise à jour:', order);
 
 
-        // 2. Remettre le chauffeur en ligne
+        // 3. Remettre le chauffeur en ligne
         // Essayer d'abord par user_id, puis par id en fallback
         let { error: driverError } = await supabase
             .from('drivers')
@@ -198,41 +220,6 @@ export async function declineOrder(orderId: string, driverId: string) {
             if (retryError) {
                 console.warn('Erreur mise à jour statut chauffeur:', retryError);
             }
-        }
-
-        // 3. Créer un événement
-        try {
-            console.log('📝 Tentative création événement de refus:', {
-                order_id: orderId,
-                event_type: 'driver_declined',
-                actor_id: driverId
-            });
-
-            const { data: eventData, error: eventError } = await supabase
-                .from('order_events')
-                .insert({
-                    order_id: orderId,
-                    event_type: 'driver_declined',
-                    description: 'Le chauffeur a refusé la course',
-                    actor_type: 'driver',
-                    actor_id: driverId,
-                    metadata: {
-                        declined_at: new Date().toISOString()
-                    }
-                })
-                .select();
-
-            if (eventError) {
-                console.error('❌ ERREUR création événement refus:', eventError);
-                console.error('❌ Code erreur:', eventError.code);
-                console.error('❌ Message:', eventError.message);
-                console.error('❌ Details:', eventError.details);
-                console.error('❌ Hint:', eventError.hint);
-            } else {
-                console.log('✅ Événement de refus créé avec succès:', eventData);
-            }
-        } catch (eventError) {
-            console.error('❌ Exception création événement:', eventError);
         }
 
         console.log('✅ Course refusée par le chauffeur');

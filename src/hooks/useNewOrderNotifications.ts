@@ -40,12 +40,15 @@ export const useNewOrderNotifications = (onNewOrder?: (order: NewOrderNotificati
         };
 
         notificationSoundRef.current = {
-            play: () => {
+            play: async () => {
                 try {
+                    // Les navigateurs bloquent l'AudioContext tant qu'il n'y a pas d'interaction.
+                    // On essaie de créer le son, mais on attrape l'erreur si c'est bloqué.
                     createNotificationSound();
                     setTimeout(createNotificationSound, 200);
                 } catch (error) {
-                    console.error('Error playing notification sound:', error);
+                    // Silencieusement ignorer les erreurs d'autofill / permissions
+                    console.debug('Notification sound deferred or blocked:', error);
                 }
             }
         };

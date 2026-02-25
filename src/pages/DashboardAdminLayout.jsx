@@ -50,8 +50,8 @@ export default function DashboardAdminLayout() {
       try {
         const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
         audio.volume = 0.2;
-        audio.play();
-      } catch { console.log("Sound blocked"); }
+        audio.play().catch(e => console.debug("Sound blocked by browser policy"));
+      } catch (e) { console.debug("Audio initialization failed", e); }
 
       setTimeout(() => setNewOrderPopup(null), 15000);
     };
@@ -224,8 +224,8 @@ export default function DashboardAdminLayout() {
 
 function NavItem({ icon: IconComponent, label, active, badge, to }) {
   const classes = `group relative flex w-full items-center justify-between rounded-xl px-4 py-3 text-sm font-bold transition-all duration-200 ${active
-      ? "bg-slate-900 text-white shadow-xl shadow-slate-900/10"
-      : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+    ? "bg-slate-900 text-white shadow-xl shadow-slate-900/10"
+    : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
     }`;
 
   const Icon = IconComponent;
