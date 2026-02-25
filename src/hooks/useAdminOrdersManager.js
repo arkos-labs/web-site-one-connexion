@@ -57,13 +57,10 @@ export default function useAdminOrdersManager(searchParams) {
                         isGuest = true;
                     }
 
-                    const hasDriver = !!o.driver_id;
                     const pickedUp = !!(o.picked_up_at || o.pickup_time_at);
-                    // Ne pas écraser driver_accepted - c'est le vrai statut Supabase
-                    const normalizedStatus = (o.status === 'accepted' && hasDriver) ? 'assigned'
-                        : (o.status === 'assigned' && pickedUp) ? 'in_progress'
-                            : (o.status === 'picked_up' || o.status === 'arrived_pickup') ? 'in_progress'
-                                : o.status;
+                    const normalizedStatus = (o.status === 'assigned' && pickedUp) ? 'in_progress'
+                        : (o.status === 'picked_up' || o.status === 'arrived_pickup') ? 'in_progress'
+                            : o.status;
 
                     return {
                         ...o,
@@ -333,9 +330,9 @@ export default function useAdminOrdersManager(searchParams) {
 
         const now = new Date().toISOString();
         const { error } = await supabase.from('orders').update({
-            status: 'driver_accepted',
+            status: 'assigned',
             driver_id: dispatchDriver,
-            driver_accepted_at: now,
+            dispatched_at: now,
             updated_at: now,
             notes: `${dispatchOrder.notes || ''} | Note dispatch: ${dispatchNote}`
         }).eq('id', dispatchOrder.id).select();

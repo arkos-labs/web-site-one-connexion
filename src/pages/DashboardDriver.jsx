@@ -334,16 +334,6 @@ export default function DashboardDriver() {
                                             >
                                                 CONFIRMER PRISE EN CHARGE 📦
                                             </button>
-                                            <button
-                                                onClick={() => {
-                                                    if (confirm("Se désister de cette mission ?")) {
-                                                        updateStatus(task.id, 'accepted');
-                                                    }
-                                                }}
-                                                className="px-4 rounded-2xl bg-slate-100 text-slate-400 font-bold hover:bg-red-50 hover:text-red-500 transition-all"
-                                            >
-                                                ✕
-                                            </button>
                                         </div>
                                     ) : (
                                         <button
