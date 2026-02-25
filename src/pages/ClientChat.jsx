@@ -108,7 +108,7 @@ export default function ClientChat() {
             supabase.removeChannel(channel);
             window._currentClientChatChannel = null;
         };
-    }, [currentUser?.id, adminId]);
+    }, [currentUser, currentUser?.id, adminId]);
 
     const handleTyping = () => {
         if (!currentUser) return;
@@ -216,7 +216,7 @@ export default function ClientChat() {
                         </div>
                     ) : (
                         messages.map((m) => {
-                            const isFromAdmin = m.is_admin_message === true;
+                            const _isFromAdmin = m.is_admin_message === true;
                             const isFromMe = m.sender_id === currentUser?.id;
                             const isMe = isFromMe; // For the client/driver, 'Me' is whoever is logged in
 

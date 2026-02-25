@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Clock, Truck, Loader2 } from "lucide-react";
 import { supabase } from "../lib/supabase";
@@ -19,18 +19,8 @@ const getPostcode = (str = "") => {
   return match ? match[0] : "";
 };
 
-const formatAddress = (d) => {
-  if (d.full) return d.full;
-  const a = d.address || {};
-  const street = [a.house_number, a.road].filter(Boolean).join(" ");
-  const city = [a.postcode, a.city || a.town || a.village].filter(Boolean).join(" ");
-  if (street && city) return `${street}, ${city}`;
-  return d.display_name;
-};
-
 function clientStatusLabel(order) {
   const status = typeof order === 'string' ? order : order.status;
-  const driverId = typeof order === 'string' ? null : order.driver_id;
 
   switch (status) {
     case "pending_acceptance":
@@ -68,8 +58,8 @@ export default function Orders() {
   const [open, setOpen] = useState(false);
   const [pickupSuggestions, setPickupSuggestions] = useState([]);
   const [deliverySuggestions, setDeliverySuggestions] = useState([]);
-  const [loadingPickup, setLoadingPickup] = useState(false);
-  const [loadingDelivery, setLoadingDelivery] = useState(false);
+  const [_loadingPickup, setLoadingPickup] = useState(false);
+  const [_loadingDelivery, setLoadingDelivery] = useState(false);
 
   const [addresses, setAddresses] = useState([]);
   const [loadingAddresses, setLoadingAddresses] = useState(false);
@@ -189,7 +179,7 @@ export default function Orders() {
     if (form.service !== autoService) {
       setForm(prev => ({ ...prev, service: autoService }));
     }
-  }, [form.pickupTime, form.deliveryDeadline]);
+  }, [form.pickupTime, form.deliveryDeadline, form.service]);
 
   // Calculate Price when inputs change
   useEffect(() => {

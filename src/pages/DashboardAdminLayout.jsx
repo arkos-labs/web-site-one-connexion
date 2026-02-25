@@ -51,7 +51,7 @@ export default function DashboardAdminLayout() {
         const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
         audio.volume = 0.2;
         audio.play();
-      } catch (e) { console.log("Sound blocked"); }
+      } catch { console.log("Sound blocked"); }
 
       setTimeout(() => setNewOrderPopup(null), 15000);
     };
@@ -222,7 +222,7 @@ export default function DashboardAdminLayout() {
   );
 }
 
-function NavItem({ icon: Icon, label, active, badge, to }) {
+function NavItem({ icon: IconComponent, label, active, badge, to }) {
   const classes = `group relative flex w-full items-center justify-between rounded-xl px-4 py-3 text-sm font-bold transition-all duration-200 ${active
       ? "bg-slate-900 text-white shadow-xl shadow-slate-900/10"
       : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
@@ -231,7 +231,7 @@ function NavItem({ icon: Icon, label, active, badge, to }) {
   return (
     <Link to={to} className={classes}>
       <div className="flex items-center gap-3.5">
-        <Icon size={18} className={`transition-all duration-300 ${active ? "text-orange-500 scale-110" : "group-hover:scale-110"}`} />
+        {IconComponent({ size: 18, className: `transition-all duration-300 ${active ? "text-orange-500 scale-110" : "group-hover:scale-110"}` })}
         <span className="tracking-tight">{label}</span>
       </div>
       {badge && (

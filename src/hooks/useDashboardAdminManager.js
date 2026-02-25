@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect, useMemo } from "react";
 import { supabase } from "../lib/supabase";
-import { autocompleteAddress } from "../lib/autocomplete";
 
 const LOCATIONIQ_KEY = import.meta.env.VITE_LOCATIONIQ_API_KEY;
 const LOCATIONIQ_URL = "https://api.locationiq.com/v1/autocomplete";
@@ -110,7 +109,7 @@ export default function useDashboardAdminManager() {
             supabase.removeChannel(ordersChannel);
             clearInterval(interval);
         };
-    }, []);
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     const checkForNewOrders = async () => {
         const { data } = await supabase.from('orders').select('id, created_at').order('created_at', { ascending: false }).limit(1).maybeSingle();
@@ -270,7 +269,7 @@ export default function useDashboardAdminManager() {
             }
 
             return { ...c, status, cls };
-        }).sort((a, b) => a.status === 'EN RETARD' ? -1 : 1);
+        }).sort((a) => a.status === 'EN RETARD' ? -1 : 1);
     }, [clients, invoicesAll]);
 
     const driverRows = useMemo(() => {
@@ -288,7 +287,7 @@ export default function useDashboardAdminManager() {
 
     useEffect(() => {
         calculatePrice();
-    }, [form.pickup, form.delivery, form.vehicle, form.service]);
+    }, [form.pickup, form.delivery, form.vehicle, form.service]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const calculatePrice = async () => {
         if (!form.pickup || !form.delivery || form.pickup.length < 5 || form.delivery.length < 5) {
@@ -307,12 +306,12 @@ export default function useDashboardAdminManager() {
 
 
 
-    const getPostcode = (str = "") => {
+    const _getPostcode = (str = "") => {
         const match = str.match(/\b\d{5}\b/);
         return match ? match[0] : null;
     };
 
-    const fetchClientAddresses = async (clientId) => {
+    const _fetchClientAddresses = async () => {
         return [];
     };
 

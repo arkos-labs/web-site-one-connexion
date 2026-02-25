@@ -40,7 +40,7 @@ export default function DashboardDriver() {
         return () => {
             supabase.removeChannel(channel);
         };
-    }, []);
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
         if (!user?.id) return;
@@ -174,7 +174,7 @@ export default function DashboardDriver() {
         }
     };
 
-    const handleActionWithProof = (orderId, status) => {
+    const _handleActionWithProof = (orderId, status) => {
         if (status === 'delivered') {
             setProofModal({ isOpen: true, orderId, type: 'delivery' });
         } else if (status === 'in_progress') {

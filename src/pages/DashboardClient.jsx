@@ -6,7 +6,6 @@ import { supabase } from "../lib/supabase";
 
 function clientStatusLabel(order) {
   const status = typeof order === 'string' ? order : order.status;
-  const driverId = typeof order === 'string' ? null : order.driver_id;
 
   switch (status) {
     case "pending_acceptance":
@@ -46,7 +45,7 @@ export default function DashboardClient() {
 
   useEffect(() => {
     fetchDashboardData();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!clientId) return;
@@ -63,7 +62,7 @@ export default function DashboardClient() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [clientId]);
+  }, [clientId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchDashboardData = async () => {
     setLoading(true);
@@ -110,12 +109,13 @@ export default function DashboardClient() {
     setLoading(false);
   };
 
-  const downloadInvoice = async (inv) => {
+  const downloadInvoice = async () => {
     // ... logic remains
   };
 
-  const downloadOrder = (order) => {
-    import("../lib/pdfGenerator").then(m => m.generateOrderPdf(order, profile || {}));
+  const downloadOrder = async (order) => {
+    const { generateOrderPdf } = await import("../lib/pdfGenerator");
+    await generateOrderPdf(order, profile || {});
   };
 
   return (
@@ -343,13 +343,13 @@ export default function DashboardClient() {
   );
 }
 
-function NavItem({ icon: Icon, label, active, badge, to = "#" }) {
+function NavItem({ icon: IconComponent, label, active, badge, to = "#" }) {
   const classes = `group flex w-full items-center justify-between rounded-2xl px-4 py-3.5 text-sm font-bold transition-all ${active ? "bg-slate-900 text-white shadow-lg shadow-slate-900/20" : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"}`;
 
   return (
     <a href={to} className={classes}>
       <div className="flex items-center gap-4">
-        <Icon size={20} className={`transition-transform ${!active && "group-hover:scale-110"}`} />
+        {IconComponent({ size: 20, className: `transition-transform ${!active && "group-hover:scale-110"}` })}
         <span>{label}</span>
       </div>
       {badge && (
@@ -360,4 +360,3 @@ function NavItem({ icon: Icon, label, active, badge, to = "#" }) {
     </a>
   );
 }
-

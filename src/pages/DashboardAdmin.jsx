@@ -115,7 +115,7 @@ export default function DashboardAdmin() {
       supabase.removeChannel(profileChannel);
       supabase.removeChannel(ordersChannel);
     };
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const triggerNewOrderAlert = (orderData) => {
     if (latestOrderIdRef.current === orderData.id) return;

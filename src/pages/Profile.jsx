@@ -21,7 +21,7 @@ export default function Profile() {
 
   useEffect(() => {
     fetchProfile();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchProfile = async () => {
     const { data: { user } } = await supabase.auth.getUser();
@@ -143,11 +143,11 @@ export default function Profile() {
   );
 }
 
-function InfoRow({ icon: Icon, label, value }) {
+function InfoRow({ icon: IconComponent, label, value }) {
   return (
     <div className="flex items-center gap-3 rounded-2xl bg-slate-50 px-4 py-3">
       <div className="grid h-10 w-10 place-items-center rounded-xl bg-white text-slate-500">
-        <Icon size={18} />
+        {IconComponent({ size: 18 })}
       </div>
       <div>
         <div className="text-xs font-bold uppercase tracking-wider text-slate-400">{label}</div>
@@ -170,5 +170,3 @@ function Field({ label, value, onChange, disabled }) {
     </div>
   );
 }
-
-

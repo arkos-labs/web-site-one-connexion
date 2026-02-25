@@ -1,10 +1,10 @@
 import { generateOrderPdf, generateInvoicePdf } from "../lib/pdfGenerator";
 
-export function downloadOrderPdf(order, client) {
-  generateOrderPdf(order, client);
+export async function downloadOrderPdf(order, client) {
+  await generateOrderPdf(order, client);
 }
 
-export function downloadInvoicePdf(invoice, orders) {
+export async function downloadInvoicePdf(invoice, orders) {
   // Map invoice fields if necessary
   const processedInvoice = {
     ...invoice,
@@ -16,7 +16,7 @@ export function downloadInvoicePdf(invoice, orders) {
   // Get client details from first order if not provided
   const clientData = orders[0]?.client_details || {};
 
-  generateInvoicePdf(processedInvoice, orders, clientData);
+  await generateInvoicePdf(processedInvoice, orders, clientData);
 }
 
 

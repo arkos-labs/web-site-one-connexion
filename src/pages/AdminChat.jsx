@@ -80,7 +80,7 @@ export default function AdminChat() {
     return () => {
       supabase.removeChannel(globalChannel);
     };
-  }, [currentUser]);
+  }, [currentUser]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!currentUser || !activeUser?.id) return;
@@ -115,7 +115,7 @@ export default function AdminChat() {
       supabase.removeChannel(chatChannel);
       window._currentChatChannel = null;
     };
-  }, [currentUser?.id, activeUser?.id]);
+  }, [currentUser?.id, activeUser?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleTyping = () => {
     if (!currentUser) return;

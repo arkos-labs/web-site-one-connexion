@@ -34,7 +34,7 @@ export default function DashboardAdmin() {
   const [operationView, setOperationView] = useState("pending_acceptance");
 
   // Form State
-  const [clientMode, setClientMode] = useState("existing");
+  const [_clientMode, _setClientMode] = useState("existing");
   const [pickupSuggestions, setPickupSuggestions] = useState([]);
   const [deliverySuggestions, setDeliverySuggestions] = useState([]);
   const [loadingPickup, setLoadingPickup] = useState(false);
@@ -117,7 +117,7 @@ export default function DashboardAdmin() {
       supabase.removeChannel(ordersChannel);
       clearInterval(interval);
     };
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const latestOrderIdRef = useRef(null);
 
@@ -279,7 +279,7 @@ export default function DashboardAdmin() {
     if (form.service !== autoService) {
       setForm(prev => ({ ...prev, service: autoService }));
     }
-  }, [form.pickupTime, form.deliveryDeadline]);
+  }, [form.pickupTime, form.deliveryDeadline, form.service]);
 
   // Pricing Calculation
   useEffect(() => {
@@ -307,7 +307,7 @@ export default function DashboardAdmin() {
 
     const timeout = setTimeout(calculatePrice, 800);
     return () => clearTimeout(timeout);
-  }, [form.pickup, form.delivery, form.vehicle, form.service]);
+  }, [form.pickup, form.delivery, form.pickupPostcode, form.deliveryPostcode, form.vehicle, form.service]);
 
   const kpis = useMemo(() => {
     const toAcceptCount = ordersAll.filter(o => ["pending_acceptance", "pending"].includes(o.status)).length;
@@ -398,10 +398,10 @@ export default function DashboardAdmin() {
   };
 
   const [clientAddresses, setClientAddresses] = useState([]);
-  const [addressBookOpen, setAddressBookOpen] = useState(null);
+  const [_addressBookOpen, setAddressBookOpen] = useState(null);
   const [addressSearch, setAddressSearch] = useState("");
 
-  const filteredAddresses = clientAddresses.filter(addr =>
+  const _filteredAddresses = clientAddresses.filter(addr =>
     (addr.name || "").toLowerCase().includes(addressSearch.toLowerCase()) ||
     (addr.address_line || "").toLowerCase().includes(addressSearch.toLowerCase()) ||
     (addr.city || "").toLowerCase().includes(addressSearch.toLowerCase())

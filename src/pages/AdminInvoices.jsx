@@ -39,12 +39,11 @@ export default function AdminInvoices() {
     return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
   });
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     fetchInvoices();
     fetchDriverData();
     fetchDriverPayments();
-  }, [selectedMonth]);
+  }, [selectedMonth]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchDriverPayments = async () => {
     const { data } = await supabase.from('driver_payments').select('*').eq('period', selectedMonth);

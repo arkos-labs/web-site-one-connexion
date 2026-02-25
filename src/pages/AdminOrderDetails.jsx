@@ -180,7 +180,6 @@ export default function AdminOrderDetails() {
   );
 
   const sc = STATUS_CONFIG[order.status] || STATUS_CONFIG.pending;
-  const currentStep = sc.step;
   const notesStr = order.notes || "";
   const pCode = order.pickup_access_code || notesStr.match(/(?:Code Enlev:|Code :|Code:)\s?([^.]+)/)?.[1]?.trim();
   const dCode = order.delivery_access_code || notesStr.match(/(?:Code Dest:|Code Deliv:)\s?([^.]+)/)?.[1]?.trim();
@@ -209,7 +208,13 @@ export default function AdminOrderDetails() {
               {sc.label}
             </span>
             <button
-              onClick={() => generateOrderPdf(order, client)}
+              onClick={async () => {
+                try {
+                  await generateOrderPdf(order, client);
+                } catch (err) {
+                  console.error("PDF generation failed:", err);
+                }
+              }}
               className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-all shadow-sm"
             >
               <FileText size={14} /> Bon de commande PDF

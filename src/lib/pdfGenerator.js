@@ -1,4 +1,5 @@
 import { jsPDF } from "jspdf";
+import { supabase } from "./supabase";
 
 const COMPANY = {
     name: "One Connexion",
@@ -13,14 +14,14 @@ const COMPANY = {
  * Generates a beautiful Order Form (Bon de Commande)
  * @param {Object} order The order data
  * @param {Object} client The client data/profile details
+ * @param {Object} options Configuration options (download: boolean, upload: boolean)
  */
-export function generateOrderPdf(order, client = {}) {
+export async function generateOrderPdf(order, client = {}, options = { download: true }) {
     const doc = new jsPDF({ unit: "pt", format: "a4" });
     const pageW = 595;
     const pageH = 842;
     const margin = 40;
     const contentW = pageW - margin * 2;
-    let y = 0;
 
     // Header Background
     doc.setFillColor(15, 23, 42); // slate-900
@@ -125,14 +126,14 @@ export function generateOrderPdf(order, client = {}) {
     };
 
     // Extract detailed fields from notes
-    const nEntreprisePick = notesStr.match(/Entreprise Pick: (.*?)(\.|$|Contact)/)?.[1]?.trim();
-    const nContactPick = notesStr.match(/Contact Pick: (.*?)(\.|$|Phone|Email)/)?.[1]?.trim();
-    const nPhonePick = notesStr.match(/Phone Pick: (.*?)(\.|$|Email)/)?.[1]?.trim();
-    const nEmailEnlev = notesStr.match(/Email Enlev: (.*?)(\.|$|Entreprise|Contact|Instructions)/)?.[1]?.trim();
+    const _nEntreprisePick = notesStr.match(/Entreprise Pick: (.*?)(\.|$|Contact)/)?.[1]?.trim();
+    const _nContactPick = notesStr.match(/Contact Pick: (.*?)(\.|$|Phone|Email)/)?.[1]?.trim();
+    const _nPhonePick = notesStr.match(/Phone Pick: (.*?)(\.|$|Email)/)?.[1]?.trim();
+    const _nEmailEnlev = notesStr.match(/Email Enlev: (.*?)(\.|$|Entreprise|Contact|Instructions)/)?.[1]?.trim();
 
-    const nEntrepriseDeliv = notesStr.match(/Entreprise Deliv: (.*?)(\.|$|Contact)/)?.[1]?.trim();
-    const nContactDeliv = notesStr.match(/Contact Deliv: (.*?)(\.|$|Phone|Instructions)/)?.[1]?.trim();
-    const nPhoneDeliv = notesStr.match(/Phone Deliv: (.*?)(\.|$|Instructions)/)?.[1]?.trim();
+    const _nEntrepriseDeliv = notesStr.match(/Entreprise Deliv: (.*?)(\.|$|Contact)/)?.[1]?.trim();
+    const _nContactDeliv = notesStr.match(/Contact Deliv: (.*?)(\.|$|Phone|Instructions)/)?.[1]?.trim();
+    const _nPhoneDeliv = notesStr.match(/Phone Deliv: (.*?)(\.|$|Instructions)/)?.[1]?.trim();
     const nContenu = notesStr.match(/Contenu: (.*?)(\.|$|Instructions)/)?.[1]?.trim();
 
     const nInstructions = notesStr.match(/Instructions:\s*(.*?)(?:\.|$)/)?.[1]?.trim();
@@ -242,8 +243,8 @@ export function generateOrderPdf(order, client = {}) {
 
     // ===== SECTION ENLÈVEMENT =====
     const schedDateObjForHeader = order.scheduled_at ? new Date(order.scheduled_at) : (order.date ? new Date(order.date) : new Date());
-    const sDateDisp = schedDateObjForHeader.toLocaleDateString("fr-FR");
-    const sTimeDisp = schedDateObjForHeader.toLocaleTimeString("fr-FR", { hour: '2-digit', minute: '2-digit' });
+    const _sDateDisp = schedDateObjForHeader.toLocaleDateString("fr-FR");
+    const _sTimeDisp = schedDateObjForHeader.toLocaleTimeString("fr-FR", { hour: '2-digit', minute: '2-digit' });
 
     y = drawSection(`Point d'enlèvement`, margin, y, contentW);
 
@@ -475,7 +476,25 @@ export function generateOrderPdf(order, client = {}) {
     doc.setTextColor(148, 163, 184);
     doc.text("One Connexion SAS • Tous droits réservés • Ce document n'est pas une facture.", margin, pageH - margin);
 
-    doc.save(`bon-commande-${String(order.id).slice(0, 8)}.pdf`);
+    const fileName = `bon-commande-${String(order.id).slice(0, 8)}.pdf`;
+
+    if (options.download) {
+        doc.save(fileName);
+    }
+
+    if (options.upload) {
+        const blob = doc.output("blob");
+        const { data: { user } } = await supabase.auth.getUser();
+        const folder = user ? user.id : 'guest';
+        const filePath = `${folder}/${fileName}`;
+
+        await supabase.storage.from('order-forms').upload(filePath, blob, {
+            cacheControl: '3600',
+            upsert: true
+        });
+    }
+
+    return doc.output("blob");
 }
 
 /**
@@ -497,8 +516,9 @@ export function generateIndividualInvoicePdf(order, client = {}) {
  * @param {Object} invoice The invoice data
  * @param {Array} orders List of orders included in the invoice
  * @param {Object} client The client data
+ * @param {Object} options Configuration options
  */
-export function generateInvoicePdf(invoice, orders = [], client = {}) {
+export async function generateInvoicePdf(invoice, orders = [], client = {}, options = { download: true }) {
     const doc = new jsPDF({ unit: "pt", format: "a4" });
     const pageW = 595;
     const pageH = 842;
@@ -678,7 +698,7 @@ export function generateInvoicePdf(invoice, orders = [], client = {}) {
     doc.setFont("helvetica", "normal");
 
     // Items
-    orders.forEach((o, i) => {
+    orders.forEach((o) => {
         if (y > pageH - 120) {
             doc.addPage();
             y = 40;
@@ -751,11 +771,27 @@ export function generateInvoicePdf(invoice, orders = [], client = {}) {
     doc.text(legalText1, pageW / 2, y, { align: "center" });
     doc.text(doc.splitTextToSize(legalText2, contentW), pageW / 2, y + 10, { align: "center" });
 
+    const fileName = `facture-${String(invoice.id).slice(0, 8)}.pdf`;
+
+    if (options.download && !invoice.returnBlob) {
+        doc.save(fileName);
+    }
+
+    if (options.upload) {
+        const blob = doc.output("blob");
+        const folder = invoice.client_id || 'manual';
+        const filePath = `${folder}/${fileName}`;
+        await supabase.storage.from('client-invoices').upload(filePath, blob, {
+            cacheControl: '3600',
+            upsert: true
+        });
+    }
+
     if (invoice.returnBlob) {
         return doc.output("blob");
     }
 
-    doc.save(`facture-${String(invoice.id).slice(0, 8)}.pdf`);
+    return doc.output("blob");
 }
 
 /**

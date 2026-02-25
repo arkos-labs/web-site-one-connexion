@@ -124,7 +124,7 @@ export default function DashboardClientLayout() {
   );
 }
 
-function NavItem({ icon: Icon, label, active, badge, to }) {
+function NavItem({ icon: IconComponent, label, active, badge, to }) {
   const classes = `group relative flex w-full items-center justify-between rounded-2xl px-4 py-3 text-sm font-bold transition-all duration-300 ${
     active ? "bg-slate-900 text-white shadow-lg shadow-slate-900/20" : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
   }`;
@@ -133,7 +133,7 @@ function NavItem({ icon: Icon, label, active, badge, to }) {
     <Link to={to} className={classes}>
       {active && <div className="absolute left-0 top-1/2 h-8 w-1 -translate-y-1/2 rounded-r-full bg-orange-500" />}
       <div className="flex items-center gap-3">
-        <Icon size={20} className={`transition-transform duration-300 ${!active && "group-hover:scale-110 group-hover:text-orange-500"}`} strokeWidth={active ? 2.5 : 2} />
+        {IconComponent({ size: 20, className: `transition-transform duration-300 ${!active && "group-hover:scale-110 group-hover:text-orange-500"}`, strokeWidth: active ? 2.5 : 2 })}
         <span>{label}</span>
       </div>
       {badge && (

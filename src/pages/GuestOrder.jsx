@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase.js";
+import { generateOrderPdf } from "../lib/pdfGenerator";
 import { autocompleteAddress } from "../lib/autocomplete";
 import PublicHeader from "../components/PublicHeader.jsx";
 import PublicFooter from "../components/PublicFooter.jsx";
@@ -26,9 +27,9 @@ export default function GuestOrder() {
     const [pickupSuggestions, setPickupSuggestions] = useState([]);
     const [deliverySuggestions, setDeliverySuggestions] = useState([]);
     const [billingSuggestions, setBillingSuggestions] = useState([]);
-    const [loadingPickup, setLoadingPickup] = useState(false);
-    const [loadingDelivery, setLoadingDelivery] = useState(false);
-    const [loadingBilling, setLoadingBilling] = useState(false);
+    const [_loadingPickup, setLoadingPickup] = useState(false);
+    const [_loadingDelivery, setLoadingDelivery] = useState(false);
+    const [_loadingBilling, setLoadingBilling] = useState(false);
 
     const [form, setForm] = useState({
         // Adresses
@@ -89,8 +90,7 @@ export default function GuestOrder() {
         const diffMinutes = (end - start) / (1000 * 60);
         let autoService = diffMinutes <= 90 ? "super" : diffMinutes <= 180 ? "exclu" : "normal";
         if (form.service !== autoService) setForm(prev => ({ ...prev, service: autoService }));
-    }, [form.pickupTime, form.deliveryDeadline]);
-
+    }, [form.pickupTime, form.deliveryDeadline, form.service]);
     const fetchSuggestions = async (query, setSuggestions, setLoading) => {
         if (query.trim().length < 3) { setSuggestions([]); return; }
         try {
@@ -108,7 +108,7 @@ export default function GuestOrder() {
 
         const notes = `[COMMANDE SANS COMPTE]\nContact: ${form.guestName} (${form.guestCompany || ''})\nEmail: ${form.guestEmail} | Tél: ${form.guestPhone}\nFacturation: ${form.billingAddress} ${form.billingPostcode} ${form.billingCity}\n---\nEnlev: ${form.pickupName} | ${form.pickupContact} | ${form.pickupPhone} | Digicode: ${form.pickupAccessCode}\nInstr Enlev: ${form.pickupInstructions}\nLivr: ${form.deliveryName} | ${form.deliveryContact} | ${form.deliveryPhone} | Digicode: ${form.deliveryAccessCode}\nInstr Livr: ${form.deliveryInstructions}`;
 
-        const { error } = await supabase.from('orders').insert({
+        const { data: newOrder, error } = await supabase.from('orders').insert({
             client_id: null,
             pickup_address: form.pickup,
             pickup_city: form.pickupCity || getPostcode(form.pickup),
@@ -129,7 +129,16 @@ export default function GuestOrder() {
             package_description: form.packageDesc,
             weight: parseFloat(String(form.packageWeight).replace(',', '.')) || null,
             notes: notes,
-        });
+        }).select().single();
+
+        if (!error && newOrder) {
+            try {
+                // Generate and upload PDF automatically to 'guest/' folder
+                await generateOrderPdf(newOrder, { name: form.guestName, email: form.guestEmail, company: form.guestCompany }, { upload: true, download: false });
+            } catch (pdfErr) {
+                console.error("Guest PDF generation/upload failed:", pdfErr);
+            }
+        }
 
         setIsSubmitting(false);
         if (error) {

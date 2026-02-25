@@ -30,7 +30,7 @@ export default function ForgotPassword() {
             }
 
             setSent(true);
-        } catch (err) {
+        } catch {
             setError("Une erreur est survenue. Veuillez réessayer.");
         } finally {
             setLoading(false);

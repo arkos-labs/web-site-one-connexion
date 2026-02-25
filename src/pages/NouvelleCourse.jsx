@@ -4,6 +4,7 @@ import { supabase } from "../lib/supabase";
 import { autocompleteAddress } from "../lib/autocomplete";
 import { ArrowLeft, ArrowRight, Truck, MapPin, Package, Clock, ShieldCheck, CheckCircle2, Loader2, Info } from "lucide-react";
 import { useProfile } from "../hooks/useProfile";
+import { generateOrderPdf } from "../lib/pdfGenerator";
 
 const VEHICLES = ["Moto", "Voiture"];
 
@@ -19,11 +20,11 @@ export default function NouvelleCourse() {
     const [price, setPrice] = useState(null);
     const [calculatingPrice, setCalculatingPrice] = useState(false);
 
-    const { profile } = useProfile();
+    const { profile: _profile } = useProfile();
     const [pickupSuggestions, setPickupSuggestions] = useState([]);
     const [deliverySuggestions, setDeliverySuggestions] = useState([]);
-    const [loadingPickup, setLoadingPickup] = useState(false);
-    const [loadingDelivery, setLoadingDelivery] = useState(false);
+    const [_loadingPickup, setLoadingPickup] = useState(false);
+    const [_loadingDelivery, setLoadingDelivery] = useState(false);
 
     const [form, setForm] = useState({
         pickup: "", pickupCity: "", pickupPostcode: "", pickupName: "", pickupContact: "", pickupPhone: "", pickupInstructions: "", pickupAccessCode: "",
@@ -93,7 +94,7 @@ export default function NouvelleCourse() {
         if (form.service !== autoService) {
             setForm(prev => ({ ...prev, service: autoService }));
         }
-    }, [form.pickupTime, form.deliveryDeadline]);
+    }, [form.pickupTime, form.deliveryDeadline, form.service]);
 
     const fetchSuggestions = async (query, setSuggestions, setLoading) => {
         if (query.trim().length < 3) {
@@ -109,7 +110,7 @@ export default function NouvelleCourse() {
                 postcode: s.postcode
             }));
             setSuggestions(list);
-        } catch (err) {
+        } catch {
             setSuggestions([]);
         } finally {
             setLoading(false);
@@ -126,7 +127,7 @@ export default function NouvelleCourse() {
 
         const notes = `Entreprise Pick: ${form.pickupName}. Contact Pick: ${form.pickupContact}. Phone Pick: ${form.pickupPhone}. Code Enlev: ${form.pickupAccessCode}. Entreprise Deliv: ${form.deliveryName}. Contact Deliv: ${form.deliveryContact}. Phone Deliv: ${form.deliveryPhone}. Code Dest: ${form.deliveryAccessCode}. Instructions: ${form.pickupInstructions} / ${form.deliveryInstructions}`;
 
-        const { error } = await supabase.from('orders').insert({
+        const { data: newOrder, error } = await supabase.from('orders').insert({
             client_id: user.id,
             pickup_address: form.pickup,
             pickup_city: form.pickupCity || form.pickup.split(',').pop()?.trim(),
@@ -147,7 +148,16 @@ export default function NouvelleCourse() {
             package_description: form.packageDesc,
             weight: parseFloat(String(form.packageWeight).replace(',', '.')) || null,
             notes: notes,
-        });
+        }).select().single();
+
+        if (!error && newOrder) {
+            try {
+                // Generate and upload PDF automatically
+                await generateOrderPdf(newOrder, _profile || {}, { upload: true, download: false });
+            } catch (pdfErr) {
+                console.error("PDF generation/upload failed:", pdfErr);
+            }
+        }
 
         setIsSubmitting(false);
         if (error) {

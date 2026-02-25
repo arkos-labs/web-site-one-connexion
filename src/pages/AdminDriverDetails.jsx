@@ -52,7 +52,6 @@ export default function AdminDriverDetails() {
   });
   const [driverRowId, setDriverRowId] = useState(null);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     fetchData();
     const channel = supabase
@@ -61,7 +60,7 @@ export default function AdminDriverDetails() {
       .on('postgres_changes', { event: '*', schema: 'public', table: 'orders', filter: `driver_id=eq.${id}` }, () => fetchData(true))
       .subscribe();
     return () => supabase.removeChannel(channel);
-  }, [id]);
+  }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchData = async (silent = false) => {
     if (!silent) setLoading(true);
@@ -95,7 +94,7 @@ export default function AdminDriverDetails() {
         } else {
           setDriverRowId(null);
         }
-      } catch (_e) {
+      } catch {
         setDriverRowId(null);
       }
     }

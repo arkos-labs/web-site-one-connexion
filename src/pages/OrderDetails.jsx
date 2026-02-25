@@ -6,7 +6,6 @@ import { Loader2 } from "lucide-react";
 
 function clientStatusLabel(order) {
   const status = typeof order === 'string' ? order : order.status;
-  const driverId = typeof order === 'string' ? null : order.driver_id;
 
   switch (status) {
     case "pending_acceptance":
@@ -46,7 +45,7 @@ export default function OrderDetails() {
     } else if (order?.client_id) {
       fetchClient(order.client_id);
     }
-  }, [id, order?.id, order?.pickup_address, order?.client_id]);
+  }, [id, order?.id, order?.pickup_address, order?.client_id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchFullOrder = async () => {
     setLoading(true);
