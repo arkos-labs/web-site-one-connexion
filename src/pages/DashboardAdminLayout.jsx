@@ -228,10 +228,14 @@ function NavItem({ icon: IconComponent, label, active, badge, to }) {
       : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
     }`;
 
+  const Icon = IconComponent;
+
   return (
     <Link to={to} className={classes}>
       <div className="flex items-center gap-3.5">
-        {IconComponent({ size: 18, className: `transition-all duration-300 ${active ? "text-orange-500 scale-110" : "group-hover:scale-110"}` })}
+        {Icon ? (
+          <Icon size={18} className={`transition-all duration-300 ${active ? "text-orange-500 scale-110" : "group-hover:scale-110"}`} />
+        ) : null}
         <span className="tracking-tight">{label}</span>
       </div>
       {badge && (
