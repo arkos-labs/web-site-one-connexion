@@ -6,6 +6,7 @@ import {
   Zap, Clock, TrendingUp, CheckCircle2, Download, Calendar
 } from "lucide-react";
 import AdminPageHeader from "../components/admin/AdminPageHeader";
+import { VehicleManager } from "../components/admin/drivers/VehicleManager";
 
 function parseOrderDateToMs(d) {
   if (!d) return null;
@@ -49,6 +50,7 @@ export default function AdminDriverDetails() {
     full_name: "", email: "", phone_number: "", company: "", siret: "",
     address: "", vehicle_model: "", vehicle_plate: "", vehicle_type: "", iban: "", bic: ""
   });
+  const [driverRowId, setDriverRowId] = useState(null);
 
   useEffect(() => {
     fetchData();
@@ -77,6 +79,23 @@ export default function AdminDriverDetails() {
           vehicle_model: d.vehicle_model || "", vehicle_plate: d.vehicle_plate || "",
           vehicle_type: d.vehicle_type || "", iban: d.iban || "", bic: d.bic || ""
         });
+      }
+
+      // Link to drivers table for vehicle management
+      try {
+        const email = dRes.data.email || dRes.data.details?.email;
+        if (email) {
+          const { data: driverRow } = await supabase
+            .from('drivers')
+            .select('id')
+            .eq('email', email)
+            .maybeSingle();
+          setDriverRowId(driverRow?.id || null);
+        } else {
+          setDriverRowId(null);
+        }
+      } catch (e) {
+        setDriverRowId(null);
       }
     }
     if (oRes.data) setOrders(oRes.data);
@@ -304,6 +323,18 @@ export default function AdminDriverDetails() {
                 </div>
               </div>
             </div>
+          </div>
+
+          {/* Gestion véhicules (Admin) */}
+          <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm p-6">
+            <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">Véhicules</div>
+            {driverRowId ? (
+              <VehicleManager driverId={driverRowId} />
+            ) : (
+              <div className="text-sm text-slate-500">
+                Aucun profil chauffeur lié dans la table <code>drivers</code>. Vérifie l’email du chauffeur.
+              </div>
+            )}
           </div>
 
           {/* Missions history */}
