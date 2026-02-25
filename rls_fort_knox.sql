@@ -16,12 +16,13 @@ CREATE OR REPLACE FUNCTION public.is_admin()
 RETURNS boolean AS $$
 BEGIN
   RETURN (
-    SELECT role = 'admin'
+    SELECT role IN ('admin', 'super_admin', 'dispatcher')
     FROM public.profiles
     WHERE id = auth.uid()
   );
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER
+SET search_path = public, auth, pg_temp;
 
 -- ==========================================
 -- POLITIQUES SUR LA TABLE "orders"

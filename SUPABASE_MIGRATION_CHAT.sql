@@ -26,6 +26,9 @@ ALTER TABLE threads
 ADD CONSTRAINT threads_type_check 
 CHECK (type IN ('general', 'plainte', 'contact', 'driver_support'));
 
+ALTER TABLE threads ENABLE ROW LEVEL SECURITY;
+ALTER TABLE messages ENABLE ROW LEVEL SECURITY;
+
 -- ==============================================================================
 -- 5. POLITIQUES RLS (Sécurité) - CHAUFFEURS
 -- ==============================================================================
@@ -57,7 +60,16 @@ USING (auth.uid() = driver_id OR EXISTS (
 DROP POLICY IF EXISTS "Drivers can insert messages" ON messages;
 CREATE POLICY "Drivers can insert messages" 
 ON messages FOR INSERT TO authenticated 
-WITH CHECK (auth.uid() = driver_id);
+WITH CHECK (
+  auth.uid() = driver_id
+  AND sender_type = 'driver'
+  AND EXISTS (
+    SELECT 1
+    FROM threads
+    WHERE threads.id = messages.thread_id
+      AND threads.driver_id = auth.uid()
+  )
+);
 
 -- ==============================================================================
 -- 6. POLITIQUES RLS (Sécurité) - ADMINS
@@ -139,7 +151,8 @@ BEGIN
   END IF;
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER
+SET search_path = public, auth, pg_temp;
 
 DROP TRIGGER IF EXISTS on_new_driver_message ON messages;
 CREATE TRIGGER on_new_driver_message

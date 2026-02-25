@@ -5,7 +5,7 @@ export default function Settings() {
   const [billingOpen, setBillingOpen] = useState(false);
   const [billingMethod, setBillingMethod] = useState("card");
   const [rib, setRib] = useState("FR76 3000 4000 1200 0000 0000 123");
-  const [cardMasked, setCardMasked] = useState("**** **** **** 1234");
+  const [cardMasked] = useState("**** **** **** 1234");
 
   return (
     <div className="pt-4 md:pt-6">
@@ -101,6 +101,8 @@ export default function Settings() {
 }
 
 function SettingsCard({ icon: Icon, title, desc, children }) {
+  const IconComponent = Icon;
+
   return (
     <div className="rounded-[2rem] bg-white p-8 shadow-sm">
       <div className="flex items-start justify-between">
@@ -109,7 +111,7 @@ function SettingsCard({ icon: Icon, title, desc, children }) {
           <p className="text-sm text-slate-500">{desc}</p>
         </div>
         <div className="grid h-12 w-12 place-items-center rounded-2xl bg-slate-50 text-slate-500">
-          <Icon size={20} />
+          <IconComponent size={20} />
         </div>
       </div>
       <div className="mt-4 space-y-3">{children}</div>

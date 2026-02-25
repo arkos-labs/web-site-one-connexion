@@ -38,6 +38,7 @@ function statusColor(status) {
 export default function DashboardClient() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const [clientId, setClientId] = useState(null);
   const [stats, setStats] = useState({ count: 0, totalPaid: 0, totalPending: 0 });
   const [recentOrders, setRecentOrders] = useState([]);
   const [invoices, setInvoices] = useState([]);
@@ -45,13 +46,16 @@ export default function DashboardClient() {
 
   useEffect(() => {
     fetchDashboardData();
+  }, []);
 
-    // Realtime subscription for orders
+  useEffect(() => {
+    if (!clientId) return;
+
     const channel = supabase
-      .channel('client-dashboard-updates')
+      .channel(`client-dashboard-updates:${clientId}`)
       .on(
         'postgres_changes',
-        { event: '*', schema: 'public', table: 'orders' },
+        { event: '*', schema: 'public', table: 'orders', filter: `client_id=eq.${clientId}` },
         () => fetchDashboardData()
       )
       .subscribe();
@@ -59,13 +63,14 @@ export default function DashboardClient() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, []);
+  }, [clientId]);
 
   const fetchDashboardData = async () => {
     setLoading(true);
     const { data: { user } } = await supabase.auth.getUser();
 
     if (user) {
+      if (clientId !== user.id) setClientId(user.id);
       // 1. Stats (Orders count & total)
       const { data: orders, error } = await supabase
         .from('orders')
@@ -355,5 +360,4 @@ function NavItem({ icon: Icon, label, active, badge, to = "#" }) {
     </a>
   );
 }
-
 

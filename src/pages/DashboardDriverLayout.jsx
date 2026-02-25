@@ -1,9 +1,16 @@
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Truck, MapPin, User, LogOut, MessageSquare } from "lucide-react";
+import { supabase } from "../lib/supabase";
 
 export default function DashboardDriverLayout() {
+    const navigate = useNavigate();
     const { pathname } = useLocation();
     const isActive = (path) => pathname === path || pathname.startsWith(path + "/");
+
+    const handleLogout = async () => {
+        await supabase.auth.signOut();
+        navigate("/connexion", { replace: true });
+    };
 
     return (
         <div className="flex h-screen flex-col bg-slate-50 font-sans text-slate-900">
@@ -13,9 +20,9 @@ export default function DashboardDriverLayout() {
                     <div className="grid h-10 w-10 place-items-center rounded-xl bg-slate-900 text-white font-bold">OC</div>
                     <span className="text-lg font-bold tracking-tight">Espace Chauffeur</span>
                 </div>
-                <Link to="/connexion" className="rounded-full bg-slate-100 p-2 text-slate-500 hover:bg-slate-200">
+                <button type="button" onClick={handleLogout} className="rounded-full bg-slate-100 p-2 text-slate-500 hover:bg-slate-200">
                     <LogOut size={20} />
-                </Link>
+                </button>
             </header>
 
             {/* Main Content */}

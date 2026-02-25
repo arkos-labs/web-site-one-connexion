@@ -8,6 +8,7 @@ create or replace function public.notify_telegram_on_order_change()
 returns trigger
 language plpgsql
 security definer
+set search_path = public, auth, pg_temp
 as $$
 declare
   event_name text;

@@ -129,7 +129,7 @@ export default function AdminCreateOrderModal({ onClose, onSuccess }) {
         const diff = (end - start) / 60000;
         const svc = diff <= 90 ? "super" : diff <= 180 ? "exclu" : "normal";
         if (form.service !== svc) setF('service', svc);
-    }, [form.pickupTime, form.deliveryDeadline]);
+    }, [form.pickupTime, form.deliveryDeadline, form.service]);
 
     // ── Auto-price
     useEffect(() => {
@@ -147,7 +147,7 @@ export default function AdminCreateOrderModal({ onClose, onSuccess }) {
             setCalculatingPrice(false);
         }, 700);
         return () => clearTimeout(timer);
-    }, [form.pickup, form.delivery, form.vehicle, form.service, form.priceOverride]);
+    }, [form.pickup, form.delivery, form.pickupPostcode, form.deliveryPostcode, form.vehicle, form.service, form.priceOverride]);
 
     const fetchSugg = async (query, set, setLoad) => {
         if (query.trim().length < 3) { set([]); return; }

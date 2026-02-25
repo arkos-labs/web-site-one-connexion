@@ -25,8 +25,10 @@ export default function GuestOrder() {
 
     const [pickupSuggestions, setPickupSuggestions] = useState([]);
     const [deliverySuggestions, setDeliverySuggestions] = useState([]);
+    const [billingSuggestions, setBillingSuggestions] = useState([]);
     const [loadingPickup, setLoadingPickup] = useState(false);
     const [loadingDelivery, setLoadingDelivery] = useState(false);
+    const [loadingBilling, setLoadingBilling] = useState(false);
 
     const [form, setForm] = useState({
         // Adresses
@@ -49,6 +51,10 @@ export default function GuestOrder() {
         guestEmail: "",
         guestPhone: "",
         guestCompany: "",
+        // Facturation
+        billingAddress: "",
+        billingCity: "",
+        billingPostcode: "",
     });
 
     // Auto-calcul du prix
@@ -100,7 +106,7 @@ export default function GuestOrder() {
         if (!form.guestEmail) return alert("Veuillez renseigner votre email pour recevoir la confirmation.");
         setIsSubmitting(true);
 
-        const notes = `[COMMANDE SANS COMPTE]\nContact: ${form.guestName} (${form.guestCompany || ''})\nEmail: ${form.guestEmail} | Tél: ${form.guestPhone}\n---\nEnlev: ${form.pickupName} | ${form.pickupContact} | ${form.pickupPhone} | Digicode: ${form.pickupAccessCode}\nInstr Enlev: ${form.pickupInstructions}\nLivr: ${form.deliveryName} | ${form.deliveryContact} | ${form.deliveryPhone} | Digicode: ${form.deliveryAccessCode}\nInstr Livr: ${form.deliveryInstructions}`;
+        const notes = `[COMMANDE SANS COMPTE]\nContact: ${form.guestName} (${form.guestCompany || ''})\nEmail: ${form.guestEmail} | Tél: ${form.guestPhone}\nFacturation: ${form.billingAddress} ${form.billingPostcode} ${form.billingCity}\n---\nEnlev: ${form.pickupName} | ${form.pickupContact} | ${form.pickupPhone} | Digicode: ${form.pickupAccessCode}\nInstr Enlev: ${form.pickupInstructions}\nLivr: ${form.deliveryName} | ${form.deliveryContact} | ${form.deliveryPhone} | Digicode: ${form.deliveryAccessCode}\nInstr Livr: ${form.deliveryInstructions}`;
 
         const { error } = await supabase.from('orders').insert({
             client_id: null,
@@ -129,18 +135,6 @@ export default function GuestOrder() {
         if (error) {
             alert("Erreur lors de la soumission : " + error.message);
         } else {
-            try {
-                    pickup_address: form.pickup,
-                    delivery_address: form.delivery,
-                    pickup_city: form.pickupCity,
-                    delivery_city: form.deliveryCity,
-                    vehicle_type: form.vehicle,
-                    service_level: form.service,
-                    price_ht: price,
-                    scheduled_at: form.date && form.pickupTime ? `${form.date}T${form.pickupTime}:00` : null,
-                    delivery_deadline: form.date && form.deliveryDeadline ? `${form.date}T${form.deliveryDeadline}:00` : null,
-                }, `${form.guestName || 'Invité'} (${form.guestEmail})`);
-            } catch { /* Non-bloquant */ }
             setSuccess(true);
         }
     };
@@ -154,7 +148,7 @@ export default function GuestOrder() {
 
     const nextStep = () => {
         if (step === 1 && (!form.pickup || !form.delivery)) return alert("Veuillez renseigner les adresses d'enlèvement et de livraison.");
-        if (step === 3 && !form.guestEmail) return alert("Veuillez renseigner votre email.");
+        if (step === 3 && (!form.guestEmail || !form.billingAddress)) return alert("Veuillez renseigner votre email et votre adresse de facturation.");
         setStep(s => Math.min(s + 1, 4));
     };
     const prevStep = () => setStep(s => Math.max(s - 1, 1));
@@ -163,20 +157,95 @@ export default function GuestOrder() {
         return (
             <div className="min-h-screen bg-[#f8fafc] flex flex-col">
                 <PublicHeader />
-                <div className="flex-1 flex flex-col items-center justify-center px-4 py-32">
-                    <div className="max-w-lg w-full bg-white rounded-[2.5rem] p-12 shadow-sm ring-1 ring-slate-100 text-center space-y-6">
-                        <div className="inline-flex h-20 w-20 items-center justify-center rounded-3xl bg-emerald-100 text-emerald-500 mx-auto">
-                            <CheckCircle2 size={40} />
+                <div className="flex-1 flex flex-col items-center justify-center px-4 py-20">
+                    <div className="max-w-2xl w-full bg-white rounded-[2.5rem] p-8 md:p-12 shadow-sm ring-1 ring-slate-100 text-center space-y-8">
+                        <div className="space-y-4">
+                            <div className="inline-flex h-20 w-20 items-center justify-center rounded-3xl bg-emerald-100 text-emerald-500 mx-auto">
+                                <CheckCircle2 size={40} />
+                            </div>
+                            <h2 className="text-3xl font-black text-slate-900">Commande bien reçue !</h2>
+                            <p className="text-slate-500 text-sm leading-relaxed max-w-md mx-auto">
+                                Votre demande a été transmise. Un email de confirmation sera envoyé à <strong>{form.guestEmail}</strong>. Notre équipe de dispatch s'occupe de tout.
+                            </p>
                         </div>
-                        <h2 className="text-2xl font-black text-slate-900">Commande bien reçue !</h2>
-                        <p className="text-slate-500 text-sm leading-relaxed">
-                            Votre demande a été transmise. Un email de confirmation sera envoyé à <strong>{form.guestEmail}</strong>.<br />
-                            Notre équipe de dispatch prend en charge votre mission.
-                        </p>
-                        <div className="bg-slate-50 rounded-2xl p-4 text-sm font-medium text-slate-600 text-left space-y-1">
-                            <div className="flex gap-2"><MapPin size={14} className="text-slate-400 mt-0.5" /><span>{form.pickup} → {form.delivery}</span></div>
-                            <div className="flex gap-2"><Clock size={14} className="text-slate-400 mt-0.5" /><span>Le {new Date(form.date).toLocaleDateString('fr-FR')} de {form.pickupTime} à {form.deliveryDeadline}</span></div>
-                            <div className="flex gap-2"><Truck size={14} className="text-slate-400 mt-0.5" /><span>{form.vehicle.charAt(0).toUpperCase() + form.vehicle.slice(1)} • {Number(price).toFixed(2)}€ HT</span></div>
+
+                        {/* Detailed Summary */}
+                        <div className="bg-slate-50 rounded-[2rem] border border-slate-100 p-6 md:p-8 text-left space-y-6">
+                            {/* Mission Header */}
+                            <div className="flex items-center justify-between border-b border-slate-200 pb-4">
+                                <div className="flex items-center gap-3">
+                                    <div className="p-3 bg-white rounded-2xl shadow-sm border border-slate-100">
+                                        <Truck className="text-orange-500" size={24} />
+                                    </div>
+                                    <div>
+                                        <div className="font-bold text-slate-900">
+                                            {form.vehicle.charAt(0).toUpperCase() + form.vehicle.slice(1)} • {form.service.charAt(0).toUpperCase() + form.service.slice(1)}
+                                        </div>
+                                        <div className="text-xs text-slate-500 font-medium">
+                                            Le {new Date(form.date).toLocaleDateString('fr-FR')} de {form.pickupTime} à {form.deliveryDeadline}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="text-right">
+                                    <div className="text-2xl font-black text-slate-900">
+                                        {Number(price).toFixed(2)}€ <span className="text-xs font-bold text-slate-400">HT</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Addresses Grid */}
+                            <div className="grid md:grid-cols-2 gap-8">
+                                <div className="space-y-3">
+                                    <div className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Enlèvement</div>
+                                    <div className="space-y-1">
+                                        <div className="text-sm font-bold text-slate-900">{form.pickupName || 'Individuel'}</div>
+                                        <div className="text-xs text-slate-600 leading-relaxed">{form.pickup}</div>
+                                        {form.pickupContact && <div className="text-xs text-slate-500"><span className="font-semibold">Contact:</span> {form.pickupContact}</div>}
+                                        {form.pickupPhone && <div className="text-xs text-slate-500"><span className="font-semibold">📞</span> {form.pickupPhone}</div>}
+                                        {form.pickupAccessCode && (
+                                            <div className="text-xs text-orange-600 font-bold bg-orange-50 inline-block px-2 py-0.5 rounded-md mt-1 italic">
+                                                Code: {form.pickupAccessCode}
+                                            </div>
+                                        )}
+                                    </div>
+                                    {form.pickupInstructions && <div className="text-xs text-slate-500 p-3 bg-white rounded-xl border border-slate-200 mt-2">{form.pickupInstructions}</div>}
+                                </div>
+
+                                <div className="space-y-3">
+                                    <div className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Livraison</div>
+                                    <div className="space-y-1">
+                                        <div className="text-sm font-bold text-slate-900">{form.deliveryName || 'Individuel'}</div>
+                                        <div className="text-xs text-slate-600 leading-relaxed">{form.delivery}</div>
+                                        {form.deliveryContact && <div className="text-xs text-slate-500"><span className="font-semibold">Contact:</span> {form.deliveryContact}</div>}
+                                        {form.deliveryPhone && <div className="text-xs text-slate-500"><span className="font-semibold">📞</span> {form.deliveryPhone}</div>}
+                                        {form.deliveryAccessCode && (
+                                            <div className="text-xs text-orange-600 font-bold bg-orange-50 inline-block px-2 py-0.5 rounded-md mt-1 italic">
+                                                Code: {form.deliveryAccessCode}
+                                            </div>
+                                        )}
+                                    </div>
+                                    {form.deliveryInstructions && <div className="text-xs text-slate-500 p-3 bg-white rounded-xl border border-slate-200 mt-2">{form.deliveryInstructions}</div>}
+                                </div>
+                            </div>
+
+                            {/* Package details */}
+                            <div className="pt-4 border-t border-slate-200 flex flex-wrap items-center gap-x-6 gap-y-2">
+                                <div className="flex items-center gap-2 text-xs font-bold text-slate-900">
+                                    <Package size={14} className="text-slate-400" />
+                                    {form.packageType} {form.packageWeight ? `(${form.packageWeight} kg)` : ''}
+                                </div>
+                                {form.packageDesc && (
+                                    <div className="text-xs text-slate-500 italic">"{form.packageDesc}"</div>
+                                )}
+                            </div>
+
+                            {form.billingAddress && (
+                                <div className="pt-4 border-t border-slate-200">
+                                    <div className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2 text-left">Facturation</div>
+                                    <div className="text-xs text-slate-600 font-bold block text-left">{form.guestCompany || form.guestName}</div>
+                                    <div className="text-xs text-slate-500 text-left">{form.billingAddress}, {form.billingPostcode} {form.billingCity}</div>
+                                </div>
+                            )}
                         </div>
                         <div className="flex flex-col gap-3 pt-2">
                             <Link to="/" className="w-full rounded-full bg-slate-900 py-3.5 text-sm font-bold text-white text-center hover:bg-orange-500 transition-all">
@@ -513,6 +582,60 @@ export default function GuestOrder() {
                                             onChange={e => setForm({ ...form, guestPhone: e.target.value })}
                                         />
                                     </div>
+                                    <div className="pt-4 border-t border-slate-100">
+                                        <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4 flex items-center gap-2">
+                                            <MapPin size={14} /> Adresse de facturation
+                                        </h3>
+                                        <div className="space-y-4 relative">
+                                            <div>
+                                                <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 block">Adresse *</label>
+                                                <input
+                                                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-orange-500 focus:bg-white transition-all"
+                                                    placeholder="Saisissez l'adresse de facturation"
+                                                    value={form.billingAddress}
+                                                    onChange={e => {
+                                                        const val = e.target.value;
+                                                        setForm({ ...form, billingAddress: val });
+                                                        fetchSuggestions(val, setBillingSuggestions, setLoadingBilling);
+                                                    }}
+                                                />
+                                                {billingSuggestions.length > 0 && (
+                                                    <div className="absolute z-30 mt-2 w-full rounded-2xl border border-slate-100 bg-white p-2 shadow-xl overflow-hidden ring-1 ring-slate-200">
+                                                        {billingSuggestions.map((s, i) => (
+                                                            <button key={i} className="w-full text-left px-4 py-3 text-sm font-medium hover:bg-slate-50 rounded-xl transition-colors"
+                                                                onClick={() => {
+                                                                    setForm({ ...form, billingAddress: s.label, billingCity: s.city, billingPostcode: s.postcode });
+                                                                    setBillingSuggestions([]);
+                                                                }}>
+                                                                {s.label}
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div>
+                                                    <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 block">Ville</label>
+                                                    <input
+                                                        className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-orange-500 focus:bg-white transition-all"
+                                                        placeholder="Paris"
+                                                        value={form.billingCity}
+                                                        onChange={e => setForm({ ...form, billingCity: e.target.value })}
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 block">Code Postal</label>
+                                                    <input
+                                                        className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-orange-500 focus:bg-white transition-all"
+                                                        placeholder="75000"
+                                                        value={form.billingPostcode}
+                                                        onChange={e => setForm({ ...form, billingPostcode: e.target.value })}
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div className="rounded-2xl bg-orange-50 p-4 border border-orange-100 flex items-start gap-3">
                                         <Info className="text-orange-500 shrink-0 mt-0.5" size={18} />
                                         <p className="text-xs font-medium text-orange-800 leading-relaxed">
@@ -572,17 +695,30 @@ export default function GuestOrder() {
                                         ))}
                                     </div>
 
-                                    {/* Colis */}
+                                    {/* Colis & Facturation */}
                                     <div className="border-t border-slate-200 pt-4 mt-2">
-                                        <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">Colis & Contact</div>
-                                        <div className="flex items-center gap-2 mb-1">
-                                            <Package className="text-slate-400" size={16} />
-                                            <span className="text-sm font-bold text-slate-900">{form.packageType} {form.packageWeight ? `(~${form.packageWeight} kg)` : ''}</span>
-                                        </div>
-                                        {form.packageDesc && <div className="text-xs text-slate-600 ml-6">{form.packageDesc}</div>}
-                                        <div className="mt-3 flex items-center gap-2 text-xs text-slate-600">
-                                            <Mail size={14} className="text-slate-400" />
-                                            <span>Confirmation → <strong>{form.guestEmail}</strong></span>
+                                        <div className="grid md:grid-cols-2 gap-6">
+                                            <div className="space-y-3">
+                                                <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">Colis & Contact</div>
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <Package className="text-slate-400" size={16} />
+                                                    <span className="text-sm font-bold text-slate-900">{form.packageType} {form.packageWeight ? `(~${form.packageWeight} kg)` : ''}</span>
+                                                </div>
+                                                {form.packageDesc && <div className="text-xs text-slate-600 ml-6">{form.packageDesc}</div>}
+                                                <div className="mt-3 flex items-center gap-2 text-xs text-slate-600">
+                                                    <Mail size={14} className="text-slate-400" />
+                                                    <span>Confirmation → <strong>{form.guestEmail}</strong></span>
+                                                </div>
+                                            </div>
+
+                                            {form.billingAddress && (
+                                                <div className="space-y-2">
+                                                    <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">Facturation</div>
+                                                    <div className="text-sm font-bold text-slate-900">{form.guestCompany || form.guestName}</div>
+                                                    <div className="text-xs text-slate-600">{form.billingAddress}</div>
+                                                    <div className="text-xs text-slate-600">{form.billingPostcode} {form.billingCity}</div>
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 </div>

@@ -26,19 +26,20 @@ export default function AdminInvoices() {
   const [searchQuery, setSearchQuery] = useState("");
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [from, setFrom] = useState("");
-  const [to, setTo] = useState("");
+  const [from, _setFrom] = useState("");
+  const [to, _setTo] = useState("");
   const [statusFilter, setStatusFilter] = useState("Tous");
   const [drivers, setDrivers] = useState([]);
   const [allDriverOrders, setAllDriverOrders] = useState([]);
   const [driverPayments, setDriverPayments] = useState([]);
-  const [isSending, setIsSending] = useState(false);
+  const [_isSending, _setIsSending] = useState(false);
   const [sendLogs, setSendLogs] = useState({});
   const [selectedMonth, setSelectedMonth] = useState(() => {
     const now = new Date();
     return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
   });
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     fetchInvoices();
     fetchDriverData();

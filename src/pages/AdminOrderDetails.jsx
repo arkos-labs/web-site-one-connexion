@@ -50,8 +50,9 @@ export default function AdminOrderDetails() {
     const total = (h * 60) + m + (delays[edit.serviceLevel] || 240);
     const newTime = `${String(Math.floor(total / 60) % 24).padStart(2, '0')}:${String(total % 60).padStart(2, '0')}`;
     if (edit.deliveryDeadline !== newTime) setEdit(p => ({ ...p, deliveryDeadline: newTime }));
-  }, [edit.pickupTime, edit.serviceLevel]);
+  }, [edit.pickupTime, edit.serviceLevel, edit.deliveryDeadline]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchOrder(); fetchDrivers(); }, [id]);
 
   const fetchDrivers = async (keepId = null) => {
@@ -114,7 +115,6 @@ export default function AdminOrderDetails() {
         updates.status = 'driver_accepted';
         updates.driver_id = edit.driverId;
         updates.driver_accepted_at = new Date().toISOString();
-        const driverName = drivers.find(d => String(d.id) === String(edit.driverId))?.name || 'Chauffeur';
         // Send async, don't wait for it
       }
     }
@@ -125,8 +125,6 @@ export default function AdminOrderDetails() {
 
   const updateStatus = async (newStatus) => {
     setSaving(true);
-    const clientName = client?.details?.company || client?.details?.full_name || 'Client';
-    const driverName = drivers.find(d => d.id === order.driver_id)?.name || 'Chauffeur';
 
     // Vérifier la session avant la mise à jour
     const { data: { session } } = await supabase.auth.getSession();

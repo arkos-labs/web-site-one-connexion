@@ -153,15 +153,6 @@ export default function NouvelleCourse() {
         if (error) {
             alert("Erreur lors de la validation : " + error.message);
         } else {
-                ...form,
-                id: null, // Sera formaté comme "Nouvelle" ou similaire si id est manquant
-                pickup_address: form.pickup,
-                delivery_address: form.delivery,
-                price_ht: price,
-                scheduled_at: form.date && form.pickupTime ? `${form.date}T${form.pickupTime}:00` : null,
-                delivery_deadline: form.date && form.deliveryDeadline ? `${form.date}T${form.deliveryDeadline}:00` : null,
-            }, profile?.full_name || profile?.company_name || 'Client Web');
-
             navigate('/dashboard-client/orders', { state: { flash: "Course validée avec succès !" } });
         }
     };

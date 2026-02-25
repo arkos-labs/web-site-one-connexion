@@ -50,6 +50,11 @@ export interface AdminStats {
     revenueToday: number;
     revenueTodayChange: number;
 
+    // Financial Metrics
+    driverPayoutsTotal: number;
+    netMarginTotal: number;
+    clientDebtTotal: number;
+
     ordersByStatus: {
         pending: number;
         in_progress: number;
@@ -81,6 +86,11 @@ export const useAdminStats = (filter: StatsFilter = { period: 'day' }) => {
         revenueToday: 0,
         revenueTodayChange: 0,
 
+        // Initialize new financial metrics
+        driverPayoutsTotal: 0,
+        netMarginTotal: 0,
+        clientDebtTotal: 0,
+
         ordersByStatus: {
             pending: 0,
             in_progress: 0,
@@ -88,8 +98,8 @@ export const useAdminStats = (filter: StatsFilter = { period: 'day' }) => {
             cancelled: 0
         },
         teamMembers: [],
-        alerts: [],
         keyPoints: [],
+        alerts: [],
         loading: true
     });
 
@@ -189,7 +199,8 @@ export const useAdminStats = (filter: StatsFilter = { period: 'day' }) => {
                 cancelledRes,
                 driversRes,
                 delayedOrdersRes,
-                newClientsAlertRes
+                newClientsAlertRes,
+                clientDebtRes
             ] = await Promise.all([
                 // 1. Orders
                 supabase.from('orders').select('*', { count: 'exact', head: true }).gte('created_at', currentStart.toISOString()).lte('created_at', currentEnd.toISOString()),
@@ -219,7 +230,10 @@ export const useAdminStats = (filter: StatsFilter = { period: 'day' }) => {
 
                 // 7. Alerts
                 supabase.from('orders').select('reference, created_at').eq('status', 'pending_acceptance').lt('created_at', twoHoursAgo).limit(1),
-                supabase.from('clients').select('company_name').gte('created_at', twentyFourHoursAgo).limit(1)
+                supabase.from('clients').select('company_name').gte('created_at', twentyFourHoursAgo).limit(1),
+
+                // 8. Client Debt (Invoices)
+                supabase.from('invoices').select('amount_ttc').in('status', ['pending', 'overdue'])
             ]);
 
             // Process Results
@@ -238,9 +252,16 @@ export const useAdminStats = (filter: StatsFilter = { period: 'day' }) => {
             const pendingCount = pendingRes.count || 0;
             const acceptedCount = acceptedRes.count || 0;
             const dispatchedCount = dispatchedRes.count || 0;
-            const inProgressCount = acceptedCount + dispatchedCount;
+            const inProgressCount = Number(acceptedCount) + Number(dispatchedCount);
             const deliveredCount = deliveredRes.count || 0;
             const cancelledCount = cancelledRes.count || 0;
+
+            // 8. Financial Calculations (CA Brut, Driver Payouts, Net Margin)
+            const driverPayoutsTotal = revenueCurrentTotal * 0.4;
+            const netMarginTotal = revenueCurrentTotal - driverPayoutsTotal;
+
+            // Client Debt Total (unpaid invoices)
+            const clientDebtTotal = clientDebtRes.data?.reduce((sum, i) => sum + (i.amount_ttc || 0), 0) || 0;
 
             // Process Team Members
             const drivers = driversRes.data || [];
@@ -335,6 +356,15 @@ export const useAdminStats = (filter: StatsFilter = { period: 'day' }) => {
                 });
             }
 
+            if (clientDebtTotal > 1000) {
+                keyPoints.push({
+                    title: 'Dette client élevée',
+                    impact: 'Élevé',
+                    time: 'Attention',
+                    color: 'text-destructive'
+                });
+            }
+
             if (keyPoints.length === 0) {
                 keyPoints.push({
                     title: 'Activité normale',
@@ -370,6 +400,10 @@ export const useAdminStats = (filter: StatsFilter = { period: 'day' }) => {
                 newClientsMonthChange: clientsChange,
                 revenueToday: revenueCurrentTotal,
                 revenueTodayChange: revenueChange,
+
+                driverPayoutsTotal,
+                netMarginTotal,
+                clientDebtTotal,
 
                 ordersByStatus: {
                     pending: pendingCount,

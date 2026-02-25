@@ -16,6 +16,7 @@ export default function DashboardDriver() {
     const [user, setUser] = useState(null);
     const userRef = useRef(null);
     const [isOnline, setIsOnline] = useState(false);
+    const [proofModal, setProofModal] = useState({ isOpen: false, orderId: null, type: 'delivery' });
 
     useEffect(() => {
         tasksRef.current = tasks;

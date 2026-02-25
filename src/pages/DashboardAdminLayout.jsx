@@ -32,17 +32,6 @@ export default function DashboardAdminLayout() {
 
     fetchActiveOrders();
 
-    let lastSeen = null;
-
-    const initLastSeen = async () => {
-      const { data } = await supabase
-        .from('orders')
-        .select('id, created_at')
-        .order('created_at', { ascending: false })
-        .limit(1);
-      lastSeen = data?.[0]?.created_at || null;
-    };
-
     const showPopup = async (order) => {
       const { data: clientData } = await supabase
         .from('profiles')
@@ -67,38 +56,34 @@ export default function DashboardAdminLayout() {
       setTimeout(() => setNewOrderPopup(null), 15000);
     };
 
-    const poll = async () => {
-      const { data } = await supabase
-        .from('orders')
-        .select('id, created_at, pickup_city, delivery_city, price_ht, client_id')
-        .order('created_at', { ascending: false })
-        .limit(1);
-
-      const latest = data?.[0];
-      if (!latest) return;
-
-      if (lastSeen && new Date(latest.created_at) > new Date(lastSeen)) {
-        await showPopup(latest);
-      }
-      lastSeen = latest.created_at;
+    const ACTIVE_STATUSES = new Set(['pending', 'assigned', 'in_progress']);
+    const shouldRefreshActiveCount = (payload) => {
+      const nextStatus = payload?.new?.status;
+      const prevStatus = payload?.old?.status;
+      return ACTIVE_STATUSES.has(nextStatus) || ACTIVE_STATUSES.has(prevStatus);
     };
-
-    initLastSeen();
-    const pollId = setInterval(poll, 8000);
 
     const channel = supabase
       .channel('admin:orders:updates')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, async (payload) => {
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'orders' }, async (payload) => {
         fetchActiveOrders();
-        if (payload.eventType === 'INSERT') {
+        if (payload?.new) {
           await showPopup(payload.new);
-          lastSeen = payload.new?.created_at || lastSeen;
+        }
+      })
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'orders' }, (payload) => {
+        if (shouldRefreshActiveCount(payload)) {
+          fetchActiveOrders();
+        }
+      })
+      .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'orders' }, (payload) => {
+        if (shouldRefreshActiveCount(payload)) {
+          fetchActiveOrders();
         }
       })
       .subscribe();
 
     return () => {
-      clearInterval(pollId);
       supabase.removeChannel(channel);
     };
   }, []);

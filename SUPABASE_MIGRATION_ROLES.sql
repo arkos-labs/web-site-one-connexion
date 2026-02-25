@@ -10,8 +10,9 @@ DECLARE
   v_vehicle_type text;
   v_full_name text;
 BEGIN
-  -- Extract metadata
-  v_role := new.raw_user_meta_data->>'role';
+  -- Force strict default role for all new signups
+  -- Ignore any client-provided raw_user_meta_data.role value.
+  v_role := 'client';
   v_first_name := new.raw_user_meta_data->>'first_name';
   v_last_name := new.raw_user_meta_data->>'last_name';
   v_full_name := new.raw_user_meta_data->>'full_name'; -- Sent by Client Web
@@ -19,10 +20,7 @@ BEGIN
   v_vehicle_type := new.raw_user_meta_data->>'vehicle_type';
 
   -- 1. Create Profile (Source of Truth for Role)
-  -- If no role specified, default to 'client' (safe fallback for web)
-  IF v_role IS NULL THEN
-      v_role := 'client';
-  END IF;
+  -- Role is always forced to client here.
 
   INSERT INTO public.profiles (id, first_name, last_name, role, email)
   VALUES (

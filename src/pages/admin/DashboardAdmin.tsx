@@ -47,13 +47,11 @@ const DashboardAdmin = () => {
 
   const {
     ordersToday,
-    ordersTodayChange,
-    newClientsMonth,
-    newClientsMonthChange,
-    activeDrivers,
-    totalDrivers,
-    revenueToday,
-    revenueTodayChange,
+    driverPayoutsTotal,
+    netMarginTotal,
+    clientDebtTotal,
+    revenueTotal,
+    revenueChange,
     ordersByStatus,
     teamMembers,
     alerts,
@@ -130,45 +128,52 @@ const DashboardAdmin = () => {
 
   const mainMetrics = [
     {
-      title: `Commandes (${periodLabel})`,
-      value: loading ? "-" : ordersToday.toString(),
-      change: loading ? "-" : `${ordersTodayChange > 0 ? '+' : ''}${ordersTodayChange}%`,
-      delta: comparisonLabel,
-      icon: Package,
-      color: "text-[#D4AF37]",
-      bgColor: "bg-[#D4AF37]/10",
-      path: "/admin/commandes",
+      title: "Dispatch & Live",
+      value: loading ? "-" : `${ordersByStatus.pending} / ${ordersByStatus.in_progress}`,
+      label: "En attente / En cours",
+      icon: Clock,
+      color: "text-amber-600",
+      bgColor: "bg-amber-50",
+      path: "/admin/dispatch",
+      detailed: true
     },
     {
-      title: `Clients (${periodLabel})`,
-      value: loading ? "-" : newClientsMonth.toString(),
-      change: loading ? "-" : `${newClientsMonthChange > 0 ? '+' : ''}${newClientsMonthChange}%`,
-      delta: comparisonLabel,
-      icon: Users,
-      color: "text-blue-600",
-      bgColor: "bg-blue-50",
-      path: "/admin/clients",
-    },
-    {
-      title: "Chauffeurs actifs",
-      value: loading ? "-" : `${activeDrivers}/${totalDrivers}`,
-      change: loading ? "-" : `${totalDrivers > 0 ? Math.round((activeDrivers / totalDrivers) * 100) : 0}%`,
-      delta: "temps réel",
-      icon: Truck,
-      color: "text-indigo-600",
-      bgColor: "bg-indigo-50",
-      path: "/admin/chauffeurs",
-    },
-    {
-      title: `Revenus (${periodLabel})`,
-      value: loading ? "-" : `${revenueToday.toLocaleString('fr-FR')}€`,
-      change: loading ? "-" : `${revenueTodayChange > 0 ? '+' : ''}${revenueTodayChange}%`,
+      title: "CA Brut (TTC)",
+      value: loading ? "-" : `${revenueTotal.toLocaleString('fr-FR')}€`,
+      change: loading ? "-" : `${revenueChange > 0 ? '+' : ''}${revenueChange}%`,
       delta: comparisonLabel,
       icon: TrendingUp,
       color: "text-emerald-600",
       bgColor: "bg-emerald-50",
       path: "/admin/statistiques",
     },
+    {
+      title: "Rémun. Chauffeurs",
+      value: loading ? "-" : `${driverPayoutsTotal.toLocaleString('fr-FR')}€`,
+      label: "40% du CA Brut",
+      icon: Users,
+      color: "text-indigo-600",
+      bgColor: "bg-indigo-50",
+      path: "/admin/chauffeurs",
+    },
+    {
+      title: "Marge Nette (Est.)",
+      value: loading ? "-" : `${netMarginTotal.toLocaleString('fr-FR')}€`,
+      label: "Revenu Net estimé",
+      icon: BarChart3,
+      color: "text-[#D4AF37]",
+      bgColor: "bg-[#D4AF37]/10",
+      path: "/admin/statistiques",
+    },
+    {
+      title: "Dette Clients",
+      value: loading ? "-" : `${clientDebtTotal.toLocaleString('fr-FR')}€`,
+      label: "Factures impayées",
+      icon: AlertTriangle,
+      color: "text-rose-600",
+      bgColor: "bg-rose-50",
+      path: "/admin/clients",
+    }
   ];
 
   const quickActions = [
@@ -287,9 +292,10 @@ const DashboardAdmin = () => {
       </div>
 
       {/* Main Metrics */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6">
         {loading ? (
           <>
+            <StatCardSkeleton />
             <StatCardSkeleton />
             <StatCardSkeleton />
             <StatCardSkeleton />
@@ -316,7 +322,7 @@ const DashboardAdmin = () => {
               <div>
                 <h3 className="text-gray-500 text-sm font-medium mb-1">{metric.title}</h3>
                 <p className="text-2xl sm:text-3xl font-bold text-[#0B1525]">{metric.value}</p>
-                <p className="text-xs text-gray-400 mt-1">{metric.delta}</p>
+                <p className="text-xs text-gray-400 mt-1">{(metric as any).delta || (metric as any).label}</p>
               </div>
             </Card>
           ))

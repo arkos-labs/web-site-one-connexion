@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { supabase } from "../lib/supabase";
 
 export default function useAdminOrdersManager(searchParams) {
@@ -8,12 +8,12 @@ export default function useAdminOrdersManager(searchParams) {
     const [loading, setLoading] = useState(true);
 
     const [decisionOpen, setDecisionOpen] = useState(false);
-    const [dragId, setDragId] = useState(null);
+    const [_dragId, _setDragId] = useState(null);
     const [decisionType, setDecisionType] = useState("accept");
     const [decisionOrder, setDecisionOrder] = useState(null);
     const [reason, setReason] = useState("");
 
-    const [decisionEditMode, setDecisionEditMode] = useState(false);
+    const [_decisionEditMode, setDecisionEditMode] = useState(false);
     const [decisionEdit, setDecisionEdit] = useState({
         pickup: "",
         delivery: "",
@@ -25,9 +25,9 @@ export default function useAdminOrdersManager(searchParams) {
         driverPay: "",
     });
     const [query, setQuery] = useState("");
-    const [lateOnly, setLateOnly] = useState(false);
-    const [missingOnly, setMissingOnly] = useState(false);
-    const [sortMode, setSortMode] = useState("deadline");
+    const [lateOnly, _setLateOnly] = useState(false);
+    const [missingOnly, _setMissingOnly] = useState(false);
+    const [sortMode, _setSortMode] = useState("deadline");
     const [isSearching, setIsSearching] = useState(false);
 
     const statusFilter = searchParams.get("status") || "Tous";
@@ -35,11 +35,77 @@ export default function useAdminOrdersManager(searchParams) {
     const [dispatchOpen, setDispatchOpen] = useState(false);
     const [dispatchOrder, setDispatchOrder] = useState(null);
     const [dispatchDriver, setDispatchDriver] = useState("");
-    const [dispatchEta, setDispatchEta] = useState("");
+    const [_dispatchEta, _setDispatchEta] = useState("");
     const [dispatchNote, setDispatchNote] = useState("");
 
+    const fetchOrders = useCallback(async () => {
+        try {
+            const [oRes, pRes] = await Promise.all([
+                supabase.from('orders').select('*').order('created_at', { ascending: false }),
+                supabase.from('profiles').select('id, details')
+            ]);
+
+            if (oRes.data && pRes.data) {
+                setOrders(oRes.data.map(o => {
+                    const profile = pRes.data.find(p => p.id === o.client_id);
+                    const cDetails = profile?.details || {};
+                    let clientName = cDetails.company || cDetails.full_name;
+                    let isGuest = false;
+
+                    if (!clientName) {
+                        clientName = o.pickup_name || 'Prospect Invité';
+                        isGuest = true;
+                    }
+
+                    const hasDriver = !!o.driver_id;
+                    const pickedUp = !!(o.picked_up_at || o.pickup_time_at);
+                    // Ne pas écraser driver_accepted - c'est le vrai statut Supabase
+                    const normalizedStatus = (o.status === 'accepted' && hasDriver) ? 'assigned'
+                        : (o.status === 'assigned' && pickedUp) ? 'in_progress'
+                            : (o.status === 'picked_up' || o.status === 'arrived_pickup') ? 'in_progress'
+                                : o.status;
+
+                    return {
+                        ...o,
+                        status: normalizedStatus,
+                        client: clientName,
+                        isGuest,
+                        total: o.price_ht,
+                        date: o.created_at ? new Date(o.created_at).toLocaleDateString() : '—',
+                        pickup: o.pickup_address,
+                        delivery: o.delivery_address,
+                        route: `${o.pickup_city || '—'} → ${o.delivery_city || '—'}`
+                    };
+                }));
+            }
+        } catch (err) {
+            console.error("Error fetching orders:", err);
+        }
+    }, []);
+
+    const fetchProfiles = useCallback(async () => {
+        const { data, error } = await supabase.from('profiles').select('*');
+        if (!error && data) {
+            setDrivers(data.filter(p => p.role === 'courier' && p.is_online === true).map(p => ({
+                id: p.id,
+                name: p.details?.full_name || 'Chauffeur sans nom'
+            })));
+            setClients(data.filter(p => p.role === 'client').map(p => ({
+                id: p.id,
+                name: p.details?.company || p.details?.full_name || 'Client',
+                details: p.details
+            })));
+        }
+    }, []);
+
     useEffect(() => {
-        fetchData();
+        let isMounted = true;
+        (async () => {
+            await Promise.all([fetchOrders(), fetchProfiles()]);
+            if (isMounted) {
+                setLoading(false);
+            }
+        })();
 
         // Realtime: Orders updates (accept / picked_up / delivered)
         const ordersChannel = supabase
@@ -88,76 +154,11 @@ export default function useAdminOrdersManager(searchParams) {
             .subscribe();
 
         return () => {
+            isMounted = false;
             supabase.removeChannel(ordersChannel);
             supabase.removeChannel(profileChannel);
         };
-    }, []);
-
-    const fetchData = async () => {
-        setLoading(true);
-        await Promise.all([fetchOrders(), fetchProfiles()]);
-        setLoading(false);
-    };
-
-    const fetchOrders = async () => {
-        try {
-            const [oRes, pRes] = await Promise.all([
-                supabase.from('orders').select('*').order('created_at', { ascending: false }),
-                supabase.from('profiles').select('id, details')
-            ]);
-
-            if (oRes.data && pRes.data) {
-                setOrders(oRes.data.map(o => {
-                    const profile = pRes.data.find(p => p.id === o.client_id);
-                    const cDetails = profile?.details || {};
-                    let clientName = cDetails.company || cDetails.full_name;
-                    let isGuest = false;
-
-                    if (!clientName) {
-                        clientName = o.pickup_name || 'Prospect Invité';
-                        isGuest = true;
-                    }
-
-                    const hasDriver = !!o.driver_id;
-                    const pickedUp = !!(o.picked_up_at || o.pickup_time_at);
-                    // Ne pas écraser driver_accepted - c'est le vrai statut Supabase
-                    const normalizedStatus = (o.status === 'accepted' && hasDriver) ? 'assigned'
-                        : (o.status === 'assigned' && pickedUp) ? 'in_progress'
-                            : (o.status === 'picked_up' || o.status === 'arrived_pickup') ? 'in_progress'
-                                : o.status;
-
-                    return {
-                        ...o,
-                        status: normalizedStatus,
-                        client: clientName,
-                        isGuest,
-                        total: o.price_ht,
-                        date: o.created_at ? new Date(o.created_at).toLocaleDateString() : '—',
-                        pickup: o.pickup_address,
-                        delivery: o.delivery_address,
-                        route: `${o.pickup_city || '—'} → ${o.delivery_city || '—'}`
-                    };
-                }));
-            }
-        } catch (err) {
-            console.error("Error fetching orders:", err);
-        }
-    };
-
-    const fetchProfiles = async () => {
-        const { data, error } = await supabase.from('profiles').select('*');
-        if (!error && data) {
-            setDrivers(data.filter(p => p.role === 'courier' && p.is_online === true).map(p => ({
-                id: p.id,
-                name: p.details?.full_name || 'Chauffeur sans nom'
-            })));
-            setClients(data.filter(p => p.role === 'client').map(p => ({
-                id: p.id,
-                name: p.details?.company || p.details?.full_name || 'Client',
-                details: p.details
-            })));
-        }
-    };
+    }, [fetchOrders, fetchProfiles]);
 
     const derived = useMemo(() => {
         const parseDeadlineMs = (o) => {
@@ -195,7 +196,7 @@ export default function useAdminOrdersManager(searchParams) {
         });
     }, [orders, query, lateOnly, missingOnly, derived]);
 
-    const sortOrders = (list) => {
+    const sortOrders = useCallback((list) => {
         const sorted = [...list].sort((a, b) => {
             if (sortMode === "amount") return Number(b.total || 0) - Number(a.total || 0);
             if (sortMode === "newest") return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
@@ -207,7 +208,7 @@ export default function useAdminOrdersManager(searchParams) {
             return ad - bd;
         });
         return sorted;
-    };
+    }, [derived, sortMode]);
 
     const activeOrders = useMemo(
         () => baseList.filter((o) => !["delivered", "cancelled"].includes(o.status)),
@@ -222,11 +223,11 @@ export default function useAdminOrdersManager(searchParams) {
     const historyFiltered = useMemo(() => {
         const list = historyOrders.filter((o) => (statusFilter === "Tous" ? true : o.status === statusFilter));
         return sortOrders(list);
-    }, [historyOrders, statusFilter, sortMode]);
+    }, [historyOrders, sortOrders, statusFilter]);
 
     const kanbanList = useMemo(
         () => sortOrders(baseList.filter((o) => o.status !== "cancelled")),
-        [baseList, sortMode]
+        [baseList, sortOrders]
     );
 
     const openDecision = (order, type) => {
@@ -248,7 +249,7 @@ export default function useAdminOrdersManager(searchParams) {
                     if (!isNaN(d.getTime())) {
                         pickupTimeStr = d.getHours().toString().padStart(2, '0') + ":" + d.getMinutes().toString().padStart(2, '0');
                     }
-                } catch (_e) { /* noop */ }
+                } catch { /* noop */ }
             }
 
             const safeDate = order.created_at ? (function () {
@@ -279,7 +280,7 @@ export default function useAdminOrdersManager(searchParams) {
     const openDispatch = (order) => {
         setDispatchOrder(order);
         setDispatchDriver(drivers?.[0]?.id || "");
-        setDispatchEta("");
+        _setDispatchEta("");
         setDispatchNote("");
         setDispatchOpen(true);
     };
@@ -313,10 +314,6 @@ export default function useAdminOrdersManager(searchParams) {
             return;
         }
 
-        if (decisionType === 'accept') {
-        } else {
-        }
-
         fetchOrders();
         setDecisionOpen(false);
     };
@@ -335,7 +332,7 @@ export default function useAdminOrdersManager(searchParams) {
         }
 
         const now = new Date().toISOString();
-        const { error, data } = await supabase.from('orders').update({
+        const { error } = await supabase.from('orders').update({
             status: 'driver_accepted',
             driver_id: dispatchDriver,
             driver_accepted_at: now,
@@ -352,8 +349,6 @@ export default function useAdminOrdersManager(searchParams) {
             }
             return;
         }
-
-        const driverName = drivers.find(d => String(d.id) === String(dispatchDriver))?.name || 'Un chauffeur';
 
         fetchOrders();
         setDispatchOpen(false);

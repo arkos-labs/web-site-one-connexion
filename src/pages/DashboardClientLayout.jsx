@@ -1,9 +1,10 @@
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Truck, FileText, MapPin, User, Settings, LogOut, LayoutDashboard, MessageSquare } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 
 export default function DashboardClientLayout() {
+  const navigate = useNavigate();
   const { pathname } = useLocation();
   const isActive = (path) => {
     if (path === "/dashboard-client") return pathname === path;
@@ -12,39 +13,55 @@ export default function DashboardClientLayout() {
   const [activeCount, setActiveCount] = useState(0);
 
   useEffect(() => {
-    const fetchActiveOrders = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        const { count } = await supabase
-          .from('orders')
-          .select('*', { count: 'exact', head: true })
-          .eq('client_id', user.id)
-          .in('status', ['pending', 'assigned', 'in_progress']);
+    let mounted = true;
+    let channelRef = null;
 
-        setActiveCount(count || 0);
+    const fetchActiveOrders = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (user && mounted) {
+        const { count } = await supabase
+          .from("orders")
+          .select("*", { count: "exact", head: true })
+          .eq("client_id", user.id)
+          .in("status", ["pending", "assigned", "in_progress"]);
+
+        if (mounted) setActiveCount(count || 0);
+
+        if (!channelRef) {
+          channelRef = supabase
+            .channel(`public:orders:count:${user.id}`)
+            .on(
+              "postgres_changes",
+              { event: "*", schema: "public", table: "orders", filter: `client_id=eq.${user.id}` },
+              () => {
+                fetchActiveOrders();
+              }
+            )
+            .subscribe();
+        }
       }
     };
 
     fetchActiveOrders();
 
-    const channel = supabase
-      .channel('public:orders:count')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, () => {
-        fetchActiveOrders();
-      })
-      .subscribe();
-
     return () => {
-      supabase.removeChannel(channel);
+      mounted = false;
+      if (channelRef) supabase.removeChannel(channelRef);
     };
   }, []);
 
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate("/connexion", { replace: true });
+  };
+
   return (
     <div className="flex h-screen bg-[#f8fafc] font-sans text-slate-900 overflow-hidden selection:bg-orange-500/30 selection:text-orange-900">
-      {/* Sidebar - Premium Design */}
       <aside className="hidden w-[280px] flex-col justify-between border-r border-slate-200/60 bg-white/80 px-6 py-8 backdrop-blur-3xl lg:flex z-20">
         <div>
-          {/* Logo Area */}
           <Link to="/" className="group mb-12 flex items-center gap-3 px-2">
             <div className="grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br from-orange-400 to-orange-600 text-white font-black shadow-lg shadow-orange-500/20 transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3">
               OC
@@ -55,7 +72,6 @@ export default function DashboardClientLayout() {
             </div>
           </Link>
 
-          {/* Navigation */}
           <nav className="space-y-2">
             <div className="mb-4 px-4 text-xs font-bold uppercase tracking-wider text-slate-400">Menu Principal</div>
             <NavItem icon={LayoutDashboard} label="Tableau de bord" to="/dashboard-client" active={isActive("/dashboard-client")} />
@@ -76,7 +92,6 @@ export default function DashboardClientLayout() {
           </nav>
         </div>
 
-        {/* Bottom Actions */}
         <div className="space-y-4">
           <div className="rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 p-5 text-white shadow-xl shadow-slate-900/10">
             <div className="mb-2 flex items-center gap-2">
@@ -89,16 +104,19 @@ export default function DashboardClientLayout() {
             </button>
           </div>
 
-          <Link to="/connexion" className="group flex w-full items-center justify-between rounded-xl px-4 py-3 text-sm font-bold text-slate-500 transition-all hover:bg-rose-50 hover:text-rose-600">
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="group flex w-full items-center justify-between rounded-xl px-4 py-3 text-sm font-bold text-slate-500 transition-all hover:bg-rose-50 hover:text-rose-600"
+          >
             <div className="flex items-center gap-3">
               <LogOut size={18} className="transition-transform group-hover:-translate-x-1" />
               <span>Déconnexion</span>
             </div>
-          </Link>
+          </button>
         </div>
       </aside>
 
-      {/* Main Content Area */}
       <main className="flex-1 overflow-y-auto">
         <Outlet />
       </main>
@@ -107,10 +125,9 @@ export default function DashboardClientLayout() {
 }
 
 function NavItem({ icon: Icon, label, active, badge, to }) {
-  const classes = `group relative flex w-full items-center justify-between rounded-2xl px-4 py-3 text-sm font-bold transition-all duration-300 ${active
-    ? "bg-slate-900 text-white shadow-lg shadow-slate-900/20"
-    : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
-    }`;
+  const classes = `group relative flex w-full items-center justify-between rounded-2xl px-4 py-3 text-sm font-bold transition-all duration-300 ${
+    active ? "bg-slate-900 text-white shadow-lg shadow-slate-900/20" : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+  }`;
 
   return (
     <Link to={to} className={classes}>
@@ -127,6 +144,3 @@ function NavItem({ icon: Icon, label, active, badge, to }) {
     </Link>
   );
 }
-
-
-

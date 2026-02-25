@@ -86,7 +86,6 @@ export default function DashboardAdmin() {
     }
 
     setDispatchOpen(false);
-    const driverName = drivers.find(d => String(d.id) === String(dispatchDriver))?.name || 'Chauffeur';
     fetchOrders();
   };
 
@@ -96,7 +95,15 @@ export default function DashboardAdmin() {
       .finally(() => setLoading(false));
 
     const profileChannel = supabase.channel('admin-profiles')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'profiles' }, () => fetchProfiles())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'profiles' }, (payload) => {
+        const nextRole = payload?.new?.role?.toLowerCase?.();
+        const prevRole = payload?.old?.role?.toLowerCase?.();
+        const relevant = ['admin', 'client', 'driver', 'courier', 'dispatcher', 'super_admin'];
+        if (!nextRole && !prevRole) return;
+        if (relevant.includes(nextRole) || relevant.includes(prevRole)) {
+          fetchProfiles();
+        }
+      })
       .subscribe();
 
     const ordersChannel = supabase.channel('admin-orders')
@@ -104,22 +111,11 @@ export default function DashboardAdmin() {
       .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'orders' }, () => fetchOrders())
       .subscribe();
 
-    const interval = setInterval(checkForNewOrders, 15000);
-
     return () => {
       supabase.removeChannel(profileChannel);
       supabase.removeChannel(ordersChannel);
-      clearInterval(interval);
     };
   }, []);
-
-  const checkForNewOrders = async () => {
-    const { data } = await supabase.from('orders').select('id').order('created_at', { ascending: false }).limit(1).maybeSingle();
-    if (data && latestOrderIdRef.current && data.id !== latestOrderIdRef.current) {
-      const { data: fullOrder } = await supabase.from('orders').select('*').eq('id', data.id).single();
-      if (fullOrder) triggerNewOrderAlert(fullOrder);
-    }
-  };
 
   const triggerNewOrderAlert = (orderData) => {
     if (latestOrderIdRef.current === orderData.id) return;
@@ -180,7 +176,6 @@ export default function DashboardAdmin() {
       fetchOrders();
       return;
     }
-    const order = ordersAll.find(o => o.id === orderId);
     fetchOrders();
   };
 

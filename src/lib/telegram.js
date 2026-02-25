@@ -68,19 +68,33 @@ const fmtDateTime = (d) => {
 
 const fmtRef = (id) => id ? id.slice(0, 8).toUpperCase() : "NOUVELLE";
 
-const orderBlock = (o) =>
-    hr() +
-    fmt("📍 Enlèvement", o.pickup_address || o.pickup) +
-    fmt("🏁 Livraison", o.delivery_address || o.delivery) +
-    (o.pickup_city && o.delivery_city ? fmt("🗺️  Trajet", `${o.pickup_city} → ${o.delivery_city}`) : "") +
-    fmt("🚗 Véhicule", o.vehicle_type ? o.vehicle_type.charAt(0).toUpperCase() + o.vehicle_type.slice(1) : null) +
-    fmt("⚡ Formule", o.service_level ? o.service_level.toUpperCase() : null) +
-    fmt("💰 Prix HT", o.price_ht ? `${Number(o.price_ht).toFixed(2)} €` : null) +
-    fmt("🕐 Enlèvement", fmtDateTime(o.scheduled_at)) +
-    fmt("⏰ Deadline", fmtTime(o.delivery_deadline)) +
-    hr();
+const orderBlock = (o) => {
+    const price = Number(o.price_ht || 0);
+    const commDriver = price * 0.4;
+    const commOC = price * 0.6;
+
+    return hr() +
+        fmt("📍 Enlèvement", o.pickup_address || o.pickup) +
+        fmt("🏁 Livraison", o.delivery_address || o.delivery) +
+        (o.pickup_city && o.delivery_city ? fmt("🗺️  Trajet", `${esc(o.pickup_city)} → ${esc(o.delivery_city)}`) : "") +
+        fmt("🚗 Véhicule", o.vehicle_type ? o.vehicle_type.charAt(0).toUpperCase() + o.vehicle_type.slice(1) : null) +
+        fmt("⚡ Formule", o.service_level ? o.service_level.toUpperCase() : null) +
+        fmt("💰 Prix HT", price > 0 ? `${price.toFixed(2)} €` : null) +
+        fmt("👷 Comm. Chauffeur (40%)", price > 0 ? `${commDriver.toFixed(2)} €` : null) +
+        fmt("🏢 Comm. One Connexion (60%)", price > 0 ? `${commOC.toFixed(2)} €` : null) +
+        fmt("🕐 Enlèvement", fmtDateTime(o.scheduled_at || o.pickup_time)) +
+        fmt("⏰ Deadline", fmtTime(o.delivery_deadline)) +
+        hr();
+};
 
 const resolveClient = (o, name) => name || o.client_name || o.client || "Client";
+const resolveEmail = (o, name) => {
+    // Try to extract email from name if it follows "Name (email)" pattern
+    if (name && name.includes('(') && name.includes(')')) {
+        return name.split('(')[1].split(')')[0];
+    }
+    return o.client_email || o.email || null;
+};
 
 // ─────────────────────────────────────────────────────────────────
 // ÉTAPE 1 — Nouvelle commande (client ou admin)
@@ -88,6 +102,7 @@ const resolveClient = (o, name) => name || o.client_name || o.client || "Client"
 export const notifyNewOrder = (order, clientName) => send(
     `📦 <b>NOUVELLE COMMANDE</b>\n\n` +
     fmt("👤 Client", resolveClient(order, clientName)) +
+    fmt("📧 Email", resolveEmail(order, clientName)) +
     fmt("🆔 Référence", fmtRef(order.id)) +
     orderBlock(order) +
     `➡️ En attente d'acceptation admin`
@@ -99,6 +114,7 @@ export const notifyNewOrder = (order, clientName) => send(
 export const notifyOrderAccepted = (order, clientName) => send(
     `✅ <b>COMMANDE ACCEPTÉE</b>\n\n` +
     fmt("👤 Client", resolveClient(order, clientName)) +
+    fmt("📧 Email", resolveEmail(order, clientName)) +
     fmt("🆔 Référence", fmtRef(order.id)) +
     orderBlock(order) +
     `➡️ En attente d'assignation chauffeur`
@@ -125,7 +141,7 @@ export const notifyDriverAccepted = (order, driverName = "Chauffeur") => send(
     fmt("📍 Vers Enlèvement", order?.pickup_address || order?.pickup) +
     fmt("📞 Contact", order?.pickup_phone) +
     hr() +
-    `➡️ Le chauffeur se dirige vers le point d'enlèvement`
+    `➡️ Le chauffeur ${esc(driverName)} se dirige vers le point d'enlèvement`
 );
 
 // ─────────────────────────────────────────────────────────────────
@@ -139,7 +155,7 @@ export const notifyPickupDone = (order, driverName = "Chauffeur") => send(
     fmt("🏁 Destination", order?.delivery_address || order?.delivery) +
     fmt("⏰ Deadline", fmtTime(order?.delivery_deadline)) +
     hr() +
-    `➡️ Le colis est en cours de livraison`
+    `➡️ Le chauffeur ${esc(driverName)} a récupéré le colis et est en route`
 );
 
 // ─────────────────────────────────────────────────────────────────
@@ -152,7 +168,7 @@ export const notifyDelivered = (order, driverName = "Chauffeur") => send(
     fmt("📍 Livré à", order?.delivery_address || order?.delivery) +
     fmt("💰 Montant HT", order?.price_ht ? `${Number(order.price_ht).toFixed(2)} €` : null) +
     hr() +
-    `🎉 Mission accomplie avec succès`
+    `🎉 Mission accomplie avec succès par ${esc(driverName)}`
 );
 
 // ─────────────────────────────────────────────────────────────────

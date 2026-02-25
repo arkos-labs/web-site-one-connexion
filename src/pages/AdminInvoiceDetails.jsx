@@ -17,6 +17,7 @@ export default function AdminInvoiceDetails() {
   const [client, setClient] = useState(null);
   const [markingPaid, setMarkingPaid] = useState(false);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchData(); }, [id]);
 
   const fetchData = async () => {

@@ -47,6 +47,9 @@ const NavetteReguliereIDF = lazy(() => import("./pages/NavetteReguliereIDF.jsx")
 const MentionsLegales = lazy(() => import("./pages/MentionsLegales.jsx"));
 const DashboardDriver = lazy(() => import("./pages/DashboardDriver.jsx"));
 const DashboardDriverLayout = lazy(() => import("./pages/DashboardDriverLayout.jsx"));
+const DriverHistory = lazy(() => import("./pages/DriverHistory.jsx"));
+const DriverProfile = lazy(() => import("./pages/DriverProfile.jsx"));
+const NotFound = lazy(() => import("./pages/NotFound.tsx"));
 
 const Loading = () => (
   <div className="flex items-center justify-center p-12 text-sm font-semibold text-slate-500">
@@ -85,7 +88,7 @@ export default function App() {
           <Route
             path="/dashboard-client"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowedRoles={["client", "user"]}>
                 <DashboardClientLayout />
               </ProtectedRoute>
             }
@@ -103,7 +106,7 @@ export default function App() {
           <Route
             path="/admin"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowedRoles={["admin", "super_admin", "dispatcher"]}>
                 <DashboardAdminLayout />
               </ProtectedRoute>
             }
@@ -122,18 +125,20 @@ export default function App() {
           <Route
             path="/dashboard-driver"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowedRoles={["driver", "courier"]}>
                 <DashboardDriverLayout />
               </ProtectedRoute>
             }
           >
             <Route index element={<DashboardDriver />} />
+            <Route path="history" element={<DriverHistory />} />
+            <Route path="profile" element={<DriverProfile />} />
             <Route path="chat" element={<ClientChat />} />
           </Route>
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
     </BrowserRouter>
   );
 }
-
 

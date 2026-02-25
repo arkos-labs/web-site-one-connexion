@@ -12,7 +12,7 @@ function computeClientRisk(invoices) {
   const today = new Date();
   const unpaid = invoices.filter(i => i.status !== "paid");
   const overdue = unpaid.filter(i => i.due_date && new Date(i.due_date) < today);
-  const unpaidAmount = unpaid.reduce((s, i) => s + Number(i.total_ttc || 0), 0);
+  const _unpaidAmount = unpaid.reduce((s, i) => s + Number(i.total_ttc || 0), 0);
   const overdueAmount = overdue.reduce((s, i) => s + Number(i.total_ttc || 0), 0);
   const worstLateDays = overdue.length ? Math.max(...overdue.map(i => daysBetween(new Date(i.due_date), today))) : 0;
   let score = 0;

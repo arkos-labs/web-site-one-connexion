@@ -57,6 +57,7 @@ export default function AdminClientDetails() {
   const [chatOpen, setChatOpen] = useState(false);
   const [sending, setSending] = useState(false);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchData(); }, [id]);
 
   const fetchData = async () => {

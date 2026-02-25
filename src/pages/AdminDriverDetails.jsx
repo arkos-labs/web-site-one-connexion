@@ -52,6 +52,7 @@ export default function AdminDriverDetails() {
   });
   const [driverRowId, setDriverRowId] = useState(null);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     fetchData();
     const channel = supabase
@@ -94,7 +95,7 @@ export default function AdminDriverDetails() {
         } else {
           setDriverRowId(null);
         }
-      } catch (e) {
+      } catch (_e) {
         setDriverRowId(null);
       }
     }
