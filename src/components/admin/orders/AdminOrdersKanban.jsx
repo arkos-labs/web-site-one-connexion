@@ -10,7 +10,7 @@ export default function AdminOrdersKanban({
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {[
                 { label: "Nouveaux", statuses: ["pending_acceptance", "pending"], color: "bg-rose-500", light: "bg-rose-50", text: "text-rose-600" },
-                { label: "Dispatch", statuses: ["accepted", "driver_refused"], color: "bg-indigo-500", light: "bg-indigo-50", text: "text-indigo-600" },
+                { label: "Dispatch", statuses: ["accepted", "driver_refused", "assigned"], color: "bg-indigo-500", light: "bg-indigo-50", text: "text-indigo-600" },
                 { label: "En cours", statuses: ["assigned", "driver_accepted", "in_progress", "picked_up"], color: "bg-amber-500", light: "bg-amber-50", text: "text-amber-600" },
                 { label: "Livrées", statuses: ["delivered"], color: "bg-emerald-500", light: "bg-emerald-50", text: "text-emerald-600" },
             ].map((col) => (
@@ -21,16 +21,28 @@ export default function AdminOrdersKanban({
                             <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">{col.label}</span>
                         </div>
                         <span className={`text-[10px] font-black ${col.light} ${col.text} px-2 py-0.5 rounded-md`}>
-                            {kanbanList.filter((o) => col.statuses.includes(o.status)).length}
+                            {kanbanList.filter((o) => {
+                                if (col.label === "Dispatch" && o.status === "assigned") return !o.driver_id;
+                                if (col.label === "En cours" && o.status === "assigned") return !!o.driver_id;
+                                return col.statuses.includes(o.status);
+                            }).length}
                         </span>
                     </div>
 
                     <div className="space-y-4">
-                        {kanbanList.filter((o) => col.statuses.includes(o.status)).length === 0 ? (
+                        {kanbanList.filter((o) => {
+                            if (col.label === "Dispatch" && o.status === "assigned") return !o.driver_id;
+                            if (col.label === "En cours" && o.status === "assigned") return !!o.driver_id;
+                            return col.statuses.includes(o.status);
+                        }).length === 0 ? (
                             <div className="p-8 rounded-[2rem] border border-dashed border-slate-200 text-center opacity-50">
                                 <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Vide</span>
                             </div>
-                        ) : kanbanList.filter((o) => col.statuses.includes(o.status)).map((o) => (
+                        ) : kanbanList.filter((o) => {
+                            if (col.label === "Dispatch" && o.status === "assigned") return !o.driver_id;
+                            if (col.label === "En cours" && o.status === "assigned") return !!o.driver_id;
+                            return col.statuses.includes(o.status);
+                        }).map((o) => (
                             <div
                                 key={o.id}
                                 className="bg-white rounded-[2rem] border border-slate-100 p-6 shadow-sm hover:shadow-xl transition-all duration-300 group cursor-pointer relative overflow-hidden"
@@ -123,8 +135,9 @@ export default function AdminOrdersKanban({
                             </div>
                         ))}
                     </div>
-                </div>
-            ))}
-        </div>
+                </div >
+            ))
+            }
+        </div >
     );
 }
