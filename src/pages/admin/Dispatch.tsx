@@ -175,24 +175,35 @@ export default function Dispatch() {
 
         // Cas 3: Commande dispatchée (envoyée au chauffeur)
         if (updatedOrder.status === 'assigned') { // assigned peut venir de accepted ou driver_refused
-            toast(
-                `📤 Commande ${updatedOrder.reference} envoyée au chauffeur`,
-                {
-                    duration: 4000,
-                    style: {
-                        background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
-                        color: 'white',
+            if (!updatedOrder.driver_id) {
+                // Si pas de chauffeur (refus), on remet dans "À Dispatcher"
+                setAcceptedOrders(prev => {
+                    const exists = prev.find(o => o.id === updatedOrder.id);
+                    if (exists) return prev.map(o => o.id === updatedOrder.id ? updatedOrder : o);
+                    return [...prev, updatedOrder];
+                });
+                setDriverAcceptedOrders(prev => prev.filter(o => o.id !== updatedOrder.id));
+                toast.info(`Course ${updatedOrder.reference} remise en attente`);
+            } else {
+                toast(
+                    `📤 Commande ${updatedOrder.reference} envoyée au chauffeur`,
+                    {
+                        duration: 4000,
+                        style: {
+                            background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+                            color: 'white',
+                        }
                     }
-                }
-            );
+                );
 
-            // Retirer de accepted et ajouter à "En cours"
-            setAcceptedOrders(prev => prev.filter(o => o.id !== updatedOrder.id));
-            setDriverAcceptedOrders(prev => {
-                const exists = prev.find(o => o.id === updatedOrder.id);
-                if (exists) return prev.map(o => o.id === updatedOrder.id ? updatedOrder : o);
-                return [...prev, updatedOrder];
-            });
+                // Retirer de accepted et ajouter à "En cours"
+                setAcceptedOrders(prev => prev.filter(o => o.id !== updatedOrder.id));
+                setDriverAcceptedOrders(prev => {
+                    const exists = prev.find(o => o.id === updatedOrder.id);
+                    if (exists) return prev.map(o => o.id === updatedOrder.id ? updatedOrder : o);
+                    return [...prev, updatedOrder];
+                });
+            }
         }
 
         // Cas 3.5: Chauffeur ACCEPTE la course - passe dans "Acceptées par chauffeur"
@@ -457,6 +468,13 @@ export default function Dispatch() {
                 case 'accepted': accepted.push(order); break;
                 case 'assigned':
                 case 'driver_refused':
+                    if (!order.driver_id) {
+                        accepted.push(order);
+                    } else {
+                        driverAccepted.push(order);
+                    }
+                    if (order.driver_id) deliveriesMap[order.driver_id] = order;
+                    break;
                 case 'driver_accepted':
                 case 'in_progress':
                     driverAccepted.push(order);
