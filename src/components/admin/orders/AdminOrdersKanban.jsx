@@ -58,7 +58,7 @@ export default function AdminOrdersKanban({
                                                     o.status === "delivered" ? "bg-slate-100 text-slate-600" :
                                                         o.status === "accepted" ? "bg-indigo-50 text-indigo-700" : "bg-slate-50 text-slate-500"
                                             }`}>
-                                            {o.status === "assigned" ? "EN ATTENTE RÉPONSE" :
+                                            {o.status === "assigned" ? (o.driver_id ? "EN ATTENTE RÉPONSE" : "REFUSÉ CHAUFFEUR ❌") :
                                                 o.status === "driver_accepted" ? "EN ROUTE ENLÈVEMENT ✅" :
                                                     (o.status === "in_progress" || o.status === "picked_up") ? "ENLEVÉE" :
                                                         o.status === "delivered" ? "LIVRÉE" :

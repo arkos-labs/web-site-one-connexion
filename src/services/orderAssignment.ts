@@ -59,6 +59,12 @@ export async function assignOrderToDriver(params: AssignOrderParams) {
             driver_id: driverUserId,
             status: 'assigned',
             dispatched_at: new Date().toISOString(),
+            picked_up_at: null,          // RÉINITIALISATION POUR NOUVEAU CHAUFFEUR
+            driver_accepted_at: null,    // RÉINITIALISATION POUR NOUVEAU CHAUFFEUR
+            refused_by_driver: null,     // NETTOYAGE ANCIEN REFUS
+            pickup_photo_url: null,      // NETTOYAGE PHOTOS
+            delivery_photo_url: null,
+            delivery_signature_url: null,
             updated_at: new Date().toISOString()
         };
 
@@ -111,8 +117,18 @@ export async function assignOrderToDriver(params: AssignOrderParams) {
                 type: 'new_order',
                 data: { orderId }
             });
+
+            // Trigger Web Push Notification via Edge Function
+            await supabase.functions.invoke('send-mission-push', {
+                body: {
+                    user_id: driverUserId,
+                    title: '🚚 Nouvelle course disponible',
+                    body: `Commande ${order?.reference}\n📍 ${order?.pickup_address}`,
+                    url: `/missions/${orderId}`
+                }
+            });
         } catch (e) {
-            console.warn('Erreur notification ignorée:', e);
+            console.warn('Erreur notification (Database ou Push) ignorée:', e);
         }
 
         try {
@@ -179,6 +195,11 @@ export async function unassignOrder(orderId: string, reason?: string) {
                 driver_id: null,
                 status: 'accepted', // Retourne dans la pile "À Dispatcher" pour l'admin
                 dispatched_at: null,
+                picked_up_at: null,          // RÉINITIALISATION
+                driver_accepted_at: null,    // RÉINITIALISATION
+                pickup_photo_url: null,      // RÉINITIALISATION
+                delivery_photo_url: null,
+                delivery_signature_url: null,
                 updated_at: new Date().toISOString()
             })
             .eq('id', orderId);

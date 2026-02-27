@@ -11,6 +11,7 @@ import {
     completeDelivery,
     getDriverOrders
 } from '@/services/driverOrderActions';
+import { usePushNotifications } from '@/hooks/usePushNotifications';
 import {
     Package,
     MapPin,
@@ -38,6 +39,7 @@ export default function DriverDashboard() {
     const [isLoading, setIsLoading] = useState(true);
     const [processingOrderId, setProcessingOrderId] = useState<string | null>(null);
     const [driverId, setDriverId] = useState<string | null>(null);
+    const { subscribeUser, isSupported } = usePushNotifications();
 
     useEffect(() => {
         fetchDriverInfo();
@@ -252,9 +254,21 @@ export default function DriverDashboard() {
 
     return (
         <div className="container mx-auto p-6 max-w-4xl">
-            <div className="mb-6">
-                <h1 className="text-3xl font-bold">Mes Courses</h1>
-                <p className="text-muted-foreground">Gérez vos livraisons en temps réel</p>
+            <div className="mb-6 flex justify-between items-center">
+                <div>
+                    <h1 className="text-3xl font-bold">Mes Courses</h1>
+                    <p className="text-muted-foreground">Gérez vos livraisons en temps réel</p>
+                </div>
+                {isSupported && (
+                    <Button
+                        onClick={subscribeUser}
+                        variant="outline"
+                        className="border-primary text-primary hover:bg-primary hover:text-white"
+                    >
+                        <Navigation className="h-4 w-4 mr-2" />
+                        Activer Notifications
+                    </Button>
+                )}
             </div>
 
             <div className="space-y-4">

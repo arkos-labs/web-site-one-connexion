@@ -24,7 +24,7 @@ interface Order {
     price: number;
     distance_km?: number;
     created_at: string;
-    pickup_time?: string;
+    scheduled_at?: string;
     assigned_driver_id?: string;
     driver_id?: string;
     updated_at: string;
@@ -485,9 +485,9 @@ export default function Dispatch() {
 
         const sortOrders = (list: Order[]) => {
             return list.sort((a, b) => {
-                if (a.pickup_time && b.pickup_time) return new Date(a.pickup_time).getTime() - new Date(b.pickup_time).getTime();
-                if (a.pickup_time) return 1;
-                if (b.pickup_time) return -1;
+                if (a.scheduled_at && b.scheduled_at) return new Date(a.scheduled_at).getTime() - new Date(b.scheduled_at).getTime();
+                if (a.scheduled_at) return 1;
+                if (b.scheduled_at) return -1;
                 return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
             });
         };
@@ -666,9 +666,9 @@ export default function Dispatch() {
                                     <div className="text-center py-12 text-slate-400 text-sm">Rien à signaler</div>
                                 )}
                                 {acceptedOrders.map((order) => {
-                                    const pickupTime = formatPickupTime(order.pickup_time);
+                                    const pickupTime = formatPickupTime(order.scheduled_at);
                                     const isDeferred = !!pickupTime;
-                                    const dispatchStatus = getDispatchStatus(order.pickup_time);
+                                    const dispatchStatus = getDispatchStatus(order.scheduled_at);
                                     const isLocked = isDeferred && !dispatchStatus.allowed;
 
                                     return (
