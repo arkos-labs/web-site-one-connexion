@@ -39,7 +39,6 @@ export default function NouvelleCourse() {
         packageDesc: "",
     });
 
-    // Calculate Price when inputs change
     useEffect(() => {
         const calc = async () => {
             const pCode = getPostcode(form.pickup);
@@ -47,22 +46,29 @@ export default function NouvelleCourse() {
 
             if (!pCode || !dCode || !form.vehicle) {
                 setPrice(null);
+                setCalculatingPrice(false);
                 return;
             }
 
             setCalculatingPrice(true);
-            const { data, error } = await supabase.rpc('calculate_shipping_cost', {
-                p_pickup_postal_code: pCode,
-                p_delivery_postal_code: dCode,
-                p_vehicle_type: form.vehicle.toLowerCase(),
-                p_service_level: form.service.toLowerCase()
-            });
+            try {
+                const { data, error } = await supabase.rpc('calculate_shipping_cost', {
+                    p_pickup_postal_code: pCode,
+                    p_delivery_postal_code: dCode,
+                    p_vehicle_type: form.vehicle.toLowerCase(),
+                    p_service_level: form.service.toLowerCase()
+                });
 
-            setCalculatingPrice(false);
-            if (!error) {
-                setPrice(data);
-            } else {
+                if (!error) {
+                    setPrice(data);
+                } else {
+                    setPrice(null);
+                }
+            } catch (err) {
+                console.error("Price calculation error:", err);
                 setPrice(null);
+            } finally {
+                setCalculatingPrice(false);
             }
         };
 

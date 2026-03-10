@@ -119,32 +119,42 @@ export default function Orders() {
   }, []);
 
   const fetchAddresses = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
-    setLoadingAddresses(true);
-    const { data } = await supabase.from('addresses').select('*').eq('client_id', user.id);
-    setAddresses(data || []);
-    setLoadingAddresses(false);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      setLoadingAddresses(true);
+      const { data } = await supabase.from('addresses').select('*').eq('client_id', user.id);
+      setAddresses(data || []);
+    } catch (err) {
+      console.error('Error fetching addresses:', err);
+    } finally {
+      setLoadingAddresses(false);
+    }
   };
 
   const fetchOrders = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
 
-    // Fetch profile
-    const { data: pData } = await supabase.from('profiles').select('*').eq('id', user.id).single();
-    if (pData) setProfile(pData);
+      // Fetch profile
+      const { data: pData } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+      if (pData) setProfile(pData);
 
-    setLoadingOrders(true);
-    const { data, error } = await supabase
-      .from('orders')
-      .select('*')
-      .eq('client_id', user.id)
-      .order('created_at', { ascending: false });
+      setLoadingOrders(true);
+      const { data, error } = await supabase
+        .from('orders')
+        .select('*')
+        .eq('client_id', user.id)
+        .order('created_at', { ascending: false });
 
-    if (error) console.error('Error fetching orders:', error);
-    else setOrders(data || []);
-    setLoadingOrders(false);
+      if (error) console.error('Error fetching orders:', error);
+      else setOrders(data || []);
+    } catch (err) {
+      console.error('Error in fetchOrders:', err);
+    } finally {
+      setLoadingOrders(false);
+    }
   };
 
   // Formula Calculation based on Deadline
@@ -181,7 +191,6 @@ export default function Orders() {
     }
   }, [form.pickupTime, form.deliveryDeadline, form.service]);
 
-  // Calculate Price when inputs change
   useEffect(() => {
     const calc = async () => {
       const pCode = getPostcode(form.pickup);
@@ -189,27 +198,34 @@ export default function Orders() {
 
       if (!pCode || !dCode || !form.vehicle) {
         setPrice(null);
+        setCalculatingPrice(false);
         return;
       }
 
       setCalculatingPrice(true);
-      const { data, error } = await supabase.rpc('calculate_shipping_cost', {
-        p_pickup_postal_code: pCode,
-        p_delivery_postal_code: dCode,
-        p_vehicle_type: form.vehicle.toLowerCase(),
-        p_service_level: form.service.toLowerCase()
-      });
+      try {
+        const { data, error } = await supabase.rpc('calculate_shipping_cost', {
+          p_pickup_postal_code: pCode,
+          p_delivery_postal_code: dCode,
+          p_vehicle_type: form.vehicle.toLowerCase(),
+          p_service_level: form.service.toLowerCase()
+        });
 
-      setCalculatingPrice(false);
-      if (error) {
-        console.error("Price calc error:", error);
+        if (error) {
+          console.error("Price calc error:", error);
+          setPrice(null);
+        } else {
+          setPrice(data);
+        }
+      } catch (err) {
+        console.error("Price calculation crash:", err);
         setPrice(null);
-      } else {
-        setPrice(data); // Can be null if not found
+      } finally {
+        setCalculatingPrice(false);
       }
     };
 
-    const timer = setTimeout(calc, 500); // Debounce
+    const timer = setTimeout(calc, 500);
     return () => clearTimeout(timer);
   }, [form.pickup, form.delivery, form.vehicle, form.service]);
 
@@ -559,9 +575,7 @@ export default function Orders() {
 
       {/* List Orders */}
       <div className="space-y-4">
-        {loadingOrders ? (
-          <div className="text-center py-10 text-slate-400">Chargement des commandes...</div>
-        ) : orders.length === 0 ? (
+        {loadingOrders ? null : orders.length === 0 ? (
           <div className="text-center py-10 text-slate-400 bg-white rounded-[2rem] border border-dashed border-slate-200">
             Aucune commande pour le moment.
           </div>

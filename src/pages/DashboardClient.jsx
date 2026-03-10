@@ -66,47 +66,52 @@ export default function DashboardClient() {
 
   const fetchDashboardData = async () => {
     setLoading(true);
-    const { data: { user } } = await supabase.auth.getUser();
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
 
-    if (user) {
-      if (clientId !== user.id) setClientId(user.id);
-      // 1. Stats (Orders count & total)
-      const { data: orders, error } = await supabase
-        .from('orders')
-        .select('id, price_ht, status, created_at, delivery_city, pickup_city')
-        .eq('client_id', user.id)
-        .order('created_at', { ascending: false });
+      if (user) {
+        if (clientId !== user.id) setClientId(user.id);
+        // 1. Stats (Orders count & total)
+        const { data: orders, error } = await supabase
+          .from('orders')
+          .select('id, price_ht, status, created_at, delivery_city, pickup_city')
+          .eq('client_id', user.id)
+          .order('created_at', { ascending: false });
 
-      if (!error && orders) {
-        const completed = orders.filter(o => o.status === 'delivered').reduce((acc, o) => acc + (Number(o.price_ht) || 0), 0);
-        const activeStatuses = ['pending_acceptance', 'pending', 'accepted', 'assigned', 'driver_accepted', 'in_progress'];
-        const pendingValue = orders.filter(o => activeStatuses.includes(o.status)).reduce((acc, o) => acc + (Number(o.price_ht) || 0), 0);
-        const activeCount = orders.filter(o => activeStatuses.includes(o.status)).length;
+        if (!error && orders) {
+          const completed = orders.filter(o => o.status === 'delivered').reduce((acc, o) => acc + (Number(o.price_ht) || 0), 0);
+          const activeStatuses = ['pending_acceptance', 'pending', 'accepted', 'assigned', 'driver_accepted', 'in_progress'];
+          const pendingValue = orders.filter(o => activeStatuses.includes(o.status)).reduce((acc, o) => acc + (Number(o.price_ht) || 0), 0);
+          const activeCount = orders.filter(o => activeStatuses.includes(o.status)).length;
 
-        setStats({
-          count: orders.length,
-          totalPaid: completed,
-          totalPending: pendingValue,
-          activeCount: activeCount
-        });
-        setRecentOrders(orders.slice(0, 3));
+          setStats({
+            count: orders.length,
+            totalPaid: completed,
+            totalPending: pendingValue,
+            activeCount: activeCount
+          });
+          setRecentOrders(orders.slice(0, 3));
+        }
+
+        // 2. Invoices
+        const { data: inv } = await supabase
+          .from('invoices')
+          .select('*')
+          .eq('client_id', user.id)
+          .order('created_at', { ascending: false })
+          .limit(5);
+
+        if (inv) setInvoices(inv);
+
+        // 3. Profile details
+        const { data: prof } = await supabase.from('profiles').select('details').eq('id', user.id).single();
+        if (prof) setProfile(prof.details);
       }
-
-      // 2. Invoices
-      const { data: inv } = await supabase
-        .from('invoices')
-        .select('*')
-        .eq('client_id', user.id)
-        .order('created_at', { ascending: false })
-        .limit(5);
-
-      if (inv) setInvoices(inv);
-
-      // 3. Profile details
-      const { data: prof } = await supabase.from('profiles').select('details').eq('id', user.id).single();
-      if (prof) setProfile(prof.details);
+    } catch (err) {
+      console.error("Dashboard fetch error:", err);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const downloadInvoice = async () => {
@@ -164,9 +169,7 @@ export default function DashboardClient() {
           </div>
         </header>
 
-        {loading ? (
-          <div className="flex h-64 items-center justify-center rounded-[2.5rem] bg-white shadow-sm"><Loader2 className="animate-spin text-orange-500" size={40} /></div>
-        ) : (
+        {loading ? null : (
           <>
             {/* KPI Widgets Grid */}
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

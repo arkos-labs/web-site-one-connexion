@@ -1,6 +1,7 @@
 import React, { Suspense, lazy } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
+import ErrorBoundary from "./components/ErrorBoundary.jsx";
 
 const Landing = lazy(() => import("./pages/Landing.jsx"));
 const DashboardClient = lazy(() => import("./pages/DashboardClient.jsx"));
@@ -52,95 +53,93 @@ const DriverHistory = lazy(() => import("./pages/DriverHistory.jsx"));
 const DriverProfile = lazy(() => import("./pages/DriverProfile.jsx"));
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
 
-const Loading = () => (
-  <div className="flex items-center justify-center p-12 text-sm font-semibold text-slate-500">
-    Chargement...
-  </div>
-);
+const Loading = () => null;
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Suspense fallback={<Loading />}>
-        <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="/connexion" element={<Login />} />
-          <Route path="/inscription" element={<Register />} />
-          <Route path="/inscription-driver" element={<RegisterDriver />} />
-          <Route path="/guest-order" element={<GuestOrder />} />
-          <Route path="/commande-sans-compte" element={<CommandeSansCompte />} />
-          <Route path="/mot-de-passe-oublie" element={<ForgotPassword />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reinitialiser-mot-de-passe" element={<ResetPassword />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/confidentialite" element={<Privacy />} />
-          <Route path="/mentions-legales" element={<MentionsLegales />} />
-          <Route path="/coursier-b2b-paris" element={<CoursierB2BParis />} />
-          <Route path="/coursier-ile-de-france" element={<CoursierIDF />} />
-          <Route path="/messagerie-express-ile-de-france" element={<MessagerieExpressIDF />} />
-          <Route path="/navette-reguliere-ile-de-france" element={<NavetteReguliereIDF />} />
-          <Route path="/devis-coursier-paris" element={<DevisCoursierParis />} />
-          <Route path="/tarifs-coursier-paris" element={<TarifsCoursierParis />} />
-          <Route path="/coursier-opticien-paris" element={<CoursierOpticienParis />} />
-          <Route path="/coursier-dentiste-paris" element={<CoursierDentisteParis />} />
-          <Route path="/coursier-juridique-paris" element={<CoursierJuridiqueParis />} />
-          <Route path="/coursier-evenementiel-paris" element={<CoursierEvenementielParis />} />
-          <Route path="/coursier-automobile-paris" element={<CoursierAutomobileParis />} />
-          <Route
-            path="/dashboard-client"
-            element={
-              <ProtectedRoute allowedRoles={["client", "user"]}>
-                <DashboardClientLayout />
-              </ProtectedRoute>
-            }
-          >
-            <Route index element={<DashboardClient />} />
-            <Route path="nouvelle-course" element={<NouvelleCourse />} />
-            <Route path="orders" element={<Orders />} />
-            <Route path="orders/:id" element={<OrderDetails />} />
-            <Route path="invoices" element={<Invoices />} />
-            <Route path="addresses" element={<Addresses />} />
-            <Route path="profile" element={<Profile />} />
-            <Route path="settings" element={<Settings />} />
-            <Route path="chat" element={<ClientChat />} />
-          </Route>
-          <Route
-            path="/admin"
-            element={
-              <ProtectedRoute allowedRoles={["admin", "super_admin", "dispatcher"]}>
-                <DashboardAdminLayout />
-              </ProtectedRoute>
-            }
-          >
-            <Route index element={<DashboardAdmin />} />
-            <Route path="orders" element={<AdminOrders />} />
-            <Route path="orders/:id" element={<AdminOrderDetails />} />
-            <Route path="invoices" element={<AdminInvoices />} />
-            <Route path="invoices/:id" element={<AdminInvoiceDetails />} />
-            <Route path="clients" element={<AdminClients />} />
-            <Route path="clients/:id" element={<AdminClientDetails />} />
-            <Route path="drivers" element={<AdminDrivers />} />
-            <Route path="drivers/:id" element={<AdminDriverDetails />} />
-            <Route path="chat" element={<AdminChat />} />
-          </Route>
-          <Route
-            path="/dashboard-driver"
-            element={
-              <ProtectedRoute allowedRoles={["driver", "courier"]}>
-                <DashboardDriverLayout />
-              </ProtectedRoute>
-            }
-          >
-            <Route index element={<DashboardDriver />} />
-            <Route path="history" element={<DriverHistory />} />
-            <Route path="profile" element={<DriverProfile />} />
-            <Route path="chat" element={<ClientChat />} />
-          </Route>
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </Suspense>
-    </BrowserRouter>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <Suspense fallback={<Loading />}>
+          <Routes>
+            <Route path="/" element={<Landing />} />
+            <Route path="/connexion" element={<Login />} />
+            <Route path="/inscription" element={<Register />} />
+            <Route path="/inscription-driver" element={<RegisterDriver />} />
+            <Route path="/guest-order" element={<GuestOrder />} />
+            <Route path="/commande-sans-compte" element={<CommandeSansCompte />} />
+            <Route path="/mot-de-passe-oublie" element={<ForgotPassword />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reinitialiser-mot-de-passe" element={<ResetPassword />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/confidentialite" element={<Privacy />} />
+            <Route path="/mentions-legales" element={<MentionsLegales />} />
+            <Route path="/coursier-b2b-paris" element={<CoursierB2BParis />} />
+            <Route path="/coursier-ile-de-france" element={<CoursierIDF />} />
+            <Route path="/messagerie-express-ile-de-france" element={<MessagerieExpressIDF />} />
+            <Route path="/navette-reguliere-ile-de-france" element={<NavetteReguliereIDF />} />
+            <Route path="/devis-coursier-paris" element={<DevisCoursierParis />} />
+            <Route path="/tarifs-coursier-paris" element={<TarifsCoursierParis />} />
+            <Route path="/coursier-opticien-paris" element={<CoursierOpticienParis />} />
+            <Route path="/coursier-dentiste-paris" element={<CoursierDentisteParis />} />
+            <Route path="/coursier-juridique-paris" element={<CoursierJuridiqueParis />} />
+            <Route path="/coursier-evenementiel-paris" element={<CoursierEvenementielParis />} />
+            <Route path="/coursier-automobile-paris" element={<CoursierAutomobileParis />} />
+            <Route
+              path="/dashboard-client"
+              element={
+                <ProtectedRoute allowedRoles={["client", "user"]}>
+                  <DashboardClientLayout />
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<DashboardClient />} />
+              <Route path="nouvelle-course" element={<NouvelleCourse />} />
+              <Route path="orders" element={<Orders />} />
+              <Route path="orders/:id" element={<OrderDetails />} />
+              <Route path="invoices" element={<Invoices />} />
+              <Route path="addresses" element={<Addresses />} />
+              <Route path="profile" element={<Profile />} />
+              <Route path="settings" element={<Settings />} />
+              <Route path="chat" element={<ClientChat />} />
+            </Route>
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute allowedRoles={["admin", "super_admin", "dispatcher"]}>
+                  <DashboardAdminLayout />
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<DashboardAdmin />} />
+              <Route path="orders" element={<AdminOrders />} />
+              <Route path="orders/:id" element={<AdminOrderDetails />} />
+              <Route path="invoices" element={<AdminInvoices />} />
+              <Route path="invoices/:id" element={<AdminInvoiceDetails />} />
+              <Route path="clients" element={<AdminClients />} />
+              <Route path="clients/:id" element={<AdminClientDetails />} />
+              <Route path="drivers" element={<AdminDrivers />} />
+              <Route path="drivers/:id" element={<AdminDriverDetails />} />
+              <Route path="chat" element={<AdminChat />} />
+            </Route>
+            <Route
+              path="/dashboard-driver"
+              element={
+                <ProtectedRoute allowedRoles={["driver", "courier"]}>
+                  <DashboardDriverLayout />
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<DashboardDriver />} />
+              <Route path="history" element={<DriverHistory />} />
+              <Route path="profile" element={<DriverProfile />} />
+              <Route path="chat" element={<ClientChat />} />
+            </Route>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
+      </BrowserRouter>
+    </ErrorBoundary>
   );
 }
 

@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Package, Truck, Clock, AlertCircle, Zap, CheckCircle2, MapPin, Phone, Mail, Building2, FileText, CalendarClock } from "lucide-react";
+import { Package, Truck, Clock, AlertCircle, Zap, CheckCircle2, MapPin, Phone, Mail, Building2, FileText, CalendarClock, Settings } from "lucide-react";
 import { toast } from "sonner";
 import Header from "@/components/client/Header";
 import Footer from "@/components/client/Footer";
@@ -276,6 +276,7 @@ const CommandeSansCompte = () => {
 
                 setPricingResults(results as Record<FormuleNew, CalculTarifaireResult>);
             } catch (err: any) {
+                console.error("Pricing calculation failed:", err);
                 setPricingError(err.message || "Erreur calcul itinéraire");
                 setPricingResults(null);
             } finally {
@@ -285,7 +286,7 @@ const CommandeSansCompte = () => {
 
         const timer = setTimeout(calculatePrice, 800);
         return () => clearTimeout(timer);
-    }, [formData.deliveryAddress, formData.pickupCity, formData.pickupAddress]); // Added dependencies for stability
+    }, [formData.deliveryAddress, formData.pickupCity, formData.pickupAddress, formData.pickupZip, formData.deliveryZip]); // Added zip dependencies for better triggers
 
     // Désactivation formule Standard selon horaire
     useEffect(() => {
@@ -534,7 +535,7 @@ const CommandeSansCompte = () => {
 
                         {/* 3. Détails & Formule */}
                         <Card className="p-6 md:p-8 bg-white border border-gray-100/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl">
-                            <SectionHeader icon={SettingsIcon} title="Détails de la mission" />
+                            <SectionHeader icon={Settings} title="Détails de la mission" />
 
                             <div className="grid md:grid-cols-2 gap-6 mb-8">
                                 <div>

@@ -67,16 +67,20 @@ export default function DashboardDriver() {
 
     const fetchInitialData = async () => {
         setLoading(true);
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user) {
-            setUser(user);
-            // Fetch online status from profile
-            const { data: profile } = await supabase.from('profiles').select('is_online').eq('id', user.id).single();
-            if (profile) {
-                setIsOnline(profile.is_online || false);
+        try {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+                setUser(user);
+                // Fetch online status from profile
+                const { data: profile } = await supabase.from('profiles').select('is_online').eq('id', user.id).single();
+                if (profile) {
+                    setIsOnline(profile.is_online || false);
+                }
+                await fetchMyTasks(user.id);
             }
-            fetchMyTasks(user.id);
-        } else {
+        } catch (err) {
+            console.error("fetchInitialData error:", err);
+        } finally {
             setLoading(false);
         }
     };
@@ -85,45 +89,50 @@ export default function DashboardDriver() {
         const id = userId || userRef.current?.id;
         if (!id) return;
 
-        // Fetch assigned orders that are not delivered yet
-        const { data, error } = await supabase
-            .from('orders')
-            .select('*')
-            .eq('driver_id', id)
-            .in('status', ['accepted', 'assigned', 'driver_accepted', 'in_progress'])
-            .order('created_at', { ascending: true });
+        try {
+            // Fetch assigned orders that are not delivered yet
+            const { data, error } = await supabase
+                .from('orders')
+                .select('*')
+                .eq('driver_id', id)
+                .in('status', ['accepted', 'assigned', 'driver_accepted', 'in_progress'])
+                .order('created_at', { ascending: true });
 
-        if (!error) {
-            const next = data || [];
+            if (!error) {
+                const next = data || [];
 
-            // Detect removed missions (cancelled or reassigned)
-            const prev = tasksRef.current;
-            const nextIds = new Set(next.map(t => t.id));
-            const removedIds = prev.filter(t => !nextIds.has(t.id)).map(t => t.id);
+                // Detect removed missions (cancelled or reassigned)
+                const prev = tasksRef.current;
+                const nextIds = new Set(next.map(t => t.id));
+                const removedIds = prev.filter(t => !nextIds.has(t.id)).map(t => t.id);
 
-            if (removedIds.length > 0) {
-                // Verify reason to avoid alerting on self-delivery
-                const { data: lost } = await supabase
-                    .from('orders')
-                    .select('id, status, driver_id')
-                    .in('id', removedIds);
+                if (removedIds.length > 0) {
+                    // Verify reason to avoid alerting on self-delivery
+                    const { data: lost } = await supabase
+                        .from('orders')
+                        .select('id, status, driver_id')
+                        .in('id', removedIds);
 
-                if (lost) {
-                    const wasCancelledOrReassigned = lost.some(o =>
-                        o.driver_id !== id || // Reassigned
-                        o.status === 'cancelled' || // Cancelled
-                        o.status === 'pending_acceptance' // Unassigned
-                    );
+                    if (lost) {
+                        const wasCancelledOrReassigned = lost.some(o =>
+                            o.driver_id !== id || // Reassigned
+                            o.status === 'cancelled' || // Cancelled
+                            o.status === 'pending_acceptance' // Unassigned
+                        );
 
-                    if (wasCancelledOrReassigned) {
-                        alert("Une course a été retirée de votre liste (Annulation ou Réassignation).");
+                        if (wasCancelledOrReassigned) {
+                            alert("Une course a été retirée de votre liste (Annulation ou Réassignation).");
+                        }
                     }
                 }
-            }
 
-            setTasks(next);
+                setTasks(next);
+            }
+        } catch (err) {
+            console.error("fetchMyTasks error:", err);
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
     };
 
     const toggleOnline = async () => {
@@ -189,7 +198,7 @@ export default function DashboardDriver() {
         window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`, '_blank');
     };
 
-    if (loading) return <div className="flex justify-center pt-20 text-slate-400">Chargement...</div>;
+    if (loading) return null;
 
     return (
         <div className="space-y-6">

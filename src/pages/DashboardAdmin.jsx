@@ -125,45 +125,61 @@ export default function DashboardAdmin() {
   };
 
   const fetchOrders = async () => {
-    const [oRes, pRes] = await Promise.all([
-      supabase.from('orders').select('*').order('created_at', { ascending: false }),
-      supabase.from('profiles').select('id, details')
-    ]);
-    if (oRes.data && pRes.data) {
-      if (oRes.data.length > 0 && !latestOrderIdRef.current) latestOrderIdRef.current = oRes.data[0].id;
-      setOrdersAll(oRes.data.map(o => {
-        const profile = pRes.data.find(p => p.id === o.client_id);
-        const cDetails = profile?.details || {};
-        return {
-          ...o,
-          clientName: cDetails.company || cDetails.full_name || o.pickup_name || 'Invité',
-          total: o.price_ht,
-          date: o.created_at,
-        };
-      }));
+    try {
+      const [oRes, pRes] = await Promise.all([
+        supabase.from('orders').select('*').order('created_at', { ascending: false }),
+        supabase.from('profiles').select('id, details')
+      ]);
+      if (oRes.data && pRes.data) {
+        if (oRes.data.length > 0 && !latestOrderIdRef.current) latestOrderIdRef.current = oRes.data[0].id;
+        setOrdersAll(oRes.data.map(o => {
+          const profile = pRes.data.find(p => p.id === o.client_id);
+          const cDetails = profile?.details || {};
+          return {
+            ...o,
+            clientName: cDetails.company || cDetails.full_name || o.pickup_name || 'Invité',
+            total: o.price_ht,
+            date: o.created_at,
+          };
+        }));
+      }
+    } catch (err) {
+      console.error("fetchOrders error:", err);
     }
   };
 
   const fetchInvoices = async () => {
-    const { data, error } = await supabase.from('invoices').select('*');
-    if (!error && data) setInvoicesAll(data);
+    try {
+      const { data, error } = await supabase.from('invoices').select('*');
+      if (!error && data) setInvoicesAll(data);
+    } catch (err) {
+      console.error("fetchInvoices error:", err);
+    }
   };
 
   const fetchDriverPayments = async () => {
-    const { data, error } = await supabase.from('driver_payments').select('*');
-    if (!error && data) setDriverPaymentsAll(data);
+    try {
+      const { data, error } = await supabase.from('driver_payments').select('*');
+      if (!error && data) setDriverPaymentsAll(data);
+    } catch (err) {
+      console.error("fetchDriverPayments error:", err);
+    }
   };
 
   const fetchProfiles = async () => {
-    const { data, error } = await supabase.from('profiles').select('*');
-    if (!error && data) {
-      setDrivers(data.filter(p => p.role?.toLowerCase() === 'courier' && p.is_online).map(p => ({
-        id: p.id,
-        name: p.details?.full_name || p.details?.company || 'Livreur',
-      })));
-      setClients(data.filter(p => !p.role || p.role === 'client' || p.role === 'admin').map(p => ({
-        id: p.id, name: p.details?.company || p.details?.full_name || 'Client', details: p.details
-      })));
+    try {
+      const { data, error } = await supabase.from('profiles').select('*');
+      if (!error && data) {
+        setDrivers(data.filter(p => p.role?.toLowerCase() === 'courier' && p.is_online).map(p => ({
+          id: p.id,
+          name: p.details?.full_name || p.details?.company || 'Livreur',
+        })));
+        setClients(data.filter(p => !p.role || p.role === 'client' || p.role === 'admin').map(p => ({
+          id: p.id, name: p.details?.company || p.details?.full_name || 'Client', details: p.details
+        })));
+      }
+    } catch (err) {
+      console.error("fetchProfiles error:", err);
     }
   };
 
@@ -295,276 +311,271 @@ export default function DashboardAdmin() {
         </div>
       </header>
 
-      {loading ? (
-        <div className="flex items-center justify-center py-32 gap-3 text-slate-400">
-          <Loader2 className="animate-spin" size={24} />
-          <span className="text-sm font-bold">Chargement des données…</span>
+      {loading && null}
+      {/* ── KPI CARDS ── */}
+      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4">
+        {/* Dispatch Live */}
+        <div className="col-span-2 md:col-span-1 bg-slate-900 text-white rounded-[2rem] p-6 shadow-xl shadow-slate-900/20 relative overflow-hidden group">
+          <div className="absolute -top-8 -right-8 h-28 w-28 rounded-full bg-orange-500/10 blur-2xl group-hover:bg-orange-500/20 transition-all" />
+          <div className="relative z-10">
+            <div className="flex items-center gap-2 mb-4">
+              <div className="h-9 w-9 rounded-xl bg-orange-500/20 flex items-center justify-center text-orange-400"><Zap size={18} /></div>
+              {kpis.toAccept > 0 && <span className="relative flex h-2 w-2"><span className="animate-ping absolute h-full w-full rounded-full bg-rose-400 opacity-75" /><span className="relative h-2 w-2 rounded-full bg-rose-500" /></span>}
+            </div>
+            <div className="text-4xl font-black tabular-nums">{kpis.toAccept + kpis.toDispatch + kpis.active}</div>
+            <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 mt-1">Flux Opérationnel</div>
+            <div className="mt-4 pt-4 border-t border-white/10 grid grid-cols-3 gap-1">
+              <div><div className="text-[8px] font-black uppercase text-rose-400">Accepter</div><div className="text-xs font-black text-rose-300">{kpis.toAccept}</div></div>
+              <div><div className="text-[8px] font-black uppercase text-amber-400">Dispatch</div><div className="text-xs font-black text-amber-300">{kpis.toDispatch}</div></div>
+              <div><div className="text-[8px] font-black uppercase text-blue-400">Mission</div><div className="text-xs font-black text-blue-300">{kpis.active}</div></div>
+            </div>
+          </div>
         </div>
-      ) : (
-        <>
-          {/* ── KPI CARDS ── */}
-          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4">
-            {/* Dispatch Live */}
-            <div className="col-span-2 md:col-span-1 bg-slate-900 text-white rounded-[2rem] p-6 shadow-xl shadow-slate-900/20 relative overflow-hidden group">
-              <div className="absolute -top-8 -right-8 h-28 w-28 rounded-full bg-orange-500/10 blur-2xl group-hover:bg-orange-500/20 transition-all" />
-              <div className="relative z-10">
-                <div className="flex items-center gap-2 mb-4">
-                  <div className="h-9 w-9 rounded-xl bg-orange-500/20 flex items-center justify-center text-orange-400"><Zap size={18} /></div>
-                  {kpis.toAccept > 0 && <span className="relative flex h-2 w-2"><span className="animate-ping absolute h-full w-full rounded-full bg-rose-400 opacity-75" /><span className="relative h-2 w-2 rounded-full bg-rose-500" /></span>}
-                </div>
-                <div className="text-4xl font-black tabular-nums">{kpis.toAccept + kpis.toDispatch + kpis.active}</div>
-                <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 mt-1">Flux Opérationnel</div>
-                <div className="mt-4 pt-4 border-t border-white/10 grid grid-cols-3 gap-1">
-                  <div><div className="text-[8px] font-black uppercase text-rose-400">Accepter</div><div className="text-xs font-black text-rose-300">{kpis.toAccept}</div></div>
-                  <div><div className="text-[8px] font-black uppercase text-amber-400">Dispatch</div><div className="text-xs font-black text-amber-300">{kpis.toDispatch}</div></div>
-                  <div><div className="text-[8px] font-black uppercase text-blue-400">Mission</div><div className="text-xs font-black text-blue-300">{kpis.active}</div></div>
-                </div>
+
+        {/* CA En cours */}
+        <KpiCard icon={<TrendingUp size={18} />} iconBg="bg-indigo-100 text-indigo-600" label="CA En cours" value={`${kpis.revenueOps.toFixed(0)}€`} sub="HT sur missions actives" trend="indigo" />
+
+        {/* À Recouvrer */}
+        <KpiCard
+          icon={<AlertTriangle size={18} />}
+          iconBg="bg-rose-100 text-rose-600"
+          label="À Recouvrer"
+          value={`${kpis.totalToRecoup.toFixed(0)}€`}
+          sub="Factures non encaissées"
+          trend="rose"
+        />
+
+        {/* Chauffeurs */}
+        <KpiCard icon={<Users size={18} />} iconBg="bg-amber-100 text-amber-600" label="Dû Chauffeurs" value={`${kpis.driverPayOutstanding.toFixed(0)}€`} sub={`${drivers.length} livreur(s) en ligne`} trend="amber" />
+
+        {/* Profit net */}
+        <KpiCard icon={<BarChart3 size={18} />} iconBg="bg-emerald-100 text-emerald-600" label="Profit Net (Encais.)" value={`${kpis.netProfit.toFixed(0)}€`} sub={`${kpis.deliveredCount} livraison(s)`} trend="emerald" />
+      </div>
+
+      {/* ── MAIN CONTENT ── */}
+      <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
+        {/* Operations center - 3 cols */}
+        <div className="xl:col-span-3 bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden">
+          {/* Tab header */}
+          <div className="px-8 pt-6 pb-4 border-b border-slate-50">
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <h2 className="text-lg font-black text-slate-900">Suivi des Missions</h2>
+                <p className="text-xs font-medium text-slate-400 uppercase tracking-widest mt-0.5">Live Dispatch Center</p>
+              </div>
+              <div className="flex bg-slate-100 p-1.5 rounded-2xl gap-1">
+                {Object.entries(TAB_CONFIG).map(([id, tab]) => (
+                  <button
+                    key={id}
+                    onClick={() => setOperationView(id)}
+                    className={`relative flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-black transition-all duration-200 ${operationView === id ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+                  >
+                    <tab.icon size={13} className={operationView === id ? "text-orange-500" : ""} />
+                    {tab.label}
+                    {tab.count > 0 && (
+                      <span className={`ml-0.5 h-4 min-w-4 px-1 rounded-full text-[9px] font-black grid place-items-center ${operationView === id ? 'bg-orange-500 text-white' : 'bg-slate-200 text-slate-600'}`}>
+                        {tab.count}
+                      </span>
+                    )}
+                  </button>
+                ))}
               </div>
             </div>
-
-            {/* CA En cours */}
-            <KpiCard icon={<TrendingUp size={18} />} iconBg="bg-indigo-100 text-indigo-600" label="CA En cours" value={`${kpis.revenueOps.toFixed(0)}€`} sub="HT sur missions actives" trend="indigo" />
-
-            {/* À Recouvrer */}
-            <KpiCard
-              icon={<AlertTriangle size={18} />}
-              iconBg="bg-rose-100 text-rose-600"
-              label="À Recouvrer"
-              value={`${kpis.totalToRecoup.toFixed(0)}€`}
-              sub="Factures non encaissées"
-              trend="rose"
-            />
-
-            {/* Chauffeurs */}
-            <KpiCard icon={<Users size={18} />} iconBg="bg-amber-100 text-amber-600" label="Dû Chauffeurs" value={`${kpis.driverPayOutstanding.toFixed(0)}€`} sub={`${drivers.length} livreur(s) en ligne`} trend="amber" />
-
-            {/* Profit net */}
-            <KpiCard icon={<BarChart3 size={18} />} iconBg="bg-emerald-100 text-emerald-600" label="Profit Net (Encais.)" value={`${kpis.netProfit.toFixed(0)}€`} sub={`${kpis.deliveredCount} livraison(s)`} trend="emerald" />
           </div>
 
-          {/* ── MAIN CONTENT ── */}
-          <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
-            {/* Operations center - 3 cols */}
-            <div className="xl:col-span-3 bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden">
-              {/* Tab header */}
-              <div className="px-8 pt-6 pb-4 border-b border-slate-50">
-                <div className="flex flex-wrap items-center justify-between gap-4">
-                  <div>
-                    <h2 className="text-lg font-black text-slate-900">Suivi des Missions</h2>
-                    <p className="text-xs font-medium text-slate-400 uppercase tracking-widest mt-0.5">Live Dispatch Center</p>
-                  </div>
-                  <div className="flex bg-slate-100 p-1.5 rounded-2xl gap-1">
-                    {Object.entries(TAB_CONFIG).map(([id, tab]) => (
-                      <button
-                        key={id}
-                        onClick={() => setOperationView(id)}
-                        className={`relative flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-black transition-all duration-200 ${operationView === id ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
-                      >
-                        <tab.icon size={13} className={operationView === id ? "text-orange-500" : ""} />
-                        {tab.label}
-                        {tab.count > 0 && (
-                          <span className={`ml-0.5 h-4 min-w-4 px-1 rounded-full text-[9px] font-black grid place-items-center ${operationView === id ? 'bg-orange-500 text-white' : 'bg-slate-200 text-slate-600'}`}>
-                            {tab.count}
-                          </span>
-                        )}
-                      </button>
-                    ))}
-                  </div>
+          {/* Orders grid */}
+          <div className="min-h-[400px]">
+            {(() => {
+              const filtered = ordersAll.filter(o => TAB_CONFIG[operationView].statuses.includes(o.status));
+              if (filtered.length === 0) return (
+                <div className="flex flex-col items-center justify-center py-24 text-slate-300 gap-3">
+                  <Package size={40} strokeWidth={1} />
+                  <span className="text-sm font-bold text-slate-400">Aucune commande dans cette catégorie</span>
                 </div>
-              </div>
-
-              {/* Orders grid */}
-              <div className="min-h-[400px]">
-                {(() => {
-                  const filtered = ordersAll.filter(o => TAB_CONFIG[operationView].statuses.includes(o.status));
-                  if (filtered.length === 0) return (
-                    <div className="flex flex-col items-center justify-center py-24 text-slate-300 gap-3">
-                      <Package size={40} strokeWidth={1} />
-                      <span className="text-sm font-bold text-slate-400">Aucune commande dans cette catégorie</span>
-                    </div>
-                  );
-                  return (
-                    <div className="divide-y divide-slate-50">
-                      {filtered.map(o => {
-                        const sc = STATUS_CONFIG[o.status] || { label: o.status, cls: "bg-slate-100 text-slate-500 border-slate-200" };
-                        return (
-                          <div
-                            key={o.id}
-                            onClick={() => navigate(`/admin/orders/${o.id}`)}
-                            className="px-8 py-5 hover:bg-slate-50/80 transition-all cursor-pointer group"
-                          >
-                            <div className="flex items-center justify-between gap-4">
-                              {/* Left: order info */}
-                              <div className="flex items-center gap-4 min-w-0">
-                                <div className="h-10 w-10 rounded-2xl bg-slate-100 shrink-0 flex items-center justify-center text-sm font-black text-slate-500">
-                                  {o.vehicle_type?.[0]?.toUpperCase() || 'M'}
-                                </div>
-                                <div className="min-w-0">
-                                  <div className="flex items-center gap-2 mb-0.5">
-                                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">BC-{o.id.slice(0, 8)}</span>
-                                    <span className={`inline-flex items-center rounded-lg border px-2 py-0.5 text-[9px] font-black uppercase tracking-wider ${sc.cls}`}>{sc.label}</span>
-                                  </div>
-                                  <div className="font-black text-slate-900 text-sm group-hover:text-orange-500 transition-colors truncate">{o.clientName}</div>
-                                  <div className="flex items-center gap-2 mt-1">
-                                    <span className="text-[10px] text-slate-400 font-bold">{o.pickup_city || '—'}</span>
-                                    <span className="text-slate-300">→</span>
-                                    <span className="text-[10px] text-slate-600 font-bold">{o.delivery_city || '—'}</span>
-                                  </div>
-                                </div>
+              );
+              return (
+                <div className="divide-y divide-slate-50">
+                  {filtered.map(o => {
+                    const sc = STATUS_CONFIG[o.status] || { label: o.status, cls: "bg-slate-100 text-slate-500 border-slate-200" };
+                    return (
+                      <div
+                        key={o.id}
+                        onClick={() => navigate(`/admin/orders/${o.id}`)}
+                        className="px-8 py-5 hover:bg-slate-50/80 transition-all cursor-pointer group"
+                      >
+                        <div className="flex items-center justify-between gap-4">
+                          {/* Left: order info */}
+                          <div className="flex items-center gap-4 min-w-0">
+                            <div className="h-10 w-10 rounded-2xl bg-slate-100 shrink-0 flex items-center justify-center text-sm font-black text-slate-500">
+                              {o.vehicle_type?.[0]?.toUpperCase() || 'M'}
+                            </div>
+                            <div className="min-w-0">
+                              <div className="flex items-center gap-2 mb-0.5">
+                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">BC-{o.id.slice(0, 8)}</span>
+                                <span className={`inline-flex items-center rounded-lg border px-2 py-0.5 text-[9px] font-black uppercase tracking-wider ${sc.cls}`}>{sc.label}</span>
                               </div>
-
-                              {/* Right: price + actions */}
-                              <div className="flex items-center gap-3 shrink-0">
-                                <div className="text-right hidden sm:block">
-                                  <div className="text-base font-black text-slate-900 tabular-nums">{o.price_ht ? `${Number(o.price_ht).toFixed(2)}€` : '—'}</div>
-                                  <div className="text-[9px] font-bold text-slate-400 uppercase">HT</div>
-                                </div>
-                                {['pending_acceptance', 'pending'].includes(o.status) && (
-                                  <button
-                                    type="button"
-                                    onClick={(e) => { e.stopPropagation(); handleQuickAccept(o.id); }}
-                                    className="rounded-xl bg-slate-900 px-4 py-2 text-[10px] font-black text-white hover:bg-orange-500 active:scale-95 transition-all"
-                                  >
-                                    ACCEPTER
-                                  </button>
-                                )}
-                                {['accepted'].includes(o.status) && (
-                                  <button
-                                    type="button"
-                                    onClick={(e) => { e.stopPropagation(); openDispatch(o); }}
-                                    className="rounded-xl bg-indigo-600 px-4 py-2 text-[10px] font-black text-white hover:bg-indigo-700 active:scale-95 transition-all"
-                                  >
-                                    DISPATCHER
-                                  </button>
-                                )}
-                                <ArrowRight size={16} className="text-slate-300 group-hover:text-orange-500 transition-colors hidden sm:block" />
+                              <div className="font-black text-slate-900 text-sm group-hover:text-orange-500 transition-colors truncate">{o.clientName}</div>
+                              <div className="flex items-center gap-2 mt-1">
+                                <span className="text-[10px] text-slate-400 font-bold">{o.pickup_city || '—'}</span>
+                                <span className="text-slate-300">→</span>
+                                <span className="text-[10px] text-slate-600 font-bold">{o.delivery_city || '—'}</span>
                               </div>
                             </div>
                           </div>
-                        );
-                      })}
-                    </div>
-                  );
-                })()}
-              </div>
-            </div>
 
-            {/* Right sidebar - 1 col */}
-            <div className="flex flex-col gap-5">
-              {/* Fleet Live */}
-              <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden">
-                <div className="px-5 py-4 border-b border-slate-50 flex items-center justify-between">
-                  <div>
-                    <h3 className="text-xs font-black uppercase tracking-widest text-slate-900">Fleet Live</h3>
-                    <p className="text-[9px] font-bold text-slate-400 mt-0.5">{driverRows.length} livreur(s) en ligne</p>
-                  </div>
-                  <button onClick={() => navigate('/admin/drivers')} className="text-[10px] font-black text-orange-500 hover:text-orange-600">Voir tout</button>
-                </div>
-                <div className="divide-y divide-slate-50 max-h-52 overflow-y-auto">
-                  {driverRows.length === 0 ? (
-                    <div className="py-8 text-center text-xs text-slate-400 italic">Aucun livreur en ligne</div>
-                  ) : driverRows.map(d => (
-                    <div key={d.id} className="px-5 py-3 flex items-center justify-between hover:bg-slate-50 transition-colors">
-                      <div className="flex items-center gap-3">
-                        <div className="h-8 w-8 rounded-xl bg-slate-900 text-white text-[10px] font-black grid place-items-center shadow">
-                          {d.name?.[0]?.toUpperCase()}
+                          {/* Right: price + actions */}
+                          <div className="flex items-center gap-3 shrink-0">
+                            <div className="text-right hidden sm:block">
+                              <div className="text-base font-black text-slate-900 tabular-nums">{o.price_ht ? `${Number(o.price_ht).toFixed(2)}€` : '—'}</div>
+                              <div className="text-[9px] font-bold text-slate-400 uppercase">HT</div>
+                            </div>
+                            {['pending_acceptance', 'pending'].includes(o.status) && (
+                              <button
+                                type="button"
+                                onClick={(e) => { e.stopPropagation(); handleQuickAccept(o.id); }}
+                                className="rounded-xl bg-slate-900 px-4 py-2 text-[10px] font-black text-white hover:bg-orange-500 active:scale-95 transition-all"
+                              >
+                                ACCEPTER
+                              </button>
+                            )}
+                            {['accepted'].includes(o.status) && (
+                              <button
+                                type="button"
+                                onClick={(e) => { e.stopPropagation(); openDispatch(o); }}
+                                className="rounded-xl bg-indigo-600 px-4 py-2 text-[10px] font-black text-white hover:bg-indigo-700 active:scale-95 transition-all"
+                              >
+                                DISPATCHER
+                              </button>
+                            )}
+                            <ArrowRight size={16} className="text-slate-300 group-hover:text-orange-500 transition-colors hidden sm:block" />
+                          </div>
                         </div>
-                        <span className="text-xs font-bold text-slate-700 truncate max-w-[90px]">{d.name}</span>
                       </div>
-                      <span className={`text-[8px] font-black px-2 py-1 rounded-lg uppercase tracking-widest ${d.cls}`}>{d.status}</span>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
-              </div>
+              );
+            })()}
+          </div>
+        </div>
 
-              {/* Client Solvabilité */}
-              <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden">
-                <div className="px-5 py-4 border-b border-slate-50 flex items-center justify-between">
-                  <div>
-                    <h3 className="text-xs font-black uppercase tracking-widest text-slate-900">Solvabilité</h3>
-                    <p className="text-[9px] font-bold text-slate-400 mt-0.5">Statut facturation clients</p>
+        {/* Right sidebar - 1 col */}
+        <div className="flex flex-col gap-5">
+          {/* Fleet Live */}
+          <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden">
+            <div className="px-5 py-4 border-b border-slate-50 flex items-center justify-between">
+              <div>
+                <h3 className="text-xs font-black uppercase tracking-widest text-slate-900">Fleet Live</h3>
+                <p className="text-[9px] font-bold text-slate-400 mt-0.5">{driverRows.length} livreur(s) en ligne</p>
+              </div>
+              <button onClick={() => navigate('/admin/drivers')} className="text-[10px] font-black text-orange-500 hover:text-orange-600">Voir tout</button>
+            </div>
+            <div className="divide-y divide-slate-50 max-h-52 overflow-y-auto">
+              {driverRows.length === 0 ? (
+                <div className="py-8 text-center text-xs text-slate-400 italic">Aucun livreur en ligne</div>
+              ) : driverRows.map(d => (
+                <div key={d.id} className="px-5 py-3 flex items-center justify-between hover:bg-slate-50 transition-colors">
+                  <div className="flex items-center gap-3">
+                    <div className="h-8 w-8 rounded-xl bg-slate-900 text-white text-[10px] font-black grid place-items-center shadow">
+                      {d.name?.[0]?.toUpperCase()}
+                    </div>
+                    <span className="text-xs font-bold text-slate-700 truncate max-w-[90px]">{d.name}</span>
                   </div>
-                  <button onClick={() => navigate('/admin/invoices')} className="text-[10px] font-black text-orange-500 hover:text-orange-600">Voir tout</button>
+                  <span className={`text-[8px] font-black px-2 py-1 rounded-lg uppercase tracking-widest ${d.cls}`}>{d.status}</span>
                 </div>
-                <div className="divide-y divide-slate-50 max-h-52 overflow-y-auto">
-                  {clientPaymentRows.length === 0 ? (
-                    <div className="py-8 text-center text-xs text-slate-400 italic">Aucun client actif</div>
-                  ) : clientPaymentRows.map(c => (
-                    <div key={c.id} className="px-5 py-3 flex items-center justify-between hover:bg-slate-50 transition-colors">
-                      <span className="text-xs font-bold text-slate-700 truncate">{c.name}</span>
-                      <span className={`text-[8px] font-black px-2 py-1 rounded-lg uppercase tracking-widest ${c.cls}`}>{c.status}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Quick Links */}
-              <div className="bg-slate-900 rounded-[2rem] p-5 space-y-3 relative overflow-hidden">
-                <div className="absolute -top-6 -right-6 h-24 w-24 bg-orange-500/10 rounded-full blur-2xl" />
-                <div className="relative z-10">
-                  <h3 className="text-xs font-black uppercase tracking-widest text-white mb-4">Accès Rapides</h3>
-                  {[
-                    { label: "Toutes les commandes", href: "/admin/orders", icon: Package },
-                    { label: "Clients", href: "/admin/clients", icon: Users },
-                    { label: "Livreurs", href: "/admin/drivers", icon: Truck },
-                    { label: "Factures", href: "/admin/invoices", icon: CreditCard },
-                  ].map((link, i) => (
-                    <button
-                      key={i}
-                      onClick={() => navigate(link.href)}
-                      className="w-full flex items-center justify-between py-2.5 px-3 rounded-xl hover:bg-white/10 transition-all group text-left mb-1"
-                    >
-                      <div className="flex items-center gap-3 text-slate-300 group-hover:text-white transition-colors">
-                        <link.icon size={14} />
-                        <span className="text-xs font-bold">{link.label}</span>
-                      </div>
-                      <ArrowRight size={12} className="text-slate-600 group-hover:text-orange-400 transition-colors" />
-                    </button>
-                  ))}
-                </div>
-              </div>
+              ))}
             </div>
           </div>
-        </>
-      )}
 
-      {/* ── NEW ORDER ALERT ── */}
-      {newOrderAlert && (
-        <div className="fixed bottom-8 right-8 z-[100] animate-in slide-in-from-bottom-4 fade-in duration-300">
-          <div className="bg-slate-900 text-white px-6 py-5 rounded-2xl shadow-2xl flex items-center gap-4 max-w-xs border border-white/10">
-            <div className="h-12 w-12 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl shrink-0">
-              🔔
+          {/* Client Solvabilité */}
+          <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden">
+            <div className="px-5 py-4 border-b border-slate-50 flex items-center justify-between">
+              <div>
+                <h3 className="text-xs font-black uppercase tracking-widest text-slate-900">Solvabilité</h3>
+                <p className="text-[9px] font-bold text-slate-400 mt-0.5">Statut facturation clients</p>
+              </div>
+              <button onClick={() => navigate('/admin/invoices')} className="text-[10px] font-black text-orange-500 hover:text-orange-600">Voir tout</button>
             </div>
-            <div className="flex-1 min-w-0">
-              <div className="font-black text-sm">Nouvelle commande !</div>
-              <div className="text-xs text-slate-400 mt-0.5 truncate">
-                {newOrderAlert.pickup_city || '—'} → {newOrderAlert.delivery_city || '—'}
-              </div>
-              <div className="flex gap-2 mt-3">
-                <button onClick={() => { setNewOrderAlert(null); navigate(`/admin/orders/${newOrderAlert.id}`); }} className="px-3 py-1.5 bg-white text-slate-900 text-xs font-black rounded-xl hover:bg-orange-50 transition-colors">Voir</button>
-                <button onClick={() => setNewOrderAlert(null)} className="px-3 py-1.5 bg-white/10 text-slate-300 text-xs font-bold rounded-xl hover:bg-white/20 transition-colors">Fermer</button>
-              </div>
+            <div className="divide-y divide-slate-50 max-h-52 overflow-y-auto">
+              {clientPaymentRows.length === 0 ? (
+                <div className="py-8 text-center text-xs text-slate-400 italic">Aucun client actif</div>
+              ) : clientPaymentRows.map(c => (
+                <div key={c.id} className="px-5 py-3 flex items-center justify-between hover:bg-slate-50 transition-colors">
+                  <span className="text-xs font-bold text-slate-700 truncate">{c.name}</span>
+                  <span className={`text-[8px] font-black px-2 py-1 rounded-lg uppercase tracking-widest ${c.cls}`}>{c.status}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Quick Links */}
+          <div className="bg-slate-900 rounded-[2rem] p-5 space-y-3 relative overflow-hidden">
+            <div className="absolute -top-6 -right-6 h-24 w-24 bg-orange-500/10 rounded-full blur-2xl" />
+            <div className="relative z-10">
+              <h3 className="text-xs font-black uppercase tracking-widest text-white mb-4">Accès Rapides</h3>
+              {[
+                { label: "Toutes les commandes", href: "/admin/orders", icon: Package },
+                { label: "Clients", href: "/admin/clients", icon: Users },
+                { label: "Livreurs", href: "/admin/drivers", icon: Truck },
+                { label: "Factures", href: "/admin/invoices", icon: CreditCard },
+              ].map((link, i) => (
+                <button
+                  key={i}
+                  onClick={() => navigate(link.href)}
+                  className="w-full flex items-center justify-between py-2.5 px-3 rounded-xl hover:bg-white/10 transition-all group text-left mb-1"
+                >
+                  <div className="flex items-center gap-3 text-slate-300 group-hover:text-white transition-colors">
+                    <link.icon size={14} />
+                    <span className="text-xs font-bold">{link.label}</span>
+                  </div>
+                  <ArrowRight size={12} className="text-slate-600 group-hover:text-orange-400 transition-colors" />
+                </button>
+              ))}
             </div>
           </div>
         </div>
-      )}
+      </div>
+      {loading ? null : (
+        <>
+          {/* ── NEW ORDER ALERT ── */}
+          {newOrderAlert && (
+            <div className="fixed bottom-8 right-8 z-[100] animate-in slide-in-from-bottom-4 fade-in duration-300">
+              <div className="bg-slate-900 text-white px-6 py-5 rounded-2xl shadow-2xl flex items-center gap-4 max-w-xs border border-white/10">
+                <div className="h-12 w-12 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl shrink-0">
+                  🔔
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="font-black text-sm">Nouvelle commande !</div>
+                  <div className="text-xs text-slate-400 mt-0.5 truncate">
+                    {newOrderAlert.pickup_city || '—'} → {newOrderAlert.delivery_city || '—'}
+                  </div>
+                  <div className="flex gap-2 mt-3">
+                    <button onClick={() => { setNewOrderAlert(null); navigate(`/admin/orders/${newOrderAlert.id}`); }} className="px-3 py-1.5 bg-white text-slate-900 text-xs font-black rounded-xl hover:bg-orange-50 transition-colors">Voir</button>
+                    <button onClick={() => setNewOrderAlert(null)} className="px-3 py-1.5 bg-white/10 text-slate-300 text-xs font-bold rounded-xl hover:bg-white/20 transition-colors">Fermer</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
-      {/* ── CREATE ORDER MODAL ── */}
-      {open && (
-        <AdminCreateOrderModal
-          onClose={() => setOpen(false)}
-          onSuccess={() => { fetchOrders(); }}
-        />
-      )}
+          {/* ── CREATE ORDER MODAL ── */}
+          {open && (
+            <AdminCreateOrderModal
+              onClose={() => setOpen(false)}
+              onSuccess={() => { fetchOrders(); }}
+            />
+          )}
 
-      {/* ── DISPATCH MODAL ── */}
-      <AdminOrderModals
-        decisionOpen={false} setDecisionOpen={() => { }} reason={""} setReason={() => { }} confirmDecision={() => { }}
-        dispatchOpen={dispatchOpen} setDispatchOpen={setDispatchOpen}
-        dispatchDriver={dispatchDriver} setDispatchDriver={setDispatchDriver}
-        drivers={drivers} dispatchNote={dispatchNote} setDispatchNote={setDispatchNote}
-        confirmDispatch={confirmDispatch}
-      />
+          {/* ── DISPATCH MODAL ── */}
+          <AdminOrderModals
+            decisionOpen={false} setDecisionOpen={() => { }} reason={""} setReason={() => { }} confirmDecision={() => { }}
+            dispatchOpen={dispatchOpen} setDispatchOpen={setDispatchOpen}
+            dispatchDriver={dispatchDriver} setDispatchDriver={setDispatchDriver}
+            drivers={drivers} dispatchNote={dispatchNote} setDispatchNote={setDispatchNote}
+            confirmDispatch={confirmDispatch}
+          />
+        </>
+      )}
     </div>
   );
 }

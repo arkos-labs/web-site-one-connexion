@@ -24,12 +24,7 @@ export default function AdminOrders() {
     openDecision, openDispatch, confirmDecision, confirmDispatch, exportCsv
   } = useAdminOrdersManager(searchParams);
 
-  if (loading) return (
-    <div className="flex items-center justify-center py-32 gap-3 text-slate-400">
-      <Loader2 className="animate-spin" size={24} />
-      <span className="text-sm font-bold">Chargement des missions…</span>
-    </div>
-  );
+  if (loading) return null;
 
   const TABS = [
     { id: "dispatch", label: "Dispatch", icon: MapPin, count: kanbanList.length },

@@ -64,7 +64,7 @@ export default function PublicHeader() {
             <a href="/#features" className="hover:text-orange-500 transition-colors" onClick={() => setIsMenuOpen(false)}>Avantages</a>
             <a href="/#expertises" className="hover:text-orange-500 transition-colors" onClick={() => setIsMenuOpen(false)}>Secteurs</a>
             <a href="/#workflow" className="hover:text-orange-500 transition-colors" onClick={() => setIsMenuOpen(false)}>Solution Logistique</a>
-            <Link to="/guest-order" className="hover:text-orange-500 transition-colors" onClick={() => setIsMenuOpen(false)}>Commander</Link>
+            <Link to="/commande-sans-compte" className="hover:text-orange-500 transition-colors" onClick={() => setIsMenuOpen(false)}>Commander</Link>
             <Link to="/contact" className="hover:text-orange-500 transition-colors" onClick={() => setIsMenuOpen(false)}>Contact</Link>
 
             <hr className="my-2 border-slate-100" />

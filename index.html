@@ -64,7 +64,19 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
     rel="stylesheet">
-</head>
+    
+    <script>
+      // Automatically reload the page if a chunk fails to load 
+      // This happens when a new version is deployed and the browser tries to load old files
+      window.addEventListener('error', (e) => {
+        if (e.message.includes('Importing a module script failed') || 
+            e.message.includes('Failed to fetch dynamically imported module')) {
+          console.warn('Chunk load error detected. Reloading...');
+          window.location.reload();
+        }
+      }, true);
+    </script>
+  </head>
 
 <body>
   <a href="#main" class="sr-only">Aller au contenu</a>

@@ -60,17 +60,7 @@ const Dispatch = lazy(() => import("./admin/Dispatch"));
 const DriverDashboard = lazy(() => import("./driver/Dashboard"));
 
 // Component de chargement élégant
-const PageLoader = () => (
-  <div className="flex flex-col items-center justify-center min-h-[50vh] space-y-4">
-    <div className="relative">
-      <div className="h-16 w-16 rounded-full border-4 border-primary/20 border-t-primary animate-spin"></div>
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-        <div className="h-2 w-2 rounded-full bg-primary"></div>
-      </div>
-    </div>
-    <p className="text-muted-foreground animate-pulse text-sm font-medium">Chargement...</p>
-  </div>
-);
+const PageLoader = () => null;
 
 const Index = () => {
   // Précharger le cache de tarification au démarrage de l'application
