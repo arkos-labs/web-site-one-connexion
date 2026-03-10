@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import ErrorBoundary from "./components/ErrorBoundary.jsx";
 
@@ -65,7 +65,7 @@ export default function App() {
             <Route path="/connexion" element={<Login />} />
             <Route path="/inscription" element={<Register />} />
             <Route path="/inscription-driver" element={<RegisterDriver />} />
-            <Route path="/guest-order" element={<GuestOrder />} />
+            <Route path="/guest-order" element={<Navigate to="/commande-sans-compte" replace />} />
             <Route path="/commande-sans-compte" element={<CommandeSansCompte />} />
             <Route path="/mot-de-passe-oublie" element={<ForgotPassword />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
