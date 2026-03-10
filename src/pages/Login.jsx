@@ -178,7 +178,7 @@ export default function Login() {
           </div>
 
           <Link
-            to="/guest-order"
+            to="/commande-sans-compte"
             className="flex w-full items-center justify-center gap-2 rounded-full border border-slate-200 bg-slate-50 py-3.5 text-sm font-bold text-slate-700 hover:bg-white hover:border-slate-300 hover:shadow-sm transition-all"
           >
             Commander sans compte

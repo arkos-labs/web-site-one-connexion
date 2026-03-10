@@ -54,7 +54,7 @@ const testimonials = [
 const faqs = [
   { q: "Comment fonctionne le bon de commande ?", a: <span>C'est simple et automatique : dès que votre course est validée par notre système, un Bon de Commande (BC) officiel est généré. Il est instantanément accessible dans votre <Link to="/connexion" className="text-orange-600 font-medium hover:underline">espace client</Link> et envoyé par email. Ce document comprend tous les détails logistiques et fait foi de l'ordre de mission.</span> },
   { q: "La facturation est-elle compatible avec les normes 2026 ?", a: "Oui, nous sommes prêts. Toutes nos factures sont émises au format électronique structuré. Cela garantit une conformité totale avec les nouvelles obligations fiscales et facilite l'import automatique dans votre logiciel comptable." },
-  { q: "Puis-je avoir une estimation rapide du prix ?", a: <span>Absolument. Notre <Link to="/guest-order" className="text-orange-600 font-medium hover:underline">simulateur en ligne</Link> vous donne un prix ferme et définitif en quelques secondes. Il prend en compte le type de véhicule (moto, voiture), la distance réelle et le niveau d'urgence. Pas de mauvaises surprises à l'arrivée.</span> },
+  { q: "Puis-je avoir une estimation rapide du prix ?", a: <span>Absolument. Notre <Link to="/commande-sans-compte" className="text-orange-600 font-medium hover:underline">simulateur en ligne</Link> vous donne un prix ferme et définitif en quelques secondes. Il prend en compte le type de véhicule (moto, voiture), la distance réelle et le niveau d'urgence. Pas de mauvaises surprises à l'arrivée.</span> },
   { q: "Quels sont les délais de prise en charge à Paris ?", a: "Pour les courses 'Urgentes', nous nous engageons sur une prise en charge en moins de 45 minutes dans Paris intra-muros. Grâce à notre flotte répartie stratégiquement, un chauffeur est toujours à proximité de vos bureaux ou entrepôts." },
   { q: "Puis-je ouvrir un compte pro sans engagement ?", a: <span>Oui, la création d'un <Link to="/inscription" className="text-orange-600 font-medium hover:underline">compte professionnel</Link> est 100% gratuite et sans aucun engagement de durée. Vous ne payez que ce que vous consommez. Pas d'abonnement mensuel caché, pas de frais de dossier.</span> },
   { q: "Les marchandises sont-elles assurées ?", a: <span>Votre sérénité est notre priorité. Chaque transport réalisé via One Connexion est couvert par notre assurance ad valorem jusqu'à 50 000€, incluse dans le prix. Vos marchandises précieuses ou sensibles sont protégées contre la perte et les dommages.</span> },
@@ -100,7 +100,7 @@ export default function Landing() {
                 <ArrowUpRight size={16} />
               </div>
             </Link>
-            <Link to="/guest-order" className="group relative flex items-center gap-3 rounded-full border border-white/40 bg-white/10 px-8 py-4 text-white backdrop-blur-sm transition-all hover:bg-white/20">
+            <Link to="/commande-sans-compte" className="group relative flex items-center gap-3 rounded-full border border-white/40 bg-white/10 px-8 py-4 text-white backdrop-blur-sm transition-all hover:bg-white/20">
               <span className="text-base font-bold">Commander sans compte</span>
               <ShoppingCart size={18} className="text-orange-300" />
             </Link>
@@ -152,7 +152,7 @@ export default function Landing() {
           </div>
 
           <div className="mt-20 text-center">
-            <Link to="/guest-order" className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-8 py-4 text-sm font-bold text-white uppercase tracking-widest shadow-xl shadow-slate-900/10 transition-transform hover:scale-105 hover:bg-orange-500">
+            <Link to="/commande-sans-compte" className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-8 py-4 text-sm font-bold text-white uppercase tracking-widest shadow-xl shadow-slate-900/10 transition-transform hover:scale-105 hover:bg-orange-500">
               Estimer votre première course &rarr;
             </Link>
           </div>

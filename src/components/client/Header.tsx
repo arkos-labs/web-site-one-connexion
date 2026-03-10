@@ -117,6 +117,7 @@ const Header = () => {
         { name: "Expertises", path: "/expertises" },
         { name: "Tarifs", path: "/tarifs" },
         { name: "Comment ça marche", path: "/fonctionnement" },
+        { name: "Commander", path: "/commande-sans-compte" },
         { name: "Contact", path: "/contact" },
     ];
 

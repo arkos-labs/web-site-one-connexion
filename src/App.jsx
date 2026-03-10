@@ -28,6 +28,7 @@ const Login = lazy(() => import("./pages/Login.jsx"));
 const RegisterDriver = lazy(() => import("./pages/RegisterDriver.jsx"));
 const Register = lazy(() => import("./pages/Register.jsx"));
 const GuestOrder = lazy(() => import("./pages/GuestOrder.jsx"));
+const CommandeSansCompte = lazy(() => import("./pages/CommandeSansCompte.tsx"));
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword.jsx"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword.jsx"));
 const Contact = lazy(() => import("./pages/Contact.jsx"));
@@ -67,6 +68,7 @@ export default function App() {
           <Route path="/inscription" element={<Register />} />
           <Route path="/inscription-driver" element={<RegisterDriver />} />
           <Route path="/guest-order" element={<GuestOrder />} />
+          <Route path="/commande-sans-compte" element={<CommandeSansCompte />} />
           <Route path="/mot-de-passe-oublie" element={<ForgotPassword />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reinitialiser-mot-de-passe" element={<ResetPassword />} />

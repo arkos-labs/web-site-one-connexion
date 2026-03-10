@@ -36,6 +36,7 @@ export default function PublicFooter() {
               <Link to="/coursier-ile-de-france" className="block hover:text-white">Coursier Île‑de‑France</Link>
               <Link to="/messagerie-express-ile-de-france" className="block hover:text-white">Messagerie express IDF</Link>
               <Link to="/navette-reguliere-ile-de-france" className="block hover:text-white">Navettes régulières</Link>
+              <Link to="/commande-sans-compte" className="block hover:text-white font-bold text-orange-400 mt-2">Commander sans compte</Link>
             </div>
           </div>
           <div>

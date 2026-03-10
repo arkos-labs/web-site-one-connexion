@@ -11,6 +11,8 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      "react": path.resolve(__dirname, "node_modules/react"),
+      "react-dom": path.resolve(__dirname, "node_modules/react-dom"),
     },
     dedupe: ["react", "react-dom", "react-router-dom"],
   },
@@ -59,5 +61,10 @@ export default defineConfig({
       }
     },
     outDir: "dist",
+  },
+  server: {
+    host: true,
+    port: 5173,
+    strictPort: true,
   }
 })
