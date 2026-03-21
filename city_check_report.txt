@@ -1,6 +1,0 @@
-Starting integrity check on 225 cities...
----------------------------------------------------
-Integrity Check Complete.
-Success: 225
-Errors:  0
-✅ All cities are correctly configured and locatable.

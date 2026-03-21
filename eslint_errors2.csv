@@ -1,8 +1,0 @@
-"line","ruleId","message"
-"15","no-unused-vars","'invoicesAll' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u."
-"16","no-unused-vars","'driverPaymentsAll' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u."
-"17","no-unused-vars","'drivers' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u."
-"22","no-unused-vars","'clientMode' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u."
-"22","no-unused-vars","'setClientMode' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u."
-"476","no-undef","'setLoadingPickup' is not defined."
-"538","no-undef","'setLoadingDelivery' is not defined."

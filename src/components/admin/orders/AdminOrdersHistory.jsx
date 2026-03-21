@@ -1,5 +1,5 @@
 import { FileText, Search } from "lucide-react";
-import { downloadOrderPdf } from "../../../pages/adminPdf.js";
+import { downloadOrderPdf } from "@/pages/adminPdf.js";
 
 export default function AdminOrdersHistory({
     query,
