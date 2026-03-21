@@ -65,10 +65,10 @@ export default function Login() {
         </div>
 
         {/* Logo */}
-        <div className="relative z-10 flex items-center gap-3">
+        <Link to="/" className="relative z-10 flex items-center gap-3">
           <div className="grid h-10 w-10 place-items-center rounded-xl bg-orange-500 text-white text-sm font-black shadow-lg shadow-orange-500/30">OC</div>
           <span className="text-xl font-black text-white tracking-tight">One Connexion</span>
-        </div>
+        </Link>
 
         {/* Center content */}
         <div className="relative z-10 space-y-10">
@@ -106,10 +106,10 @@ export default function Login() {
       <div className="flex w-full flex-col items-center justify-center bg-white p-6 lg:w-1/2 lg:p-14">
         <div className="w-full max-w-sm">
           {/* Mobile logo */}
-          <div className="flex items-center gap-3 mb-10 lg:hidden">
+          <Link to="/" className="flex items-center gap-3 mb-10 lg:hidden">
             <div className="grid h-9 w-9 place-items-center rounded-xl bg-orange-500 text-white text-sm font-black">OC</div>
             <span className="text-lg font-black text-slate-900">One Connexion</span>
-          </div>
+          </Link>
 
           <div className="mb-10">
             <h1 className="text-3xl font-black text-slate-900 tracking-tight">Bon retour 👋</h1>
