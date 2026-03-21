@@ -16,7 +16,7 @@ export default function PublicHeader() {
 
   return (
     <header className={`fixed top-0 z-50 w-full transition-all duration-300 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm ${isScrolled ? 'py-3' : 'py-5'}`}>
-      <div className="container mx-auto flex items-center justify-between px-6 md:px-12">
+      <div className="container mx-auto flex items-center px-6 md:px-12">
         <div className="flex items-center gap-4">
           <Link to="/" className="group flex items-center gap-3">
             <div className="grid h-10 w-10 place-items-center rounded-xl bg-orange-500 text-white text-sm font-black shadow-lg shadow-orange-500/20 group-hover:shadow-orange-500/40 transition-shadow">
@@ -30,7 +30,7 @@ export default function PublicHeader() {
         </div>
 
         {/* Desktop Navigation */}
-        <nav className="hidden items-center justify-center gap-10 text-sm font-bold uppercase tracking-wider md:flex text-slate-600">
+        <nav className="hidden flex-1 items-center justify-center gap-10 text-sm font-bold uppercase tracking-wider md:flex text-slate-600">
           <a href="/#features" className="hover:text-orange-500 transition-colors">Avantages</a>
           <a href="/#expertises" className="hover:text-orange-500 transition-colors">Secteurs</a>
           <a href="/#workflow" className="hover:text-orange-500 transition-colors">Solution Logistique</a>
