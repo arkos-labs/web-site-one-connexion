@@ -122,7 +122,7 @@ export const AddressAutocomplete = ({
             )}
 
             <div className="relative group">
-                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-[#ed5518] transition-colors" />
                 <Input
                     type="text"
                     value={value}
@@ -144,9 +144,9 @@ export const AddressAutocomplete = ({
                         <li
                             key={index}
                             onClick={() => handleSuggestionClick(suggestion)}
-                            className="px-4 py-3 hover:bg-accent cursor-pointer transition-colors border-b border-border last:border-b-0 flex items-start gap-2"
+                            className="px-4 py-3 hover:bg-[#ed5518] cursor-pointer transition-colors border-b border-border last:border-b-0 flex items-start gap-2"
                         >
-                            <MapPin className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                            <MapPin className="h-4 w-4 text-[#ed5518] mt-0.5 flex-shrink-0" />
                             <div className="flex-1 min-w-0">
                                 <p className="text-sm font-medium text-foreground truncate">
                                     {suggestion.full}

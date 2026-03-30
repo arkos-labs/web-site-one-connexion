@@ -221,7 +221,7 @@ export function DriverDocumentsViewer({ driverId, onDocumentsValidated }: Driver
                             className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/30 transition-colors"
                         >
                             <div className="flex items-center gap-4 flex-1">
-                                <FileText className="h-8 w-8 text-primary" />
+                                <FileText className="h-8 w-8 text-[#ed5518]" />
                                 <div className="flex-1">
                                     <div className="flex items-center gap-2 mb-1">
                                         <p className="font-medium">{getDocumentTypeLabel(doc.document_type)}</p>

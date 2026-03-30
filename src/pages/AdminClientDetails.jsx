@@ -130,13 +130,13 @@ export default function AdminClientDetails() {
   if (!client || client.role === 'admin') return (
     <div className="py-20 text-center">
       <div className="text-2xl font-black text-slate-300 mb-3">{!client ? "Client introuvable" : "Accès refusé"}</div>
-      <button onClick={() => navigate('/admin/clients')} className="text-sm font-bold text-orange-500 hover:underline">← Retour aux clients</button>
+      <button onClick={() => navigate('/admin/clients')} className="text-sm font-bold text-[#ed5518] hover:underline">← Retour aux clients</button>
     </div>
   );
 
   const clientName = client.details?.company || client.details?.full_name || "Client";
-  const riskColor = risk.level === "Élevé" ? "text-rose-600" : risk.level === "Moyen" ? "text-amber-600" : "text-emerald-600";
-  const riskBg = risk.level === "Élevé" ? "bg-rose-50 border-rose-100" : risk.level === "Moyen" ? "bg-amber-50 border-amber-100" : "bg-emerald-50 border-emerald-100";
+  const riskColor = risk.level === "Élevé" ? "text-rose-600" : risk.level === "Moyen" ? "text-amber-600" : "text-[#ed5518]";
+  const riskBg = risk.level === "Élevé" ? "bg-rose-50 border-rose-100" : risk.level === "Moyen" ? "bg-amber-50 border-amber-100" : "bg-[#ed5518] border-emerald-100";
 
   return (
     <div className="space-y-6 pb-20">
@@ -148,7 +148,7 @@ export default function AdminClientDetails() {
           <div className="flex items-center gap-3">
             {/* Risk badge */}
             <div className={`flex items-center gap-2 rounded-2xl border px-4 py-2 ${riskBg}`}>
-              <span className={`h-2 w-2 rounded-full ${risk.level === "Élevé" ? "bg-rose-500 animate-pulse" : risk.level === "Moyen" ? "bg-amber-500" : "bg-emerald-500"}`} />
+              <span className={`h-2 w-2 rounded-full ${risk.level === "Élevé" ? "bg-rose-500 animate-pulse" : risk.level === "Moyen" ? "bg-amber-500" : "bg-[#ed5518]"}`} />
               <span className={`text-[10px] font-black uppercase tracking-widest ${riskColor}`}>Risque {risk.level} · {risk.score}/100</span>
             </div>
             {!isEditing ? (
@@ -160,7 +160,7 @@ export default function AdminClientDetails() {
                 <button onClick={() => setIsEditing(false)} className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs font-bold text-slate-500">
                   <X size={14} /> Annuler
                 </button>
-                <button onClick={handleSaveDetails} disabled={sending} className="flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-xs font-black text-white hover:bg-emerald-700 disabled:opacity-50 transition-all">
+                <button onClick={handleSaveDetails} disabled={sending} className="flex items-center gap-2 rounded-xl bg-[#ed5518] px-5 py-2.5 text-xs font-black text-white hover:bg-[#ed5518] disabled:opacity-50 transition-all">
                   <Save size={14} /> Sauvegarder
                 </button>
               </div>
@@ -172,10 +172,10 @@ export default function AdminClientDetails() {
       {/* KPI row */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
-          { icon: <TrendingUp size={18} />, iconBg: "bg-indigo-100 text-indigo-600", label: "CA Total", value: `${spend.toFixed(0)}€` },
+          { icon: <TrendingUp size={18} />, iconBg: "bg-[#ed5518] text-[#ed5518]", label: "CA Total", value: `${spend.toFixed(0)}€` },
           { icon: <FileText size={18} />, iconBg: "bg-slate-100 text-slate-600", label: "Commandes", value: ordersAll.length },
           { icon: <AlertTriangle size={18} />, iconBg: risk.unpaid.length > 0 ? "bg-amber-100 text-amber-600" : "bg-slate-100 text-slate-400", label: "Impayées", value: risk.unpaidAmount.toFixed(0) + "€", alert: risk.unpaid.length > 0 },
-          { icon: <CheckCircle2 size={18} />, iconBg: "bg-emerald-100 text-emerald-600", label: "En retard", value: risk.overdue.length === 0 ? "Aucune" : `${risk.overdue.length} facture(s)`, alert: risk.overdue.length > 0 },
+          { icon: <CheckCircle2 size={18} />, iconBg: "bg-[#ed5518] text-[#ed5518]", label: "En retard", value: risk.overdue.length === 0 ? "Aucune" : `${risk.overdue.length} facture(s)`, alert: risk.overdue.length > 0 },
         ].map((kpi, i) => (
           <div key={i} className={`bg-white rounded-[2rem] p-5 border ${kpi.alert ? 'border-amber-100 ring-1 ring-amber-200' : 'border-slate-100'} shadow-sm`}>
             <div className={`h-9 w-9 rounded-xl mb-3 flex items-center justify-center ${kpi.iconBg}`}>{kpi.icon}</div>
@@ -235,7 +235,7 @@ export default function AdminClientDetails() {
             {/* Actions CRM */}
             <div className="mt-4 flex flex-wrap gap-2">
               {mailto ? (
-                <a href={mailto} className="flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-xs font-black text-white hover:bg-orange-500 transition-all">
+                <a href={mailto} className="flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-xs font-black text-white hover:bg-[#ed5518] transition-all">
                   <Mail size={14} /> Relance email (1 clic)
                 </a>
               ) : (
@@ -243,7 +243,7 @@ export default function AdminClientDetails() {
                   <Mail size={14} /> Relance email
                 </button>
               )}
-              <button onClick={() => setChatOpen(true)} className="flex items-center gap-2 rounded-xl bg-indigo-50 border border-indigo-100 px-4 py-2.5 text-xs font-black text-indigo-600 hover:bg-indigo-100 transition-all">
+              <button onClick={() => setChatOpen(true)} className="flex items-center gap-2 rounded-xl bg-[#ed5518] border border-indigo-100 px-4 py-2.5 text-xs font-black text-[#ed5518] hover:bg-[#ed5518] transition-all">
                 <MessageSquare size={14} /> Message tchat
               </button>
             </div>
@@ -275,11 +275,11 @@ export default function AdminClientDetails() {
                     <tr><td colSpan={5} className="py-12 text-center text-sm font-bold text-slate-300">Aucune commande dans cette catégorie.</td></tr>
                   ) : orders.map(o => (
                     <tr key={o.id} onClick={() => navigate(`/admin/orders/${o.id}`)} className="hover:bg-slate-50/80 cursor-pointer transition-all group">
-                      <td className="px-6 py-4 font-black text-slate-900 group-hover:text-orange-500 transition-colors">#{o.id.slice(0, 8)}</td>
+                      <td className="px-6 py-4 font-black text-slate-900 group-hover:text-[#ed5518] transition-colors">#{o.id.slice(0, 8)}</td>
                       <td className="px-6 py-4 text-slate-600 text-xs">{o.pickup_city} → {o.delivery_city}</td>
                       <td className="px-6 py-4 text-xs text-slate-500">{o.scheduled_at ? new Date(o.scheduled_at).toLocaleDateString('fr-FR') : "—"}</td>
                       <td className="px-6 py-4">
-                        <span className={`inline-flex items-center rounded-lg px-2.5 py-1 text-[9px] font-black uppercase tracking-widest ${o.status === "delivered" ? "bg-emerald-50 text-emerald-700" : "bg-amber-50 text-amber-700"}`}>
+                        <span className={`inline-flex items-center rounded-lg px-2.5 py-1 text-[9px] font-black uppercase tracking-widest ${o.status === "delivered" ? "bg-[#ed5518] text-[#ed5518]" : "bg-amber-50 text-amber-700"}`}>
                           {o.status === "delivered" ? "Terminée" : o.status}
                         </span>
                       </td>
@@ -298,7 +298,7 @@ export default function AdminClientDetails() {
           <div className={`rounded-[2rem] border p-6 ${riskBg}`}>
             <div className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-3">Indice de solvabilité</div>
             <div className="w-full h-2 rounded-full bg-white/50 overflow-hidden mb-3">
-              <div className={`h-full rounded-full ${risk.level === "Élevé" ? "bg-rose-500" : risk.level === "Moyen" ? "bg-amber-500" : "bg-emerald-500"}`} style={{ width: `${risk.score}%` }} />
+              <div className={`h-full rounded-full ${risk.level === "Élevé" ? "bg-rose-500" : risk.level === "Moyen" ? "bg-amber-500" : "bg-[#ed5518]"}`} style={{ width: `${risk.score}%` }} />
             </div>
             <div className={`text-3xl font-black ${riskColor}`}>{risk.score}<span className="text-base">/100</span></div>
             <div className="mt-4 space-y-2 text-sm">
@@ -382,7 +382,7 @@ export default function AdminClientDetails() {
             <button
               onClick={handleSendChat}
               disabled={sending || !chatMsg.trim()}
-              className="mt-4 w-full rounded-xl bg-slate-900 py-3.5 text-sm font-black text-white hover:bg-orange-500 transition-all disabled:opacity-50"
+              className="mt-4 w-full rounded-xl bg-slate-900 py-3.5 text-sm font-black text-white hover:bg-[#ed5518] transition-all disabled:opacity-50"
             >
               {sending ? "Envoi…" : "Envoyer le message"}
             </button>

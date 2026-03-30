@@ -254,7 +254,7 @@ export const CreateClientModal = ({ isOpen, onClose, onSuccess }: CreateClientMo
                                     />
                                     {isLoading && formData.siret.length === 14 && (
                                         <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                                            <div className="animate-spin h-4 w-4 border-2 border-primary border-t-transparent rounded-full"></div>
+                                            <div className="animate-spin h-4 w-4 border-2 border-[#ed5518] border-t-transparent rounded-full"></div>
                                         </div>
                                     )}
                                 </div>
@@ -316,7 +316,7 @@ export const CreateClientModal = ({ isOpen, onClose, onSuccess }: CreateClientMo
                         </div>
 
                         <div className="flex justify-end pt-4">
-                            <Button onClick={() => handleStepComplete('info')} className="bg-primary text-white">
+                            <Button onClick={() => handleStepComplete('info')} className="bg-[#ed5518] text-white">
                                 Suivant
                             </Button>
                         </div>
@@ -373,7 +373,7 @@ export const CreateClientModal = ({ isOpen, onClose, onSuccess }: CreateClientMo
                             <Button variant="outline" onClick={() => setCurrentStep('info')}>
                                 Retour
                             </Button>
-                            <Button onClick={() => handleStepComplete('address')} className="bg-primary text-white">
+                            <Button onClick={() => handleStepComplete('address')} className="bg-[#ed5518] text-white">
                                 Suivant
                             </Button>
                         </div>
@@ -403,7 +403,7 @@ export const CreateClientModal = ({ isOpen, onClose, onSuccess }: CreateClientMo
                             <Button variant="outline" onClick={() => setCurrentStep('address')}>
                                 Retour
                             </Button>
-                            <Button onClick={() => handleStepComplete('notes')} className="bg-primary text-white">
+                            <Button onClick={() => handleStepComplete('notes')} className="bg-[#ed5518] text-white">
                                 Suivant
                             </Button>
                         </div>
@@ -448,7 +448,7 @@ export const CreateClientModal = ({ isOpen, onClose, onSuccess }: CreateClientMo
                             <Button variant="outline" onClick={() => setCurrentStep('notes')}>
                                 Retour
                             </Button>
-                            <Button onClick={handleSubmit} disabled={isLoading} className="bg-cta text-cta-foreground hover:bg-cta/90">
+                            <Button onClick={handleSubmit} disabled={isLoading} className="bg-[#ed5518] text-cta-foreground hover:bg-[#ed5518]/90">
                                 {isLoading ? "Création..." : "Créer le client"}
                             </Button>
                         </div>
@@ -481,7 +481,7 @@ export const CreateClientModal = ({ isOpen, onClose, onSuccess }: CreateClientMo
                                 disabled={isLocked}
                                 className={`w-full flex items-center gap-3 p-3 rounded-xl text-left transition-all duration-200
                                     ${isCurrent
-                                        ? "bg-blue-50 text-blue-700 shadow-sm ring-1 ring-blue-100"
+                                        ? "bg-[#ed5518] text-[#ed5518] shadow-sm ring-1 ring-blue-100"
                                         : isCompleted
                                             ? "text-gray-700 hover:bg-gray-50"
                                             : "text-gray-400 cursor-not-allowed"
@@ -491,7 +491,7 @@ export const CreateClientModal = ({ isOpen, onClose, onSuccess }: CreateClientMo
                                 <div className={`
                                     w-8 h-8 rounded-lg flex items-center justify-center transition-colors
                                     ${isCurrent
-                                        ? "bg-blue-100 text-blue-600"
+                                        ? "bg-[#ed5518] text-[#ed5518]"
                                         : isCompleted
                                             ? "bg-green-100 text-green-600"
                                             : "bg-gray-100 text-gray-400"

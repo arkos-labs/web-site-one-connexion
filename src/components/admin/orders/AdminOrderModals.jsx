@@ -62,7 +62,7 @@ export default function AdminOrderModals({
                 <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
                     <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={() => setDispatchOpen(false)}></div>
                     <div className="w-full max-w-md bg-white rounded-[2.5rem] p-10 shadow-2xl relative z-10 animate-in fade-in zoom-in-95 duration-300">
-                        <div className="h-16 w-16 rounded-2xl bg-orange-500 flex items-center justify-center text-3xl mb-8 shadow-xl shadow-orange-500/20">
+                        <div className="h-16 w-16 rounded-2xl bg-[#ed5518] flex items-center justify-center text-3xl mb-8 shadow-xl shadow-primary/20">
                             🧭
                         </div>
                         <h3 className="text-2xl font-black text-slate-900 mb-2">Dispatch Mission</h3>

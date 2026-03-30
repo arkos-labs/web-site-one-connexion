@@ -29,7 +29,7 @@ export default function SEOPageLayout({
                 </div>
 
                 <div className="mx-auto max-w-7xl px-6 md:px-12 relative z-10 text-center">
-                    <div className="inline-flex items-center gap-2 rounded-full bg-orange-100 px-4 py-2 text-xs font-bold uppercase tracking-widest text-orange-600 mb-6">
+                    <div className="inline-flex items-center gap-2 rounded-full bg-[#ed5518] px-4 py-2 text-xs font-bold uppercase tracking-widest text-[#ed5518] mb-6">
                         Expertise Sectorielle
                     </div>
                     <h1 className="text-4xl font-black tracking-tight text-slate-900 md:text-6xl mb-6 leading-tight">
@@ -39,7 +39,7 @@ export default function SEOPageLayout({
                         {subtitle}
                     </p>
                     <div className="mt-10 flex flex-wrap justify-center gap-4">
-                        <Link to="/guest-order" className="rounded-full bg-orange-500 px-8 py-4 text-sm font-bold text-white shadow-xl hover:bg-orange-600 transition-all">
+                        <Link to="/guest-order" className="rounded-full bg-[#ed5518] px-8 py-4 text-sm font-bold text-white shadow-xl hover:bg-[#ed5518] transition-all">
                             Commander une course
                         </Link>
                         <Link to="/contact" className="rounded-full bg-slate-900 px-8 py-4 text-sm font-bold text-white shadow-xl hover:bg-slate-800 transition-all">
@@ -79,7 +79,7 @@ export default function SEOPageLayout({
                                 <div className="grid gap-6 sm:grid-cols-2">
                                     {useCases.map((useCase, idx) => (
                                         <div key={idx} className="p-6 rounded-2xl border border-slate-100 bg-white shadow-sm hover:shadow-md transition-shadow">
-                                            <div className="h-2 w-12 bg-orange-500 rounded-full mb-4" />
+                                            <div className="h-2 w-12 bg-[#ed5518] rounded-full mb-4" />
                                             <p className="font-bold text-slate-900">{useCase}</p>
                                         </div>
                                     ))}
@@ -94,7 +94,7 @@ export default function SEOPageLayout({
                                 <ul className="space-y-5">
                                     {benefits.map((benefit, idx) => (
                                         <li key={idx} className="flex items-start gap-4">
-                                            <CheckCircle2 className="text-orange-500 shrink-0 mt-1" size={20} />
+                                            <CheckCircle2 className="text-[#ed5518] shrink-0 mt-1" size={20} />
                                             <span className="text-slate-300 font-medium">{benefit}</span>
                                         </li>
                                     ))}
@@ -102,21 +102,21 @@ export default function SEOPageLayout({
                                 <hr className="my-8 border-white/10" />
                                 <div className="space-y-6">
                                     <div className="flex items-center gap-4">
-                                        <Clock size={24} className="text-orange-500" />
+                                        <Clock size={24} className="text-[#ed5518]" />
                                         <div>
                                             <p className="text-xs uppercase tracking-widest text-slate-500 font-bold">Disponibilité</p>
                                             <p className="text-sm font-bold">7j/7 - 24h/24</p>
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-4">
-                                        <ShieldCheck size={24} className="text-orange-500" />
+                                        <ShieldCheck size={24} className="text-[#ed5518]" />
                                         <div>
                                             <p className="text-xs uppercase tracking-widest text-slate-500 font-bold">Sécurité</p>
                                             <p className="text-sm font-bold">Assurance Transport Incluse</p>
                                         </div>
                                     </div>
                                 </div>
-                                <Link to="/contact" className="mt-10 flex w-full items-center justify-center gap-2 rounded-full bg-orange-500 py-4 text-sm font-bold text-white transition-all hover:bg-white hover:text-slate-900">
+                                <Link to="/contact" className="mt-10 flex w-full items-center justify-center gap-2 rounded-full bg-[#ed5518] py-4 text-sm font-bold text-white transition-all hover:bg-white hover:text-slate-900">
                                     Devis Personnalisé <ArrowRight size={18} />
                                 </Link>
                             </div>
@@ -134,7 +134,7 @@ export default function SEOPageLayout({
                             <details key={idx} className="group rounded-2xl bg-white p-2 border border-slate-200 transition-all">
                                 <summary className="flex cursor-pointer items-center justify-between px-6 py-4 font-bold text-slate-900">
                                     {faq.q}
-                                    <span className="text-orange-500 group-open:rotate-180 transition-transform">↓</span>
+                                    <span className="text-[#ed5518] group-open:rotate-180 transition-transform">↓</span>
                                 </summary>
                                 <div className="px-6 pb-6 pt-2 text-slate-600">
                                     {faq.a}

@@ -10,9 +10,9 @@ export default function AdminOrdersKanban({
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {[
                 { label: "Nouveaux", statuses: ["pending_acceptance", "pending"], color: "bg-rose-500", light: "bg-rose-50", text: "text-rose-600" },
-                { label: "Dispatch", statuses: ["accepted", "driver_refused", "assigned"], color: "bg-indigo-500", light: "bg-indigo-50", text: "text-indigo-600" },
+                { label: "Dispatch", statuses: ["accepted", "driver_refused", "assigned"], color: "bg-[#ed5518]", light: "bg-[#ed5518]", text: "text-[#ed5518]" },
                 { label: "En cours", statuses: ["assigned", "driver_accepted", "in_progress", "picked_up"], color: "bg-amber-500", light: "bg-amber-50", text: "text-amber-600" },
-                { label: "Livrées", statuses: ["delivered"], color: "bg-emerald-500", light: "bg-emerald-50", text: "text-emerald-600" },
+                { label: "Livrées", statuses: ["delivered"], color: "bg-[#ed5518]", light: "bg-[#ed5518]", text: "text-[#ed5518]" },
             ].map((col) => (
                 <div key={col.label} className="flex flex-col gap-4">
                     <div className="flex items-center justify-between px-2">
@@ -51,12 +51,12 @@ export default function AdminOrdersKanban({
                                 <div className="flex justify-between items-start mb-4">
                                     <div className="flex flex-col">
                                         <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">BC-{o.id.slice(0, 8)}</span>
-                                        <h4 className="text-base font-black text-slate-900 group-hover:text-orange-500 transition-colors line-clamp-1">{o.client}</h4>
+                                        <h4 className="text-base font-black text-slate-900 group-hover:text-[#ed5518] transition-colors line-clamp-1">{o.client}</h4>
                                         <span className={`mt-2 inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-black uppercase tracking-widest ${o.status === "assigned" ? "bg-amber-50 text-amber-700" :
-                                            o.status === "driver_accepted" ? "bg-emerald-50 text-emerald-700" :
-                                                o.status === "in_progress" ? "bg-blue-50 text-blue-700" :
+                                            o.status === "driver_accepted" ? "bg-[#ed5518] text-[#ed5518]" :
+                                                o.status === "in_progress" ? "bg-[#ed5518] text-[#ed5518]" :
                                                     o.status === "delivered" ? "bg-slate-100 text-slate-600" :
-                                                        o.status === "accepted" ? "bg-indigo-50 text-indigo-700" : "bg-slate-50 text-slate-500"
+                                                        o.status === "accepted" ? "bg-[#ed5518] text-[#ed5518]" : "bg-slate-50 text-slate-500"
                                             }`}>
                                             {o.status === "assigned" ? (o.driver_id ? "EN ATTENTE RÉPONSE" : "REFUSÉ CHAUFFEUR ❌") :
                                                 o.status === "driver_accepted" ? "EN ROUTE ENLÈVEMENT ✅" :
@@ -76,7 +76,7 @@ export default function AdminOrdersKanban({
                                         <div className="mt-1 flex flex-col items-center gap-1">
                                             <div className="h-1.5 w-1.5 rounded-full bg-slate-300"></div>
                                             <div className="h-4 w-px bg-slate-100"></div>
-                                            <div className="h-1.5 w-1.5 rounded-full bg-orange-500"></div>
+                                            <div className="h-1.5 w-1.5 rounded-full bg-[#ed5518]"></div>
                                         </div>
                                         <div className="flex flex-col min-w-0">
                                             <span className="text-[10px] text-slate-400 font-bold uppercase truncate">{o.pickup_city || 'Départ'}</span>
@@ -108,7 +108,7 @@ export default function AdminOrdersKanban({
                                         ) : col.label === "Dispatch" ? (
                                             <button
                                                 onClick={(e) => { e.stopPropagation(); openDispatch(o); }}
-                                                className="rounded-xl bg-orange-500 px-4 py-2 text-[10px] font-black text-white hover:bg-orange-600 transition-all uppercase tracking-widest shadow-lg shadow-orange-500/10 active:scale-95"
+                                                className="rounded-xl bg-[#ed5518] px-4 py-2 text-[10px] font-black text-white hover:bg-[#ed5518] transition-all uppercase tracking-widest shadow-lg shadow-primary/10 active:scale-95"
                                             >
                                                 DISPATCH
                                             </button>
@@ -120,7 +120,7 @@ export default function AdminOrdersKanban({
                                                 RÉASSIGNER
                                             </button>
                                         ) : (
-                                            <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">LIVRÉ ✓</span>
+                                            <span className="text-[10px] font-black text-[#ed5518] uppercase tracking-widest">LIVRÉ ✓</span>
                                         )}
                                     </div>
                                     <div className="flex flex-col items-end">

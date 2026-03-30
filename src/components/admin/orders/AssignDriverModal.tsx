@@ -146,8 +146,8 @@ const AssignDriverModal = ({
 
         <div className="space-y-4">
           {/* Info commande */}
-          <div className="bg-blue-50 p-3 rounded-lg border border-blue-200">
-            <p className="text-sm text-blue-900">
+          <div className="bg-[#ed5518] p-3 rounded-lg border border-blue-200">
+            <p className="text-sm text-[#ed5518]">
               <strong>Commande :</strong> {orderId}
             </p>
           </div>

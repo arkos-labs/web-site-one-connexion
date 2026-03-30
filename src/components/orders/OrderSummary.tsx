@@ -64,11 +64,11 @@ export function OrderSummary({
     }
 
     return (
-        <Card className={`p-6 border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-background ${className}`}>
+        <Card className={`p-6 border-2 border-[#ed5518]/20 bg-gradient-to-br from-primary/5 to-background ${className}`}>
             {/* En-tête */}
             <div className="flex items-center justify-between mb-6">
                 <div>
-                    <h3 className="text-xl font-display font-bold text-primary">
+                    <h3 className="text-xl font-display font-bold text-[#ed5518]">
                         Récapitulatif de la commande
                     </h3>
                     <p className="text-sm text-muted-foreground mt-1">
@@ -113,8 +113,8 @@ export function OrderSummary({
                 </div>
 
                 <div className="flex items-start gap-3">
-                    <div className="mt-1 p-2 rounded-lg bg-blue-500/10">
-                        <MapPin className="h-5 w-5 text-blue-600" />
+                    <div className="mt-1 p-2 rounded-lg bg-[#ed5518]/10">
+                        <MapPin className="h-5 w-5 text-[#ed5518]" />
                     </div>
                     <div className="flex-1">
                         <p className="text-sm font-medium text-muted-foreground">
@@ -204,7 +204,7 @@ export function OrderSummary({
                     <div className="flex items-center justify-between">
                         <span className="text-sm text-muted-foreground">Délai estimé</span>
                         <div className="flex items-center gap-2">
-                            <Clock className="h-4 w-4 text-primary" />
+                            <Clock className="h-4 w-4 text-[#ed5518]" />
                             <span className="font-medium">2h à 4h</span>
                         </div>
                     </div>
@@ -219,7 +219,7 @@ export function OrderSummary({
 
                     <div className="flex items-center justify-between">
                         <span className="text-sm text-muted-foreground">Supplément kilométrique</span>
-                        <span className={`font-medium ${pricingResult.supplement > 0 ? 'text-orange-600' : 'text-muted-foreground'}`}>
+                        <span className={`font-medium ${pricingResult.supplement > 0 ? 'text-[#ed5518]' : 'text-muted-foreground'}`}>
                             {pricingResult.supplement > 0 ? '+' : ''}{pricingResult.supplement.toFixed(2)} bons
                         </span>
                     </div>
@@ -235,7 +235,7 @@ export function OrderSummary({
                     <div className="flex items-center justify-between pt-2">
                         <span className="text-base font-semibold">Prix total</span>
                         <div className="flex items-center gap-2">
-                            <span className="text-3xl font-bold text-primary">
+                            <span className="text-3xl font-bold text-[#ed5518]">
                                 {pricingResult.totalEuros.toFixed(2)}€
                             </span>
                         </div>

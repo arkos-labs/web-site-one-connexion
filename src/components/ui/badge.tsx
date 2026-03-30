@@ -8,7 +8,7 @@ const badgeVariants = cva(
   {
     variants: {
       variant: {
-        default: "border-transparent bg-primary text-primary-foreground hover:bg-primary/80",
+        default: "border-transparent bg-[#ed5518] text-primary-foreground hover:bg-[#ed5518]/80",
         secondary: "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
         destructive: "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
         outline: "text-foreground",
@@ -19,7 +19,7 @@ const badgeVariants = cva(
         in_progress: "border-transparent bg-status-in_progress text-status-in_progress-foreground hover:bg-status-in_progress/80",
         delivered: "border-transparent bg-status-delivered text-status-delivered-foreground hover:bg-status-delivered/80",
         cancelled: "border-transparent bg-status-cancelled text-status-cancelled-foreground hover:bg-status-cancelled/80",
-        driver_accepted: "border-transparent bg-teal-500 text-white hover:bg-teal-600",
+        driver_accepted: "border-transparent bg-[#ed5518] text-white hover:bg-[#ed5518]",
       },
     },
     defaultVariants: {

@@ -95,9 +95,9 @@ export default function AdminClients() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { icon: <Users size={18} />, iconBg: "bg-slate-100 text-slate-600", label: "Total clients", value: stats.total },
-          { icon: <TrendingUp size={18} />, iconBg: "bg-indigo-100 text-indigo-600", label: "CA cumulé", value: `${stats.totalRevenue.toFixed(0)}€` },
+          { icon: <TrendingUp size={18} />, iconBg: "bg-[#ed5518] text-[#ed5518]", label: "CA cumulé", value: `${stats.totalRevenue.toFixed(0)}€` },
           { icon: <AlertTriangle size={18} />, iconBg: "bg-rose-100 text-rose-600", label: "Risque élevé", value: stats.highRisk, alert: stats.highRisk > 0 },
-          { icon: <CheckCircle2 size={18} />, iconBg: "bg-emerald-100 text-emerald-600", label: "Clients actifs", value: stats.activeMonth },
+          { icon: <CheckCircle2 size={18} />, iconBg: "bg-[#ed5518] text-[#ed5518]", label: "Clients actifs", value: stats.activeMonth },
         ].map((kpi, i) => (
           <div key={i} className={`bg-white rounded-[2rem] p-5 border ${kpi.alert ? 'border-rose-100 ring-1 ring-rose-200' : 'border-slate-100'} shadow-sm hover:shadow-md transition-all`}>
             <div className={`h-9 w-9 rounded-xl mb-3 flex items-center justify-center ${kpi.iconBg}`}>{kpi.icon}</div>
@@ -151,7 +151,7 @@ export default function AdminClients() {
                         {c.name[0]?.toUpperCase()}
                       </div>
                       <div>
-                        <div className="text-sm font-black text-slate-900 group-hover:text-orange-500 transition-colors">{c.name}</div>
+                        <div className="text-sm font-black text-slate-900 group-hover:text-[#ed5518] transition-colors">{c.name}</div>
                         <div className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Compte certifié</div>
                       </div>
                     </div>
@@ -167,13 +167,13 @@ export default function AdminClients() {
                   </td>
                   <td className="px-8 py-5">
                     <div className="space-y-1.5">
-                      <div className={`flex items-center gap-1.5 text-[9px] font-black uppercase tracking-widest ${c.risk.level === "Élevé" ? "text-rose-600" : c.risk.level === "Moyen" ? "text-amber-600" : "text-emerald-600"}`}>
-                        <span className={`h-1.5 w-1.5 rounded-full ${c.risk.level === "Élevé" ? "bg-rose-500 animate-pulse" : c.risk.level === "Moyen" ? "bg-amber-500" : "bg-emerald-500"}`} />
+                      <div className={`flex items-center gap-1.5 text-[9px] font-black uppercase tracking-widest ${c.risk.level === "Élevé" ? "text-rose-600" : c.risk.level === "Moyen" ? "text-amber-600" : "text-[#ed5518]"}`}>
+                        <span className={`h-1.5 w-1.5 rounded-full ${c.risk.level === "Élevé" ? "bg-rose-500 animate-pulse" : c.risk.level === "Moyen" ? "bg-amber-500" : "bg-[#ed5518]"}`} />
                         {c.risk.level}
                       </div>
                       <div className="w-20 h-1 bg-slate-100 rounded-full overflow-hidden">
                         <div
-                          className={`h-full rounded-full ${c.risk.level === "Élevé" ? "bg-rose-500" : c.risk.level === "Moyen" ? "bg-amber-500" : "bg-emerald-500"}`}
+                          className={`h-full rounded-full ${c.risk.level === "Élevé" ? "bg-rose-500" : c.risk.level === "Moyen" ? "bg-amber-500" : "bg-[#ed5518]"}`}
                           style={{ width: `${c.risk.score}%` }}
                         />
                       </div>
@@ -182,7 +182,7 @@ export default function AdminClients() {
                   <td className="px-8 py-5 text-right">
                     <button
                       onClick={e => { e.stopPropagation(); navigate(`/admin/clients/${c.id}`); }}
-                      className="inline-flex items-center gap-1.5 rounded-xl bg-slate-900 px-4 py-2 text-[10px] font-black text-white hover:bg-orange-500 transition-all active:scale-95 shadow"
+                      className="inline-flex items-center gap-1.5 rounded-xl bg-slate-900 px-4 py-2 text-[10px] font-black text-white hover:bg-[#ed5518] transition-all active:scale-95 shadow"
                     >
                       DOSSIER <ArrowRight size={12} />
                     </button>

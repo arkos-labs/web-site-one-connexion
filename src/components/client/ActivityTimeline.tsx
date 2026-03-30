@@ -91,8 +91,8 @@ export const ActivityTimeline = ({ clientId, limit = 10 }: ActivityTimelineProps
                                 description: `Commande ${order.reference} prise en charge`,
                                 timestamp: order.dispatched_at,
                                 icon: Truck,
-                                color: 'text-indigo-600',
-                                bgColor: 'bg-indigo-50',
+                                color: 'text-[#ed5518]',
+                                bgColor: 'bg-[#ed5518]',
                             });
                         }
                     });
@@ -115,8 +115,8 @@ export const ActivityTimeline = ({ clientId, limit = 10 }: ActivityTimelineProps
                             description: `Facture ${invoice.reference} - ${invoice.amount_ttc}€`,
                             timestamp: invoice.created_at,
                             icon: FileText,
-                            color: 'text-emerald-600',
-                            bgColor: 'bg-emerald-50',
+                            color: 'text-[#ed5518]',
+                            bgColor: 'bg-[#ed5518]',
                         });
 
                         // Événement de paiement
@@ -128,8 +128,8 @@ export const ActivityTimeline = ({ clientId, limit = 10 }: ActivityTimelineProps
                                 description: `Facture ${invoice.reference} réglée`,
                                 timestamp: invoice.paid_date,
                                 icon: CheckCircle,
-                                color: 'text-emerald-600',
-                                bgColor: 'bg-emerald-100',
+                                color: 'text-[#ed5518]',
+                                bgColor: 'bg-[#ed5518]',
                             });
                         }
                     });
@@ -160,8 +160,8 @@ export const ActivityTimeline = ({ clientId, limit = 10 }: ActivityTimelineProps
                                 description: message.content.substring(0, 60) + (message.content.length > 60 ? '...' : ''),
                                 timestamp: message.created_at,
                                 icon: MessageSquare,
-                                color: 'text-blue-600',
-                                bgColor: 'bg-blue-50',
+                                color: 'text-[#ed5518]',
+                                bgColor: 'bg-[#ed5518]',
                             });
                         });
                     }

@@ -15,7 +15,7 @@ export const DeliveryChart = ({ data }: DeliveryChartProps) => {
 
     return (
         <Card className="p-6 shadow-soft border-0">
-            <h2 className="text-xl font-display font-bold text-primary mb-6">
+            <h2 className="text-xl font-display font-bold text-[#ed5518] mb-6">
                 Types de livraison
             </h2>
             <div className="space-y-6">
@@ -26,7 +26,7 @@ export const DeliveryChart = ({ data }: DeliveryChartProps) => {
                         onClick={() => handleClick(item.type)}
                     >
                         <div className="flex items-center justify-between mb-2">
-                            <span className="font-semibold text-primary group-hover:text-accent-main transition-colors">
+                            <span className="font-semibold text-[#ed5518] group-hover:text-accent-main transition-colors">
                                 {item.type}
                             </span>
                             <span className="text-sm text-muted-foreground">

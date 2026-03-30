@@ -19,11 +19,11 @@ const OrderDetailsModal = ({ order, isOpen, onClose }: OrderDetailsModalProps) =
 
     const getStatusBadge = (status: Order['status']) => {
         const statusConfig: Record<string, { label: string; className: string }> = {
-            pending: { label: 'En attente', className: 'bg-orange-500 hover:bg-orange-600' },
-            pending_acceptance: { label: 'En attente', className: 'bg-orange-500 hover:bg-orange-600' },
-            accepted: { label: 'Acceptée', className: 'bg-blue-500 hover:bg-blue-600' },
-            assigned: { label: 'En cours', className: 'bg-blue-600 hover:bg-blue-700' },
-            in_progress: { label: 'En cours', className: 'bg-blue-600 hover:bg-blue-700' },
+            pending: { label: 'En attente', className: 'bg-[#ed5518] hover:bg-[#ed5518]' },
+            pending_acceptance: { label: 'En attente', className: 'bg-[#ed5518] hover:bg-[#ed5518]' },
+            accepted: { label: 'Acceptée', className: 'bg-[#ed5518] hover:bg-[#ed5518]' },
+            assigned: { label: 'En cours', className: 'bg-[#ed5518] hover:bg-[#ed5518]' },
+            in_progress: { label: 'En cours', className: 'bg-[#ed5518] hover:bg-[#ed5518]' },
             delivered: { label: 'Livrée', className: 'bg-green-500 hover:bg-green-600' },
             cancelled: { label: 'Annulée', className: 'bg-red-500 hover:bg-red-600' },
         };

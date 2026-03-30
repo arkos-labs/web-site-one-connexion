@@ -66,19 +66,19 @@ export default function Login() {
 
         {/* Logo */}
         <Link to="/" className="relative z-10 flex items-center gap-3">
-          <div className="grid h-10 w-10 place-items-center rounded-xl bg-orange-500 text-white text-sm font-black shadow-lg shadow-orange-500/30">OC</div>
+          <div className="grid h-10 w-10 place-items-center rounded-xl bg-[#ed5518] text-white text-sm font-black shadow-lg shadow-primary/30">OC</div>
           <span className="text-xl font-black text-white tracking-tight">One Connexion</span>
         </Link>
 
         {/* Center content */}
         <div className="relative z-10 space-y-10">
           <div className="space-y-4">
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-bold uppercase tracking-widest text-orange-400">
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-bold uppercase tracking-widest text-[#ed5518]">
               Plateforme B2B
             </div>
             <h2 className="text-4xl font-black text-white leading-tight">
               Votre logistique,<br />
-              <span className="text-orange-400 italic">enfin maîtrisée.</span>
+              <span className="text-[#ed5518] italic">enfin maîtrisée.</span>
             </h2>
             <p className="text-slate-400 text-base leading-relaxed max-w-xs">
               Gérez toutes vos expéditions depuis un seul espace. Simple, rapide, traçable.
@@ -87,7 +87,7 @@ export default function Login() {
           <ul className="space-y-4">
             {PERKS.map((p, i) => (
               <li key={i} className="flex items-center gap-4 text-sm font-medium text-slate-300">
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/5 text-orange-400">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/5 text-[#ed5518]">
                   <p.icon size={18} />
                 </div>
                 {p.text}
@@ -107,7 +107,7 @@ export default function Login() {
         <div className="w-full max-w-sm">
           {/* Mobile logo */}
           <Link to="/" className="flex items-center gap-3 mb-10 lg:hidden">
-            <div className="grid h-9 w-9 place-items-center rounded-xl bg-orange-500 text-white text-sm font-black">OC</div>
+            <div className="grid h-9 w-9 place-items-center rounded-xl bg-[#ed5518] text-white text-sm font-black">OC</div>
             <span className="text-lg font-black text-slate-900">One Connexion</span>
           </Link>
 
@@ -134,7 +134,7 @@ export default function Login() {
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
                 <label className="text-xs font-bold uppercase tracking-widest text-slate-500">Mot de passe</label>
-                <Link to="/forgot-password" className="text-xs font-bold text-orange-600 hover:text-orange-700 transition-colors">Oublié ?</Link>
+                <Link to="/forgot-password" className="text-xs font-bold text-[#ed5518] hover:text-[#ed5518] transition-colors">Oublié ?</Link>
               </div>
               <div className="relative">
                 <input
@@ -162,7 +162,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="group w-full flex items-center justify-center gap-2 rounded-full bg-slate-900 py-4 text-sm font-black text-white shadow-xl shadow-slate-900/15 transition-all hover:bg-orange-500 hover:-translate-y-0.5 hover:shadow-orange-500/20 disabled:opacity-60 disabled:cursor-not-allowed"
+              className="group w-full flex items-center justify-center gap-2 rounded-full bg-slate-900 py-4 text-sm font-black text-white shadow-xl shadow-slate-900/15 transition-all hover:bg-[#ed5518] hover:-translate-y-0.5 hover:shadow-primary/20 disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {loading ? <Loader2 className="animate-spin" size={18} /> : (
                 <>Se connecter <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" /></>
@@ -186,7 +186,7 @@ export default function Login() {
 
           <p className="mt-8 text-center text-sm text-slate-500">
             Pas encore de compte ?{" "}
-            <Link to="/inscription" className="font-black text-slate-900 hover:text-orange-500 transition-colors hover:underline">
+            <Link to="/inscription" className="font-black text-slate-900 hover:text-[#ed5518] transition-colors hover:underline">
               Créer un compte pro
             </Link>
           </p>

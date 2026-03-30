@@ -129,7 +129,7 @@ export default function Invoices() {
                   </div>
                   <div className="text-sm font-bold">#{inv.id.slice(0, 8)}</div>
                 </div>
-                <span className={`rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide ${inv.status === "paid" ? "bg-emerald-50 text-emerald-600" : "bg-amber-50 text-amber-600"}`}>
+                <span className={`rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide ${inv.status === "paid" ? "bg-[#ed5518] text-[#ed5518]" : "bg-amber-50 text-amber-600"}`}>
                   {inv.status === 'paid' ? 'Payée' : inv.status}
                 </span>
               </button>
@@ -147,7 +147,7 @@ export default function Invoices() {
                   {new Date(selected.period_start).toLocaleDateString()} - {new Date(selected.period_end).toLocaleDateString()}
                 </div>
               </div>
-              <span className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wide ${selected.status === "paid" ? "bg-emerald-50 text-emerald-600" : "bg-amber-50 text-amber-600"}`}>
+              <span className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wide ${selected.status === "paid" ? "bg-[#ed5518] text-[#ed5518]" : "bg-amber-50 text-amber-600"}`}>
                 {selected.status}
               </span>
             </div>

@@ -11,12 +11,12 @@ import AdminPageHeader from "../components/admin/AdminPageHeader";
 const STATUS_CONFIG = {
   pending_acceptance: { label: "Nouveau", cls: "bg-rose-50 text-rose-700 border-rose-200", step: 0 },
   pending: { label: "En attente", cls: "bg-rose-50 text-rose-700 border-rose-200", step: 0 },
-  accepted: { label: "Validé", cls: "bg-indigo-50 text-indigo-700 border-indigo-200", step: 1 },
+  accepted: { label: "Validé", cls: "bg-[#ed5518] text-[#ed5518] border-indigo-200", step: 1 },
   assigned: { label: "Assigné", cls: "bg-amber-50 text-amber-700 border-amber-200", step: 2 },
-  driver_accepted: { label: "Chauffeur en route vers enlèvement", cls: "bg-emerald-50 text-emerald-700 border-emerald-200", step: 3 },
+  driver_accepted: { label: "Chauffeur en route vers enlèvement", cls: "bg-[#ed5518] text-[#ed5518] border-emerald-200", step: 3 },
   driver_refused: { label: "Refusé par le chauffeur", cls: "bg-rose-50 text-rose-700 border-rose-200", step: 1 },
-  picked_up: { label: "Enlevée", cls: "bg-blue-50 text-blue-700 border-blue-200", step: 4 },
-  in_progress: { label: "Enlevée", cls: "bg-blue-50 text-blue-700 border-blue-200", step: 4 },
+  picked_up: { label: "Enlevée", cls: "bg-[#ed5518] text-[#ed5518] border-blue-200", step: 4 },
+  in_progress: { label: "Enlevée", cls: "bg-[#ed5518] text-[#ed5518] border-blue-200", step: 4 },
   delivered: { label: "Livrée ✓", cls: "bg-slate-100 text-slate-700 border-slate-300", step: 5 },
   cancelled: { label: "Annulée", cls: "bg-red-50 text-red-600 border-red-200", step: -1 },
 };
@@ -176,7 +176,7 @@ export default function AdminOrderDetails() {
   if (!order) return (
     <div className="text-center py-20">
       <div className="text-2xl font-black text-slate-300 mb-3">Commande introuvable</div>
-      <button onClick={() => navigate('/admin/orders')} className="text-sm font-bold text-orange-500 hover:underline">← Retour aux missions</button>
+      <button onClick={() => navigate('/admin/orders')} className="text-sm font-bold text-[#ed5518] hover:underline">← Retour aux missions</button>
     </div>
   );
 
@@ -221,7 +221,7 @@ export default function AdminOrderDetails() {
               <FileText size={14} /> Bon de commande PDF
             </button>
             {['pending_acceptance', 'pending'].includes(order.status) && (
-              <button onClick={() => updateStatus(order.driver_id || edit.driverId ? 'driver_accepted' : 'accepted')} disabled={saving} className="rounded-xl bg-slate-900 px-5 py-2.5 text-xs font-black text-white hover:bg-orange-500 transition-all disabled:opacity-50 tracking-widest uppercase">ACCEPTER</button>
+              <button onClick={() => updateStatus(order.driver_id || edit.driverId ? 'driver_accepted' : 'accepted')} disabled={saving} className="rounded-xl bg-slate-900 px-5 py-2.5 text-xs font-black text-white hover:bg-[#ed5518] transition-all disabled:opacity-50 tracking-widest uppercase">ACCEPTER</button>
             )}
             {order.status === 'accepted' && (
               <button onClick={() => {
@@ -230,17 +230,17 @@ export default function AdminOrderDetails() {
                   el.focus();
                   el.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }
-              }} disabled={saving} className="rounded-xl bg-indigo-600 px-5 py-2.5 text-xs font-black text-white hover:bg-indigo-700 transition-all disabled:opacity-50">DISPATCHER</button>
+              }} disabled={saving} className="rounded-xl bg-[#ed5518] px-5 py-2.5 text-xs font-black text-white hover:bg-[#ed5518] transition-all disabled:opacity-50">DISPATCHER</button>
             )}
             {order.status === 'in_progress' && (
-              <button onClick={() => updateStatus('delivered')} disabled={saving} className="rounded-xl bg-emerald-600 px-5 py-2.5 text-xs font-black text-white hover:bg-emerald-700 transition-all disabled:opacity-50">MARQUER LIVRÉE</button>
+              <button onClick={() => updateStatus('delivered')} disabled={saving} className="rounded-xl bg-[#ed5518] px-5 py-2.5 text-xs font-black text-white hover:bg-[#ed5518] transition-all disabled:opacity-50">MARQUER LIVRÉE</button>
             )}
             {order.status === 'delivered' && (
               <button
                 onClick={() => {
                   import("../lib/pdfGenerator").then(m => m.generateIndividualInvoicePdf(order, client));
                 }}
-                className="flex items-center gap-2 rounded-xl border border-indigo-200 bg-indigo-50 px-4 py-2.5 text-xs font-bold text-indigo-700 hover:bg-indigo-100 transition-all shadow-sm"
+                className="flex items-center gap-2 rounded-xl border border-indigo-200 bg-[#ed5518] px-4 py-2.5 text-xs font-bold text-[#ed5518] hover:bg-[#ed5518] transition-all shadow-sm"
               >
                 <TrendingUp size={14} /> Facture PDF
               </button>
@@ -262,10 +262,10 @@ export default function AdminOrderDetails() {
             return (
               <div key={step.key} className="flex items-center flex-1 min-w-0">
                 <div className="flex flex-col items-center gap-1.5 flex-1">
-                  <div className={`h-7 w-7 rounded-full flex items-center justify-center text-[10px] font-black border-2 transition-all ${isCurrent ? 'bg-orange-500 border-orange-500 text-white scale-110' : isDone ? 'bg-slate-900 border-slate-900 text-white' : 'bg-white border-slate-200 text-slate-400'}`}>
+                  <div className={`h-7 w-7 rounded-full flex items-center justify-center text-[10px] font-black border-2 transition-all ${isCurrent ? 'bg-[#ed5518] border-[#ed5518] text-white scale-110' : isDone ? 'bg-slate-900 border-slate-900 text-white' : 'bg-white border-slate-200 text-slate-400'}`}>
                     {isDone && !isCurrent ? <CheckCircle2 size={14} /> : i + 1}
                   </div>
-                  <span className={`text-[9px] font-black uppercase tracking-widest text-center ${isCurrent ? 'text-orange-500' : isDone ? 'text-slate-700' : 'text-slate-300'}`}>{step.label}</span>
+                  <span className={`text-[9px] font-black uppercase tracking-widest text-center ${isCurrent ? 'text-[#ed5518]' : isDone ? 'text-slate-700' : 'text-slate-300'}`}>{step.label}</span>
                 </div>
                 {i < PIPELINE.length - 1 && (
                   <div className={`h-px flex-1 mx-1 ${PIPELINE.findIndex(s => s.key === order.status) > i ? 'bg-slate-900' : 'bg-slate-200'}`} />
@@ -292,7 +292,7 @@ export default function AdminOrderDetails() {
                 </div>
                 <div className="font-black text-slate-900 text-sm">{pickupName}</div>
                 <div className="text-xs text-slate-500 mt-1">{order.pickup_address || "—"}</div>
-                {pCode && <div className="mt-2 inline-flex items-center rounded-lg bg-orange-50 border border-orange-100 px-2.5 py-1 text-xs font-black text-orange-600">🔑 Code: {pCode}</div>}
+                {pCode && <div className="mt-2 inline-flex items-center rounded-lg bg-orange-50 border border-[#ed5518] px-2.5 py-1 text-xs font-black text-[#ed5518]">🔑 Code: {pCode}</div>}
                 {nPNote && <div className="mt-2 text-xs text-slate-600 italic bg-amber-50 rounded-xl px-3 py-2 border border-amber-100">📝 {nPNote}</div>}
                 <div className="mt-3 flex gap-4 text-xs text-slate-500">
                   {pickupPhone !== "—" && <span className="flex items-center gap-1"><Phone size={11} /> {pickupPhone}</span>}
@@ -302,12 +302,12 @@ export default function AdminOrderDetails() {
               {/* Delivery */}
               <div className="rounded-2xl bg-slate-50 border border-slate-100 p-5">
                 <div className="flex items-center gap-2 mb-3">
-                  <div className="h-6 w-6 rounded-full bg-orange-500 flex items-center justify-center"><MapPin size={12} className="text-white" /></div>
+                  <div className="h-6 w-6 rounded-full bg-[#ed5518] flex items-center justify-center"><MapPin size={12} className="text-white" /></div>
                   <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">Livraison</span>
                 </div>
                 <div className="font-black text-slate-900 text-sm">{deliveryName}</div>
                 <div className="text-xs text-slate-500 mt-1">{order.delivery_address || "—"}</div>
-                {dCode && <div className="mt-2 inline-flex items-center rounded-lg bg-orange-50 border border-orange-100 px-2.5 py-1 text-xs font-black text-orange-600">🔑 Code: {dCode}</div>}
+                {dCode && <div className="mt-2 inline-flex items-center rounded-lg bg-orange-50 border border-[#ed5518] px-2.5 py-1 text-xs font-black text-[#ed5518]">🔑 Code: {dCode}</div>}
                 {nDNote && <div className="mt-2 text-xs text-slate-600 italic bg-amber-50 rounded-xl px-3 py-2 border border-amber-100">📝 {nDNote}</div>}
                 {deliveryPhone !== "—" && <div className="mt-3 flex items-center gap-1 text-xs text-slate-500"><Phone size={11} /> {deliveryPhone}</div>}
               </div>
@@ -349,7 +349,7 @@ export default function AdminOrderDetails() {
           <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm p-6">
             <div className="flex items-center justify-between mb-4">
               <div className="text-[10px] font-black uppercase tracking-widest text-slate-400">Client / Expéditeur</div>
-              {!client?.id && <span className="rounded-lg bg-orange-50 border border-orange-100 px-2 py-0.5 text-[9px] font-black text-orange-600 uppercase">Invité</span>}
+              {!client?.id && <span className="rounded-lg bg-orange-50 border border-[#ed5518] px-2 py-0.5 text-[9px] font-black text-[#ed5518] uppercase">Invité</span>}
             </div>
             <div className="grid grid-cols-2 gap-3 text-sm">
               {[
@@ -365,7 +365,7 @@ export default function AdminOrderDetails() {
               ))}
             </div>
             {client?.id && (
-              <button onClick={() => navigate(`/admin/clients/${client.id}`)} className="mt-4 flex items-center gap-1.5 text-xs font-black text-orange-500 hover:underline">
+              <button onClick={() => navigate(`/admin/clients/${client.id}`)} className="mt-4 flex items-center gap-1.5 text-xs font-black text-[#ed5518] hover:underline">
                 Voir le dossier client <ChevronRight size={13} />
               </button>
             )}
@@ -376,7 +376,7 @@ export default function AdminOrderDetails() {
         <div className="space-y-5">
           {/* Price */}
           <div className="bg-slate-900 text-white rounded-[2rem] p-6 shadow-xl relative overflow-hidden">
-            <div className="absolute -top-8 -right-8 h-24 w-24 bg-orange-500/10 rounded-full blur-2xl" />
+            <div className="absolute -top-8 -right-8 h-24 w-24 bg-[#ed5518]/10 rounded-full blur-2xl" />
             <div className="relative z-10">
               <div className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">Montant HT</div>
               <div className="text-5xl font-black tabular-nums">{Number(order.price_ht || 0).toFixed(2)}€</div>
@@ -385,7 +385,7 @@ export default function AdminOrderDetails() {
                 <div className="mt-4 pt-4 border-t border-white/10">
                   <div className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">Livreur assigné</div>
                   <div className="flex items-center gap-2">
-                    <div className="h-7 w-7 rounded-xl bg-emerald-500/20 text-emerald-400 text-[10px] font-black grid place-items-center">{assignedDriver.name[0]}</div>
+                    <div className="h-7 w-7 rounded-xl bg-[#ed5518]/20 text-[#ed5518] text-[10px] font-black grid place-items-center">{assignedDriver.name[0]}</div>
                     <span className="text-sm font-black">{assignedDriver.name}</span>
                   </div>
                 </div>
@@ -459,7 +459,7 @@ export default function AdminOrderDetails() {
               <button
                 onClick={saveEdits}
                 disabled={saving}
-                className="w-full flex items-center justify-center gap-2 rounded-xl bg-slate-900 py-3.5 text-sm font-black text-white hover:bg-orange-500 transition-all disabled:opacity-50"
+                className="w-full flex items-center justify-center gap-2 rounded-xl bg-slate-900 py-3.5 text-sm font-black text-white hover:bg-[#ed5518] transition-all disabled:opacity-50"
               >
                 {saving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
                 Enregistrer les modifications

@@ -6,15 +6,18 @@ export default function PublicFooter() {
       <div className="mx-auto max-w-7xl px-6 md:px-12">
         <div className="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
           <div className="max-w-2xl">
-            <div className="flex items-center gap-4">
-              <div className="grid h-12 w-12 place-items-center rounded-xl bg-orange-500 text-white font-black text-xl shadow-lg shadow-orange-500/20">OC</div>
-              <span className="text-2xl font-black tracking-tight">One Connexion</span>
-            </div>
+            <Link to="/" className="flex items-center">
+              <img 
+                src="/logos/ONECONNEXION-09.svg" 
+                alt="One Connexion Logo" 
+                className="h-16 w-auto" 
+              />
+            </Link>
             <p className="mt-6 text-[15px] leading-relaxed text-slate-400">
               Notre mission est de simplifier la logistique B2B pour les entreprises, en offrant une solution rapide, fiable et 100% digitalisée.
             </p>
           </div>
-          <Link to="/contact" className="inline-flex items-center gap-2 rounded-full bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500">
+          <Link to="/contact" className="inline-flex items-center gap-2 rounded-full bg-[#ed5518] px-5 py-2.5 text-sm font-black text-white hover:bg-[#ed5518]-hover shadow-lg shadow-primary/20 transition-all">
             Contactez‑nous ↗
           </Link>
         </div>
@@ -36,7 +39,7 @@ export default function PublicFooter() {
               <Link to="/coursier-ile-de-france" className="block hover:text-white">Coursier Île‑de‑France</Link>
               <Link to="/messagerie-express-ile-de-france" className="block hover:text-white">Messagerie express IDF</Link>
               <Link to="/navette-reguliere-ile-de-france" className="block hover:text-white">Navettes régulières</Link>
-              <Link to="/commande-sans-compte" className="block hover:text-white font-bold text-orange-400 mt-2">Commander sans compte</Link>
+              <Link to="/commande-sans-compte" className="block hover:text-white font-bold text-[#ed5518] mt-2">Commander sans compte</Link>
             </div>
           </div>
           <div>
@@ -53,7 +56,7 @@ export default function PublicFooter() {
             <div className="text-xs uppercase tracking-widest text-slate-400">Newsletter</div>
             <div className="mt-4 flex items-center gap-2 rounded-lg bg-white/5 p-2">
               <input className="w-full bg-transparent text-sm text-white placeholder:text-slate-500 focus:outline-none" placeholder="Email" />
-              <button className="rounded-md bg-indigo-600 px-3 py-2 text-xs font-semibold">S’abonner</button>
+              <button className="rounded-md bg-[#ed5518] px-3 py-2 text-xs font-black uppercase text-white hover:bg-[#ed5518]-hover transition-colors">S’abonner</button>
             </div>
           </div>
         </div>

@@ -59,11 +59,11 @@ export default function DashboardClientLayout() {
   };
 
   return (
-    <div className="flex h-screen bg-[#f8fafc] font-sans text-slate-900 overflow-hidden selection:bg-orange-500/30 selection:text-orange-900">
+    <div className="flex h-screen bg-[#f8fafc] font-sans text-slate-900 overflow-hidden selection:bg-[#ed5518]/30 selection:text-[#ed5518]">
       <aside className="hidden w-[280px] flex-col justify-between border-r border-slate-200/60 bg-white/80 px-6 py-8 backdrop-blur-3xl lg:flex z-20">
         <div>
           <Link to="/" className="group mb-12 flex items-center gap-3 px-2">
-            <div className="grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br from-orange-400 to-orange-600 text-white font-black shadow-lg shadow-orange-500/20 transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3">
+            <div className="grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br from-primary to-primary text-white font-black shadow-lg shadow-primary/20 transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3">
               OC
             </div>
             <div className="flex flex-col">
@@ -95,7 +95,7 @@ export default function DashboardClientLayout() {
         <div className="space-y-4">
           <div className="rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 p-5 text-white shadow-xl shadow-slate-900/10">
             <div className="mb-2 flex items-center gap-2">
-              <div className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></div>
+              <div className="h-2 w-2 rounded-full bg-[#ed5518] animate-pulse"></div>
               <span className="text-[10px] font-bold uppercase tracking-wider text-slate-300">Support Premium</span>
             </div>
             <p className="text-xs font-medium leading-relaxed text-slate-400 mb-4">Un expert logistique dédié à votre écoute 24/7.</p>
@@ -131,13 +131,13 @@ function NavItem({ icon: IconComponent, label, active, badge, to }) {
 
   return (
     <Link to={to} className={classes}>
-      {active && <div className="absolute left-0 top-1/2 h-8 w-1 -translate-y-1/2 rounded-r-full bg-orange-500" />}
+      {active && <div className="absolute left-0 top-1/2 h-8 w-1 -translate-y-1/2 rounded-r-full bg-[#ed5518]" />}
       <div className="flex items-center gap-3">
-        {IconComponent({ size: 20, className: `transition-transform duration-300 ${!active && "group-hover:scale-110 group-hover:text-orange-500"}`, strokeWidth: active ? 2.5 : 2 })}
+        {IconComponent({ size: 20, className: `transition-transform duration-300 ${!active && "group-hover:scale-110 group-hover:text-[#ed5518]"}`, strokeWidth: active ? 2.5 : 2 })}
         <span>{label}</span>
       </div>
       {badge && (
-        <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-orange-500 px-1.5 text-[10px] font-black text-white shadow-sm ring-2 ring-white">
+        <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-[#ed5518] px-1.5 text-[10px] font-black text-white shadow-sm ring-2 ring-white">
           {badge}
         </span>
       )}

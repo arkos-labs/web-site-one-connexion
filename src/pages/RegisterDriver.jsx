@@ -73,7 +73,7 @@ export default function RegisterDriver() {
         <PublicHeader />
         <div className="flex min-h-[calc(100vh-96px)] items-center justify-center bg-slate-50 p-4">
           <div className="w-full max-w-md rounded-3xl bg-white p-8 shadow-xl text-center">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 mb-6">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#ed5518] text-[#ed5518] mb-6">
             <ShieldCheck size={32} />
           </div>
           <h2 className="text-2xl font-bold text-slate-900">Compte Créé ! 🎉</h2>
@@ -108,9 +108,9 @@ export default function RegisterDriver() {
         <div className="w-full max-w-md bg-white rounded-3xl shadow-xl overflow-hidden">
           <div className="bg-slate-900 p-8 text-center relative overflow-hidden">
             {/* Decor */}
-            <div className="absolute top-0 left-0 w-full h-full opacity-20 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-orange-500 via-slate-900 to-slate-950"></div>
+            <div className="absolute top-0 left-0 w-full h-full opacity-20 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary via-slate-900 to-slate-950"></div>
             <div className="relative z-10">
-              <div className="mx-auto mb-4 grid h-12 w-12 place-items-center rounded-xl bg-orange-500 text-white font-bold text-xl shadow-lg">OC</div>
+              <div className="mx-auto mb-4 grid h-12 w-12 place-items-center rounded-xl bg-[#ed5518] text-white font-bold text-xl shadow-lg">OC</div>
               <h1 className="text-2xl font-bold text-white">Rejoindre la Flotte</h1>
               <p className="text-slate-400 text-sm mt-1">Créez votre accès chauffeur sécurisé.</p>
             </div>

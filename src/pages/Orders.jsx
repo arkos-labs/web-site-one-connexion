@@ -40,10 +40,10 @@ function statusColor(status) {
     case "pending_acceptance":
     case "pending": return "bg-slate-100 text-slate-600";
     case "accepted":
-    case "assigned": return "bg-blue-50 text-blue-600";
+    case "assigned": return "bg-[#ed5518] text-[#ed5518]";
     case "driver_accepted":
-    case "in_progress": return "bg-orange-50 text-orange-600";
-    case "delivered": return "bg-emerald-50 text-emerald-600";
+    case "in_progress": return "bg-orange-50 text-[#ed5518]";
+    case "delivered": return "bg-[#ed5518] text-[#ed5518]";
     case "cancelled": return "bg-red-50 text-red-600";
     default: return "bg-slate-100";
   }
@@ -379,7 +379,7 @@ export default function Orders() {
 
                 {/* Delivery Block */}
                 <div className="relative group">
-                  <div className="rounded-2xl bg-blue-50/30 p-5 border border-blue-100">
+                  <div className="rounded-2xl bg-[#ed5518]/30 p-5 border border-blue-100">
                     <h3 className="text-sm font-bold text-slate-900 mb-4 flex items-center gap-2">
                       🏁 Destination
                     </h3>
@@ -462,7 +462,7 @@ export default function Orders() {
                 </div>
                 <div>
                   <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Formule</label>
-                  <div className={`mt-1 w-full rounded-xl px-3 py-2 text-sm font-bold uppercase border bg-white ${form.service === 'super' ? 'text-rose-600 border-rose-100' : form.service === 'exclu' ? 'text-blue-600 border-blue-100' : 'text-emerald-600 border-emerald-100'}`}>
+                  <div className={`mt-1 w-full rounded-xl px-3 py-2 text-sm font-bold uppercase border bg-white ${form.service === 'super' ? 'text-rose-600 border-rose-100' : form.service === 'exclu' ? 'text-[#ed5518] border-blue-100' : 'text-[#ed5518] border-emerald-100'}`}>
                     {form.service || 'Normal'}
                   </div>
                 </div>

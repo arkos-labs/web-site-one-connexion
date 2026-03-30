@@ -34,7 +34,7 @@ const DashboardLayout = ({ type }: DashboardLayoutProps) => {
       <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
         {/* Header (Mobile & Desktop) */}
         <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b border-border p-4 flex items-center justify-between md:hidden">
-          <div className="font-semibold text-lg text-primary">
+          <div className="font-semibold text-lg text-[#ed5518]">
             One Connexion
           </div>
           <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>

@@ -21,11 +21,11 @@ function computeDriverPay(order) {
 const STATUS_CONFIG = {
   pending_acceptance: { label: "Nouveau", cls: "bg-rose-50 text-rose-600 border-rose-100" },
   pending: { label: "En attente", cls: "bg-rose-50 text-rose-600 border-rose-100" },
-  accepted: { label: "Validé", cls: "bg-indigo-50 text-indigo-600 border-indigo-100" },
+  accepted: { label: "Validé", cls: "bg-[#ed5518] text-[#ed5518] border-indigo-100" },
   assigned: { label: "Assigné", cls: "bg-amber-50 text-amber-700 border-amber-100" },
-  driver_accepted: { label: "Dispatché", cls: "bg-emerald-50 text-emerald-700 border-emerald-100" },
-  picked_up: { label: "Enlevé", cls: "bg-blue-50 text-blue-700 border-blue-100" },
-  in_progress: { label: "Enlevé", cls: "bg-blue-50 text-blue-700 border-blue-100" },
+  driver_accepted: { label: "Dispatché", cls: "bg-[#ed5518] text-[#ed5518] border-emerald-100" },
+  picked_up: { label: "Enlevé", cls: "bg-[#ed5518] text-[#ed5518] border-blue-100" },
+  in_progress: { label: "Enlevé", cls: "bg-[#ed5518] text-[#ed5518] border-blue-100" },
   delivered: { label: "Livré", cls: "bg-slate-100 text-slate-600 border-slate-200" },
   cancelled: { label: "Annulé", cls: "bg-red-50 text-red-500 border-red-100" },
 };
@@ -246,14 +246,14 @@ export default function DashboardAdmin() {
 
   const driverRows = useMemo(() => drivers.map(d => {
     const activeOrder = ordersAll.find(o => o.driver_id === d.id && ['in_progress', 'driver_accepted', 'assigned', 'picked_up'].includes(o.status));
-    return { ...d, status: activeOrder ? (activeOrder.status === 'in_progress' || activeOrder.status === 'picked_up' ? "ENLEVÉ" : "EN MISSION") : "DISPONIBLE", cls: activeOrder ? "bg-amber-100 text-amber-700" : "bg-emerald-100 text-emerald-700" };
+    return { ...d, status: activeOrder ? (activeOrder.status === 'in_progress' || activeOrder.status === 'picked_up' ? "ENLEVÉ" : "EN MISSION") : "DISPONIBLE", cls: activeOrder ? "bg-amber-100 text-amber-700" : "bg-[#ed5518] text-[#ed5518]" };
   }), [ordersAll, drivers]);
 
   const clientPaymentRows = useMemo(() => clients.map(c => {
     const cInvoices = invoicesAll.filter(i => i.client_id === c.id).sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
     const latest = cInvoices[0];
     if (!latest) return { id: c.id, name: c.name, status: "SANS FACTURE", cls: "bg-slate-100 text-slate-500" };
-    if (latest.status === 'paid') return { id: c.id, name: c.name, status: "À JOUR", cls: "bg-emerald-100 text-emerald-700" };
+    if (latest.status === 'paid') return { id: c.id, name: c.name, status: "À JOUR", cls: "bg-[#ed5518] text-[#ed5518]" };
     return { id: c.id, name: c.name, status: "À RECOUVRER", cls: "bg-amber-100 text-amber-700" };
   }), [clients, invoicesAll]);
 
@@ -280,10 +280,10 @@ export default function DashboardAdmin() {
               <span className="text-xs font-bold text-slate-400 capitalize">{dateLabel}</span>
               <div className="flex items-center gap-1.5">
                 <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#ed5518] opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[#ed5518]" />
                 </span>
-                <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Opérationnel</span>
+                <span className="text-[10px] font-black text-[#ed5518] uppercase tracking-widest">Opérationnel</span>
               </div>
             </div>
             <h1 className="text-4xl font-black tracking-tight text-slate-900 lg:text-5xl">
@@ -297,7 +297,7 @@ export default function DashboardAdmin() {
           <div className="flex items-center gap-3">
             <button
               onClick={() => setOpen(true)}
-              className="flex items-center gap-2 rounded-2xl bg-orange-500 px-5 py-3 text-sm font-black text-white shadow-lg shadow-orange-500/20 hover:bg-orange-600 transition-all hover:-translate-y-0.5"
+              className="flex items-center gap-2 rounded-2xl bg-[#ed5518] px-5 py-3 text-sm font-black text-white shadow-lg shadow-primary/20 hover:bg-[#ed5518] transition-all hover:-translate-y-0.5"
             >
               <Plus size={18} /> Nouvelle mission
             </button>
@@ -316,10 +316,10 @@ export default function DashboardAdmin() {
       <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4">
         {/* Dispatch Live */}
         <div className="col-span-2 md:col-span-1 bg-slate-900 text-white rounded-[2rem] p-6 shadow-xl shadow-slate-900/20 relative overflow-hidden group">
-          <div className="absolute -top-8 -right-8 h-28 w-28 rounded-full bg-orange-500/10 blur-2xl group-hover:bg-orange-500/20 transition-all" />
+          <div className="absolute -top-8 -right-8 h-28 w-28 rounded-full bg-[#ed5518]/10 blur-2xl group-hover:bg-[#ed5518]/20 transition-all" />
           <div className="relative z-10">
             <div className="flex items-center gap-2 mb-4">
-              <div className="h-9 w-9 rounded-xl bg-orange-500/20 flex items-center justify-center text-orange-400"><Zap size={18} /></div>
+              <div className="h-9 w-9 rounded-xl bg-[#ed5518]/20 flex items-center justify-center text-[#ed5518]"><Zap size={18} /></div>
               {kpis.toAccept > 0 && <span className="relative flex h-2 w-2"><span className="animate-ping absolute h-full w-full rounded-full bg-rose-400 opacity-75" /><span className="relative h-2 w-2 rounded-full bg-rose-500" /></span>}
             </div>
             <div className="text-4xl font-black tabular-nums">{kpis.toAccept + kpis.toDispatch + kpis.active}</div>
@@ -327,13 +327,13 @@ export default function DashboardAdmin() {
             <div className="mt-4 pt-4 border-t border-white/10 grid grid-cols-3 gap-1">
               <div><div className="text-[8px] font-black uppercase text-rose-400">Accepter</div><div className="text-xs font-black text-rose-300">{kpis.toAccept}</div></div>
               <div><div className="text-[8px] font-black uppercase text-amber-400">Dispatch</div><div className="text-xs font-black text-amber-300">{kpis.toDispatch}</div></div>
-              <div><div className="text-[8px] font-black uppercase text-blue-400">Mission</div><div className="text-xs font-black text-blue-300">{kpis.active}</div></div>
+              <div><div className="text-[8px] font-black uppercase text-[#ed5518]">Mission</div><div className="text-xs font-black text-[#ed5518]">{kpis.active}</div></div>
             </div>
           </div>
         </div>
 
         {/* CA En cours */}
-        <KpiCard icon={<TrendingUp size={18} />} iconBg="bg-indigo-100 text-indigo-600" label="CA En cours" value={`${kpis.revenueOps.toFixed(0)}€`} sub="HT sur missions actives" trend="indigo" />
+        <KpiCard icon={<TrendingUp size={18} />} iconBg="bg-[#ed5518] text-[#ed5518]" label="CA En cours" value={`${kpis.revenueOps.toFixed(0)}€`} sub="HT sur missions actives" trend="indigo" />
 
         {/* À Recouvrer */}
         <KpiCard
@@ -349,7 +349,7 @@ export default function DashboardAdmin() {
         <KpiCard icon={<Users size={18} />} iconBg="bg-amber-100 text-amber-600" label="Dû Chauffeurs" value={`${kpis.driverPayOutstanding.toFixed(0)}€`} sub={`${drivers.length} livreur(s) en ligne`} trend="amber" />
 
         {/* Profit net */}
-        <KpiCard icon={<BarChart3 size={18} />} iconBg="bg-emerald-100 text-emerald-600" label="Profit Net (Encais.)" value={`${kpis.netProfit.toFixed(0)}€`} sub={`${kpis.deliveredCount} livraison(s)`} trend="emerald" />
+        <KpiCard icon={<BarChart3 size={18} />} iconBg="bg-[#ed5518] text-[#ed5518]" label="Profit Net (Encais.)" value={`${kpis.netProfit.toFixed(0)}€`} sub={`${kpis.deliveredCount} livraison(s)`} trend="emerald" />
       </div>
 
       {/* ── MAIN CONTENT ── */}
@@ -370,10 +370,10 @@ export default function DashboardAdmin() {
                     onClick={() => setOperationView(id)}
                     className={`relative flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-black transition-all duration-200 ${operationView === id ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
                   >
-                    <tab.icon size={13} className={operationView === id ? "text-orange-500" : ""} />
+                    <tab.icon size={13} className={operationView === id ? "text-[#ed5518]" : ""} />
                     {tab.label}
                     {tab.count > 0 && (
-                      <span className={`ml-0.5 h-4 min-w-4 px-1 rounded-full text-[9px] font-black grid place-items-center ${operationView === id ? 'bg-orange-500 text-white' : 'bg-slate-200 text-slate-600'}`}>
+                      <span className={`ml-0.5 h-4 min-w-4 px-1 rounded-full text-[9px] font-black grid place-items-center ${operationView === id ? 'bg-[#ed5518] text-white' : 'bg-slate-200 text-slate-600'}`}>
                         {tab.count}
                       </span>
                     )}
@@ -414,7 +414,7 @@ export default function DashboardAdmin() {
                                 <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">BC-{o.id.slice(0, 8)}</span>
                                 <span className={`inline-flex items-center rounded-lg border px-2 py-0.5 text-[9px] font-black uppercase tracking-wider ${sc.cls}`}>{sc.label}</span>
                               </div>
-                              <div className="font-black text-slate-900 text-sm group-hover:text-orange-500 transition-colors truncate">{o.clientName}</div>
+                              <div className="font-black text-slate-900 text-sm group-hover:text-[#ed5518] transition-colors truncate">{o.clientName}</div>
                               <div className="flex items-center gap-2 mt-1">
                                 <span className="text-[10px] text-slate-400 font-bold">{o.pickup_city || '—'}</span>
                                 <span className="text-slate-300">→</span>
@@ -433,7 +433,7 @@ export default function DashboardAdmin() {
                               <button
                                 type="button"
                                 onClick={(e) => { e.stopPropagation(); handleQuickAccept(o.id); }}
-                                className="rounded-xl bg-slate-900 px-4 py-2 text-[10px] font-black text-white hover:bg-orange-500 active:scale-95 transition-all"
+                                className="rounded-xl bg-slate-900 px-4 py-2 text-[10px] font-black text-white hover:bg-[#ed5518] active:scale-95 transition-all"
                               >
                                 ACCEPTER
                               </button>
@@ -442,12 +442,12 @@ export default function DashboardAdmin() {
                               <button
                                 type="button"
                                 onClick={(e) => { e.stopPropagation(); openDispatch(o); }}
-                                className="rounded-xl bg-indigo-600 px-4 py-2 text-[10px] font-black text-white hover:bg-indigo-700 active:scale-95 transition-all"
+                                className="rounded-xl bg-[#ed5518] px-4 py-2 text-[10px] font-black text-white hover:bg-[#ed5518] active:scale-95 transition-all"
                               >
                                 DISPATCHER
                               </button>
                             )}
-                            <ArrowRight size={16} className="text-slate-300 group-hover:text-orange-500 transition-colors hidden sm:block" />
+                            <ArrowRight size={16} className="text-slate-300 group-hover:text-[#ed5518] transition-colors hidden sm:block" />
                           </div>
                         </div>
                       </div>
@@ -468,7 +468,7 @@ export default function DashboardAdmin() {
                 <h3 className="text-xs font-black uppercase tracking-widest text-slate-900">Fleet Live</h3>
                 <p className="text-[9px] font-bold text-slate-400 mt-0.5">{driverRows.length} livreur(s) en ligne</p>
               </div>
-              <button onClick={() => navigate('/admin/drivers')} className="text-[10px] font-black text-orange-500 hover:text-orange-600">Voir tout</button>
+              <button onClick={() => navigate('/admin/drivers')} className="text-[10px] font-black text-[#ed5518] hover:text-[#ed5518]">Voir tout</button>
             </div>
             <div className="divide-y divide-slate-50 max-h-52 overflow-y-auto">
               {driverRows.length === 0 ? (
@@ -494,7 +494,7 @@ export default function DashboardAdmin() {
                 <h3 className="text-xs font-black uppercase tracking-widest text-slate-900">Solvabilité</h3>
                 <p className="text-[9px] font-bold text-slate-400 mt-0.5">Statut facturation clients</p>
               </div>
-              <button onClick={() => navigate('/admin/invoices')} className="text-[10px] font-black text-orange-500 hover:text-orange-600">Voir tout</button>
+              <button onClick={() => navigate('/admin/invoices')} className="text-[10px] font-black text-[#ed5518] hover:text-[#ed5518]">Voir tout</button>
             </div>
             <div className="divide-y divide-slate-50 max-h-52 overflow-y-auto">
               {clientPaymentRows.length === 0 ? (
@@ -510,7 +510,7 @@ export default function DashboardAdmin() {
 
           {/* Quick Links */}
           <div className="bg-slate-900 rounded-[2rem] p-5 space-y-3 relative overflow-hidden">
-            <div className="absolute -top-6 -right-6 h-24 w-24 bg-orange-500/10 rounded-full blur-2xl" />
+            <div className="absolute -top-6 -right-6 h-24 w-24 bg-[#ed5518]/10 rounded-full blur-2xl" />
             <div className="relative z-10">
               <h3 className="text-xs font-black uppercase tracking-widest text-white mb-4">Accès Rapides</h3>
               {[
@@ -528,7 +528,7 @@ export default function DashboardAdmin() {
                     <link.icon size={14} />
                     <span className="text-xs font-bold">{link.label}</span>
                   </div>
-                  <ArrowRight size={12} className="text-slate-600 group-hover:text-orange-400 transition-colors" />
+                  <ArrowRight size={12} className="text-slate-600 group-hover:text-[#ed5518] transition-colors" />
                 </button>
               ))}
             </div>
@@ -541,7 +541,7 @@ export default function DashboardAdmin() {
           {newOrderAlert && (
             <div className="fixed bottom-8 right-8 z-[100] animate-in slide-in-from-bottom-4 fade-in duration-300">
               <div className="bg-slate-900 text-white px-6 py-5 rounded-2xl shadow-2xl flex items-center gap-4 max-w-xs border border-white/10">
-                <div className="h-12 w-12 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl shrink-0">
+                <div className="h-12 w-12 rounded-2xl bg-[#ed5518]/20 text-[#ed5518] flex items-center justify-center text-xl shrink-0">
                   🔔
                 </div>
                 <div className="flex-1 min-w-0">
@@ -583,10 +583,10 @@ export default function DashboardAdmin() {
 // ── KPI Card Component ──
 function KpiCard({ icon, iconBg, label, value, sub, trend, alert }) {
   const trendColors = {
-    indigo: "text-indigo-600",
+    indigo: "text-[#ed5518]",
     amber: "text-amber-600",
     rose: "text-rose-600",
-    emerald: "text-emerald-600",
+    emerald: "text-[#ed5518]",
   };
   return (
     <div className={`bg-white rounded-[2rem] p-6 shadow-sm border ${alert ? 'border-rose-100 ring-1 ring-rose-200' : 'border-slate-100'} relative overflow-hidden group hover:shadow-md transition-all hover:-translate-y-0.5 duration-300`}>

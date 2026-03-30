@@ -18,7 +18,7 @@ export const TopPerformances = ({ drivers, clients }: TopPerformancesProps) => {
             {/* Top Drivers */}
             <Card className="p-6 shadow-soft border-0">
                 <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-xl font-display font-bold text-primary">
+                    <h2 className="text-xl font-display font-bold text-[#ed5518]">
                         Top Chauffeurs
                     </h2>
                     <Button variant="ghost" size="sm" onClick={() => navigate("/admin/chauffeurs")}>
@@ -33,11 +33,11 @@ export const TopPerformances = ({ drivers, clients }: TopPerformancesProps) => {
                             onClick={() => navigate(`/admin/chauffeurs?id=${driver.id}`)}
                         >
                             <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary">
+                                <div className="w-10 h-10 rounded-full bg-[#ed5518]/10 flex items-center justify-center font-bold text-[#ed5518]">
                                     {driver.initials}
                                 </div>
                                 <div>
-                                    <p className="font-semibold text-primary">{driver.name}</p>
+                                    <p className="font-semibold text-[#ed5518]">{driver.name}</p>
                                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
                                         <span>{driver.deliveries} courses</span>
                                         <span>•</span>
@@ -69,7 +69,7 @@ export const TopPerformances = ({ drivers, clients }: TopPerformancesProps) => {
             {/* Top Clients */}
             <Card className="p-6 shadow-soft border-0">
                 <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-xl font-display font-bold text-primary">
+                    <h2 className="text-xl font-display font-bold text-[#ed5518]">
                         Top Clients
                     </h2>
                     <Button variant="ghost" size="sm" onClick={() => navigate("/admin/clients")}>
@@ -88,12 +88,12 @@ export const TopPerformances = ({ drivers, clients }: TopPerformancesProps) => {
                                     {client.name.substring(0, 2).toUpperCase()}
                                 </div>
                                 <div>
-                                    <p className="font-semibold text-primary">{client.name}</p>
+                                    <p className="font-semibold text-[#ed5518]">{client.name}</p>
                                     <p className="text-xs text-muted-foreground">{client.sector}</p>
                                 </div>
                             </div>
                             <div className="text-right">
-                                <p className="font-bold text-primary">{client.revenue.toLocaleString()}€</p>
+                                <p className="font-bold text-[#ed5518]">{client.revenue.toLocaleString()}€</p>
                                 <div className="flex items-center justify-end gap-1 text-success text-xs">
                                     <TrendingUp className="h-3 w-3" />
                                     <span>+{client.growth}%</span>

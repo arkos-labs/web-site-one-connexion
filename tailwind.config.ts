@@ -1,7 +1,7 @@
 import type { Config } from "tailwindcss";
 
 export default {
-  darkMode: ["class"],
+  darkMode: "class",
   content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
   prefix: "",
   theme: {
@@ -14,8 +14,9 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Poppins', 'system-ui', 'sans-serif'],
-        display: ['Poppins', 'system-ui', 'sans-serif'],
+        sans: ['"Archivo"', 'sans-serif'],
+        display: ['"Archivo"', 'sans-serif'],
+        'loos-wide': ['"Archivo"', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -24,16 +25,16 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
-          hover: "hsl(var(--primary-hover))",
-          active: "hsl(var(--primary-active))",
+          DEFAULT: "#ed5518",
+          foreground: "#ffffff",
+          hover: "#ed5518",
+          active: "#ed5518",
         },
         cta: {
-          DEFAULT: "hsl(var(--cta))",
-          foreground: "hsl(var(--cta-foreground))",
-          hover: "hsl(var(--cta-hover))",
-          active: "hsl(var(--cta-active))",
+          DEFAULT: "#ed5518",
+          foreground: "#ffffff",
+          hover: "#ed5518",
+          active: "#ed5518",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -48,10 +49,10 @@ export default {
           foreground: "hsl(var(--muted-foreground))",
         },
         accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
-          main: "hsl(var(--accent-main))",
-          light: "hsl(var(--accent-light))",
+          DEFAULT: "#ed5518",
+          foreground: "#ffffff",
+          main: "#ed5518",
+          light: "#ed5518",
         },
         popover: {
           DEFAULT: "hsl(var(--popover))",
@@ -111,6 +112,19 @@ export default {
             DEFAULT: "hsl(var(--status-cancelled))",
             foreground: "hsl(var(--status-cancelled-foreground))",
           },
+        },
+        orange: {
+          50: '#ed5518',
+          100: '#ed5518',
+          200: '#ed5518',
+          300: '#ed5518',
+          400: '#ed5518',
+          500: '#ed5518',
+          600: '#ed5518',
+          700: '#ed5518',
+          800: '#ed5518',
+          900: '#ed5518',
+          950: '#ed5518',
         },
       },
       borderRadius: {

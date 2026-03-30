@@ -38,7 +38,7 @@ class ErrorBoundary extends React.Component {
                     <p className="mt-4 text-slate-500">Le site a tenté un rechargement automatique.</p>
                     <button
                         onClick={() => { sessionStorage.removeItem('reload_count'); window.location.reload(); }}
-                        className="mt-8 rounded-full bg-orange-500 px-8 py-3 font-bold text-white shadow-lg transition-transform hover:scale-105"
+                        className="mt-8 rounded-full bg-[#ed5518] px-8 py-3 font-bold text-white shadow-lg transition-transform hover:scale-105"
                     >
                         Recharger manuellement
                     </button>

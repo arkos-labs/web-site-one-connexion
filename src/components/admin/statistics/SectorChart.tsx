@@ -28,7 +28,7 @@ export const SectorChart = ({ data }: SectorChartProps) => {
 
     return (
         <Card className="p-6 shadow-soft border-0 min-h-[350px]">
-            <h2 className="text-xl font-display font-bold text-primary mb-6">
+            <h2 className="text-xl font-display font-bold text-[#ed5518] mb-6">
                 Répartition par secteur
             </h2>
             <ResponsiveContainer width="100%" height={300}>

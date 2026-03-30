@@ -57,7 +57,7 @@ const Footer = () => {
                         </h3>
                         <ul className="space-y-4">
                             <li className="flex items-start gap-4 text-gray-600 group">
-                                <div className="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center shrink-0 group-hover:border-[#D4AF37] group-hover:text-[#D4AF37] transition-all">
+                                <div className="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center shrink-0 group-hover:border-[#ed5518] group-hover:text-[#ed5518] transition-all">
                                     <MapPin className="w-4 h-4" />
                                 </div>
                                 <span className="text-sm font-light mt-1.5">
@@ -66,18 +66,18 @@ const Footer = () => {
                                 </span>
                             </li>
                             <li className="flex items-center gap-4 text-gray-600 group">
-                                <div className="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center shrink-0 group-hover:border-[#D4AF37] group-hover:text-[#D4AF37] transition-all">
+                                <div className="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center shrink-0 group-hover:border-[#ed5518] group-hover:text-[#ed5518] transition-all">
                                     <Phone className="w-4 h-4" />
                                 </div>
-                                <a href="tel:+33123456789" className="text-sm font-light hover:text-[#D4AF37] transition-colors mt-0.5">
+                                <a href="tel:+33123456789" className="text-sm font-light hover:text-[#ed5518] transition-colors mt-0.5">
                                     +33 1 23 45 67 89
                                 </a>
                             </li>
                             <li className="flex items-center gap-4 text-gray-600 group">
-                                <div className="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center shrink-0 group-hover:border-[#D4AF37] group-hover:text-[#D4AF37] transition-all">
+                                <div className="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center shrink-0 group-hover:border-[#ed5518] group-hover:text-[#ed5518] transition-all">
                                     <Mail className="w-4 h-4" />
                                 </div>
-                                <a href="mailto:contact@oneconnexion.fr" className="text-sm font-light hover:text-[#D4AF37] transition-colors mt-0.5">
+                                <a href="mailto:contact@oneconnexion.fr" className="text-sm font-light hover:text-[#ed5518] transition-colors mt-0.5">
                                     contact@oneconnexion.fr
                                 </a>
                             </li>
@@ -91,11 +91,11 @@ const Footer = () => {
                         © {currentYear} One Connexion Express. Tous droits réservés.
                     </p>
                     <div className="flex items-center gap-6 text-xs text-gray-500 font-light">
-                        <Link to="/mentions-legales" className="hover:text-[#D4AF37] transition-colors">Mentions légales</Link>
+                        <Link to="/mentions-legales" className="hover:text-[#ed5518] transition-colors">Mentions légales</Link>
                         <span className="w-1 h-1 rounded-full bg-gray-300"></span>
-                        <Link to="/cgv" className="hover:text-[#D4AF37] transition-colors">CGV</Link>
+                        <Link to="/cgv" className="hover:text-[#ed5518] transition-colors">CGV</Link>
                         <span className="w-1 h-1 rounded-full bg-gray-300"></span>
-                        <Link to="/contact" className="hover:text-[#D4AF37] transition-colors">Support</Link>
+                        <Link to="/contact" className="hover:text-[#ed5518] transition-colors">Support</Link>
                     </div>
                 </div>
             </div>

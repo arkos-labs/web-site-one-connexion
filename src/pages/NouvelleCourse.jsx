@@ -215,15 +215,15 @@ export default function NouvelleCourse() {
                                 <div key={i} className="flex flex-col items-center gap-2 relative">
                                     {/* Connector Line */}
                                     {i < steps.length - 1 && (
-                                        <div className={`hidden md:block absolute top-[18px] left-[50%] w-[200%] h-[2px] transition-colors duration-500 ${passed ? 'bg-orange-500' : 'bg-slate-100'}`} style={{ transform: 'translateX(20px)' }} />
+                                        <div className={`hidden md:block absolute top-[18px] left-[50%] w-[200%] h-[2px] transition-colors duration-500 ${passed ? 'bg-[#ed5518]' : 'bg-slate-100'}`} style={{ transform: 'translateX(20px)' }} />
                                     )}
-                                    <div className={`grid h-10 w-10 place-items-center rounded-2xl font-bold transition-all duration-300 relative z-10 ${active ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/30 scale-110'
+                                    <div className={`grid h-10 w-10 place-items-center rounded-2xl font-bold transition-all duration-300 relative z-10 ${active ? 'bg-[#ed5518] text-white shadow-lg shadow-primary/30 scale-110'
                                         : passed ? 'bg-slate-900 text-white'
                                             : 'bg-slate-100 text-slate-400'
                                         }`}>
                                         {passed ? <CheckCircle2 size={20} /> : <s.icon size={20} />}
                                     </div>
-                                    <span className={`text-[10px] font-bold uppercase tracking-widest ${active ? 'text-orange-500' : passed ? 'text-slate-900' : 'text-slate-400'}`}>
+                                    <span className={`text-[10px] font-bold uppercase tracking-widest ${active ? 'text-[#ed5518]' : passed ? 'text-slate-900' : 'text-slate-400'}`}>
                                         {s.title}
                                     </span>
                                 </div>
@@ -249,7 +249,7 @@ export default function NouvelleCourse() {
                                         <div>
                                             <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 block">Adresse de départ *</label>
                                             <input
-                                                className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-orange-500 focus:bg-white transition-all"
+                                                className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#ed5518] focus:bg-white transition-all"
                                                 placeholder="Saisissez l'adresse complète"
                                                 value={form.pickup}
                                                 onChange={(e) => {
@@ -300,7 +300,7 @@ export default function NouvelleCourse() {
                                 {/* Delivery */}
                                 <div className="space-y-5 relative">
                                     <div className="flex items-center gap-3 border-b border-slate-100 pb-3">
-                                        <div className="h-8 w-8 rounded-full bg-orange-500 text-white flex items-center justify-center font-bold">2</div>
+                                        <div className="h-8 w-8 rounded-full bg-[#ed5518] text-white flex items-center justify-center font-bold">2</div>
                                         <h2 className="text-xl font-bold text-slate-900">Livraison</h2>
                                     </div>
 
@@ -308,7 +308,7 @@ export default function NouvelleCourse() {
                                         <div>
                                             <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 block">Adresse d'arrivée *</label>
                                             <input
-                                                className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-orange-500 focus:bg-white transition-all"
+                                                className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#ed5518] focus:bg-white transition-all"
                                                 placeholder="Saisissez l'adresse complète"
                                                 value={form.delivery}
                                                 onChange={(e) => {
@@ -377,12 +377,12 @@ export default function NouvelleCourse() {
                                         </div>
                                         <div>
                                             <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 block">Livraison max</label>
-                                            <input type="time" className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-medium focus:ring-2 focus:ring-orange-500 outline-none" value={form.deliveryDeadline} onChange={e => setForm({ ...form, deliveryDeadline: e.target.value })} />
+                                            <input type="time" className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-medium focus:ring-2 focus:ring-[#ed5518] outline-none" value={form.deliveryDeadline} onChange={e => setForm({ ...form, deliveryDeadline: e.target.value })} />
                                         </div>
                                     </div>
-                                    <div className="rounded-2xl bg-orange-50 p-4 border border-orange-100 flex items-start gap-3 mt-4">
-                                        <Info className="text-orange-500 shrink-0 mt-0.5" size={18} />
-                                        <p className="text-xs font-medium text-orange-800 leading-relaxed">
+                                    <div className="rounded-2xl bg-orange-50 p-4 border border-[#ed5518] flex items-start gap-3 mt-4">
+                                        <Info className="text-[#ed5518] shrink-0 mt-0.5" size={18} />
+                                        <p className="text-xs font-medium text-[#ed5518] leading-relaxed">
                                             Une livraison express est déterminée automatiquement selon l'écart entre l'enlèvement et la livraison max. Le niveau de service (Normal, Super, Exclu) sera calculé.
                                         </p>
                                     </div>
@@ -442,7 +442,7 @@ export default function NouvelleCourse() {
                     {step === 3 && (
                         <div className="space-y-8 animate-fade-in-up max-w-2xl mx-auto">
                             <div className="text-center space-y-2">
-                                <div className="inline-flex h-16 w-16 items-center justify-center rounded-3xl bg-emerald-100 text-emerald-500 mb-4">
+                                <div className="inline-flex h-16 w-16 items-center justify-center rounded-3xl bg-[#ed5518] text-[#ed5518] mb-4">
                                     <ShieldCheck size={32} />
                                 </div>
                                 <h2 className="text-2xl font-black text-slate-900">Résumé de la commande</h2>
@@ -521,7 +521,7 @@ export default function NouvelleCourse() {
                         <button
                             onClick={submitOrder}
                             disabled={!price || isSubmitting}
-                            className="group flex items-center gap-2 px-10 py-4 rounded-2xl bg-gradient-to-r from-orange-500 to-orange-600 text-white font-black text-lg shadow-xl shadow-orange-500/30 hover:shadow-orange-500/50 hover:scale-105 transition-all outline-none focus:ring-4 focus:ring-orange-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="group flex items-center gap-2 px-10 py-4 rounded-2xl bg-gradient-to-r from-primary to-primary text-white font-black text-lg shadow-xl shadow-primary/30 hover:shadow-primary/50 hover:scale-105 transition-all outline-none focus:ring-4 focus:ring-[#ed5518]/30 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             {isSubmitting ? <Loader2 className="animate-spin" size={24} /> : 'Valider la commande'}
                         </button>

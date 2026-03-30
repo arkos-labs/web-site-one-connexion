@@ -169,7 +169,7 @@ export default function GuestOrder() {
                 <div className="flex-1 flex flex-col items-center justify-center px-4 py-20">
                     <div className="max-w-2xl w-full bg-white rounded-[2.5rem] p-8 md:p-12 shadow-sm ring-1 ring-slate-100 text-center space-y-8">
                         <div className="space-y-4">
-                            <div className="inline-flex h-20 w-20 items-center justify-center rounded-3xl bg-emerald-100 text-emerald-500 mx-auto">
+                            <div className="inline-flex h-20 w-20 items-center justify-center rounded-3xl bg-[#ed5518] text-[#ed5518] mx-auto">
                                 <CheckCircle2 size={40} />
                             </div>
                             <h2 className="text-3xl font-black text-slate-900">Commande bien reçue !</h2>
@@ -184,7 +184,7 @@ export default function GuestOrder() {
                             <div className="flex items-center justify-between border-b border-slate-200 pb-4">
                                 <div className="flex items-center gap-3">
                                     <div className="p-3 bg-white rounded-2xl shadow-sm border border-slate-100">
-                                        <Truck className="text-orange-500" size={24} />
+                                        <Truck className="text-[#ed5518]" size={24} />
                                     </div>
                                     <div>
                                         <div className="font-bold text-slate-900">
@@ -212,7 +212,7 @@ export default function GuestOrder() {
                                         {form.pickupContact && <div className="text-xs text-slate-500"><span className="font-semibold">Contact:</span> {form.pickupContact}</div>}
                                         {form.pickupPhone && <div className="text-xs text-slate-500"><span className="font-semibold">📞</span> {form.pickupPhone}</div>}
                                         {form.pickupAccessCode && (
-                                            <div className="text-xs text-orange-600 font-bold bg-orange-50 inline-block px-2 py-0.5 rounded-md mt-1 italic">
+                                            <div className="text-xs text-[#ed5518] font-bold bg-orange-50 inline-block px-2 py-0.5 rounded-md mt-1 italic">
                                                 Code: {form.pickupAccessCode}
                                             </div>
                                         )}
@@ -228,7 +228,7 @@ export default function GuestOrder() {
                                         {form.deliveryContact && <div className="text-xs text-slate-500"><span className="font-semibold">Contact:</span> {form.deliveryContact}</div>}
                                         {form.deliveryPhone && <div className="text-xs text-slate-500"><span className="font-semibold">📞</span> {form.deliveryPhone}</div>}
                                         {form.deliveryAccessCode && (
-                                            <div className="text-xs text-orange-600 font-bold bg-orange-50 inline-block px-2 py-0.5 rounded-md mt-1 italic">
+                                            <div className="text-xs text-[#ed5518] font-bold bg-orange-50 inline-block px-2 py-0.5 rounded-md mt-1 italic">
                                                 Code: {form.deliveryAccessCode}
                                             </div>
                                         )}
@@ -257,7 +257,7 @@ export default function GuestOrder() {
                             )}
                         </div>
                         <div className="flex flex-col gap-3 pt-2">
-                            <Link to="/" className="w-full rounded-full bg-slate-900 py-3.5 text-sm font-bold text-white text-center hover:bg-orange-500 transition-all">
+                            <Link to="/" className="w-full rounded-full bg-slate-900 py-3.5 text-sm font-bold text-white text-center hover:bg-[#ed5518] transition-all">
                                 Retour à l'accueil
                             </Link>
                             <Link to="/inscription" className="w-full rounded-full border border-slate-200 py-3.5 text-sm font-bold text-slate-700 text-center hover:bg-slate-50 transition-all">
@@ -285,7 +285,7 @@ export default function GuestOrder() {
 
                     {/* Stepper Header */}
                     <div className="bg-white rounded-[2.5rem] p-8 shadow-sm ring-1 ring-slate-100 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
-                        <div className="absolute top-0 right-0 w-64 h-64 bg-orange-500/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none" />
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-[#ed5518]/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none" />
 
                         <div className="relative z-10 w-full md:w-auto">
                             <h1 className="text-3xl font-black text-slate-900">Commander sans compte</h1>
@@ -299,15 +299,15 @@ export default function GuestOrder() {
                                 return (
                                     <div key={i} className="flex flex-col items-center gap-2 relative">
                                         {i < steps.length - 1 && (
-                                            <div className={`hidden md:block absolute top-[18px] left-[50%] w-[160%] h-[2px] transition-colors duration-500 ${passed ? 'bg-orange-500' : 'bg-slate-100'}`} style={{ transform: 'translateX(20px)' }} />
+                                            <div className={`hidden md:block absolute top-[18px] left-[50%] w-[160%] h-[2px] transition-colors duration-500 ${passed ? 'bg-[#ed5518]' : 'bg-slate-100'}`} style={{ transform: 'translateX(20px)' }} />
                                         )}
                                         <div className={`grid h-10 w-10 place-items-center rounded-2xl font-bold transition-all duration-300 relative z-10
-                      ${active ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/30 scale-110'
+                      ${active ? 'bg-[#ed5518] text-white shadow-lg shadow-primary/30 scale-110'
                                                 : passed ? 'bg-slate-900 text-white'
                                                     : 'bg-slate-100 text-slate-400'}`}>
                                             {passed ? <CheckCircle2 size={20} /> : <s.icon size={20} />}
                                         </div>
-                                        <span className={`text-[10px] font-bold uppercase tracking-widest ${active ? 'text-orange-500' : passed ? 'text-slate-900' : 'text-slate-400'}`}>
+                                        <span className={`text-[10px] font-bold uppercase tracking-widest ${active ? 'text-[#ed5518]' : passed ? 'text-slate-900' : 'text-slate-400'}`}>
                                             {s.title}
                                         </span>
                                     </div>
@@ -333,7 +333,7 @@ export default function GuestOrder() {
                                             <div>
                                                 <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 block">Adresse de départ *</label>
                                                 <input
-                                                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-orange-500 focus:bg-white transition-all"
+                                                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#ed5518] focus:bg-white transition-all"
                                                     placeholder="Saisissez l'adresse complète"
                                                     value={form.pickup}
                                                     onChange={e => {
@@ -386,14 +386,14 @@ export default function GuestOrder() {
                                     {/* Delivery */}
                                     <div className="space-y-5 relative">
                                         <div className="flex items-center gap-3 border-b border-slate-100 pb-3">
-                                            <div className="h-8 w-8 rounded-full bg-orange-500 text-white flex items-center justify-center font-bold">2</div>
+                                            <div className="h-8 w-8 rounded-full bg-[#ed5518] text-white flex items-center justify-center font-bold">2</div>
                                             <h2 className="text-xl font-bold text-slate-900">Livraison</h2>
                                         </div>
                                         <div className="space-y-4">
                                             <div>
                                                 <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 block">Adresse d'arrivée *</label>
                                                 <input
-                                                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-orange-500 focus:bg-white transition-all"
+                                                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#ed5518] focus:bg-white transition-all"
                                                     placeholder="Saisissez l'adresse complète"
                                                     value={form.delivery}
                                                     onChange={e => {
@@ -464,12 +464,12 @@ export default function GuestOrder() {
                                             </div>
                                             <div>
                                                 <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 block">Livraison max</label>
-                                                <input type="time" className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-medium focus:ring-2 focus:ring-orange-500 outline-none" value={form.deliveryDeadline} onChange={e => setForm({ ...form, deliveryDeadline: e.target.value })} />
+                                                <input type="time" className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-medium focus:ring-2 focus:ring-[#ed5518] outline-none" value={form.deliveryDeadline} onChange={e => setForm({ ...form, deliveryDeadline: e.target.value })} />
                                             </div>
                                         </div>
-                                        <div className="rounded-2xl bg-orange-50 p-4 border border-orange-100 flex items-start gap-3 mt-4">
-                                            <Info className="text-orange-500 shrink-0 mt-0.5" size={18} />
-                                            <p className="text-xs font-medium text-orange-800 leading-relaxed">
+                                        <div className="rounded-2xl bg-orange-50 p-4 border border-[#ed5518] flex items-start gap-3 mt-4">
+                                            <Info className="text-[#ed5518] shrink-0 mt-0.5" size={18} />
+                                            <p className="text-xs font-medium text-[#ed5518] leading-relaxed">
                                                 Le niveau de service (Normal, Super, Exclu) est déterminé automatiquement par l'écart entre l'heure d'enlèvement et la deadline de livraison.
                                             </p>
                                         </div>
@@ -555,7 +555,7 @@ export default function GuestOrder() {
                                         <div>
                                             <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 block">Prénom & Nom *</label>
                                             <input
-                                                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-orange-500 focus:bg-white transition-all"
+                                                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#ed5518] focus:bg-white transition-all"
                                                 placeholder="Jean Dupont"
                                                 value={form.guestName}
                                                 onChange={e => setForm({ ...form, guestName: e.target.value })}
@@ -564,7 +564,7 @@ export default function GuestOrder() {
                                         <div>
                                             <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 block">Société</label>
                                             <input
-                                                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-orange-500 focus:bg-white transition-all"
+                                                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#ed5518] focus:bg-white transition-all"
                                                 placeholder="Votre entreprise"
                                                 value={form.guestCompany}
                                                 onChange={e => setForm({ ...form, guestCompany: e.target.value })}
@@ -575,7 +575,7 @@ export default function GuestOrder() {
                                         <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 block">Email *</label>
                                         <input
                                             type="email"
-                                            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-orange-500 focus:bg-white transition-all"
+                                            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#ed5518] focus:bg-white transition-all"
                                             placeholder="vous@entreprise.com"
                                             value={form.guestEmail}
                                             onChange={e => setForm({ ...form, guestEmail: e.target.value })}
@@ -585,7 +585,7 @@ export default function GuestOrder() {
                                         <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 block">Téléphone</label>
                                         <input
                                             type="tel"
-                                            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-orange-500 focus:bg-white transition-all"
+                                            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#ed5518] focus:bg-white transition-all"
                                             placeholder="06 12 34 56 78"
                                             value={form.guestPhone}
                                             onChange={e => setForm({ ...form, guestPhone: e.target.value })}
@@ -599,7 +599,7 @@ export default function GuestOrder() {
                                             <div>
                                                 <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 block">Adresse *</label>
                                                 <input
-                                                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-orange-500 focus:bg-white transition-all"
+                                                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#ed5518] focus:bg-white transition-all"
                                                     placeholder="Saisissez l'adresse de facturation"
                                                     value={form.billingAddress}
                                                     onChange={e => {
@@ -626,7 +626,7 @@ export default function GuestOrder() {
                                                 <div>
                                                     <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 block">Ville</label>
                                                     <input
-                                                        className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-orange-500 focus:bg-white transition-all"
+                                                        className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#ed5518] focus:bg-white transition-all"
                                                         placeholder="Paris"
                                                         value={form.billingCity}
                                                         onChange={e => setForm({ ...form, billingCity: e.target.value })}
@@ -635,7 +635,7 @@ export default function GuestOrder() {
                                                 <div>
                                                     <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 block">Code Postal</label>
                                                     <input
-                                                        className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-orange-500 focus:bg-white transition-all"
+                                                        className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#ed5518] focus:bg-white transition-all"
                                                         placeholder="75000"
                                                         value={form.billingPostcode}
                                                         onChange={e => setForm({ ...form, billingPostcode: e.target.value })}
@@ -645,9 +645,9 @@ export default function GuestOrder() {
                                         </div>
                                     </div>
 
-                                    <div className="rounded-2xl bg-orange-50 p-4 border border-orange-100 flex items-start gap-3">
-                                        <Info className="text-orange-500 shrink-0 mt-0.5" size={18} />
-                                        <p className="text-xs font-medium text-orange-800 leading-relaxed">
+                                    <div className="rounded-2xl bg-orange-50 p-4 border border-[#ed5518] flex items-start gap-3">
+                                        <Info className="text-[#ed5518] shrink-0 mt-0.5" size={18} />
+                                        <p className="text-xs font-medium text-[#ed5518] leading-relaxed">
                                             Vos données ne sont utilisées que pour cette commande et pour envoyer la confirmation. Pour un carnet d'adresses et la facturation mensuelle, <Link to="/inscription" className="underline font-bold">créez un compte professionnel</Link>.
                                         </p>
                                     </div>
@@ -659,7 +659,7 @@ export default function GuestOrder() {
                         {step === 4 && (
                             <div className="space-y-8 animate-fade-in-up max-w-2xl mx-auto">
                                 <div className="text-center space-y-2">
-                                    <div className="inline-flex h-16 w-16 items-center justify-center rounded-3xl bg-emerald-100 text-emerald-500 mb-4">
+                                    <div className="inline-flex h-16 w-16 items-center justify-center rounded-3xl bg-[#ed5518] text-[#ed5518] mb-4">
                                         <ShieldCheck size={32} />
                                     </div>
                                     <h2 className="text-2xl font-black text-slate-900">Résumé de la commande</h2>
@@ -751,7 +751,7 @@ export default function GuestOrder() {
                             <button
                                 onClick={submitOrder}
                                 disabled={!price || isSubmitting}
-                                className="group flex items-center gap-2 px-10 py-4 rounded-2xl bg-gradient-to-r from-orange-500 to-orange-600 text-white font-black text-lg shadow-xl shadow-orange-500/30 hover:shadow-orange-500/50 hover:scale-105 transition-all outline-none focus:ring-4 focus:ring-orange-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="group flex items-center gap-2 px-10 py-4 rounded-2xl bg-gradient-to-r from-primary to-primary text-white font-black text-lg shadow-xl shadow-primary/30 hover:shadow-primary/50 hover:scale-105 transition-all outline-none focus:ring-4 focus:ring-[#ed5518]/30 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 {isSubmitting ? <Loader2 className="animate-spin" size={24} /> : 'Valider la commande'}
                             </button>
@@ -764,7 +764,7 @@ export default function GuestOrder() {
                             <div className="font-bold text-slate-900">Vous commandez souvent ?</div>
                             <div className="text-sm text-slate-500 mt-1">Un compte pro vous donne accès à la facturation mensuelle, l'historique et le carnet d'adresses.</div>
                         </div>
-                        <Link to="/inscription" className="shrink-0 rounded-full bg-slate-900 px-8 py-3 text-sm font-bold text-white hover:bg-orange-500 transition-all whitespace-nowrap">
+                        <Link to="/inscription" className="shrink-0 rounded-full bg-slate-900 px-8 py-3 text-sm font-bold text-white hover:bg-[#ed5518] transition-all whitespace-nowrap">
                             Créer un compte →
                         </Link>
                     </div>

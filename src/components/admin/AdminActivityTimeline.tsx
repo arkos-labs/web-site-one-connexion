@@ -123,8 +123,8 @@ export const AdminActivityTimeline = ({ limit = 10 }: AdminActivityTimelineProps
                                 description: `${order.reference} - Chauffeur assigné`,
                                 timestamp: order.dispatched_at,
                                 icon: Truck,
-                                color: 'text-indigo-600',
-                                bgColor: 'bg-indigo-100',
+                                color: 'text-[#ed5518]',
+                                bgColor: 'bg-[#ed5518]',
                             });
                         }
                     });
@@ -140,8 +140,8 @@ export const AdminActivityTimeline = ({ limit = 10 }: AdminActivityTimelineProps
                             description: `${client.company_name} a rejoint la plateforme`,
                             timestamp: client.created_at,
                             icon: UserPlus,
-                            color: 'text-blue-600',
-                            bgColor: 'bg-blue-100',
+                            color: 'text-[#ed5518]',
+                            bgColor: 'bg-[#ed5518]',
                         });
                     });
                 }
@@ -185,8 +185,8 @@ export const AdminActivityTimeline = ({ limit = 10 }: AdminActivityTimelineProps
                                 description: `${invoice.reference} - ${invoice.amount_ttc}€ reçu`,
                                 timestamp: invoice.paid_date,
                                 icon: CheckCircle,
-                                color: 'text-emerald-600',
-                                bgColor: 'bg-emerald-100',
+                                color: 'text-[#ed5518]',
+                                bgColor: 'bg-[#ed5518]',
                             });
                         }
                     });

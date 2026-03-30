@@ -10,7 +10,7 @@ export default function Privacy() {
       <section className="pt-32 pb-16 md:pt-48 md:pb-24 bg-white border-b border-slate-100">
         <div className="mx-auto max-w-4xl px-6">
           <div className="flex items-center gap-4 mb-6">
-            <div className="h-12 w-12 bg-orange-50 rounded-2xl flex items-center justify-center text-orange-500">
+            <div className="h-12 w-12 bg-orange-50 rounded-2xl flex items-center justify-center text-[#ed5518]">
               <Shield size={24} />
             </div>
             <h1 className="text-3xl font-black text-slate-900 md:text-5xl tracking-tight">
@@ -28,7 +28,7 @@ export default function Privacy() {
         <div className="space-y-16">
           <section>
             <div className="flex items-center gap-3 mb-6 text-slate-900">
-              <Eye size={20} className="text-orange-500" />
+              <Eye size={20} className="text-[#ed5518]" />
               <h2 className="text-2xl font-black uppercase tracking-tight">Transparence de la Collecte</h2>
             </div>
             <div className="prose prose-slate max-w-none text-slate-600 leading-relaxed space-y-4">
@@ -43,7 +43,7 @@ export default function Privacy() {
 
           <section>
             <div className="flex items-center gap-3 mb-6 text-slate-900">
-              <Lock size={20} className="text-orange-500" />
+              <Lock size={20} className="text-[#ed5518]" />
               <h2 className="text-2xl font-black uppercase tracking-tight">Sécurité des Échanges</h2>
             </div>
             <p className="text-slate-600 leading-relaxed mb-4">
@@ -56,7 +56,7 @@ export default function Privacy() {
 
           <section>
             <div className="flex items-center gap-3 mb-6 text-slate-900">
-              <FileText size={20} className="text-orange-500" />
+              <FileText size={20} className="text-[#ed5518]" />
               <h2 className="text-2xl font-black uppercase tracking-tight">Vos Droits & Contrôle</h2>
             </div>
             <p className="text-slate-600 leading-relaxed mb-6">
@@ -70,7 +70,7 @@ export default function Privacy() {
                 "Droit à la portabilité des données"
               ].map((right, idx) => (
                 <div key={idx} className="flex items-center gap-3 p-4 bg-white rounded-xl border border-slate-200">
-                  <div className="h-2 w-2 bg-orange-500 rounded-full" />
+                  <div className="h-2 w-2 bg-[#ed5518] rounded-full" />
                   <span className="text-sm font-bold text-slate-700">{right}</span>
                 </div>
               ))}
@@ -80,7 +80,7 @@ export default function Privacy() {
           <footer className="pt-12 border-t border-slate-200">
             <p className="text-sm text-slate-500">
               Pour toute question relative à vos données personnelles, contactez notre délégué à la protection des données (DPO) :
-              <a href="mailto:privacy@oneconnexion.fr" className="text-orange-600 font-bold ml-1 hover:underline">privacy@oneconnexion.fr</a>
+              <a href="mailto:privacy@oneconnexion.fr" className="text-[#ed5518] font-bold ml-1 hover:underline">privacy@oneconnexion.fr</a>
             </p>
             <p className="text-xs text-slate-400 mt-4 italic">Dernière mise à jour : 23 février 2026</p>
           </footer>

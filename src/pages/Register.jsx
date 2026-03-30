@@ -92,7 +92,7 @@ export default function Register() {
         return (
             <div className="min-h-screen font-sans flex items-center justify-center bg-slate-50 p-6">
                 <div className="w-full max-w-md bg-white rounded-[2.5rem] p-12 shadow-sm ring-1 ring-slate-100 text-center space-y-6">
-                    <div className="mx-auto inline-flex h-20 w-20 items-center justify-center rounded-3xl bg-emerald-100 text-emerald-500">
+                    <div className="mx-auto inline-flex h-20 w-20 items-center justify-center rounded-3xl bg-[#ed5518] text-[#ed5518]">
                         <CheckCircle2 size={40} />
                     </div>
                     <h1 className="text-2xl font-black text-slate-900">Compte créé avec succès !</h1>
@@ -101,7 +101,7 @@ export default function Register() {
                     </p>
                     <button
                         onClick={() => navigate('/connexion')}
-                        className="w-full rounded-full bg-slate-900 py-4 text-sm font-black text-white hover:bg-orange-500 transition-all"
+                        className="w-full rounded-full bg-slate-900 py-4 text-sm font-black text-white hover:bg-[#ed5518] transition-all"
                     >
                         Aller à la connexion →
                     </button>
@@ -125,19 +125,19 @@ export default function Register() {
 
                 {/* Logo */}
                 <Link to="/" className="relative z-10 flex items-center gap-3">
-                    <div className="grid h-10 w-10 place-items-center rounded-xl bg-orange-500 text-white text-sm font-black shadow-lg">OC</div>
+                    <div className="grid h-10 w-10 place-items-center rounded-xl bg-[#ed5518] text-white text-sm font-black shadow-lg">OC</div>
                     <span className="text-xl font-black text-white tracking-tight">One Connexion</span>
                 </Link>
 
                 {/* Content */}
                 <div className="relative z-10 space-y-10">
                     <div className="space-y-4">
-                        <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-bold uppercase tracking-widest text-orange-400">
+                        <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-bold uppercase tracking-widest text-[#ed5518]">
                             Accès Pro Gratuit
                         </div>
                         <h2 className="text-4xl font-black text-white leading-tight">
                             Rejoignez le réseau<br />
-                            <span className="text-orange-400 italic">One Connexion</span>
+                            <span className="text-[#ed5518] italic">One Connexion</span>
                         </h2>
                         <p className="text-slate-400 text-sm leading-relaxed max-w-xs">
                             Inscription en 2 minutes. Accès immédiat à votre dashboard. Aucun engagement.
@@ -146,8 +146,8 @@ export default function Register() {
                     <ul className="space-y-3">
                         {BENEFITS.map((b, i) => (
                             <li key={i} className="flex items-center gap-3 text-sm font-medium text-slate-300">
-                                <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-orange-500/20">
-                                    <CheckCircle2 size={12} className="text-orange-400" />
+                                <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#ed5518]/20">
+                                    <CheckCircle2 size={12} className="text-[#ed5518]" />
                                 </div>
                                 {b}
                             </li>
@@ -157,7 +157,7 @@ export default function Register() {
                     {/* Testimonial mini */}
                     <div className="rounded-2xl bg-white/5 border border-white/10 p-5 space-y-3">
                         <div className="flex gap-1">
-                            {[...Array(5)].map((_, i) => <span key={i} className="text-orange-400 text-sm">★</span>)}
+                            {[...Array(5)].map((_, i) => <span key={i} className="text-[#ed5518] text-sm">★</span>)}
                         </div>
                         <p className="text-sm text-slate-300 italic leading-relaxed">
                             "On a réduit de 40% le temps admin grâce à la facturation mensuelle de One Connexion."
@@ -174,7 +174,7 @@ export default function Register() {
                 <div className="mx-auto w-full max-w-xl px-6 py-12 lg:px-12">
                     {/* Mobile logo */}
                     <Link to="/" className="flex items-center gap-3 mb-10 lg:hidden">
-                        <div className="grid h-9 w-9 place-items-center rounded-xl bg-orange-500 text-white text-sm font-black">OC</div>
+                        <div className="grid h-9 w-9 place-items-center rounded-xl bg-[#ed5518] text-white text-sm font-black">OC</div>
                         <span className="text-lg font-black text-slate-900">One Connexion</span>
                     </Link>
 
@@ -242,7 +242,7 @@ export default function Register() {
                             />
                             <span className="text-sm text-slate-500 leading-relaxed group-hover:text-slate-700 transition-colors">
                                 J'accepte la{" "}
-                                <Link to="/confidentialite" className="font-bold text-slate-900 hover:text-orange-500 underline underline-offset-2 transition-colors">
+                                <Link to="/confidentialite" className="font-bold text-slate-900 hover:text-[#ed5518] underline underline-offset-2 transition-colors">
                                     politique de confidentialité
                                 </Link>{" "}
                                 et les conditions générales de vente de One Connexion.
@@ -260,7 +260,7 @@ export default function Register() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="group w-full flex items-center justify-center gap-2 rounded-full bg-slate-900 py-4 text-sm font-black text-white shadow-xl shadow-slate-900/15 transition-all hover:bg-orange-500 hover:-translate-y-0.5 hover:shadow-orange-500/20 disabled:opacity-60 disabled:cursor-not-allowed"
+                            className="group w-full flex items-center justify-center gap-2 rounded-full bg-slate-900 py-4 text-sm font-black text-white shadow-xl shadow-slate-900/15 transition-all hover:bg-[#ed5518] hover:-translate-y-0.5 hover:shadow-primary/20 disabled:opacity-60 disabled:cursor-not-allowed"
                         >
                             {loading
                                 ? <Loader2 className="animate-spin" size={18} />
@@ -270,7 +270,7 @@ export default function Register() {
 
                         <p className="text-center text-sm text-slate-500">
                             Déjà un compte ?{" "}
-                            <Link to="/connexion" className="font-black text-slate-900 hover:text-orange-500 transition-colors hover:underline">
+                            <Link to="/connexion" className="font-black text-slate-900 hover:text-[#ed5518] transition-colors hover:underline">
                                 Se connecter
                             </Link>
                         </p>

@@ -92,7 +92,7 @@ export default function AdminDrivers() {
             </button>
             <button
               onClick={() => setCreateOpen(true)}
-              className="flex items-center gap-2 rounded-2xl bg-orange-500 px-5 py-3 text-xs font-black text-white shadow-lg shadow-orange-500/20 hover:bg-orange-600 transition-all hover:-translate-y-0.5"
+              className="flex items-center gap-2 rounded-2xl bg-[#ed5518] px-5 py-3 text-xs font-black text-white shadow-lg shadow-primary/20 hover:bg-[#ed5518] transition-all hover:-translate-y-0.5"
             >
               <Plus size={16} /> Nouveau livreur
             </button>
@@ -104,9 +104,9 @@ export default function AdminDrivers() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { icon: <Users size={18} />, iconBg: "bg-slate-100 text-slate-600", label: "Total livreurs", value: stats.total },
-          { icon: <Zap size={18} />, iconBg: "bg-emerald-100 text-emerald-600", label: "En ligne", value: stats.online },
+          { icon: <Zap size={18} />, iconBg: "bg-[#ed5518] text-[#ed5518]", label: "En ligne", value: stats.online },
           { icon: <Truck size={18} />, iconBg: "bg-amber-100 text-amber-700", label: "En mission", value: stats.onMission },
-          { icon: <CheckCircle2 size={18} />, iconBg: "bg-indigo-100 text-indigo-600", label: "Gains du mois", value: `${stats.revenueMonth.toFixed(0)}€` },
+          { icon: <CheckCircle2 size={18} />, iconBg: "bg-[#ed5518] text-[#ed5518]", label: "Gains du mois", value: `${stats.revenueMonth.toFixed(0)}€` },
         ].map((kpi, i) => (
           <div key={i} className="bg-white rounded-[2rem] p-5 border border-slate-100 shadow-sm hover:shadow-md transition-all">
             <div className={`h-9 w-9 rounded-xl mb-3 flex items-center justify-center ${kpi.iconBg}`}>{kpi.icon}</div>
@@ -151,22 +151,22 @@ export default function AdminDrivers() {
                 >
                   <td className="px-8 py-5">
                     <div className="flex items-center gap-3">
-                      <div className={`h-10 w-10 rounded-xl text-white text-[11px] font-black grid place-items-center shadow transition-all group-hover:scale-105 ${r.driver.is_online ? 'bg-emerald-500 shadow-emerald-500/20' : 'bg-slate-400'}`}>
+                      <div className={`h-10 w-10 rounded-xl text-white text-[11px] font-black grid place-items-center shadow transition-all group-hover:scale-105 ${r.driver.is_online ? 'bg-[#ed5518] shadow-emerald-500/20' : 'bg-slate-400'}`}>
                         {r.driver.name[0]?.toUpperCase()}
                       </div>
                       <div>
-                        <div className="text-sm font-black text-slate-900 group-hover:text-orange-500 transition-colors">{r.driver.name}</div>
+                        <div className="text-sm font-black text-slate-900 group-hover:text-[#ed5518] transition-colors">{r.driver.name}</div>
                         <div className="text-[9px] font-bold text-slate-400">{r.driver.details?.email}</div>
                       </div>
                     </div>
                   </td>
                   <td className="px-8 py-5">
                     <div className="space-y-1">
-                      <div className={`flex items-center gap-1.5 text-[9px] font-black uppercase tracking-widest ${r.status === "En mission" ? "text-amber-600" : "text-emerald-600"}`}>
-                        <span className={`h-1.5 w-1.5 rounded-full ${r.status === "En mission" ? "bg-amber-500 animate-pulse" : "bg-emerald-500"}`} />
+                      <div className={`flex items-center gap-1.5 text-[9px] font-black uppercase tracking-widest ${r.status === "En mission" ? "text-amber-600" : "text-[#ed5518]"}`}>
+                        <span className={`h-1.5 w-1.5 rounded-full ${r.status === "En mission" ? "bg-amber-500 animate-pulse" : "bg-[#ed5518]"}`} />
                         {r.status}
                       </div>
-                      <div className={`text-[8px] font-black uppercase tracking-tighter ${r.driver.is_online ? "text-emerald-500" : "text-slate-300"}`}>
+                      <div className={`text-[8px] font-black uppercase tracking-tighter ${r.driver.is_online ? "text-[#ed5518]" : "text-slate-300"}`}>
                         {r.driver.is_online ? "Connecté" : "Déconnecté"}
                       </div>
                     </div>
@@ -191,7 +191,7 @@ export default function AdminDrivers() {
                               fetchData(true);
                             }
                           }}
-                          className="h-9 w-9 rounded-xl bg-slate-100 text-slate-400 hover:bg-orange-500 hover:text-white flex items-center justify-center transition-all"
+                          className="h-9 w-9 rounded-xl bg-slate-100 text-slate-400 hover:bg-[#ed5518] hover:text-white flex items-center justify-center transition-all"
                           title="Forcer déconnexion"
                         >
                           <Zap size={14} />
@@ -199,7 +199,7 @@ export default function AdminDrivers() {
                       )}
                       <button
                         onClick={e => { e.stopPropagation(); navigate(`/admin/drivers/${r.driver.id}`); }}
-                        className="inline-flex items-center gap-1.5 rounded-xl bg-slate-900 px-4 py-2 text-[10px] font-black text-white hover:bg-orange-500 transition-all active:scale-95 shadow"
+                        className="inline-flex items-center gap-1.5 rounded-xl bg-slate-900 px-4 py-2 text-[10px] font-black text-white hover:bg-[#ed5518] transition-all active:scale-95 shadow"
                       >
                         GÉRER
                       </button>
@@ -224,10 +224,10 @@ export default function AdminDrivers() {
             <p className="text-sm text-slate-500 leading-relaxed mb-6">
               La gestion des comptes est centralisée. Les livreurs s'inscrivent via le portail dédié <strong className="text-slate-700">/inscription-driver</strong>.
             </p>
-            <div className="rounded-2xl bg-orange-50 border border-orange-100 p-4 text-sm text-orange-800 mb-6">
+            <div className="rounded-2xl bg-orange-50 border border-[#ed5518] p-4 text-sm text-[#ed5518] mb-6">
               <strong>Note :</strong> Une fois inscrit, le chauffeur apparaîtra automatiquement dans cette liste.
             </div>
-            <button onClick={() => setCreateOpen(false)} className="w-full rounded-full bg-slate-900 py-4 text-sm font-black text-white hover:bg-orange-500 transition-all">
+            <button onClick={() => setCreateOpen(false)} className="w-full rounded-full bg-slate-900 py-4 text-sm font-black text-white hover:bg-[#ed5518] transition-all">
               Compris
             </button>
           </div>

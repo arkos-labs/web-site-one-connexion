@@ -10,15 +10,15 @@ export default function Contact() {
       {/* Hero Section */}
       <section className="bg-slate-50 pt-32 pb-16 md:pt-48 md:pb-24 border-b border-slate-200">
         <div className="mx-auto max-w-7xl px-6 md:px-12 text-center">
-          <div className="inline-flex items-center gap-2 rounded-full bg-orange-50 px-4 py-2 text-xs font-bold uppercase tracking-widest text-orange-600 mb-6">
+          <div className="inline-flex items-center gap-2 rounded-full bg-orange-50 px-4 py-2 text-xs font-bold uppercase tracking-widest text-[#ed5518] mb-6">
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#ed5518] opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#ed5518]"></span>
             </span>
             Réponse en moins de 15 minutes
           </div>
           <h1 className="text-4xl font-black tracking-tight text-slate-900 md:text-6xl mb-6">
-            Parlons de votre <span className="text-orange-500">logistique</span>
+            Parlons de votre <span className="text-[#ed5518]">logistique</span>
           </h1>
           <p className="mx-auto max-w-2xl text-lg text-slate-600 leading-relaxed">
             Vous avez un besoin urgent ou vous souhaitez mettre en place des tournées régulières ?
@@ -37,7 +37,7 @@ export default function Contact() {
                 <h2 className="text-2xl font-bold text-slate-900 mb-8">Informations de contact</h2>
                 <div className="space-y-6">
                   <div className="flex items-start gap-5">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-slate-50 text-orange-500 shadow-sm border border-slate-100">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-slate-50 text-[#ed5518] shadow-sm border border-slate-100">
                       <Phone size={24} />
                     </div>
                     <div>
@@ -48,7 +48,7 @@ export default function Contact() {
                   </div>
 
                   <div className="flex items-start gap-5">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-slate-50 text-orange-500 shadow-sm border border-slate-100">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-slate-50 text-[#ed5518] shadow-sm border border-slate-100">
                       <Mail size={24} />
                     </div>
                     <div>
@@ -59,7 +59,7 @@ export default function Contact() {
                   </div>
 
                   <div className="flex items-start gap-5">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-slate-50 text-orange-500 shadow-sm border border-slate-100">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-slate-50 text-[#ed5518] shadow-sm border border-slate-100">
                       <MapPin size={24} />
                     </div>
                     <div>
@@ -81,12 +81,12 @@ export default function Contact() {
                     "Ouverture de compte pro (Net 30)"
                   ].map((item, id) => (
                     <li key={id} className="flex items-center gap-3 text-slate-300">
-                      <CheckCircle2 size={18} className="text-orange-500" />
+                      <CheckCircle2 size={18} className="text-[#ed5518]" />
                       <span className="text-sm font-medium">{item}</span>
                     </li>
                   ))}
                 </ul>
-                <button className="w-full mt-8 flex items-center justify-center gap-2 rounded-full bg-orange-500 py-4 text-sm font-bold text-white transition-all hover:bg-orange-600">
+                <button className="w-full mt-8 flex items-center justify-center gap-2 rounded-full bg-[#ed5518] py-4 text-sm font-bold text-white transition-all hover:bg-[#ed5518]">
                   Devenir client partenaire <ArrowRight size={18} />
                 </button>
               </div>
@@ -103,28 +103,28 @@ export default function Contact() {
                 <div className="grid gap-6 md:grid-cols-2">
                   <div className="space-y-2">
                     <label className="text-xs font-black uppercase tracking-widest text-slate-400">Nom Complet</label>
-                    <input type="text" placeholder="Jean Dupont" className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm font-medium text-slate-900 focus:border-orange-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-orange-500/5 transition-all" />
+                    <input type="text" placeholder="Jean Dupont" className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm font-medium text-slate-900 focus:border-[#ed5518] focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#ed5518]/5 transition-all" />
                   </div>
                   <div className="space-y-2">
                     <label className="text-xs font-black uppercase tracking-widest text-slate-400">Entreprise</label>
-                    <input type="text" placeholder="Clinique / Cabinet / SARL" className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm font-medium text-slate-900 focus:border-orange-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-orange-500/5 transition-all" />
+                    <input type="text" placeholder="Clinique / Cabinet / SARL" className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm font-medium text-slate-900 focus:border-[#ed5518] focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#ed5518]/5 transition-all" />
                   </div>
                 </div>
 
                 <div className="grid gap-6 md:grid-cols-2">
                   <div className="space-y-2">
                     <label className="text-xs font-black uppercase tracking-widest text-slate-400">Email Pro</label>
-                    <input type="email" placeholder="nom@entreprise.fr" className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm font-medium text-slate-900 focus:border-orange-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-orange-500/5 transition-all" />
+                    <input type="email" placeholder="nom@entreprise.fr" className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm font-medium text-slate-900 focus:border-[#ed5518] focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#ed5518]/5 transition-all" />
                   </div>
                   <div className="space-y-2">
                     <label className="text-xs font-black uppercase tracking-widest text-slate-400">Téléphone</label>
-                    <input type="tel" placeholder="06..." className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm font-medium text-slate-900 focus:border-orange-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-orange-500/5 transition-all" />
+                    <input type="tel" placeholder="06..." className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm font-medium text-slate-900 focus:border-[#ed5518] focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#ed5518]/5 transition-all" />
                   </div>
                 </div>
 
                 <div className="space-y-2">
                   <label className="text-xs font-black uppercase tracking-widest text-slate-400">Type de besoin</label>
-                  <select className="w-full appearance-none rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm font-medium text-slate-900 focus:border-orange-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-orange-500/5 transition-all">
+                  <select className="w-full appearance-none rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm font-medium text-slate-900 focus:border-[#ed5518] focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#ed5518]/5 transition-all">
                     <option>Course Express Ponctuelle</option>
                     <option>Mise en place de tournées régulières</option>
                     <option>Partenariat long terme</option>
@@ -134,10 +134,10 @@ export default function Contact() {
 
                 <div className="space-y-2">
                   <label className="text-xs font-black uppercase tracking-widest text-slate-400">Votre message</label>
-                  <textarea rows={4} placeholder="Détaillez votre besoin (volume, urgence, spécificités)..." className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm font-medium text-slate-900 focus:border-orange-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-orange-500/5 transition-all resize-none" />
+                  <textarea rows={4} placeholder="Détaillez votre besoin (volume, urgence, spécificités)..." className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm font-medium text-slate-900 focus:border-[#ed5518] focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#ed5518]/5 transition-all resize-none" />
                 </div>
 
-                <button type="button" className="w-full rounded-full bg-slate-900 py-5 text-sm font-black uppercase tracking-widest text-white shadow-xl transition-all hover:bg-orange-500 hover:shadow-orange-500/20 active:scale-95">
+                <button type="button" className="w-full rounded-full bg-slate-900 py-5 text-sm font-black uppercase tracking-widest text-white shadow-xl transition-all hover:bg-[#ed5518] hover:shadow-primary/20 active:scale-95">
                   Envoyer ma demande
                 </button>
               </form>

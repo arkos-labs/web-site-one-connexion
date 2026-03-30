@@ -285,7 +285,7 @@ export default function AdminChat() {
               <div
                 key={u.id}
                 onClick={() => setActiveUser(u)}
-                className={`p-5 flex items-center gap-4 cursor-pointer transition-all relative border-l-4 ${activeUser?.id === u.id ? 'bg-white border-orange-500 shadow-sm' : 'border-transparent hover:bg-slate-50'}`}
+                className={`p-5 flex items-center gap-4 cursor-pointer transition-all relative border-l-4 ${activeUser?.id === u.id ? 'bg-white border-[#ed5518] shadow-sm' : 'border-transparent hover:bg-slate-50'}`}
               >
                 <div className={`h-12 w-12 rounded-2xl flex-shrink-0 flex items-center justify-center font-black text-xs text-white shadow-lg ${u.role === 'courier' ? 'bg-amber-500 shadow-amber-500/20' : 'bg-slate-900 shadow-slate-900/20'}`}>
                   {u.name.slice(0, 1).toUpperCase()}
@@ -294,7 +294,7 @@ export default function AdminChat() {
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-xs font-black text-slate-900 uppercase tracking-tight truncate">{u.name}</span>
                     {u.unreadCount > 0 && (
-                      <span className="px-1.5 py-0.5 rounded bg-orange-500 text-white text-[9px] font-black animate-pulse">
+                      <span className="px-1.5 py-0.5 rounded bg-[#ed5518] text-white text-[9px] font-black animate-pulse">
                         {u.unreadCount}
                       </span>
                     )}
@@ -321,7 +321,7 @@ export default function AdminChat() {
                   <div>
                     <h4 className="text-sm font-black text-slate-900 uppercase tracking-wider">{activeUser.name}</h4>
                     <div className="flex items-center gap-2">
-                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#ed5518]"></span>
                       <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{activeUser.roleLabel}</span>
                     </div>
                   </div>
@@ -371,7 +371,7 @@ export default function AdminChat() {
                               {new Date(m.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                             </span>
                             {isMe && m.read_at && (
-                              <Check className="text-emerald-500" size={10} />
+                              <Check className="text-[#ed5518]" size={10} />
                             )}
                           </div>
                         </div>
@@ -414,7 +414,7 @@ export default function AdminChat() {
                   <button
                     type="submit"
                     disabled={!newMessage.trim() || sending}
-                    className="h-14 w-14 flex items-center justify-center rounded-2xl bg-orange-500 text-white shadow-xl shadow-orange-500/20 hover:bg-orange-600 transition-all active:scale-95 disabled:opacity-50"
+                    className="h-14 w-14 flex items-center justify-center rounded-2xl bg-[#ed5518] text-white shadow-xl shadow-primary/20 hover:bg-[#ed5518] transition-all active:scale-95 disabled:opacity-50"
                   >
                     {sending ? <Loader2 className="animate-spin" size={20} /> : <Send size={20} />}
                   </button>
@@ -436,11 +436,11 @@ export default function AdminChat() {
       {toast && (
         <div className="fixed bottom-10 right-10 z-[200] animate-in fade-in slide-in-from-right-10 duration-500">
           <div className="bg-slate-900 text-white p-6 rounded-[2.5rem] shadow-2xl flex items-center gap-5 border border-white/10 backdrop-blur-xl">
-            <div className="h-12 w-12 rounded-2xl bg-orange-500 flex items-center justify-center font-black text-xs">
+            <div className="h-12 w-12 rounded-2xl bg-[#ed5518] flex items-center justify-center font-black text-xs">
               {toast.senderName?.slice(0, 1).toUpperCase()}
             </div>
             <div>
-              <div className="text-[10px] font-black uppercase text-orange-500 tracking-widest mb-1">Nouveau message</div>
+              <div className="text-[10px] font-black uppercase text-[#ed5518] tracking-widest mb-1">Nouveau message</div>
               <div className="text-xs font-bold text-white/90 truncate max-w-[200px] italic">"{toast.content}"</div>
             </div>
             <button onClick={() => setToast(null)} className="h-8 w-8 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition-colors">

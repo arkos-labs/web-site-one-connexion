@@ -25,7 +25,7 @@ export default function ResetPassword() {
     })();
 
     const strengthLabel = ["", "Faible", "Moyen", "Bon", "Excellent"][strength];
-    const strengthColor = ["", "bg-rose-400", "bg-amber-400", "bg-blue-400", "bg-emerald-500"][strength];
+    const strengthColor = ["", "bg-rose-400", "bg-amber-400", "bg-[#ed5518]", "bg-[#ed5518]"][strength];
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -62,19 +62,19 @@ export default function ResetPassword() {
 
                 {/* Logo */}
                 <div className="relative z-10 flex items-center gap-3">
-                    <div className="grid h-10 w-10 place-items-center rounded-xl bg-orange-500 text-white text-sm font-black shadow-lg">OC</div>
+                    <div className="grid h-10 w-10 place-items-center rounded-xl bg-[#ed5518] text-white text-sm font-black shadow-lg">OC</div>
                     <span className="text-xl font-black text-white tracking-tight">One Connexion</span>
                 </div>
 
                 {/* Center content */}
                 <div className="relative z-10 space-y-8">
                     <div className="space-y-4">
-                        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-orange-500/15 text-orange-400">
+                        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#ed5518]/15 text-[#ed5518]">
                             <ShieldCheck size={32} />
                         </div>
                         <h2 className="text-4xl font-black text-white leading-tight">
                             Nouveau mot<br />
-                            de <span className="text-orange-400 italic">passe</span>
+                            de <span className="text-[#ed5518] italic">passe</span>
                         </h2>
                         <p className="text-slate-400 text-sm leading-relaxed max-w-xs">
                             Choisissez un mot de passe robuste pour sécuriser l'accès à vos données logistiques.
@@ -91,7 +91,7 @@ export default function ResetPassword() {
                             "Différent de votre ancien mot de passe",
                         ].map((tip, i) => (
                             <div key={i} className="flex items-center gap-3 text-sm text-slate-400 font-medium">
-                                <div className="h-1.5 w-1.5 rounded-full bg-orange-500 shrink-0" />
+                                <div className="h-1.5 w-1.5 rounded-full bg-[#ed5518] shrink-0" />
                                 {tip}
                             </div>
                         ))}
@@ -106,7 +106,7 @@ export default function ResetPassword() {
                 <div className="w-full max-w-sm">
                     {/* Mobile logo */}
                     <div className="flex items-center gap-3 mb-10 lg:hidden">
-                        <div className="grid h-9 w-9 place-items-center rounded-xl bg-orange-500 text-white text-sm font-black">OC</div>
+                        <div className="grid h-9 w-9 place-items-center rounded-xl bg-[#ed5518] text-white text-sm font-black">OC</div>
                         <span className="text-lg font-black text-slate-900">One Connexion</span>
                     </div>
 
@@ -150,7 +150,7 @@ export default function ResetPassword() {
                                                     />
                                                 ))}
                                             </div>
-                                            <p className={`text-xs font-bold ${["", "text-rose-500", "text-amber-500", "text-blue-500", "text-emerald-500"][strength]}`}>
+                                            <p className={`text-xs font-bold ${["", "text-rose-500", "text-amber-500", "text-[#ed5518]", "text-[#ed5518]"][strength]}`}>
                                                 {strengthLabel}
                                             </p>
                                         </div>
@@ -180,7 +180,7 @@ export default function ResetPassword() {
                                             {showConfirm ? <EyeOff size={16} /> : <Eye size={16} />}
                                         </button>
                                         {confirmPassword && password === confirmPassword && (
-                                            <CheckCircle2 size={16} className="absolute right-10 top-1/2 -translate-y-1/2 text-emerald-500" />
+                                            <CheckCircle2 size={16} className="absolute right-10 top-1/2 -translate-y-1/2 text-[#ed5518]" />
                                         )}
                                     </div>
                                     {confirmPassword && password !== confirmPassword && (
@@ -204,7 +204,7 @@ export default function ResetPassword() {
                                 <button
                                     type="submit"
                                     disabled={loading || !password || !confirmPassword}
-                                    className="group w-full flex items-center justify-center gap-2 rounded-full bg-slate-900 py-4 text-sm font-black text-white shadow-xl shadow-slate-900/15 transition-all hover:bg-orange-500 hover:-translate-y-0.5 hover:shadow-orange-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="group w-full flex items-center justify-center gap-2 rounded-full bg-slate-900 py-4 text-sm font-black text-white shadow-xl shadow-slate-900/15 transition-all hover:bg-[#ed5518] hover:-translate-y-0.5 hover:shadow-primary/20 disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     {loading
                                         ? <><Loader2 className="animate-spin" size={18} /> Réinitialisation...</>
@@ -215,7 +215,7 @@ export default function ResetPassword() {
 
                             <p className="mt-6 text-center text-xs text-slate-400">
                                 Lien expiré ?{" "}
-                                <Link to="/mot-de-passe-oublie" className="font-bold text-slate-600 hover:text-orange-500 transition-colors">
+                                <Link to="/mot-de-passe-oublie" className="font-bold text-slate-600 hover:text-[#ed5518] transition-colors">
                                     Faire une nouvelle demande
                                 </Link>
                             </p>
@@ -224,7 +224,7 @@ export default function ResetPassword() {
                         /* ── Success Screen ── */
                         <div className="space-y-8">
                             <div className="space-y-4">
-                                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-500">
+                                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#ed5518] text-[#ed5518]">
                                     <CheckCircle2 size={32} />
                                 </div>
                                 <h1 className="text-3xl font-black text-slate-900 tracking-tight">Mot de passe modifié !</h1>
@@ -233,14 +233,14 @@ export default function ResetPassword() {
                                 </p>
                             </div>
 
-                            <div className="rounded-2xl bg-emerald-50 border border-emerald-100 p-5 text-sm text-emerald-800 font-medium">
-                                <CheckCircle2 size={16} className="inline-block mr-2 text-emerald-500" />
+                            <div className="rounded-2xl bg-[#ed5518] border border-emerald-100 p-5 text-sm text-[#ed5518] font-medium">
+                                <CheckCircle2 size={16} className="inline-block mr-2 text-[#ed5518]" />
                                 Vous pouvez désormais vous connecter avec votre nouveau mot de passe sécurisé.
                             </div>
 
                             <Link
                                 to="/connexion"
-                                className="flex w-full items-center justify-center gap-2 rounded-full bg-slate-900 py-4 text-sm font-black text-white hover:bg-orange-500 transition-all"
+                                className="flex w-full items-center justify-center gap-2 rounded-full bg-slate-900 py-4 text-sm font-black text-white hover:bg-[#ed5518] transition-all"
                             >
                                 Se connecter maintenant →
                             </Link>

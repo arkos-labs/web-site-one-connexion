@@ -109,7 +109,7 @@ const PricingGrid = () => {
                         <thead className="bg-gray-50 text-gray-700 font-serif font-bold sticky top-0 z-10 shadow-sm">
                             <tr>
                                 <th className="px-6 py-4">Ville</th>
-                                <th className="px-6 py-4 text-center bg-blue-50/50 text-blue-900">Normal<br /><span className="text-[10px] font-normal opacity-70">4h</span></th>
+                                <th className="px-6 py-4 text-center bg-[#ed5518]/50 text-[#ed5518]">Normal<br /><span className="text-[10px] font-normal opacity-70">4h</span></th>
                                 <th className="px-6 py-4 text-center bg-purple-50/50 text-purple-900">Express<br /><span className="text-[10px] font-normal opacity-70">2h</span></th>
                                 <th className="px-6 py-4 text-center bg-red-50/50 text-red-900">Urgence<br /><span className="text-[10px] font-normal opacity-70">45min</span></th>
                             </tr>
@@ -136,7 +136,7 @@ const PricingGrid = () => {
                                         <td className="px-6 py-4 font-medium text-gray-900">
                                             {city.ville} <span className="text-gray-400 font-normal ml-1">({city.cp})</span>
                                         </td>
-                                        <td className="px-6 py-4 text-center font-medium text-blue-700">
+                                        <td className="px-6 py-4 text-center font-medium text-[#ed5518]">
                                             {city.formules.NORMAL} bons
                                         </td>
                                         <td className="px-6 py-4 text-center font-medium text-purple-700">
@@ -153,7 +153,7 @@ const PricingGrid = () => {
                 </div>
             </div>
 
-            <div className="bg-blue-50/50 border border-blue-100/50 rounded-xl p-4 flex gap-3 text-sm text-blue-800">
+            <div className="bg-[#ed5518]/50 border border-blue-100/50 rounded-xl p-4 flex gap-3 text-sm text-[#ed5518]">
                 <Info className="w-4 h-4 mt-0.5 shrink-0" />
                 <p>
                     Ces tarifs correspondent à une prise en charge (trajet <strong>Paris ↔ Ville</strong>).

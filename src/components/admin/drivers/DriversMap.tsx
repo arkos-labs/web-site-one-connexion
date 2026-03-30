@@ -126,7 +126,7 @@ const DriversMap = ({ drivers, onDriverClick }: DriversMapProps) => {
                         variant={filter.on_delivery ? "default" : "outline"}
                         size="sm"
                         onClick={() => toggleFilter('on_delivery')}
-                        className={filter.on_delivery ? "bg-blue-500 hover:bg-blue-600" : ""}
+                        className={filter.on_delivery ? "bg-[#ed5518] hover:bg-[#ed5518]" : ""}
                     >
                         🔵 En déplacement ({drivers.filter(d => d.status === 'on_delivery').length})
                     </Button>
@@ -163,7 +163,7 @@ const DriversMap = ({ drivers, onDriverClick }: DriversMapProps) => {
                     {filteredDrivers.length === 0 ? (
                         <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100">
                             <div className="text-center">
-                                <MapPin className="h-16 w-16 text-blue-500 mx-auto mb-4" />
+                                <MapPin className="h-16 w-16 text-[#ed5518] mx-auto mb-4" />
                                 <h3 className="text-xl font-semibold mb-2">Aucun chauffeur à afficher</h3>
                                 <p className="text-muted-foreground mb-4">
                                     Ajoutez des positions GPS à vos chauffeurs pour les voir sur la carte

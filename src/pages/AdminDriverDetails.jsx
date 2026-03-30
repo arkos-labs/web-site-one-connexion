@@ -170,7 +170,7 @@ export default function AdminDriverDetails() {
   if (!driver) return (
     <div className="py-20 text-center">
       <div className="text-2xl font-black text-slate-300 mb-3">Chauffeur introuvable</div>
-      <button onClick={() => navigate('/admin/drivers')} className="text-sm font-bold text-orange-500 hover:underline">← Retour à la flotte</button>
+      <button onClick={() => navigate('/admin/drivers')} className="text-sm font-bold text-[#ed5518] hover:underline">← Retour à la flotte</button>
     </div>
   );
 
@@ -207,9 +207,9 @@ export default function AdminDriverDetails() {
         actions={
           <div className="flex items-center gap-3 flex-wrap">
             {/* Online status badge */}
-            <div className={`flex items-center gap-2 rounded-2xl border px-4 py-2 ${driver.is_online ? 'bg-emerald-50 border-emerald-100' : 'bg-slate-50 border-slate-200'}`}>
-              <span className={`h-2 w-2 rounded-full ${driver.is_online ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400'}`} />
-              <span className={`text-[10px] font-black uppercase tracking-widest ${driver.is_online ? 'text-emerald-700' : 'text-slate-500'}`}>
+            <div className={`flex items-center gap-2 rounded-2xl border px-4 py-2 ${driver.is_online ? 'bg-[#ed5518] border-emerald-100' : 'bg-slate-50 border-slate-200'}`}>
+              <span className={`h-2 w-2 rounded-full ${driver.is_online ? 'bg-[#ed5518] animate-pulse' : 'bg-slate-400'}`} />
+              <span className={`text-[10px] font-black uppercase tracking-widest ${driver.is_online ? 'text-[#ed5518]' : 'text-slate-500'}`}>
                 {driver.is_online ? "En ligne" : "Hors ligne"}
               </span>
             </div>
@@ -253,7 +253,7 @@ export default function AdminDriverDetails() {
                 <button onClick={() => setIsEditing(false)} className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs font-bold text-slate-500">
                   <X size={14} /> Annuler
                 </button>
-                <button onClick={handleSave} disabled={saving} className="flex items-center gap-2 rounded-xl bg-slate-900 px-5 py-2.5 text-xs font-black text-white hover:bg-orange-500 transition-all disabled:opacity-50">
+                <button onClick={handleSave} disabled={saving} className="flex items-center gap-2 rounded-xl bg-slate-900 px-5 py-2.5 text-xs font-black text-white hover:bg-[#ed5518] transition-all disabled:opacity-50">
                   {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
                   Enregistrer
                 </button>
@@ -266,8 +266,8 @@ export default function AdminDriverDetails() {
       {/* KPIs */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
-          { icon: <CheckCircle2 size={18} />, iconBg: "bg-emerald-100 text-emerald-600", label: "Courses terminées", value: `${totals.count} / ${totals.allCount}` },
-          { icon: <TrendingUp size={18} />, iconBg: "bg-indigo-100 text-indigo-600", label: "Gains période", value: `${totals.totalPay.toFixed(2)}€` },
+          { icon: <CheckCircle2 size={18} />, iconBg: "bg-[#ed5518] text-[#ed5518]", label: "Courses terminées", value: `${totals.count} / ${totals.allCount}` },
+          { icon: <TrendingUp size={18} />, iconBg: "bg-[#ed5518] text-[#ed5518]", label: "Gains période", value: `${totals.totalPay.toFixed(2)}€` },
           { icon: <Clock size={18} />, iconBg: "bg-amber-100 text-amber-700", label: "Temps cumulé", value: fmtMinutes(totals.totalMins) },
           { icon: <Truck size={18} />, iconBg: "bg-slate-100 text-slate-600", label: "Véhicule", value: driverDetails.vehicle_type?.toUpperCase() || "—" },
         ].map((kpi, i) => (
@@ -317,8 +317,8 @@ export default function AdminDriverDetails() {
                 {field("IBAN", "iban", "text", "FR76 0000 0000 0000...")}
                 {field("BIC", "bic", "text", "XXXXXXXX")}
               </div>
-              <div className="mt-4 rounded-2xl bg-emerald-50 border border-emerald-100 p-4">
-                <div className="flex items-center gap-2 text-xs font-black text-emerald-700">
+              <div className="mt-4 rounded-2xl bg-[#ed5518] border border-emerald-100 p-4">
+                <div className="flex items-center gap-2 text-xs font-black text-[#ed5518]">
                   <CheckCircle2 size={14} /> Profil actif — Virements automatiques
                 </div>
               </div>
@@ -370,7 +370,7 @@ export default function AdminDriverDetails() {
                   disabled={totals.count === 0}
                   className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-all disabled:opacity-40 shadow-sm"
                 >
-                  <FileText size={13} className="text-indigo-500" /> Listing PDF
+                  <FileText size={13} className="text-[#ed5518]" /> Listing PDF
                 </button>
               </div>
             </div>
@@ -393,14 +393,14 @@ export default function AdminDriverDetails() {
                     <tr><td colSpan={7} className="py-12 text-center text-sm font-bold text-slate-300">Aucune mission dans cette période.</td></tr>
                   ) : rows.map(o => (
                     <tr key={o.id} className="hover:bg-slate-50/80 transition-all cursor-pointer group" onClick={() => navigate(`/admin/orders/${o.id}`)}>
-                      <td className="px-6 py-4 font-black text-slate-900 group-hover:text-orange-500 transition-colors text-xs font-mono">#{o.id.slice(0, 8)}</td>
+                      <td className="px-6 py-4 font-black text-slate-900 group-hover:text-[#ed5518] transition-colors text-xs font-mono">#{o.id.slice(0, 8)}</td>
                       <td className="px-6 py-4 text-xs text-slate-600 max-w-[180px] truncate">{o.route}</td>
                       <td className="px-6 py-4 text-xs text-slate-500">{o.displayDate}</td>
                       <td className="px-6 py-4">
                         <span className="inline-flex items-center rounded-lg bg-slate-100 px-2 py-0.5 text-xs font-bold text-slate-600">{o.pickupTime}</span>
                       </td>
                       <td className="px-6 py-4">
-                        <span className={`inline-flex items-center rounded-lg px-2 py-0.5 text-xs font-bold ${o.status === 'delivered' ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-50 text-slate-400'}`}>{o.deliveryTime}</span>
+                        <span className={`inline-flex items-center rounded-lg px-2 py-0.5 text-xs font-bold ${o.status === 'delivered' ? 'bg-[#ed5518] text-[#ed5518]' : 'bg-slate-50 text-slate-400'}`}>{o.deliveryTime}</span>
                       </td>
                       <td className="px-6 py-4 text-xs font-bold text-slate-700">{fmtMinutes(o.durationMinutes)}</td>
                       <td className="px-6 py-4 text-right font-black text-slate-900 tabular-nums">
@@ -426,14 +426,14 @@ export default function AdminDriverDetails() {
         <div className="space-y-5">
           {/* Summary */}
           <div className="bg-slate-900 text-white rounded-[2rem] p-6 shadow-xl relative overflow-hidden">
-            <div className="absolute -top-8 -right-8 h-28 w-28 bg-orange-500/10 rounded-full blur-3xl" />
+            <div className="absolute -top-8 -right-8 h-28 w-28 bg-[#ed5518]/10 rounded-full blur-3xl" />
             <div className="relative z-10">
               <div className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-4">Vue d'ensemble</div>
               <div className="space-y-5">
                 {[
-                  { label: "Courses terminées", value: `${totals.count} / ${totals.allCount}`, icon: <CheckCircle2 size={18} className="text-emerald-400" /> },
+                  { label: "Courses terminées", value: `${totals.count} / ${totals.allCount}`, icon: <CheckCircle2 size={18} className="text-[#ed5518]" /> },
                   { label: "Temps de livraison", value: fmtMinutes(totals.totalMins), icon: <Clock size={18} className="text-amber-400" /> },
-                  { label: "Gains HT (période)", value: `${totals.totalPay.toFixed(2)}€`, icon: <TrendingUp size={18} className="text-indigo-400" /> },
+                  { label: "Gains HT (période)", value: `${totals.totalPay.toFixed(2)}€`, icon: <TrendingUp size={18} className="text-[#ed5518]" /> },
                 ].map((item, i) => (
                   <div key={i} className="flex items-center justify-between border-b border-white/5 pb-4 last:border-0 last:pb-0">
                     <div className="flex items-center gap-3">
@@ -473,7 +473,7 @@ export default function AdminDriverDetails() {
             <button
               onClick={handleDownloadListing}
               disabled={totals.count === 0}
-              className="w-full flex items-center justify-center gap-2 rounded-xl bg-indigo-600 py-3 text-xs font-black text-white hover:bg-indigo-700 transition-all disabled:opacity-40"
+              className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#ed5518] py-3 text-xs font-black text-white hover:bg-[#ed5518] transition-all disabled:opacity-40"
             >
               <Download size={14} /> Télécharger le relevé
             </button>

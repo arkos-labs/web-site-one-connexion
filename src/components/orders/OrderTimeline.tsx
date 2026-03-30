@@ -13,7 +13,7 @@ export const OrderTimeline = ({ events, loading }: OrderTimelineProps) => {
         return (
             <Card className="p-6">
                 <div className="flex items-center justify-center py-8">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#ed5518]"></div>
                 </div>
             </Card>
         );
@@ -31,7 +31,7 @@ export const OrderTimeline = ({ events, loading }: OrderTimelineProps) => {
 
     return (
         <Card className="p-6">
-            <h3 className="text-lg font-semibold text-primary mb-6 flex items-center gap-2">
+            <h3 className="text-lg font-semibold text-[#ed5518] mb-6 flex items-center gap-2">
                 <Clock className="h-5 w-5" />
                 Historique de la commande
             </h3>
@@ -45,7 +45,7 @@ export const OrderTimeline = ({ events, loading }: OrderTimelineProps) => {
                     {events.map((event, index) => (
                         <div key={event.id} className="relative pl-10">
                             {/* Point sur la timeline */}
-                            <div className="absolute left-0 top-1 w-8 h-8 rounded-full bg-background border-2 border-primary flex items-center justify-center text-lg">
+                            <div className="absolute left-0 top-1 w-8 h-8 rounded-full bg-background border-2 border-[#ed5518] flex items-center justify-center text-lg">
                                 {ORDER_EVENT_ICONS[event.event_type] || '📌'}
                             </div>
 

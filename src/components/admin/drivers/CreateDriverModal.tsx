@@ -224,7 +224,7 @@ const CreateDriverModal = ({ isOpen, onClose, onSubmit }: CreateDriverModalProps
                         </div>
 
                         <div className="flex justify-end pt-4">
-                            <Button onClick={() => handleStepComplete('personal')} className="bg-primary text-white">
+                            <Button onClick={() => handleStepComplete('personal')} className="bg-[#ed5518] text-white">
                                 Suivant
                             </Button>
                         </div>
@@ -274,7 +274,7 @@ const CreateDriverModal = ({ isOpen, onClose, onSubmit }: CreateDriverModalProps
                             <Button variant="outline" onClick={() => setCurrentStep('personal')}>
                                 Retour
                             </Button>
-                            <Button onClick={() => handleStepComplete('vehicle')} className="bg-primary text-white">
+                            <Button onClick={() => handleStepComplete('vehicle')} className="bg-[#ed5518] text-white">
                                 Suivant
                             </Button>
                         </div>
@@ -300,7 +300,7 @@ const CreateDriverModal = ({ isOpen, onClose, onSubmit }: CreateDriverModalProps
                                         variant="outline"
                                         size="sm"
                                         onClick={() => setCurrentStep('personal')}
-                                        className="text-blue-600 border-blue-200 hover:bg-blue-50 hover:text-blue-700"
+                                        className="text-[#ed5518] border-blue-200 hover:bg-[#ed5518] hover:text-[#ed5518]"
                                     >
                                         Modifier
                                     </Button>
@@ -345,7 +345,7 @@ const CreateDriverModal = ({ isOpen, onClose, onSubmit }: CreateDriverModalProps
                                         variant="outline"
                                         size="sm"
                                         onClick={() => setCurrentStep('vehicle')}
-                                        className="text-blue-600 border-blue-200 hover:bg-blue-50 hover:text-blue-700"
+                                        className="text-[#ed5518] border-blue-200 hover:bg-[#ed5518] hover:text-[#ed5518]"
                                     >
                                         Modifier
                                     </Button>
@@ -368,7 +368,7 @@ const CreateDriverModal = ({ isOpen, onClose, onSubmit }: CreateDriverModalProps
                             <Button variant="outline" onClick={() => setCurrentStep('vehicle')}>
                                 Retour
                             </Button>
-                            <Button onClick={handleSubmit} className="bg-cta text-cta-foreground hover:bg-cta/90">
+                            <Button onClick={handleSubmit} className="bg-[#ed5518] text-cta-foreground hover:bg-[#ed5518]/90">
                                 Créer le dossier chauffeur
                             </Button>
                         </div>
@@ -403,7 +403,7 @@ const CreateDriverModal = ({ isOpen, onClose, onSubmit }: CreateDriverModalProps
                                 disabled={isLocked}
                                 className={`w-full flex items-center gap-3 p-3 rounded-xl text-left transition-all duration-200
                                     ${isCurrent
-                                        ? "bg-blue-50 text-blue-700 shadow-sm ring-1 ring-blue-100"
+                                        ? "bg-[#ed5518] text-[#ed5518] shadow-sm ring-1 ring-blue-100"
                                         : isCompleted
                                             ? "text-gray-700 hover:bg-gray-50"
                                             : "text-gray-400 cursor-not-allowed"
@@ -413,7 +413,7 @@ const CreateDriverModal = ({ isOpen, onClose, onSubmit }: CreateDriverModalProps
                                 <div className={`
                                     w-8 h-8 rounded-lg flex items-center justify-center transition-colors
                                     ${isCurrent
-                                        ? "bg-blue-100 text-blue-600"
+                                        ? "bg-[#ed5518] text-[#ed5518]"
                                         : isCompleted
                                             ? "bg-green-100 text-green-600"
                                             : "bg-gray-100 text-gray-400"

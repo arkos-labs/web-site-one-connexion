@@ -61,7 +61,7 @@ export default function AdminAssistant() {
                 <div
                   className={`inline-block px-3 py-2 rounded-2xl text-sm ${
                     m.role === "user"
-                      ? "bg-orange-500 text-white"
+                      ? "bg-[#ed5518] text-white"
                       : "bg-white/10 text-white border border-white/10"
                   }`}
                 >
@@ -78,7 +78,7 @@ export default function AdminAssistant() {
               className="bg-white/10 border-white/10 text-white placeholder:text-white/50"
               onKeyDown={(e) => e.key === "Enter" && sendMessage()}
             />
-            <Button onClick={sendMessage} disabled={loading} className="bg-orange-500 hover:bg-orange-600">
+            <Button onClick={sendMessage} disabled={loading} className="bg-[#ed5518] hover:bg-[#ed5518]">
               {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Envoyer"}
             </Button>
           </div>

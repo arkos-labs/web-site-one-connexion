@@ -393,9 +393,9 @@ const CreateOrderModal = ({ isOpen, onClose, onSubmit }: CreateOrderModalProps) 
                     <form onSubmit={handleSubmit} className="space-y-4">
 
                         {/* SÉLECTION CLIENT (ADMIN ONLY) */}
-                        <div className="bg-blue-50 p-4 rounded-lg border border-blue-100 space-y-3">
+                        <div className="bg-[#ed5518] p-4 rounded-lg border border-blue-100 space-y-3">
                             <div className="flex items-center justify-between">
-                                <Label className="text-blue-900 font-semibold flex items-center gap-2">
+                                <Label className="text-[#ed5518] font-semibold flex items-center gap-2">
                                     <User className="h-4 w-4" />
                                     Sélectionner un client
                                 </Label>
@@ -403,7 +403,7 @@ const CreateOrderModal = ({ isOpen, onClose, onSubmit }: CreateOrderModalProps) 
                                     type="button"
                                     variant="ghost"
                                     size="sm"
-                                    className="text-blue-600 hover:text-blue-800 h-8"
+                                    className="text-[#ed5518] hover:text-[#ed5518] h-8"
                                     onClick={() => setShowCreateClientModal(true)}
                                 >
                                     <Plus className="h-3 w-3 mr-1" />
@@ -455,7 +455,7 @@ const CreateOrderModal = ({ isOpen, onClose, onSubmit }: CreateOrderModalProps) 
                                                                 setClientSearchTerm(`${client.first_name || ''} ${client.last_name || ''}`.trim() || client.email);
                                                                 setShowClientDropdown(false);
                                                             }}
-                                                            className="p-3 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0"
+                                                            className="p-3 hover:bg-[#ed5518] cursor-pointer border-b border-gray-100 last:border-b-0"
                                                         >
                                                             <div className="font-medium text-gray-900">
                                                                 {client.first_name} {client.last_name}
@@ -526,7 +526,7 @@ const CreateOrderModal = ({ isOpen, onClose, onSubmit }: CreateOrderModalProps) 
                                 <div className="w-8 h-8 rounded-lg bg-accent-light flex items-center justify-center">
                                     <MapPin className="h-4 w-4 text-accent-main" />
                                 </div>
-                                <h3 className="text-base font-semibold text-primary">
+                                <h3 className="text-base font-semibold text-[#ed5518]">
                                     Informations d'enlèvement
                                 </h3>
                             </div>
@@ -592,7 +592,7 @@ const CreateOrderModal = ({ isOpen, onClose, onSubmit }: CreateOrderModalProps) 
                                 <div className="w-8 h-8 rounded-lg bg-success-light flex items-center justify-center">
                                     <MapPin className="h-4 w-4 text-success" />
                                 </div>
-                                <h3 className="text-base font-semibold text-primary">
+                                <h3 className="text-base font-semibold text-[#ed5518]">
                                     Informations de livraison
                                 </h3>
                             </div>
@@ -655,10 +655,10 @@ const CreateOrderModal = ({ isOpen, onClose, onSubmit }: CreateOrderModalProps) 
                         {/* Section Détails */}
                         <div className="space-y-3">
                             <div className="flex items-center gap-2 mb-2">
-                                <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                                    <Package className="h-4 w-4 text-primary" />
+                                <div className="w-8 h-8 rounded-lg bg-[#ed5518]/10 flex items-center justify-center">
+                                    <Package className="h-4 w-4 text-[#ed5518]" />
                                 </div>
-                                <h3 className="text-base font-semibold text-primary">
+                                <h3 className="text-base font-semibold text-[#ed5518]">
                                     Détails de la commande
                                 </h3>
                             </div>

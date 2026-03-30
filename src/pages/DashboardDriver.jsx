@@ -214,7 +214,7 @@ export default function DashboardDriver() {
                     <button
                         onClick={toggleOnline}
                         className={`flex items-center gap-3 rounded-2xl px-5 py-3 transition-all ${isOnline
-                            ? "bg-emerald-500 text-white shadow-lg shadow-emerald-200"
+                            ? "bg-[#ed5518] text-white shadow-lg shadow-emerald-200"
                             : "bg-slate-100 text-slate-400 hover:bg-slate-200"
                             }`}
                     >
@@ -275,7 +275,7 @@ export default function DashboardDriver() {
 
                                     {/* Delivery */}
                                     <div className="relative flex gap-4">
-                                        <div className="h-6 w-6 rounded-full border-4 border-orange-500 bg-white z-10 shrink-0"></div>
+                                        <div className="h-6 w-6 rounded-full border-4 border-[#ed5518] bg-white z-10 shrink-0"></div>
                                         <div>
                                             <div className="text-xs font-bold uppercase tracking-wider text-slate-400">Livraison</div>
                                             <div className="font-bold text-slate-900 text-lg leading-tight mt-1">{task.delivery_city || "Destination"}</div>
@@ -301,7 +301,7 @@ export default function DashboardDriver() {
                                                 if (hasCode) {
                                                     return (
                                                         <div className="flex flex-col gap-2">
-                                                            <div className="inline-flex items-center gap-2 bg-orange-100/50 border border-orange-200 text-orange-800 px-3 py-1.5 rounded-lg text-xs font-black w-max">
+                                                            <div className="inline-flex items-center gap-2 bg-[#ed5518]/50 border border-[#ed5518] text-[#ed5518] px-3 py-1.5 rounded-lg text-xs font-black w-max">
                                                                 🔑 ATTENTION CODE D'ACCÈS INCLUS
                                                             </div>
                                                             <span className="whitespace-pre-line">{notes}</span>
@@ -320,7 +320,7 @@ export default function DashboardDriver() {
                                         <>
                                             <button
                                                 onClick={() => updateStatus(task.id, 'driver_accepted')}
-                                                className="flex-1 rounded-2xl bg-emerald-500 py-4 text-center font-bold text-white shadow-xl shadow-emerald-500/20 active:scale-[0.98] transition-all"
+                                                className="flex-1 rounded-2xl bg-[#ed5518] py-4 text-center font-bold text-white shadow-xl shadow-emerald-500/20 active:scale-[0.98] transition-all"
                                             >
                                                 ACCEPTER LA MISSION ✅
                                             </button>
@@ -347,7 +347,7 @@ export default function DashboardDriver() {
                                     ) : (
                                         <button
                                             onClick={() => updateStatus(task.id, 'delivered')}
-                                            className="w-full rounded-2xl bg-emerald-500 py-4 text-center font-bold text-white shadow-xl shadow-emerald-500/20 active:scale-[0.98] transition-all"
+                                            className="w-full rounded-2xl bg-[#ed5518] py-4 text-center font-bold text-white shadow-xl shadow-emerald-500/20 active:scale-[0.98] transition-all"
                                         >
                                             VALIDER LA LIVRAISON ✅
                                         </button>

@@ -221,9 +221,9 @@ export function ClientDetailsPanel({
 
           {/* Infos légales */}
           {client.siret && (
-            <Card className="p-4 bg-blue-50 border-blue-200">
-              <h3 className="font-semibold mb-3 text-blue-900">?? Informations légales</h3>
-              <div className="space-y-2 text-sm text-blue-900">
+            <Card className="p-4 bg-[#ed5518] border-blue-200">
+              <h3 className="font-semibold mb-3 text-[#ed5518]">?? Informations légales</h3>
+              <div className="space-y-2 text-sm text-[#ed5518]">
                 <p><strong>SIRET:</strong> {client.siret}</p>
               </div>
             </Card>
@@ -257,7 +257,7 @@ export function ClientDetailsPanel({
                       <p className="text-xs text-gray-500">{order.date}</p>
                     </div>
                     <div className="flex items-center gap-3">
-                      <Badge className={order.status === "delivered" ? "bg-green-500" : "bg-blue-500"}>
+                      <Badge className={order.status === "delivered" ? "bg-green-500" : "bg-[#ed5518]"}>
                         {order.status === "delivered" ? "Livrée" : "En cours"}
                       </Badge>
                       <span className="font-semibold">{order.amount}€</span>

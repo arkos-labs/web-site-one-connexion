@@ -92,7 +92,7 @@ export function SendInvitationButton({
                     size="sm"
                     onClick={handleClick}
                     disabled={isLoading}
-                    className="gap-2 border-orange-200 bg-orange-50 text-orange-700 hover:bg-orange-100"
+                    className="gap-2 border-[#ed5518] bg-orange-50 text-[#ed5518] hover:bg-[#ed5518]"
                 >
                     <AlertCircle size={16} />
                     {isLoading ? 'Envoi...' : 'Renvoyer invitation'}

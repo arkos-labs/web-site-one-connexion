@@ -21,20 +21,19 @@ export const Logo = ({
 
     // Size mapping for the image width
     const widthClass = {
-        sm: "w-24",
-        md: "w-32",
-        lg: "w-56"
+        sm: "w-24 md:w-32 lg:w-36",
+        md: "w-32 md:w-40 lg:w-44",
+        lg: "w-40 md:w-48 lg:w-56"
     }[size];
 
     return (
         <Link to="/" className={cn("flex items-center gap-2 group", className)}>
             <img
-                src="/logo-one-connexion.png"
+                src="/logos/ONECONNEXION-02.png"
                 alt="One Connexion Express"
                 className={cn(
                     "h-auto object-contain transition-transform group-hover:scale-105",
-                    widthClass,
-                    "mix-blend-multiply"
+                    widthClass
                 )}
             />
         </Link>

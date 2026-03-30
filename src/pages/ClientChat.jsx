@@ -194,14 +194,14 @@ export default function ClientChat() {
                 {/* Chat Header */}
                 <div className="px-8 py-5 border-b border-slate-50 flex items-center gap-4 bg-white">
                     <div className="relative">
-                        <div className="h-12 w-12 rounded-full bg-[#f97316] flex items-center justify-center text-white font-black text-lg shadow-md shadow-orange-200">
+                        <div className="h-12 w-12 rounded-full bg-[#ed5518] flex items-center justify-center text-white font-black text-lg shadow-md shadow-[#ed5518]/20">
                             OC
                         </div>
-                        <div className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-white bg-emerald-500"></div>
+                        <div className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-white bg-[#ed5518]"></div>
                     </div>
                     <div>
                         <div className="text-xl font-bold text-slate-900">Support One Connexion</div>
-                        <div className="text-xs font-bold text-emerald-500 uppercase tracking-widest">Équipe en ligne</div>
+                        <div className="text-xs font-bold text-[#ed5518] uppercase tracking-widest">Équipe en ligne</div>
                     </div>
                 </div>
 
@@ -223,7 +223,7 @@ export default function ClientChat() {
                             return (
                                 <div key={m.id} className={`flex ${isMe ? "justify-end" : "justify-start"}`}>
                                     <div className={`max-w-[75%] group relative flex flex-col ${isMe ? "items-end" : "items-start"}`}>
-                                        <div className={`mb-1 text-xs font-semibold uppercase tracking-widest ${isMe ? "text-slate-400" : "text-emerald-500"}`}>
+                                        <div className={`mb-1 text-xs font-semibold uppercase tracking-widest ${isMe ? "text-slate-400" : "text-[#ed5518]"}`}>
                                             {isMe ? "Vous" : "Support"}
                                         </div>
                                         <div className={`px-6 py-3.5 text-[17px] font-medium shadow-sm transition-all ${isMe
@@ -241,11 +241,11 @@ export default function ClientChat() {
                         })
                     )}
                     {isPartnerTyping && (
-                        <div className="flex items-center gap-2 text-xs font-bold text-emerald-500 animate-pulse pb-4">
+                        <div className="flex items-center gap-2 text-xs font-bold text-[#ed5518] animate-pulse pb-4">
                             <div className="flex gap-1">
-                                <span className="h-1.5 w-1.5 rounded-full bg-emerald-300 animate-bounce [animation-delay:-0.3s]"></span>
-                                <span className="h-1.5 w-1.5 rounded-full bg-emerald-300 animate-bounce [animation-delay:-0.15s]"></span>
-                                <span className="h-1.5 w-1.5 rounded-full bg-emerald-300 animate-bounce"></span>
+                                <span className="h-1.5 w-1.5 rounded-full bg-[#ed5518] animate-bounce [animation-delay:-0.3s]"></span>
+                                <span className="h-1.5 w-1.5 rounded-full bg-[#ed5518] animate-bounce [animation-delay:-0.15s]"></span>
+                                <span className="h-1.5 w-1.5 rounded-full bg-[#ed5518] animate-bounce"></span>
                             </div>
                             Support est en train d'écrire...
                         </div>

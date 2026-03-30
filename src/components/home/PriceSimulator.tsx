@@ -101,13 +101,13 @@ export function PriceSimulator() {
 
     return (
         <div className="space-y-8">
-            <Card className="p-8 shadow-xl border-2 border-primary/10">
+            <Card className="p-8 shadow-xl border-2 border-[#ed5518]/10">
                 {/* En-tête */}
                 <div className="text-center mb-8">
                     <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-hero mb-4">
                         <Calculator className="h-8 w-8 text-white" />
                     </div>
-                    <h2 className="text-3xl font-display font-bold text-primary mb-2">
+                    <h2 className="text-3xl font-display font-bold text-[#ed5518] mb-2">
                         Simulateur de prix
                     </h2>
                     <p className="text-muted-foreground">
@@ -190,7 +190,7 @@ export function PriceSimulator() {
 
                     {/* Ville détectée */}
                     {villeArrivee && !error && (
-                        <div className="p-4 bg-primary/5 border border-primary/20 rounded-lg">
+                        <div className="p-4 bg-[#ed5518]/5 border border-[#ed5518]/20 rounded-lg">
                             <div className="flex items-center gap-2 text-sm">
                                 <CheckCircle2 className="h-5 w-5 text-green-600" />
                                 <span className="font-medium">Ville d'arrivée détectée :</span>
@@ -214,8 +214,8 @@ export function PriceSimulator() {
                                         key={formule}
                                         onClick={() => handleFormulaSelect(formule)}
                                         className={`p-6 transition-all cursor-pointer border-2 ${selectedFormula === formule
-                                            ? "border-primary bg-primary/5 shadow-lg scale-105"
-                                            : "border-border hover:border-primary/50 hover:shadow-md"
+                                            ? "border-[#ed5518] bg-[#ed5518]/5 shadow-lg scale-105"
+                                            : "border-border hover:border-[#ed5518]/50 hover:shadow-md"
                                             }`}
                                     >
                                         <div className="text-center space-y-4">
@@ -231,7 +231,7 @@ export function PriceSimulator() {
 
                                             {/* Nom de la formule */}
                                             <div>
-                                                <h4 className="text-xl font-bold text-primary mb-1">
+                                                <h4 className="text-xl font-bold text-[#ed5518] mb-1">
                                                     {pricing.formule}
                                                 </h4>
                                                 <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
@@ -246,8 +246,8 @@ export function PriceSimulator() {
                                                     {pricing.totalBons.toFixed(2)} bons × 5.50€
                                                 </div>
                                                 <div className="flex items-center justify-center gap-2">
-                                                    <Euro className="h-6 w-6 text-primary" />
-                                                    <span className="text-4xl font-bold text-primary">
+                                                    <Euro className="h-6 w-6 text-[#ed5518]" />
+                                                    <span className="text-4xl font-bold text-[#ed5518]">
                                                         {pricing.totalEuros.toFixed(2)}
                                                     </span>
                                                 </div>

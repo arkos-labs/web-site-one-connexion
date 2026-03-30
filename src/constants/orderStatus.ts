@@ -19,7 +19,7 @@ export const ORDER_STATUS_LABELS: Record<string, string> = {
 };
 
 export const ORDER_STATUS_COLORS: Record<string, string> = {
-    'pending_acceptance': 'bg-orange-500',
+    'pending_acceptance': 'bg-[#ed5518]',
     'accepted': 'bg-blue-500',
     'assigned': 'bg-purple-500',
     'driver_accepted': 'bg-teal-500',

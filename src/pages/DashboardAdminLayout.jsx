@@ -101,11 +101,11 @@ export default function DashboardAdminLayout() {
           {/* Logo */}
           <Link to="/admin" className="mb-10 flex items-center gap-3 px-4">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-900 text-white font-black shadow-xl shadow-slate-900/20 ring-1 ring-white/20">
-              <Activity size={20} className="text-orange-500" />
+              <Activity size={20} className="text-[#ed5518]" />
             </div>
             <div className="flex flex-col">
               <span className="text-lg font-black tracking-tight leading-none text-slate-900">ONE CONNEXION</span>
-              <span className="text-[10px] font-bold tracking-[0.2em] text-orange-500 uppercase mt-1">Plateforme Admin</span>
+              <span className="text-[10px] font-bold tracking-[0.2em] text-[#ed5518] uppercase mt-1">Plateforme Admin</span>
             </div>
           </Link>
 
@@ -140,8 +140,8 @@ export default function DashboardAdminLayout() {
               </div>
               <div className="flex flex-col min-w-0">
                 <span className="text-xs font-bold text-slate-900 truncate">{user?.email || "Administrateur"}</span>
-                <span className="flex items-center gap-1 text-[9px] font-bold text-emerald-500 uppercase tracking-wider">
-                  <span className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span className="flex items-center gap-1 text-[9px] font-bold text-[#ed5518] uppercase tracking-wider">
+                  <span className="h-1 w-1 rounded-full bg-[#ed5518] animate-pulse"></span>
                   Super Admin
                 </span>
               </div>
@@ -169,15 +169,15 @@ export default function DashboardAdminLayout() {
         <div className="fixed bottom-8 right-8 z-[100] w-full max-w-sm animate-in fade-in slide-in-from-bottom-5 duration-500">
           <div className="relative overflow-hidden rounded-3xl bg-slate-900 text-white shadow-2xl shadow-indigo-500/20 ring-1 ring-white/10 p-1">
             {/* Top Accent Bar */}
-            <div className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-orange-400 via-rose-500 to-indigo-500" />
+            <div className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-primary via-rose-500 to-indigo-500" />
 
             <div className="p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-orange-500/20 text-orange-400">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#ed5518]/20 text-[#ed5518]">
                     <Bell size={16} className="animate-pulse" />
                   </div>
-                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-orange-500">Alerte Dispatch</span>
+                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#ed5518]">Alerte Dispatch</span>
                 </div>
                 <button
                   onClick={() => setNewOrderPopup(null)}
@@ -198,7 +198,7 @@ export default function DashboardAdminLayout() {
                   </div>
                   <div className="text-right flex flex-col">
                     <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wider">Montant</span>
-                    <span className="text-sm font-black text-emerald-400">{newOrderPopup.price}€</span>
+                    <span className="text-sm font-black text-[#ed5518]">{newOrderPopup.price}€</span>
                   </div>
                 </div>
               </div>
@@ -234,18 +234,18 @@ function NavItem({ icon: IconComponent, label, active, badge, to }) {
     <Link to={to} className={classes}>
       <div className="flex items-center gap-3.5">
         {Icon ? (
-          <Icon size={18} className={`transition-all duration-300 ${active ? "text-orange-500 scale-110" : "group-hover:scale-110"}`} />
+          <Icon size={18} className={`transition-all duration-300 ${active ? "text-[#ed5518] scale-110" : "group-hover:scale-110"}`} />
         ) : null}
         <span className="tracking-tight">{label}</span>
       </div>
       {badge && (
-        <span className={`flex h-5 min-w-[20px] items-center justify-center rounded-full px-1.5 text-[10px] font-black tracking-tighter ${active ? "bg-white text-slate-900" : "bg-orange-500 text-white shadow-lg shadow-orange-500/20"
+        <span className={`flex h-5 min-w-[20px] items-center justify-center rounded-full px-1.5 text-[10px] font-black tracking-tighter ${active ? "bg-white text-slate-900" : "bg-[#ed5518] text-white shadow-lg shadow-primary/20"
           }`}>
           {badge}
         </span>
       )}
       {active && (
-        <div className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-1 bg-orange-500 rounded-r-full" />
+        <div className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-1 bg-[#ed5518] rounded-r-full" />
       )}
     </Link>
   );

@@ -52,19 +52,19 @@ export default function ForgotPassword() {
 
                 {/* Logo */}
                 <div className="relative z-10 flex items-center gap-3">
-                    <div className="grid h-10 w-10 place-items-center rounded-xl bg-orange-500 text-white text-sm font-black shadow-lg">OC</div>
+                    <div className="grid h-10 w-10 place-items-center rounded-xl bg-[#ed5518] text-white text-sm font-black shadow-lg">OC</div>
                     <span className="text-xl font-black text-white tracking-tight">One Connexion</span>
                 </div>
 
                 {/* Center content */}
                 <div className="relative z-10 space-y-8">
                     <div className="space-y-4">
-                        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-orange-500/15 text-orange-400">
+                        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#ed5518]/15 text-[#ed5518]">
                             <ShieldCheck size={32} />
                         </div>
                         <h2 className="text-4xl font-black text-white leading-tight">
                             Votre compte,<br />
-                            <span className="text-orange-400 italic">bien protégé.</span>
+                            <span className="text-[#ed5518] italic">bien protégé.</span>
                         </h2>
                         <p className="text-slate-400 text-sm leading-relaxed max-w-xs">
                             Un lien de réinitialisation vous sera envoyé par email. Il est valide pendant 1 heure.
@@ -79,7 +79,7 @@ export default function ForgotPassword() {
                             { num: "03", text: "Choisissez un nouveau mot de passe sécurisé" },
                         ].map((step, i) => (
                             <div key={i} className="flex items-center gap-4">
-                                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/5 text-xs font-black text-orange-400">
+                                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/5 text-xs font-black text-[#ed5518]">
                                     {step.num}
                                 </div>
                                 <p className="text-sm text-slate-300 font-medium">{step.text}</p>
@@ -96,7 +96,7 @@ export default function ForgotPassword() {
                 <div className="w-full max-w-sm">
                     {/* Mobile logo */}
                     <div className="flex items-center gap-3 mb-10 lg:hidden">
-                        <div className="grid h-9 w-9 place-items-center rounded-xl bg-orange-500 text-white text-sm font-black">OC</div>
+                        <div className="grid h-9 w-9 place-items-center rounded-xl bg-[#ed5518] text-white text-sm font-black">OC</div>
                         <span className="text-lg font-black text-slate-900">One Connexion</span>
                     </div>
 
@@ -107,7 +107,7 @@ export default function ForgotPassword() {
                     {!sent ? (
                         <>
                             <div className="mb-10">
-                                <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-50 text-orange-500">
+                                <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-50 text-[#ed5518]">
                                     <Mail size={28} />
                                 </div>
                                 <h1 className="text-3xl font-black text-slate-900 tracking-tight">Mot de passe oublié ?</h1>
@@ -142,7 +142,7 @@ export default function ForgotPassword() {
                                 <button
                                     type="submit"
                                     disabled={loading}
-                                    className="group w-full flex items-center justify-center gap-2 rounded-full bg-slate-900 py-4 text-sm font-black text-white shadow-xl shadow-slate-900/15 transition-all hover:bg-orange-500 hover:-translate-y-0.5 hover:shadow-orange-500/20 disabled:opacity-60 disabled:cursor-not-allowed"
+                                    className="group w-full flex items-center justify-center gap-2 rounded-full bg-slate-900 py-4 text-sm font-black text-white shadow-xl shadow-slate-900/15 transition-all hover:bg-[#ed5518] hover:-translate-y-0.5 hover:shadow-primary/20 disabled:opacity-60 disabled:cursor-not-allowed"
                                 >
                                     {loading
                                         ? <><Loader2 className="animate-spin" size={18} /> Envoi en cours...</>
@@ -159,7 +159,7 @@ export default function ForgotPassword() {
                         /* ── Success State ── */
                         <div className="space-y-8">
                             <div className="space-y-3">
-                                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-500">
+                                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#ed5518] text-[#ed5518]">
                                     <CheckCircle2 size={32} />
                                 </div>
                                 <h1 className="text-3xl font-black text-slate-900 tracking-tight">Email envoyé !</h1>
@@ -171,9 +171,9 @@ export default function ForgotPassword() {
                             <div className="rounded-2xl bg-slate-50 border border-slate-100 p-5 space-y-3 text-sm text-slate-600">
                                 <div className="font-bold text-slate-800 text-xs uppercase tracking-wider">Que faire si je ne reçois pas l'email ?</div>
                                 <ul className="space-y-2">
-                                    <li className="flex items-start gap-2"><span className="text-orange-500 mt-0.5">→</span> Vérifiez votre dossier <strong>Spams / Indésirables</strong></li>
-                                    <li className="flex items-start gap-2"><span className="text-orange-500 mt-0.5">→</span> Assurez-vous d'utiliser l'email de votre compte pro</li>
-                                    <li className="flex items-start gap-2"><span className="text-orange-500 mt-0.5">→</span> Le lien expire dans <strong>1 heure</strong></li>
+                                    <li className="flex items-start gap-2"><span className="text-[#ed5518] mt-0.5">→</span> Vérifiez votre dossier <strong>Spams / Indésirables</strong></li>
+                                    <li className="flex items-start gap-2"><span className="text-[#ed5518] mt-0.5">→</span> Assurez-vous d'utiliser l'email de votre compte pro</li>
+                                    <li className="flex items-start gap-2"><span className="text-[#ed5518] mt-0.5">→</span> Le lien expire dans <strong>1 heure</strong></li>
                                 </ul>
                             </div>
 
@@ -186,7 +186,7 @@ export default function ForgotPassword() {
                                 </button>
                                 <Link
                                     to="/connexion"
-                                    className="flex w-full items-center justify-center gap-2 rounded-full bg-slate-900 py-3.5 text-sm font-black text-white hover:bg-orange-500 transition-all"
+                                    className="flex w-full items-center justify-center gap-2 rounded-full bg-slate-900 py-3.5 text-sm font-black text-white hover:bg-[#ed5518] transition-all"
                                 >
                                     Retour à la connexion
                                 </Link>
@@ -194,7 +194,7 @@ export default function ForgotPassword() {
 
                             <p className="text-center text-xs text-slate-400">
                                 Besoin d'aide ?{" "}
-                                <a href="mailto:support@oneconnexion.fr" className="font-bold text-slate-600 hover:text-orange-500 transition-colors">
+                                <a href="mailto:support@oneconnexion.fr" className="font-bold text-slate-600 hover:text-[#ed5518] transition-colors">
                                     support@oneconnexion.fr
                                 </a>
                             </p>

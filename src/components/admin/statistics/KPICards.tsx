@@ -19,8 +19,8 @@ export const KPICards = ({ data, onOpenRevenueDetails, onOpenGrowthDetails }: KP
             change: `${data.revenue.growth > 0 ? "+" : ""}${data.revenue.growth.toFixed(1)}%`,
             subtext: "vs période précédente",
             icon: Euro,
-            color: "text-primary",
-            bgColor: "bg-primary/10",
+            color: "text-[#ed5518]",
+            bgColor: "bg-[#ed5518]/10",
             onClick: onOpenRevenueDetails,
         },
         {
@@ -71,7 +71,7 @@ export const KPICards = ({ data, onOpenRevenueDetails, onOpenGrowthDetails }: KP
                     </div>
                     <div>
                         <p className="text-sm text-muted-foreground mb-1">{card.title}</p>
-                        <p className="text-3xl font-display font-bold text-primary mb-2">
+                        <p className="text-3xl font-display font-bold text-[#ed5518] mb-2">
                             {card.value}
                         </p>
                         <div className="flex items-center gap-2">

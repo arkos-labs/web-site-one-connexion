@@ -54,9 +54,9 @@ export default function AdminOrders() {
                   onClick={() => setView(tab.id)}
                   className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black transition-all duration-200 ${view === tab.id ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
                 >
-                  <tab.icon size={13} className={view === tab.id ? "text-orange-500" : ""} />
+                  <tab.icon size={13} className={view === tab.id ? "text-[#ed5518]" : ""} />
                   {tab.label}
-                  <span className={`h-4 min-w-4 px-1 rounded-full text-[9px] font-black grid place-items-center ${view === tab.id ? 'bg-orange-500 text-white' : 'bg-slate-200 text-slate-500'}`}>
+                  <span className={`h-4 min-w-4 px-1 rounded-full text-[9px] font-black grid place-items-center ${view === tab.id ? 'bg-[#ed5518] text-white' : 'bg-slate-200 text-slate-500'}`}>
                     {tab.count}
                   </span>
                 </button>

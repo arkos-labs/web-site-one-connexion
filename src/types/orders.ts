@@ -151,7 +151,7 @@ export const getDriverStatusBadgeColor = (status: DriverStatus): string => {
         busy: 'bg-blue-500',
         offline: 'bg-gray-500',
         suspended: 'bg-red-500',
-        on_break: 'bg-orange-400',
+        on_break: 'bg-[#ed5518]',
         on_vacation: 'bg-purple-400',
         on_delivery: 'bg-blue-600'
     };

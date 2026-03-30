@@ -35,7 +35,7 @@ function AddressSuggest({ label, value, onChange, onSelect, suggestions, loading
                             className="w-full text-left flex items-center gap-2 px-3 py-2.5 text-sm font-medium hover:bg-slate-50 rounded-xl transition-colors"
                             onClick={() => onSelect(s)}
                         >
-                            <MapPin size={12} className="text-orange-500 shrink-0" />
+                            <MapPin size={12} className="text-[#ed5518] shrink-0" />
                             {s.label}
                         </button>
                     ))}
@@ -314,8 +314,8 @@ export default function AdminCreateOrderModal({ onClose, onSuccess }) {
 
     const serviceColors = {
         super: "bg-rose-50 text-rose-600 border-rose-100",
-        exclu: "bg-blue-50 text-blue-600 border-blue-100",
-        normal: "bg-emerald-50 text-emerald-600 border-emerald-100",
+        exclu: "bg-[#ed5518] text-[#ed5518] border-blue-100",
+        normal: "bg-[#ed5518] text-[#ed5518] border-emerald-100",
     };
 
     return (
@@ -343,10 +343,10 @@ export default function AdminCreateOrderModal({ onClose, onSuccess }) {
                             return (
                                 <div key={s.title} className="flex items-center flex-1">
                                     <div className="flex flex-col items-center gap-1 flex-1">
-                                        <div className={`h-7 w-7 rounded-full flex items-center justify-center text-[10px] font-black border-2 transition-all ${current ? 'bg-orange-500 border-orange-500 text-white scale-110' : done ? 'bg-slate-900 border-slate-900 text-white' : 'bg-white border-slate-200 text-slate-400'}`}>
+                                        <div className={`h-7 w-7 rounded-full flex items-center justify-center text-[10px] font-black border-2 transition-all ${current ? 'bg-[#ed5518] border-[#ed5518] text-white scale-110' : done ? 'bg-slate-900 border-slate-900 text-white' : 'bg-white border-slate-200 text-slate-400'}`}>
                                             {done ? <CheckCircle2 size={13} /> : i + 1}
                                         </div>
-                                        <span className={`text-[8px] font-black uppercase tracking-widest ${current ? 'text-orange-500' : done ? 'text-slate-700' : 'text-slate-300'}`}>{s.title}</span>
+                                        <span className={`text-[8px] font-black uppercase tracking-widest ${current ? 'text-[#ed5518]' : done ? 'text-slate-700' : 'text-slate-300'}`}>{s.title}</span>
                                     </div>
                                     {i < STEPS.length - 1 && <div className={`h-px flex-1 mx-1 ${step > i + 1 ? 'bg-slate-900' : 'bg-slate-200'}`} />}
                                 </div>
@@ -417,27 +417,27 @@ export default function AdminCreateOrderModal({ onClose, onSuccess }) {
                                                 <button
                                                     key={c.id}
                                                     onClick={() => setSelectedClient(c)}
-                                                    className={`w-full flex items-center justify-between px-5 py-3.5 transition-all text-left hover:bg-slate-50 ${selectedClient?.id === c.id ? 'bg-orange-50 border-l-4 border-orange-500' : ''}`}
+                                                    className={`w-full flex items-center justify-between px-5 py-3.5 transition-all text-left hover:bg-slate-50 ${selectedClient?.id === c.id ? 'bg-orange-50 border-l-4 border-[#ed5518]' : ''}`}
                                                 >
                                                     <div className="min-w-0 flex-1">
-                                                        <div className={`text-sm font-black truncate ${selectedClient?.id === c.id ? 'text-orange-600' : 'text-slate-900'}`}>{c.name}</div>
+                                                        <div className={`text-sm font-black truncate ${selectedClient?.id === c.id ? 'text-[#ed5518]' : 'text-slate-900'}`}>{c.name}</div>
                                                         {c.email && <div className="text-xs font-medium text-slate-400 truncate">{c.email}</div>}
                                                         {c.role && c.role !== 'client' && (
                                                             <span className="inline-block mt-0.5 text-[8px] font-black uppercase tracking-widest bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded">{c.role}</span>
                                                         )}
                                                     </div>
-                                                    {selectedClient?.id === c.id && <CheckCircle2 size={18} className="text-orange-500 shrink-0 ml-2" />}
+                                                    {selectedClient?.id === c.id && <CheckCircle2 size={18} className="text-[#ed5518] shrink-0 ml-2" />}
                                                 </button>
                                             ))}
                                         </div>
                                     </div>
 
                                     {selectedClient && (
-                                        <div className="flex items-center gap-3 rounded-2xl bg-emerald-50 border border-emerald-100 px-5 py-3">
-                                            <CheckCircle2 size={18} className="text-emerald-600 shrink-0" />
+                                        <div className="flex items-center gap-3 rounded-2xl bg-[#ed5518] border border-emerald-100 px-5 py-3">
+                                            <CheckCircle2 size={18} className="text-[#ed5518] shrink-0" />
                                             <div>
-                                                <div className="text-sm font-black text-emerald-800">{selectedClient.name}</div>
-                                                <div className="text-xs text-emerald-600">{selectedClient.email}</div>
+                                                <div className="text-sm font-black text-[#ed5518]">{selectedClient.name}</div>
+                                                <div className="text-xs text-[#ed5518]">{selectedClient.email}</div>
                                             </div>
                                         </div>
                                     )}
@@ -446,9 +446,9 @@ export default function AdminCreateOrderModal({ onClose, onSuccess }) {
 
                             {clientMode === "new" && (
                                 <div className="space-y-4">
-                                    <div className="rounded-2xl bg-blue-50 border border-blue-100 p-4 flex items-start gap-3">
-                                        <Info size={16} className="text-blue-500 shrink-0 mt-0.5" />
-                                        <p className="text-xs font-medium text-blue-700 leading-relaxed">
+                                    <div className="rounded-2xl bg-[#ed5518] border border-blue-100 p-4 flex items-start gap-3">
+                                        <Info size={16} className="text-[#ed5518] shrink-0 mt-0.5" />
+                                        <p className="text-xs font-medium text-[#ed5518] leading-relaxed">
                                             Un nouveau profil client sera créé sans compte. La commande sera liée à ce profil. Vous pourrez compléter le dossier client plus tard.
                                         </p>
                                     </div>
@@ -473,7 +473,7 @@ export default function AdminCreateOrderModal({ onClose, onSuccess }) {
                                     <button
                                         onClick={handleCreateNewClient}
                                         disabled={creatingClient || !newClient.email}
-                                        className="w-full flex items-center justify-center gap-2 rounded-2xl bg-slate-900 py-3.5 text-sm font-black text-white hover:bg-orange-500 transition-all disabled:opacity-50"
+                                        className="w-full flex items-center justify-center gap-2 rounded-2xl bg-slate-900 py-3.5 text-sm font-black text-white hover:bg-[#ed5518] transition-all disabled:opacity-50"
                                     >
                                         {creatingClient ? <Loader2 size={16} className="animate-spin" /> : <UserPlus size={16} />}
                                         {creatingClient ? "Création en cours…" : "Créer et sélectionner ce client"}
@@ -529,7 +529,7 @@ export default function AdminCreateOrderModal({ onClose, onSuccess }) {
                             {/* DELIVERY */}
                             <div className="rounded-2xl bg-slate-50 border border-slate-100 p-5 space-y-4">
                                 <div className="flex items-center gap-2 mb-1">
-                                    <div className="h-6 w-6 rounded-full bg-orange-500 flex items-center justify-center text-white text-[10px] font-black">2</div>
+                                    <div className="h-6 w-6 rounded-full bg-[#ed5518] flex items-center justify-center text-white text-[10px] font-black">2</div>
                                     <span className="text-sm font-black text-slate-900">Livraison</span>
                                 </div>
                                 <AddressSuggest
@@ -661,7 +661,7 @@ export default function AdminCreateOrderModal({ onClose, onSuccess }) {
                                         type="number"
                                         min="0"
                                         step="0.01"
-                                        className="w-28 rounded-xl border border-white/20 bg-white/10 px-3 py-2 text-sm font-bold text-white text-right focus:outline-none focus:ring-2 focus:ring-orange-500 placeholder:text-slate-500"
+                                        className="w-28 rounded-xl border border-white/20 bg-white/10 px-3 py-2 text-sm font-bold text-white text-right focus:outline-none focus:ring-2 focus:ring-[#ed5518] placeholder:text-slate-500"
                                         placeholder="Prix HT"
                                         value={form.priceOverride}
                                         onChange={e => setF('priceOverride', e.target.value)}
@@ -687,7 +687,7 @@ export default function AdminCreateOrderModal({ onClose, onSuccess }) {
                     {step === 4 && (
                         <div className="space-y-5 max-w-2xl mx-auto">
                             <div className="text-center">
-                                <div className="inline-flex h-16 w-16 items-center justify-center rounded-3xl bg-emerald-100 text-emerald-500 mb-4">
+                                <div className="inline-flex h-16 w-16 items-center justify-center rounded-3xl bg-[#ed5518] text-[#ed5518] mb-4">
                                     <ShieldCheck size={32} />
                                 </div>
                                 <h3 className="text-xl font-black text-slate-900">Résumé de la mission</h3>
@@ -708,7 +708,7 @@ export default function AdminCreateOrderModal({ onClose, onSuccess }) {
                                         <div className="text-sm font-black text-slate-900">{form.pickupName || '—'}</div>
                                         <div className="text-xs text-slate-500 mt-0.5">{form.pickup}</div>
                                         {form.pickupPhone && <div className="text-xs text-slate-500">📞 {form.pickupPhone}</div>}
-                                        {form.pickupAccessCode && <div className="text-xs text-orange-600 font-bold">🔑 {form.pickupAccessCode}</div>}
+                                        {form.pickupAccessCode && <div className="text-xs text-[#ed5518] font-bold">🔑 {form.pickupAccessCode}</div>}
                                         {form.pickupInstructions && <div className="text-xs text-slate-600 italic mt-1">📝 {form.pickupInstructions}</div>}
                                     </div>
                                     <div>
@@ -716,7 +716,7 @@ export default function AdminCreateOrderModal({ onClose, onSuccess }) {
                                         <div className="text-sm font-black text-slate-900">{form.deliveryName || '—'}</div>
                                         <div className="text-xs text-slate-500 mt-0.5">{form.delivery}</div>
                                         {form.deliveryPhone && <div className="text-xs text-slate-500">📞 {form.deliveryPhone}</div>}
-                                        {form.deliveryAccessCode && <div className="text-xs text-orange-600 font-bold">🔑 {form.deliveryAccessCode}</div>}
+                                        {form.deliveryAccessCode && <div className="text-xs text-[#ed5518] font-bold">🔑 {form.deliveryAccessCode}</div>}
                                         {form.deliveryInstructions && <div className="text-xs text-slate-600 italic mt-1">📝 {form.deliveryInstructions}</div>}
                                     </div>
                                 </div>
@@ -763,7 +763,7 @@ export default function AdminCreateOrderModal({ onClose, onSuccess }) {
                         <button
                             onClick={() => setStep(s => s + 1)}
                             disabled={!canGoNext()}
-                            className="flex items-center gap-2 rounded-xl bg-slate-900 px-6 py-2.5 text-sm font-black text-white hover:bg-orange-500 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                            className="flex items-center gap-2 rounded-xl bg-slate-900 px-6 py-2.5 text-sm font-black text-white hover:bg-[#ed5518] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                         >
                             Continuer <ArrowRight size={14} />
                         </button>
@@ -771,7 +771,7 @@ export default function AdminCreateOrderModal({ onClose, onSuccess }) {
                         <button
                             onClick={handleSubmit}
                             disabled={submitting}
-                            className="flex items-center gap-2 rounded-xl bg-orange-500 px-8 py-3 text-sm font-black text-white hover:bg-orange-600 transition-all disabled:opacity-50 shadow-lg shadow-orange-500/20"
+                            className="flex items-center gap-2 rounded-xl bg-[#ed5518] px-8 py-3 text-sm font-black text-white hover:bg-[#ed5518] transition-all disabled:opacity-50 shadow-lg shadow-primary/20"
                         >
                             {submitting ? <Loader2 size={16} className="animate-spin" /> : <CheckCircle2 size={16} />}
                             {submitting ? "Création en cours…" : "Créer la mission"}

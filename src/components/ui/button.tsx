@@ -9,14 +9,14 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary-hover active:bg-primary-active shadow-soft",
-        cta: "bg-cta text-cta-foreground hover:bg-cta-hover active:bg-cta-active shadow-cta font-semibold",
+        default: "bg-[#ed5518] text-primary-foreground hover:bg-[#ed5518]-hover active:bg-[#ed5518]-active shadow-soft",
+        cta: "bg-[#ed5518] text-cta-foreground hover:bg-cta-hover active:bg-cta-active shadow-cta font-semibold",
         hero: "bg-gradient-hero text-white hover:shadow-strong hover:scale-105 font-semibold",
         destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-soft",
-        outline: "border-2 border-primary bg-transparent text-primary hover:bg-primary hover:text-primary-foreground",
+        outline: "border-2 border-[#ed5518] bg-transparent text-[#ed5518] hover:bg-[#ed5518] hover:text-primary-foreground",
         secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
+        ghost: "hover:bg-[#ed5518] hover:text-accent-foreground",
+        link: "text-[#ed5518] underline-offset-4 hover:underline",
         success: "bg-success text-success-foreground hover:bg-success/90 shadow-soft",
         warning: "bg-warning text-warning-foreground hover:bg-warning/90 shadow-soft",
       },

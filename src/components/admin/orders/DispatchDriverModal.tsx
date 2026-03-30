@@ -195,12 +195,12 @@ const DispatchDriverModal = ({
         >
             <div className="space-y-6 p-6 h-full overflow-y-auto">
                 {/* Order Info */}
-                <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                <div className="bg-[#ed5518] p-4 rounded-lg border border-blue-200">
                     <div className="flex items-start gap-3">
-                        <Package className="h-5 w-5 text-blue-600 mt-0.5" />
+                        <Package className="h-5 w-5 text-[#ed5518] mt-0.5" />
                         <div className="flex-1">
-                            <p className="font-semibold text-blue-900">Commande : {orderId}</p>
-                            <p className="text-sm text-blue-700 mt-1">
+                            <p className="font-semibold text-[#ed5518]">Commande : {orderId}</p>
+                            <p className="text-sm text-[#ed5518] mt-1">
                                 <MapPin className="h-3 w-3 inline mr-1" />
                                 Point de retrait : {pickupAddress}
                             </p>
@@ -256,8 +256,8 @@ const DispatchDriverModal = ({
                                 className={`
                     p-4 rounded-lg border-2 cursor-pointer transition-all
                     ${selectedDriverId === driver.id
-                                        ? 'border-primary bg-primary/5 shadow-md'
-                                        : 'border-gray-200 hover:border-primary/50 hover:bg-gray-50'
+                                        ? 'border-[#ed5518] bg-[#ed5518]/5 shadow-md'
+                                        : 'border-gray-200 hover:border-[#ed5518]/50 hover:bg-gray-50'
                                     }
                   `}
                             >
@@ -274,12 +274,12 @@ const DispatchDriverModal = ({
                                                 {getDriverStatusLabel(driver.status)}
                                             </Badge>
                                             {index === 0 && !searchQuery && (
-                                                <Badge className="bg-gradient-to-r from-amber-400 to-orange-500 text-white border-0 animate-pulse">
+                                                <Badge className="bg-gradient-to-r from-amber-400 to-primary text-white border-0 animate-pulse">
                                                     ✨ IA : Recommandé
                                                 </Badge>
                                             )}
                                             {selectedDriverId === driver.id && (
-                                                <CheckCircle2 className="h-5 w-5 text-primary ml-auto" />
+                                                <CheckCircle2 className="h-5 w-5 text-[#ed5518] ml-auto" />
                                             )}
                                         </div>
 
@@ -303,7 +303,7 @@ const DispatchDriverModal = ({
                                         </div>
 
                                         {driver.current_orders_count > 0 && (
-                                            <div className="mt-2 text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded inline-block">
+                                            <div className="mt-2 text-xs text-[#ed5518] bg-[#ed5518] px-2 py-1 rounded inline-block">
                                                 {driver.current_orders_count} commande{driver.current_orders_count > 1 ? 's' : ''} en cours
                                             </div>
                                         )}

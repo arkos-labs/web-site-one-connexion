@@ -76,7 +76,7 @@ export default function AdminOrdersHistory({
                                     <span className="text-xs font-black text-slate-500">{o.date}</span>
                                 </td>
                                 <td className="px-8 py-6">
-                                    <span className={`px-2.5 py-1 rounded-md text-[9px] font-black uppercase tracking-widest ${o.status === "delivered" ? "bg-emerald-50 text-emerald-600" : "bg-slate-100 text-slate-400"
+                                    <span className={`px-2.5 py-1 rounded-md text-[9px] font-black uppercase tracking-widest ${o.status === "delivered" ? "bg-[#ed5518] text-[#ed5518]" : "bg-slate-100 text-slate-400"
                                         }`}>
                                         {o.status === "delivered" ? "Livrée" : "Annulée"}
                                     </span>

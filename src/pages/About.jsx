@@ -20,7 +20,7 @@ export default function About() {
 
         <div className="mx-auto max-w-7xl px-6 md:px-12 relative z-10 text-center">
           <h1 className="text-4xl font-black tracking-tight text-white md:text-7xl mb-8 leading-tight">
-            Redéfinir le <span className="text-orange-500 italic">Dernier Kilomètre</span>
+            Redéfinir le <span className="text-[#ed5518] italic">Dernier Kilomètre</span>
           </h1>
           <p className="mx-auto max-w-3xl text-xl text-slate-300 leading-relaxed font-light">
             One Connexion n'est pas qu'une société de livraison. Nous sommes le partenaire technologique et logistique
@@ -34,7 +34,7 @@ export default function About() {
         <div className="mx-auto max-w-7xl px-6 md:px-12">
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <div className="space-y-8">
-              <div className="inline-flex items-center gap-2 rounded-full bg-orange-50 px-4 py-2 text-xs font-black uppercase tracking-widest text-orange-600">
+              <div className="inline-flex items-center gap-2 rounded-full bg-orange-50 px-4 py-2 text-xs font-black uppercase tracking-widest text-[#ed5518]">
                 Notre Mission
               </div>
               <h2 className="text-3xl font-black text-slate-900 md:text-5xl leading-tight">
@@ -46,17 +46,17 @@ export default function About() {
               </p>
               <div className="grid grid-cols-2 gap-8 pt-4">
                 <div>
-                  <div className="text-3xl font-black text-orange-500">15 min</div>
+                  <div className="text-3xl font-black text-[#ed5518]">15 min</div>
                   <div className="text-sm font-bold text-slate-400 uppercase tracking-widest mt-1">Réponse Devis</div>
                 </div>
                 <div>
-                  <div className="text-3xl font-black text-orange-500">24/7</div>
+                  <div className="text-3xl font-black text-[#ed5518]">24/7</div>
                   <div className="text-sm font-bold text-slate-400 uppercase tracking-widest mt-1">Service Dispatch</div>
                 </div>
               </div>
             </div>
             <div className="relative">
-              <div className="absolute -inset-4 bg-orange-500/5 rounded-3xl blur-2xl transform rotate-3"></div>
+              <div className="absolute -inset-4 bg-[#ed5518]/5 rounded-3xl blur-2xl transform rotate-3"></div>
               <img
                 src="https://images.unsplash.com/photo-1556740758-90de374c12ad?auto=format&fit=crop&q=80"
                 className="relative rounded-3xl shadow-2xl border border-slate-100 grayscale hover:grayscale-0 transition-all duration-700"
@@ -91,8 +91,8 @@ export default function About() {
                 desc: "Une équipe dédiée à Paris pour vous accompagner, loin des centres d'appels délocalisés."
               }
             ].map((value, i) => (
-              <div key={i} className="p-8 rounded-3xl bg-white border border-slate-100 shadow-xl shadow-slate-200/50 hover:border-orange-500/30 transition-all group">
-                <div className="h-16 w-16 bg-orange-50 rounded-2xl flex items-center justify-center text-orange-500 mb-6 group-hover:bg-orange-500 group-hover:text-white transition-all">
+              <div key={i} className="p-8 rounded-3xl bg-white border border-slate-100 shadow-xl shadow-slate-200/50 hover:border-[#ed5518]/30 transition-all group">
+                <div className="h-16 w-16 bg-orange-50 rounded-2xl flex items-center justify-center text-[#ed5518] mb-6 group-hover:bg-[#ed5518] group-hover:text-white transition-all">
                   <value.icon size={32} />
                 </div>
                 <h3 className="text-xl font-black text-slate-900 mb-4">{value.title}</h3>
@@ -111,7 +111,7 @@ export default function About() {
             "Nous ne nous contentons pas de transporter des objets, nous livrons votre promesse à vos clients."
           </p>
           <div className="flex flex-wrap justify-center gap-4">
-            <button className="rounded-full bg-slate-900 px-10 py-5 text-sm font-black uppercase tracking-widest text-white shadow-xl hover:bg-orange-500 transition-all active:scale-95">
+            <button className="rounded-full bg-slate-900 px-10 py-5 text-sm font-black uppercase tracking-widest text-white shadow-xl hover:bg-[#ed5518] transition-all active:scale-95">
               Devenir Partenaire B2B
             </button>
           </div>

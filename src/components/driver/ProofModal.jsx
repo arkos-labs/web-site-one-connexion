@@ -66,21 +66,21 @@ export default function ProofModal({ isOpen, onClose, orderId, type, onComplete 
                             <div className="grid grid-cols-2 gap-4">
                                 <button
                                     onClick={() => setStep('photo')}
-                                    className="flex flex-col items-center justify-center gap-4 p-8 rounded-[2rem] border-2 border-slate-100 bg-slate-50 hover:border-orange-500 hover:bg-orange-50 transition-all group"
+                                    className="flex flex-col items-center justify-center gap-4 p-8 rounded-[2rem] border-2 border-slate-100 bg-slate-50 hover:border-[#ed5518] hover:bg-orange-50 transition-all group"
                                 >
-                                    <div className="h-14 w-14 rounded-2xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 group-hover:text-orange-500 transition-colors shadow-sm">
+                                    <div className="h-14 w-14 rounded-2xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 group-hover:text-[#ed5518] transition-colors shadow-sm">
                                         <Camera size={28} />
                                     </div>
-                                    <span className="text-xs font-black uppercase text-slate-600 group-hover:text-orange-600">Prendre Photo</span>
+                                    <span className="text-xs font-black uppercase text-slate-600 group-hover:text-[#ed5518]">Prendre Photo</span>
                                 </button>
                                 <button
                                     onClick={() => setStep('signature')}
-                                    className="flex flex-col items-center justify-center gap-4 p-8 rounded-[2rem] border-2 border-slate-100 bg-slate-50 hover:border-indigo-500 hover:bg-indigo-50 transition-all group"
+                                    className="flex flex-col items-center justify-center gap-4 p-8 rounded-[2rem] border-2 border-slate-100 bg-slate-50 hover:border-indigo-500 hover:bg-[#ed5518] transition-all group"
                                 >
-                                    <div className="h-14 w-14 rounded-2xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 group-hover:text-indigo-500 transition-colors shadow-sm">
+                                    <div className="h-14 w-14 rounded-2xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 group-hover:text-[#ed5518] transition-colors shadow-sm">
                                         <PenTool size={28} />
                                     </div>
-                                    <span className="text-xs font-black uppercase text-slate-600 group-hover:text-indigo-600">Signature Client</span>
+                                    <span className="text-xs font-black uppercase text-slate-600 group-hover:text-[#ed5518]">Signature Client</span>
                                 </button>
                             </div>
                         )}
@@ -88,7 +88,7 @@ export default function ProofModal({ isOpen, onClose, orderId, type, onComplete 
                         {step === 'photo' && (
                             <div className="flex flex-col items-center gap-6 py-4">
                                 <label className="w-full flex flex-col items-center justify-center gap-4 p-12 rounded-[2.5rem] border-4 border-dashed border-slate-100 bg-slate-50 hover:bg-slate-100 transition-all cursor-pointer group">
-                                    <div className="h-20 w-20 rounded-3xl bg-white flex items-center justify-center text-slate-300 group-hover:text-orange-500 group-hover:scale-110 transition-all shadow-sm">
+                                    <div className="h-20 w-20 rounded-3xl bg-white flex items-center justify-center text-slate-300 group-hover:text-[#ed5518] group-hover:scale-110 transition-all shadow-sm">
                                         <Camera size={40} />
                                     </div>
                                     <div className="text-center">
@@ -115,7 +115,7 @@ export default function ProofModal({ isOpen, onClose, orderId, type, onComplete 
                                     <button
                                         onClick={() => handleSave()}
                                         disabled={isUploading}
-                                        className="flex-[2] py-4 rounded-2xl bg-orange-500 text-xs font-black uppercase text-white hover:bg-orange-600 transition-all shadow-lg flex items-center justify-center gap-2"
+                                        className="flex-[2] py-4 rounded-2xl bg-[#ed5518] text-xs font-black uppercase text-white hover:bg-[#ed5518] transition-all shadow-lg flex items-center justify-center gap-2"
                                     >
                                         {isUploading ? <Loader2 className="animate-spin" size={16} /> : <Check size={16} />}
                                         Confirmer cette photo
@@ -137,7 +137,7 @@ export default function ProofModal({ isOpen, onClose, orderId, type, onComplete 
                                     <button
                                         onClick={() => handleSave(preview)}
                                         disabled={!preview || isUploading}
-                                        className="flex-[2] py-4 rounded-2xl bg-indigo-600 text-xs font-black uppercase text-white hover:bg-indigo-700 transition-all shadow-lg flex items-center justify-center gap-2 disabled:opacity-50"
+                                        className="flex-[2] py-4 rounded-2xl bg-[#ed5518] text-xs font-black uppercase text-white hover:bg-[#ed5518] transition-all shadow-lg flex items-center justify-center gap-2 disabled:opacity-50"
                                     >
                                         {isUploading ? <Loader2 className="animate-spin" size={16} /> : <Check size={16} />}
                                         Valider la signature

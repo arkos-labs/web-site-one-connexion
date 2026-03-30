@@ -18,7 +18,7 @@ interface OperationalAnalysisProps {
 
 export const OperationalAnalysis = ({ data }: OperationalAnalysisProps) => {
     const metrics = [
-        { label: "Distance totale", value: `${data.totalDistance} km`, icon: MapPin, color: "text-primary" },
+        { label: "Distance totale", value: `${data.totalDistance} km`, icon: MapPin, color: "text-[#ed5518]" },
         { label: "Durée moyenne", value: `${data.avgDuration} min`, icon: Clock, color: "text-info" },
         { label: "Pic d'activité", value: data.peakHour, icon: TrendingUp, color: "text-warning" },
         { label: "Rev. moyen/course", value: `${data.avgRevenue}€`, icon: Euro, color: "text-success" },
@@ -31,7 +31,7 @@ export const OperationalAnalysis = ({ data }: OperationalAnalysisProps) => {
 
     return (
         <Card className="p-6 shadow-soft border-0">
-            <h2 className="text-xl font-display font-bold text-primary mb-6">
+            <h2 className="text-xl font-display font-bold text-[#ed5518] mb-6">
                 Analyse opérationnelle
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
@@ -43,7 +43,7 @@ export const OperationalAnalysis = ({ data }: OperationalAnalysisProps) => {
                                 {metric.label}
                             </span>
                         </div>
-                        <p className="text-xl font-bold text-primary">{metric.value}</p>
+                        <p className="text-xl font-bold text-[#ed5518]">{metric.value}</p>
                     </div>
                 ))}
             </div>

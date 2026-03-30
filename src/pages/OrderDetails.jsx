@@ -154,9 +154,9 @@ export default function OrderDetails() {
           </div>
           <div className="flex items-center gap-2">
             <div className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wide ${order.status === 'delivered' ? 'bg-slate-100 text-slate-600' :
-                order.status === 'driver_accepted' ? 'bg-emerald-50 text-emerald-600' :
+                order.status === 'driver_accepted' ? 'bg-[#ed5518] text-[#ed5518]' :
                   order.status === 'assigned' ? 'bg-amber-50 text-amber-600' :
-                    order.status === 'in_progress' ? 'bg-blue-50 text-blue-600' :
+                    order.status === 'in_progress' ? 'bg-[#ed5518] text-[#ed5518]' :
                       'bg-slate-900 text-white'
               }`}>
               {clientStatusLabel(order) || "—"}
@@ -185,7 +185,7 @@ export default function OrderDetails() {
                 <div className="mt-2 text-sm font-bold text-slate-900 leading-none mb-1">{pickupName}</div>
                 <div className="text-xs text-slate-500 leading-snug mb-2">{order.pickup_address || "—"}</div>
                 <div className="text-xs font-semibold text-slate-900">
-                  {pCode && <span className="font-bold mr-2 text-orange-600">Code: {pCode}</span>}
+                  {pCode && <span className="font-bold mr-2 text-[#ed5518]">Code: {pCode}</span>}
                   {nPNote && nPNote !== "—" ? nPNote : "—"}
                 </div>
               </div>
@@ -194,7 +194,7 @@ export default function OrderDetails() {
                 <div className="mt-2 text-sm font-bold text-slate-900 leading-none mb-1">{deliveryName}</div>
                 <div className="text-xs text-slate-500 leading-snug mb-2">{order.delivery_address || "—"}</div>
                 <div className="text-xs font-semibold text-slate-900">
-                  {dCode && <span className="font-bold mr-2 text-orange-600">Code: {dCode}</span>}
+                  {dCode && <span className="font-bold mr-2 text-[#ed5518]">Code: {dCode}</span>}
                   {nDNote && nDNote !== "—" ? nDNote : "—"}
                 </div>
               </div>

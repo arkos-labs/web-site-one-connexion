@@ -124,10 +124,12 @@ const Header = () => {
     return (
         <>
             <header className="fixed top-0 left-0 right-0 z-50 py-0 shadow-sm bg-white/95 backdrop-blur-sm border-b border-gray-100 transition-all duration-300">
-                <div className="container mx-auto px-4 md:px-6">
+                <div className="w-full max-w-[1920px] mx-auto px-4 md:px-6 lg:px-8">
                     <div className="flex items-center justify-between">
                         {/* Logo */}
-                        <Logo variant="default" size="sm" />
+                        <div className="-ml-2 md:-ml-4">
+                            <Logo variant="default" size="lg" />
+                        </div>
 
                         {/* Desktop Navigation (Visible uniquement sur Grand Écran LG) */}
                         <nav className="hidden lg:flex items-center gap-6">
@@ -149,7 +151,7 @@ const Header = () => {
                                         onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
                                         className="flex items-center gap-2 px-2 py-1.5 rounded-full transition-all duration-300 bg-gray-100 hover:bg-gray-200 text-gray-800 border border-gray-200"
                                     >
-                                        <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs ${userRole === 'admin' ? "bg-red-500" : "bg-cta"} text-white shadow-sm`}>
+                                        <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs ${userRole === 'admin' ? "bg-red-500" : "bg-[#ed5518]"} text-white shadow-sm`}>
                                             {getInitials(userName)}
                                         </div>
                                         {/* Version Compacte : Pas de nom, juste le chevron */}
@@ -159,7 +161,7 @@ const Header = () => {
                                     {/* Dropdown Menu */}
                                     {isUserMenuOpen && (
                                         <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-xl border border-gray-100 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-                                            <div className={`p-4 ${userRole === 'admin' ? "bg-red-600" : "bg-primary"} text-white`}>
+                                            <div className={`p-4 ${userRole === 'admin' ? "bg-red-600" : "bg-[#ed5518]"} text-white`}>
                                                 <p className="font-semibold truncate text-sm">{userName || "Compte"}</p>
                                                 <p className="text-xs opacity-80 truncate">{user?.email}</p>
                                             </div>
@@ -177,13 +179,13 @@ const Header = () => {
                                                 ) : (
                                                     <>
                                                         <Link to="/client/tableau-de-bord" onClick={() => setIsUserMenuOpen(false)} className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-50 text-sm text-gray-700">
-                                                            <LayoutDashboard className="w-4 h-4 text-primary" /> Tableau de bord
+                                                            <LayoutDashboard className="w-4 h-4 text-[#ed5518]" /> Tableau de bord
                                                         </Link>
                                                         <Link to="/client/commandes" onClick={() => setIsUserMenuOpen(false)} className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-50 text-sm text-gray-700">
-                                                            <Package className="w-4 h-4 text-primary" /> Mes commandes
+                                                            <Package className="w-4 h-4 text-[#ed5518]" /> Mes commandes
                                                         </Link>
                                                         <Link to="/client/parametres" onClick={() => setIsUserMenuOpen(false)} className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-50 text-sm text-gray-700">
-                                                            <Settings className="w-4 h-4 text-primary" /> Paramètres
+                                                            <Settings className="w-4 h-4 text-[#ed5518]" /> Paramètres
                                                         </Link>
                                                     </>
                                                 )}
@@ -199,12 +201,12 @@ const Header = () => {
                             ) : (
                                 <div className="flex items-center gap-3">
                                     <Link to="/connexion">
-                                        <Button variant="ghost" size="sm" className="text-gray-600 hover:text-primary hover:bg-gray-100 font-medium h-8 px-3 text-xs">
+                                        <Button variant="ghost" size="sm" className="text-gray-600 hover:text-[#ed5518] hover:bg-gray-100 font-medium h-8 px-3 text-xs">
                                             Connexion
                                         </Button>
                                     </Link>
                                     <Link to="/inscription">
-                                        <Button size="sm" className="bg-cta hover:bg-cta/90 text-white font-bold shadow-md h-8 px-3 text-xs">
+                                        <Button size="sm" className="bg-[#ed5518] hover:bg-[#ed5518]/90 text-white font-bold shadow-md h-8 px-3 text-xs">
                                             Compte Pro
                                         </Button>
                                     </Link>
@@ -223,7 +225,7 @@ const Header = () => {
                 {isMobileMenuOpen && (
                     <div className="lg:hidden absolute top-[44px] left-0 right-0 bg-white shadow-xl border-t border-gray-100 p-4 flex flex-col gap-2 animate-in slide-in-from-top-2">
                         {navLinks.map((link) => (
-                            <Link key={link.path} to={link.path} className={`px-4 py-3 rounded-lg text-sm font-medium transition-colors ${location.pathname === link.path ? "bg-primary/5 text-primary" : "text-gray-600 hover:bg-gray-50"}`}>
+                            <Link key={link.path} to={link.path} className={`px-4 py-3 rounded-lg text-sm font-medium transition-colors ${location.pathname === link.path ? "bg-[#ed5518]/5 text-[#ed5518]" : "text-gray-600 hover:bg-gray-50"}`}>
                                 {link.name}
                             </Link>
                         ))}
@@ -231,7 +233,7 @@ const Header = () => {
                         {user ? (
                             <>
                                 <div className="px-4 py-2 flex items-center gap-3 mb-2">
-                                    <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xs">
+                                    <div className="w-8 h-8 rounded-full bg-[#ed5518] text-white flex items-center justify-center font-bold text-xs">
                                         {getInitials(userName)}
                                     </div>
                                     <div className="overflow-hidden">
@@ -251,7 +253,7 @@ const Header = () => {
                         ) : (
                             <div className="flex flex-col gap-2">
                                 <Link to="/connexion" className="w-full"><Button variant="outline" className="w-full justify-center">Se connecter</Button></Link>
-                                <Link to="/inscription" className="w-full"><Button className="w-full justify-center bg-cta hover:bg-cta/90">Créer un compte</Button></Link>
+                                <Link to="/inscription" className="w-full"><Button className="w-full justify-center bg-[#ed5518] hover:bg-[#ed5518]/90">Créer un compte</Button></Link>
                             </div>
                         )}
                     </div>

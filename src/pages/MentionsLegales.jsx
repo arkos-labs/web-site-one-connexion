@@ -10,7 +10,7 @@ export default function MentionsLegales() {
             <section className="pt-32 pb-16 md:pt-48 md:pb-24 bg-white border-b border-slate-100">
                 <div className="mx-auto max-w-4xl px-6">
                     <div className="flex items-center gap-4 mb-6">
-                        <div className="h-12 w-12 bg-orange-50 rounded-2xl flex items-center justify-center text-orange-500">
+                        <div className="h-12 w-12 bg-orange-50 rounded-2xl flex items-center justify-center text-[#ed5518]">
                             <Scale size={24} />
                         </div>
                         <h1 className="text-3xl font-black text-slate-900 md:text-5xl tracking-tight">
@@ -28,7 +28,7 @@ export default function MentionsLegales() {
                     {/* Éditeur */}
                     <section>
                         <div className="flex items-center gap-3 mb-6 text-slate-900">
-                            <Building2 size={20} className="text-orange-500" />
+                            <Building2 size={20} className="text-[#ed5518]" />
                             <h2 className="text-2xl font-black uppercase tracking-tight">Éditeur du Site</h2>
                         </div>
                         <div className="grid md:grid-cols-2 gap-8 text-slate-600">
@@ -47,7 +47,7 @@ export default function MentionsLegales() {
                     {/* Publication */}
                     <section>
                         <div className="flex items-center gap-3 mb-6 text-slate-900">
-                            <User size={20} className="text-orange-500" />
+                            <User size={20} className="text-[#ed5518]" />
                             <h2 className="text-2xl font-black uppercase tracking-tight">Direction de Publication</h2>
                         </div>
                         <p className="text-slate-600"><strong>Directeur :</strong> M. Jean Dupont, en qualité de Président de One Connexion.</p>
@@ -56,20 +56,20 @@ export default function MentionsLegales() {
                     {/* Hébergement */}
                     <section>
                         <div className="flex items-center gap-3 mb-6 text-slate-900">
-                            <Globe size={20} className="text-orange-500" />
+                            <Globe size={20} className="text-[#ed5518]" />
                             <h2 className="text-2xl font-black uppercase tracking-tight">Hébergement</h2>
                         </div>
                         <p className="text-slate-600">
                             Le site est hébergé par <strong>Vercel Inc.</strong><br />
                             Adresse : 340 S Lemon Ave #4133, Walnut, CA 91789, USA<br />
-                            Site web : <a href="https://vercel.com" className="text-orange-600 hover:underline">vercel.com</a>
+                            Site web : <a href="https://vercel.com" className="text-[#ed5518] hover:underline">vercel.com</a>
                         </p>
                     </section>
 
                     {/* Propriété Intellectuelle */}
                     <section>
                         <div className="flex items-center gap-3 mb-6 text-slate-900">
-                            <Shield size={20} className="text-orange-500" />
+                            <Shield size={20} className="text-[#ed5518]" />
                             <h2 className="text-2xl font-black uppercase tracking-tight">Propriété Intellectuelle</h2>
                         </div>
                         <p className="text-slate-600 leading-relaxed">
