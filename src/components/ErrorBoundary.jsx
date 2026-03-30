@@ -16,13 +16,14 @@ class ErrorBoundary extends React.Component {
                 sessionStorage.setItem('reload_count', String(reloadCount + 1));
                 window.location.reload();
             }
-            return { hasError: true };
+            return { hasError: true, error };
         }
-        return { hasError: true };
+        return { hasError: true, error };
     }
 
     componentDidCatch(error, errorInfo) {
         console.error("ErrorBoundary caught an error", error, errorInfo);
+        this.setState({ errorInfo });
     }
 
     componentWillUnmount() {
@@ -36,6 +37,13 @@ class ErrorBoundary extends React.Component {
                 <div className="flex min-h-screen flex-col items-center justify-center bg-white p-6 text-center">
                     <h2 className="text-2xl font-black text-slate-900">Oups, une erreur est survenue !</h2>
                     <p className="mt-4 text-slate-500">Le site a tenté un rechargement automatique.</p>
+                    {this.state.error && (
+                        <div className="mt-6 p-4 bg-red-50 text-red-700 text-left text-xs font-mono rounded-lg w-full max-w-4xl overflow-auto shadow-inner border border-red-100">
+                            <strong>{this.state.error.toString()}</strong>
+                            <br /><br />
+                            {this.state.errorInfo && this.state.errorInfo.componentStack}
+                        </div>
+                    )}
                     <button
                         onClick={() => { sessionStorage.removeItem('reload_count'); window.location.reload(); }}
                         className="mt-8 rounded-full bg-[#ed5518] px-8 py-3 font-bold text-white shadow-lg transition-transform hover:scale-105"

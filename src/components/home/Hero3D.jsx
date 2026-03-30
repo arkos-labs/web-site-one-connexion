@@ -1,6 +1,7 @@
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { ArrowUpRight, Package, CreditCard, MessageSquare, ShoppingCart } from "lucide-react";
+import DeliveryScene3D from "./DeliveryScene3D";
 import "./Hero3D.css";
 
 /* ─── Mini composant : colis 3D CSS ─────────────────────────────────── */
@@ -257,12 +258,12 @@ export default function Hero3D() {
         </div>
 
         {/* ── Globe 3D (droite) ── */}
-        <div className="hero3d-visual" aria-hidden="true">
-          <div className="hero3d-visual__ring hero3d-visual__ring--outer" />
-          <div className="hero3d-visual__ring hero3d-visual__ring--middle" />
-          <Globe3D />
+        <div className="hero3d-visual" aria-hidden="true" style={{ position: 'relative', zIndex: 10 }}>
+          <React.Suspense fallback={<div className="text-white text-center mt-20">Chargement 3D...</div>}>
+            <DeliveryScene3D />
+          </React.Suspense>
 
-          {/* Cards flottantes autour du globe */}
+          {/* Cards flottantes autour de la scene */}
           <div className="hero3d-float-card hero3d-float-card--tl">
             <Package size={14} className="text-orange-400" />
             <span>Livraison confirmée</span>
@@ -278,6 +279,15 @@ export default function Hero3D() {
       <div className="hero3d-scroll" aria-hidden="true">
         <div className="hero3d-scroll__line" />
         <span className="hero3d-scroll__text">Défiler</span>
+      </div>
+
+      {/* ── Ticker Tape (Bottom) ── */}
+      <div className="hero3d-ticker">
+        <div className="hero3d-ticker__track">
+          {Array(4).fill("PARIS · LYON · MARSEILLE // LIVRAISON MÉDICALE CONFIRMÉE — 08:42 // MISSION JUR").map((text, i) => (
+            <span key={i} className="hero3d-ticker__item">{text}</span>
+          ))}
+        </div>
       </div>
     </section>
   );

@@ -16,3 +16,5 @@ export default defineConfig({
     outDir: "dist",
   },
 })
+// Reboot Vite server (forced for R3F React 18 compat)
+

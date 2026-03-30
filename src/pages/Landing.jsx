@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import PublicHeader from "../components/PublicHeader.jsx";
 import PublicFooter from "../components/PublicFooter.jsx";
-import { ArrowUpRight, Package, FileText, MessageSquare, CreditCard, Stethoscope, Scale, Calendar, Car, Plus, Facebook, Twitter, Instagram, Linkedin, ShoppingCart, Star, CheckCircle2 } from "lucide-react";
+import Hero3D from "../components/home/Hero3D.jsx";
+import { ArrowUpRight, Package, FileText, MessageSquare, CreditCard, Stethoscope, Scale, Calendar, Car, Plus, ShoppingCart, Star, CheckCircle2 } from "lucide-react";
 
 const benefits = [
   { title: "Bon de commande & Suivi", desc: <span>Génération automatique PDF et traçabilité complète de chaque envoi. <Link to="/inscription" className="underline decoration-primary/30 hover:decoration-primary">Ouvrir un compte</Link></span> },
@@ -63,65 +64,11 @@ const faqs = [
 
 export default function Landing() {
   return (
-    <div className="bg-slate-50 text-slate-700 font-sans selection:bg-[#ed5518]/30 selection:text-[#ed5518]">
-      {/* Header */}
+    <div className="bg-slate-50 text-slate-700 min-h-screen font-sans">
       <PublicHeader />
-
-      {/* Hero */}
-      <section className="relative flex min-h-[85vh] items-center justify-center overflow-hidden bg-slate-900 px-4 py-16 md:py-32 text-center">
-        {/* Background Image & Overlay */}
-        <div className="absolute inset-0 z-0">
-          <img
-            src="https://images.unsplash.com/photo-1556740758-90de374c12ad?auto=format&fit=crop&q=80"
-            alt="Livraison professionnelle : remise de colis et documents"
-            className="h-full w-full object-cover opacity-60"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-slate-900/20" />
-        </div>
-
-        {/* Content */}
-        <div className="relative z-10 mx-auto max-w-5xl">
-
-          <h1 className="mb-8 font-serif text-5xl font-medium tracking-tight text-white md:text-7xl">
-            Envoyez vos colis & marchandises <br className="hidden md:block" />
-            dans <span className="italic text-[#ed5518]">tout Paris</span> et l’Île‑de‑France
-          </h1>
-
-          <p className="mx-auto mb-10 max-w-3xl text-xl leading-relaxed text-slate-100">
-            Messagerie B2B et coursier express à Paris & Île‑de‑France : envois rapides, plis urgents,
-            colis sensibles et tournées régulières avec facturation claire.
-            <br className="hidden md:block" /> Idéal pour dentistes, opticiens, juridique, santé, événementiel et automobile.
-          </p>
-
-          <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Link to="/inscription" className="group relative flex items-center gap-3 rounded-full bg-[#ed5518] px-8 py-4 text-white shadow-xl transition-all hover:bg-[#ed5518] hover:scale-105">
-              <span className="text-base font-bold">Créer un compte pro</span>
-              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-white/20">
-                <ArrowUpRight size={16} />
-              </div>
-            </Link>
-            <Link to="/commande-sans-compte" className="group relative flex items-center gap-3 rounded-full border border-white/40 bg-white/10 px-8 py-4 text-white backdrop-blur-sm transition-all hover:bg-white/20">
-              <span className="text-base font-bold">Commander sans compte</span>
-              <ShoppingCart size={18} className="text-[#ed5518]" />
-            </Link>
-          </div>
-
-          <div className="mt-16 flex flex-wrap justify-center gap-8 text-sm font-medium text-slate-100">
-            <div className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 backdrop-blur-md border border-white/20">
-              <Package className="text-[#ed5518]" size={18} />
-              <span>Commandes 24/7</span>
-            </div>
-            <div className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 backdrop-blur-md border border-white/20">
-              <CreditCard className="text-[#ed5518]" size={18} />
-              <span>Facturation Mensuelle</span>
-            </div>
-            <div className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 backdrop-blur-md border border-white/20">
-              <MessageSquare className="text-[#ed5518]" size={18} />
-              <span>Suivi des étapes</span>
-            </div>
-          </div>
-        </div>
-      </section>
+      
+      {/* Hero 3D */}
+      <Hero3D />
 
       {/* Benefits */}
       <section id="features" className="bg-white py-16 md:py-32 relative border-t border-slate-100">
