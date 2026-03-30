@@ -22,7 +22,7 @@ export default function PublicHeader() {
             <img 
               src="/logos/ONECONNEXION-02.png" 
               alt="One Connexion Logo" 
-              className="w-28 sm:w-32 md:w-40 lg:w-48 h-auto group-hover:scale-102 transition-transform"
+              className="w-28 sm:w-32 md:w-40 lg:w-48 h-auto group-hover:scale-105 transition-transform"
             />
           </Link>
         </div>

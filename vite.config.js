@@ -1,75 +1,18 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react-swc'
-import { VitePWA } from 'vite-plugin-pwa'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-// https://vite.dev/config/
 export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
-      "react": path.resolve(__dirname, "node_modules/react"),
-      "react-dom": path.resolve(__dirname, "node_modules/react-dom"),
     },
-    dedupe: ["react", "react-dom", "react-router-dom"],
   },
-  optimizeDeps: {
-    include: ["react", "react-dom", "react-router-dom", "lucide-react"],
-  },
-  plugins: [
-    react(),
-    VitePWA({
-      registerType: 'autoUpdate',
-      workbox: {
-        cleanupOutdatedCaches: true,
-        skipWaiting: true,
-        clientsClaim: true,
-      },
-      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
-      manifest: {
-        name: 'One Connexion - Messagerie B2B',
-        short_name: 'One Connexion',
-        description: 'Solution de transport express B2B à Paris et Île-de-France',
-        theme_color: '#f97316',
-        start_url: '/',
-        display: 'standalone',
-        background_color: '#ffffff',
-        icons: [
-          {
-            src: 'pwa-192x192.png',
-            sizes: '192x192',
-            type: 'image/png'
-          },
-          {
-            src: 'pwa-512x512.png',
-            sizes: '512x512',
-            type: 'image/png'
-          },
-          {
-            src: 'pwa-512x512.png',
-            sizes: '512x512',
-            type: 'image/png',
-            purpose: 'any maskable'
-          }
-        ]
-      }
-    })
-  ],
+  plugins: [react()],
   build: {
-    minify: "terser",
-    terserOptions: {
-      format: {
-        comments: false
-      }
-    },
     outDir: "dist",
   },
-  server: {
-    host: true,
-    port: 5173,
-    strictPort: true,
-  }
 })
