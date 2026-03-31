@@ -7,11 +7,17 @@
   --font-body: "Archivo", sans-serif;
 }
 
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
 @layer base {
   body {
     @apply bg-white text-slate-900 antialiased font-light;
     font-family: var(--font-body);
     font-weight: 300;
+    overflow-x: hidden;
   }
   
   h1, h2, h3, h4, h5, h6 {
