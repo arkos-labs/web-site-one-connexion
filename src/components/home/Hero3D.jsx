@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { ArrowUpRight, Package, CreditCard, MessageSquare, ShoppingCart } from "lucide-react";
+import { ArrowUpRight, ShoppingCart } from "lucide-react";
 import "./Hero3D.css";
 /* ─── Arrière-plan Vidéo Unique ─────────────────────────────────────────── */
 function ProfessionalVideoCarousel() {
@@ -11,9 +11,9 @@ function ProfessionalVideoCarousel() {
         loop
         muted 
         playsInline 
-        className="hero-fullscreen-video"
+        className="hero-fullscreen-video object-cover"
       >
-        <source src="/images/video-medecin.mp4" type="video/mp4" />
+        <source src="/images/hero-video.mp4" type="video/mp4" />
       </video>
       
       {/* Couche de gradient noir sur la gauche pour lire le texte */}
@@ -47,7 +47,7 @@ export default function Hero3D() {
             Livraison Express{" "}
             <span className="hero3d-title__accent">B2B</span>
             <br />
-            <span className="hero3d-title__sub">Paris & Île‑de‑France</span>
+            Paris & Île‑de‑France
           </h1>
 
           <p className="hero3d-desc">
@@ -55,46 +55,14 @@ export default function Hero3D() {
             et tournées régulières avec facturation mensuelle claire.
           </p>
 
-          {/* Statistiques 3D */}
-          <div className="hero3d-stats">
-            {[
-              { value: "45min", label: "Prise en charge" },
-              { value: "24/7", label: "Disponibilité" },
-              { value: "50k€", label: "Assurance incluse" },
-            ].map((s, i) => (
-              <div key={i} className="hero3d-stat">
-                <span className="hero3d-stat__value">{s.value}</span>
-                <span className="hero3d-stat__label">{s.label}</span>
-              </div>
-            ))}
-          </div>
-
           {/* CTAs */}
           <div className="hero3d-ctas">
-            <Link to="/inscription" className="hero3d-cta hero3d-cta--primary">
-              <span>Créer un compte pro</span>
+            <Link to="/commande-rapide" className="hero3d-cta hero3d-cta--primary">
+              <span className="hero3d-cta__text">Commander sans compte</span>
               <div className="hero3d-cta__icon">
-                <ArrowUpRight size={16} />
+                <ShoppingCart size={18} />
               </div>
             </Link>
-            <Link to="/commande-sans-compte" className="hero3d-cta hero3d-cta--ghost">
-              <ShoppingCart size={16} className="text-orange-400" />
-              <span>Commander sans compte</span>
-            </Link>
-          </div>
-
-          {/* Badges de confiance */}
-          <div className="hero3d-trust">
-            {[
-              { icon: Package, label: "Commandes 24/7" },
-              { icon: CreditCard, label: "Facturation mensuelle" },
-              { icon: MessageSquare, label: "Suivi temps réel" },
-            ].map(({ icon: Icon, label }, i) => (
-              <div key={i} className="hero3d-trust__badge">
-                <Icon size={14} />
-                <span>{label}</span>
-              </div>
-            ))}
           </div>
         </div>
       </div>

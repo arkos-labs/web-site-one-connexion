@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
@@ -6,6 +6,8 @@ import { Logo } from "@/components/ui/Logo";
 export default function PublicHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const location = useLocation();
+  const isHomePage = location.pathname === "/";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -16,33 +18,37 @@ export default function PublicHeader() {
   }, []);
 
   return (
-    <header className={`fixed top-0 z-50 w-full transition-all duration-300 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm ${isScrolled ? 'py-0.5' : 'py-1'}`}>
-      <div className="container mx-auto flex items-center px-6 md:px-12 h-12 md:h-14">
+    <header className={`fixed top-0 z-50 w-full transition-all duration-500 ${
+      (isScrolled || !isHomePage)
+        ? 'bg-[#0a0c14]/95 backdrop-blur-md border-b border-white/10 shadow-xl py-0.5' 
+        : 'bg-transparent border-b border-transparent py-2'
+    } text-white`}>
+      <div className="container mx-auto flex items-center px-6 md:px-12 h-12 md:h-16">
         <div className="flex items-center shrink-0 -ml-2 md:-ml-4">
-          <Logo size="md" />
+          <Logo size="md" variant="light" />
         </div>
 
         {/* Desktop Navigation */}
-        <nav className="hidden flex-1 items-center justify-center gap-10 text-sm font-bold uppercase tracking-wider md:flex text-slate-600">
+        <nav className="hidden flex-1 items-center justify-center gap-10 text-sm font-bold uppercase tracking-wider md:flex text-white/80">
           <a href="/#features" className="hover:text-[#ed5518] transition-colors">Avantages</a>
           <a href="/#expertises" className="hover:text-[#ed5518] transition-colors">Secteurs</a>
           <a href="/#workflow" className="hover:text-[#ed5518] transition-colors">Solution Logistique</a>
-          <Link to="/contact" className="hover:text-[#ed5518] transition-colors">Contact</Link>
+          <Link to="/contact" className="hover:text-[#ed5518] transition-colors font-black">Contact</Link>
         </nav>
 
         {/* Desktop Auth Buttons */}
         <div className="hidden items-center gap-4 md:flex">
-          <Link to="/connexion" className="text-sm font-bold uppercase tracking-wider text-slate-600 hover:text-[#ed5518] transition-colors">
+          <Link to="/connexion" className="text-sm font-bold uppercase tracking-wider text-white/90 hover:text-[#ed5518] transition-colors">
             Se connecter
           </Link>
-          <Link to="/inscription" className="rounded-full bg-[#ed5518] px-6 py-2.5 text-sm font-black uppercase tracking-wider text-white shadow-lg shadow-primary/10 transition-all hover:bg-[#c24514] hover:shadow-primary/20">
+          <Link to="/inscription" className="rounded-full bg-[#ed5518] px-6 py-2.5 text-sm font-black uppercase tracking-wider text-white shadow-lg shadow-orange-500/20 transition-all hover:bg-[#c24514] hover:shadow-orange-500/30">
             Créer un compte
           </Link>
         </div>
 
         {/* Mobile Menu Button */}
         <button
-          className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-slate-50 text-slate-600 transition-colors hover:bg-slate-100 md:hidden"
+          className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/5 text-white transition-colors hover:bg-white/10 md:hidden"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
           {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
@@ -51,18 +57,18 @@ export default function PublicHeader() {
 
       {/* Mobile Menu Overlay */}
       {isMenuOpen && (
-        <div className="absolute left-0 top-full w-full border-b border-slate-200 bg-white/95 backdrop-blur-xl p-6 shadow-2xl md:hidden">
-          <nav className="flex flex-col gap-6 text-sm font-bold uppercase tracking-wider text-slate-600">
+        <div className="absolute left-0 top-full w-full border-b border-white/5 bg-[#0a0c14]/98 backdrop-blur-xl p-6 shadow-2xl md:hidden">
+          <nav className="flex flex-col gap-6 text-sm font-bold uppercase tracking-wider text-white/80">
             <a href="/#features" className="hover:text-[#ed5518] transition-colors" onClick={() => setIsMenuOpen(false)}>Avantages</a>
             <a href="/#expertises" className="hover:text-[#ed5518] transition-colors" onClick={() => setIsMenuOpen(false)}>Secteurs</a>
             <a href="/#workflow" className="hover:text-[#ed5518] transition-colors" onClick={() => setIsMenuOpen(false)}>Solution Logistique</a>
             <Link to="/commande-sans-compte" className="hover:text-[#ed5518] transition-colors" onClick={() => setIsMenuOpen(false)}>Commander</Link>
             <Link to="/contact" className="hover:text-[#ed5518] transition-colors" onClick={() => setIsMenuOpen(false)}>Contact</Link>
 
-            <hr className="my-2 border-slate-100" />
+            <hr className="my-2 border-white/10" />
 
             <div className="flex flex-col gap-3">
-              <Link to="/connexion" className="flex w-full items-center justify-center rounded-full border border-slate-200 px-5 py-3 text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors" onClick={() => setIsMenuOpen(false)}>
+              <Link to="/connexion" className="flex w-full items-center justify-center rounded-full border border-white/10 px-5 py-3 text-sm font-bold text-white hover:bg-white/5 transition-colors" onClick={() => setIsMenuOpen(false)}>
                 SE CONNECTER
               </Link>
               <Link to="/inscription" className="flex w-full items-center justify-center rounded-full bg-[#ed5518] px-5 py-3 text-sm font-black text-white shadow-lg hover:bg-[#c24514] transition-colors" onClick={() => setIsMenuOpen(false)}>

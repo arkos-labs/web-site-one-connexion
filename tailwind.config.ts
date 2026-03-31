@@ -14,9 +14,9 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['"Archivo"', 'sans-serif'],
-        display: ['"Archivo"', 'sans-serif'],
-        'loos-wide': ['"Archivo"', 'sans-serif'],
+        sans: ['var(--font-body)', 'sans-serif'],
+        display: ['var(--font-title)', 'sans-serif'],
+        'loos-wide': ['var(--font-title)', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",

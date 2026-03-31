@@ -99,7 +99,7 @@ const LiveMap = ({ driverLocation, deliveryLocation, driverName = "Chauffeur" }:
             }).addTo(map);
 
             driverMarker.bindPopup(`
-        <div style="font-family: 'Plus Jakarta Sans', sans-serif; padding: 4px;">
+        <div style="font-family: var(--font-body), sans-serif; padding: 4px;">
           <strong style="color: #0B0B0B;">${driverName}</strong><br/>
           <span style="color: #666; font-size: 12px;">Position actuelle</span>
         </div>
@@ -113,7 +113,7 @@ const LiveMap = ({ driverLocation, deliveryLocation, driverName = "Chauffeur" }:
             }).addTo(map);
 
             deliveryMarker.bindPopup(`
-        <div style="font-family: 'Plus Jakarta Sans', sans-serif; padding: 4px;">
+        <div style="font-family: var(--font-body), sans-serif; padding: 4px;">
           <strong style="color: #0B0B0B;">Destination</strong><br/>
           <span style="color: #666; font-size: 12px;">${deliveryLocation.address}</span>
         </div>

@@ -1,9 +1,9 @@
 import React, { Suspense, lazy } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import ProtectedRoute from "../components/ProtectedRoute.jsx";
+import Landing from "../pages/public/Landing.jsx";
 
 // Public Pages
-const Landing = lazy(() => import("../pages/public/Landing.jsx"));
 const Login = lazy(() => import("../pages/auth/Login.jsx"));
 const Register = lazy(() => import("../pages/auth/Register.jsx"));
 const RegisterDriver = lazy(() => import("../pages/auth/RegisterDriver.jsx"));

@@ -6,13 +6,13 @@
 /* ── Section principale ─────────────────────────────────── */
 .hero3d-section {
   position: relative;
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   background: #050505;
-  padding: 80px 24px 60px;
+  padding: 0 24px;
 }
 
 /* ── Fond : gradient + grille ───────────────────────────── */
@@ -140,13 +140,15 @@
 .hero3d-layout {
   position: relative;
   z-index: 10;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 60px;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  max-width: 1200px;
+  justify-content: center;
+  gap: 40px;
+  max-width: 900px;
   width: 100%;
   margin: 0 auto;
+  text-align: center;
 }
 
 @media (max-width: 900px) {
@@ -171,7 +173,11 @@
 .hero3d-content {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  align-items: center;
+  gap: 20px;
+  background: radial-gradient(circle at center, rgba(0, 0, 0, 0.4) 0%, transparent 80%);
+  padding: 40px;
+  border-radius: 40px;
 }
 
 /* Badge live */
@@ -208,15 +214,16 @@
 
 /* Titre */
 .hero3d-title {
-  font-size: clamp(2.4rem, 6vw, 4.8rem);
-  font-weight: 900; /* Titres : Montserrat Poids 900 */
-  line-height: 0.95;
+  font-size: clamp(2.5rem, 6vw, 4.2rem);
+  font-weight: 900; 
+  line-height: 1.05;
   color: #ffffff;
   letter-spacing: -0.04em;
   margin: 0;
   text-transform: uppercase;
   animation: fadeSlideIn 0.7s ease 0.1s both;
   font-family: var(--font-title);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
 .hero3d-title__accent {
@@ -232,65 +239,29 @@
   display: block;
   font-size: 0.85em;
   font-weight: 900;
-  margin-top: 4px;
+  margin-top: 8px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
 /* Description */
 .hero3d-desc {
-  font-size: 1.05rem;
-  line-height: 1.7;
-  color: #94a3b8;
-  max-width: 480px;
-  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.6;
+  color: #ffffff;
+  max-width: 650px;
+  margin: 0 auto;
   animation: fadeSlideIn 0.7s ease 0.2s both;
-}
-
-/* Statistiques */
-.hero3d-stats {
-  display: flex;
-  gap: 0;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 16px;
-  overflow: hidden;
-  width: fit-content;
-  animation: fadeSlideIn 0.7s ease 0.3s both;
-}
-
-.hero3d-stat {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 16px 24px;
-  border-right: 1px solid rgba(255,255,255,0.08);
-}
-
-.hero3d-stat:last-child {
-  border-right: none;
-}
-
-.hero3d-stat__value {
-  font-size: 1.5rem;
-  font-weight: 600; /* Numbers in bold: 600 */
-  color: #ed5518;
-  line-height: 1;
-}
-
-.hero3d-stat__label {
-  font-size: 0.68rem;
-  font-weight: 300; /* Text: 300 */
-  color: #94a3b8;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-top: 4px;
-  white-space: nowrap;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.4);
 }
 
 /* CTAs */
 .hero3d-ctas {
   display: flex;
-  gap: 12px;
+  gap: 16px;
+  justify-content: center;
   flex-wrap: wrap;
+  margin-top: 30px;
   animation: fadeSlideIn 0.7s ease 0.4s both;
 }
 
@@ -335,37 +306,18 @@
 }
 
 .hero3d-cta--ghost {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.15);
-  color: #e2e8f0;
-  backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 .hero3d-cta--ghost:hover {
-  background: rgba(255,255,255,0.1);
+  background: rgba(0, 0, 0, 0.9);
   transform: translateY(-2px);
-  border-color: rgba(237, 85, 24, 0.4);
-}
-
-/* Trust badges */
-.hero3d-trust {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  animation: fadeSlideIn 0.7s ease 0.5s both;
-}
-
-.hero3d-trust__badge {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: #64748b;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 100px;
-  padding: 6px 12px;
+  border-color: rgba(237, 85, 24, 0.5);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
 }
 
 /* ── Globe visuel ───────────────────────────────────────── */
@@ -455,6 +407,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: bottom;
   position: absolute;
   inset: 0;
   z-index: 1;
@@ -463,8 +416,13 @@
 .hero-video-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, rgba(5, 5, 5, 0.95) 0%, rgba(5, 5, 5, 0.8) 35%, rgba(5, 5, 5, 0.4) 65%, rgba(5, 5, 5, 0) 100%);
+  background: radial-gradient(circle at center, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.6) 100%),
+              linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 0%, transparent 40%);
   z-index: 10;
+}
+
+.hero3d-title, .hero3d-desc, .hero3d-title__sub {
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
 }
 
 /* Sur mobile, on assombrit l'image entière pour que le texte soit lisible partout */
@@ -525,23 +483,9 @@
   line-height: 1.5;
 }
 
-@keyframes slideVideoTextRight {
-  0% { opacity: 0; transform: translateX(20px); }
-  100% { opacity: 1; transform: translateX(0); }
-}
-
 /* ── Scroll indicator ───────────────────────────────────── */
 .hero3d-scroll {
-  position: absolute;
-  bottom: 28px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  z-index: 10;
-  animation: fadeSlideIn 1s ease 1s both;
+  display: none; /* Removed as it takes too much space in small hero */
 }
 
 .hero3d-scroll__line {
@@ -577,9 +521,9 @@
   left: 0;
   width: 100%;
   overflow: hidden;
-  background: #050505;
-  border-top: 1px solid rgba(237, 85, 24, 0.1);
-  padding: 12px 0;
+  background: #000000;
+  border-top: 1px solid rgba(237, 85, 24, 0.2);
+  padding: 14px 0;
   z-index: 20;
 }
 

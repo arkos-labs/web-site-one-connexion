@@ -14,9 +14,6 @@ export const Logo = ({
     showText = true,
     className
 }: LogoProps) => {
-    // Determine if the logo needs to be light (for dark backgrounds)
-    // variant 'light' -> text-white (so logo should be light)
-    // variant 'sidebar' -> text-sidebar-foreground (usually light on dark sidebar)
     const isLightLogo = variant === 'light' || variant === 'sidebar';
 
     // Size mapping for the image width
@@ -27,9 +24,9 @@ export const Logo = ({
     }[size];
 
     return (
-        <Link to="/" className={cn("flex items-center gap-2 group", className)}>
+        <Link to="/" className={cn("flex flex-col group", className)}>
             <img
-                src={isLightLogo ? "/logos/ONECONNEXION-04.png" : "/logos/ONECONNEXION-01.png"}
+                src={isLightLogo ? "/logos/one-connexion-light.png" : "/logos/one-connexion-official.png"}
                 alt="One Connexion"
                 className={cn(
                     "h-auto object-contain transition-transform group-hover:scale-105",

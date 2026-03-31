@@ -1,11 +1,10 @@
 @import "tailwindcss";
 
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Poppins:wght@300;600&display=swap');
 
 :root {
   --brand-orange: #ed5518;
-  --font-title: "Montserrat", sans-serif;
-  --font-body: "Poppins", sans-serif;
+  --font-title: "Archivo", sans-serif;
+  --font-body: "Archivo", sans-serif;
 }
 
 @layer base {

@@ -4,20 +4,17 @@ export const DashboardLoading = ({ isExiting = false }: { isExiting?: boolean })
   return (
     <div className={`fixed inset-0 bg-[#0B1525] flex flex-col items-center justify-center z-[9999] transition-opacity duration-1000 ease-in-out ${isExiting ? "opacity-0 pointer-events-none scale-110" : "opacity-100 scale-100"}`}>
       <div className="relative w-32 h-32 mb-12 flex items-center justify-center">
-        {/* The Glow Effect */}
-        <div className="absolute inset-0 bg-[#ed5518]/15 blur-3xl rounded-full animate-pulse-glow" />
-        
         {/* The rotating and zooming logo */}
         <div className="relative z-10 animate-spin-slow-zoom">
           <img 
-            src="/logos/ONECONNEXION-04.png" 
+            src="/logos/one-connexion-official.png" 
             alt="One Connexion Loading" 
-            className="w-28 h-28 object-contain drop-shadow-[0_0_20px_rgba(237,85,24,0.5)]"
+            className="w-24 h-24 object-contain"
           />
         </div>
         
         {/* Premium subtle loader around it */}
-        <div className="absolute inset-[-20px] border-[1px] border-[#ed5518]/10 rounded-full border-t-[#ed5518] animate-spin duration-[3000ms] linear" />
+        <div className="absolute inset-[-10px] border-[1px] border-[#ed5518]/20 rounded-full border-t-[#ed5518] animate-spin duration-[3000ms] linear" />
       </div>
 
       <div className="flex flex-col items-center gap-6">
