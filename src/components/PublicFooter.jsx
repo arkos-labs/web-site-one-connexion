@@ -3,43 +3,45 @@ import { Logo } from "@/components/ui/Logo";
 
 export default function PublicFooter() {
   return (
-    <footer className="bg-slate-900 text-white pt-16 pb-10 w-full mt-auto">
+    <footer className="bg-slate-900 text-white pt-4 pb-2 w-full mt-auto text-[12px]">
       <div className="mx-auto max-w-7xl px-6 md:px-12">
-        <div className="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
-          <div className="max-w-2xl">
-            <Logo variant="light" size="lg" />
-            <p className="mt-6 text-[15px] leading-relaxed text-slate-400">
+        <div className="grid gap-8 md:grid-cols-12 md:items-start pt-2">
+          {/* Brand & Mission Column */}
+          <div className="md:col-span-4 flex flex-col gap-3">
+            <Logo variant="light" size="sm" />
+            <p className="text-[12px] leading-relaxed text-slate-400 max-w-sm">
               Notre mission est de simplifier la logistique B2B pour les entreprises, en offrant une solution rapide, fiable et 100% digitalisée.
             </p>
+            <Link to="/contact" className="w-fit inline-flex items-center gap-2 rounded-full bg-[#ed5518] px-4 py-1.5 text-[11px] font-black text-white hover:bg-[#ed5518]-hover shadow-lg shadow-primary/20 transition-all">
+              Contactez‑nous ↗
+            </Link>
           </div>
-          <Link to="/contact" className="inline-flex items-center gap-2 rounded-full bg-[#ed5518] px-5 py-2.5 text-sm font-black text-white hover:bg-[#ed5518]-hover shadow-lg shadow-primary/20 transition-all">
-            Contactez‑nous ↗
-          </Link>
-        </div>
 
-        <div className="mt-10 grid gap-10 md:grid-cols-4">
-          <div>
-            <div className="text-xs uppercase tracking-widest text-slate-400">Société</div>
-            <div className="mt-4 space-y-2 text-sm text-slate-300">
+          {/* Links Columns */}
+          <div className="md:col-span-2">
+            <div className="text-xs uppercase tracking-widest text-[#ed5518] font-bold">Société</div>
+            <div className="mt-3 space-y-1.5 text-slate-300">
               <Link to="/about" className="block hover:text-white">À propos</Link>
               <Link to="/contact" className="block hover:text-white">Contact</Link>
               <Link to="/mentions-legales" className="block hover:text-white">Mentions légales</Link>
               <Link to="/confidentialite" className="block hover:text-white">Confidentialité</Link>
             </div>
           </div>
-          <div>
-            <div className="text-xs uppercase tracking-widest text-slate-400">Services</div>
-            <div className="mt-4 space-y-2 text-sm text-slate-300">
+          
+          <div className="md:col-span-3">
+            <div className="text-xs uppercase tracking-widest text-[#ed5518] font-bold">Services</div>
+            <div className="mt-3 space-y-1.5 text-slate-300">
               <Link to="/coursier-b2b-paris" className="block hover:text-white">Coursier B2B Paris</Link>
               <Link to="/coursier-ile-de-france" className="block hover:text-white">Coursier Île‑de‑France</Link>
               <Link to="/messagerie-express-ile-de-france" className="block hover:text-white">Messagerie express IDF</Link>
               <Link to="/navette-reguliere-ile-de-france" className="block hover:text-white">Navettes régulières</Link>
-              <Link to="/commande-sans-compte" className="block hover:text-white font-bold text-[#ed5518] mt-2">Commander sans compte</Link>
+              <Link to="/commande-sans-compte" className="block hover:text-[#ed5518] font-bold mt-1">Commander sans compte</Link>
             </div>
           </div>
-          <div>
-            <div className="text-xs uppercase tracking-widest text-slate-400">Secteurs</div>
-            <div className="mt-4 space-y-2 text-sm text-slate-300">
+
+          <div className="md:col-span-3">
+            <div className="text-xs uppercase tracking-widest text-[#ed5518] font-bold">Secteurs</div>
+            <div className="mt-3 space-y-1.5 text-slate-300">
               <Link to="/coursier-opticien-paris" className="block hover:text-white">Opticiens</Link>
               <Link to="/coursier-dentiste-paris" className="block hover:text-white">Dentistes</Link>
               <Link to="/coursier-juridique-paris" className="block hover:text-white">Juridique</Link>
@@ -47,16 +49,9 @@ export default function PublicFooter() {
               <Link to="/coursier-automobile-paris" className="block hover:text-white">Automobile</Link>
             </div>
           </div>
-          <div>
-            <div className="text-xs uppercase tracking-widest text-slate-400">Newsletter</div>
-            <div className="mt-4 flex items-center gap-2 rounded-lg bg-white/5 p-2">
-              <input className="w-full bg-transparent text-sm text-white placeholder:text-slate-500 focus:outline-none" placeholder="Email" />
-              <button className="rounded-md bg-[#ed5518] px-3 py-2 text-xs font-black uppercase text-white hover:bg-[#ed5518]-hover transition-colors">S’abonner</button>
-            </div>
-          </div>
         </div>
 
-        <div className="my-8 h-px w-full bg-white/10" />
+        <div className="my-2 h-px w-full bg-white/10" />
 
         <div className="flex flex-col items-center justify-between gap-4 text-xs text-slate-500 md:flex-row">
           <span>© 2026 One Connexion. Tous droits réservés.</span>

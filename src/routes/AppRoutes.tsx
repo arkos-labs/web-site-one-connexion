@@ -3,62 +3,62 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import ProtectedRoute from "../components/ProtectedRoute.jsx";
 
 // Public Pages
-const Landing = lazy(() => import("../pages/Landing.jsx"));
-const Login = lazy(() => import("../pages/Login.jsx"));
-const Register = lazy(() => import("../pages/Register.jsx"));
-const RegisterDriver = lazy(() => import("../pages/RegisterDriver.jsx"));
-const GuestOrder = lazy(() => import("../pages/GuestOrder.jsx"));
-const ForgotPassword = lazy(() => import("../pages/ForgotPassword.jsx"));
-const ResetPassword = lazy(() => import("../pages/ResetPassword.jsx"));
-const Contact = lazy(() => import("../pages/Contact.jsx"));
-const About = lazy(() => import("../pages/About.jsx"));
-const Privacy = lazy(() => import("../pages/Privacy.jsx"));
-const MentionsLegales = lazy(() => import("../pages/MentionsLegales.jsx"));
-const NotFound = lazy(() => import("../pages/NotFound.tsx"));
+const Landing = lazy(() => import("../pages/public/Landing.jsx"));
+const Login = lazy(() => import("../pages/auth/Login.jsx"));
+const Register = lazy(() => import("../pages/auth/Register.jsx"));
+const RegisterDriver = lazy(() => import("../pages/auth/RegisterDriver.jsx"));
+const GuestOrder = lazy(() => import("../pages/public/GuestOrder.jsx"));
+const ForgotPassword = lazy(() => import("../pages/auth/ForgotPassword.jsx"));
+const ResetPassword = lazy(() => import("../pages/auth/ResetPassword.jsx"));
+const Contact = lazy(() => import("../pages/public/Contact.jsx"));
+const About = lazy(() => import("../pages/public/About.jsx"));
+const Privacy = lazy(() => import("../pages/legal/Privacy.jsx"));
+const MentionsLegales = lazy(() => import("../pages/legal/MentionsLegales.jsx"));
+const NotFound = lazy(() => import("../pages/public/NotFound.tsx"));
 
 // SEO / Specialized Pages
-const CoursierB2BParis = lazy(() => import("../pages/CoursierB2BParis.jsx"));
-const CoursierIDF = lazy(() => import("../pages/CoursierIDF.jsx"));
-const MessagerieExpressIDF = lazy(() => import("../pages/MessagerieExpressIDF.jsx"));
-const DevisCoursierParis = lazy(() => import("../pages/DevisCoursierParis.jsx"));
-const TarifsCoursierParis = lazy(() => import("../pages/TarifsCoursierParis.jsx"));
-const CoursierOpticienParis = lazy(() => import("../pages/CoursierOpticienParis.jsx"));
-const CoursierDentisteParis = lazy(() => import("../pages/CoursierDentisteParis.jsx"));
-const CoursierJuridiqueParis = lazy(() => import("../pages/CoursierJuridiqueParis.jsx"));
-const CoursierEvenementielParis = lazy(() => import("../pages/CoursierEvenementielParis.jsx"));
-const CoursierAutomobileParis = lazy(() => import("../pages/CoursierAutomobileParis.jsx"));
-const NavetteReguliereIDF = lazy(() => import("../pages/NavetteReguliereIDF.jsx"));
+const CoursierB2BParis = lazy(() => import("../pages/public/CoursierB2BParis.jsx"));
+const CoursierIDF = lazy(() => import("../pages/public/CoursierIDF.jsx"));
+const MessagerieExpressIDF = lazy(() => import("../pages/public/MessagerieExpressIDF.jsx"));
+const DevisCoursierParis = lazy(() => import("../pages/public/DevisCoursierParis.jsx"));
+const TarifsCoursierParis = lazy(() => import("../pages/public/TarifsCoursierParis.jsx"));
+const CoursierOpticienParis = lazy(() => import("../pages/public/CoursierOpticienParis.jsx"));
+const CoursierDentisteParis = lazy(() => import("../pages/public/CoursierDentisteParis.jsx"));
+const CoursierJuridiqueParis = lazy(() => import("../pages/public/CoursierJuridiqueParis.jsx"));
+const CoursierEvenementielParis = lazy(() => import("../pages/public/CoursierEvenementielParis.jsx"));
+const CoursierAutomobileParis = lazy(() => import("../pages/public/CoursierAutomobileParis.jsx"));
+const NavetteReguliereIDF = lazy(() => import("../pages/public/NavetteReguliereIDF.jsx"));
 
 // Client Dashboard
-const DashboardClient = lazy(() => import("../pages/DashboardClient.jsx"));
-const DashboardClientLayout = lazy(() => import("../pages/DashboardClientLayout.jsx"));
-const NouvelleCourse = lazy(() => import("../pages/NouvelleCourse.jsx"));
-const Orders = lazy(() => import("../pages/Orders.jsx"));
-const OrderDetails = lazy(() => import("../pages/OrderDetails.jsx"));
-const Invoices = lazy(() => import("../pages/Invoices.jsx"));
-const Addresses = lazy(() => import("../pages/Addresses.jsx"));
-const Profile = lazy(() => import("../pages/Profile.jsx"));
-const Settings = lazy(() => import("../pages/Settings.jsx"));
-const ClientChat = lazy(() => import("../pages/ClientChat.jsx"));
+const DashboardClient = lazy(() => import("../pages/client/DashboardClient.jsx"));
+const DashboardClientLayout = lazy(() => import("../pages/client/DashboardClientLayout.jsx"));
+const NouvelleCourse = lazy(() => import("../pages/client/NouvelleCourse.jsx"));
+const Orders = lazy(() => import("../pages/client/Orders.jsx"));
+const OrderDetails = lazy(() => import("../pages/client/OrderDetails.jsx"));
+const Invoices = lazy(() => import("../pages/client/Invoices.jsx"));
+const Addresses = lazy(() => import("../pages/client/Addresses.jsx"));
+const Profile = lazy(() => import("../pages/client/Profile.jsx"));
+const Settings = lazy(() => import("../pages/client/Settings.jsx"));
+const ClientChat = lazy(() => import("../pages/client/ClientChat.jsx"));
 
 // Admin Dashboard
-const DashboardAdmin = lazy(() => import("../pages/DashboardAdmin.jsx"));
-const DashboardAdminLayout = lazy(() => import("../pages/DashboardAdminLayout.jsx"));
-const AdminOrders = lazy(() => import("../pages/AdminOrders.jsx"));
-const AdminOrderDetails = lazy(() => import("../pages/AdminOrderDetails.jsx"));
-const AdminInvoices = lazy(() => import("../pages/AdminInvoices.jsx"));
-const AdminInvoiceDetails = lazy(() => import("../pages/AdminInvoiceDetails.jsx"));
-const AdminClients = lazy(() => import("../pages/AdminClients.jsx"));
-const AdminClientDetails = lazy(() => import("../pages/AdminClientDetails.jsx"));
-const AdminDrivers = lazy(() => import("../pages/AdminDrivers.jsx"));
-const AdminDriverDetails = lazy(() => import("../pages/AdminDriverDetails.jsx"));
-const AdminChat = lazy(() => import("../pages/AdminChat.jsx"));
+const DashboardAdmin = lazy(() => import("../pages/admin/DashboardAdmin.jsx"));
+const DashboardAdminLayout = lazy(() => import("../pages/admin/DashboardAdminLayout.jsx"));
+const AdminOrders = lazy(() => import("../pages/admin/AdminOrders.jsx"));
+const AdminOrderDetails = lazy(() => import("../pages/admin/AdminOrderDetails.jsx"));
+const AdminInvoices = lazy(() => import("../pages/admin/AdminInvoices.jsx"));
+const AdminInvoiceDetails = lazy(() => import("../pages/admin/AdminInvoiceDetails.jsx"));
+const AdminClients = lazy(() => import("../pages/admin/AdminClients.jsx"));
+const AdminClientDetails = lazy(() => import("../pages/admin/AdminClientDetails.jsx"));
+const AdminDrivers = lazy(() => import("../pages/admin/AdminDrivers.jsx"));
+const AdminDriverDetails = lazy(() => import("../pages/admin/AdminDriverDetails.jsx"));
+const AdminChat = lazy(() => import("../pages/admin/AdminChat.jsx"));
 
 // Driver Dashboard
-const DashboardDriver = lazy(() => import("../pages/DashboardDriver.jsx"));
-const DashboardDriverLayout = lazy(() => import("../pages/DashboardDriverLayout.jsx"));
-const DriverHistory = lazy(() => import("../pages/DriverHistory.jsx"));
-const DriverProfile = lazy(() => import("../pages/DriverProfile.jsx"));
+const DashboardDriver = lazy(() => import("../pages/driver/DashboardDriver.jsx"));
+const DashboardDriverLayout = lazy(() => import("../pages/driver/DashboardDriverLayout.jsx"));
+const DriverHistory = lazy(() => import("../pages/driver/DriverHistory.jsx"));
+const DriverProfile = lazy(() => import("../pages/driver/DriverProfile.jsx"));
 
 const Loading = () => null;
 

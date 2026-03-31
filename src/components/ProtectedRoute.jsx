@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { supabase } from "../lib/supabase.js";
+import { DashboardLoading } from "./ui/DashboardLoading";
 
 const ADMIN_ROLES = new Set(["admin", "super_admin", "dispatcher"]);
 
@@ -20,16 +21,19 @@ function getDefaultRouteForRole(role) {
 
 export default function ProtectedRoute({ children, allowedRoles = [] }) {
   const [loading, setLoading] = useState(true);
+  const [isExiting, setIsExiting] = useState(false);
   const [session, setSession] = useState(null);
   const [role, setRole] = useState(null);
 
   useEffect(() => {
+    const startLoadingTime = Date.now();
+
     const loadSessionAndRole = async (nextSession) => {
       setSession(nextSession || null);
 
       if (!nextSession?.user?.id) {
         setRole(null);
-        setLoading(false);
+        finishLoading();
         return;
       }
 
@@ -43,7 +47,7 @@ export default function ProtectedRoute({ children, allowedRoles = [] }) {
       const normalizedProfileRole = normalizeRole(profileData?.role);
       if (normalizedProfileRole) {
         setRole(normalizedProfileRole);
-        setLoading(false);
+        finishLoading();
         return;
       }
 
@@ -55,7 +59,7 @@ export default function ProtectedRoute({ children, allowedRoles = [] }) {
 
       if (driverData?.id) {
         setRole("driver");
-        setLoading(false);
+        finishLoading();
         return;
       }
 
@@ -66,7 +70,16 @@ export default function ProtectedRoute({ children, allowedRoles = [] }) {
         .maybeSingle();
 
       setRole(clientData?.id ? "client" : null);
-      setLoading(false);
+      finishLoading();
+    };
+
+    const finishLoading = () => {
+      const elapsed = Date.now() - startLoadingTime;
+      const remaining = Math.max(0, 5200 - elapsed);
+      setTimeout(() => {
+        setIsExiting(true);
+        setTimeout(() => setLoading(false), 1000); // Wait for the 1s fade animation
+      }, remaining);
     };
 
     supabase.auth.getSession().then(({ data }) => {
@@ -80,7 +93,7 @@ export default function ProtectedRoute({ children, allowedRoles = [] }) {
     return () => listener?.subscription?.unsubscribe();
   }, []);
 
-  if (loading) return null;
+  if (loading) return <DashboardLoading isExiting={isExiting} />;
   if (!session) return <Navigate to="/connexion" replace />;
 
   if (allowedRoles.length > 0) {
