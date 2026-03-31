@@ -27,7 +27,7 @@ export default function AdminPageHeader({ title, subtitle, badge, actions, backT
                         </button>
                     )}
                     <div className="flex items-center gap-3 flex-wrap">
-                        <h1 className="text-3xl font-black tracking-tight text-slate-900">{title}</h1>
+                        <h1 className="text-2xl md:text-3xl font-black tracking-tight text-slate-900">{title}</h1>
                         {badge && (
                             <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-3 py-1 text-xs font-black text-slate-600">
                                 {badge.label}

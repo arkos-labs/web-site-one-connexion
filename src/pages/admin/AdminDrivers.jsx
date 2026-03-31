@@ -121,7 +121,8 @@ export default function AdminDrivers() {
         <div className="px-8 py-5 border-b border-slate-50 flex items-center justify-between">
           <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">{rows.length} livreur(s) enregistré(s)</span>
         </div>
-        <div className="overflow-x-auto">
+        {/* Desktop Table View */}
+        <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-left text-sm">
             <thead>
               <tr className="text-[9px] font-black uppercase tracking-[0.15em] text-slate-400 border-b border-slate-50">
@@ -182,21 +183,19 @@ export default function AdminDrivers() {
                   </td>
                   <td className="px-8 py-5 text-right">
                     <div className="flex items-center justify-end gap-2">
-                      {r.driver.is_online && (
-                        <button
-                          onClick={async (e) => {
-                            e.stopPropagation();
-                            if (confirm("Déconnecter ce livreur ?")) {
-                              await supabase.from('profiles').update({ is_online: false }).eq('id', r.driver.id);
-                              fetchData(true);
-                            }
-                          }}
-                          className="h-9 w-9 rounded-xl bg-slate-100 text-slate-400 hover:bg-[#ed5518] hover:text-white flex items-center justify-center transition-all"
-                          title="Forcer déconnexion"
-                        >
-                          <Zap size={14} />
-                        </button>
-                      )}
+                       <button
+                         onClick={async (e) => {
+                           e.stopPropagation();
+                           if (confirm("Déconnecter ce livreur ?")) {
+                             await supabase.from('profiles').update({ is_online: false }).eq('id', r.driver.id);
+                             fetchData(true);
+                           }
+                         }}
+                         className="h-9 w-9 rounded-xl bg-slate-100 text-slate-400 hover:bg-[#ed5518] hover:text-white flex items-center justify-center transition-all"
+                         title="Forcer déconnexion"
+                       >
+                         <Zap size={14} />
+                       </button>
                       <button
                         onClick={e => { e.stopPropagation(); navigate(`/admin/drivers/${r.driver.id}`); }}
                         className="inline-flex items-center gap-1.5 rounded-xl bg-slate-900 px-4 py-2 text-[10px] font-black text-white hover:bg-[#ed5518] transition-all active:scale-95 shadow"
@@ -209,6 +208,74 @@ export default function AdminDrivers() {
               ))}
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile Card View */}
+        <div className="md:hidden divide-y divide-slate-50">
+          {rows.length === 0 ? (
+            <div className="py-20 text-center opacity-40">
+              <Truck size={40} className="mx-auto mb-3" strokeWidth={1} />
+              <span className="text-sm font-black text-slate-600">Aucun livreur enregistré</span>
+            </div>
+          ) : rows.map(r => (
+            <div 
+              key={r.driver.id} 
+              className="p-6 flex flex-col gap-4 active:bg-slate-50 transition-colors"
+              onClick={() => navigate(`/admin/drivers/${r.driver.id}`)}
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className={`h-11 w-11 rounded-2xl text-white text-[12px] font-black grid place-items-center shadow ${r.driver.is_online ? 'bg-[#ed5518]' : 'bg-slate-400'}`}>
+                    {r.driver.name[0]?.toUpperCase()}
+                  </div>
+                  <div>
+                    <div className="text-sm font-black text-slate-900">{r.driver.name}</div>
+                    <div className={`flex items-center gap-1.5 text-[9px] font-black uppercase tracking-widest ${r.status === "En mission" ? "text-amber-600" : "text-[#ed5518] opacity-60"}`}>
+                      {r.status} • {r.driver.is_online ? "Connecté" : "OFFLINE"}
+                    </div>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="text-sm font-black text-slate-900 tabular-nums">{r.earningsMonth.toFixed(2)}€</div>
+                  <div className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Ce mois</div>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-2">
+                <div className="bg-slate-50 rounded-2xl p-3 border border-slate-100/50">
+                  <div className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">Aujourd'hui</div>
+                  <div className="text-xs font-black text-slate-900">{r.completedTodayCount} courses</div>
+                </div>
+                <div className="bg-slate-50 rounded-2xl p-3 border border-slate-100/50">
+                  <div className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">Gains Jour</div>
+                  <div className="text-xs font-black text-slate-900">{r.earningsToday.toFixed(2)}€</div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 mt-2">
+                <button
+                  onClick={e => { e.stopPropagation(); navigate(`/admin/drivers/${r.driver.id}`); }}
+                  className="flex-1 py-3.5 rounded-2xl bg-slate-900 text-white text-[10px] font-black uppercase tracking-widest shadow-lg shadow-slate-900/10 active:scale-95 transition-all"
+                >
+                  Gérer le profil
+                </button>
+                {r.driver.is_online && (
+                  <button
+                    onClick={async (e) => {
+                      e.stopPropagation();
+                      if (confirm("Déconnecter ce livreur ?")) {
+                        await supabase.from('profiles').update({ is_online: false }).eq('id', r.driver.id);
+                        fetchData(true);
+                      }
+                    }}
+                    className="h-12 w-12 flex items-center justify-center rounded-2xl bg-slate-100 text-slate-400 active:bg-rose-500 active:text-white transition-all shadow-sm"
+                  >
+                    <Zap size={18} />
+                  </button>
+                )}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 

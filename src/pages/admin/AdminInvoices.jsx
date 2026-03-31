@@ -230,14 +230,16 @@ export default function AdminInvoices() {
               onChange={e => setSearchQuery(e.target.value)}
             />
           </div>
-          <div className="flex items-center gap-3 flex-wrap">
+          <div className="flex items-center gap-2 flex-wrap">
             {activeTab === "clients" ? (
               <>
-                {["Tous", "Payée", "À payer", "En retard"].map(s => (
-                  <button key={s} onClick={() => setStatusFilter(s)} className={`rounded-xl px-4 py-2 text-xs font-bold transition-all ${statusFilter === s ? 'bg-slate-900 text-white shadow' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>{s}</button>
-                ))}
-                <button onClick={handleGenerateClients} className="rounded-xl bg-[#ed5518] px-4 py-2 text-xs font-bold text-white hover:bg-[#ed5518] transition-all">
-                  Générer mensuel
+                <div className="flex gap-1 overflow-x-auto no-scrollbar pb-1">
+                  {["Tous", "Payée", "À payer", "En retard"].map(s => (
+                    <button key={s} onClick={() => setStatusFilter(s)} className={`whitespace-nowrap rounded-xl px-4 py-2 text-[10px] font-bold transition-all ${statusFilter === s ? 'bg-slate-900 text-white shadow' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>{s}</button>
+                  ))}
+                </div>
+                <button onClick={handleGenerateClients} className="rounded-xl bg-[#ed5518] px-4 py-2 text-[10px] font-bold text-white hover:bg-[#ed5518] transition-all">
+                  Générer
                 </button>
               </>
             ) : (
@@ -246,7 +248,7 @@ export default function AdminInvoices() {
                   type="month"
                   value={selectedMonth}
                   onChange={e => setSelectedMonth(e.target.value)}
-                  className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs font-black text-slate-900 focus:outline-none focus:ring-4 focus:ring-slate-900/5 transition-all"
+                  className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-[10px] font-black text-slate-900 focus:outline-none focus:ring-4 focus:ring-slate-900/5 transition-all"
                 />
                 <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">{getMonthLabel(selectedMonth)}</span>
               </>
@@ -257,130 +259,226 @@ export default function AdminInvoices() {
         {/* Table */}
         <div className="overflow-x-auto">
           {activeTab === "clients" ? (
-            <table className="w-full text-left text-sm">
-              <thead>
-                <tr className="text-[9px] font-black uppercase tracking-[0.15em] text-slate-400 border-b border-slate-50">
-                  <th className="px-8 py-4">Référence</th>
-                  <th className="px-8 py-4">Client</th>
-                  <th className="px-8 py-4">Période</th>
-                  <th className="px-8 py-4">TTC</th>
-                  <th className="px-8 py-4">Statut</th>
-                  <th className="px-8 py-4 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-50">
+            <div className="flex flex-col">
+              {/* Desktop View */}
+              <div className="hidden md:block">
+                <table className="w-full text-left text-sm">
+                  <thead>
+                    <tr className="text-[9px] font-black uppercase tracking-[0.15em] text-slate-400 border-b border-slate-50">
+                      <th className="px-8 py-4">Référence</th>
+                      <th className="px-8 py-4">Client</th>
+                      <th className="px-8 py-4">Période</th>
+                      <th className="px-8 py-4">TTC</th>
+                      <th className="px-8 py-4">Statut</th>
+                      <th className="px-8 py-4 text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-50">
+                    {filteredInvoices.length === 0 ? (
+                      <tr><td colSpan={6} className="py-20 text-center text-sm font-bold text-slate-400">Aucune facture trouvée.</td></tr>
+                    ) : filteredInvoices.map(i => (
+                      <tr key={i.id} className="hover:bg-slate-50/80 transition-all cursor-pointer group" onClick={() => navigate(`/admin/invoices/${i.id}`)}>
+                        <td className="px-8 py-5">
+                          <span className="inline-flex items-center rounded-xl bg-slate-900 text-white px-3 py-1.5 text-[10px] font-black uppercase tracking-widest shadow">
+                            FAC-{i.id.slice(0, 8)}
+                          </span>
+                        </td>
+                        <td className="px-8 py-5">
+                          <div>
+                            <div className="text-sm font-black text-slate-900 group-hover:text-[#ed5518] transition-colors">{i.client}</div>
+                            {i.isGuest && <div className="text-[9px] font-bold text-[#ed5518] uppercase">Usage ponctuel</div>}
+                          </div>
+                        </td>
+                        <td className="px-8 py-5">
+                          <span className="text-xs font-bold text-slate-500 uppercase">{i.period}</span>
+                        </td>
+                        <td className="px-8 py-5">
+                          <span className="text-sm font-black text-slate-900 tabular-nums">{Number(i.amount).toFixed(2)}€</span>
+                        </td>
+                        <td className="px-8 py-5">
+                          <span className={`${i.rawStatus === "paid" ? "text-emerald-600" : "text-amber-600"} text-[9px] font-black uppercase tracking-widest`}>
+                            {i.status}
+                          </span>
+                        </td>
+                        <td className="px-8 py-5 text-right">
+                          <div className="flex items-center justify-end gap-2 text-right">
+                            {i.rawStatus !== "paid" && (
+                              <button
+                                onClick={e => { e.stopPropagation(); handleMarkPaid(i.id); }}
+                                className="h-9 w-9 rounded-xl bg-slate-100 text-slate-400 hover:bg-[#ed5518] hover:text-white flex items-center justify-center transition-all"
+                              >
+                                <CheckCircle2 size={14} />
+                              </button>
+                            )}
+                            <button
+                              onClick={e => { e.stopPropagation(); navigate(`/admin/invoices/${i.id}`); }}
+                              className="inline-flex items-center gap-1 rounded-xl bg-slate-900 px-4 py-2 text-[10px] font-black text-white hover:bg-[#ed5518] transition-all shadow"
+                            >
+                              VOIR
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Mobile View */}
+              <div className="md:hidden divide-y divide-slate-50">
                 {filteredInvoices.length === 0 ? (
-                  <tr><td colSpan={6} className="py-20 text-center text-sm font-bold text-slate-400">Aucune facture trouvée.</td></tr>
+                  <div className="py-20 text-center text-sm font-bold text-slate-400 uppercase tracking-widest">Aucune facture</div>
                 ) : filteredInvoices.map(i => (
-                  <tr key={i.id} className="hover:bg-slate-50/80 transition-all cursor-pointer group" onClick={() => navigate(`/admin/invoices/${i.id}`)}>
-                    <td className="px-8 py-5">
-                      <span className="inline-flex items-center rounded-xl bg-slate-900 text-white px-3 py-1.5 text-[10px] font-black uppercase tracking-widest shadow">
-                        FAC-{i.id.slice(0, 8)}
-                      </span>
-                    </td>
-                    <td className="px-8 py-5">
-                      <div>
-                        <div className="text-sm font-black text-slate-900 group-hover:text-[#ed5518] transition-colors">{i.client}</div>
-                        {i.isGuest && <div className="text-[9px] font-bold text-[#ed5518] uppercase">Usage ponctuel</div>}
+                  <div key={i.id} className="p-6 flex flex-col gap-4 active:bg-slate-50 transition-all" onClick={() => navigate(`/admin/invoices/${i.id}`)}>
+                    <div className="flex justify-between items-start">
+                      <div className="flex flex-col gap-1">
+                        <span className="text-[9px] font-black text-[#ed5518] uppercase tracking-widest leading-none">FAC-{i.id.slice(0, 8)}</span>
+                        <h4 className="text-sm font-black text-slate-900 truncate max-w-[200px]">{i.client}</h4>
+                        <span className="text-[10px] font-bold text-slate-400 uppercase">{i.period}</span>
                       </div>
-                    </td>
-                    <td className="px-8 py-5">
-                      <span className="text-xs font-bold text-slate-500 uppercase">{i.period}</span>
-                    </td>
-                    <td className="px-8 py-5">
-                      <span className="text-sm font-black text-slate-900 tabular-nums">{Number(i.amount).toFixed(2)}€</span>
-                    </td>
-                    <td className="px-8 py-5">
-                      <span className={`inline-flex items-center rounded-lg border px-2.5 py-1 text-[9px] font-black uppercase tracking-widest ${i.rawStatus === "paid" ? "bg-[#ed5518] text-[#ed5518] border-emerald-100" : "bg-amber-50 text-amber-700 border-amber-100"}`}>
+                      <div className={`px-2 py-1 rounded-lg text-[8px] font-black uppercase ${i.rawStatus === 'paid' ? 'bg-[#ed5518] text-white' : 'bg-amber-100 text-amber-700'}`}>
                         {i.status}
-                      </span>
-                    </td>
-                    <td className="px-8 py-5 text-right">
-                      <div className="flex items-center justify-end gap-2">
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between pt-2 border-t border-slate-50">
+                      <div className="text-lg font-black text-slate-900 tabular-nums">{Number(i.amount).toFixed(2)}€ <span className="text-[10px] text-slate-400 uppercase">TTC</span></div>
+                      <div className="flex gap-2">
                         {i.rawStatus !== "paid" && (
                           <button
                             onClick={e => { e.stopPropagation(); handleMarkPaid(i.id); }}
-                            className="h-9 w-9 rounded-xl bg-[#ed5518] text-[#ed5518] hover:bg-[#ed5518] hover:text-white flex items-center justify-center transition-all"
+                            className="h-10 w-10 rounded-xl bg-slate-100 text-slate-400 flex items-center justify-center transition-all"
                           >
-                            <CheckCircle2 size={14} />
+                            <CheckCircle2 size={16} />
                           </button>
                         )}
-                        <button
-                          onClick={e => { e.stopPropagation(); navigate(`/admin/invoices/${i.id}`); }}
-                          className="inline-flex items-center gap-1 rounded-xl bg-slate-900 px-4 py-2 text-[10px] font-black text-white hover:bg-[#ed5518] transition-all shadow"
-                        >
-                          VOIR <ChevronRight size={12} />
-                        </button>
+                        <button className="px-4 py-2 rounded-xl bg-slate-900 text-white text-[10px] font-black uppercase tracking-widest">Détails</button>
                       </div>
-                    </td>
-                  </tr>
+                    </div>
+                  </div>
                 ))}
-              </tbody>
-            </table>
+              </div>
+            </div>
           ) : (
-            <table className="w-full text-left text-sm">
-              <thead>
-                <tr className="text-[9px] font-black uppercase tracking-[0.15em] text-slate-400 border-b border-slate-50">
-                  <th className="px-8 py-4">Livreur</th>
-                  <th className="px-8 py-4">Référence relevé</th>
-                  <th className="px-8 py-4">Missions</th>
-                  <th className="px-8 py-4">Gain Total</th>
-                  <th className="px-8 py-4">Statut</th>
-                  <th className="px-8 py-4 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-50">
+            <div className="flex flex-col">
+              {/* Desktop View */}
+              <div className="hidden md:block">
+                <table className="w-full text-left text-sm">
+                  <thead>
+                    <tr className="text-[9px] font-black uppercase tracking-[0.15em] text-slate-400 border-b border-slate-50">
+                      <th className="px-8 py-4">Livreur</th>
+                      <th className="px-8 py-4">Référence relevé</th>
+                      <th className="px-8 py-4">Missions</th>
+                      <th className="px-8 py-4">Gain Total</th>
+                      <th className="px-8 py-4">Statut</th>
+                      <th className="px-8 py-4 text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-50">
+                    {driverStats.length === 0 ? (
+                      <tr><td colSpan={6} className="py-20 text-center text-sm font-bold text-slate-400">Aucun reversement ce mois.</td></tr>
+                    ) : driverStats.map(d => (
+                      <tr key={d.id} className="hover:bg-slate-50/80 transition-all group">
+                        <td className="px-8 py-5">
+                          <div className="flex items-center gap-3">
+                            <div className="h-9 w-9 rounded-xl bg-slate-100 text-slate-500 text-[11px] font-black grid place-items-center">
+                              {d.details?.full_name?.[0]?.toUpperCase()}
+                            </div>
+                            <div>
+                              <div className="text-sm font-black text-slate-900 group-hover:text-[#ed5518] transition-colors">{d.details?.full_name}</div>
+                              <div className="text-[9px] font-bold text-slate-400">{d.email}</div>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-8 py-5">
+                          <span className="text-xs font-black text-slate-400">RL-{String(d.id).slice(0, 4)}</span>
+                        </td>
+                        <td className="px-8 py-5">
+                          <span className="inline-flex items-center rounded-lg bg-slate-100 px-2.5 py-1 text-xs font-black text-slate-700">{d.orders.length}</span>
+                        </td>
+                        <td className="px-8 py-5">
+                          <span className="text-sm font-black text-slate-900 tabular-nums">{d.totalGain.toFixed(2)}€</span>
+                        </td>
+                        <td className="px-8 py-5">
+                          <span className={`${d.isPaid ? "text-emerald-600" : "text-amber-600"} text-[9px] font-black uppercase tracking-widest`}>
+                            {d.isPaid ? "PAYÉ" : "À RÉGLER"}
+                          </span>
+                        </td>
+                        <td className="px-8 py-5 text-right">
+                          <div className="flex items-center justify-end gap-2 text-right">
+                            <button
+                              onClick={e => { e.stopPropagation(); handleSendOne(d); }}
+                              className={`h-9 w-9 rounded-xl flex items-center justify-center transition-all ${sendLogs[d.id] === 'success' ? 'bg-[#ed5518] text-[#ed5518]' : sendLogs[d.id] === 'error' ? 'bg-rose-50 text-rose-600' : 'bg-slate-100 text-slate-400 hover:bg-[#ed5518] hover:text-white'}`}
+                            >
+                              {sendLogs[d.id] === 'sending' ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
+                            </button>
+                            {!d.isPaid && d.totalGain > 0 && (
+                              <button
+                                onClick={e => { e.stopPropagation(); handleMarkDriverPaid(d.id, d.totalGain); }}
+                                className="inline-flex items-center gap-1 rounded-xl bg-slate-900 px-4 py-2 text-[10px] font-black text-white hover:bg-[#ed5518] transition-all shadow"
+                              >
+                                RÉGLER
+                              </button>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Mobile View */}
+              <div className="md:hidden divide-y divide-slate-50">
                 {driverStats.length === 0 ? (
-                  <tr><td colSpan={6} className="py-20 text-center text-sm font-bold text-slate-400">Aucun reversement ce mois.</td></tr>
+                  <div className="py-20 text-center text-sm font-bold text-slate-400 uppercase tracking-widest">Aucun reversement</div>
                 ) : driverStats.map(d => (
-                  <tr key={d.id} className="hover:bg-slate-50/80 transition-all group">
-                    <td className="px-8 py-5">
+                  <div key={d.id} className="p-6 flex flex-col gap-4">
+                    <div className="flex justify-between items-start">
                       <div className="flex items-center gap-3">
-                        <div className="h-9 w-9 rounded-xl bg-slate-100 text-slate-500 text-[11px] font-black grid place-items-center">
+                        <div className="h-10 w-10 rounded-xl bg-slate-100 text-slate-900 text-[10px] font-black flex items-center justify-center">
                           {d.details?.full_name?.[0]?.toUpperCase()}
                         </div>
-                        <div>
-                          <div className="text-sm font-black text-slate-900 group-hover:text-[#ed5518] transition-colors">{d.details?.full_name}</div>
-                          <div className="text-[9px] font-bold text-slate-400">{d.email}</div>
+                        <div className="flex flex-col">
+                          <h4 className="text-sm font-black text-slate-900 truncate max-w-[150px]">{d.details?.full_name}</h4>
+                          <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">RL-{String(d.id).slice(0, 4)}</span>
                         </div>
                       </div>
-                    </td>
-                    <td className="px-8 py-5">
-                      <span className="text-xs font-black text-slate-400">RL-{String(d.id).slice(0, 4)}</span>
-                    </td>
-                    <td className="px-8 py-5">
-                      <span className="inline-flex items-center rounded-lg bg-slate-100 px-2.5 py-1 text-xs font-black text-slate-700">{d.orders.length}</span>
-                    </td>
-                    <td className="px-8 py-5">
-                      <span className="text-sm font-black text-slate-900 tabular-nums">{d.totalGain.toFixed(2)}€</span>
-                    </td>
-                    <td className="px-8 py-5">
-                      <span className={`inline-flex items-center rounded-lg border px-2.5 py-1 text-[9px] font-black uppercase tracking-widest ${d.isPaid ? "bg-[#ed5518] text-[#ed5518] border-emerald-100" : "bg-amber-50 text-amber-700 border-amber-100"}`}>
+                      <div className={`px-2 py-1 rounded-lg text-[8px] font-black uppercase ${d.isPaid ? 'bg-[#ed5518] text-white' : 'bg-amber-100 text-amber-700'}`}>
                         {d.isPaid ? "PAYÉ" : "À RÉGLER"}
-                      </span>
-                    </td>
-                    <td className="px-8 py-5 text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <button
-                          onClick={e => { e.stopPropagation(); handleSendOne(d); }}
-                          className={`h-9 w-9 rounded-xl flex items-center justify-center transition-all ${sendLogs[d.id] === 'success' ? 'bg-[#ed5518] text-[#ed5518]' : sendLogs[d.id] === 'error' ? 'bg-rose-50 text-rose-600' : 'bg-slate-100 text-slate-400 hover:bg-[#ed5518] hover:text-white'}`}
-                        >
-                          {sendLogs[d.id] === 'sending' ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
-                        </button>
-                        {!d.isPaid && d.totalGain > 0 && (
-                          <button
-                            onClick={e => { e.stopPropagation(); handleMarkDriverPaid(d.id, d.totalGain); }}
-                            className="inline-flex items-center gap-1 rounded-xl bg-slate-900 px-4 py-2 text-[10px] font-black text-white hover:bg-[#ed5518] transition-all shadow"
-                          >
-                            RÉGLER
-                          </button>
-                        )}
                       </div>
-                    </td>
-                  </tr>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-2">
+                       <div className="bg-slate-50 rounded-xl p-3 border border-slate-100/50">
+                         <div className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">Missions</div>
+                         <div className="text-xs font-black text-slate-900">{d.orders.length}</div>
+                       </div>
+                       <div className="bg-slate-50 rounded-xl p-3 border border-slate-100/50">
+                         <div className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Gain</div>
+                         <div className="text-xs font-black text-slate-900 tabular-nums">{d.totalGain.toFixed(2)}€</div>
+                       </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 mt-1">
+                      <button 
+                        onClick={() => handleSendOne(d)}
+                        className="h-12 w-12 flex items-center justify-center rounded-2xl bg-slate-100 text-slate-400"
+                      >
+                        {sendLogs[d.id] === 'sending' ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} />}
+                      </button>
+                      {!d.isPaid && d.totalGain > 0 && (
+                        <button 
+                          onClick={() => handleMarkDriverPaid(d.id, d.totalGain)}
+                          className="flex-1 py-3.5 rounded-2xl bg-slate-900 text-white text-[10px] font-black uppercase tracking-widest"
+                        >
+                          Régler le montant
+                        </button>
+                      )}
+                    </div>
+                  </div>
                 ))}
-              </tbody>
-            </table>
+              </div>
+            </div>
           )}
         </div>
       </div>

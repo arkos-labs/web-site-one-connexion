@@ -14,6 +14,7 @@ export default function AdminChat() {
   const [activeTab, setActiveTab] = useState("all");
   const [toast, setToast] = useState(null);
   const [typingUsers, setTypingUsers] = useState({});
+  const [showMobileList, setShowMobileList] = useState(true);
   const messagesEndRef = useRef(null);
   const typingTimeoutRef = useRef(null);
   const activeUserRef = useRef(null);
@@ -244,10 +245,10 @@ export default function AdminChat() {
 
   return (
     <div className="flex flex-col h-[calc(100vh-140px)] -mt-4">
-      <header className="flex items-center justify-between mb-8 animate-in fade-in slide-in-from-left-4 duration-700">
+      <header className="flex flex-col md:flex-row md:items-center justify-between mb-8 animate-in fade-in slide-in-from-left-4 duration-700">
         <div>
-          <h2 className="text-4xl font-black tracking-tight text-slate-900 uppercase">Centre de Messagerie</h2>
-          <p className="mt-1 text-base font-medium text-slate-500">
+          <h2 className="text-2xl md:text-4xl font-black tracking-tight text-slate-900 uppercase">Support</h2>
+          <p className="mt-1 text-xs md:text-base font-medium text-slate-500">
             Interaction en direct avec la flotte et les partenaires.
           </p>
         </div>
@@ -255,7 +256,7 @@ export default function AdminChat() {
 
       <div className="flex-1 overflow-hidden grid grid-cols-12 bg-white rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-200/20">
         {/* Sidebar */}
-        <div className="col-span-12 md:col-span-4 lg:col-span-3 border-r border-slate-50 flex flex-col h-full bg-slate-50/20">
+        <div className={`col-span-12 md:col-span-4 lg:col-span-3 border-r border-slate-50 bg-slate-50/20 flex flex-col h-full ${!showMobileList ? 'hidden md:flex' : 'flex'}`}>
           <div className="p-6 border-b border-slate-50">
             <div className="relative mb-4">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
@@ -284,7 +285,7 @@ export default function AdminChat() {
             {filteredUsers.map(u => (
               <div
                 key={u.id}
-                onClick={() => setActiveUser(u)}
+                onClick={() => { setActiveUser(u); setShowMobileList(false); }}
                 className={`p-5 flex items-center gap-4 cursor-pointer transition-all relative border-l-4 ${activeUser?.id === u.id ? 'bg-white border-[#ed5518] shadow-sm' : 'border-transparent hover:bg-slate-50'}`}
               >
                 <div className={`h-12 w-12 rounded-2xl flex-shrink-0 flex items-center justify-center font-black text-xs text-white shadow-lg ${u.role === 'courier' ? 'bg-amber-500 shadow-amber-500/20' : 'bg-slate-900 shadow-slate-900/20'}`}>
@@ -309,35 +310,42 @@ export default function AdminChat() {
         </div>
 
         {/* Chat Area */}
-        <div className="col-span-12 md:col-span-8 lg:col-span-9 flex flex-col h-full bg-white relative">
+        <div className={`col-span-12 md:col-span-8 lg:col-span-9 flex flex-col h-full bg-white relative ${showMobileList ? 'hidden md:flex' : 'flex'}`}>
           {activeUser ? (
             <>
               {/* Chat Header */}
-              <div className="p-6 border-b border-slate-50 flex items-center justify-between bg-white z-10">
-                <div className="flex items-center gap-4">
-                  <div className={`h-10 w-10 rounded-xl flex items-center justify-center font-black text-[10px] text-white ${activeUser.role === 'courier' ? 'bg-amber-500' : 'bg-slate-900'}`}>
+              <div className="p-4 md:p-6 border-b border-slate-50 flex items-center justify-between bg-white z-10">
+                <div className="flex items-center gap-3 md:gap-4">
+                  {/* Mobile Back Button */}
+                  <button 
+                    onClick={() => setShowMobileList(true)}
+                    className="md:hidden h-10 w-10 flex items-center justify-center bg-slate-100 rounded-xl text-slate-500 hover:text-slate-900"
+                  >
+                    <X size={18} />
+                  </button>
+                  <div className={`h-10 w-10 rounded-xl flex-shrink-0 flex items-center justify-center font-black text-[10px] text-white ${activeUser.role === 'courier' ? 'bg-amber-500' : 'bg-slate-900'}`}>
                     {activeUser.name.slice(0, 1).toUpperCase()}
                   </div>
-                  <div>
-                    <h4 className="text-sm font-black text-slate-900 uppercase tracking-wider">{activeUser.name}</h4>
+                  <div className="min-w-0">
+                    <h4 className="text-sm font-black text-slate-900 uppercase tracking-wider truncate max-w-[120px] md:max-w-none">{activeUser.name}</h4>
                     <div className="flex items-center gap-2">
                       <span className="h-1.5 w-1.5 rounded-full bg-[#ed5518]"></span>
                       <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{activeUser.roleLabel}</span>
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-4">
-                  <button className="p-2.5 text-slate-400 hover:text-slate-900 transition-colors bg-slate-50 rounded-xl" title="Appeler">
+                <div className="flex items-center gap-2 md:gap-4">
+                  <button className="h-10 w-10 flex items-center justify-center text-slate-400 hover:text-slate-900 transition-colors bg-slate-50 rounded-xl" title="Appeler">
                     <Phone size={18} />
                   </button>
-                  <button className="p-2.5 text-slate-400 hover:text-slate-900 transition-colors bg-slate-50 rounded-xl" title="Détails">
+                  <button className="hidden md:flex h-10 w-10 items-center justify-center text-slate-400 hover:text-slate-900 transition-colors bg-slate-50 rounded-xl" title="Plus">
                     <MoreVertical size={18} />
                   </button>
                 </div>
               </div>
 
               {/* Messages Area */}
-              <div className="flex-1 overflow-y-auto p-8 space-y-6 custom-scrollbar bg-slate-50/10">
+              <div className="flex-1 overflow-y-auto p-4 md:p-8 space-y-4 md:space-y-6 custom-scrollbar bg-slate-50/10">
                 {messages.length === 0 && (
                   <div className="h-full flex flex-col items-center justify-center opacity-20 py-20">
                     <div className="h-20 w-20 rounded-3xl bg-slate-100 flex items-center justify-center text-4xl mb-4">💬</div>
@@ -393,7 +401,7 @@ export default function AdminChat() {
               </div>
 
               {/* Input Area */}
-              <div className="p-6 bg-white border-t border-slate-50">
+              <div className="p-4 md:p-6 bg-white border-t border-slate-50 sticky bottom-0">
                 <form onSubmit={sendMessage} className="relative flex items-center gap-4">
                   <div className="flex-1 relative">
                     <button type="button" className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-900">

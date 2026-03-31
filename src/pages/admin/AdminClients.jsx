@@ -124,7 +124,8 @@ export default function AdminClients() {
           <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">{rows.length} résultat(s)</span>
         </div>
 
-        <div className="overflow-x-auto">
+        {/* Desktop View */}
+        <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-left text-sm">
             <thead>
               <tr className="text-[9px] font-black uppercase tracking-[0.15em] text-slate-400 border-b border-slate-50">
@@ -191,6 +192,48 @@ export default function AdminClients() {
               ))}
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile View */}
+        <div className="md:hidden divide-y divide-slate-50">
+          {rows.length === 0 ? (
+            <div className="py-20 text-center text-sm font-bold text-slate-400 uppercase tracking-widest">Aucun client</div>
+          ) : rows.map(c => (
+            <div key={c.id} className="p-6 flex flex-col gap-4 active:bg-slate-50 transition-all" onClick={() => navigate(`/admin/clients/${c.id}`)}>
+              <div className="flex justify-between items-start">
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-xl bg-slate-900 text-white text-[10px] font-black flex items-center justify-center">
+                    {c.name[0]?.toUpperCase()}
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-black text-slate-900 truncate max-w-[150px]">{c.name}</h4>
+                    <span className="text-[9px] font-bold text-slate-400 uppercase">SIRET: {c.siret}</span>
+                  </div>
+                </div>
+                <div className={`px-2 py-1 rounded-lg text-[8px] font-black uppercase ${c.risk.level === 'Élevé' ? 'bg-rose-500 text-white animate-pulse' : 'bg-slate-100 text-slate-400'}`}>
+                   Risque {c.risk.level}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
+                <div className="bg-slate-50 rounded-xl p-3 border border-slate-100/50">
+                  <div className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">CA Total</div>
+                  <div className="text-xs font-black text-slate-900 tabular-nums">{c.spend.toFixed(2)}€</div>
+                </div>
+                <div className="bg-slate-50 rounded-xl p-3 border border-slate-100/50">
+                  <div className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">Missions</div>
+                  <div className="text-xs font-black text-slate-900">{c.courses}</div>
+                </div>
+              </div>
+
+              <button 
+                onClick={() => navigate(`/admin/clients/${c.id}`)}
+                className="w-full py-3.5 rounded-2xl bg-slate-900 text-white text-[10px] font-black uppercase tracking-widest shadow-lg shadow-slate-900/10"
+              >
+                Accéder au dossier
+              </button>
+            </div>
+          ))}
         </div>
       </div>
     </div>
