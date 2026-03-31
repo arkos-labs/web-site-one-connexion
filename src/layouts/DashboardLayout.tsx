@@ -33,14 +33,14 @@ const DashboardLayout = ({ type }: DashboardLayoutProps) => {
       {/* Mobile Header & Content */}
       <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
         {/* Header (Mobile & Desktop) */}
-        <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b border-border p-4 flex items-center justify-between md:hidden">
-          <div className="font-semibold text-lg text-[#ed5518]">
+        <header className="sticky top-0 z-40 bg-[#0B1525]/90 backdrop-blur-md border-b border-white/10 p-4 flex items-center justify-between md:hidden">
+          <div className="font-black text-xl text-[#ed5518] tracking-tighter uppercase">
             One Connexion
           </div>
           <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" aria-label="Ouvrir le menu">
-                <Menu className="h-6 w-6" />
+              <Button variant="ghost" size="icon" className="text-white hover:bg-white/10" aria-label="Ouvrir le menu">
+                <Menu className="h-7 w-7" />
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="p-0 w-72 border-r-0">
@@ -50,11 +50,11 @@ const DashboardLayout = ({ type }: DashboardLayoutProps) => {
         </header>
 
         {/* Floating menu button (mobile safety) */}
-        <div className="md:hidden fixed bottom-4 right-4 z-50">
+        <div className="md:hidden fixed bottom-6 right-6 z-50">
           <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
             <SheetTrigger asChild>
-              <Button className="rounded-full h-12 w-12 shadow-lg" aria-label="Ouvrir le menu">
-                <Menu className="h-5 w-5" />
+              <Button className="rounded-full h-14 w-14 shadow-2xl bg-[#ed5518] hover:bg-[#ed5518]/90 text-white border-none" aria-label="Ouvrir le menu">
+                <Menu className="h-6 w-6" />
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="p-0 w-72 border-r-0">
