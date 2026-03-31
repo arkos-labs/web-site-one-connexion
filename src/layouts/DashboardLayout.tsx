@@ -40,7 +40,7 @@ const DashboardLayout = ({ type }: DashboardLayoutProps) => {
           <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="text-white hover:bg-white/10" aria-label="Ouvrir le menu">
-                <Menu className="h-7 w-7" />
+                <Menu className="h-8 w-8" strokeWidth={3} />
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="p-0 w-72 border-r-0">
@@ -54,7 +54,7 @@ const DashboardLayout = ({ type }: DashboardLayoutProps) => {
           <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
             <SheetTrigger asChild>
               <Button className="rounded-full h-14 w-14 shadow-2xl bg-[#ed5518] hover:bg-[#ed5518]/90 text-white border-none" aria-label="Ouvrir le menu">
-                <Menu className="h-6 w-6" />
+                <Menu className="h-8 w-8" strokeWidth={3} />
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="p-0 w-72 border-r-0">
