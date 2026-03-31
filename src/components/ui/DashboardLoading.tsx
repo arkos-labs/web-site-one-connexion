@@ -7,7 +7,7 @@ export const DashboardLoading = ({ isExiting = false }: { isExiting?: boolean })
         {/* The rotating and zooming logo */}
         <div className="relative z-10 animate-spin-slow-zoom">
           <img 
-            src="/logos/one-connexion-official.png" 
+            src="/logos/ONECONNEXION-04.png" 
             alt="One Connexion Loading" 
             className="w-24 h-24 object-contain"
           />
