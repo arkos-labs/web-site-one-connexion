@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { Logo } from "@/components/ui/Logo";
 
 export default function PublicFooter() {
   return (
@@ -6,13 +7,7 @@ export default function PublicFooter() {
       <div className="mx-auto max-w-7xl px-6 md:px-12">
         <div className="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
           <div className="max-w-2xl">
-            <Link to="/" className="flex items-center">
-              <img 
-                src="/logos/ONECONNEXION-09.svg" 
-                alt="One Connexion Logo" 
-                className="h-16 w-auto" 
-              />
-            </Link>
+            <Logo variant="light" size="lg" />
             <p className="mt-6 text-[15px] leading-relaxed text-slate-400">
               Notre mission est de simplifier la logistique B2B pour les entreprises, en offrant une solution rapide, fiable et 100% digitalisée.
             </p>

@@ -1,22 +1,29 @@
 @import "tailwindcss";
 
-@font-face {
-  font-family: 'Archivo';
-  font-style: normal;
-  display: swap;
-  font-weight: 100 900;
-  src: url(https://fonts.gstatic.com/s/archivo/v19/8uInPqcY_mBy-X36rC-8Bz0.woff2) format('woff2');
-}
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Poppins:wght@300;600&display=swap');
 
 :root {
   --brand-orange: #ed5518;
-  --font-brand: "Archivo", sans-serif;
+  --font-title: "Montserrat", sans-serif;
+  --font-body: "Poppins", sans-serif;
 }
 
 @layer base {
   body {
-    @apply bg-white text-slate-900 antialiased;
-    font-family: var(--font-brand);
+    @apply bg-white text-slate-900 antialiased font-light;
+    font-family: var(--font-body);
+    font-weight: 300;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-title);
+    font-weight: 900;
+    @apply tracking-tight uppercase;
+  }
+
+  /* Specific rule for numbers if user wants bold digits */
+  .font-numbers {
+    font-weight: 600;
   }
 }
 

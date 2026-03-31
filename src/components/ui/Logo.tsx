@@ -29,8 +29,8 @@ export const Logo = ({
     return (
         <Link to="/" className={cn("flex items-center gap-2 group", className)}>
             <img
-                src="/logos/ONECONNEXION-02.png"
-                alt="One Connexion Express"
+                src={isLightLogo ? "/logos/ONECONNEXION-04.png" : "/logos/ONECONNEXION-01.png"}
+                alt="One Connexion"
                 className={cn(
                     "h-auto object-contain transition-transform group-hover:scale-105",
                     widthClass

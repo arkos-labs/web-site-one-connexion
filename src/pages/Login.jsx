@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { supabase } from "../lib/supabase.js";
+import { Logo } from "@/components/ui/Logo";
 import { Eye, EyeOff, ArrowRight, CheckCircle2, Package, FileText, MessageSquare, Loader2 } from "lucide-react";
 
 const PERKS = [
@@ -54,21 +55,11 @@ export default function Login() {
     <div className="min-h-screen flex font-sans">
       {/* ── LEFT PANEL ── */}
       <div className="hidden lg:flex lg:w-1/2 relative flex-col justify-between p-12 overflow-hidden bg-slate-950">
-        {/* Background image */}
-        <div className="absolute inset-0 z-0">
-          <img
-            src="https://images.unsplash.com/photo-1556740758-90de374c12ad?auto=format&fit=crop&q=80"
-            alt="Logistique professionnelle"
-            className="h-full w-full object-cover opacity-25"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/40 via-slate-950/80 to-slate-950" />
-        </div>
+        {/* Background */}
+        <div className="absolute inset-0 z-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 opacity-100" />
 
         {/* Logo */}
-        <Link to="/" className="relative z-10 flex items-center gap-3">
-          <div className="grid h-10 w-10 place-items-center rounded-xl bg-[#ed5518] text-white text-sm font-black shadow-lg shadow-primary/30">OC</div>
-          <span className="text-xl font-black text-white tracking-tight">One Connexion</span>
-        </Link>
+        <Logo variant="light" size="lg" className="relative z-10" />
 
         {/* Center content */}
         <div className="relative z-10 space-y-10">
@@ -106,10 +97,7 @@ export default function Login() {
       <div className="flex w-full flex-col items-center justify-center bg-white p-6 lg:w-1/2 lg:p-14">
         <div className="w-full max-w-sm">
           {/* Mobile logo */}
-          <Link to="/" className="flex items-center gap-3 mb-10 lg:hidden">
-            <div className="grid h-9 w-9 place-items-center rounded-xl bg-[#ed5518] text-white text-sm font-black">OC</div>
-            <span className="text-lg font-black text-slate-900">One Connexion</span>
-          </Link>
+          <Logo size="md" className="flex items-center gap-3 mb-10 lg:hidden" />
 
           <div className="mb-10">
             <h1 className="text-3xl font-black text-slate-900 tracking-tight">Bon retour 👋</h1>

@@ -184,7 +184,7 @@
   border-radius: 100px;
   padding: 6px 14px;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 900;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: #f97316;
@@ -208,13 +208,15 @@
 
 /* Titre */
 .hero3d-title {
-  font-size: clamp(2.4rem, 5vw, 4rem);
-  font-weight: 800;
-  line-height: 1.1;
+  font-size: clamp(2.4rem, 6vw, 4.8rem);
+  font-weight: 900; /* Titres : Montserrat Poids 900 */
+  line-height: 0.95;
   color: #ffffff;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.04em;
   margin: 0;
+  text-transform: uppercase;
   animation: fadeSlideIn 0.7s ease 0.1s both;
+  font-family: var(--font-title);
 }
 
 .hero3d-title__accent {
@@ -226,9 +228,11 @@
 }
 
 .hero3d-title__sub {
-  color: #94a3b8;
-  font-size: 0.7em;
-  font-weight: 600;
+  color: #ffffff;
+  display: block;
+  font-size: 0.85em;
+  font-weight: 900;
+  margin-top: 4px;
 }
 
 /* Description */
@@ -267,15 +271,15 @@
 
 .hero3d-stat__value {
   font-size: 1.5rem;
-  font-weight: 800;
+  font-weight: 600; /* Numbers in bold: 600 */
   color: #ed5518;
   line-height: 1;
 }
 
 .hero3d-stat__label {
   font-size: 0.68rem;
-  font-weight: 600;
-  color: #64748b;
+  font-weight: 300; /* Text: 300 */
+  color: #94a3b8;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-top: 4px;
@@ -296,10 +300,11 @@
   gap: 10px;
   border-radius: 100px;
   padding: 14px 28px;
-  font-size: 0.9rem;
-  font-weight: 700;
+  font-size: 0.95rem;
+  font-weight: 900;
+  text-transform: uppercase;
   text-decoration: none;
-  transition: all 0.25s ease;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
 }
 
@@ -435,50 +440,94 @@
   filter: drop-shadow(0 0 4px #fed7aa);
 }
 
-/* Cards flottantes */
-.hero3d-float-card {
+/* ── Premium Video Carousel (Fullscreen Background) ──────────────────────── */
+.hero-video-carousel {
   position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+  background: #050505;
+}
+
+.hero-fullscreen-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.hero-video-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(5, 5, 5, 0.95) 0%, rgba(5, 5, 5, 0.8) 35%, rgba(5, 5, 5, 0.4) 65%, rgba(5, 5, 5, 0) 100%);
+  z-index: 10;
+}
+
+/* Sur mobile, on assombrit l'image entière pour que le texte soit lisible partout */
+@media (max-width: 900px) {
+  .hero-video-overlay {
+    background: linear-gradient(to top, rgba(5, 5, 5, 0.95) 0%, rgba(5, 5, 5, 0.8) 50%, rgba(5, 5, 5, 0.6) 100%);
+  }
+}
+
+.hero-video-text {
+  position: absolute;
+  bottom: 80px;
+  right: 6%;
+  max-width: 400px;
+  text-align: right;
+  z-index: 20;
   display: flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(15, 23, 42, 0.85);
-  border: 1px solid rgba(237, 85, 24, 0.25);
-  border-radius: 12px;
-  padding: 10px 16px;
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: #e2e8f0;
-  backdrop-filter: blur(12px);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-  white-space: nowrap;
+  flex-direction: column;
+  align-items: flex-end;
 }
 
-.hero3d-float-card--tl {
-  top: 8%;
-  left: -5%;
-  animation: cardFloat 5s ease-in-out infinite;
+@media (max-width: 900px) {
+  .hero-video-text {
+    display: none; /* Cache le texte secondaire sur mobile pour éviter la surcharge */
+  }
 }
 
-.hero3d-float-card--br {
-  bottom: 10%;
-  right: -5%;
-  animation: cardFloat 6s ease-in-out infinite reverse;
-  animation-delay: 1s;
+.hero-video-subtitle {
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: #ed5518;
+  margin-bottom: 8px;
+  animation: slideVideoTextRight 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  opacity: 0;
 }
 
-.hero3d-float-card__dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #22c55e;
-  box-shadow: 0 0 8px #22c55e;
-  animation: dotPulse 2s ease-in-out infinite;
-  flex-shrink: 0;
+.hero-video-title {
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: #fff;
+  line-height: 1.1;
+  margin: 0 0 12px 0;
+  animation: slideVideoTextRight 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  animation-delay: 0.15s;
+  opacity: 0;
 }
 
-@keyframes cardFloat {
-  0%, 100% { transform: translateY(0px) rotate(-1deg); }
-  50%       { transform: translateY(-10px) rotate(1deg); }
+.hero-video-desc {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #cbd5e1;
+  margin: 0;
+  animation: slideVideoTextRight 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  animation-delay: 0.3s;
+  opacity: 0;
+  line-height: 1.5;
+}
+
+@keyframes slideVideoTextRight {
+  0% { opacity: 0; transform: translateX(20px); }
+  100% { opacity: 1; transform: translateX(0); }
 }
 
 /* ── Scroll indicator ───────────────────────────────────── */
@@ -542,15 +591,70 @@
 
 .hero3d-ticker__item {
   padding: 0 40px;
-  font-family: monospace;
-  font-size: 0.7rem;
-  font-weight: 500;
+  font-family: var(--font-title);
+  font-size: 0.75rem;
+  font-weight: 900;
   color: #ed5518;
   letter-spacing: 0.25em;
-  opacity: 0.7;
+  opacity: 0.9;
+  text-transform: uppercase;
 }
 
 @keyframes tickerScroll {
   0%   { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
+
+/* ── Live Logistics Map ──────────────────────────────── */
+.hero-logistics-map {
+  position: absolute;
+  inset: 0;
+  z-index: 15;
+  pointer-events: none;
+}
+
+.logistics-svg {
+  width: 100%;
+  height: 100%;
+  opacity: 0.4;
+}
+
+.logistics-path {
+  fill: none;
+  stroke: rgba(237, 85, 24, 0.4);
+  stroke-width: 0.15;
+  stroke-dasharray: 1, 1;
+  stroke-linecap: round;
+}
+
+.logistics-pulse {
+  animation: pulsePoint 4s ease-out infinite;
+  transform-origin: center;
+}
+
+@keyframes pulsePoint {
+  0% { r: 0.8; stroke-opacity: 1; }
+  100% { r: 4; stroke-opacity: 0; }
+}
+
+.moving-delivery {
+  filter: drop-shadow(0 0 2px #ed5518);
+}
+
+.logistics-label {
+  position: absolute;
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: rgba(5, 5, 5, 0.6);
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid rgba(237, 85, 24, 0.2);
+  transform: translate(10px, -50%);
+  white-space: nowrap;
+  backdrop-filter: blur(4px);
+  opacity: 0.8;
+}
+

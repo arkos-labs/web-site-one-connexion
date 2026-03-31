@@ -1,6 +1,7 @@
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Truck, MapPin, User, LogOut, MessageSquare } from "lucide-react";
 import { supabase } from "../lib/supabase";
+import { Logo } from "@/components/ui/Logo";
 
 export default function DashboardDriverLayout() {
     const navigate = useNavigate();
@@ -17,8 +18,10 @@ export default function DashboardDriverLayout() {
             {/* Mobile-first Header */}
             <header className="flex items-center justify-between bg-white px-4 py-4 shadow-sm z-20">
                 <div className="flex items-center gap-3">
-                    <div className="grid h-10 w-10 place-items-center rounded-xl bg-slate-900 text-white font-bold">OC</div>
-                    <span className="text-lg font-bold tracking-tight">Espace Chauffeur</span>
+                    <Logo size="sm" />
+                    <div className="flex flex-col">
+                        <span className="text-[11px] font-black tracking-widest text-[#ed5518] uppercase">Espace Chauffeur</span>
+                    </div>
                 </div>
                 <button type="button" onClick={handleLogout} className="rounded-full bg-slate-100 p-2 text-slate-500 hover:bg-slate-200">
                     <LogOut size={20} />

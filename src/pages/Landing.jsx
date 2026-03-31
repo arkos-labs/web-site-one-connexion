@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import PublicHeader from "../components/PublicHeader.jsx";
 import PublicFooter from "../components/PublicFooter.jsx";
 import Hero3D from "../components/home/Hero3D.jsx";
-import { ArrowUpRight, Package, FileText, MessageSquare, CreditCard, Stethoscope, Scale, Calendar, Car, Plus, ShoppingCart, Star, CheckCircle2 } from "lucide-react";
+import { ArrowUpRight, Package, FileText, MessageSquare, CreditCard, Stethoscope, Scale, Calendar, Car, Plus, ShoppingCart, Star, CheckCircle2, Zap, UserCheck, Camera, Receipt } from "lucide-react";
 
 const benefits = [
   { title: "Bon de commande & Suivi", desc: <span>Génération automatique PDF et traçabilité complète de chaque envoi. <Link to="/inscription" className="underline decoration-primary/30 hover:decoration-primary">Ouvrir un compte</Link></span> },
@@ -39,10 +39,10 @@ const expertises = [
 ];
 
 const steps = [
-  { num: "01", title: "Commande Express", desc: "Saisie rapide, carnet d’adresses et choix du véhicule (moto, camion)." },
-  { num: "02", title: "Assignation Chauffeur", desc: "Un coursier qualifié prend en charge votre mission immédiatement." },
-  { num: "03", title: "Livraison & Preuve", desc: "Remise en main propre sécurisée et validation instantanée par photo." },
-  { num: "04", title: "Facture Unique", desc: "Toutes vos courses regroupées en une seule facture mensuelle détaillée." },
+  { num: "01", icon: Zap, title: "Commande Express", desc: "Saisie rapide, carnet d’adresses et choix du véhicule (moto, camion)." },
+  { num: "02", icon: UserCheck, title: "Assignation Chauffeur", desc: "Un coursier qualifié prend en charge votre mission immédiatement." },
+  { num: "03", icon: Camera, title: "Livraison & Preuve", desc: "Remise en main propre sécurisée et validation instantanée par photo." },
+  { num: "04", icon: Receipt, title: "Facture Unique", desc: "Toutes vos courses regroupées en une seule facture mensuelle détaillée." },
 ];
 
 const testimonials = [
@@ -137,38 +137,77 @@ export default function Landing() {
       </section>
 
       {/* Workflow */}
-      <section id="workflow" className="bg-white py-16 md:py-32 border-t border-slate-100">
-        <div className="mx-auto max-w-6xl px-4 md:px-8">
-          <div className="mb-20 text-center">
-            <h2 className="text-3xl font-black tracking-tight text-slate-900 md:text-5xl">
-              Un workflow maîtrisé de A à Z
+      <section id="workflow" className="bg-white py-16 md:py-32 border-t border-slate-100 overflow-hidden">
+        <div className="mx-auto max-w-7xl px-4 md:px-8">
+          <div className="mb-24 text-center">
+            <h2 className="text-4xl font-black tracking-tight text-slate-900 md:text-6xl mb-6">
+              UN WORKFLOW MAÎTRISÉ DE A À Z
             </h2>
-            <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-600">
+            <p className="mx-auto max-w-2xl text-xl text-slate-500 font-light px-4">
               4 étapes structurées pour une logistique infaillible. Le contrôle direct à chaque instant.
             </p>
-            <div className="mt-8 inline-flex items-center gap-2 rounded-full border border-[#ed5518]/20 bg-orange-50 px-4 py-2 text-xs font-bold uppercase tracking-widest text-[#ed5518]">
-              <span className="relative flex h-2 w-2">
+            <div className="mt-10 inline-flex items-center gap-3 rounded-full border border-slate-200 bg-slate-50 px-6 py-3 text-sm font-bold uppercase tracking-widest text-slate-800 shadow-sm transition-all hover:border-[#ed5518] hover:bg-orange-50 hover:text-[#ed5518]">
+              <span className="relative flex h-3 w-3">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#ed5518] opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#ed5518]"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-[#ed5518]"></span>
               </span>
               Dispatch Actif 24/7
             </div>
           </div>
 
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            {steps.map((s) => (
-              <div key={s.num} className="group relative flex flex-col rounded-3xl bg-slate-50 p-8 shadow-lg shadow-slate-200/50 border border-slate-100 transition-all hover:-translate-y-2 hover:bg-white hover:border-slate-200 hover:shadow-xl">
-                <div className="mb-8 flex items-start justify-between">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-[#ed5518] text-lg font-black text-[#ed5518] group-hover:bg-[#ed5518] group-hover:text-white transition-colors shadow-sm">
-                    {s.num}
-                  </div>
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Étape</span>
-                </div>
+          <div className="relative">
+            {/* Desktop Connector Line */}
+            <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-slate-100 -translate-y-1/2 hidden lg:block">
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#ed5518]/20 to-transparent"></div>
+            </div>
 
-                <h3 className="mb-4 text-xl font-bold tracking-tight text-slate-900">{s.title}</h3>
-                <p className="text-[15px] leading-relaxed text-slate-600 group-hover:text-slate-700 transition-colors">{s.desc}</p>
-              </div>
-            ))}
+            <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-4 relative z-10">
+              {steps.map((s, idx) => (
+                <div key={s.num} className="group relative">
+                  {/* Step Connector Dots for Desktop */}
+                  {idx < steps.length - 1 && (
+                    <div className="absolute top-1/2 -right-6 translate-x-1/2 -translate-y-1/2 hidden lg:flex items-center gap-1">
+                      <div className="w-1.5 h-1.5 rounded-full bg-slate-200 group-hover:bg-[#ed5518]/40 transition-colors"></div>
+                      <div className="w-1.5 h-1.5 rounded-full bg-slate-200 group-hover:bg-[#ed5518]/40 transition-colors delay-75"></div>
+                      <div className="w-1.5 h-1.5 rounded-full bg-slate-200 group-hover:bg-[#ed5518]/40 transition-colors delay-150"></div>
+                    </div>
+                  )}
+
+                  <div className="flex flex-col items-center text-center">
+                    {/* Circle Icon Container */}
+                    <div className="relative mb-10">
+                      {/* Outer Pulse (on hover) */}
+                      <div className="absolute inset-0 rounded-full bg-[#ed5518]/0 group-hover:bg-[#ed5518]/10 group-hover:scale-150 transition-all duration-500"></div>
+                      
+                      {/* The Icon Circle */}
+                      <div className="relative flex h-24 w-24 items-center justify-center rounded-2xl bg-white shadow-2xl shadow-slate-200 border border-slate-100 group-hover:border-[#ed5518] group-hover:shadow-[#ed5518]/20 transition-all duration-300 transform group-hover:-translate-y-2">
+                        <s.icon size={40} strokeWidth={1.2} className="text-slate-800 group-hover:text-[#ed5518] transition-colors" />
+                        
+                        {/* Step Number Badge */}
+                        <div className="absolute -top-3 -right-3 flex h-10 w-10 items-center justify-center rounded-lg bg-[#ed5518] text-white text-sm font-black shadow-lg shadow-[#ed5518]/30">
+                          {s.num}
+                        </div>
+                      </div>
+                    </div>
+
+                    <h3 className="mb-4 text-2xl font-black tracking-tight text-slate-900 uppercase">
+                      {s.title}
+                    </h3>
+                    <p className="max-w-[240px] text-base leading-relaxed text-slate-500 group-hover:text-slate-700 transition-colors font-medium">
+                      {s.desc}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-24 flex justify-center">
+            <Link to="/inscription" className="group relative overflow-hidden rounded-full bg-slate-900 px-10 py-5 text-sm font-bold text-white uppercase tracking-widest shadow-2xl transition-all hover:scale-105 hover:bg-[#ed5518]">
+              <span className="relative z-10 flex items-center gap-2">
+                Commencer mon premier envoi <ArrowUpRight size={18} />
+              </span>
+            </Link>
           </div>
         </div>
       </section>

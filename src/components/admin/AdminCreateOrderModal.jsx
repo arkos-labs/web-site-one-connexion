@@ -314,8 +314,8 @@ export default function AdminCreateOrderModal({ onClose, onSuccess }) {
 
     const serviceColors = {
         super: "bg-rose-50 text-rose-600 border-rose-100",
-        exclu: "bg-[#ed5518] text-[#ed5518] border-blue-100",
-        normal: "bg-[#ed5518] text-[#ed5518] border-emerald-100",
+        exclu: "bg-orange-50 text-[#ed5518] border-orange-100",
+        normal: "bg-emerald-50 text-emerald-600 border-emerald-100",
     };
 
     return (
@@ -433,11 +433,11 @@ export default function AdminCreateOrderModal({ onClose, onSuccess }) {
                                     </div>
 
                                     {selectedClient && (
-                                        <div className="flex items-center gap-3 rounded-2xl bg-[#ed5518] border border-emerald-100 px-5 py-3">
+                                        <div className="flex items-center gap-3 rounded-2xl bg-orange-50 border border-orange-100 px-5 py-3 mt-4">
                                             <CheckCircle2 size={18} className="text-[#ed5518] shrink-0" />
                                             <div>
-                                                <div className="text-sm font-black text-[#ed5518]">{selectedClient.name}</div>
-                                                <div className="text-xs text-[#ed5518]">{selectedClient.email}</div>
+                                                <div className="text-sm font-black text-[#ed5518]">Sélectionné : {selectedClient.name}</div>
+                                                <div className="text-xs font-medium text-[#ed5518]/70">{selectedClient.email}</div>
                                             </div>
                                         </div>
                                     )}
@@ -446,7 +446,7 @@ export default function AdminCreateOrderModal({ onClose, onSuccess }) {
 
                             {clientMode === "new" && (
                                 <div className="space-y-4">
-                                    <div className="rounded-2xl bg-[#ed5518] border border-blue-100 p-4 flex items-start gap-3">
+                                    <div className="rounded-2xl bg-orange-50 border border-orange-100 p-4 flex items-start gap-3">
                                         <Info size={16} className="text-[#ed5518] shrink-0 mt-0.5" />
                                         <p className="text-xs font-medium text-[#ed5518] leading-relaxed">
                                             Un nouveau profil client sera créé sans compte. La commande sera liée à ce profil. Vous pourrez compléter le dossier client plus tard.
@@ -687,7 +687,7 @@ export default function AdminCreateOrderModal({ onClose, onSuccess }) {
                     {step === 4 && (
                         <div className="space-y-5 max-w-2xl mx-auto">
                             <div className="text-center">
-                                <div className="inline-flex h-16 w-16 items-center justify-center rounded-3xl bg-[#ed5518] text-[#ed5518] mb-4">
+                                <div className="inline-flex h-16 w-16 items-center justify-center rounded-3xl bg-orange-50 text-[#ed5518] mb-4">
                                     <ShieldCheck size={32} />
                                 </div>
                                 <h3 className="text-xl font-black text-slate-900">Résumé de la mission</h3>

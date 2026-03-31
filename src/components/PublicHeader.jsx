@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
+import { Logo } from "@/components/ui/Logo";
 
 export default function PublicHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -18,13 +19,7 @@ export default function PublicHeader() {
     <header className={`fixed top-0 z-50 w-full transition-all duration-300 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm ${isScrolled ? 'py-0.5' : 'py-1'}`}>
       <div className="container mx-auto flex items-center px-6 md:px-12 h-12 md:h-14">
         <div className="flex items-center shrink-0 -ml-2 md:-ml-4">
-          <Link to="/" className="group flex items-center">
-            <img 
-              src="/logos/ONECONNEXION-02.png" 
-              alt="One Connexion Logo" 
-              className="w-28 sm:w-32 md:w-40 lg:w-48 h-auto group-hover:scale-105 transition-transform"
-            />
-          </Link>
+          <Logo size="md" />
         </div>
 
         {/* Desktop Navigation */}

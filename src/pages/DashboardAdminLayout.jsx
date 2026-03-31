@@ -2,6 +2,7 @@ import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { LayoutDashboard, Truck, Users, FileText, MessageSquare, LogOut, Bell, ExternalLink, X, Shield, Activity } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
+import { Logo } from "@/components/ui/Logo";
 
 export default function DashboardAdminLayout() {
   const navigate = useNavigate();
@@ -99,15 +100,10 @@ export default function DashboardAdminLayout() {
       <aside className="hidden w-72 flex-col justify-between bg-white px-4 py-8 border-r border-slate-100 lg:flex z-20">
         <div>
           {/* Logo */}
-          <Link to="/admin" className="mb-10 flex items-center gap-3 px-4">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-900 text-white font-black shadow-xl shadow-slate-900/20 ring-1 ring-white/20">
-              <Activity size={20} className="text-[#ed5518]" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-lg font-black tracking-tight leading-none text-slate-900">ONE CONNEXION</span>
-              <span className="text-[10px] font-bold tracking-[0.2em] text-[#ed5518] uppercase mt-1">Plateforme Admin</span>
-            </div>
-          </Link>
+          <div className="mb-6 flex flex-col items-center">
+            <Logo size="lg" />
+            <span className="text-[10px] font-black tracking-[0.3em] text-[#ed5518] uppercase mt-2">Plateforme Admin</span>
+          </div>
 
           {/* Navigation */}
           <nav className="space-y-1">

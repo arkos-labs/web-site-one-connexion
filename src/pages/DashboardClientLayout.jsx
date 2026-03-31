@@ -2,6 +2,7 @@ import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Truck, FileText, MapPin, User, Settings, LogOut, LayoutDashboard, MessageSquare } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
+import { Logo } from "@/components/ui/Logo";
 
 export default function DashboardClientLayout() {
   const navigate = useNavigate();
@@ -62,15 +63,10 @@ export default function DashboardClientLayout() {
     <div className="flex h-screen bg-[#f8fafc] font-sans text-slate-900 overflow-hidden selection:bg-[#ed5518]/30 selection:text-[#ed5518]">
       <aside className="hidden w-[280px] flex-col justify-between border-r border-slate-200/60 bg-white/80 px-6 py-8 backdrop-blur-3xl lg:flex z-20">
         <div>
-          <Link to="/" className="group mb-12 flex items-center gap-3 px-2">
-            <div className="grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br from-primary to-primary text-white font-black shadow-lg shadow-primary/20 transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3">
-              OC
-            </div>
-            <div className="flex flex-col">
-              <span className="text-xl font-black tracking-tight text-slate-900">One Connexion</span>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Entreprise</span>
-            </div>
-          </Link>
+          <div className="mb-8 flex flex-col items-center">
+            <Logo size="lg" />
+            <span className="text-[10px] font-black uppercase tracking-widest text-[#ed5518] mt-2">Entreprise</span>
+          </div>
 
           <nav className="space-y-2">
             <div className="mb-4 px-4 text-xs font-bold uppercase tracking-wider text-slate-400">Menu Principal</div>

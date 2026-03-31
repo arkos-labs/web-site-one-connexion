@@ -246,15 +246,15 @@ export default function DashboardAdmin() {
 
   const driverRows = useMemo(() => drivers.map(d => {
     const activeOrder = ordersAll.find(o => o.driver_id === d.id && ['in_progress', 'driver_accepted', 'assigned', 'picked_up'].includes(o.status));
-    return { ...d, status: activeOrder ? (activeOrder.status === 'in_progress' || activeOrder.status === 'picked_up' ? "ENLEVÉ" : "EN MISSION") : "DISPONIBLE", cls: activeOrder ? "bg-amber-100 text-amber-700" : "bg-[#ed5518] text-[#ed5518]" };
+    return { ...d, status: activeOrder ? (activeOrder.status === 'in_progress' || activeOrder.status === 'picked_up' ? "ENLEVÉ" : "EN MISSION") : "DISPONIBLE", cls: activeOrder ? "bg-amber-50 text-amber-600 border-amber-100" : "bg-emerald-50 text-emerald-600 border-emerald-100" };
   }), [ordersAll, drivers]);
 
   const clientPaymentRows = useMemo(() => clients.map(c => {
     const cInvoices = invoicesAll.filter(i => i.client_id === c.id).sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
     const latest = cInvoices[0];
-    if (!latest) return { id: c.id, name: c.name, status: "SANS FACTURE", cls: "bg-slate-100 text-slate-500" };
-    if (latest.status === 'paid') return { id: c.id, name: c.name, status: "À JOUR", cls: "bg-[#ed5518] text-[#ed5518]" };
-    return { id: c.id, name: c.name, status: "À RECOUVRER", cls: "bg-amber-100 text-amber-700" };
+    if (!latest) return { id: c.id, name: c.name, status: "SANS FACTURE", cls: "bg-slate-50 text-slate-400 border-slate-100" };
+    if (latest.status === 'paid') return { id: c.id, name: c.name, status: "À JOUR", cls: "bg-emerald-50 text-emerald-600 border-emerald-100" };
+    return { id: c.id, name: c.name, status: "À RECOUVRER", cls: "bg-rose-50 text-rose-600 border-rose-100" };
   }), [clients, invoicesAll]);
 
   const TAB_CONFIG = {
@@ -333,7 +333,7 @@ export default function DashboardAdmin() {
         </div>
 
         {/* CA En cours */}
-        <KpiCard icon={<TrendingUp size={18} />} iconBg="bg-[#ed5518] text-[#ed5518]" label="CA En cours" value={`${kpis.revenueOps.toFixed(0)}€`} sub="HT sur missions actives" trend="indigo" />
+        <KpiCard icon={<TrendingUp size={18} />} iconBg="bg-indigo-50 text-indigo-600" label="CA En cours" value={`${kpis.revenueOps.toFixed(0)}€`} sub="HT sur missions actives" trend="indigo" />
 
         {/* À Recouvrer */}
         <KpiCard
@@ -349,7 +349,7 @@ export default function DashboardAdmin() {
         <KpiCard icon={<Users size={18} />} iconBg="bg-amber-100 text-amber-600" label="Dû Chauffeurs" value={`${kpis.driverPayOutstanding.toFixed(0)}€`} sub={`${drivers.length} livreur(s) en ligne`} trend="amber" />
 
         {/* Profit net */}
-        <KpiCard icon={<BarChart3 size={18} />} iconBg="bg-[#ed5518] text-[#ed5518]" label="Profit Net (Encais.)" value={`${kpis.netProfit.toFixed(0)}€`} sub={`${kpis.deliveredCount} livraison(s)`} trend="emerald" />
+        <KpiCard icon={<BarChart3 size={18} />} iconBg="bg-emerald-50 text-emerald-600" label="Profit Net (Encais.)" value={`${kpis.netProfit.toFixed(0)}€`} sub={`${kpis.deliveredCount} livraison(s)`} trend="emerald" />
       </div>
 
       {/* ── MAIN CONTENT ── */}
@@ -481,7 +481,7 @@ export default function DashboardAdmin() {
                     </div>
                     <span className="text-xs font-bold text-slate-700 truncate max-w-[90px]">{d.name}</span>
                   </div>
-                  <span className={`text-[8px] font-black px-2 py-1 rounded-lg uppercase tracking-widest ${d.cls}`}>{d.status}</span>
+                  <span className={`text-[8px] font-black px-2 py-1 rounded-lg uppercase tracking-widest border ${d.cls}`}>{d.status}</span>
                 </div>
               ))}
             </div>
@@ -502,7 +502,7 @@ export default function DashboardAdmin() {
               ) : clientPaymentRows.map(c => (
                 <div key={c.id} className="px-5 py-3 flex items-center justify-between hover:bg-slate-50 transition-colors">
                   <span className="text-xs font-bold text-slate-700 truncate">{c.name}</span>
-                  <span className={`text-[8px] font-black px-2 py-1 rounded-lg uppercase tracking-widest ${c.cls}`}>{c.status}</span>
+                  <span className={`text-[8px] font-black px-2 py-1 rounded-lg uppercase tracking-widest border ${c.cls}`}>{c.status}</span>
                 </div>
               ))}
             </div>

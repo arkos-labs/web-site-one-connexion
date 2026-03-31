@@ -9,13 +9,8 @@ export default function About() {
 
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden bg-slate-900 border-b border-slate-100">
-        <div className="absolute inset-0 z-0">
-          <img
-            src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&q=80"
-            alt="L'équipe One Connexion"
-            className="h-full w-full object-cover opacity-30"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-900/60 via-slate-900 to-slate-900" />
+        <div className="absolute inset-0 z-0 bg-slate-900 overflow-hidden">
+          <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-[#ed5518]/10 blur-[150px] rounded-full translate-x-1/2 -translate-y-1/2" />
         </div>
 
         <div className="mx-auto max-w-7xl px-6 md:px-12 relative z-10 text-center">
@@ -57,11 +52,16 @@ export default function About() {
             </div>
             <div className="relative">
               <div className="absolute -inset-4 bg-[#ed5518]/5 rounded-3xl blur-2xl transform rotate-3"></div>
-              <img
-                src="https://images.unsplash.com/photo-1556740758-90de374c12ad?auto=format&fit=crop&q=80"
-                className="relative rounded-3xl shadow-2xl border border-slate-100 grayscale hover:grayscale-0 transition-all duration-700"
-                alt="Logistique Professionnelle"
-              />
+              <div className="relative rounded-3xl bg-slate-900 shadow-2xl border border-white/5 aspect-video flex flex-col items-center justify-center p-12 overflow-hidden group">
+                <div className="absolute inset-0 bg-gradient-to-br from-[#ed5518]/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500" />
+                <div className="h-20 w-20 rounded-full bg-[#ed5518]/20 flex items-center justify-center text-[#ed5518] mb-6">
+                  <ShieldCheck size={40} />
+                </div>
+                <div className="text-center">
+                  <p className="text-white font-black uppercase tracking-[0.3em] text-xs">Exigence de service</p>
+                  <p className="text-slate-400 text-xs mt-2 font-medium">Standard Certifié Paris / IDF</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
