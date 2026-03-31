@@ -23,7 +23,7 @@ export default function PublicHeader() {
         ? 'bg-[#0a0c14]/95 backdrop-blur-md border-b border-white/10 shadow-xl py-0.5' 
         : 'bg-transparent border-b border-transparent py-2'
     } text-white`}>
-      <div className="container mx-auto flex items-center px-6 md:px-12 h-12 md:h-16">
+      <div className="container mx-auto flex items-center justify-between px-6 md:px-12 h-12 md:h-16">
         <div className="flex items-center shrink-0 -ml-2 md:-ml-4">
           <Logo size="md" variant="light" />
         </div>
@@ -33,6 +33,7 @@ export default function PublicHeader() {
           <a href="/#features" className="hover:text-[#ed5518] transition-colors">Avantages</a>
           <a href="/#expertises" className="hover:text-[#ed5518] transition-colors">Secteurs</a>
           <a href="/#workflow" className="hover:text-[#ed5518] transition-colors">Solution Logistique</a>
+          <Link to="/commande-sans-compte" className="hover:text-[#ed5518] transition-colors font-black text-[#ed5518]">Suivi de mission</Link>
           <Link to="/contact" className="hover:text-[#ed5518] transition-colors font-black">Contact</Link>
         </nav>
 
@@ -46,23 +47,26 @@ export default function PublicHeader() {
           </Link>
         </div>
 
-        {/* Mobile Menu Button */}
+        {/* Mobile Menu Button / 3 traits */}
         <button
-          className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#ed5518] text-white shadow-lg transition-transform active:scale-95 md:hidden"
+          className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#ed5518] text-white shadow-xl transition-all active:scale-90 md:hidden border border-white/20"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
+          aria-label="Menu"
         >
-          {isMenuOpen ? <X size={24} strokeWidth={3} /> : <Menu size={24} strokeWidth={3} />}
+          {isMenuOpen ? <X size={28} strokeWidth={3.5} /> : <Menu size={28} strokeWidth={3.5} />}
         </button>
       </div>
 
       {/* Mobile Menu Overlay */}
       {isMenuOpen && (
-        <div className="absolute left-0 top-full w-full border-b border-white/5 bg-[#0a0c14]/98 backdrop-blur-xl p-6 shadow-2xl md:hidden">
-          <nav className="flex flex-col gap-6 text-sm font-bold uppercase tracking-wider text-white/80">
-            <a href="/#features" className="hover:text-[#ed5518] transition-colors" onClick={() => setIsMenuOpen(false)}>Avantages</a>
-            <a href="/#expertises" className="hover:text-[#ed5518] transition-colors" onClick={() => setIsMenuOpen(false)}>Secteurs</a>
-            <a href="/#workflow" className="hover:text-[#ed5518] transition-colors" onClick={() => setIsMenuOpen(false)}>Solution Logistique</a>
-            <Link to="/commande-sans-compte" className="hover:text-[#ed5518] transition-colors" onClick={() => setIsMenuOpen(false)}>Commander</Link>
+        <div className="fixed inset-0 top-12 z-50 w-full overflow-y-auto bg-[#0a0c14]/98 backdrop-blur-2xl p-8 md:hidden">
+          <nav className="flex flex-col gap-8 text-lg font-black uppercase tracking-widest text-white/80">
+            <a href="/#features" className="hover:text-[#ed5518] transition-colors border-b border-white/5 pb-2" onClick={() => setIsMenuOpen(false)}>Avantages</a>
+            <a href="/#expertises" className="hover:text-[#ed5518] transition-colors border-b border-white/5 pb-2" onClick={() => setIsMenuOpen(false)}>Secteurs</a>
+            <a href="/#workflow" className="hover:text-[#ed5518] transition-colors border-b border-white/5 pb-2" onClick={() => setIsMenuOpen(false)}>Solution Logistique</a>
+            <Link to="/commande-sans-compte" className="hover:text-[#ed5518] transition-colors border-b border-white/5 pb-2 flex items-center justify-between" onClick={() => setIsMenuOpen(false)}>
+              Suivi de mission <span className="text-[10px] bg-[#ed5518] px-2 py-0.5 rounded text-white">Nouveau</span>
+            </Link>
             <Link to="/contact" className="hover:text-[#ed5518] transition-colors" onClick={() => setIsMenuOpen(false)}>Contact</Link>
 
             <hr className="my-2 border-white/10" />

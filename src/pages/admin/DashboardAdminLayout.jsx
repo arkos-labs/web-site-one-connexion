@@ -1,5 +1,5 @@
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { LayoutDashboard, Truck, Users, FileText, MessageSquare, LogOut, Bell, ExternalLink, X, Shield, Activity } from "lucide-react";
+import { LayoutDashboard, Truck, Users, FileText, MessageSquare, LogOut, Bell, ExternalLink, X, Shield, Activity, Menu } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "../../lib/supabase";
 import { Logo } from "@/components/ui/Logo";
@@ -14,6 +14,7 @@ export default function DashboardAdminLayout() {
   const [activeCount, setActiveCount] = useState(0);
   const [newOrderPopup, setNewOrderPopup] = useState(null);
   const [user, setUser] = useState(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const getUser = async () => {
@@ -111,7 +112,7 @@ export default function DashboardAdminLayout() {
             <NavItem icon={LayoutDashboard} label="Dashboard" to="/admin" active={isActive("/admin")} />
             <NavItem
               icon={Truck}
-              label="Missions"
+              label="Suivi des Missions"
               badge={activeCount > 0 ? activeCount : null}
               to="/admin/orders"
               active={isActive("/admin/orders")}
@@ -154,11 +155,71 @@ export default function DashboardAdminLayout() {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-y-auto p-4 md:p-8 lg:p-10 relative">
-        <div className="mx-auto max-w-7xl">
+      <div className="flex-1 flex flex-col min-w-0">
+        {/* Mobile Header */}
+        <header className="sticky top-0 z-40 bg-white border-b border-slate-100 p-4 flex items-center justify-between lg:hidden shadow-sm">
+          <div className="flex items-center gap-2">
+            <Logo size="sm" />
+            <span className="text-[10px] font-black tracking-widest text-[#ed5518] uppercase">Admin</span>
+          </div>
+          <button
+            onClick={() => setIsMobileMenuOpen(true)}
+            className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-900 text-white shadow-xl transition-all active:scale-90"
+            aria-label="Ouvrir le menu"
+          >
+            <Menu size={24} strokeWidth={2.5} />
+          </button>
+        </header>
+
+        {/* Custom Mobile Menu Overseas */}
+        {isMobileMenuOpen && (
+          <div className="fixed inset-0 z-[100] lg:hidden">
+            <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={() => setIsMobileMenuOpen(false)} />
+            <div className="absolute left-0 top-0 bottom-0 w-72 bg-white shadow-2xl flex flex-col p-6 animate-in slide-in-from-left duration-300">
+              <div className="mb-8 flex flex-col items-center relative">
+                <button 
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="absolute -right-2 -top-2 p-2 text-slate-400 hover:text-slate-900 transition-colors"
+                >
+                  <X size={20} />
+                </button>
+                <Logo size="lg" />
+                <span className="text-[10px] font-black tracking-[0.3em] text-[#ed5518] uppercase mt-2">Plateforme Admin</span>
+              </div>
+              <nav className="space-y-1 overflow-y-auto flex-1">
+                <NavItem icon={LayoutDashboard} label="Dashboard" to="/admin" active={isActive("/admin")} onClick={() => setIsMobileMenuOpen(false)} />
+                <NavItem
+                  icon={Truck}
+                  label="Suivi des Missions"
+                  badge={activeCount > 0 ? activeCount : null}
+                  to="/admin/orders"
+                  active={isActive("/admin/orders")}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                />
+                <NavItem icon={Users} label="Livreurs" to="/admin/drivers" active={isActive("/admin/drivers")} onClick={() => setIsMobileMenuOpen(false)} />
+                <NavItem icon={FileText} label="Facturation" to="/admin/invoices" active={isActive("/admin/invoices")} onClick={() => setIsMobileMenuOpen(false)} />
+                <NavItem icon={Users} label="Comptes Clients" to="/admin/clients" active={isActive("/admin/clients")} onClick={() => setIsMobileMenuOpen(false)} />
+                <NavItem icon={MessageSquare} label="Support" to="/admin/chat" active={isActive("/admin/chat")} onClick={() => setIsMobileMenuOpen(false)} />
+              </nav>
+              <div className="mt-8 pt-6 border-t border-slate-100">
+                <button
+                  onClick={() => { handleLogout(); setIsMobileMenuOpen(false); }}
+                  className="flex w-full items-center gap-3 rounded-2xl px-6 py-4 text-sm font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 transition-all font-sans"
+                >
+                  <LogOut size={18} />
+                  <span>Déconnexion</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <main className="flex-1 overflow-y-auto p-4 md:p-8 lg:p-10 relative">
+          <div className="mx-auto max-w-7xl">
           <Outlet />
         </div>
       </main>
+    </div>
 
       {/* New Order Notification Popup - Even more Premium */}
       {newOrderPopup && (
@@ -218,7 +279,7 @@ export default function DashboardAdminLayout() {
   );
 }
 
-function NavItem({ icon: IconComponent, label, active, badge, to }) {
+function NavItem({ icon: IconComponent, label, active, badge, to, onClick }) {
   const classes = `group relative flex w-full items-center justify-between rounded-xl px-4 py-3 text-sm font-bold transition-all duration-200 ${active
     ? "bg-slate-900 text-white shadow-xl shadow-slate-900/10"
     : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
@@ -227,7 +288,7 @@ function NavItem({ icon: IconComponent, label, active, badge, to }) {
   const Icon = IconComponent;
 
   return (
-    <Link to={to} className={classes}>
+    <Link to={to} className={classes} onClick={onClick}>
       <div className="flex items-center gap-3.5">
         {Icon ? (
           <Icon size={18} className={`transition-all duration-300 ${active ? "text-[#ed5518] scale-110" : "group-hover:scale-110"}`} />
