@@ -48,10 +48,10 @@ export default function PublicHeader() {
 
         {/* Mobile Menu Button */}
         <button
-          className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/5 text-white transition-colors hover:bg-white/10 md:hidden"
+          className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#ed5518] text-white shadow-lg transition-transform active:scale-95 md:hidden"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
-          {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
+          {isMenuOpen ? <X size={24} strokeWidth={3} /> : <Menu size={24} strokeWidth={3} />}
         </button>
       </div>
 
