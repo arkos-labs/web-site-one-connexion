@@ -1,29 +1,5 @@
-// ============================================
-// SKELETON LOADERS - COMPOSANTS RÉUTILISABLES
-// ============================================
-// Composants de chargement élégants pour améliorer l'UX
-// Pendant le chargement des données
-
-import { cn } from '@/lib/utils';
-
-// ============================================
-// SKELETON DE BASE
-// ============================================
-
-interface SkeletonProps {
-    className?: string;
-}
-
-export function Skeleton({ className }: SkeletonProps) {
-    return (
-        <div
-            className={cn(
-                'animate-pulse rounded-md bg-slate-200 dark:bg-slate-800',
-                className
-            )}
-        />
-    );
-}
+import { Skeleton } from "./skeleton";
+import { cn } from "@/lib/utils";
 
 // ============================================
 // SKELETON POUR CARTE DE COMMANDE
@@ -31,7 +7,7 @@ export function Skeleton({ className }: SkeletonProps) {
 
 export function OrderCardSkeleton() {
     return (
-        <div className="border rounded-lg p-4 space-y-3 bg-white">
+        <div className="border rounded-lg p-4 space-y-3 bg-white shadow-sm border-slate-100">
             {/* Header */}
             <div className="flex items-center justify-between">
                 <Skeleton className="h-5 w-32" />
@@ -41,19 +17,19 @@ export function OrderCardSkeleton() {
             {/* Addresses */}
             <div className="space-y-2">
                 <div className="flex items-start gap-2">
-                    <Skeleton className="h-2 w-2 rounded-full mt-1" />
+                    <Skeleton className="h-2 w-2 rounded-full mt-1 bg-slate-300" />
                     <Skeleton className="h-4 w-full" />
                 </div>
                 <div className="flex items-start gap-2">
-                    <Skeleton className="h-2 w-2 rounded-full mt-1" />
+                    <Skeleton className="h-2 w-2 rounded-full mt-1 bg-[#ed5518]/30" />
                     <Skeleton className="h-4 w-full" />
                 </div>
             </div>
 
             {/* Footer */}
-            <div className="flex items-center justify-between pt-2 border-t">
+            <div className="flex items-center justify-between pt-2 border-t border-slate-50">
                 <Skeleton className="h-6 w-16" />
-                <Skeleton className="h-8 w-24 rounded" />
+                <Skeleton className="h-8 w-24 rounded-xl" />
             </div>
         </div>
     );
@@ -65,7 +41,7 @@ export function OrderCardSkeleton() {
 
 export function DriverCardSkeleton() {
     return (
-        <div className="border rounded-lg p-4 space-y-3 bg-white">
+        <div className="border rounded-2xl p-4 space-y-3 bg-white shadow-sm border-slate-100">
             {/* Avatar + Name */}
             <div className="flex items-center gap-3">
                 <Skeleton className="h-12 w-12 rounded-full" />
@@ -77,7 +53,7 @@ export function DriverCardSkeleton() {
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-2 gap-2 pt-2 border-t">
+            <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-50">
                 <div className="space-y-1">
                     <Skeleton className="h-3 w-16" />
                     <Skeleton className="h-4 w-12" />
@@ -89,7 +65,7 @@ export function DriverCardSkeleton() {
             </div>
 
             {/* Action */}
-            <Skeleton className="h-9 w-full rounded" />
+            <Skeleton className="h-10 w-full rounded-xl" />
         </div>
     );
 }
@@ -107,7 +83,7 @@ export function TableSkeleton({ rows = 5, columns = 4 }: TableSkeletonProps) {
     return (
         <div className="space-y-3">
             {/* Header */}
-            <div className="flex gap-4 pb-3 border-b">
+            <div className="flex gap-4 pb-3 border-b border-slate-100">
                 {Array.from({ length: columns }).map((_, i) => (
                     <Skeleton key={i} className="h-4 flex-1" />
                 ))}
@@ -115,9 +91,9 @@ export function TableSkeleton({ rows = 5, columns = 4 }: TableSkeletonProps) {
 
             {/* Rows */}
             {Array.from({ length: rows }).map((_, rowIndex) => (
-                <div key={rowIndex} className="flex gap-4 py-3 border-b">
+                <div key={rowIndex} className="flex gap-4 py-3 border-b border-slate-50 last:border-0">
                     {Array.from({ length: columns }).map((_, colIndex) => (
-                        <Skeleton key={colIndex} className="h-4 flex-1" />
+                        <Skeleton key={colIndex} className="h-4 flex-1 opacity-60" />
                     ))}
                 </div>
             ))}
@@ -131,10 +107,10 @@ export function TableSkeleton({ rows = 5, columns = 4 }: TableSkeletonProps) {
 
 export function StatCardSkeleton() {
     return (
-        <div className="border rounded-lg p-6 space-y-3 bg-white">
+        <div className="border rounded-2xl p-6 space-y-3 bg-white shadow-sm border-slate-100">
             <div className="flex items-center justify-between">
                 <Skeleton className="h-4 w-24" />
-                <Skeleton className="h-8 w-8 rounded" />
+                <Skeleton className="h-10 w-10 rounded-xl" />
             </div>
             <Skeleton className="h-8 w-32" />
             <Skeleton className="h-3 w-40" />
@@ -154,13 +130,13 @@ export function ListSkeleton({ items = 3 }: ListSkeletonProps) {
     return (
         <div className="space-y-3">
             {Array.from({ length: items }).map((_, i) => (
-                <div key={i} className="flex items-center gap-3 p-3 border rounded-lg">
+                <div key={i} className="flex items-center gap-3 p-4 border rounded-2xl bg-white border-slate-100 shadow-sm">
                     <Skeleton className="h-10 w-10 rounded-full" />
                     <div className="flex-1 space-y-2">
                         <Skeleton className="h-4 w-3/4" />
                         <Skeleton className="h-3 w-1/2" />
                     </div>
-                    <Skeleton className="h-8 w-20 rounded" />
+                    <Skeleton className="h-8 w-20 rounded-xl" />
                 </div>
             ))}
         </div>
@@ -174,20 +150,21 @@ export function ListSkeleton({ items = 3 }: ListSkeletonProps) {
 interface CardGridSkeletonProps {
     cards?: number;
     columns?: number;
+    className?: string;
 }
 
-export function CardGridSkeleton({ cards = 6, columns = 3 }: CardGridSkeletonProps) {
+export function CardGridSkeleton({ cards = 6, columns = 3, className }: CardGridSkeletonProps) {
     return (
-        <div className={`grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-${columns}`}>
+        <div className={cn(`grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-${columns}`, className)}>
             {Array.from({ length: cards }).map((_, i) => (
-                <div key={i} className="border rounded-lg p-4 space-y-3 bg-white">
-                    <Skeleton className="h-40 w-full rounded" />
+                <div key={i} className="border rounded-2xl p-4 space-y-3 bg-white border-slate-100 shadow-sm">
+                    <Skeleton className="h-40 w-full rounded-xl" />
                     <Skeleton className="h-5 w-3/4" />
                     <Skeleton className="h-4 w-full" />
                     <Skeleton className="h-4 w-2/3" />
                     <div className="flex gap-2 pt-2">
-                        <Skeleton className="h-8 flex-1 rounded" />
-                        <Skeleton className="h-8 w-20 rounded" />
+                        <Skeleton className="h-9 flex-1 rounded-xl" />
+                        <Skeleton className="h-9 w-20 rounded-xl" />
                     </div>
                 </div>
             ))}
@@ -202,20 +179,17 @@ export function CardGridSkeleton({ cards = 6, columns = 3 }: CardGridSkeletonPro
 export function DispatchKanbanSkeleton() {
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-4">
-            {/* 4 colonnes */}
             {Array.from({ length: 4 }).map((_, colIndex) => (
-                <div key={colIndex} className="border rounded-lg overflow-hidden">
-                    {/* Header */}
-                    <div className="p-3 border-b bg-slate-50">
+                <div key={colIndex} className="border rounded-3xl overflow-hidden border-slate-100 bg-slate-50/30">
+                    <div className="p-4 border-b bg-slate-50/50">
                         <div className="flex items-center justify-between">
                             <Skeleton className="h-5 w-32" />
                             <Skeleton className="h-6 w-8 rounded-full" />
                         </div>
                     </div>
 
-                    {/* Cards */}
-                    <div className="p-3 space-y-3">
-                        {Array.from({ length: 3 }).map((_, cardIndex) => (
+                    <div className="p-4 space-y-4">
+                        {Array.from({ length: 2 }).map((_, cardIndex) => (
                             <OrderCardSkeleton key={cardIndex} />
                         ))}
                     </div>
@@ -232,7 +206,6 @@ export function DispatchKanbanSkeleton() {
 export function ProfileSkeleton() {
     return (
         <div className="space-y-6">
-            {/* Header */}
             <div className="flex items-center gap-4">
                 <Skeleton className="h-24 w-24 rounded-full" />
                 <div className="flex-1 space-y-2">
@@ -242,84 +215,92 @@ export function ProfileSkeleton() {
                 </div>
             </div>
 
-            {/* Sections */}
             <div className="space-y-4">
                 <Skeleton className="h-5 w-32" />
                 <div className="grid grid-cols-2 gap-4">
-                    <Skeleton className="h-10 w-full" />
-                    <Skeleton className="h-10 w-full" />
+                    <Skeleton className="h-12 w-full rounded-xl" />
+                    <Skeleton className="h-12 w-full rounded-xl" />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
-                    <Skeleton className="h-10 w-full" />
-                    <Skeleton className="h-10 w-full" />
+                    <Skeleton className="h-12 w-full rounded-xl" />
+                    <Skeleton className="h-12 w-full rounded-xl" />
                 </div>
             </div>
 
-            {/* Actions */}
             <div className="flex gap-3">
-                <Skeleton className="h-10 w-32 rounded" />
-                <Skeleton className="h-10 w-24 rounded" />
+                <Skeleton className="h-11 w-32 rounded-xl" />
+                <Skeleton className="h-11 w-24 rounded-xl" />
             </div>
         </div>
     );
 }
 
 // ============================================
-// EXEMPLES D'UTILISATION
+// VARIANTES GLOBALES (Ex-SkeletonVariants)
 // ============================================
 
-/*
-// Dans un composant avec chargement
-function OrdersList() {
-  const { data: orders, isLoading } = useOrders();
+interface CardSkeletonProps {
+    hasHeader?: boolean;
+    hasIcon?: boolean;
+    lines?: number;
+}
 
-  if (isLoading) {
+export const CardSkeleton = ({ hasHeader = true, hasIcon = true, lines = 3 }: CardSkeletonProps) => {
     return (
-      <div className="space-y-3">
-        <OrderCardSkeleton />
-        <OrderCardSkeleton />
-        <OrderCardSkeleton />
-      </div>
+        <div className="p-6 bg-white rounded-3xl shadow-sm border border-slate-100">
+            {hasHeader && (
+                <div className="flex items-center gap-4 mb-4">
+                    {hasIcon && <Skeleton className="w-12 h-12 rounded-xl" />}
+                    <div className="flex-1 space-y-2">
+                        <Skeleton className="h-4 w-24" />
+                        <Skeleton className="h-6 w-32" />
+                    </div>
+                </div>
+            )}
+            <div className="space-y-2">
+                {Array.from({ length: lines }).map((_, i) => (
+                    <Skeleton key={i} className="h-4" style={{ width: `${100 - i * 15}%` }} />
+                ))}
+            </div>
+        </div>
     );
-  }
+};
 
-  return (
-    <div className="space-y-3">
-      {orders.map(order => (
-        <OrderCard key={order.id} order={order} />
-      ))}
-    </div>
-  );
-}
-
-// Avec grille
-function Dashboard() {
-  const { data, isLoading } = useStats();
-
-  if (isLoading) {
+export const StatsSkeleton = ({ count = 4 }: { count?: number }) => {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCardSkeleton />
-        <StatCardSkeleton />
-        <StatCardSkeleton />
-        <StatCardSkeleton />
-      </div>
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            {Array.from({ length: count }).map((_, i) => (
+                <CardSkeleton key={i} lines={1} />
+            ))}
+        </div>
     );
-  }
+};
 
-  return <StatsGrid data={data} />;
-}
+export const DashboardSkeleton = () => {
+    return (
+        <div className="space-y-6">
+            <StatsSkeleton count={4} />
+            <div className="grid gap-6 lg:grid-cols-2">
+                <CardSkeleton lines={5} />
+                <CardSkeleton lines={5} />
+            </div>
+            <div className="p-6 bg-white rounded-3xl shadow-sm border border-slate-100">
+                <Skeleton className="h-6 w-40 mb-4" />
+                <TableSkeleton rows={5} columns={6} />
+            </div>
+        </div>
+    );
+};
 
-// Dispatch Kanban
-function Dispatch() {
-  const { isLoading } = useOrders();
-
-  if (isLoading) {
-    return <DispatchKanbanSkeleton />;
-  }
-
-  return <DispatchKanban />;
-}
-*/
-
-
+export const OrdersTableSkeleton = () => {
+    return (
+        <div className="p-6 bg-white rounded-3xl shadow-sm border border-slate-100">
+            <div className="flex gap-4 mb-6">
+                <Skeleton className="h-12 flex-1 max-w-xs rounded-xl" />
+                <Skeleton className="h-12 w-40 rounded-xl" />
+                <Skeleton className="h-12 w-40 rounded-xl" />
+            </div>
+            <TableSkeleton rows={8} columns={8} />
+        </div>
+    );
+};

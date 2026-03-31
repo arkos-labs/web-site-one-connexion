@@ -1,13 +1,21 @@
 import React, { useRef, useEffect, useState } from 'react';
 
-export default function SignaturePad({ onSave, onClear }) {
-    const canvasRef = useRef(null);
+interface SignaturePadProps {
+    onSave: (dataUrl: string) => void;
+    onClear?: () => void;
+}
+
+export default function SignaturePad({ onSave, onClear }: SignaturePadProps) {
+    const canvasRef = useRef<HTMLCanvasElement>(null);
     const [isDrawing, setIsDrawing] = useState(false);
     const [hasSignature, setHasSignature] = useState(false);
 
     useEffect(() => {
         const canvas = canvasRef.current;
+        if (!canvas) return;
+        
         const ctx = canvas.getContext('2d');
+        if (!ctx) return;
 
         // Setup for high quality lines
         ctx.strokeStyle = '#0f172a';
@@ -17,7 +25,9 @@ export default function SignaturePad({ onSave, onClear }) {
 
         // Handle resize
         const resizeCanvas = () => {
-            const rect = canvas.parentElement.getBoundingClientRect();
+            const parent = canvas.parentElement;
+            if (!parent) return;
+            const rect = parent.getBoundingClientRect();
             canvas.width = rect.width;
             canvas.height = rect.height;
             // Re-setup after resize
@@ -32,34 +42,46 @@ export default function SignaturePad({ onSave, onClear }) {
         return () => window.removeEventListener('resize', resizeCanvas);
     }, []);
 
-    const getCoordinates = (e) => {
+    const getCoordinates = (e: any) => {
         const canvas = canvasRef.current;
+        if (!canvas) return { x: 0, y: 0 };
         const rect = canvas.getBoundingClientRect();
-        if (e.touches && e.touches[0]) {
-            return {
-                x: e.touches[0].clientX - rect.left,
-                y: e.touches[0].clientY - rect.top
-            };
-        }
+        
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
         return {
-            x: e.clientX - rect.left,
-            y: e.clientY - rect.top
+            x: clientX - rect.left,
+            y: clientY - rect.top
         };
     };
 
-    const startDrawing = (e) => {
+    const startDrawing = (e: any) => {
         const { x, y } = getCoordinates(e);
-        const ctx = canvasRef.current.getContext('2d');
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+        
         ctx.beginPath();
         ctx.moveTo(x, y);
         setIsDrawing(true);
     };
 
-    const draw = (e) => {
+    const draw = (e: any) => {
         if (!isDrawing) return;
-        e.preventDefault(); // Prevent scrolling while signing
+        
+        // Prevent scrolling if it's a touch event
+        if (e.touches) {
+            e.preventDefault();
+        }
+
         const { x, y } = getCoordinates(e);
-        const ctx = canvasRef.current.getContext('2d');
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
         ctx.lineTo(x, y);
         ctx.stroke();
         setHasSignature(true);
@@ -67,14 +89,18 @@ export default function SignaturePad({ onSave, onClear }) {
 
     const stopDrawing = () => {
         setIsDrawing(false);
-        if (hasSignature) {
-            onSave(canvasRef.current.toDataURL('image/png'));
+        const canvas = canvasRef.current;
+        if (hasSignature && canvas) {
+            onSave(canvas.toDataURL('image/png'));
         }
     };
 
     const clear = () => {
         const canvas = canvasRef.current;
+        if (!canvas) return;
         const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         setHasSignature(false);
         if (onClear) onClear();

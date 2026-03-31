@@ -1,5 +1,5 @@
 import { OrderFormData } from "../OrderWizardModal";
-import { AddressAutocomplete } from "@/components/ui/AddressAutocomplete";
+import { AddressAutocomplete } from "@/components/shared/AddressAutocomplete";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";

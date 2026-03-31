@@ -25,7 +25,7 @@ import { loadPricingConfigCached } from "@/utils/pricingConfigLoader";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { OrderSummary } from "@/components/orders/OrderSummary";
 import { useNavigate } from "react-router-dom";
-import { AddressAutocomplete } from "@/components/ui/AddressAutocomplete";
+import { AddressAutocomplete } from "@/components/shared/AddressAutocomplete";
 import type { AddressSuggestion } from "@/lib/autocomplete";
 
 export function PriceSimulator() {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Camera, PenTool, X, Check, Loader2 } from 'lucide-react';
-import SignaturePad from '../ui/SignaturePad.jsx';
+import SignaturePad from '../shared/SignaturePad.jsx';
 import { uploadProofFile, updateOrderProof } from '../../services/driverOrderActions';
 
 export default function ProofModal({ isOpen, onClose, orderId, type, onComplete }) {

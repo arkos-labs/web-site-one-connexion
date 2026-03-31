@@ -5,7 +5,7 @@ import { Search, Info, X, ChevronRight, MapPin, Loader2, List } from "lucide-rea
 import { Button } from "@/components/ui/button";
 import { TARIFS_BONS, TarifVille } from "@/data/tarifs_idf";
 import { supabase } from "@/lib/supabase";
-import { AddressAutocomplete } from "@/components/ui/AddressAutocomplete";
+import { AddressAutocomplete } from "@/components/shared/AddressAutocomplete";
 
 // Hook personnalisé pour charger les données (Local + DB)
 const usePricingData = () => {
