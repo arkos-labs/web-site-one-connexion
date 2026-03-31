@@ -157,17 +157,20 @@ export default function DashboardAdminLayout() {
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Mobile Header */}
-        <header className="sticky top-0 z-40 bg-white border-b border-slate-100 p-4 flex items-center justify-between lg:hidden shadow-sm">
-          <div className="flex items-center gap-2">
+        <header className="sticky top-0 z-40 bg-white border-b border-slate-100 px-6 py-4 flex items-center justify-between lg:hidden shadow-sm">
+          <div className="flex items-center gap-3">
             <Logo size="sm" />
-            <span className="text-[10px] font-black tracking-widest text-[#ed5518] uppercase">Admin</span>
+            <div className="flex flex-col">
+              <span className="text-[10px] font-black tracking-[0.2em] text-[#ed5518] uppercase leading-none">Admin</span>
+              <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest mt-1">Plateforme</span>
+            </div>
           </div>
           <button
             onClick={() => setIsMobileMenuOpen(true)}
-            className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-900 text-white shadow-xl transition-all active:scale-90"
+            className="flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-900 text-white shadow-xl transition-all active:scale-90"
             aria-label="Ouvrir le menu"
           >
-            <Menu size={24} strokeWidth={2.5} />
+            <Menu size={22} strokeWidth={2.5} />
           </button>
         </header>
 
