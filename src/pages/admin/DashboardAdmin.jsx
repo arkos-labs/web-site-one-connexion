@@ -129,9 +129,13 @@ export default function DashboardAdmin() {
           </div>
           <h1 className="text-4xl font-black text-slate-900 lg:text-5xl">Tableau de bord 👋</h1>
         </div>
-        <div className="flex gap-3">
-          <button onClick={() => setOpen(true)} className="flex items-center gap-2 rounded-2xl bg-[#ed5518] px-5 py-3 text-sm font-black text-white shadow-lg shadow-primary/20 hover:-translate-y-0.5 transition-all"><Plus size={18} /> Nouvelle mission</button>
-          <button onClick={() => navigate('/admin/orders')} className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-700 hover:bg-slate-50">Toutes les missions <ArrowRight size={16} /></button>
+        <div className="flex flex-wrap gap-3">
+          <button onClick={() => setOpen(true)} className="flex-1 min-w-[160px] flex items-center justify-center gap-2 rounded-2xl bg-[#ed5518] px-5 py-4 text-sm font-black text-white shadow-lg shadow-primary/20 hover:-translate-y-0.5 transition-all">
+            <Plus size={18} /> Nouvelle mission
+          </button>
+          <button onClick={() => navigate('/admin/orders')} className="flex-1 min-w-[160px] flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-4 text-sm font-bold text-slate-700 hover:bg-slate-50">
+            Suivi des missions <ArrowRight size={16} />
+          </button>
         </div>
       </header>
       <KpiSection kpis={kpis} driversCount={drivers.length} />

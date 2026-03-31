@@ -12,7 +12,21 @@ const STATUS_CONFIG = {
   cancelled: { label: "Annulé", cls: "bg-red-50 text-red-500 border-red-100" },
 };
 
-export function OperationsCenter({ orders, operationView, setOperationView, tabConfig, handleQuickAccept, openDispatch }) {
+export function OperationsCenter({ 
+  orders, 
+  operationView, 
+  setOperationView, 
+  tabConfig, 
+  handleQuickAccept, 
+  openDispatch 
+}: {
+  orders: any[],
+  operationView: string,
+  setOperationView: (v: string) => void,
+  tabConfig: Record<string, { label: string, icon: any, count: number, statuses: string[] }>,
+  handleQuickAccept: (id: string) => void,
+  openDispatch: (o: any) => void
+}) {
   const navigate = useNavigate();
   const filtered = orders.filter(o => tabConfig[operationView].statuses.includes(o.status));
 
@@ -23,7 +37,7 @@ export function OperationsCenter({ orders, operationView, setOperationView, tabC
           <h2 className="text-lg font-black text-slate-900">Suivi des Missions</h2>
           <p className="text-xs font-medium text-slate-400 uppercase tracking-widest mt-0.5">Live Dispatch Center</p>
         </div>
-        <div className="flex bg-slate-100 p-1.5 rounded-2xl gap-1">
+        <div className="flex bg-slate-100 p-1 rounded-2xl gap-1 overflow-x-auto no-scrollbar scroll-smooth">
           {Object.entries(tabConfig).map(([id, tab]) => (
             <button key={id} onClick={() => setOperationView(id)} className={`relative flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-black transition-all ${operationView === id ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}>
               <tab.icon size={13} className={operationView === id ? "text-[#ed5518]" : ""} /> {tab.label}
