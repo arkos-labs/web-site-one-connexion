@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { supabase } from "../../lib/supabase.js";
+import { supabase } from "../../lib/supabase";
 import { Mail, ArrowLeft, CheckCircle2, Loader2, ShieldCheck, RefreshCw } from "lucide-react";
 
 export default function ForgotPassword() {

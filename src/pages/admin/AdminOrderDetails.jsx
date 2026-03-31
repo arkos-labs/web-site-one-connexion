@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
-import { generateOrderPdf } from "../../lib/pdfGenerator";
+import { generateOrderPdf } from "../../lib/pdf-generator";
 import {
   Loader2, ArrowLeft, MapPin, Clock, Package, User, Phone,
   FileText, CheckCircle2, Truck, AlertTriangle, Save, ChevronRight
@@ -238,7 +238,7 @@ export default function AdminOrderDetails() {
             {order.status === 'delivered' && (
               <button
                 onClick={() => {
-                  import("../../lib/pdfGenerator").then(m => m.generateIndividualInvoicePdf(order, client));
+                  import("@/lib/pdf-generator").then(m => m.generateIndividualInvoicePdf(order, client));
                 }}
                 className="flex items-center gap-2 rounded-xl border border-indigo-200 bg-[#ed5518] px-4 py-2.5 text-xs font-bold text-[#ed5518] hover:bg-[#ed5518] transition-all shadow-sm"
               >

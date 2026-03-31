@@ -141,7 +141,7 @@ export default function OrderDetails() {
     const packageDims = order.package_description || String(gDims && gDims !== "undefined" ? gDims : "");
 
     const downloadPdf = async () => {
-      const { generateOrderPdf } = await import("../../lib/pdfGenerator");
+      const { generateOrderPdf } = await import("@/lib/pdf-generator");
       generateOrderPdf(order, client || order.client || {});
     };
 

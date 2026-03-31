@@ -82,7 +82,7 @@ export default function Invoices() {
   const downloadInvoice = async () => {
     if (!selected) return;
     const periodStr = new Date(selected.period_start).toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
-    const { generateInvoicePdf } = await import("../../lib/pdfGenerator");
+    const { generateInvoicePdf } = await import("../../lib/pdf-generator");
     generateInvoicePdf({ ...selected, period: periodStr }, orders, profile || {});
   };
 

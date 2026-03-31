@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "../../../lib/supabase";
-import { autocompleteAddress } from "../../../lib/autocomplete";
+import { supabase } from "@/lib/supabase";
+import { autocompleteAddress } from "@/lib/autocomplete";
 import { ArrowLeft, ArrowRight, MapPin, Package, ShieldCheck, Loader2 } from "lucide-react";
-import { useProfile } from "../../../hooks/useProfile";
-import { generateOrderPdf } from "../../../lib/pdfGenerator";
+import { useProfile } from "@/hooks/useProfile";
+import { generateOrderPdf } from "@/lib/pdf-generator";
 
 // Modular Components
 import { CourseStepper } from "./nouvelle-course/CourseStepper";

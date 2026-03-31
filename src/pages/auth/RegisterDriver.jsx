@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { UserPlus, Phone, Lock, Mail, User, ShieldCheck } from "lucide-react";
 import { useState } from "react";
-import { supabase } from "../../lib/supabase.js";
+import { supabase } from "../../lib/supabase";
 import PublicHeader from "../../components/PublicHeader.jsx";
 
 export default function RegisterDriver() {

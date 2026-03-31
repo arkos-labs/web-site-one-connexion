@@ -121,7 +121,7 @@ export default function AdminDriverDetails() {
   const handleDownloadListing = async () => {
     const periodLabel = from ? new Date(from).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' }) : "Période globale";
     const completedOrders = rows.filter(r => r.status === "delivered");
-    const { generateDriverStatementPdf } = await import("../../lib/pdfGenerator");
+    const { generateDriverStatementPdf } = await import("@/lib/pdf-generator");
     generateDriverStatementPdf(driver, completedOrders, periodLabel, computeDriverPay);
   };
 

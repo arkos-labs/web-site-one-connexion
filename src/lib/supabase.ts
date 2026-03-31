@@ -72,6 +72,11 @@ export interface Order {
     billing_company?: string;
     billing_siret?: string;
     sender_email?: string;
+    scheduled_at?: string;
+    pickup_city?: string;
+    delivery_city?: string;
+    distance_km?: number;
+    price_ht?: number;
 }
 
 export interface Invoice {

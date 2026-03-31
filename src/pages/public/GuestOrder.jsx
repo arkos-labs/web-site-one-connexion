@@ -8,12 +8,12 @@ import PublicFooter from "../../components/PublicFooter.jsx";
 import { ArrowLeft, ArrowRight, MapPin, Package, User, ShieldCheck, Loader2 } from "lucide-react";
 
 // Modular Components
-import { Stepper } from "./guest-order/Stepper";
-import { OrderSuccess } from "./guest-order/OrderSuccess";
-import { Step1Trajet } from "./guest-order/Step1Trajet";
-import { Step2Details } from "./guest-order/Step2Details";
-import { Step3Contact } from "./guest-order/Step3Contact";
-import { Step4Resume } from "./guest-order/Step4Resume";
+import { Stepper } from "../guest-order/Stepper";
+import { OrderSuccess } from "../guest-order/OrderSuccess";
+import { Step1Trajet } from "../guest-order/Step1Trajet";
+import { Step2Details } from "../guest-order/Step2Details";
+import { Step3Contact } from "../guest-order/Step3Contact";
+import { Step4Resume } from "../guest-order/Step4Resume";
 
 const getPostcode = (str = "") => str.match(/\b\d{5}\b/)?.[0] || "";
 

@@ -620,7 +620,7 @@ export default function Orders() {
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        import("../../lib/pdfGenerator").then(m => m.generateOrderPdf(order, profile || {}));
+                        import("@/lib/pdf-generator").then(m => m.generateOrderPdf(order, profile || {}));
                       }}
                       className="flex items-center gap-2 rounded-full bg-slate-900 px-3 py-1.5 text-[10px] font-bold text-white shadow-sm ring-1 ring-slate-900 transition-all hover:bg-white hover:text-slate-900 active:scale-95"
                     >

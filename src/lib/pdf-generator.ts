@@ -19,7 +19,12 @@ interface ClientInfo {
 
 interface DriverInfo {
     id: string;
-    email?: string;
+    sender_email?: string;
+    scheduled_at?: string;
+    pickup_city?: string;
+    delivery_city?: string;
+    distance_km?: number;
+    price_ht?: number;
     details?: {
         full_name?: string;
         phone_number?: string;
@@ -186,7 +191,7 @@ export const generateOrderPDF = (order: Order, clientInfo: ClientInfo) => {
 /**
  * Generates an Invoice for a Client
  */
-export const generateInvoicePDF = (invoice: Invoice, clientInfo: ClientInfo) => {
+export const generateInvoicePDF = (invoice: any, clientInfo: ClientInfo, orders: any[] = []) => {
     const doc = new jsPDF({ unit: "pt", format: "a4" });
     const pageW = 595;
     const pageH = 842;
@@ -396,3 +401,9 @@ export const generateDriverInvoicePdf = (driver: DriverInfo, orders: Order[], pe
 export const generateIndividualInvoicePdf = (order: Order, clientInfo: ClientInfo) => {
     generateOrderPDF(order, clientInfo);
 };
+
+// Aliases for camelCase support
+export const generateOrderPdf = generateOrderPDF;
+export const generateInvoicePdf = generateInvoicePDF;
+export const downloadInvoicePdf = generateInvoicePDF;
+export const downloadOrderPdf = generateOrderPDF;

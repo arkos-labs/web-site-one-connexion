@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { supabase } from "../../lib/supabase";
-import { downloadInvoicePdf, downloadOrderPdf } from "./adminPdf.js";
+import { generateInvoicePDF, generateOrderPDF } from "@/lib/pdf-generator";
 import {
   Loader2, Download, CheckCircle2, ChevronRight,
   FileText, User, Calendar, TrendingUp
