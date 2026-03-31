@@ -6,6 +6,7 @@ import {
     Eye, EyeOff, ArrowRight, CheckCircle2, Building2, User,
     Mail, Phone, MapPin, Lock, Loader2, ShieldCheck
 } from "lucide-react";
+import Logo from "../../components/ui/Logo";
 
 const BENEFITS = [
     "Dashboard de gestion des commandes",
@@ -124,10 +125,7 @@ export default function Register() {
                 </div>
 
                 {/* Logo */}
-                <Link to="/" className="relative z-10 flex items-center gap-3">
-                    <div className="grid h-10 w-10 place-items-center rounded-xl bg-[#ed5518] text-white text-sm font-black shadow-lg">OC</div>
-                    <span className="text-xl font-black text-white tracking-tight">One Connexion</span>
-                </Link>
+                <Logo variant="light" size="lg" className="relative z-10" />
 
                 {/* Content */}
                 <div className="relative z-10 space-y-10">
@@ -173,10 +171,7 @@ export default function Register() {
             <div className="flex w-full flex-col bg-white overflow-y-auto lg:w-[58%]">
                 <div className="mx-auto w-full max-w-xl px-6 py-12 lg:px-12">
                     {/* Mobile logo */}
-                    <Link to="/" className="flex items-center gap-3 mb-10 lg:hidden">
-                        <div className="grid h-9 w-9 place-items-center rounded-xl bg-[#ed5518] text-white text-sm font-black">OC</div>
-                        <span className="text-lg font-black text-slate-900">One Connexion</span>
-                    </Link>
+                    <Logo size="md" className="flex items-center gap-3 mb-10 lg:hidden" />
 
                     <div className="mb-10">
                         <h1 className="text-3xl font-black text-slate-900 tracking-tight">Créer un compte pro</h1>

@@ -26,7 +26,7 @@ export const Logo = ({
     return (
         <Link to="/" className={cn("flex flex-col group", className)}>
             <img
-                src={isLightLogo ? "/logos/one-connexion-light.png" : "/logos/one-connexion-official.png"}
+                src={isLightLogo ? "/logos/one-connexion-light.png" : "/logos/ONECONNEXION-04.png"}
                 alt="One Connexion"
                 className={cn(
                     "h-auto object-contain transition-transform group-hover:scale-105",
