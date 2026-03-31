@@ -42,7 +42,7 @@ export default function DashboardClient() {
   };
 
   const downloadOrder = async (order) => {
-    const { generateOrderPdf } = await import("../../lib/pdfGenerator");
+    const { generateOrderPdf } = await import("../../lib/pdf-generator");
     await generateOrderPdf(order, profile || {});
   };
 

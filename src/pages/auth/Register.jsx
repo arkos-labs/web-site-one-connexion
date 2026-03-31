@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { supabase } from "../../lib/supabase.js";
+import { supabase } from "../../lib/supabase";
 import { fetchSiret } from "../../lib/siret.js";
 import {
     Eye, EyeOff, ArrowRight, CheckCircle2, Building2, User,

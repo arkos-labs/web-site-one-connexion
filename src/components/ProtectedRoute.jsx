@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-import { supabase } from "../lib/supabase.js";
+import { supabase } from "../lib/supabase";
 import { DashboardLoading } from "./ui/DashboardLoading";
 
 const ADMIN_ROLES = new Set(["admin", "super_admin", "dispatcher"]);

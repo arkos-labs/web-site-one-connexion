@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { supabase } from "../../lib/supabase.js";
-import { generateOrderPdf } from "../../lib/pdfGenerator";
+import { supabase } from "../../lib/supabase";
+import { generateOrderPdf } from "../../lib/pdf-generator";
 import { autocompleteAddress } from "../../lib/autocomplete";
 import PublicHeader from "../../components/PublicHeader.jsx";
 import PublicFooter from "../../components/PublicFooter.jsx";

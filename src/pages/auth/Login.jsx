@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { supabase } from "../../lib/supabase.js";
+import { supabase } from "../../lib/supabase";
 import { Logo } from "@/components/ui/Logo";
 import { Eye, EyeOff, ArrowRight, CheckCircle2, Package, FileText, MessageSquare, Loader2 } from "lucide-react";
 
