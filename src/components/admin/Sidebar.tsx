@@ -145,11 +145,13 @@ export const Sidebar = ({ type, onClose }: SidebarProps) => {
 
     // Logic to determine display name and email
     const displayName = type === "client"
-        ? (profile?.company_name || user?.user_metadata?.company_name || profile?.first_name || user?.user_metadata?.first_name || "Client")
+        ? (profile?.details?.full_name || profile?.first_name || profile?.last_name 
+            ? `${profile.first_name || ''} ${profile.last_name || ''}`.trim() 
+            : user?.user_metadata?.full_name || user?.user_metadata?.contact_name || "Client")
         : "Administrateur";
 
     const displayEmail = type === "client"
-        ? (profile?.email || user?.email || "")
+        ? (profile?.details?.company || profile?.company_name || user?.user_metadata?.company || user?.user_metadata?.company_name || profile?.email || user?.email || "")
         : "admin@one-connexion.com";
 
     return (
@@ -231,10 +233,10 @@ export const Sidebar = ({ type, onClose }: SidebarProps) => {
                             <User className="h-4 w-4 text-[#D4AF37]" />
                         </div>
                         <div className="flex-1 min-w-0">
-                            <p className="font-medium text-white truncate group-hover:text-[#D4AF37] transition-colors text-sm">
+                            <p className="font-black text-white truncate uppercase tracking-tight text-sm group-hover:text-[#ed5518] transition-colors leading-tight mb-0.5">
                                 {displayName}
                             </p>
-                            <p className="text-xs text-gray-500 truncate">
+                            <p className="text-[10px] font-bold text-gray-500 truncate uppercase tracking-widest opacity-80">
                                 {displayEmail}
                             </p>
                         </div>

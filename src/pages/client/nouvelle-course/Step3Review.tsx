@@ -35,11 +35,35 @@ export function Step3Review({ form, price, calculatingPrice }) {
             <div className="text-[10px] text-slate-500 font-bold">{form.deliveryContact} • {form.deliveryPhone}</div>
           </div>
         </div>
-        <div className="pt-4 border-t border-slate-200 flex items-center gap-3">
-          <Package className="text-slate-400" size={18} />
-          <div className="text-xs font-bold text-slate-900">{form.packageType} {form.packageWeight ? `(Jusqu'à ${form.packageWeight} kg)` : ''}</div>
-          {form.packageDesc && <div className="text-xs text-slate-500 italic ml-auto max-w-[200px] truncate">{form.packageDesc}</div>}
+        <div className="grid md:grid-cols-2 gap-6 pt-4 border-t border-slate-200">
+          <div className="space-y-3">
+            <div className="text-[10px] font-black uppercase tracking-wider text-slate-400">Nature du transport</div>
+            <div className="flex items-center gap-3">
+              <Truck className="text-[#ed5518]" size={18} />
+              <div className="text-xs font-bold text-slate-900 capitalize">{form.vehicle} ({form.packageType})</div>
+            </div>
+            {form.packageWeight && (
+              <div className="flex items-center gap-3">
+                <Package className="text-slate-400" size={18} />
+                <div className="text-xs font-bold text-slate-900">Poids : {form.packageWeight} kg</div>
+              </div>
+            )}
+          </div>
+          <div className="space-y-3">
+            <div className="text-[10px] font-black uppercase tracking-wider text-slate-400">Détails colis</div>
+            <div className="text-xs text-slate-600 italic leading-relaxed">
+              {form.packageDesc || "Aucun descriptif fourni"}
+            </div>
+          </div>
         </div>
+        {form.deliveryScheduleNotes && (
+          <div className="pt-4 border-t border-slate-200">
+            <div className="text-[10px] font-black uppercase tracking-wider text-[#ed5518] mb-2">Note sur l'horaire de livraison</div>
+            <div className="text-xs font-semibold text-slate-900 p-3 bg-white rounded-xl border border-orange-100 italic">
+              « {form.deliveryScheduleNotes} »
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

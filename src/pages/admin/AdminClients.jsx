@@ -95,9 +95,9 @@ export default function AdminClients() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { icon: <Users size={18} />, iconBg: "bg-slate-100 text-slate-600", label: "Total clients", value: stats.total },
-          { icon: <TrendingUp size={18} />, iconBg: "bg-[#ed5518] text-[#ed5518]", label: "CA cumulé", value: `${stats.totalRevenue.toFixed(0)}€` },
+          { icon: <TrendingUp size={18} />, iconBg: "bg-emerald-50 text-emerald-600", label: "CA cumulé", value: `${stats.totalRevenue.toFixed(0)}€` },
           { icon: <AlertTriangle size={18} />, iconBg: "bg-rose-100 text-rose-600", label: "Risque élevé", value: stats.highRisk, alert: stats.highRisk > 0 },
-          { icon: <CheckCircle2 size={18} />, iconBg: "bg-[#ed5518] text-[#ed5518]", label: "Clients actifs", value: stats.activeMonth },
+          { icon: <CheckCircle2 size={18} />, iconBg: "bg-indigo-50 text-indigo-600", label: "Clients actifs", value: stats.activeMonth },
         ].map((kpi, i) => (
           <div key={i} className={`bg-white rounded-[2rem] p-5 border ${kpi.alert ? 'border-rose-100 ring-1 ring-rose-200' : 'border-slate-100'} shadow-sm hover:shadow-md transition-all`}>
             <div className={`h-9 w-9 rounded-xl mb-3 flex items-center justify-center ${kpi.iconBg}`}>{kpi.icon}</div>

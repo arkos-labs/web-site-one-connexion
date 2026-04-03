@@ -33,7 +33,6 @@ export default function PublicHeader() {
           <a href="/#features" className="hover:text-[#ed5518] transition-colors">Avantages</a>
           <a href="/#expertises" className="hover:text-[#ed5518] transition-colors">Secteurs</a>
           <a href="/#workflow" className="hover:text-[#ed5518] transition-colors">Solution Logistique</a>
-          <Link to="/commande-sans-compte" className="hover:text-[#ed5518] transition-colors font-black text-[#ed5518]">Suivi de mission</Link>
           <Link to="/contact" className="hover:text-[#ed5518] transition-colors font-black">Contact</Link>
         </nav>
 
@@ -64,9 +63,6 @@ export default function PublicHeader() {
             <a href="/#features" className="hover:text-[#ed5518] transition-colors border-b border-white/5 pb-2" onClick={() => setIsMenuOpen(false)}>Avantages</a>
             <a href="/#expertises" className="hover:text-[#ed5518] transition-colors border-b border-white/5 pb-2" onClick={() => setIsMenuOpen(false)}>Secteurs</a>
             <a href="/#workflow" className="hover:text-[#ed5518] transition-colors border-b border-white/5 pb-2" onClick={() => setIsMenuOpen(false)}>Solution Logistique</a>
-            <Link to="/commande-sans-compte" className="hover:text-[#ed5518] transition-colors border-b border-white/5 pb-2 flex items-center justify-between" onClick={() => setIsMenuOpen(false)}>
-              Suivi de mission <span className="text-[10px] bg-[#ed5518] px-2 py-0.5 rounded text-white">Nouveau</span>
-            </Link>
             <Link to="/contact" className="hover:text-[#ed5518] transition-colors" onClick={() => setIsMenuOpen(false)}>Contact</Link>
 
             <hr className="my-2 border-white/10" />

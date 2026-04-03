@@ -4,15 +4,16 @@ export default function AdminOrdersKanban({
     drivers,
     openDecision,
     openDispatch,
-    derived
+    derived,
+    forceComplete
 }) {
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {[
                 { label: "Nouveaux", statuses: ["pending_acceptance", "pending"], color: "bg-rose-500", light: "bg-rose-50", text: "text-rose-600" },
-                { label: "Dispatch", statuses: ["accepted", "driver_refused", "assigned"], color: "bg-[#ed5518]", light: "bg-[#ed5518]", text: "text-[#ed5518]" },
+                { label: "Dispatch", statuses: ["accepted", "driver_refused", "assigned"], color: "bg-[#ed5518]", light: "bg-[#ed5518]/10", text: "text-[#ed5518]" },
                 { label: "En cours", statuses: ["assigned", "driver_accepted", "in_progress", "picked_up"], color: "bg-amber-500", light: "bg-amber-50", text: "text-amber-600" },
-                { label: "Livrées", statuses: ["delivered"], color: "bg-[#ed5518]", light: "bg-[#ed5518]", text: "text-[#ed5518]" },
+                { label: "Livrées", statuses: ["delivered"], color: "bg-emerald-500", light: "bg-emerald-50", text: "text-emerald-600" },
             ].map((col) => (
                 <div key={col.label} className="flex flex-col gap-4">
                     <div className="flex items-center justify-between px-2">
@@ -53,10 +54,10 @@ export default function AdminOrdersKanban({
                                         <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">BC-{o.id.slice(0, 8)}</span>
                                         <h4 className="text-base font-black text-slate-900 group-hover:text-[#ed5518] transition-colors line-clamp-1">{o.client}</h4>
                                         <span className={`mt-2 inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-black uppercase tracking-widest ${o.status === "assigned" ? "bg-amber-50 text-amber-700" :
-                                            o.status === "driver_accepted" ? "bg-[#ed5518] text-[#ed5518]" :
-                                                o.status === "in_progress" ? "bg-[#ed5518] text-[#ed5518]" :
-                                                    o.status === "delivered" ? "bg-slate-100 text-slate-600" :
-                                                        o.status === "accepted" ? "bg-[#ed5518] text-[#ed5518]" : "bg-slate-50 text-slate-500"
+                                            o.status === "driver_accepted" ? "bg-emerald-50 text-emerald-600" :
+                                                o.status === "in_progress" ? "bg-blue-50 text-blue-600" :
+                                                    o.status === "delivered" ? "bg-emerald-100 text-emerald-800" :
+                                                        o.status === "accepted" ? "bg-[#ed5518]/10 text-[#ed5518]" : "bg-slate-50 text-slate-500"
                                             }`}>
                                             {o.status === "assigned" ? (o.driver_id ? "EN ATTENTE RÉPONSE" : "REFUSÉ CHAUFFEUR ❌") :
                                                 o.status === "driver_accepted" ? "EN ROUTE ENLÈVEMENT ✅" :
@@ -113,12 +114,20 @@ export default function AdminOrdersKanban({
                                                 DISPATCH
                                             </button>
                                         ) : col.label === "En cours" ? (
-                                            <button
-                                                onClick={(e) => { e.stopPropagation(); openDispatch(o); }}
-                                                className="rounded-xl bg-slate-900 px-4 py-2 text-[10px] font-black text-white hover:bg-slate-800 transition-all uppercase tracking-widest shadow-lg shadow-slate-900/10 active:scale-95"
-                                            >
-                                                RÉASSIGNER
-                                            </button>
+                                            <div className="flex gap-2">
+                                                <button
+                                                    onClick={(e) => { e.stopPropagation(); openDispatch(o); }}
+                                                    className="rounded-xl bg-slate-900 px-4 py-2 text-[10px] font-black text-white hover:bg-slate-800 transition-all uppercase tracking-widest shadow-lg shadow-slate-900/10 active:scale-95"
+                                                >
+                                                    RÉASSIGNER
+                                                </button>
+                                                <button
+                                                    onClick={(e) => { e.stopPropagation(); forceComplete(o); }}
+                                                    className="rounded-xl bg-emerald-600 px-3 py-2 text-[10px] font-black text-white hover:bg-emerald-700 transition-all uppercase tracking-widest shadow-lg shadow-emerald-900/10 active:scale-95"
+                                                >
+                                                    FORCE LIVRER
+                                                </button>
+                                            </div>
                                         ) : (
                                             <span className="text-[10px] font-black text-[#ed5518] uppercase tracking-widest">LIVRÉ ✓</span>
                                         )}

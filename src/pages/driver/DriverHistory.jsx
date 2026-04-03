@@ -67,7 +67,7 @@ export default function DriverHistory() {
                 </div>
                 <span
                   className={`rounded-lg px-2 py-1 text-xs font-bold ${
-                    order.status === "delivered" ? "bg-[#ed5518] text-[#ed5518]" : "bg-rose-100 text-rose-700"
+                    order.status === "delivered" ? "bg-emerald-50 text-emerald-600" : "bg-rose-100 text-rose-700"
                   }`}
                 >
                   {order.status === "delivered" ? "Livrée" : "Annulée"}

@@ -4,11 +4,11 @@ import { Package, ArrowRight } from "lucide-react";
 const STATUS_CONFIG = {
   pending_acceptance: { label: "Nouveau", cls: "bg-rose-50 text-rose-600 border-rose-100" },
   pending: { label: "En attente", cls: "bg-rose-50 text-rose-600 border-rose-100" },
-  accepted: { label: "Validé", cls: "bg-[#ed5518] text-[#ed5518] border-indigo-100" },
+  accepted: { label: "Validé", cls: "bg-indigo-50 text-indigo-700 border-indigo-100" },
   assigned: { label: "Assigné", cls: "bg-amber-50 text-amber-700 border-amber-100" },
-  driver_accepted: { label: "Dispatché", cls: "bg-[#ed5518] text-[#ed5518] border-emerald-100" },
-  picked_up: { label: "Enlevé", cls: "bg-[#ed5518] text-[#ed5518] border-blue-100" },
-  delivered: { label: "Livré", cls: "bg-slate-100 text-slate-600 border-slate-200" },
+  driver_accepted: { label: "Dispatché", cls: "bg-orange-50 text-orange-700 border-orange-100" },
+  picked_up: { label: "Enlevé", cls: "bg-blue-50 text-blue-700 border-blue-100" },
+  delivered: { label: "Livré", cls: "bg-emerald-50 text-emerald-700 border-emerald-200" },
   cancelled: { label: "Annulé", cls: "bg-red-50 text-red-500 border-red-100" },
 };
 

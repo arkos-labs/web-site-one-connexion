@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Clock, Truck, Loader2 } from "lucide-react";
+import { Clock, Truck, Loader2, FileText } from "lucide-react";
 import { supabase } from "../../lib/supabase";
 import { autocompleteAddress } from "../../lib/autocomplete";
+import { generateOrderPdf } from "../../lib/pdf-generator";
 
 const VEHICLES = ["Moto", "Voiture"];
 const SERVICES = ["Normal", "Exclu", "Super"];
@@ -40,10 +41,10 @@ function statusColor(status) {
     case "pending_acceptance":
     case "pending": return "bg-slate-100 text-slate-600";
     case "accepted":
-    case "assigned": return "bg-[#ed5518] text-[#ed5518]";
+    case "assigned": return "bg-amber-50 text-amber-600";
     case "driver_accepted":
     case "in_progress": return "bg-orange-50 text-[#ed5518]";
-    case "delivered": return "bg-[#ed5518] text-[#ed5518]";
+    case "delivered": return "bg-emerald-50 text-emerald-600";
     case "cancelled": return "bg-red-50 text-red-600";
     default: return "bg-slate-100";
   }
@@ -620,11 +621,20 @@ export default function Orders() {
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        import("@/lib/pdf-generator").then(m => m.generateOrderPdf(order, profile || {}));
+                        const clientInfo = {
+                          name: profile?.details?.full_name || profile?.details?.contact || profile?.email?.split('@')[0] || "Client",
+                          email: profile?.email || profile?.details?.email || "",
+                          phone: profile?.details?.phone || "",
+                          company: profile?.details?.company || profile?.details?.company_name || "",
+                          billingAddress: order.billing_address || profile?.address || profile?.details?.address || "",
+                          billingCity: order.billing_city || profile?.city || profile?.details?.city || "",
+                          billingZip: order.billing_zip || profile?.postal_code || profile?.details?.zip || profile?.details?.postal_code || ""
+                        };
+                        generateOrderPdf(order, clientInfo);
                       }}
                       className="flex items-center gap-2 rounded-full bg-slate-900 px-3 py-1.5 text-[10px] font-bold text-white shadow-sm ring-1 ring-slate-900 transition-all hover:bg-white hover:text-slate-900 active:scale-95"
                     >
-                      <Truck size={12} />
+                      <FileText size={12} />
                       <span>PDF BC</span>
                     </button>
                   </div>

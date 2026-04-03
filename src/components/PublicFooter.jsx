@@ -15,14 +15,14 @@ export default function PublicFooter() {
               <img
                 src="/logos/one-connexion-light.png"
                 alt="One Connexion"
-                className="w-[160px] h-auto block m-0 p-0"
+                className="w-[200px] aspect-[4/1] object-cover block m-0 p-0"
               />
             </Link>
             <p className="text-[11px] leading-relaxed text-slate-400 font-medium mt-4 max-w-[180px]">
               Messagerie B2B express Paris &amp; IDF. Disponible 24/7.
             </p>
             <Link
-              to="/commande-rapide"
+              to="/commande-sans-compte"
               className="inline-block mt-3 text-[10px] font-black text-[#ed5518] uppercase tracking-widest hover:underline"
             >
               Commander sans compte →

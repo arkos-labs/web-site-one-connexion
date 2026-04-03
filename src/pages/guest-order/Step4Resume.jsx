@@ -33,9 +33,37 @@ export function Step4Resume({ form, price, calculatingPrice }) {
                         <div className="text-[11px] text-slate-600">{form.delivery}</div>
                     </div>
                 </div>
-                <div className="border-t border-slate-200 pt-4 flex items-center gap-x-6">
-                    <div className="flex items-center gap-2 text-xs font-bold text-slate-900"><Package size={16} className="text-slate-400" />{form.packageType} {form.packageWeight ? `(${form.packageWeight} kg)` : ''}</div>
-                    <div className="text-xs text-slate-500">Client : <strong>{form.guestEmail}</strong></div>
+                <div className="grid md:grid-cols-2 gap-6 pt-4 border-t border-slate-200">
+                    <div className="space-y-3 text-left">
+                        <div className="text-[10px] font-black uppercase tracking-wider text-slate-400">Nature du transport</div>
+                        <div className="flex items-center gap-3">
+                            <Truck className="text-[#ed5518]" size={18} />
+                            <div className="text-xs font-bold text-slate-900 capitalize">{form.vehicle} ({form.packageType})</div>
+                        </div>
+                        {form.packageWeight && (
+                            <div className="flex items-center gap-3">
+                                <Package className="text-slate-400" size={18} />
+                                <div className="text-xs font-bold text-slate-900">Poids : {form.packageWeight} kg</div>
+                            </div>
+                        )}
+                    </div>
+                    <div className="space-y-3 text-left">
+                        <div className="text-[10px] font-black uppercase tracking-wider text-slate-400">Détails colis</div>
+                        <div className="text-xs text-slate-600 italic leading-relaxed">
+                            {form.packageDesc || "Aucun descriptif fourni"}
+                        </div>
+                    </div>
+                </div>
+                {form.deliveryScheduleNotes && (
+                    <div className="pt-4 border-t border-slate-200 text-left">
+                        <div className="text-[10px] font-black uppercase tracking-wider text-[#ed5518] mb-2">Note sur l'horaire de livraison</div>
+                        <div className="text-xs font-semibold text-slate-900 p-3 bg-white rounded-xl border border-orange-100 italic">
+                            « {form.deliveryScheduleNotes} »
+                        </div>
+                    </div>
+                )}
+                <div className="border-t border-slate-200 pt-4 flex items-center justify-between">
+                    <div className="text-xs text-slate-500 font-medium">Récapitulatif envoyé à : <strong className="text-slate-900">{form.guestEmail}</strong></div>
                 </div>
             </div>
         </div>

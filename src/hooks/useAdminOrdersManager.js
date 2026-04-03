@@ -351,6 +351,36 @@ export default function useAdminOrdersManager(searchParams) {
         setDispatchOpen(false);
     };
 
+    const forceComplete = async (order) => {
+        if (!order) return;
+        if (!window.confirm(`Êtes-vous sûr de vouloir forcer le statut "LIVRÉE" pour la commande BC-${order.id.slice(0, 8)} ?\n\nCette action est irréversible et doit être utilisée uniquement en cas de bug technique.`)) {
+            return;
+        }
+
+        const now = new Date().toISOString();
+        const { error } = await supabase.from('orders').update({
+            status: 'delivered',
+            delivered_at: now,
+            updated_at: now,
+            notes: `${order.notes || ''} | Force Livrée (Admin)`
+        }).eq('id', order.id);
+
+        if (error) {
+            console.error("Force Complete Error", error);
+            alert("Erreur: " + error.message);
+            return;
+        }
+
+        // Release driver status back to online if they were assigned
+        if (order.driver_id) {
+            await supabase.from('profiles').update({ is_online: true }).eq('id', order.driver_id);
+            // Also update driver status in drivers table for consistency
+            await supabase.from('drivers').update({ status: 'available' }).eq('user_id', order.driver_id);
+        }
+
+        fetchOrders();
+    };
+
     const exportCsv = () => {
         const rows = historyFiltered.map((o) => [
             o.id,
@@ -400,6 +430,7 @@ export default function useAdminOrdersManager(searchParams) {
         openDispatch,
         confirmDecision,
         confirmDispatch,
+        forceComplete,
         exportCsv
     };
 }

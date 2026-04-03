@@ -11,6 +11,15 @@ export function Step2Details({ form, setForm, vehicles }) {
             <input type="time" className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm" value={form.pickupTime} onChange={e => setForm({ ...form, pickupTime: e.target.value })} />
             <input type="time" className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:ring-2 focus:ring-[#ed5518] outline-none" value={form.deliveryDeadline} onChange={e => setForm({ ...form, deliveryDeadline: e.target.value })} />
           </div>
+          <div className="mt-4">
+            <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 block">Commentaire sur l'horaire (optionnel)</label>
+            <textarea 
+              className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:ring-2 focus:ring-[#ed5518] outline-none min-h-[80px]" 
+              placeholder="Ex: Ne pas livrer entre 12h et 14h, appeler avant d'arriver..."
+              value={form.deliveryScheduleNotes || ""} 
+              onChange={e => setForm({ ...form, deliveryScheduleNotes: e.target.value })}
+            />
+          </div>
           <div className="rounded-2xl bg-orange-50 p-4 border border-[#ed5518] flex items-start gap-3 mt-4 text-[#ed5518] text-xs font-medium leading-relaxed">
             <Info size={18} className="shrink-0" />
             <p>Le niveau de service (Normal, Super, Exclu) est calculé automatiquement selon le délai entre l'enlèvement et la livraison.</p>

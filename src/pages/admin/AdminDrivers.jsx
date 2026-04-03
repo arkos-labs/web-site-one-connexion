@@ -104,9 +104,9 @@ export default function AdminDrivers() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { icon: <Users size={18} />, iconBg: "bg-slate-100 text-slate-600", label: "Total livreurs", value: stats.total },
-          { icon: <Zap size={18} />, iconBg: "bg-[#ed5518] text-[#ed5518]", label: "En ligne", value: stats.online },
+          { icon: <Zap size={18} />, iconBg: "bg-emerald-50 text-emerald-600", label: "En ligne", value: stats.online },
           { icon: <Truck size={18} />, iconBg: "bg-amber-100 text-amber-700", label: "En mission", value: stats.onMission },
-          { icon: <CheckCircle2 size={18} />, iconBg: "bg-[#ed5518] text-[#ed5518]", label: "Gains du mois", value: `${stats.revenueMonth.toFixed(0)}€` },
+          { icon: <CheckCircle2 size={18} />, iconBg: "bg-indigo-50 text-indigo-600", label: "Gains du mois", value: `${stats.revenueMonth.toFixed(0)}€` },
         ].map((kpi, i) => (
           <div key={i} className="bg-white rounded-[2rem] p-5 border border-slate-100 shadow-sm hover:shadow-md transition-all">
             <div className={`h-9 w-9 rounded-xl mb-3 flex items-center justify-center ${kpi.iconBg}`}>{kpi.icon}</div>

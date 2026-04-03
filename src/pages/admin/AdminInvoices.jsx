@@ -203,8 +203,8 @@ export default function AdminInvoices() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
             { icon: <CreditCard size={18} />, iconBg: "bg-slate-100 text-slate-600", label: "Total factures", value: invoiceStats.total },
-            { icon: <TrendingUp size={18} />, iconBg: "bg-[#ed5518] text-[#ed5518]", label: "CA encaissé", value: `${invoiceStats.revenue.toFixed(0)}€` },
-            { icon: <CheckCircle2 size={18} />, iconBg: "bg-[#ed5518] text-[#ed5518]", label: "Payées", value: invoiceStats.paid },
+            { icon: <TrendingUp size={18} />, iconBg: "bg-[#ed5518] text-white", label: "CA encaissé", value: `${invoiceStats.revenue.toFixed(0)}€` },
+            { icon: <CheckCircle2 size={18} />, iconBg: "bg-emerald-500 text-white", label: "Payées", value: invoiceStats.paid },
             { icon: <AlertTriangle size={18} />, iconBg: "bg-amber-100 text-amber-600", label: "En attente", value: invoiceStats.pending, alert: invoiceStats.pending > 0 },
           ].map((kpi, i) => (
             <div key={i} className={`bg-white rounded-[2rem] p-5 border ${kpi.alert ? 'border-amber-100 ring-1 ring-amber-200' : 'border-slate-100'} shadow-sm hover:shadow-md transition-all`}>
@@ -238,9 +238,15 @@ export default function AdminInvoices() {
                     <button key={s} onClick={() => setStatusFilter(s)} className={`whitespace-nowrap rounded-xl px-4 py-2 text-[10px] font-bold transition-all ${statusFilter === s ? 'bg-slate-900 text-white shadow' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>{s}</button>
                   ))}
                 </div>
-                <button onClick={handleGenerateClients} className="rounded-xl bg-[#ed5518] px-4 py-2 text-[10px] font-bold text-white hover:bg-[#ed5518] transition-all">
-                  Générer
-                </button>
+                <div className="flex items-center gap-3">
+                  <span className="text-[9px] font-black text-emerald-600 uppercase tracking-widest hidden lg:flex items-center gap-1">
+                    <CheckCircle2 size={10} />
+                    Auto : 1er du mois
+                  </span>
+                  <button onClick={handleGenerateClients} className="rounded-xl bg-[#ed5518] px-4 py-2 text-[10px] font-bold text-white hover:bg-slate-900 transition-all shadow-sm">
+                    Générer
+                  </button>
+                </div>
               </>
             ) : (
               <>
@@ -279,43 +285,45 @@ export default function AdminInvoices() {
                     ) : filteredInvoices.map(i => (
                       <tr key={i.id} className="hover:bg-slate-50/80 transition-all cursor-pointer group" onClick={() => navigate(`/admin/invoices/${i.id}`)}>
                         <td className="px-8 py-5">
-                          <span className="inline-flex items-center rounded-xl bg-slate-900 text-white px-3 py-1.5 text-[10px] font-black uppercase tracking-widest shadow">
+                          <span className="inline-flex items-center rounded-xl bg-slate-900 text-white px-3 py-1.5 text-[10px] font-black uppercase tracking-widest shadow-sm group-hover:bg-[#ed5518] transition-colors">
                             FAC-{i.id.slice(0, 8)}
                           </span>
                         </td>
                         <td className="px-8 py-5">
                           <div>
                             <div className="text-sm font-black text-slate-900 group-hover:text-[#ed5518] transition-colors">{i.client}</div>
-                            {i.isGuest && <div className="text-[9px] font-bold text-[#ed5518] uppercase">Usage ponctuel</div>}
+                            {i.isGuest && <div className="text-[9px] font-bold text-[#ed5518] uppercase tracking-wider">Passager</div>}
                           </div>
                         </td>
                         <td className="px-8 py-5">
-                          <span className="text-xs font-bold text-slate-500 uppercase">{i.period}</span>
+                          <span className="text-xs font-bold text-slate-400 uppercase tracking-tight">{i.period}</span>
                         </td>
                         <td className="px-8 py-5">
                           <span className="text-sm font-black text-slate-900 tabular-nums">{Number(i.amount).toFixed(2)}€</span>
                         </td>
                         <td className="px-8 py-5">
-                          <span className={`${i.rawStatus === "paid" ? "text-emerald-600" : "text-amber-600"} text-[9px] font-black uppercase tracking-widest`}>
+                          <span className={`inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[9px] font-black uppercase tracking-widest ${i.rawStatus === "paid" ? "bg-emerald-50 text-emerald-600" : "bg-amber-50 text-amber-600"}`}>
+                            {i.rawStatus === "paid" && <CheckCircle2 size={10} />}
                             {i.status}
                           </span>
                         </td>
                         <td className="px-8 py-5 text-right">
-                          <div className="flex items-center justify-end gap-2 text-right">
-                            {i.rawStatus !== "paid" && (
+                          <div className="flex items-center justify-end gap-3 text-right">
+                            {i.rawStatus !== "paid" ? (
                               <button
                                 onClick={e => { e.stopPropagation(); handleMarkPaid(i.id); }}
-                                className="h-9 w-9 rounded-xl bg-slate-100 text-slate-400 hover:bg-[#ed5518] hover:text-white flex items-center justify-center transition-all"
+                                className="h-9 px-4 rounded-xl bg-slate-100 text-slate-500 hover:bg-[#ed5518] hover:text-white flex items-center justify-center transition-all text-[10px] font-black uppercase"
                               >
-                                <CheckCircle2 size={14} />
+                                Payer
                               </button>
+                            ) : (
+                                <div className="text-emerald-500 opacity-40">
+                                  <CheckCircle2 size={16} />
+                                </div>
                             )}
-                            <button
-                              onClick={e => { e.stopPropagation(); navigate(`/admin/invoices/${i.id}`); }}
-                              className="inline-flex items-center gap-1 rounded-xl bg-slate-900 px-4 py-2 text-[10px] font-black text-white hover:bg-[#ed5518] transition-all shadow"
-                            >
-                              VOIR
-                            </button>
+                            <div className="h-9 w-9 rounded-full bg-slate-50 text-slate-300 group-hover:bg-slate-900 group-hover:text-white flex items-center justify-center transition-all">
+                              <ChevronRight size={16} />
+                            </div>
                           </div>
                         </td>
                       </tr>
@@ -407,7 +415,7 @@ export default function AdminInvoices() {
                           <div className="flex items-center justify-end gap-2 text-right">
                             <button
                               onClick={e => { e.stopPropagation(); handleSendOne(d); }}
-                              className={`h-9 w-9 rounded-xl flex items-center justify-center transition-all ${sendLogs[d.id] === 'success' ? 'bg-[#ed5518] text-[#ed5518]' : sendLogs[d.id] === 'error' ? 'bg-rose-50 text-rose-600' : 'bg-slate-100 text-slate-400 hover:bg-[#ed5518] hover:text-white'}`}
+                              className={`h-9 w-9 rounded-xl flex items-center justify-center transition-all ${sendLogs[d.id] === 'success' ? 'bg-emerald-50 text-emerald-600' : sendLogs[d.id] === 'error' ? 'bg-rose-50 text-rose-600' : 'bg-slate-100 text-slate-400 hover:bg-[#ed5518] hover:text-white'}`}
                             >
                               {sendLogs[d.id] === 'sending' ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
                             </button>

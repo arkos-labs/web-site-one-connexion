@@ -70,18 +70,68 @@ export default function NouvelleCourse() {
     const submitOrder = async () => {
         if (!price) return alert("Prix indisponible.");
         setIsSubmitting(true);
-        const { data: { user } } = await supabase.auth.getUser();
-        const { data, error } = await supabase.from('orders').insert({
-            client_id: user.id, pickup_address: form.pickup, pickup_city: form.pickupCity, pickup_postal_code: form.pickupPostcode,
-            delivery_address: form.delivery, delivery_city: form.deliveryCity, delivery_postal_code: form.deliveryPostcode,
-            vehicle_type: form.vehicle, service_level: form.service, status: 'pending_acceptance', price_ht: price,
-            scheduled_at: `${form.date}T${form.pickupTime}:00`, delivery_deadline: `${form.date}T${form.deliveryDeadline}:00`,
-            package_type: form.packageType, weight: parseFloat(form.packageWeight) || null,
-            notes: `Pick: ${form.pickupName} | Del: ${form.deliveryName} | ${form.pickupInstructions}`,
-        }).select().single();
-        if (!error && data) await generateOrderPdf(data, _profile || {}, { upload: true });
-        setIsSubmitting(false);
-        error ? alert(error.message) : navigate('/dashboard-client/orders', { state: { flash: "Course validée !" } });
+        try {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) throw new Error("Utilisateur non connecté");
+
+            const { data, error } = await supabase.from('orders').insert({
+                client_id: user.id,
+                pickup_address: form.pickup,
+                pickup_city: form.pickupCity,
+                pickup_postal_code: form.pickupPostcode,
+                delivery_address: form.delivery,
+                delivery_city: form.deliveryCity,
+                delivery_postal_code: form.deliveryPostcode,
+                vehicle_type: form.vehicle.toLowerCase(),
+                service_level: form.service.toLowerCase(),
+                status: 'pending_acceptance',
+                price_ht: price,
+                scheduled_at: `${form.date}T${form.pickupTime}:00`,
+                delivery_deadline: `${form.date}T${form.deliveryDeadline}:00`,
+                delivery_schedule_notes: form.deliveryScheduleNotes || "",
+                package_type: form.packageType || "Pli",
+                package_description: form.packageDesc || "",
+                weight: parseFloat(form.packageWeight) || null,
+                notes: `Pick: ${form.pickupName || '—'} | Del: ${form.deliveryName || '—'} | ${form.pickupInstructions || ''}`,
+                billing_name: _profile?.details?.full_name || _profile?.details?.contact_name || user.email?.split('@')[0],
+                billing_company: _profile?.details?.company || _profile?.company_name || "",
+                billing_address: _profile?.details?.address || _profile?.address || _profile?.details?.billing_address || "",
+                billing_city: _profile?.city || _profile?.details?.city || _profile?.details?.billing_city || "",
+                billing_zip: _profile?.postal_code || _profile?.details?.zip || _profile?.details?.postal_code || _profile?.details?.billing_zip || "",
+                sender_email: user.email,
+                pickup_name: form.pickupName,
+                delivery_name: form.deliveryName,
+                pickup_phone: form.pickupPhone,
+                delivery_phone: form.deliveryPhone,
+                pickup_access_code: form.pickupAccessCode,
+                delivery_access_code: form.deliveryAccessCode
+            }).select().single();
+
+            if (error) throw error;
+            if (data) {
+                try {
+                    // We attempt to generate the PDF but don't let it block the navigation if it fails
+                    const clientInfo = {
+                        name: _profile?.details?.full_name || _profile?.details?.contact_name || user.email?.split('@')[0] || "Client",
+                        email: user.email || _profile?.details?.email || "",
+                        phone: _profile?.details?.phone || _profile?.details?.phone_number || "",
+                        company: _profile?.details?.company || _profile?.company_name || "",
+                        billingAddress: _profile?.details?.address || _profile?.address || _profile?.details?.billing_address || "",
+                        billingCity: _profile?.city || _profile?.details?.city || _profile?.details?.billing_city || "",
+                        billingZip: _profile?.postal_code || _profile?.details?.zip || _profile?.details?.postal_code || _profile?.details?.billing_zip || ""
+                    };
+                    await generateOrderPdf(data, clientInfo);
+                } catch (pdfErr) {
+                    console.error("Erreur PDF:", pdfErr);
+                }
+                navigate('/dashboard-client/orders', { state: { flash: "Course validée !" } });
+            }
+        } catch (error) {
+            console.error("Exception submitOrder:", error);
+            alert(error.message || "Une erreur est survenue lors de la validation.");
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const steps = [{ title: "Trajet", icon: MapPin }, { title: "Détails", icon: Package }, { title: "Validation", icon: ShieldCheck }];

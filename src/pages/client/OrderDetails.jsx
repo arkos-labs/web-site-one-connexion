@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
-// pdfGenerator loaded dynamically
-import { Loader2 } from "lucide-react";
+import { generateOrderPdf } from "../../lib/pdf-generator";
+import { Loader2, FileText } from "lucide-react";
 
 function clientStatusLabel(order) {
   const status = typeof order === 'string' ? order : order.status;
@@ -141,8 +141,31 @@ export default function OrderDetails() {
     const packageDims = order.package_description || String(gDims && gDims !== "undefined" ? gDims : "");
 
     const downloadPdf = async () => {
-      const { generateOrderPdf } = await import("@/lib/pdf-generator");
-      generateOrderPdf(order, client || order.client || {});
+      try {
+        let latestClient = client;
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+          if (data) latestClient = data;
+        }
+
+        const d = latestClient?.details || {};
+        const clientInfo = {
+          name: d.full_name || d.contact_name || (latestClient?.first_name ? `${latestClient.first_name} ${latestClient.last_name || ""}` : (latestClient?.email?.split('@')[0] || "")),
+          firstName: d.first_name || latestClient?.first_name || (d.full_name || d.contact_name || "").split(' ')[0] || "",
+          lastName: d.last_name || latestClient?.last_name || (d.full_name || d.contact_name || "").split(' ').slice(1).join(' ') || "",
+          email: latestClient?.email || d.email || order?.sender_email || "",
+          phone: d.phone || d.phone_number || d.telephone || latestClient?.telephone || (order?.notes || "").match(/Phone: ([^|]+)/)?.[1]?.trim() || "",
+          company: d.company || latestClient?.company_name || order?.billing_company || "",
+          billingAddress: latestClient?.address || d.address || d.billing_address || order?.billing_address || "",
+          billingCity: latestClient?.city || d.city || d.billing_city || d.ville || order?.billing_city || "",
+          billingZip: latestClient?.postal_code || d.zip || d.postal_code || d.billing_zip || d.postcode || order?.billing_zip || ""
+        };
+        await generateOrderPdf(order, clientInfo);
+      } catch (err) {
+        console.error("PDF Fail Client:", err);
+        alert("Erreur lors de la génération du PDF.");
+      }
     };
 
     return (
@@ -153,19 +176,20 @@ export default function OrderDetails() {
             <h1 className="text-2xl font-bold text-slate-900">#{String(order.id || "").slice(0, 8)}</h1>
           </div>
           <div className="flex items-center gap-2">
-            <div className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wide ${order.status === 'delivered' ? 'bg-slate-100 text-slate-600' :
-                order.status === 'driver_accepted' ? 'bg-[#ed5518] text-[#ed5518]' :
+            <div className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wide ${order.status === 'delivered' ? 'bg-emerald-50 text-emerald-600' :
+                order.status === 'driver_accepted' ? 'bg-orange-50 text-[#ed5518]' :
                   order.status === 'assigned' ? 'bg-amber-50 text-amber-600' :
-                    order.status === 'in_progress' ? 'bg-[#ed5518] text-[#ed5518]' :
+                    order.status === 'in_progress' ? 'bg-orange-50 text-[#ed5518]' :
                       'bg-slate-900 text-white'
               }`}>
               {clientStatusLabel(order) || "—"}
             </div>
             <button
               onClick={downloadPdf}
-              className="rounded-full bg-slate-900 px-4 py-2 text-xs font-bold text-white transition-transform hover:scale-105"
+              className="flex items-center gap-2 rounded-full bg-slate-900 px-4 py-2 text-xs font-bold text-white transition-transform hover:scale-105 shadow-lg active:scale-95"
             >
-              Télécharger le bon (PDF)
+              <FileText size={14} />
+              <span>Télécharger le BC (PDF)</span>
             </button>
             <button
               onClick={() => navigate(-1)}

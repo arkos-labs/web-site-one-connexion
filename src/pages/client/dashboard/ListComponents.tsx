@@ -3,6 +3,21 @@ import { useNavigate } from "react-router-dom";
 
 export function RecentActivity({ orders, downloadOrder }) {
   const navigate = useNavigate();
+
+  const getStatusLabel = (status) => {
+    switch (status) {
+      case 'delivered': return 'Livré';
+      case 'cancelled': return 'Annulé';
+      case 'pending':
+      case 'pending_acceptance': return 'Attente';
+      case 'accepted':
+      case 'assigned':
+      case 'driver_accepted':
+      case 'in_progress': return 'En cours';
+      default: return status;
+    }
+  };
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between px-2">
@@ -20,7 +35,13 @@ export function RecentActivity({ orders, downloadOrder }) {
               </div>
             </div>
             <div className="flex flex-col items-end gap-3">
-              <span className="rounded-xl px-3 py-1 text-[11px] font-black uppercase tracking-wide bg-slate-50 text-slate-500 group-hover:bg-[#ed5518] group-hover:text-white transition-all">{o.status}</span>
+              <span className={`rounded-xl px-3 py-1 text-[11px] font-black uppercase tracking-wide transition-all ${
+                o.status === 'delivered' ? 'bg-emerald-50 text-emerald-600 group-hover:bg-emerald-500' : 
+                o.status === 'cancelled' ? 'bg-rose-50 text-rose-600 group-hover:bg-rose-500' :
+                'bg-amber-50 text-amber-600 group-hover:bg-amber-500'
+              } group-hover:text-white`}>
+                {getStatusLabel(o.status)}
+              </span>
               <button onClick={(e) => { e.stopPropagation(); downloadOrder(o); }} className="text-xs font-bold text-slate-400 hover:text-slate-900"><FileText size={14} /></button>
             </div>
           </div>

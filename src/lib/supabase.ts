@@ -77,6 +77,20 @@ export interface Order {
     delivery_city?: string;
     distance_km?: number;
     price_ht?: number;
+    vehicle_type?: string;
+    service_level?: string;
+    pickup_postal_code?: string;
+    delivery_postal_code?: string;
+    package_description?: string;
+    delivery_schedule_notes?: string;
+    weight?: number;
+    pickup_name?: string;
+    delivery_name?: string;
+    pickup_phone?: string;
+    delivery_phone?: string;
+    pickup_access_code?: string;
+    delivery_access_code?: string;
+    delivery_deadline?: string;
 }
 
 export interface Invoice {
@@ -114,6 +128,7 @@ export interface Client {
     first_name?: string;
     last_name?: string;
     billing_address?: string;
+    details?: any;
     tva_number?: string;
     iban?: string;
     email_notif?: boolean;

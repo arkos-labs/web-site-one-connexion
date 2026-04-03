@@ -33,7 +33,7 @@ export function Step3Contact({ form, setForm, fetchSuggestions, billingSuggestio
                                 {billingSuggestions.map((s, i) => (
                                     <button key={i} className="w-full text-left px-4 py-3 text-sm font-medium hover:bg-slate-50 rounded-xl transition-colors"
                                         onClick={() => {
-                                            setForm(p => ({ ...prev, billingAddress: s.label, billingCity: s.city, billingPostcode: s.postcode }));
+                                            setForm(p => ({ ...p, billingAddress: s.label, billingCity: s.city, billingPostcode: s.postcode }));
                                             setBillingSuggestions([]);
                                         }}>{s.label}</button>
                                 ))}

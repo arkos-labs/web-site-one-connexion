@@ -207,9 +207,9 @@ export default function AdminDriverDetails() {
         actions={
           <div className="flex items-center gap-3 flex-wrap">
             {/* Online status badge */}
-            <div className={`flex items-center gap-2 rounded-2xl border px-4 py-2 ${driver.is_online ? 'bg-[#ed5518] border-emerald-100' : 'bg-slate-50 border-slate-200'}`}>
-              <span className={`h-2 w-2 rounded-full ${driver.is_online ? 'bg-[#ed5518] animate-pulse' : 'bg-slate-400'}`} />
-              <span className={`text-[10px] font-black uppercase tracking-widest ${driver.is_online ? 'text-[#ed5518]' : 'text-slate-500'}`}>
+            <div className={`flex items-center gap-2 rounded-2xl border px-4 py-2 ${driver.is_online ? 'bg-emerald-50 border-emerald-200' : 'bg-slate-50 border-slate-200'}`}>
+              <span className={`h-2 w-2 rounded-full ${driver.is_online ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400'}`} />
+              <span className={`text-[10px] font-black uppercase tracking-widest ${driver.is_online ? 'text-emerald-700' : 'text-slate-500'}`}>
                 {driver.is_online ? "En ligne" : "Hors ligne"}
               </span>
             </div>
@@ -266,8 +266,8 @@ export default function AdminDriverDetails() {
       {/* KPIs */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
-          { icon: <CheckCircle2 size={18} />, iconBg: "bg-[#ed5518] text-[#ed5518]", label: "Courses terminées", value: `${totals.count} / ${totals.allCount}` },
-          { icon: <TrendingUp size={18} />, iconBg: "bg-[#ed5518] text-[#ed5518]", label: "Gains période", value: `${totals.totalPay.toFixed(2)}€` },
+          { icon: <CheckCircle2 size={18} />, iconBg: "bg-emerald-50 text-emerald-600", label: "Courses terminées", value: `${totals.count} / ${totals.allCount}` },
+          { icon: <TrendingUp size={18} />, iconBg: "bg-indigo-50 text-indigo-600", label: "Gains période", value: `${totals.totalPay.toFixed(2)}€` },
           { icon: <Clock size={18} />, iconBg: "bg-amber-100 text-amber-700", label: "Temps cumulé", value: fmtMinutes(totals.totalMins) },
           { icon: <Truck size={18} />, iconBg: "bg-slate-100 text-slate-600", label: "Véhicule", value: driverDetails.vehicle_type?.toUpperCase() || "—" },
         ].map((kpi, i) => (
@@ -317,8 +317,8 @@ export default function AdminDriverDetails() {
                 {field("IBAN", "iban", "text", "FR76 0000 0000 0000...")}
                 {field("BIC", "bic", "text", "XXXXXXXX")}
               </div>
-              <div className="mt-4 rounded-2xl bg-[#ed5518] border border-emerald-100 p-4">
-                <div className="flex items-center gap-2 text-xs font-black text-[#ed5518]">
+              <div className="mt-4 rounded-2xl bg-emerald-50 border border-emerald-100 p-4">
+                <div className="flex items-center gap-2 text-xs font-black text-emerald-700">
                   <CheckCircle2 size={14} /> Profil actif — Virements automatiques
                 </div>
               </div>
@@ -400,7 +400,7 @@ export default function AdminDriverDetails() {
                         <span className="inline-flex items-center rounded-lg bg-slate-100 px-2 py-0.5 text-xs font-bold text-slate-600">{o.pickupTime}</span>
                       </td>
                       <td className="px-6 py-4">
-                        <span className={`inline-flex items-center rounded-lg px-2 py-0.5 text-xs font-bold ${o.status === 'delivered' ? 'bg-[#ed5518] text-[#ed5518]' : 'bg-slate-50 text-slate-400'}`}>{o.deliveryTime}</span>
+                        <span className={`inline-flex items-center rounded-lg px-2 py-0.5 text-xs font-bold ${o.status === 'delivered' ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-50 text-slate-400'}`}>{o.deliveryTime}</span>
                       </td>
                       <td className="px-6 py-4 text-xs font-bold text-slate-700">{fmtMinutes(o.durationMinutes)}</td>
                       <td className="px-6 py-4 text-right font-black text-slate-900 tabular-nums">

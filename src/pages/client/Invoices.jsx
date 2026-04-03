@@ -38,8 +38,21 @@ export default function Invoices() {
         setInvoices(data);
         if (data.length > 0) setSelected(data[0]);
 
-        const { data: prof } = await supabase.from('profiles').select('details').eq('id', user.id).single();
-        if (prof) setProfile(prof.details);
+        const { data: prof } = await supabase
+          .from('profiles')
+          .select('details, address, city, postal_code, email, company_name')
+          .eq('id', user.id)
+          .single();
+        if (prof) {
+          setProfile({
+            ...(prof.details || {}),
+            address: prof.address,
+            city: prof.city,
+            postal_code: prof.postal_code,
+            email: prof.email,
+            company_name: prof.company_name
+          });
+        }
       }
     }
     setLoading(false);
@@ -83,7 +96,20 @@ export default function Invoices() {
     if (!selected) return;
     const periodStr = new Date(selected.period_start).toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
     const { generateInvoicePdf } = await import("../../lib/pdf-generator");
-    generateInvoicePdf({ ...selected, period: periodStr }, orders, profile || {});
+    
+    // Construct robust client info
+    const info = {
+      name: profile?.full_name || profile?.contact_name || "",
+      firstName: (profile?.full_name || "").split(' ')[0] || "",
+      lastName: (profile?.full_name || "").split(' ').slice(1).join(' ') || "",
+      email: profile?.email || "",
+      company: profile?.company || "",
+      billingAddress: profile?.address || "",
+      billingCity: profile?.city || "",
+      billingZip: profile?.zip || profile?.postal_code || ""
+    };
+
+    generateInvoicePdf({ ...selected, period: periodStr }, orders, info);
   };
 
   if (loading) return <div className="flex h-64 items-center justify-center"><Loader2 className="animate-spin text-slate-400" /></div>;
@@ -129,7 +155,7 @@ export default function Invoices() {
                   </div>
                   <div className="text-sm font-bold">#{inv.id.slice(0, 8)}</div>
                 </div>
-                <span className={`rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide ${inv.status === "paid" ? "bg-[#ed5518] text-[#ed5518]" : "bg-amber-50 text-amber-600"}`}>
+                <span className={`rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide ${inv.status === "paid" ? "bg-emerald-50 text-emerald-600" : "bg-amber-50 text-amber-600"}`}>
                   {inv.status === 'paid' ? 'Payée' : inv.status}
                 </span>
               </button>
@@ -147,7 +173,7 @@ export default function Invoices() {
                   {new Date(selected.period_start).toLocaleDateString()} - {new Date(selected.period_end).toLocaleDateString()}
                 </div>
               </div>
-              <span className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wide ${selected.status === "paid" ? "bg-[#ed5518] text-[#ed5518]" : "bg-amber-50 text-amber-600"}`}>
+              <span className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wide ${selected.status === "paid" ? "bg-emerald-50 text-emerald-600" : "bg-amber-50 text-amber-600"}`}>
                 {selected.status}
               </span>
             </div>

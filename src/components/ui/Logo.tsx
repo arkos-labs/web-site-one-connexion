@@ -18,18 +18,18 @@ export const Logo = ({
 
     // Size mapping for the image width
     const widthClass = {
-        sm: "w-24 md:w-32 lg:w-36",
-        md: "w-32 md:w-40 lg:w-44",
-        lg: "w-40 md:w-48 lg:w-56"
+        sm: "w-32 md:w-40 lg:w-48",
+        md: "w-44 md:w-56 lg:w-64",
+        lg: "w-56 md:w-72 lg:w-80"
     }[size];
 
     return (
         <Link to="/" className={cn("flex flex-col group", className)}>
             <img
-                src={isLightLogo ? "/logos/one-connexion-light.png" : "/logos/ONECONNEXION-04.png"}
+                src={isLightLogo ? "/logos/one-connexion-light.png" : "/logos/one-connexion-dark.png"}
                 alt="One Connexion"
                 className={cn(
-                    "h-auto object-contain transition-transform group-hover:scale-105",
+                    "aspect-[4/1] object-cover transition-transform group-hover:scale-105",
                     widthClass
                 )}
             />

@@ -20,7 +20,7 @@ export function ClientHeader({ profile, activeCount }) {
             Bonjour, {profile?.full_name ? profile.full_name.split(' ')[0] : 'Partenaire'}.
           </h1>
           <p className="mt-4 text-lg font-medium text-slate-400 max-w-xl leading-relaxed">
-            Votre tableau de bord logistique intelligent. Suivez vos expéditions en temps réel.
+            Votre tableau de bord logistique intelligent.
           </p>
         </div>
         <div className="flex shrink-0 items-center gap-4">

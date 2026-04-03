@@ -75,18 +75,65 @@ export default function GuestOrder() {
     const submitOrder = async () => {
         if (!price) return alert("Prix indisponible.");
         setIsSubmitting(true);
-        const { data, error } = await supabase.from('orders').insert({
-            pickup_address: form.pickup, pickup_city: form.pickupCity, pickup_postal_code: form.pickupPostcode,
-            delivery_address: form.delivery, delivery_city: form.deliveryCity, delivery_postal_code: form.deliveryPostcode,
-            vehicle_type: form.vehicle.toLowerCase(), service_level: form.service.toLowerCase(),
-            price_ht: price, scheduled_at: `${form.date}T${form.pickupTime}:00`, delivery_deadline: `${form.date}T${form.deliveryDeadline}:00`,
-            package_type: form.packageType, weight: parseFloat(form.packageWeight) || null,
-            notes: `[GUEST] ${form.guestName} | ${form.guestEmail} | ${form.guestPhone}`,
-        }).select().single();
+        try {
+            const { data, error } = await supabase.from('orders').insert({
+                pickup_address: form.pickup,
+                pickup_city: form.pickupCity,
+                pickup_postal_code: form.pickupPostcode,
+                delivery_address: form.delivery,
+                delivery_city: form.deliveryCity,
+                delivery_postal_code: form.deliveryPostcode,
+                vehicle_type: form.vehicle.toLowerCase(),
+                service_level: form.service.toLowerCase(),
+                status: 'pending_acceptance',
+                price_ht: price,
+                scheduled_at: `${form.date}T${form.pickupTime}:00`,
+                delivery_deadline: `${form.date}T${form.deliveryDeadline}:00`,
+                delivery_schedule_notes: form.deliveryScheduleNotes || "",
+                package_type: form.packageType || "Pli",
+                package_description: form.packageDesc || "",
+                weight: parseFloat(form.packageWeight) || null,
+                notes: `[GUEST] ${form.guestName} | ${form.guestEmail} | ${form.guestPhone} | ${form.packageDesc || ''}`,
+                billing_name: form.guestName,
+                billing_company: form.guestCompany,
+                billing_address: form.billingAddress,
+                billing_city: form.billingCity,
+                billing_zip: form.billingPostcode,
+                sender_email: form.guestEmail,
+                pickup_name: form.pickupName,
+                delivery_name: form.deliveryName,
+                pickup_phone: form.pickupPhone,
+                delivery_phone: form.deliveryPhone,
+                pickup_access_code: form.pickupAccessCode,
+                delivery_access_code: form.deliveryAccessCode
+            }).select().single();
 
-        if (!error && data) await generateOrderPdf(data, { name: form.guestName, email: form.guestEmail }, { upload: true });
-        setIsSubmitting(false);
-        error ? alert(error.message) : setSuccess(true);
+            if (error) throw error;
+            if (data) {
+                try {
+                    // Attempt PDF generation for guest
+                    await generateOrderPdf(data, {
+                        name: form.guestName || "Client Invité",
+                        firstName: (form.guestName || "Client Invité").split(' ')[0],
+                        lastName: (form.guestName || "").split(' ').slice(1).join(' '),
+                        email: form.guestEmail || "",
+                        phone: form.guestPhone || "",
+                        company: form.guestCompany || "",
+                        billingAddress: form.billingAddress || "",
+                        billingCity: form.billingCity || "",
+                        billingZip: form.billingPostcode || ""
+                    });
+                } catch (pdfErr) {
+                    console.error("Erreur PDF Guest:", pdfErr);
+                }
+                setSuccess(true);
+            }
+        } catch (error) {
+            console.error("Exception submitOrder Guest:", error);
+            alert(error.message || "Une erreur est survenue lors de la commande.");
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const steps = [{ title: "Trajet", icon: MapPin }, { title: "Détails", icon: Package }, { title: "Contact", icon: User }, { title: "Validation", icon: ShieldCheck }];

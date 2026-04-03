@@ -102,7 +102,13 @@ export default function AdminClientDetails() {
 
   const handleSaveDetails = async () => {
     setSending(true);
-    const { error } = await supabase.from('profiles').update({ details: client.details }).eq('id', id);
+    const updates = { 
+      details: client.details,
+      address: client.details?.address || "",
+      city: client.details?.city || "",
+      postal_code: client.details?.zip || client.details?.postal_code || ""
+    };
+    const { error } = await supabase.from('profiles').update(updates).eq('id', id);
     if (error) alert("Erreur: " + error.message);
     else { setIsEditing(false); alert("Détails mis à jour !"); }
     setSending(false);
@@ -172,10 +178,10 @@ export default function AdminClientDetails() {
       {/* KPI row */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
-          { icon: <TrendingUp size={18} />, iconBg: "bg-[#ed5518] text-[#ed5518]", label: "CA Total", value: `${spend.toFixed(0)}€` },
+          { icon: <TrendingUp size={18} />, iconBg: "bg-[#ed5518] text-white", label: "CA Total", value: `${spend.toFixed(0)}€` },
           { icon: <FileText size={18} />, iconBg: "bg-slate-100 text-slate-600", label: "Commandes", value: ordersAll.length },
           { icon: <AlertTriangle size={18} />, iconBg: risk.unpaid.length > 0 ? "bg-amber-100 text-amber-600" : "bg-slate-100 text-slate-400", label: "Impayées", value: risk.unpaidAmount.toFixed(0) + "€", alert: risk.unpaid.length > 0 },
-          { icon: <CheckCircle2 size={18} />, iconBg: "bg-[#ed5518] text-[#ed5518]", label: "En retard", value: risk.overdue.length === 0 ? "Aucune" : `${risk.overdue.length} facture(s)`, alert: risk.overdue.length > 0 },
+          { icon: <CheckCircle2 size={18} />, iconBg: "bg-[#ed5518] text-white", label: "En retard", value: risk.overdue.length === 0 ? "Aucune" : `${risk.overdue.length} facture(s)`, alert: risk.overdue.length > 0 },
         ].map((kpi, i) => (
           <div key={i} className={`bg-white rounded-[2rem] p-5 border ${kpi.alert ? 'border-amber-100 ring-1 ring-amber-200' : 'border-slate-100'} shadow-sm`}>
             <div className={`h-9 w-9 rounded-xl mb-3 flex items-center justify-center ${kpi.iconBg}`}>{kpi.icon}</div>
@@ -279,7 +285,7 @@ export default function AdminClientDetails() {
                       <td className="px-6 py-4 text-slate-600 text-xs">{o.pickup_city} → {o.delivery_city}</td>
                       <td className="px-6 py-4 text-xs text-slate-500">{o.scheduled_at ? new Date(o.scheduled_at).toLocaleDateString('fr-FR') : "—"}</td>
                       <td className="px-6 py-4">
-                        <span className={`inline-flex items-center rounded-lg px-2.5 py-1 text-[9px] font-black uppercase tracking-widest ${o.status === "delivered" ? "bg-[#ed5518] text-[#ed5518]" : "bg-amber-50 text-amber-700"}`}>
+                        <span className={`inline-flex items-center rounded-lg px-2.5 py-1 text-[9px] font-black uppercase tracking-widest ${o.status === "delivered" ? "bg-emerald-50 text-emerald-600" : "bg-amber-50 text-amber-700"}`}>
                           {o.status === "delivered" ? "Terminée" : o.status}
                         </span>
                       </td>

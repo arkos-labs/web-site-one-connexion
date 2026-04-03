@@ -36,4 +36,25 @@ html, body {
   .btn-primary {
     @apply bg-[#ed5518] text-white font-black uppercase;
   }
+
+  .animate-in {
+    animation-duration: 500ms;
+    animation-fill-mode: forwards;
+  }
+  .fade-in {
+    animation-name: fadeIn;
+  }
+  .zoom-in {
+    animation-name: zoomIn;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes zoomIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }

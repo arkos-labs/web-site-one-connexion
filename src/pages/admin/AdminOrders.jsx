@@ -21,7 +21,7 @@ export default function AdminOrders() {
     dispatchNote, setDispatchNote,
     query, setQuery, isSearching, setIsSearching,
     statusFilter, derived,
-    openDecision, openDispatch, confirmDecision, confirmDispatch, exportCsv
+    openDecision, openDispatch, confirmDecision, confirmDispatch, forceComplete, exportCsv
   } = useAdminOrdersManager(searchParams);
 
   if (loading) return null;
@@ -136,6 +136,7 @@ export default function AdminOrders() {
             <AdminOrdersKanban
               kanbanList={kanbanList} navigate={navigate} drivers={drivers}
               openDecision={openDecision} openDispatch={openDispatch} derived={derived}
+              forceComplete={forceComplete}
             />
           )}
         </div>

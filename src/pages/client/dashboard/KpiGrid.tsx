@@ -21,9 +21,9 @@ export function KpiGrid({ stats }) {
         <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-blue-50 transition-transform group-hover:scale-150" />
         <div className="relative z-10 flex items-start justify-between">
           <div>
-            <h3 className="text-sm font-bold uppercase tracking-wider text-slate-400">Total Historique</h3>
+            <h3 className="text-sm font-bold uppercase tracking-wider text-slate-400">Total Missions</h3>
             <div className="mt-4 flex items-end gap-3">
-              <span className="text-5xl font-black text-slate-900">{stats.count || 0}</span>
+              <span className="text-5xl font-black text-slate-900">{stats.completedCount || 0}</span>
               <span className="mb-1 text-sm font-bold text-blue-500">réussies</span>
             </div>
           </div>

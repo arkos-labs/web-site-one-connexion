@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { supabase } from "../../lib/supabase";
-import { generateInvoicePDF, generateOrderPDF } from "@/lib/pdf-generator";
+import { generateInvoicePdf, generateOrderPdf } from "@/lib/pdf-generator";
 import {
   Loader2, Download, CheckCircle2, ChevronRight,
   FileText, User, Calendar, TrendingUp
@@ -101,7 +101,19 @@ export default function AdminInvoiceDetails() {
               </button>
             )}
             <button
-              onClick={() => downloadInvoicePdf(invoice, orders)}
+              onClick={() => {
+                const info = {
+                  name: client.full_name || client.contact_name || invoice.client,
+                  firstName: client.first_name || (client.full_name || client.contact_name || "").split(' ')[0] || "",
+                  lastName: client.last_name || (client.full_name || client.contact_name || "").split(' ').slice(1).join(' ') || "",
+                  email: client.email || "",
+                  company: client.company || "",
+                  billingAddress: client.address || "",
+                  billingCity: client.city || "",
+                  billingZip: client.zip || client.postal_code || ""
+                };
+                generateInvoicePdf(invoice, orders, info);
+              }}
               className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-xs font-black text-slate-700 hover:bg-slate-50 transition-all shadow-sm"
             >
               <Download size={14} /> Télécharger PDF
@@ -114,9 +126,9 @@ export default function AdminInvoiceDetails() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { icon: <FileText size={18} />, iconBg: "bg-slate-100 text-slate-600", label: "Référence", value: `FAC-${invoice.id.slice(0, 8)}` },
-          { icon: <User size={18} />, iconBg: "bg-[#ed5518] text-[#ed5518]", label: "Client", value: invoice.client },
-          { icon: <Calendar size={18} />, iconBg: "bg-[#ed5518] text-[#ed5518]", label: "Période", value: invoice.period },
-          { icon: <TrendingUp size={18} />, iconBg: "bg-[#ed5518] text-[#ed5518]", label: "Total TTC", value: `${totalTTC.toFixed(2)}€` },
+          { icon: <User size={18} />, iconBg: "bg-indigo-50 text-indigo-600", label: "Client", value: invoice.client },
+          { icon: <Calendar size={18} />, iconBg: "bg-amber-50 text-amber-600", label: "Période", value: invoice.period },
+          { icon: <TrendingUp size={18} />, iconBg: "bg-emerald-50 text-emerald-600", label: "Total TTC", value: `${totalTTC.toFixed(2)}€` },
         ].map((kpi, i) => (
           <div key={i} className="bg-white rounded-[2rem] p-5 border border-slate-100 shadow-sm">
             <div className={`h-9 w-9 rounded-xl mb-3 flex items-center justify-center ${kpi.iconBg}`}>{kpi.icon}</div>
@@ -158,7 +170,7 @@ export default function AdminInvoiceDetails() {
                   <td className="px-8 py-5 text-xs font-bold text-slate-700">{o.route}</td>
                   <td className="px-8 py-5 text-xs text-slate-500">{o.date}</td>
                   <td className="px-8 py-5">
-                    <span className={`inline-flex items-center rounded-lg px-2.5 py-1 text-[9px] font-black uppercase tracking-widest ${o.status === "Terminée" ? "bg-[#ed5518] text-[#ed5518]" : "bg-slate-100 text-slate-600"}`}>
+                    <span className={`inline-flex items-center rounded-lg px-2.5 py-1 text-[9px] font-black uppercase tracking-widest ${o.status === "Terminée" ? "bg-emerald-50 text-emerald-600" : "bg-slate-100 text-slate-600"}`}>
                       {o.status}
                     </span>
                   </td>
@@ -166,7 +178,7 @@ export default function AdminInvoiceDetails() {
                   <td className="px-8 py-5 text-right">
                     <div className="flex items-center justify-end gap-2">
                       <button
-                        onClick={() => downloadOrderPdf(o, client)}
+                        onClick={() => generateOrderPdf(o, client)}
                         className="flex items-center gap-1.5 rounded-xl bg-slate-100 px-3 py-2 text-[10px] font-black text-slate-600 hover:bg-slate-200 transition-all"
                       >
                         <Download size={12} /> BC

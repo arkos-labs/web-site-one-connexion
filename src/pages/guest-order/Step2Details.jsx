@@ -21,6 +21,15 @@ export function Step2Details({ form, setForm, price, calculatingPrice }) {
                             <input type="time" className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm" value={form.deliveryDeadline} onChange={e => setForm(p => ({ ...p, deliveryDeadline: e.target.value }))} />
                         </div>
                     </div>
+                    <div className="mt-4">
+                        <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 block">Commentaire sur l'horaire (optionnel)</label>
+                        <textarea 
+                            className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:ring-2 focus:ring-[#ed5518] outline-none min-h-[80px]" 
+                            placeholder="Ex: Ne pas livrer entre 12h et 14h, appeler avant d'arriver..."
+                            value={form.deliveryScheduleNotes || ""} 
+                            onChange={e => setForm(p => ({ ...p, deliveryScheduleNotes: e.target.value }))}
+                        />
+                    </div>
                     {price !== null && (
                         <div className="rounded-2xl bg-slate-900 p-5 text-white flex items-center justify-between mt-4">
                             <div>

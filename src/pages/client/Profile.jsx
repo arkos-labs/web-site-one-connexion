@@ -26,17 +26,17 @@ export default function Profile() {
   const fetchProfile = async () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
-      const { data } = await supabase.from('profiles').select('details').eq('id', user.id).single();
-      if (data && data.details) {
-        const d = data.details;
+      const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+      if (data) {
+        const d = data.details || {};
         setForm({
           ...form,
           company: d.company || "",
           contact: d.contact || d.full_name || d.contact_name || "",
           phone: d.phone || d.phone_number || "",
-          address: d.address || "",
-          city: d.city || "",
-          zip: d.zip || d.postal_code || "",
+          address: data.address || d.address || "",
+          city: data.city || d.city || "",
+          zip: data.postal_code || d.zip || d.postal_code || "",
           siret: d.siret || "",
           tva: d.tva || "",
           iban: d.iban || "",
@@ -65,8 +65,11 @@ export default function Profile() {
     }
     const updatedForm = { ...form, siret: autoSiret };
 
-    // Save details to 'profiles'
+    // Save structured columns AND legacy details
     const { error } = await supabase.from('profiles').update({
+      address: updatedForm.address,
+      city: updatedForm.city,
+      postal_code: updatedForm.zip,
       details: updatedForm
     }).eq('id', user.id);
 

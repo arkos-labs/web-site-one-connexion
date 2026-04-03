@@ -61,6 +61,7 @@ export default function Register() {
                     data: {
                         role: 'client',
                         company: form.companyName,
+                        company_name: form.companyName,
                         contact_name: form.contactName,
                         full_name: form.contactName,
                         phone: form.phone,
@@ -91,21 +92,44 @@ export default function Register() {
     // ── Success screen ──
     if (success) {
         return (
-            <div className="min-h-screen font-sans flex items-center justify-center bg-slate-50 p-6">
-                <div className="w-full max-w-md bg-white rounded-[2.5rem] p-12 shadow-sm ring-1 ring-slate-100 text-center space-y-6">
-                    <div className="mx-auto inline-flex h-20 w-20 items-center justify-center rounded-3xl bg-[#ed5518] text-[#ed5518]">
-                        <CheckCircle2 size={40} />
+            <div className="min-h-screen font-sans flex items-center justify-center bg-[#fdfdfd] p-6 relative overflow-hidden">
+                {/* Background Decorations */}
+                <div className="absolute top-0 right-0 w-96 h-96 bg-[#ed5518]/5 rounded-full blur-3xl -mr-48 -mt-48 pointer-events-none" />
+                <div className="absolute bottom-0 left-0 w-96 h-96 bg-slate-900/5 rounded-full blur-3xl -ml-48 -mb-48 pointer-events-none" />
+
+                <div className="w-full max-w-lg bg-white rounded-[2.5rem] p-10 md:p-16 shadow-[0_20px_50px_rgba(0,0,0,0.05)] ring-1 ring-slate-100 text-center relative z-10 animate-in fade-in zoom-in duration-500">
+                    <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-[#ed5518]/10 text-[#ed5518] mb-8 ring-8 ring-[#ed5518]/5">
+                        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#ed5518] text-white shadow-lg shadow-[#ed5518]/30">
+                            <CheckCircle2 size={32} strokeWidth={3} />
+                        </div>
                     </div>
-                    <h1 className="text-2xl font-black text-slate-900">Compte créé avec succès !</h1>
-                    <p className="text-slate-500 text-sm leading-relaxed">
-                        Un email de confirmation vous a été envoyé à <strong className="text-slate-800">{form.email}</strong>. Cliquez sur le lien pour activer votre compte.
-                    </p>
-                    <button
-                        onClick={() => navigate('/connexion')}
-                        className="w-full rounded-full bg-slate-900 py-4 text-sm font-black text-white hover:bg-[#ed5518] transition-all"
-                    >
-                        Aller à la connexion →
-                    </button>
+
+                    <div className="space-y-4 mb-10">
+                        <h1 className="text-3xl font-black text-slate-900 tracking-tight">
+                            Bienvenue chez One Connexion !
+                        </h1>
+                        <div className="h-1 w-12 bg-[#ed5518] mx-auto rounded-full" />
+                        <p className="text-slate-500 text-base leading-relaxed max-w-sm mx-auto">
+                            Votre compte entreprise a été créé. Un email de confirmation vient d'être envoyé à :
+                            <br />
+                            <span className="inline-block mt-2 font-bold text-slate-900 bg-slate-50 px-3 py-1 rounded-lg border border-slate-100">
+                                {form.email}
+                            </span>
+                        </p>
+                    </div>
+
+                    <div className="space-y-4">
+                        <button
+                            onClick={() => navigate('/connexion')}
+                            className="group w-full flex items-center justify-center gap-2 rounded-full bg-slate-900 py-4 text-sm font-black text-white hover:bg-[#ed5518] transition-all shadow-xl shadow-slate-900/10 active:scale-95"
+                        >
+                            Accéder à mon espace client <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                        </button>
+                        
+                        <p className="text-xs text-slate-400 font-medium">
+                            Vous n'avez pas reçu l'email ? Pensez à vérifier vos spams.
+                        </p>
+                    </div>
                 </div>
             </div>
         );

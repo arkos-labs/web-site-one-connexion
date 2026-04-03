@@ -57,7 +57,7 @@ export default function Hero3D() {
 
           {/* CTAs */}
           <div className="hero3d-ctas">
-            <Link to="/commande-rapide" className="hero3d-cta hero3d-cta--primary">
+            <Link to="/commande-sans-compte" className="hero3d-cta hero3d-cta--primary">
               <span className="hero3d-cta__text">Commander sans compte</span>
               <div className="hero3d-cta__icon">
                 <ShoppingCart size={18} />

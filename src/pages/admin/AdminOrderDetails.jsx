@@ -11,13 +11,13 @@ import AdminPageHeader from "../../components/admin/AdminPageHeader";
 const STATUS_CONFIG = {
   pending_acceptance: { label: "Nouveau", cls: "bg-rose-50 text-rose-700 border-rose-200", step: 0 },
   pending: { label: "En attente", cls: "bg-rose-50 text-rose-700 border-rose-200", step: 0 },
-  accepted: { label: "Validé", cls: "bg-[#ed5518] text-[#ed5518] border-indigo-200", step: 1 },
+  accepted: { label: "Validé", cls: "bg-indigo-50 text-indigo-700 border-indigo-200", step: 1 },
   assigned: { label: "Assigné", cls: "bg-amber-50 text-amber-700 border-amber-200", step: 2 },
-  driver_accepted: { label: "Chauffeur en route vers enlèvement", cls: "bg-[#ed5518] text-[#ed5518] border-emerald-200", step: 3 },
+  driver_accepted: { label: "Chauffeur en route", cls: "bg-orange-50 text-orange-700 border-orange-200", step: 3 },
   driver_refused: { label: "Refusé par le chauffeur", cls: "bg-rose-50 text-rose-700 border-rose-200", step: 1 },
-  picked_up: { label: "Enlevée", cls: "bg-[#ed5518] text-[#ed5518] border-blue-200", step: 4 },
-  in_progress: { label: "Enlevée", cls: "bg-[#ed5518] text-[#ed5518] border-blue-200", step: 4 },
-  delivered: { label: "Livrée ✓", cls: "bg-slate-100 text-slate-700 border-slate-300", step: 5 },
+  picked_up: { label: "Enlevée", cls: "bg-blue-50 text-blue-700 border-blue-200", step: 4 },
+  in_progress: { label: "Enlevée", cls: "bg-blue-50 text-blue-700 border-blue-200", step: 4 },
+  delivered: { label: "Livrée ✓", cls: "bg-emerald-50 text-emerald-700 border-emerald-200", step: 5 },
   cancelled: { label: "Annulée", cls: "bg-red-50 text-red-600 border-red-200", step: -1 },
 };
 
@@ -138,6 +138,12 @@ export default function AdminOrderDetails() {
     const now = new Date().toISOString();
     const patch = { status: newStatus, updated_at: now };
     if (newStatus === 'driver_accepted') patch.driver_accepted_at = now;
+    if (newStatus === 'delivered') patch.delivered_at = now;
+
+    // Release driver if finishing
+    if (['delivered', 'cancelled'].includes(newStatus) && order?.driver_id) {
+      supabase.from('drivers').update({ status: 'online', updated_at: now }).eq('user_id', order.driver_id).then();
+    }
 
     // Utiliser .select() pour confirmer que la ligne a bien été modifiée
     const { data: updated, error } = await supabase
@@ -211,9 +217,30 @@ export default function AdminOrderDetails() {
             <button
               onClick={async () => {
                 try {
-                  await generateOrderPdf(order, client);
+                  // Ensure we have the latest client data
+                  let latestClient = client;
+                  if (order?.client_id) {
+                    const { data } = await supabase.from('profiles').select('*').eq('id', order.client_id).single();
+                    if (data) latestClient = data;
+                  }
+
+                  const d = latestClient?.details || {};
+                  const clientInfo = {
+                    name: d.full_name || d.contact_name || (latestClient?.first_name ? `${latestClient.first_name} ${latestClient.last_name || ""}` : (latestClient?.email?.split('@')[0] || "")),
+                    firstName: d.first_name || latestClient?.first_name || (d.full_name || d.contact_name || "").split(' ')[0] || "",
+                    lastName: d.last_name || latestClient?.last_name || (d.full_name || d.contact_name || "").split(' ').slice(1).join(' ') || "",
+                    email: latestClient?.email || d.email || order?.sender_email || "",
+                    phone: d.phone || d.phone_number || d.telephone || latestClient?.telephone || order?.pickup_phone || "",
+                    company: d.company || latestClient?.company_name || order?.billing_company || "",
+                    billingAddress: latestClient?.address || d.address || d.billing_address || order?.billing_address || "",
+                    billingCity: latestClient?.city || d.city || d.billing_city || d.ville || order?.billing_city || "",
+                    billingZip: latestClient?.postal_code || d.zip || d.postal_code || d.billing_zip || d.postcode || order?.billing_zip || ""
+                  };
+                  
+                  await generateOrderPdf(order, clientInfo);
                 } catch (err) {
-                  console.error("PDF generation failed:", err);
+                  console.error("PDF Fail:", err);
+                  alert("Erreur lors de la génération du PDF.");
                 }
               }}
               className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-all shadow-sm"
@@ -232,15 +259,21 @@ export default function AdminOrderDetails() {
                 }
               }} disabled={saving} className="rounded-xl bg-[#ed5518] px-5 py-2.5 text-xs font-black text-white hover:bg-[#ed5518] transition-all disabled:opacity-50">DISPATCHER</button>
             )}
-            {order.status === 'in_progress' && (
-              <button onClick={() => updateStatus('delivered')} disabled={saving} className="rounded-xl bg-[#ed5518] px-5 py-2.5 text-xs font-black text-white hover:bg-[#ed5518] transition-all disabled:opacity-50">MARQUER LIVRÉE</button>
+            {['assigned', 'driver_accepted', 'picked_up', 'in_progress'].includes(order.status) && (
+              <button
+                onClick={() => { if (window.confirm('Voulez-vous vraiment forcer le passage en "LIVRÉE" pour ce dossier ?\n\nCette action est irréversible.')) updateStatus('delivered'); }}
+                disabled={saving}
+                className="rounded-xl bg-emerald-600 px-5 py-2.5 text-xs font-black text-white hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-500/10 active:scale-95 disabled:opacity-50"
+              >
+                FORCE LIVRER
+              </button>
             )}
             {order.status === 'delivered' && (
               <button
                 onClick={() => {
                   import("@/lib/pdf-generator").then(m => m.generateIndividualInvoicePdf(order, client));
                 }}
-                className="flex items-center gap-2 rounded-xl border border-indigo-200 bg-[#ed5518] px-4 py-2.5 text-xs font-bold text-[#ed5518] hover:bg-[#ed5518] transition-all shadow-sm"
+                className="flex items-center gap-2 rounded-xl border border-indigo-100 bg-[#ed5518] px-4 py-2.5 text-xs font-bold text-white hover:bg-slate-900 transition-all shadow-sm"
               >
                 <TrendingUp size={14} /> Facture PDF
               </button>
