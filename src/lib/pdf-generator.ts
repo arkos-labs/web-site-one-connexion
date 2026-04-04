@@ -420,7 +420,7 @@ export const generateOrderPdf = async (order: Order, clientInfo: ClientInfo) => 
     doc.setTextColor(148, 163, 184); // Slate 400
     doc.setFontSize(7);
     doc.setFont("helvetica", "italic");
-    doc.text(`E-Dossier généré numériquement · Signatures requises sur smartphone`, margin, ftY + 15);
+    doc.text(`E-Dossier généré numériquement · Document à valeur légale`, margin, ftY + 15);
     doc.text(`One Connexion - Spécialiste de la messagerie urgente et délicate.`, margin, ftY + 25);
 
     doc.save(`OC-${displayRef}.pdf`);
@@ -447,7 +447,7 @@ const drawCompanyHeader = async (doc: jsPDF, margin: number) => {
   const infoLines = [
     "5 SQUARE NUNGESSER · 94160 SAINT-MANDÉ",
     "RCS CRÉTEIL 101 517 100 · SIRET 101 517 100 00018",
-    "CAPITAL 3.000,00 € · contact@one-connexion.fr"
+    "CAPITAL 3.000,00 €"
   ];
   doc.text(infoLines, margin, 85, { lineHeightFactor: 1.4 });
 };
@@ -641,8 +641,8 @@ export const generateInvoicePdf = async (invoice: any, orders: any[], clientInfo
     doc.setTextColor(148, 163, 184);
     doc.setFontSize(7);
     doc.setFont("helvetica", "italic");
-    doc.text(`Une question sur cette facture ? Contactez notre service comptabilité : contact@one-connexion.fr`, margin, ftY);
-    doc.text(`One Connexion · 5 Square Nungesser, 94160 Saint-Mandé`, margin, ftY + 10);
+    doc.text(`One Connexion · 5 Square Nungesser, 94160 Saint-Mandé`, margin, ftY);
+    doc.text(`RCS Créteil 101 517 100`, margin, ftY + 10);
 
     doc.save(`Facture-FAC-${invoice.id.slice(0, 8)}.pdf`);
   } catch (err) {
@@ -650,8 +650,143 @@ export const generateInvoicePdf = async (invoice: any, orders: any[], clientInfo
   }
 };
 
-export const generateDriverStatementPdf = (driver: any, orders: any[]) => {
-  const doc = new jsPDF();
-  doc.text("Relevé Driver", 20, 20);
-  doc.save("releve.pdf");
+export const generateDriverStatementPdf = async (driver: any, orders: any[], periodLabel: string, computeDriverPay: (o: any) => number) => {
+  try {
+    const doc = new jsPDF({ unit: "pt", format: "a4" });
+    const pageW = 595;
+    const pageH = 842;
+    const margin = 30;
+    const contentW = pageW - margin * 2;
+
+    await drawCompanyHeader(doc, margin);
+
+    const totalPay = orders.reduce((sum, o) => sum + computeDriverPay(o), 0);
+    const driverDetails = driver.details || {};
+    const driverName = driverDetails.full_name || driver.email || "Chauffeur";
+
+    // Driver Info Box (Reuse Billing block style but for driver)
+    const boxW = 210;
+    const boxH = 115;
+    const boxX = pageW - margin - boxW;
+    const boxY = 25;
+
+    doc.setFillColor(248, 250, 252);
+    doc.roundedRect(boxX, boxY, boxW, boxH, 8, 8, "F");
+    doc.setDrawColor(226, 232, 240);
+    doc.setLineWidth(1);
+    doc.roundedRect(boxX, boxY, boxW, boxH, 8, 8, "D");
+    
+    doc.setFillColor(15, 23, 42); // Black accent
+    doc.rect(boxX, boxY + 5, 3, 22, "F");
+
+    doc.setTextColor(100, 116, 139);
+    doc.setFontSize(7.5);
+    doc.setFont("helvetica", "bold");
+    doc.text("RELEVÉ CHAUFFEUR", boxX + 12, boxY + 15);
+    
+    doc.setTextColor(15, 23, 42);
+    doc.setFontSize(9);
+    doc.setFont("helvetica", "bold");
+    doc.text(driverName.toUpperCase(), boxX + 12, boxY + 32);
+    
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8);
+    let currentY = boxY + 45;
+    if (driverDetails.company) {
+      doc.text(driverDetails.company, boxX + 12, currentY);
+      currentY += 12;
+    }
+    if (driverDetails.phone_number) {
+      doc.text(`Tél : ${driverDetails.phone_number}`, boxX + 12, currentY);
+      currentY += 12;
+    }
+    doc.text(driver.email, boxX + 12, currentY);
+
+    doc.setTextColor(237, 85, 24);
+    doc.setFont("helvetica", "bold");
+    doc.text(`PÉRIODE : ${periodLabel.toUpperCase()}`, boxX + 12, boxY + boxH - 12);
+
+    // Main Black Title Bar
+    const barY = 135;
+    doc.setFillColor(15, 23, 42);
+    doc.roundedRect(margin, barY, contentW, 25, 4, 4, "F");
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(9);
+    doc.setFont("helvetica", "bold");
+    doc.text(`DÉCOMPTE DES PRESTATIONS EFFECTUÉES`, margin + 15, barY + 16);
+
+    // Table Header
+    let tbY = 175;
+    doc.setFillColor(241, 245, 249);
+    doc.rect(margin, tbY, contentW, 20, "F");
+    doc.setTextColor(15, 23, 42);
+    doc.setFontSize(8);
+    doc.text("DATE", margin + 10, tbY + 13);
+    doc.text("RÉFÉRENCE", margin + 80, tbY + 13);
+    doc.text("TRAJET / MISSION", margin + 160, tbY + 13);
+    doc.text("REMUNERATION HT", margin + contentW - 10, tbY + 13, { align: "right" });
+
+    // Table Body
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8);
+    doc.setTextColor(71, 85, 105);
+    let rowY = tbY + 35;
+
+    orders.forEach((o) => {
+      if (rowY > pageH - 100) {
+        doc.addPage();
+        rowY = 40;
+      }
+      
+      const dateStr = o.scheduled_at ? new Date(o.scheduled_at).toLocaleDateString('fr-FR') : new Date(o.created_at).toLocaleDateString('fr-FR');
+      const refStr = o.id.slice(0, 8).toUpperCase();
+      const routeStr = `${o.pickup_city || "?"} -> ${o.delivery_city || "?"}`;
+      const pay = computeDriverPay(o);
+
+      doc.setTextColor(15, 23, 42);
+      doc.setFont("helvetica", "bold");
+      doc.text(dateStr, margin + 10, rowY);
+      
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(71, 85, 105);
+      doc.text(`#${refStr}`, margin + 80, rowY);
+      doc.text(routeStr, margin + 160, rowY);
+      
+      doc.setTextColor(30, 41, 59);
+      doc.setFont("helvetica", "bold");
+      doc.text(`${pay.toFixed(2)} €`, margin + contentW - 10, rowY, { align: "right" });
+
+      doc.setDrawColor(241, 245, 249);
+      doc.line(margin, rowY + 6, margin + contentW, rowY + 6);
+      rowY += 18;
+    });
+
+    // Summary Totals
+    const summaryY = rowY + 30;
+    
+    doc.setDrawColor(15, 23, 42);
+    doc.setLineWidth(1.5);
+    doc.line(margin + 280, summaryY, pageW - margin, summaryY);
+    
+    doc.setTextColor(15, 23, 42);
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "bold");
+    doc.text("TOTAL DES PRESTATIONS HT", margin + 280, summaryY + 22);
+    
+    doc.setFontSize(14);
+    doc.setTextColor(237, 85, 24);
+    doc.text(`${totalPay.toFixed(2)} €`, pageW - margin, summaryY + 22, { align: "right" });
+
+    // Footer Info
+    const ftY = pageH - 60;
+    doc.setTextColor(148, 163, 184);
+    doc.setFontSize(7);
+    doc.setFont("helvetica", "italic");
+    doc.text(`Ce document constitue un relevé de prestations et non une facture.`, margin, ftY);
+    doc.text(`One Connexion · 5 Square Nungesser, 94160 Saint-Mandé`, margin, ftY + 10);
+
+    doc.save(`Releve-${driverName.replace(/\s+/g, '-')}-${periodLabel}.pdf`);
+  } catch (err) {
+    console.error("Driver Statement Generate Error", err);
+  }
 };

@@ -36,19 +36,9 @@ export default function AdminInvoiceDetails() {
         isPaid: inv.status === 'paid',
       });
       setClient(profile?.details || {});
-
       const { data: ords } = await supabase.from('orders').select('*').eq('invoice_id', id).order('created_at', { ascending: false });
       if (ords) {
-        setOrders(ords.map(o => ({
-          id: o.id, route: `${o.pickup_city} → ${o.delivery_city}`,
-          date: new Date(o.created_at).toLocaleDateString('fr-FR'),
-          status: o.status === 'delivered' ? 'Terminée' : o.status,
-          total: o.price_ht,
-          client: clientName, client_details: profile?.details,
-          pickup: o.pickup_address, delivery: o.delivery_address,
-          vehicle: o.vehicle_type, service: o.service_level,
-          pickup_name: o.pickup_name
-        })));
+        setOrders(ords);
       }
     }
     setLoading(false);
@@ -76,7 +66,7 @@ export default function AdminInvoiceDetails() {
     </div>
   );
 
-  const totalHT = orders.reduce((sum, o) => sum + (Number(o.total) || 0), 0);
+  const totalHT = orders.reduce((sum, o) => sum + (Number(o.price_ht) || 0), 0);
   const totalTTC = totalHT * 1.2;
 
   return (
@@ -163,22 +153,36 @@ export default function AdminInvoiceDetails() {
               ) : orders.map(o => (
                 <tr key={o.id} className="hover:bg-slate-50/80 transition-all group">
                   <td className="px-8 py-5">
-                    <span className="inline-flex items-center rounded-xl bg-slate-100 px-2.5 py-1 text-xs font-black text-slate-700 font-mono">
+                    <span className="inline-flex items-center rounded-xl bg-slate-900 text-white px-2.5 py-1 text-xs font-black font-mono">
                       #{o.id.slice(0, 8)}
                     </span>
                   </td>
-                  <td className="px-8 py-5 text-xs font-bold text-slate-700">{o.route}</td>
-                  <td className="px-8 py-5 text-xs text-slate-500">{o.date}</td>
+                  <td className="px-8 py-5 text-xs font-bold text-slate-700">{o.pickup_city} → {o.delivery_city}</td>
+                  <td className="px-8 py-5 text-xs text-slate-500">{new Date(o.created_at).toLocaleDateString('fr-FR')}</td>
                   <td className="px-8 py-5">
-                    <span className={`inline-flex items-center rounded-lg px-2.5 py-1 text-[9px] font-black uppercase tracking-widest ${o.status === "Terminée" ? "bg-emerald-50 text-emerald-600" : "bg-slate-100 text-slate-600"}`}>
-                      {o.status}
+                    <span className={`inline-flex items-center rounded-lg px-2.5 py-1 text-[9px] font-black uppercase tracking-widest ${o.status === "delivered" ? "bg-emerald-50 text-emerald-600" : "bg-slate-100 text-slate-600"}`}>
+                      {o.status === 'delivered' ? 'Terminée' : o.status}
                     </span>
                   </td>
-                  <td className="px-8 py-5 font-black text-slate-900 tabular-nums">{Number(o.total || 0).toFixed(2)}€</td>
+                  <td className="px-8 py-5 font-black text-slate-900 tabular-nums">{Number(o.price_ht || 0).toFixed(2)}€</td>
                   <td className="px-8 py-5 text-right">
                     <div className="flex items-center justify-end gap-2">
                       <button
-                        onClick={() => generateOrderPdf(o, client)}
+                        onClick={() => {
+                          const d = client || {};
+                          const clientInfo = {
+                            name: d.full_name || d.contact_name || invoice.client || "",
+                            firstName: d.first_name || (d.full_name || "").split(' ')[0] || "",
+                            lastName: d.last_name || (d.full_name || "").split(' ').slice(1).join(' ') || "",
+                            email: d.email || "",
+                            phone: d.phone || d.phone_number || "",
+                            company: d.company || "",
+                            billingAddress: d.address || "",
+                            billingCity: d.city || "",
+                            billingZip: d.zip || d.postal_code || ""
+                          };
+                          generateOrderPdf(o, clientInfo);
+                        }}
                         className="flex items-center gap-1.5 rounded-xl bg-slate-100 px-3 py-2 text-[10px] font-black text-slate-600 hover:bg-slate-200 transition-all"
                       >
                         <Download size={12} /> BC

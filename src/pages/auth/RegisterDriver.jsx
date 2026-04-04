@@ -11,8 +11,6 @@ export default function RegisterDriver() {
     lastName: "",
     email: "",
     phone: "",
-    siret: "",
-    address: "",
     password: ""
   });
   const [error, setError] = useState("");
@@ -44,8 +42,6 @@ export default function RegisterDriver() {
           role: 'courier',
           full_name: `${formData.firstName} ${formData.lastName}`.trim(),
           phone_number: formData.phone,
-          siret: formData.siret,
-          address: formData.address,
           company: "One Connexion Flotte"
         }
       }
@@ -173,36 +169,6 @@ export default function RegisterDriver() {
                     placeholder="06 12 34 56 78"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-4 py-3 text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900 transition-all"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-500">SIRET</label>
-                <div className="relative">
-                  <User className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                  <input
-                    type="text"
-                    required
-                    placeholder="123 456 789 00012"
-                    value={formData.siret}
-                    onChange={(e) => setFormData({ ...formData, siret: e.target.value })}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-4 py-3 text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900 transition-all"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-500">Adresse</label>
-                <div className="relative">
-                  <User className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                  <input
-                    type="text"
-                    required
-                    placeholder="123 rue de la livraison, Paris"
-                    value={formData.address}
-                    onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                     className="w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-4 py-3 text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900 transition-all"
                   />
                 </div>

@@ -1,5 +1,5 @@
 import { FileText, Search } from "lucide-react";
-import { downloadOrderPdf } from "@/pages/adminPdf.js";
+import { generateOrderPdf } from "@/lib/pdf-generator";
 
 export default function AdminOrdersHistory({
     query,
@@ -59,7 +59,12 @@ export default function AdminOrdersHistory({
                         {historyFiltered.map((o) => (
                             <tr key={o.id} className="hover:bg-slate-50/80 transition-all cursor-pointer" onClick={() => navigate(`/admin/orders/${o.id}`)}>
                                 <td className="px-8 py-6">
-                                    <span className="text-xs font-black text-slate-400">#{o.id.slice(0, 8)}</span>
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-xs font-black text-slate-400">#{o.id.slice(0, 8)}</span>
+                                        {o.claim_status && o.claim_status !== 'none' && (
+                                            <span className={`h-2 w-2 rounded-full animate-pulse ${o.claim_status === 'resolved' ? 'bg-emerald-500' : 'bg-rose-500'}`} title={o.claim_status === 'resolved' ? 'Litige résolu' : 'Litige en cours'} />
+                                        )}
+                                    </div>
                                 </td>
                                 <td className="px-8 py-6">
                                     <div className="flex flex-col">
@@ -88,7 +93,19 @@ export default function AdminOrdersHistory({
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 const fullClient = clients.find(c => c.id === o.client_id);
-                                                downloadOrderPdf(o, fullClient || {});
+                                                const d = fullClient?.details || {};
+                                                const clientInfo = {
+                                                    name: d.full_name || d.contact_name || o.client || "",
+                                                    firstName: d.first_name || (d.full_name || "").split(' ')[0] || "",
+                                                    lastName: d.last_name || (d.full_name || "").split(' ').slice(1).join(' ') || "",
+                                                    email: d.email || fullClient?.email || o.sender_email || "",
+                                                    phone: d.phone || d.phone_number || o.pickup_phone || "",
+                                                    company: d.company || o.billing_company || "",
+                                                    billingAddress: d.address || o.billing_address || "",
+                                                    billingCity: d.city || o.billing_city || "",
+                                                    billingZip: d.zip || d.postal_code || o.billing_zip || ""
+                                                };
+                                                generateOrderPdf(o, clientInfo);
                                             }}
                                             className="h-8 w-8 flex items-center justify-center rounded-lg bg-slate-100 text-slate-400 hover:bg-slate-900 hover:text-white transition-all"
                                         >

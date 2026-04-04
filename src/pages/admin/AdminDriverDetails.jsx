@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
 import {
   Loader2, Edit2, Save, X, FileText,
-  Zap, Clock, TrendingUp, CheckCircle2, Download, Calendar
+  Zap, Clock, TrendingUp, CheckCircle2, Download, Calendar, Truck
 } from "lucide-react";
 import AdminPageHeader from "../../components/admin/AdminPageHeader";
 // VehicleManager import removed as per CDI status
@@ -48,8 +48,8 @@ export default function AdminDriverDetails() {
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [formData, setFormData] = useState({
-    full_name: "", email: "", phone_number: "", company: "", siret: "",
-    address: "", vehicle_model: "", vehicle_plate: "", vehicle_type: "", iban: "", bic: ""
+    full_name: "", email: "", phone_number: "",
+    vehicle_model: "", vehicle_plate: "", vehicle_type: "", iban: "", bic: ""
   });
   const [driverRowId, setDriverRowId] = useState(null);
 
@@ -75,8 +75,7 @@ export default function AdminDriverDetails() {
         const d = dRes.data.details || {};
         setFormData({
           full_name: d.full_name || "", email: d.email || dRes.data.email || "",
-          phone_number: d.phone_number || "", company: d.company || "",
-          siret: d.siret || "", address: d.address || "",
+          phone_number: d.phone_number || "",
           vehicle_model: d.vehicle_model || "", vehicle_plate: d.vehicle_plate || "",
           vehicle_type: d.vehicle_type || "", iban: d.iban || "", bic: d.bic || ""
         });
@@ -123,7 +122,7 @@ export default function AdminDriverDetails() {
     const periodLabel = from ? new Date(from).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' }) : "Période globale";
     const completedOrders = rows.filter(r => r.status === "delivered");
     const { generateDriverStatementPdf } = await import("@/lib/pdf-generator");
-    generateDriverStatementPdf(driver, completedOrders, periodLabel, computeDriverPay);
+    await generateDriverStatementPdf(driver, completedOrders, periodLabel, computeDriverPay);
   };
 
   const rows = useMemo(() => {
@@ -203,7 +202,7 @@ export default function AdminDriverDetails() {
     <div className="space-y-6 pb-20">
       <AdminPageHeader
         title={driverName}
-        subtitle={`${driverDetails.company ? driverDetails.company + ' · ' : ''}Membre depuis le ${new Date(driver.created_at).toLocaleDateString('fr-FR')}`}
+        subtitle={`Membre depuis le ${new Date(driver.created_at).toLocaleDateString('fr-FR')}`}
         backTo="/admin/drivers"
         actions={
           <div className="flex items-center gap-3 flex-wrap">
@@ -290,9 +289,6 @@ export default function AdminDriverDetails() {
               {field("Prénom & Nom", "full_name", "text", "Jean Dupont")}
               {field("Téléphone", "phone_number", "tel", "06 12 34 56 78")}
               <div className="md:col-span-2">{field("Email", "email", "email", "email@exemple.com")}</div>
-              {field("Société", "company", "text", "Société Express")}
-              {field("SIRET", "siret", "text", "123 456 789 00010")}
-              <div className="md:col-span-2">{field("Adresse", "address", "text", "123 rue de la livraison, 75000 Paris")}</div>
             </div>
           </div>
 

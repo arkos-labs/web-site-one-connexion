@@ -42,6 +42,7 @@ export default function AdminOrderDetails() {
     pickupTime: "", deliveryDeadline: "", contactPhone: "",
     accessCode: "", deliveryPhone: "", deliveryAccessCode: "",
     dispatchNote: "", driverId: "", serviceLevel: "",
+    claimStatus: "none", claimNotes: "",
   });
 
   useEffect(() => {
@@ -89,6 +90,8 @@ export default function AdminOrderDetails() {
       dispatchNote: ord.notes?.match(/Dispatch: (.*)/)?.[1] || "",
       driverId: ord.driver_id || "",
       serviceLevel: ord.service_level || "normal",
+      claimStatus: ord.claim_status || "none",
+      claimNotes: ord.claim_notes || "",
     });
     fetchDrivers(ord.driver_id);
     setLoading(false);
@@ -108,6 +111,10 @@ export default function AdminOrderDetails() {
       notes: `${(order.notes || '').split(' | Dispatch:')[0]} | Dispatch: ${edit.dispatchNote}`,
       ...(edit.pickupTime ? { scheduled_at: `${datePart}T${edit.pickupTime}:00` } : {}),
       ...(edit.deliveryDeadline ? { delivery_deadline: `${datePart}T${edit.deliveryDeadline}:00` } : {}),
+      claim_status: edit.claimStatus,
+      claim_notes: edit.claimNotes,
+      claim_opened_at: (edit.claimStatus !== 'none' && order.claim_status === 'none') ? new Date().toISOString() : order.claim_opened_at,
+      claim_resolved_at: (edit.claimStatus === 'resolved' && order.claim_status !== 'resolved') ? new Date().toISOString() : order.claim_resolved_at,
     };
     if (edit.driverId) {
       const driverChanged = String(edit.driverId) !== String(order.driver_id);
@@ -565,6 +572,80 @@ export default function AdminOrderDetails() {
                   <span className="text-xs font-black text-slate-900">{item.value}</span>
                 </div>
               ))}
+            </div>
+          </div>
+
+          {/* Claims / Réclamations */}
+          <div className={`rounded-[2rem] border p-6 transition-all ${edit.claimStatus !== 'none' ? 'bg-rose-50 border-rose-200 shadow-lg shadow-rose-500/5' : 'bg-white border-slate-100 shadow-sm'}`}>
+            <div className="flex items-center justify-between mb-5">
+              <div className="flex items-center gap-2">
+                <AlertTriangle size={14} className={edit.claimStatus !== 'none' ? 'text-rose-600' : 'text-slate-400'} />
+                <div className={`text-[10px] font-black uppercase tracking-widest ${edit.claimStatus !== 'none' ? 'text-rose-600' : 'text-slate-400'}`}>Réclamation & Litige</div>
+              </div>
+              {edit.claimStatus !== 'none' && (
+                <span className="animate-pulse rounded-full bg-rose-500 w-2 h-2" />
+              )}
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1.5 block">Statut du litige</label>
+                <div className="grid grid-cols-3 gap-2">
+                  {[
+                    { id: 'none', label: 'Aucun', cls: 'bg-slate-100 text-slate-400' },
+                    { id: 'pending', label: 'En cours', cls: 'bg-rose-100 text-rose-600' },
+                    { id: 'resolved', label: 'Résolu', cls: 'bg-emerald-100 text-emerald-600' }
+                  ].map(s => (
+                    <button
+                      key={s.id}
+                      onClick={() => setEdit(p => ({ ...p, claimStatus: s.id }))}
+                      className={`px-2 py-2 rounded-xl text-[10px] font-black transition-all ${edit.claimStatus === s.id ? `${s.cls} ring-2 ring-slate-900/5` : 'bg-slate-50 text-slate-400 hover:bg-slate-100'}`}
+                    >
+                      {s.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {edit.claimStatus !== 'none' && (
+                <div className="animate-in fade-in slide-in-from-top-2 duration-300">
+                  <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1.5 block">Détails du problème</label>
+                  <textarea
+                    rows={3}
+                    className="w-full rounded-xl border border-rose-100 bg-white/50 px-3 py-3 text-xs placeholder:text-slate-300 focus:outline-none focus:ring-4 focus:ring-rose-500/5 focus:border-rose-300 transition-all"
+                    placeholder="Saisissez ici les motifs de la réclamation client (colis endommagé, retard critique, erreur d'adresse...)"
+                    value={edit.claimNotes}
+                    onChange={e => setEdit(p => ({ ...p, claimNotes: e.target.value }))}
+                  />
+                  {order.claim_opened_at && (
+                    <div className="mt-2 text-[8px] font-bold text-rose-400 uppercase tracking-tighter">
+                      Ouvert le {new Date(order.claim_opened_at).toLocaleString('fr-FR')}
+                    </div>
+                  )}
+                  {order.claim_resolved_at && edit.claimStatus === 'resolved' && (
+                    <div className="mt-1 text-[8px] font-bold text-emerald-500 uppercase tracking-tighter">
+                      Résolu le {new Date(order.claim_resolved_at).toLocaleString('fr-FR')}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {edit.claimStatus !== order.claim_status || edit.claimNotes !== order.claim_notes ? (
+                <button
+                  onClick={saveEdits}
+                  disabled={saving}
+                  className="w-full flex items-center justify-center gap-2 rounded-xl bg-slate-900 py-3 text-[10px] font-black text-white hover:bg-rose-600 transition-all shadow-lg shadow-slate-900/10"
+                >
+                  Mettre à jour le litige
+                </button>
+              ) : edit.claimStatus !== 'none' && (
+                <div className="p-3 bg-rose-100/50 rounded-xl flex items-start gap-2">
+                  <AlertTriangle size={12} className="text-rose-500 shrink-0 mt-0.5" />
+                  <p className="text-[10px] font-medium text-rose-700 leading-tight">
+                    Ce dossier est marqué comme litigieux. Assurez-vous de bien documenter tous les échanges.
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </div>
