@@ -4,7 +4,8 @@ import { supabase } from "../../lib/supabase";
 import { generateOrderPdf } from "../../lib/pdf-generator";
 import {
   Loader2, ArrowLeft, MapPin, Clock, Package, User, Phone,
-  FileText, CheckCircle2, Truck, AlertTriangle, Save, ChevronRight, TrendingUp
+  FileText, CheckCircle2, Truck, AlertTriangle, Save, ChevronRight, TrendingUp,
+  Camera, Image as ImageIcon
 } from "lucide-react";
 import AdminPageHeader from "../../components/admin/AdminPageHeader";
 
@@ -403,6 +404,53 @@ export default function AdminOrderDetails() {
               </button>
             )}
           </div>
+          {/* Preuves photos */}
+          {(order.pickup_photo_url || order.delivery_photo_url || order.delivery_signature_url) && (
+            <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm p-6 overflow-hidden">
+              <div className="flex items-center gap-2 mb-4">
+                <Camera size={14} className="text-slate-400" />
+                <div className="text-[10px] font-black uppercase tracking-widest text-slate-400">Justificatifs de mission</div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                {order.pickup_photo_url && (
+                  <div className="space-y-2">
+                    <div className="text-[8px] font-black uppercase tracking-widest text-slate-400">Photo Enlèvement</div>
+                    <a 
+                      href={order.pickup_photo_url} 
+                      target="_blank" 
+                      rel="noreferrer" 
+                      className="group relative block aspect-[4/3] rounded-2xl overflow-hidden border border-slate-100 bg-slate-50 transition-all hover:ring-4 hover:ring-slate-900/5"
+                    >
+                      <img src={order.pickup_photo_url} alt="Enlèvement" className="h-full w-full object-cover transition-transform group-hover:scale-105" />
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
+                    </a>
+                  </div>
+                )}
+                {order.delivery_photo_url && (
+                  <div className="space-y-2">
+                    <div className="text-[8px] font-black uppercase tracking-widest text-slate-400">Photo Livraison</div>
+                    <a 
+                      href={order.delivery_photo_url} 
+                      target="_blank" 
+                      rel="noreferrer" 
+                      className="group relative block aspect-[4/3] rounded-2xl overflow-hidden border border-slate-100 bg-slate-50 transition-all hover:ring-4 hover:ring-slate-900/5"
+                    >
+                      <img src={order.delivery_photo_url} alt="Livraison" className="h-full w-full object-cover transition-transform group-hover:scale-105" />
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
+                    </a>
+                  </div>
+                )}
+              </div>
+              {order.delivery_signature_url && (
+                <div className="mt-4 pt-4 border-t border-slate-50">
+                  <div className="text-[8px] font-black uppercase tracking-widest text-slate-400 mb-2">Signature de réception</div>
+                  <div className="rounded-2xl border border-slate-100 bg-slate-50 p-4">
+                    <img src={order.delivery_signature_url} alt="Signature" className="mx-auto max-h-32 brightness-90 contrast-125" />
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Right — Dispatch panel */}
