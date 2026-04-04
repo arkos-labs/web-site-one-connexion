@@ -1,4 +1,4 @@
-import { Clock } from "lucide-react";
+import { Clock, AlertTriangle } from "lucide-react";
 
 export default function AdminOrdersKanban({
     kanbanList,
@@ -61,26 +61,37 @@ export default function AdminOrdersKanban({
                                 onClick={() => navigate(`/admin/orders/${o.id}`)}
                             >
                                 <div className="flex justify-between items-start mb-4">
-                                    <div className="flex flex-col">
-                                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">BC-{o.id.slice(0, 8)}</span>
+                                    <div className="flex flex-col min-w-0">
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">BC-{o.id.slice(0, 8)}</span>
+                                            {o.claim_status && o.claim_status !== 'none' && (
+                                                <div className="h-4 w-4 rounded-full bg-rose-500 flex items-center justify-center text-white animate-pulse shadow-lg shadow-rose-500/20" title="Réclamation en cours">
+                                                    <AlertTriangle size={10} />
+                                                </div>
+                                            )}
+                                        </div>
                                         <h4 className="text-base font-black text-slate-900 group-hover:text-[#ed5518] transition-colors line-clamp-1">{o.client}</h4>
-                                        <span className={`mt-2 inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-black uppercase tracking-widest ${o.status === "assigned" ? "bg-amber-50 text-amber-700" :
-                                            o.status === "driver_accepted" ? "bg-emerald-50 text-emerald-600" :
-                                                o.status === "in_progress" ? "bg-blue-50 text-blue-600" :
-                                                    o.status === "delivered" ? "bg-emerald-100 text-emerald-800" :
-                                                        o.status === "accepted" ? "bg-[#ed5518]/10 text-[#ed5518]" : "bg-slate-50 text-slate-500"
-                                            }`}>
-                                            {o.status === "assigned" ? (o.driver_id ? "EN ATTENTE RÉPONSE" : "REFUSÉ CHAUFFEUR ❌") :
-                                                o.status === "driver_accepted" ? "EN ROUTE ENLÈVEMENT ✅" :
-                                                    (o.status === "in_progress" || o.status === "picked_up") ? "ENLEVÉE" :
-                                                        o.status === "delivered" ? "LIVRÉE" :
-                                                            o.status === "accepted" ? "À DISPATCHER" :
-                                                                o.status === "driver_refused" ? "REFUSÉ CHAUFFEUR ❌" : o.status}
-                                        </span>
+                                        <div className="mt-2 flex flex-wrap gap-1">
+                                            <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-black uppercase tracking-widest ${o.status === "assigned" ? "bg-amber-50 text-amber-700" :
+                                                o.status === "driver_accepted" ? "bg-emerald-50 text-emerald-600" :
+                                                    o.status === "in_progress" ? "bg-blue-50 text-blue-600" :
+                                                        o.status === "delivered" ? "bg-emerald-100 text-emerald-800" :
+                                                            o.status === "accepted" ? "bg-[#ed5518]/10 text-[#ed5518]" : "bg-slate-50 text-slate-500"
+                                                }`}>
+                                                {o.status === "assigned" ? (o.driver_id ? "EN ATTENTE RÉPONSE" : "REFUSÉ CHAUFFEUR ❌") :
+                                                    o.status === "driver_accepted" ? "EN ROUTE ENLÈVEMENT ✅" :
+                                                        (o.status === "in_progress" || o.status === "picked_up") ? "ENLEVÉE" :
+                                                            o.status === "delivered" ? "LIVRÉE" :
+                                                                o.status === "accepted" ? "À DISPATCHER" :
+                                                                    o.status === "driver_refused" ? "REFUSÉ CHAUFFEUR ❌" : o.status}
+                                            </span>
+                                        </div>
                                     </div>
-                                    {o.isGuest && (
-                                        <div className="h-2 w-2 rounded-full bg-rose-500 animate-pulse shadow-[0_0_8px_rgba(244,63,94,0.5)]"></div>
-                                    )}
+                                    <div className="flex gap-2 items-center">
+                                        {o.isGuest && (
+                                            <div className="h-2 w-2 rounded-full bg-rose-500 animate-pulse shadow-[0_0_8px_rgba(244,63,94,0.5)]"></div>
+                                        )}
+                                    </div>
                                 </div>
 
                                 <div className="space-y-3 mb-6">
