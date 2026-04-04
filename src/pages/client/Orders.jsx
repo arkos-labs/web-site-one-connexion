@@ -25,28 +25,43 @@ function clientStatusLabel(order) {
 
   switch (status) {
     case "pending_acceptance":
-    case "pending": return "En attente";
-    case "accepted": return "Acceptée";
-    case "assigned": return "Dispatchée";
+    case "pending":
+      return "⌛ En attente";
+    case "accepted":
+      return "✅ Mission Validée";
+    case "assigned":
+      return "📍 Recherche chauffeur";
     case "driver_accepted":
-    case "in_progress": return "En cours";
-    case "delivered": return "Terminée";
-    case "cancelled": return "Annulée";
-    default: return status || "—";
+      return "🚚 Chauffeur en route";
+    case "in_progress":
+      return "📦 Livraison en cours";
+    case "delivered":
+      return "🏁 Terminée";
+    case "cancelled":
+      return "🚫 Annulée";
+    default:
+      return status || "—";
   }
 }
 
 function statusColor(status) {
   switch (status) {
     case "pending_acceptance":
-    case "pending": return "bg-slate-100 text-slate-600";
+    case "pending":
+      return "bg-slate-100 text-slate-500 border border-slate-200";
     case "accepted":
-    case "assigned": return "bg-amber-50 text-amber-600";
+      return "bg-blue-50 text-blue-600 border border-blue-100 animate-pulse";
+    case "assigned":
+      return "bg-amber-50 text-amber-600 border border-amber-100";
     case "driver_accepted":
-    case "in_progress": return "bg-orange-50 text-[#ed5518]";
-    case "delivered": return "bg-emerald-50 text-emerald-600";
-    case "cancelled": return "bg-red-50 text-red-600";
-    default: return "bg-slate-100";
+    case "in_progress":
+      return "bg-orange-50 text-[#ed5518] border border-orange-100";
+    case "delivered":
+      return "bg-emerald-50 text-emerald-600 border border-emerald-100";
+    case "cancelled":
+      return "bg-red-50 text-red-600 border border-red-200";
+    default:
+      return "bg-slate-100 text-slate-400";
   }
 }
 

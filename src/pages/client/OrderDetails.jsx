@@ -10,19 +10,19 @@ function clientStatusLabel(order) {
   switch (status) {
     case "pending_acceptance":
     case "pending":
-      return "En attente";
+      return "⌛ En attente";
     case "accepted":
-      return "Acceptée";
+      return "✅ Mission Validée";
     case "assigned":
-      return "En attente acceptation";
+      return "📍 Recherche chauffeur";
     case "driver_accepted":
-      return "Accepté";
+      return "🚚 Chauffeur en route";
     case "in_progress":
-      return "En cours";
+      return "📦 Livraison en cours";
     case "delivered":
-      return "Terminée";
+      return "🏁 Terminée";
     case "cancelled":
-      return "Annulée";
+      return "🚫 Annulée";
     default:
       return status || "—";
   }
@@ -44,6 +44,26 @@ export default function OrderDetails() {
       fetchFullOrder();
     } else if (order?.client_id) {
       fetchClient(order.client_id);
+    }
+
+    // Subscribe to realtime updates for THIS order
+    const orderId = id || order?.id;
+    if (orderId) {
+      const channel = supabase
+        .channel(`order-details-${orderId}`)
+        .on(
+          'postgres_changes',
+          { event: 'UPDATE', schema: 'public', table: 'orders', filter: `id=eq.${orderId}` },
+          (payload) => {
+            console.log('Real-time update received:', payload.new);
+            setOrder(payload.new);
+          }
+        )
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
     }
   }, [id, order?.id, order?.pickup_address, order?.client_id]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -88,8 +108,26 @@ export default function OrderDetails() {
 
   try {
     const timeline = [
-      { label: "Commande passée", value: order.created_at ? new Date(order.created_at).toLocaleString() : "—" },
-      { label: " en cours", value: order.status === 'delivered' ? "Effectuée" : "En cours" },
+      { 
+        label: "Commande passée", 
+        value: order.created_at ? new Date(order.created_at).toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' }) : "—",
+        done: true
+      },
+      { 
+        label: "Validation Admin", 
+        value: ['accepted', 'assigned', 'driver_accepted', 'in_progress', 'delivered'].includes(order.status) ? "Mission validée" : "En attente",
+        done: ['accepted', 'assigned', 'driver_accepted', 'in_progress', 'delivered'].includes(order.status)
+      },
+      { 
+        label: "Prise en charge", 
+        value: ['driver_accepted', 'in_progress', 'delivered'].includes(order.status) ? "Chauffeur assigné" : "Recherche chauffeur",
+        done: ['driver_accepted', 'in_progress', 'delivered'].includes(order.status)
+      },
+      { 
+        label: "Livraison", 
+        value: order.status === 'delivered' ? (order.delivered_at ? new Date(order.delivered_at).toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' }) : "Livrée") : "En cours",
+        done: order.status === 'delivered'
+      }
     ];
 
     // ======================
@@ -176,11 +214,12 @@ export default function OrderDetails() {
             <h1 className="text-2xl font-bold text-slate-900">#{String(order.id || "").slice(0, 8)}</h1>
           </div>
           <div className="flex items-center gap-2">
-            <div className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wide ${order.status === 'delivered' ? 'bg-emerald-50 text-emerald-600' :
-                order.status === 'driver_accepted' ? 'bg-orange-50 text-[#ed5518]' :
-                  order.status === 'assigned' ? 'bg-amber-50 text-amber-600' :
-                    order.status === 'in_progress' ? 'bg-orange-50 text-[#ed5518]' :
-                      'bg-slate-900 text-white'
+            <div className={`rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-widest ${
+              order.status === 'delivered' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' :
+              order.status === 'driver_accepted' || order.status === 'in_progress' ? 'bg-orange-50 text-[#ed5518] border border-orange-100' :
+              order.status === 'accepted' ? 'bg-blue-50 text-blue-600 border border-blue-100 animate-pulse' :
+              order.status === 'assigned' ? 'bg-amber-50 text-amber-600 border border-amber-100' :
+              'bg-slate-100 text-slate-500 border border-slate-200'
               }`}>
               {clientStatusLabel(order) || "—"}
             </div>
@@ -301,13 +340,13 @@ export default function OrderDetails() {
             <div className="absolute left-3 top-1 h-full w-px bg-slate-200" />
             {timeline.map((t, idx) => (
               <div key={t.label} className="relative flex items-start gap-4">
-                <div className={`mt-1 h-3 w-3 rounded-full ${t.value !== "—" ? "bg-slate-900" : "bg-slate-200"}`} />
+                <div className={`mt-1 h-3 w-3 rounded-full transition-all duration-500 ${t.done ? "bg-[#ed5518] scale-110 shadow-[0_0_10px_rgba(237,85,24,0.5)]" : "bg-slate-200"}`} />
                 {idx < timeline.length - 1 && (
-                  <div className="absolute left-[5px] top-4 h-full w-px bg-slate-200" />
+                  <div className={`absolute left-[5px] top-4 h-full w-px transition-colors duration-500 ${t.done && timeline[idx+1].done ? "bg-[#ed5518]" : "bg-slate-200"}`} />
                 )}
-                <div className="flex w-full items-center justify-between rounded-2xl bg-slate-50 px-4 py-3">
-                  <div className="text-sm font-semibold text-slate-900">{t.label}</div>
-                  <div className="text-xs font-bold text-slate-500">{t.value}</div>
+                <div className={`flex w-full items-center justify-between rounded-2xl px-4 py-3 transition-all ${t.done ? "bg-slate-50 border border-slate-100 shadow-sm" : "bg-white border border-transparent opacity-60"}`}>
+                  <div className={`text-sm font-bold ${t.done ? "text-slate-900" : "text-slate-400"}`}>{t.label}</div>
+                  <div className={`text-[10px] font-black uppercase tracking-tight ${t.done ? "text-[#ed5518]" : "text-slate-400"}`}>{t.value}</div>
                 </div>
               </div>
             ))}
