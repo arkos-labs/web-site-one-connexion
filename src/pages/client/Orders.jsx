@@ -610,8 +610,13 @@ export default function Orders() {
                   <div className="font-bold text-slate-900 leading-none">
                     {order.pickup_city || 'Départ'} → {order.delivery_city || 'Arrivée'}
                   </div>
-                  <div className="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-tight">
-                    #{order.id.slice(0, 8)} • {new Date(order.created_at).toLocaleDateString('fr-FR')}
+                  <div className="flex items-center gap-2 mt-1">
+                    <div className="text-[10px] font-bold text-slate-400 uppercase tracking-tight">
+                      #{order.id.slice(0, 8)} • {new Date(order.created_at).toLocaleDateString('fr-FR')}
+                    </div>
+                    {order.claim_status && order.claim_status !== 'none' && (
+                      <div className={`h-1.5 w-1.5 rounded-full animate-pulse ${order.claim_status === 'resolved' ? 'bg-emerald-500' : 'bg-rose-500'}`} title={order.claim_status === 'resolved' ? 'Litige résolu' : 'Litige en cours'} />
+                    )}
                   </div>
                 </div>
               </div>

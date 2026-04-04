@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
 import { generateOrderPdf } from "../../lib/pdf-generator";
-import { Loader2, FileText } from "lucide-react";
+import { Loader2, FileText, AlertTriangle, Send, CheckCircle2 } from "lucide-react";
 
 function clientStatusLabel(order) {
   const status = typeof order === 'string' ? order : order.status;
@@ -36,6 +36,9 @@ export default function OrderDetails() {
   const [client, setClient] = useState(null);
   const [loading, setLoading] = useState(false);
   const [notFound, setNotFound] = useState(false);
+  const [showClaimForm, setShowClaimForm] = useState(false);
+  const [claimNotes, setClaimNotes] = useState("");
+  const [submittingClaim, setSubmittingClaim] = useState(false);
 
   useEffect(() => {
     // If we have an order ID but the object lacks full details (like pickup_address)
@@ -206,6 +209,24 @@ export default function OrderDetails() {
       }
     };
 
+    const submitClaim = async () => {
+      if (!claimNotes.trim()) return;
+      setSubmittingClaim(true);
+      const { error } = await supabase.from('orders').update({
+        claim_status: 'pending',
+        claim_notes: claimNotes,
+        claim_opened_at: new Date().toISOString()
+      }).eq('id', order.id);
+      
+      if (!error) {
+        setOrder({ ...order, claim_status: 'pending', claim_notes: claimNotes });
+        setShowClaimForm(false);
+      } else {
+        alert("Erreur lors de l'envoi de la réclamation.");
+      }
+      setSubmittingClaim(false);
+    };
+
     return (
       <div className="grid gap-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
@@ -328,6 +349,70 @@ export default function OrderDetails() {
             <div className="mt-6 rounded-2xl bg-slate-50 p-4">
               <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Statut</div>
               <div className="mt-2 text-sm font-semibold text-slate-900">{clientStatusLabel(order)}</div>
+            </div>
+
+            {/* Reclamation / Claim Section */}
+            <div className="mt-4">
+              {!order.claim_status || order.claim_status === 'none' ? (
+                <>
+                  {!showClaimForm ? (
+                    <button
+                      onClick={() => setShowClaimForm(true)}
+                      className="w-full flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white py-3 text-xs font-bold text-slate-600 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-100 transition-all"
+                    >
+                      <AlertTriangle size={14} />
+                      Signaler un problème
+                    </button>
+                  ) : (
+                    <div className="space-y-3 p-4 bg-rose-50 rounded-2xl border border-rose-100 animate-in fade-in slide-in-from-top-2 duration-300">
+                      <div className="text-xs font-black text-rose-600 uppercase tracking-widest">Nouvelle Réclamation</div>
+                      <textarea
+                        rows={3}
+                        placeholder="Décrivez votre problème (retard, colis dégradé...)"
+                        className="w-full rounded-xl border border-rose-100 bg-white p-3 text-xs focus:outline-none focus:ring-4 focus:ring-rose-500/5 focus:border-rose-300 transition-all"
+                        value={claimNotes}
+                        onChange={(e) => setClaimNotes(e.target.value)}
+                      />
+                      <div className="flex gap-2">
+                        <button
+                          onClick={submitClaim}
+                          disabled={submittingClaim}
+                          className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-rose-600 py-2.5 text-xs font-bold text-white hover:bg-rose-700 transition-all shadow-lg shadow-rose-900/10 active:scale-95 disabled:opacity-50"
+                        >
+                          {submittingClaim ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
+                          Envoyer
+                        </button>
+                        <button
+                          onClick={() => setShowClaimForm(false)}
+                          className="px-4 rounded-xl bg-white border border-rose-100 text-xs font-bold text-rose-400"
+                        >
+                          Annuler
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className={`p-4 rounded-2xl border ${order.claim_status === 'resolved' ? 'bg-emerald-50 border-emerald-100' : 'bg-rose-50 border-rose-100'} animate-in zoom-in-95 duration-300`}>
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      {order.claim_status === 'resolved' ? <CheckCircle2 size={14} className="text-emerald-600" /> : <AlertTriangle size={14} className="text-rose-600" />}
+                      <span className={`text-[10px] font-black uppercase tracking-widest ${order.claim_status === 'resolved' ? 'text-emerald-600' : 'text-rose-600'}`}>
+                        Réclamation {order.claim_status === 'resolved' ? 'résolue' : 'en cours'}
+                      </span>
+                    </div>
+                    {order.claim_status === 'pending' && <span className="h-1.5 w-1.5 rounded-full bg-rose-500 animate-ping" />}
+                  </div>
+                  <p className={`text-[11px] font-medium leading-relaxed ${order.claim_status === 'resolved' ? 'text-emerald-700' : 'text-rose-700'}`}>
+                    {order.claim_notes || "Aucun détail fourni."}
+                  </p>
+                  {order.claim_status === 'pending' && (
+                    <div className="mt-3 text-[9px] font-bold text-rose-400 bg-white/50 rounded-lg p-2 border border-rose-100 italic">
+                      Notre équipe examine votre demande. Vous recevrez une réponse sous peu.
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>
