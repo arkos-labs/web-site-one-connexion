@@ -50,9 +50,26 @@ export default function DashboardAdmin() {
 
   useEffect(() => {
     Promise.all([fetchOrders(), fetchInvoices(), fetchDriverPayments(), fetchProfiles()]).finally(() => setLoading(false));
-    const ordersChannel = supabase.channel('admin-orders')
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'orders' }, (p) => { if (latestOrderIdRef.current !== p.new.id) { latestOrderIdRef.current = p.new.id; setNewOrderAlert(p.new); fetchOrders(); } })
-      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'orders' }, () => fetchOrders()).subscribe();
+    const ordersChannel = supabase.channel('admin-updates-v2')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'orders' }, (p) => { 
+        console.log("Realtime: New order detected", p.new.id);
+        if (latestOrderIdRef.current !== p.new.id) { 
+          latestOrderIdRef.current = p.new.id; 
+          setNewOrderAlert(p.new); 
+          fetchOrders(); 
+        } 
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, (p) => {
+        console.log("Realtime: Order update", p.new?.id);
+        fetchOrders();
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'profiles' }, (p) => {
+        console.log("Realtime: Profile change detected", p.new?.id, p.new?.is_online);
+        fetchProfiles();
+      })
+      .subscribe((status) => {
+        console.log("Realtime subscription status:", status);
+      });
     return () => supabase.removeChannel(ordersChannel);
   }, []);
 

@@ -4,7 +4,7 @@ import { supabase } from "../../lib/supabase";
 import { generateOrderPdf } from "../../lib/pdf-generator";
 import {
   Loader2, ArrowLeft, MapPin, Clock, Package, User, Phone,
-  FileText, CheckCircle2, Truck, AlertTriangle, Save, ChevronRight
+  FileText, CheckCircle2, Truck, AlertTriangle, Save, ChevronRight, TrendingUp
 } from "lucide-react";
 import AdminPageHeader from "../../components/admin/AdminPageHeader";
 
@@ -413,7 +413,10 @@ export default function AdminOrderDetails() {
             <div className="relative z-10">
               <div className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">Montant HT</div>
               <div className="text-5xl font-black tabular-nums">{Number(order.price_ht || 0).toFixed(2)}€</div>
-              <div className="text-xs text-slate-500 mt-1">+20% TVA = {(Number(order.price_ht || 0) * 1.2).toFixed(2)}€ TTC</div>
+              <div className="flex items-center justify-between text-xs mt-1">
+                <span className="text-slate-500">+20% TVA = {(Number(order.price_ht || 0) * 1.2).toFixed(2)}€ TTC</span>
+                <span className="text-[#ed5518] font-black bg-[#ed5518]/10 px-2 py-0.5 rounded-lg border border-[#ed5518]/20">Commission Simu. : {(Number(order.price_ht || 0) * 0.4).toFixed(2)}€</span>
+              </div>
               {assignedDriver && (
                 <div className="mt-4 pt-4 border-t border-white/10">
                   <div className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">Livreur assigné</div>

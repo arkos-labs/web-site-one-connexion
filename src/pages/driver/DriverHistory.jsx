@@ -79,9 +79,9 @@ export default function DriverHistory() {
                   <CalendarClock size={14} />
                   {new Date(order.created_at).toLocaleString("fr-FR")}
                 </span>
-                <span className="inline-flex items-center gap-1 font-semibold text-slate-700">
-                  <PackageCheck size={14} />
-                  {(Number(order.price_ht) || 0).toFixed(2)} EUR HT
+                <span className="inline-flex items-center gap-1">
+                  <CalendarClock size={14} />
+                  {new Date(order.created_at).toLocaleString("fr-FR")}
                 </span>
               </div>
             </article>

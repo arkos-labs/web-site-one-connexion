@@ -2,11 +2,12 @@ import { useEffect, useMemo, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
 import {
-  Loader2, Edit2, Save, X, Truck, CreditCard, FileText,
+  Loader2, Edit2, Save, X, FileText,
   Zap, Clock, TrendingUp, CheckCircle2, Download, Calendar
 } from "lucide-react";
 import AdminPageHeader from "../../components/admin/AdminPageHeader";
-import { VehicleManager } from "../../components/admin/drivers/VehicleManager";
+// VehicleManager import removed as per CDI status
+
 
 function parseOrderDateToMs(d) {
   if (!d) return null;
@@ -293,48 +294,6 @@ export default function AdminDriverDetails() {
               {field("SIRET", "siret", "text", "123 456 789 00010")}
               <div className="md:col-span-2">{field("Adresse", "address", "text", "123 rue de la livraison, 75000 Paris")}</div>
             </div>
-          </div>
-
-          {/* Vehicle + Bank grid */}
-          <div className="grid md:grid-cols-2 gap-5">
-            <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm p-6">
-              <div className="flex items-center gap-2 mb-5">
-                <Truck size={14} className="text-slate-400" />
-                <div className="text-[10px] font-black uppercase tracking-widest text-slate-400">Véhicule</div>
-              </div>
-              <div className="space-y-3">
-                {field("Modèle", "vehicle_model", "text", "Renault Master")}
-                {field("Immatriculation", "vehicle_plate", "text", "AA-123-BB")}
-                {field("Type", "vehicle_type", "select")}
-              </div>
-            </div>
-            <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm p-6">
-              <div className="flex items-center gap-2 mb-5">
-                <CreditCard size={14} className="text-slate-400" />
-                <div className="text-[10px] font-black uppercase tracking-widest text-slate-400">Coordonnées bancaires</div>
-              </div>
-              <div className="space-y-3">
-                {field("IBAN", "iban", "text", "FR76 0000 0000 0000...")}
-                {field("BIC", "bic", "text", "XXXXXXXX")}
-              </div>
-              <div className="mt-4 rounded-2xl bg-emerald-50 border border-emerald-100 p-4">
-                <div className="flex items-center gap-2 text-xs font-black text-emerald-700">
-                  <CheckCircle2 size={14} /> Profil actif — Virements automatiques
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Gestion véhicules (Admin) */}
-          <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm p-6">
-            <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">Véhicules</div>
-            {driverRowId ? (
-              <VehicleManager driverId={driverRowId} />
-            ) : (
-              <div className="text-sm text-slate-500">
-                Aucun profil chauffeur lié dans la table <code>drivers</code>. Vérifie l’email du chauffeur.
-              </div>
-            )}
           </div>
 
           {/* Missions history */}
