@@ -223,9 +223,20 @@ export default function useAdminOrdersManager(searchParams) {
     }, [historyOrders, sortOrders, statusFilter]);
 
     const kanbanList = useMemo(
-        () => sortOrders(baseList.filter((o) => o.status !== "cancelled")),
+        () => {
+            const todayStr = new Date().toLocaleDateString();
+            return sortOrders(baseList.filter((o) => {
+                const orderDate = new Date(o.created_at).toLocaleDateString();
+                const isToday = orderDate === todayStr;
+                return isToday && o.status !== "cancelled" && o.status !== "delivered";
+            }));
+        },
         [baseList, sortOrders]
     );
+
+    const allMissions = useMemo(() => {
+        return sortOrders(baseList);
+    }, [baseList, sortOrders]);
 
     const openDecision = (order, type) => {
         if (!order) return;
@@ -410,6 +421,7 @@ export default function useAdminOrdersManager(searchParams) {
         historyOrders,
         kanbanList,
         historyFiltered,
+        allMissions,
         decisionOpen,
         setDecisionOpen,
         reason,

@@ -1,3 +1,5 @@
+import { Clock } from "lucide-react";
+
 export default function AdminOrdersKanban({
     kanbanList,
     navigate,
@@ -8,7 +10,16 @@ export default function AdminOrdersKanban({
     forceComplete
 }) {
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="space-y-6">
+            <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-3">
+                    <Clock size={16} className="text-[#ed5518]" />
+                    <span className="text-sm font-black text-slate-900 uppercase tracking-widest">
+                        Tableau de Bord du {new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
+                    </span>
+                </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {[
                 { label: "Nouveaux", statuses: ["pending_acceptance", "pending"], color: "bg-rose-500", light: "bg-rose-50", text: "text-rose-600" },
                 { label: "Dispatch", statuses: ["accepted", "driver_refused", "assigned"], color: "bg-[#ed5518]", light: "bg-[#ed5518]/10", text: "text-[#ed5518]" },
@@ -144,9 +155,9 @@ export default function AdminOrdersKanban({
                             </div>
                         ))}
                     </div>
-                </div >
-            ))
-            }
-        </div >
+                </div>
+            ))}
+            </div>
+        </div>
     );
 }

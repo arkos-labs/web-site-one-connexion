@@ -5,6 +5,7 @@ import AdminOrdersStats from "../../components/admin/orders/AdminOrdersStats";
 import AdminOrderModals from "../../components/admin/orders/AdminOrderModals";
 import AdminOrdersHistory from "../../components/admin/orders/AdminOrdersHistory";
 import AdminOrdersKanban from "../../components/admin/orders/AdminOrdersKanban";
+import AdminOrdersAll from "../../components/admin/orders/AdminOrdersAll";
 import useAdminOrdersManager from "../../hooks/useAdminOrdersManager";
 import AdminPageHeader from "../../components/admin/AdminPageHeader";
 
@@ -15,7 +16,7 @@ export default function AdminOrders() {
 
   const {
     loading, drivers, clients,
-    activeOrders, historyOrders, kanbanList, historyFiltered,
+    activeOrders, historyOrders, kanbanList, historyFiltered, allMissions,
     decisionOpen, setDecisionOpen, reason, setReason,
     dispatchOpen, setDispatchOpen, dispatchDriver, setDispatchDriver,
     dispatchNote, setDispatchNote,
@@ -27,8 +28,9 @@ export default function AdminOrders() {
   if (loading) return null;
 
   const TABS = [
-    { id: "dispatch", label: "Dispatch", icon: MapPin, count: kanbanList.length },
-    { id: "history", label: "Terminées / Refusées", icon: CheckCircle2, count: historyOrders.length },
+    { id: "dispatch", label: "Missions du Jour", icon: MapPin, count: kanbanList.length },
+    { id: "all", label: "Toutes les Missions", icon: Package, count: allMissions.length },
+    { id: "history", label: "Historique (Finies/Refusées)", icon: CheckCircle2, count: historyOrders.length },
   ];
 
   return (
@@ -36,15 +38,15 @@ export default function AdminOrders() {
       <AdminPageHeader
         title="Gestion des Missions"
         subtitle="Dispatch en temps réel et historique de toutes les commandes."
-        badge={{ label: "Actives", count: activeOrders.length }}
+        badge={{ label: "Opérations", count: kanbanList.length }}
         actions={
           <>
-            {view === "history" && (
+            {view === "all" && (
               <button
                 onClick={exportCsv}
                 className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-xs font-bold text-slate-700 shadow-sm hover:bg-slate-50 transition-all"
               >
-                <Download size={16} /> Exporter CSV
+                <Download size={16} /> Exporter Global
               </button>
             )}
             <div className="flex bg-slate-100 rounded-2xl p-1.5 gap-1">
@@ -69,77 +71,27 @@ export default function AdminOrders() {
       {/* Stats Bar */}
       <AdminOrdersStats activeOrders={activeOrders} historyOrders={historyOrders} />
 
-      {/* Main Table */}
-      <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden">
-        {/* Toolbar */}
-        <div className="px-8 py-5 border-b border-slate-50 bg-slate-50/40 flex flex-wrap items-center justify-between gap-3">
-          {/* Search */}
-          <div className={`relative transition-all duration-300 ${isSearching || query ? 'w-64' : 'w-auto'}`}>
-            {query || isSearching ? (
-              <div className="flex items-center gap-2">
-                <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={15} />
-                  <input
-                    autoFocus
-                    className="w-full rounded-xl border border-slate-200 bg-white pl-9 pr-8 py-2.5 text-xs font-semibold text-slate-700 focus:outline-none focus:ring-4 focus:ring-slate-900/5 focus:border-slate-900 transition-all"
-                    placeholder="Rechercher…"
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    onBlur={() => !query && setIsSearching(false)}
-                  />
-                  {query && (
-                    <button onClick={() => setQuery("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700">
-                      <X size={13} />
-                    </button>
-                  )}
-                </div>
-              </div>
-            ) : (
-              <button
-                onClick={() => setIsSearching(true)}
-                className="flex items-center gap-2 rounded-xl bg-slate-100 border border-slate-200 px-3 py-2.5 text-xs font-bold text-slate-500 hover:bg-white hover:text-slate-700 transition-all"
-              >
-                <Search size={14} /> Rechercher
-              </button>
-            )}
-          </div>
-
-          <div className="flex items-center gap-3">
-            {view === "history" && (
-              <>
-                {[{ label: "Toutes", status: "Tous" }, { label: "Terminées", status: "delivered" }, { label: "Refusées", status: "cancelled" }].map(({ label, status }) => (
-                  <button
-                    key={status}
-                    onClick={() => setSearchParams({ status })}
-                    className={`rounded-xl px-4 py-2 text-xs font-bold transition-all ${statusFilter === status ? "bg-slate-900 text-white shadow" : "bg-slate-100 text-slate-600 hover:bg-slate-200"}`}
-                  >
-                    {label}
-                  </button>
-                ))}
-              </>
-            )}
-            <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">
-              {view === "dispatch" ? `${kanbanList.length} active(s)` : `${historyFiltered.length} commande(s)`}
-            </span>
-          </div>
-        </div>
-
-        {/* Content */}
-        <div className="min-h-[500px]">
-          {view === "history" ? (
-            <AdminOrdersHistory
-              query={query} setQuery={setQuery}
-              statusFilter={statusFilter} setSearchParams={setSearchParams}
-              historyFiltered={historyFiltered} clients={clients} navigate={navigate}
-            />
-          ) : (
+      {/* Content Area - Tables handle their own headers now for "History" and "All" */}
+      <div className="min-h-[500px]">
+        {view === "history" ? (
+          <AdminOrdersHistory
+            query={query} setQuery={setQuery}
+            statusFilter={statusFilter} setSearchParams={setSearchParams}
+            historyFiltered={historyFiltered} clients={clients} navigate={navigate}
+          />
+        ) : view === "all" ? (
+          <AdminOrdersAll
+            allMissions={allMissions} clients={clients} navigate={navigate}
+          />
+        ) : (
+          <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden">
             <AdminOrdersKanban
               kanbanList={kanbanList} navigate={navigate} drivers={drivers}
               openDecision={openDecision} openDispatch={openDispatch} derived={derived}
               forceComplete={forceComplete}
             />
-          )}
-        </div>
+          </div>
+        )}
       </div>
 
       <AdminOrderModals
