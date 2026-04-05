@@ -92,6 +92,7 @@ export default function AdminOrderDetails() {
       serviceLevel: ord.service_level || "normal",
       claimStatus: ord.claim_status || "none",
       claimNotes: ord.claim_notes || "",
+      claimReply: ord.claim_reply || "",
     });
     fetchDrivers(ord.driver_id);
     setLoading(false);
@@ -113,6 +114,7 @@ export default function AdminOrderDetails() {
       ...(edit.deliveryDeadline ? { delivery_deadline: `${datePart}T${edit.deliveryDeadline}:00` } : {}),
       claim_status: edit.claimStatus,
       claim_notes: edit.claimNotes,
+      claim_reply: edit.claimReply,
       claim_opened_at: (edit.claimStatus !== 'none' && order.claim_status === 'none') ? new Date().toISOString() : order.claim_opened_at,
       claim_resolved_at: (edit.claimStatus === 'resolved' && order.claim_status !== 'resolved') ? new Date().toISOString() : order.claim_resolved_at,
     };
@@ -612,13 +614,23 @@ export default function AdminOrderDetails() {
                   <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1.5 block">Détails du problème</label>
                   <textarea
                     rows={3}
-                    className="w-full rounded-xl border border-rose-100 bg-white/50 px-3 py-3 text-xs placeholder:text-slate-300 focus:outline-none focus:ring-4 focus:ring-rose-500/5 focus:border-rose-300 transition-all"
+                    className="w-full rounded-xl border border-rose-100 bg-white/50 px-3 py-3 text-xs placeholder:text-slate-300 focus:outline-none focus:ring-4 focus:ring-rose-500/5 focus:border-rose-300 transition-all mb-4"
                     placeholder="Saisissez ici les motifs de la réclamation client (colis endommagé, retard critique, erreur d'adresse...)"
                     value={edit.claimNotes}
                     onChange={e => setEdit(p => ({ ...p, claimNotes: e.target.value }))}
                   />
+
+                  <label className="text-[9px] font-black uppercase tracking-widest text-emerald-600 mb-1.5 block">Votre réponse au client (SAV)</label>
+                  <textarea
+                    rows={3}
+                    className="w-full rounded-xl border border-emerald-100 bg-white/50 px-3 py-3 text-xs placeholder:text-slate-300 focus:outline-none focus:ring-4 focus:ring-emerald-500/5 focus:border-emerald-300 transition-all"
+                    placeholder="Rédigez ici votre réponse officielle que le client pourra consulter sur son interface..."
+                    value={edit.claimReply}
+                    onChange={e => setEdit(p => ({ ...p, claimReply: e.target.value }))}
+                  />
+
                   {order.claim_opened_at && (
-                    <div className="mt-2 text-[8px] font-bold text-rose-400 uppercase tracking-tighter">
+                    <div className="mt-3 text-[8px] font-bold text-rose-400 uppercase tracking-tighter">
                       Ouvert le {new Date(order.claim_opened_at).toLocaleString('fr-FR')}
                     </div>
                   )}
@@ -630,7 +642,7 @@ export default function AdminOrderDetails() {
                 </div>
               )}
 
-              {edit.claimStatus !== order.claim_status || edit.claimNotes !== order.claim_notes ? (
+              {edit.claimStatus !== order.claim_status || edit.claimNotes !== order.claim_notes || edit.claimReply !== order.claim_reply ? (
                 <button
                   onClick={saveEdits}
                   disabled={saving}

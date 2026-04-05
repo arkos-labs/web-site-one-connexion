@@ -406,11 +406,22 @@ export default function OrderDetails() {
                   <p className={`text-[11px] font-medium leading-relaxed ${order.claim_status === 'resolved' ? 'text-emerald-700' : 'text-rose-700'}`}>
                     {order.claim_notes || "Aucun détail fourni."}
                   </p>
-                  {order.claim_status === 'pending' && (
-                    <div className="mt-3 text-[9px] font-bold text-rose-400 bg-white/50 rounded-lg p-2 border border-rose-100 italic">
-                      Notre équipe examine votre demande. Vous recevrez une réponse sous peu.
-                    </div>
-                  )}
+                    {order.claim_reply && (
+                      <div className="mt-4 p-3 bg-white/60 rounded-xl border border-white/80 shadow-sm animate-in slide-in-from-bottom-2 duration-500">
+                        <div className="flex items-center gap-1.5 mb-1.5">
+                          <div className="h-1 w-1 rounded-full bg-emerald-500" />
+                          <span className="text-[9px] font-black uppercase tracking-widest text-slate-800">Réponse de One Connexion</span>
+                        </div>
+                        <p className="text-[11px] font-bold text-slate-700 leading-relaxed italic">
+                          "{order.claim_reply}"
+                        </p>
+                      </div>
+                    )}
+                    {order.claim_status === 'pending' && !order.claim_reply && (
+                      <div className="mt-3 text-[9px] font-bold text-rose-400 bg-white/50 rounded-lg p-2 border border-rose-100 italic">
+                        Notre équipe examine votre demande. Vous recevrez une réponse sous peu.
+                      </div>
+                    )}
                 </div>
               )}
             </div>

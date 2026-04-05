@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Clock, Truck, Loader2, FileText } from "lucide-react";
+import { Clock, Truck, Loader2, FileText, AlertTriangle } from "lucide-react";
 import { supabase } from "../../lib/supabase";
 import { autocompleteAddress } from "../../lib/autocomplete";
 import { generateOrderPdf } from "../../lib/pdf-generator";
@@ -614,8 +614,11 @@ export default function Orders() {
                     <div className="text-[10px] font-bold text-slate-400 uppercase tracking-tight">
                       #{order.id.slice(0, 8)} • {new Date(order.created_at).toLocaleDateString('fr-FR')}
                     </div>
-                    {order.claim_status && order.claim_status !== 'none' && (
-                      <div className={`h-1.5 w-1.5 rounded-full animate-pulse ${order.claim_status === 'resolved' ? 'bg-emerald-500' : 'bg-rose-500'}`} title={order.claim_status === 'resolved' ? 'Litige résolu' : 'Litige en cours'} />
+                     {order.claim_status && order.claim_status !== 'none' && (
+                      <div className={`mt-1.5 flex items-center gap-1.5 px-2 py-0.5 rounded-full border ${order.claim_status === 'resolved' ? 'bg-emerald-50 border-emerald-100 text-emerald-600' : 'bg-rose-50 border-rose-100 text-rose-600'} animate-pulse`}>
+                        <AlertTriangle size={10} />
+                        <span className="text-[9px] font-black uppercase tracking-widest">{order.claim_status === 'resolved' ? 'Litige résolu' : 'Litige en cours'}</span>
+                      </div>
                     )}
                   </div>
                 </div>
