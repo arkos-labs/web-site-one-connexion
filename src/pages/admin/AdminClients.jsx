@@ -39,12 +39,31 @@ export default function AdminClients() {
 
   const fetchData = async () => {
     setLoading(true);
-    const [cRes, oRes, iRes] = await Promise.all([
+    const [cRes, clRes, oRes, iRes] = await Promise.all([
       supabase.from('profiles').select('*'),
+      supabase.from('clients').select('*'),
       supabase.from('orders').select('*'),
       supabase.from('invoices').select('*')
     ]);
-    if (cRes.data) setClients(cRes.data.filter(p => p.role?.toLowerCase() === 'client' || !p.role));
+
+    const registeredClients = (cRes.data || []).filter(p => p.role?.toLowerCase() === 'client' || !p.role);
+    const crmClients = (clRes.data || []).map(c => ({
+      ...c,
+      isCRM: true,
+      details: {
+        company: c.company_name,
+        full_name: c.contact_name,
+        email: c.email,
+        phone: c.phone,
+        siret: c.siret,
+        address: c.address || c.billing_address,
+        zip: c.postal_code,
+        city: c.city,
+        notes: c.notes
+      }
+    }));
+
+    setClients([...registeredClients, ...crmClients]);
     if (oRes.data) setOrders(oRes.data);
     if (iRes.data) setInvoices(iRes.data);
     setLoading(false);

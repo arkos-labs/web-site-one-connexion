@@ -137,24 +137,20 @@ export const AddressAutocomplete = ({
                 )}
             </div>
 
-            {/* Liste des suggestions */}
+            {/* Liste des suggestions (Visuel 1:1 Client) */}
             {showSuggestions && suggestions.length > 0 && (
-                <ul className="absolute z-[9999] w-full mt-1 bg-white border border-border rounded-md shadow-lg max-h-80 overflow-auto">
+                <div className="absolute z-[9999] mt-2 w-full rounded-2xl border border-slate-100 bg-white p-2 shadow-xl ring-1 ring-slate-200 animate-in fade-in slide-in-from-top-2 duration-200">
                     {suggestions.map((suggestion, index) => (
-                        <li
+                        <button
                             key={index}
+                            type="button"
                             onClick={() => handleSuggestionClick(suggestion)}
-                            className="px-4 py-3 hover:bg-[#ed5518] cursor-pointer transition-colors border-b border-border last:border-b-0 flex items-start gap-2"
+                            className="w-full text-left px-4 py-3 text-sm font-medium text-slate-900 hover:bg-slate-50 rounded-xl transition-colors truncate"
                         >
-                            <MapPin className="h-4 w-4 text-[#ed5518] mt-0.5 flex-shrink-0" />
-                            <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium text-foreground truncate">
-                                    {suggestion.full}
-                                </p>
-                            </div>
-                        </li>
+                            {suggestion.full}
+                        </button>
                     ))}
-                </ul>
+                </div>
             )}
         </div>
     );

@@ -98,6 +98,48 @@ export default function DashboardAdmin() {
     fetchOrders();
   };
 
+  const handleCreateOrder = async (orderData) => {
+    try {
+      const { data, error } = await supabase.from('orders').insert({
+        client_id: orderData.clientId,
+        pickup_address: orderData.pickupAddress,
+        pickup_city: orderData.pickupCity,
+        pickup_postal_code: orderData.pickupPostcode,
+        pickup_name: orderData.pickupName,
+        pickup_phone: orderData.pickupPhone,
+        pickup_access_code: orderData.pickupInstructions,
+        delivery_address: orderData.deliveryAddress,
+        delivery_city: orderData.deliveryCity,
+        delivery_postal_code: orderData.deliveryPostcode,
+        delivery_name: orderData.deliveryName,
+        delivery_phone: orderData.deliveryPhone,
+        delivery_access_code: orderData.deliveryInstructions,
+        vehicle_type: orderData.vehicle.toLowerCase(),
+        service_level: orderData.formula.toLowerCase(),
+        status: 'pending_acceptance',
+        price_ht: orderData.pricingResult?.totalEuros || 0,
+        scheduled_at: `${orderData.pickupDate}T${orderData.pickupTime}:00`,
+        delivery_deadline: `${orderData.pickupDate}T${orderData.deliveryDeadline}:00`,
+        package_type: orderData.packageType || "Pli",
+        package_description: orderData.packageDesc || "",
+        weight: parseFloat(orderData.packageWeight) || null,
+        notes: `Contact Pick: ${orderData.pickupContact || '—'} . Contact Deliv: ${orderData.deliveryContact || '—'} . Instructions: ${orderData.notes || '—'}`,
+        billing_name: orderData.clientName || "",
+        billing_company: orderData.clientCompany || "",
+        billing_address: orderData.billingAddress || "",
+        billing_city: orderData.billingCity || "",
+        billing_zip: orderData.billingZip || "",
+        sender_email: orderData.clientEmail || ""
+      });
+      if (error) throw error;
+      setOpen(false);
+      fetchOrders();
+    } catch (err) {
+      console.error(err);
+      alert(err.message || "Erreur création commande");
+    }
+  };
+
   const kpis = useMemo(() => {
     const delivered = ordersAll.filter(o => o.status === 'delivered');
     const totalDelHT = delivered.reduce((acc, o) => acc + (Number(o.price_ht) || 0), 0);
@@ -165,7 +207,7 @@ export default function DashboardAdmin() {
         </div>
       </div>
       <NewOrderNotification order={newOrderAlert} onClose={() => setNewOrderAlert(null)} onView={() => { setNewOrderAlert(null); navigate(`/admin/orders/${newOrderAlert.id}`); }} />
-      {open && <CreateOrderModal isOpen={open} onClose={() => setOpen(false)} onSubmit={fetchOrders} />}
+      {open && <CreateOrderModal isOpen={open} onClose={() => setOpen(false)} onSubmit={handleCreateOrder} />}
       <AdminOrderModals dispatchOpen={dispatchOpen} setDispatchOpen={setDispatchOpen} dispatchDriver={dispatchDriver} setDispatchDriver={setDispatchDriver} drivers={drivers} dispatchNote={dispatchNote} setDispatchNote={setDispatchNote} confirmDispatch={confirmDispatch} decisionOpen={false} setDecisionOpen={()=>{}} reason="" setReason={()=>{}} confirmDecision={()=>{}} />
     </div>
   );

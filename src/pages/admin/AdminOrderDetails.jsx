@@ -205,15 +205,21 @@ export default function AdminOrderDetails() {
   const notesStr = order.notes || "";
   const pCode = order.pickup_access_code || notesStr.match(/(?:Code Enlev:|Code :|Code:)\s?([^.]+)/)?.[1]?.trim();
   const dCode = order.delivery_access_code || notesStr.match(/(?:Code Dest:|Code Deliv:)\s?([^.]+)/)?.[1]?.trim();
-  const nInstructions = notesStr.match(/Instructions:\s*(.*?)(?:\.|$)/)?.[1]?.trim() || "";
+  const nInstructions = order.delivery_schedule_notes || notesStr.match(/Instructions:\s*(.*?)(?:\.|$)/)?.[1]?.trim() || "";
   const nPNote = nInstructions.split('/')?.[0]?.trim();
-  const nDNote = nInstructions.split('/')?.[1]?.trim();
+  const nDNote = (nInstructions.split('/')?.[1] || nInstructions).trim();
   const pickupName = order.pickup_name || notesStr.match(/(?:Entreprise Pick|Contact Pick):\s*(.*?)(?:\.|$)/)?.[1]?.trim() || "—";
   const deliveryName = order.delivery_name || notesStr.match(/(?:Entreprise Deliv|Contact Deliv):\s*(.*?)(?:\.|$)/)?.[1]?.trim() || "—";
   const pickupPhone = order.pickup_phone || notesStr.match(/Phone Pick:\s*(.*?)(?:\.|$)/)?.[1]?.trim() || "—";
   const deliveryPhone = order.delivery_phone || notesStr.match(/Phone Deliv:\s*(.*?)(?:\.|$)/)?.[1]?.trim() || "—";
-  const displayCompany = client?.details?.company || "";
-  const displayEmail = client?.details?.email || "—";
+  const pickupContact = order.pickup_contact_name || notesStr.match(/(?:Contact Pick):\s*(.*?)(?:\.|$)/)?.[1]?.trim() || "";
+  const deliveryContact = order.delivery_contact_name || notesStr.match(/(?:Contact Deliv):\s*(.*?)(?:\.|$)/)?.[1]?.trim() || "";
+  const displayCompany = client?.details?.company || order.billing_company || "";
+  const displayEmail = client?.details?.email || order.sender_email || "—";
+  const displayBillingName = client?.details?.full_name || order.billing_name || "—";
+  const displayBillingAddress = client?.details?.address || order.billing_address || "";
+  const displayBillingCity = client?.details?.city || order.billing_city || "";
+  const displayBillingZip = client?.details?.postcode || order.billing_zip || "";
   const packageNature = order.package_type || "—";
   const packageWeight = order.weight ? `${order.weight} kg` : "—";
   const assignedDriver = drivers.find(d => d.id === order.driver_id);
@@ -338,10 +344,12 @@ export default function AdminOrderDetails() {
                   <div className="h-6 w-6 rounded-full bg-slate-900 flex items-center justify-center"><MapPin size={12} className="text-white" /></div>
                   <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">Enlèvement</span>
                 </div>
-                <div className="font-black text-slate-900 text-sm">{pickupName}</div>
+                <div className="font-black text-slate-900 text-sm">
+                  {pickupName}
+                  {pickupContact && <span className="ml-2 font-normal text-slate-500">({pickupContact})</span>}
+                </div>
                 <div className="text-xs text-slate-500 mt-1">{order.pickup_address || "—"}</div>
                 {pCode && <div className="mt-2 inline-flex items-center rounded-lg bg-orange-50 border border-[#ed5518] px-2.5 py-1 text-xs font-black text-[#ed5518]">🔑 Code: {pCode}</div>}
-                {nPNote && <div className="mt-2 text-xs text-slate-600 italic bg-amber-50 rounded-xl px-3 py-2 border border-amber-100">📝 {nPNote}</div>}
                 <div className="mt-3 flex gap-4 text-xs text-slate-500">
                   {pickupPhone !== "—" && <span className="flex items-center gap-1"><Phone size={11} /> {pickupPhone}</span>}
                 </div>
@@ -353,12 +361,27 @@ export default function AdminOrderDetails() {
                   <div className="h-6 w-6 rounded-full bg-[#ed5518] flex items-center justify-center"><MapPin size={12} className="text-white" /></div>
                   <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">Livraison</span>
                 </div>
-                <div className="font-black text-slate-900 text-sm">{deliveryName}</div>
+                <div className="font-black text-slate-900 text-sm">
+                  {deliveryName}
+                  {deliveryContact && <span className="ml-2 font-normal text-slate-500">({deliveryContact})</span>}
+                </div>
                 <div className="text-xs text-slate-500 mt-1">{order.delivery_address || "—"}</div>
                 {dCode && <div className="mt-2 inline-flex items-center rounded-lg bg-orange-50 border border-[#ed5518] px-2.5 py-1 text-xs font-black text-[#ed5518]">🔑 Code: {dCode}</div>}
-                {nDNote && <div className="mt-2 text-xs text-slate-600 italic bg-amber-50 rounded-xl px-3 py-2 border border-amber-100">📝 {nDNote}</div>}
                 {deliveryPhone !== "—" && <div className="mt-3 flex items-center gap-1 text-xs text-slate-500"><Phone size={11} /> {deliveryPhone}</div>}
               </div>
+
+              {/* Delivery info end ... */}
+              
+              {nInstructions && nInstructions !== "—" && (
+                <div className="rounded-2xl bg-amber-50/50 border border-amber-200/50 p-4">
+                  <div className="text-[9px] font-black uppercase tracking-widest text-amber-600 mb-1.5 flex items-center gap-2">
+                    <FileText size={12} /> Instructions de mission
+                  </div>
+                  <div className="text-sm font-medium text-slate-900 italic">
+                    {nInstructions}
+                  </div>
+                </div>
+              )}
 
               {/* Timing row */}
               <div className="grid grid-cols-2 gap-4">
@@ -401,14 +424,15 @@ export default function AdminOrderDetails() {
             </div>
             <div className="grid grid-cols-2 gap-3 text-sm">
               {[
-                { label: "Entreprise", value: displayCompany || pickupName },
-                { label: "Email", value: displayEmail },
+                { label: "Société Facturée", value: displayCompany || "—" },
+                { label: "Nom Facturation", value: displayBillingName },
+                { label: "Email Facturation", value: displayEmail, hl: true },
                 { label: "Téléphone", value: client?.details?.phone || pickupPhone },
-                { label: "Adresse fact.", value: client?.details?.address || "—" },
+                { label: "Adresse fact.", value: `${displayBillingAddress} ${displayBillingZip} ${displayBillingCity}`.trim() || "—" },
               ].map((item, i) => (
-                <div key={i} className="rounded-xl bg-slate-50 p-3">
-                  <div className="text-[8px] font-black uppercase tracking-widest text-slate-400">{item.label}</div>
-                  <div className="font-bold text-slate-800 truncate mt-0.5">{item.value || "—"}</div>
+                <div key={i} className={`rounded-xl p-3 ${item.hl ? 'bg-orange-50/50 border border-orange-100 ring-1 ring-orange-100' : 'bg-slate-50 border border-transparent'}`}>
+                  <div className={`text-[8px] font-black uppercase tracking-widest ${item.hl ? 'text-[#ed5518]' : 'text-slate-400'}`}>{item.label}</div>
+                  <div className={`font-bold truncate mt-0.5 ${item.hl ? 'text-[#ed5518]' : 'text-slate-800'}`}>{item.value || "—"}</div>
                 </div>
               ))}
             </div>

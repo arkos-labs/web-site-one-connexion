@@ -44,9 +44,9 @@ export const DEFAULT_SUPPLEMENT_PAR_KM_BONS = 0.1;
 // ============================================================================
 
 /**
- * Les 5 formules disponibles
+ * Les 5 formules disponibles (Parité Dashboard Client & RPC)
  */
-export type FormuleNew = 'NORMAL' | 'EXPRESS' | 'URGENCE' | 'VL_NORMAL' | 'VL_EXPRESS';
+export type FormuleNew = 'normal' | 'exclu' | 'super' | 'vl_normal' | 'vl_exclu';
 
 /**
  * Configuration dynamique du moteur de pricing

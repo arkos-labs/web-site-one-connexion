@@ -1,6 +1,7 @@
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { OrderFormData } from "./types";
+import { Clock, Zap, Calendar } from "lucide-react";
 
 interface SchedulingSectionProps {
     orderType: 'immediate' | 'deferred';
@@ -11,29 +12,60 @@ interface SchedulingSectionProps {
 
 export function SchedulingSection({ orderType, setOrderType, formData, onChange }: SchedulingSectionProps) {
     return (
-        <div className="space-y-2 pt-3 border-t">
-            <Label className="text-sm font-semibold text-[#0B2D55]">Horaire de prise en charge *</Label>
-            <div className="flex gap-2">
+        <div className="space-y-6 pt-8 border-t border-slate-100">
+            <div className="flex items-center gap-4 px-2">
+                <div className="h-10 w-10 rounded-2xl bg-sky-500/10 flex items-center justify-center">
+                    <Clock className="h-5 w-5 text-sky-500" />
+                </div>
+                <div>
+                    <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest leading-none mb-1">Planification</h3>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tight">Quand devons-nous intervenir ? *</p>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 px-2">
                 <button
                     type="button"
                     onClick={() => setOrderType('immediate')}
-                    className={`flex-1 px-4 py-2 rounded-lg font-semibold text-sm transition-all ${orderType === 'immediate' ? 'bg-[#FFCC00] text-[#0B2D55] shadow-md' : 'bg-white text-gray-700 border-2 border-gray-200'}`}
+                    className={`flex flex-col items-center justify-center p-6 rounded-[2rem] border-2 transition-all duration-300 ${
+                        orderType === 'immediate' 
+                        ? 'bg-slate-900 border-slate-900 shadow-xl shadow-slate-900/20' 
+                        : 'bg-white border-slate-100 hover:border-slate-200'
+                    }`}
                 >
-                    Dès que possible
+                    <Zap className={`h-6 w-6 mb-2 ${orderType === 'immediate' ? 'text-[#ed5518]' : 'text-slate-400'}`} />
+                    <span className={`text-xs font-black uppercase tracking-widest ${orderType === 'immediate' ? 'text-white' : 'text-slate-900'}`}>Immédiat</span>
                 </button>
                 <button
                     type="button"
                     onClick={() => setOrderType('deferred')}
-                    className={`flex-1 px-4 py-2 rounded-lg font-semibold text-sm transition-all ${orderType === 'deferred' ? 'bg-[#FFCC00] text-[#0B2D55] shadow-md' : 'bg-white text-gray-700 border-2 border-gray-200'}`}
+                    className={`flex flex-col items-center justify-center p-6 rounded-[2rem] border-2 transition-all duration-300 ${
+                        orderType === 'deferred' 
+                        ? 'bg-slate-900 border-slate-900 shadow-xl shadow-slate-900/20' 
+                        : 'bg-white border-slate-100 hover:border-slate-200'
+                    }`}
                 >
-                    Choisir un créneau
+                    <Calendar className={`h-6 w-6 mb-2 ${orderType === 'deferred' ? 'text-[#ed5518]' : 'text-slate-400'}`} />
+                    <span className={`text-xs font-black uppercase tracking-widest ${orderType === 'deferred' ? 'text-white' : 'text-slate-900'}`}>Programmé</span>
                 </button>
             </div>
 
             {orderType === 'deferred' && (
-                <div className="grid grid-cols-2 gap-2 mt-2 animate-in fade-in slide-in-from-top-2">
-                    <Input type="date" name="pickupDate" value={formData.pickupDate} onChange={onChange} className="bg-white" />
-                    <Input type="time" name="pickupTime" value={formData.pickupTime} onChange={onChange} className="bg-white" />
+                <div className="grid grid-cols-2 gap-4 px-2 animate-in zoom-in-95 duration-500">
+                    <div className="space-y-2">
+                        <Label className="text-[10px] font-black uppercase text-slate-400 tracking-widest pl-1">Date</Label>
+                        <Input 
+                            type="date" name="pickupDate" value={formData.pickupDate} onChange={onChange} 
+                            className="h-14 rounded-2xl border-slate-100 bg-slate-50/50 px-5 font-bold focus:bg-white transition-all focus:ring-sky-500/10 text-sm" 
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <Label className="text-[10px] font-black uppercase text-slate-400 tracking-widest pl-1">Heure</Label>
+                        <Input 
+                            type="time" name="pickupTime" value={formData.pickupTime} onChange={onChange} 
+                            className="h-14 rounded-2xl border-slate-100 bg-slate-50/50 px-5 font-bold focus:bg-white transition-all focus:ring-sky-500/10 text-sm" 
+                        />
+                    </div>
                 </div>
             )}
         </div>

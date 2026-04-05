@@ -1,84 +1,171 @@
-import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Package, Truck, Clock, Zap, AlertCircle, Loader2 } from "lucide-react";
-import { FormuleNew, CalculTarifaireResult } from "@/utils/pricingEngine";
+import { Package, Truck, Info, AlertCircle, Loader2, ShieldCheck } from "lucide-react";
 import { OrderFormData } from "./types";
+import { FormuleNew, CalculTarifaireResult } from "@/utils/pricingEngine";
 
 interface PackageDetailsProps {
     formData: OrderFormData;
-    onChange: (e: React.ChangeEvent<HTMLSelectElement | HTMLTextAreaElement>) => void;
-    onFormulaChange: (formula: FormuleNew) => void;
+    onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
     pricingResults: Record<FormuleNew, CalculTarifaireResult> | null;
     isCalculating: boolean;
     error: string | null;
-    isStandardDisabled: boolean;
+    setForm: (data: Partial<OrderFormData>) => void;
 }
 
 export function PackageDetails({ 
     formData, 
     onChange, 
-    onFormulaChange, 
     pricingResults, 
     isCalculating, 
     error,
-    isStandardDisabled
+    setForm
 }: PackageDetailsProps) {
+    const vehicles = ["Moto", "Voiture"];
+
+    const activePricing = pricingResults && formData.formula ? pricingResults[formData.formula] : null;
+
     return (
-        <div className="space-y-4">
-            <div className="flex items-center gap-2 mb-2">
-                <Package className="h-4 w-4 text-[#ed5518]" />
-                <h3 className="text-base font-semibold text-[#ed5518]">Détails de la commande</h3>
-            </div>
+        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 font-poppins text-left">
+            <div className="grid md:grid-cols-2 gap-10">
+                {/* Planification */}
+                <div className="space-y-5">
+                    <h2 className="text-lg font-black text-slate-900 border-b border-slate-100 pb-2 uppercase tracking-tight">Planification</h2>
+                    <div className="grid grid-cols-3 gap-4">
+                        <div className="space-y-1.5">
+                            <label className="text-[10px] font-black uppercase tracking-wider text-slate-400">Date</label>
+                            <Input 
+                                type="date" name="pickupDate" value={formData.pickupDate} onChange={onChange} 
+                                className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-bold bg-white" 
+                            />
+                        </div>
+                        <div className="space-y-1.5">
+                            <label className="text-[10px] font-black uppercase tracking-wider text-slate-400">Enlèvement</label>
+                            <Input 
+                                type="time" name="pickupTime" value={formData.pickupTime} onChange={onChange} 
+                                className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-bold bg-white" 
+                            />
+                        </div>
+                        <div className="space-y-1.5">
+                            <label className="text-[10px] font-black uppercase tracking-wider text-slate-400">Délai Max</label>
+                            <Input 
+                                type="time" name="deliveryDeadline" value={formData.deliveryDeadline} onChange={onChange} 
+                                className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-bold bg-white focus:ring-2 focus:ring-[#ed5518] outline-none" 
+                            />
+                        </div>
+                    </div>
+                    <div>
+                        <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 block">Commentaire sur l'horaire (optionnel)</label>
+                        <Textarea 
+                            name="notes" 
+                            value={formData.notes} 
+                            onChange={onChange}
+                            className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:ring-2 focus:ring-[#ed5518] outline-none min-h-[80px]" 
+                            placeholder="Ex: Ne pas livrer entre 12h et 14h, appeler avant d'arriver..."
+                        />
+                    </div>
+                    <div className="rounded-2xl bg-orange-50 p-4 border border-[#ed5518] flex items-start gap-3 mt-4 text-[#ed5518] text-[11px] font-bold leading-relaxed shadow-sm">
+                        <Info size={18} className="shrink-0" />
+                        <p>Le niveau de service (Normal, Super, Exclu) est calculé automatiquement selon le délai entre l'enlèvement et la livraison.</p>
+                    </div>
+                </div>
 
-            <div>
-                <Label htmlFor="packageType" className="flex items-center gap-2 mb-1"><Package className="h-4 w-4" />Type de colis</Label>
-                <select
-                    id="packageType"
-                    name="packageType"
-                    value={formData.packageType}
-                    onChange={onChange}
-                    className="w-full h-10 px-3 rounded-md border border-input bg-background text-sm"
-                >
-                    <option value="document">Document / Pli</option>
-                    <option value="petit_colis">Petit colis</option>
-                    <option value="standard">Standard</option>
-                    <option value="fragile">Fragile</option>
-                    <option value="volumineux">Volumineux</option>
-                </select>
-            </div>
-
-            <div>
-                {error && <div className="p-2 mb-2 text-xs text-red-500 bg-red-50 border border-red-200 rounded-md flex items-center gap-2"><AlertCircle className="h-3 w-3" />{error}</div>}
-                <Label className="text-sm">Formule de livraison *</Label>
-                <div className="grid grid-cols-3 gap-2 mt-2">
-                    {[
-                        { id: "NORMAL", label: "Standard", icon: Truck },
-                        { id: "EXPRESS", label: "Express", icon: Clock },
-                        { id: "URGENCE", label: "Flash", icon: Zap },
-                    ].map((f) => {
-                        const price = pricingResults ? pricingResults[f.id as FormuleNew] : null;
-                        const isDisabled = !pricingResults || !!error || (f.id === "NORMAL" && isStandardDisabled);
-
-                        return (
-                            <div
-                                key={f.id}
-                                className={`rounded-lg border-2 p-2 text-center transition-all ${isDisabled ? "opacity-50 cursor-not-allowed bg-gray-50 bg-gray-50 border-gray-200" : formData.formula === f.id ? "border-[#FFCC00] bg-[#FFCC00]/10 cursor-pointer" : "border-gray-100 hover:border-gray-200 cursor-pointer"}`}
-                                onClick={() => !isDisabled && onFormulaChange(f.id as FormuleNew)}
-                            >
-                                <f.icon className={`h-4 w-4 mx-auto mb-1 ${isDisabled ? "text-gray-300" : formData.formula === f.id ? "text-[#0B2D55]" : "text-gray-400"}`} />
-                                <span className={`text-xs font-bold block ${isDisabled ? "text-gray-400" : formData.formula === f.id ? "text-[#0B2D55]" : "text-gray-500"}`}>{f.label}</span>
-                                {price && !isDisabled && <span className="text-xs font-bold text-[#0B2D55] mt-1 block">{price.totalEuros.toFixed(2)}€</span>}
-                                {isCalculating && <Loader2 className="h-3 w-3 animate-spin mx-auto mt-1 text-gray-400" />}
+                {/* Nature du transport */}
+                <div className="space-y-5">
+                    <h2 className="text-lg font-black text-slate-900 border-b border-slate-100 pb-2 uppercase tracking-tight">Nature du transport</h2>
+                    <div className="space-y-6">
+                        <div className="flex gap-4">
+                            {vehicles.map(v => (
+                                <button 
+                                    key={v} 
+                                    type="button"
+                                    onClick={() => setForm({ vehicle: v.toLowerCase() })} 
+                                    className={`flex-1 py-4 px-4 rounded-2xl border-2 font-black text-sm uppercase tracking-widest transition-all ${
+                                        formData.vehicle === v.toLowerCase() 
+                                        ? 'bg-slate-900 text-white border-slate-900 shadow-xl' 
+                                        : 'bg-white text-slate-400 border-slate-100 hover:border-slate-300'
+                                    }`}
+                                >
+                                    {v}
+                                </button>
+                            ))}
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-1.5">
+                                <label className="text-[10px] font-black uppercase tracking-wider text-slate-400">Type de colis</label>
+                                <select 
+                                    name="packageType" 
+                                    value={formData.packageType} 
+                                    onChange={onChange}
+                                    className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-bold bg-white"
+                                >
+                                    {["Pli", "Colis", "Document", "Carton", "Palette"].map(t => (
+                                        <option key={t} value={t}>{t}</option>
+                                    ))}
+                                </select>
                             </div>
-                        );
-                    })}
+                            <div className="space-y-1.5">
+                                <label className="text-[10px] font-black uppercase tracking-wider text-slate-400">Poids approximatif</label>
+                                <select 
+                                    name="packageWeight" 
+                                    value={formData.packageWeight} 
+                                    onChange={onChange}
+                                    className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-bold bg-white"
+                                >
+                                    <option value="">Poids : Non spécifié</option>
+                                    <option value="1">- de 1 kg</option>
+                                    <option value="5">1 à 5 kg</option>
+                                    <option value="10">5 à 10 kg</option>
+                                    <option value="30">10 à 30 kg</option>
+                                    <option value="+30">+ de 30 kg</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div className="space-y-1.5">
+                            <label className="text-[10px] font-black uppercase tracking-wider text-slate-400">Contenu du colis</label>
+                            <Input 
+                                name="packageDesc" 
+                                value={formData.packageDesc} 
+                                onChange={onChange}
+                                className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-bold bg-white outline-none" 
+                                placeholder="Ex: Documents, Ordinateur..." 
+                            />
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div>
-                <Label htmlFor="notes" className="flex items-center gap-2 mb-1">Notes complémentaires</Label>
-                <Textarea id="notes" name="notes" value={formData.notes} onChange={onChange} rows={3} placeholder="Instructions spéciales..." />
-            </div>
+            {/* Price display (calculated automatically) */}
+            {(activePricing || isCalculating) && (
+                <div className="pt-8 border-t border-slate-100 flex items-center justify-between">
+                    <div>
+                        <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Total Commande (Calculé)</h4>
+                        <div className="flex items-center gap-3">
+                            <div className="bg-[#ed5518]/10 text-[#ed5518] px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest">
+                                Formule {formData.formula === 'normal' ? 'Normal' : formData.formula === 'exclu' ? 'Exclu' : 'Super'}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div className="text-right">
+                        {isCalculating ? (
+                            <div className="flex items-center gap-2 text-slate-400 font-bold text-sm">
+                                <Loader2 className="h-4 w-4 animate-spin" /> Calcul en cours...
+                            </div>
+                        ) : activePricing && (
+                            <div className="flex items-center gap-6">
+                                <div className="text-3xl font-black text-slate-900">{activePricing.totalEuros.toFixed(2)}€ <span className="text-xs font-bold text-slate-400 ml-1">HT</span></div>
+                                <div className="h-14 w-14 rounded-2xl bg-[#ed5518] flex items-center justify-center text-white shadow-lg shadow-[#ed5518]/20">
+                                    <ShieldCheck size={28} />
+                                </div>
+                            </div>
+                        )}
+                        {error && (
+                            <div className="text-[10px] font-bold text-red-500 mt-2">{error}</div>
+                        )}
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
