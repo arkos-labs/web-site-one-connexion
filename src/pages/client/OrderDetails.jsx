@@ -282,6 +282,37 @@ export default function OrderDetails() {
                   {nDNote && nDNote !== "—" ? nDNote : "—"}
                 </div>
               </div>
+
+              {/* Détails de livraison effective (Preuves de dépot) */}
+              {(order.delivery_comment || order.delivery_recipient || order.delivery_department) && (
+                <div className="rounded-2xl bg-emerald-50 p-5 border border-emerald-100 animate-in fade-in slide-in-from-top-2 duration-500">
+                  <div className="flex items-center gap-2 mb-4">
+                    <CheckCircle2 size={16} className="text-emerald-600" />
+                    <span className="text-[11px] font-black uppercase tracking-widest text-emerald-600">Confirmation de livraison</span>
+                  </div>
+                  <div className="space-y-4">
+                    {order.delivery_recipient && (
+                      <div>
+                        <div className="text-[9px] font-black text-emerald-400 uppercase tracking-widest mb-1">Réceptionné par</div>
+                        <div className="text-sm font-black text-slate-900">{order.delivery_recipient}</div>
+                      </div>
+                    )}
+                    {order.delivery_department && (
+                      <div>
+                        <div className="text-[9px] font-black text-emerald-400 uppercase tracking-widest mb-1">Service / Bureau</div>
+                        <div className="text-sm font-black text-slate-900">{order.delivery_department}</div>
+                      </div>
+                    )}
+                    {order.delivery_comment && (
+                      <div className="pt-3 border-t border-emerald-100/30">
+                        <div className="text-[9px] font-black text-emerald-400 uppercase tracking-widest mb-1">Lieu précis du dépot</div>
+                        <div className="text-sm font-bold text-slate-700 italic leading-relaxed">"{order.delivery_comment}"</div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
               <div className="grid gap-3 sm:grid-cols-2">
                 <div className="rounded-2xl bg-slate-50 p-4">
                   <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Formule</div>
@@ -346,30 +377,6 @@ export default function OrderDetails() {
             <div className="text-xs font-bold uppercase tracking-wider text-slate-400">Prix TTC</div>
             <div className="mt-3 text-4xl font-bold text-slate-900">{(Number(order.price_ht || 0) * 1.2).toFixed(2)}€</div>
             <div className="text-xs text-slate-400 mt-1 font-semibold">{Number(order.price_ht || 0).toFixed(2)}€ HT</div>
-            {/* Détails de livraison effective */}
-            {order.status === 'delivered' && (order.delivery_comment || order.delivery_recipient) && (
-              <div className="mt-4 p-4 rounded-2xl bg-emerald-50 border border-emerald-100 animate-in fade-in slide-in-from-top-2 duration-500">
-                <div className="flex items-center gap-2 mb-3">
-                  <CheckCircle2 size={14} className="text-emerald-600" />
-                  <span className="text-[10px] font-black uppercase tracking-widest text-emerald-600">Détails de réception</span>
-                </div>
-                <div className="space-y-2">
-                  {order.delivery_recipient && (
-                    <div>
-                      <div className="text-[8px] font-bold text-emerald-400 uppercase">Réceptionné par</div>
-                      <div className="text-sm font-bold text-slate-800">{order.delivery_recipient}</div>
-                    </div>
-                  )}
-                  {order.delivery_comment && (
-                    <div>
-                      <div className="text-[8px] font-bold text-emerald-400 uppercase">Déposé à / Précisions</div>
-                      <div className="text-sm font-bold text-slate-700 italic">"{order.delivery_comment}"</div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-
             <div className="mt-6 rounded-2xl bg-slate-50 p-4">
               <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Statut</div>
               <div className="mt-2 text-sm font-semibold text-slate-900">{clientStatusLabel(order)}</div>
