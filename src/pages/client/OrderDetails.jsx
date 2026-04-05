@@ -417,6 +417,17 @@ export default function OrderDetails() {
                         </p>
                       </div>
                     )}
+                    {order.claim_proof_url && (
+                      <div className="mt-3 overflow-hidden rounded-xl border border-white/80 shadow-sm bg-white/40 group cursor-pointer" onClick={() => window.open(order.claim_proof_url, '_blank')}>
+                         <img src={order.claim_proof_url} alt="Preuve" className="w-full h-auto object-cover max-h-[300px] hover:scale-105 transition-transform duration-500" />
+                         <div className="p-2 bg-white/80 flex items-center justify-between">
+                            <span className="text-[8px] font-black uppercase tracking-widest text-slate-400">Photo de preuve jointe</span>
+                            <span className="text-[8px] font-black uppercase tracking-widest text-emerald-600 flex items-center gap-1">
+                               <ImageIcon size={10} /> Agrandir
+                            </span>
+                         </div>
+                      </div>
+                    )}
                     {order.claim_status === 'pending' && !order.claim_reply && (
                       <div className="mt-3 text-[9px] font-bold text-rose-400 bg-white/50 rounded-lg p-2 border border-rose-100 italic">
                         Notre équipe examine votre demande. Vous recevrez une réponse sous peu.

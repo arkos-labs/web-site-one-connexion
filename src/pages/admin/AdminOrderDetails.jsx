@@ -42,7 +42,7 @@ export default function AdminOrderDetails() {
     pickupTime: "", deliveryDeadline: "", contactPhone: "",
     accessCode: "", deliveryPhone: "", deliveryAccessCode: "",
     dispatchNote: "", driverId: "", serviceLevel: "",
-    claimStatus: "none", claimNotes: "",
+    claimStatus: "none", claimNotes: "", claimProofUrl: "",
   });
 
   useEffect(() => {
@@ -93,6 +93,7 @@ export default function AdminOrderDetails() {
       claimStatus: ord.claim_status || "none",
       claimNotes: ord.claim_notes || "",
       claimReply: ord.claim_reply || "",
+      claimProofUrl: ord.claim_proof_url || "",
     });
     fetchDrivers(ord.driver_id);
     setLoading(false);
@@ -115,6 +116,7 @@ export default function AdminOrderDetails() {
       claim_status: edit.claimStatus,
       claim_notes: edit.claimNotes,
       claim_reply: edit.claimReply,
+      claim_proof_url: edit.claimProofUrl,
       claim_opened_at: (edit.claimStatus !== 'none' && order.claim_status === 'none') ? new Date().toISOString() : order.claim_opened_at,
       claim_resolved_at: (edit.claimStatus === 'resolved' && order.claim_status !== 'resolved') ? new Date().toISOString() : order.claim_resolved_at,
     };
@@ -133,6 +135,9 @@ export default function AdminOrderDetails() {
     if (!error) { await fetchOrder(); } else alert("Erreur: " + error.message);
     setSaving(false);
   };
+
+  const removeClaimProof = () => setEdit(p => ({ ...p, claimProofUrl: "" }));
+  const setClaimProof = (url) => setEdit(p => ({ ...p, claimProofUrl: url }));
 
   const updateStatus = async (newStatus) => {
     setSaving(true);
@@ -639,10 +644,73 @@ export default function AdminOrderDetails() {
                       Résolu le {new Date(order.claim_resolved_at).toLocaleString('fr-FR')}
                     </div>
                   )}
+
+                  {/* Photo sharing for claim */}
+                  <div className="mt-6 pt-6 border-t border-rose-100/30">
+                    <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-3 block">Photo envoyée au client</label>
+                    
+                    {edit.claimProofUrl ? (
+                      <div className="relative rounded-2xl overflow-hidden border border-emerald-200 aspect-video bg-slate-900 group">
+                        <img src={edit.claimProofUrl} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all" alt="Preuve litige" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-3">
+                          <button 
+                            onClick={removeClaimProof}
+                            className="w-full py-2 bg-rose-500/90 text-white text-[9px] font-black uppercase tracking-widest rounded-lg hover:bg-rose-600 transition-all backdrop-blur-sm"
+                          >
+                            Retirer la photo
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="rounded-2xl border-2 border-dashed border-rose-200 p-6 flex flex-col items-center justify-center text-center bg-rose-50/50">
+                        <ImageIcon className="text-rose-200 mb-2" size={24} />
+                        <span className="text-[9px] font-bold text-rose-300 uppercase tracking-widest">Aucune photo jointe</span>
+                      </div>
+                    )}
+
+                    <div className="mt-4 grid grid-cols-1 gap-2">
+                       {order.pickup_photo_url && (
+                         <button 
+                          onClick={() => setClaimProof(order.pickup_photo_url)}
+                          className={`flex items-center justify-between px-4 py-3 rounded-xl border transition-all ${edit.claimProofUrl === order.pickup_photo_url ? 'bg-emerald-50 border-emerald-200 text-emerald-700 ring-2 ring-emerald-500/10' : 'bg-white border-slate-100 text-slate-600 hover:border-rose-200'}`}
+                         >
+                           <div className="flex items-center gap-2">
+                             <Camera size={14} className={edit.claimProofUrl === order.pickup_photo_url ? 'text-emerald-500' : 'text-slate-400'} />
+                             <span className="text-[10px] font-black uppercase tracking-widest">Photo Enlèvement</span>
+                           </div>
+                           {edit.claimProofUrl === order.pickup_photo_url && <CheckCircle2 size={12} />}
+                         </button>
+                       )}
+                       {order.delivery_photo_url && (
+                         <button 
+                          onClick={() => setClaimProof(order.delivery_photo_url)}
+                          className={`flex items-center justify-between px-4 py-3 rounded-xl border transition-all ${edit.claimProofUrl === order.delivery_photo_url ? 'bg-emerald-50 border-emerald-200 text-emerald-700 ring-2 ring-emerald-500/10' : 'bg-white border-slate-100 text-slate-600 hover:border-rose-200'}`}
+                         >
+                           <div className="flex items-center gap-2">
+                             <Camera size={14} className={edit.claimProofUrl === order.delivery_photo_url ? 'text-emerald-500' : 'text-slate-400'} />
+                             <span className="text-[10px] font-black uppercase tracking-widest">Photo Livraison</span>
+                           </div>
+                           {edit.claimProofUrl === order.delivery_photo_url && <CheckCircle2 size={12} />}
+                         </button>
+                       )}
+                       {order.delivery_signature_url && (
+                         <button 
+                          onClick={() => setClaimProof(order.delivery_signature_url)}
+                          className={`flex items-center justify-between px-4 py-3 rounded-xl border transition-all ${edit.claimProofUrl === order.delivery_signature_url ? 'bg-emerald-50 border-emerald-200 text-emerald-700 ring-2 ring-emerald-500/10' : 'bg-white border-slate-100 text-slate-600 hover:border-rose-200'}`}
+                         >
+                           <div className="flex items-center gap-2">
+                             <FileText size={14} className={edit.claimProofUrl === order.delivery_signature_url ? 'text-emerald-500' : 'text-slate-400'} />
+                             <span className="text-[10px] font-black uppercase tracking-widest">Signature</span>
+                           </div>
+                           {edit.claimProofUrl === order.delivery_signature_url && <CheckCircle2 size={12} />}
+                         </button>
+                       )}
+                    </div>
+                  </div>
                 </div>
               )}
 
-              {edit.claimStatus !== order.claim_status || edit.claimNotes !== order.claim_notes || edit.claimReply !== order.claim_reply ? (
+              {edit.claimStatus !== order.claim_status || edit.claimNotes !== order.claim_notes || edit.claimReply !== order.claim_reply || edit.claimProofUrl !== order.claim_proof_url ? (
                 <button
                   onClick={saveEdits}
                   disabled={saving}
