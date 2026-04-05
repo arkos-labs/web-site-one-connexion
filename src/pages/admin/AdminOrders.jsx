@@ -15,7 +15,7 @@ export default function AdminOrders() {
   const [view, setView] = useState("dispatch");
 
   const {
-    loading, drivers, clients,
+    loading, drivers, clients, orders,
     activeOrders, historyOrders, kanbanList, historyFiltered, allMissions,
     decisionOpen, setDecisionOpen, reason, setReason,
     dispatchOpen, setDispatchOpen, dispatchDriver, setDispatchDriver,
@@ -27,7 +27,7 @@ export default function AdminOrders() {
 
   if (loading) return null;
 
-  const claimCount = allMissions.filter(o => o.claim_status === 'pending').length;
+  const claimCount = (orders || []).filter(o => o.claim_status === 'pending').length;
 
   const TABS = [
     { id: "dispatch", label: "Missions du Jour", icon: MapPin, count: kanbanList.length },
