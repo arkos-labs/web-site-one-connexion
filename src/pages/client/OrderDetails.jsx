@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
 import { generateOrderPdf } from "../../lib/pdf-generator";
-import { Loader2, FileText, AlertTriangle, Send, CheckCircle2 } from "lucide-react";
+import { Loader2, FileText, AlertTriangle, Send, CheckCircle2, Image as ImageIcon } from "lucide-react";
 
 function clientStatusLabel(order) {
   const status = typeof order === 'string' ? order : order.status;
