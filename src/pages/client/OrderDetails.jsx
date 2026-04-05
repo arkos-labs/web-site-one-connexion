@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
 import { generateOrderPdf } from "../../lib/pdf-generator";
-import { Loader2, FileText, AlertTriangle, Send, CheckCircle2, Image as ImageIcon } from "lucide-react";
+import { Loader2, FileText, AlertTriangle, Send, CheckCircle2, Image as LucideImage, Camera } from "lucide-react";
 
 function clientStatusLabel(order) {
   const status = typeof order === 'string' ? order : order.status;
@@ -346,6 +346,30 @@ export default function OrderDetails() {
             <div className="text-xs font-bold uppercase tracking-wider text-slate-400">Prix TTC</div>
             <div className="mt-3 text-4xl font-bold text-slate-900">{(Number(order.price_ht || 0) * 1.2).toFixed(2)}€</div>
             <div className="text-xs text-slate-400 mt-1 font-semibold">{Number(order.price_ht || 0).toFixed(2)}€ HT</div>
+            {/* Détails de livraison effective */}
+            {order.status === 'delivered' && (order.delivery_comment || order.delivery_recipient) && (
+              <div className="mt-4 p-4 rounded-2xl bg-emerald-50 border border-emerald-100 animate-in fade-in slide-in-from-top-2 duration-500">
+                <div className="flex items-center gap-2 mb-3">
+                  <CheckCircle2 size={14} className="text-emerald-600" />
+                  <span className="text-[10px] font-black uppercase tracking-widest text-emerald-600">Détails de réception</span>
+                </div>
+                <div className="space-y-2">
+                  {order.delivery_recipient && (
+                    <div>
+                      <div className="text-[8px] font-bold text-emerald-400 uppercase">Réceptionné par</div>
+                      <div className="text-sm font-bold text-slate-800">{order.delivery_recipient}</div>
+                    </div>
+                  )}
+                  {order.delivery_comment && (
+                    <div>
+                      <div className="text-[8px] font-bold text-emerald-400 uppercase">Déposé à / Précisions</div>
+                      <div className="text-sm font-bold text-slate-700 italic">"{order.delivery_comment}"</div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
             <div className="mt-6 rounded-2xl bg-slate-50 p-4">
               <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Statut</div>
               <div className="mt-2 text-sm font-semibold text-slate-900">{clientStatusLabel(order)}</div>
@@ -423,7 +447,7 @@ export default function OrderDetails() {
                          <div className="p-2 bg-white/80 flex items-center justify-between">
                             <span className="text-[8px] font-black uppercase tracking-widest text-slate-400">Photo de preuve jointe</span>
                             <span className="text-[8px] font-black uppercase tracking-widest text-emerald-600 flex items-center gap-1">
-                               <ImageIcon size={10} /> Agrandir
+                               <LucideImage size={10} /> Agrandir
                             </span>
                          </div>
                       </div>

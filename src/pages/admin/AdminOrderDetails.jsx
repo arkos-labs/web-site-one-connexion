@@ -5,7 +5,7 @@ import { generateOrderPdf } from "../../lib/pdf-generator";
 import {
   Loader2, ArrowLeft, MapPin, Clock, Package, User, Phone,
   FileText, CheckCircle2, Truck, AlertTriangle, Save, ChevronRight, TrendingUp,
-  Camera, Image as ImageIcon
+  Camera, Image as LucideImage
 } from "lucide-react";
 import AdminPageHeader from "../../components/admin/AdminPageHeader";
 
@@ -418,13 +418,38 @@ export default function AdminOrderDetails() {
               </button>
             )}
           </div>
-          {/* Preuves photos */}
-          {(order.pickup_photo_url || order.delivery_photo_url || order.delivery_signature_url) && (
+          {/* Preuves photos & Détails de Livraison */}
+          {(order.pickup_photo_url || order.delivery_photo_url || order.delivery_signature_url || order.delivery_comment || order.delivery_recipient) && (
             <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm p-6 overflow-hidden">
               <div className="flex items-center gap-2 mb-4">
                 <Camera size={14} className="text-slate-400" />
-                <div className="text-[10px] font-black uppercase tracking-widest text-slate-400">Justificatifs de mission</div>
+                <div className="text-[10px] font-black uppercase tracking-widest text-slate-400">Justificatifs & Détails de mission</div>
               </div>
+              
+              {/* Delivery Details Details */}
+              {(order.delivery_comment || order.delivery_recipient || order.delivery_department) && (
+                <div className="mb-6 p-4 rounded-2xl bg-emerald-50/50 border border-emerald-100/50 grid grid-cols-2 gap-4">
+                  {order.delivery_recipient && (
+                    <div className="space-y-1">
+                      <div className="text-[8px] font-black uppercase tracking-widest text-emerald-600">Réceptionné par</div>
+                      <div className="text-sm font-black text-slate-900">{order.delivery_recipient}</div>
+                    </div>
+                  )}
+                  {order.delivery_department && (
+                    <div className="space-y-1">
+                      <div className="text-[8px] font-black uppercase tracking-widest text-emerald-600">Service / Bureau</div>
+                      <div className="text-sm font-black text-slate-900">{order.delivery_department}</div>
+                    </div>
+                  )}
+                  {order.delivery_comment && (
+                    <div className="col-span-2 space-y-1 pt-2 border-t border-emerald-100/30">
+                      <div className="text-[8px] font-black uppercase tracking-widest text-emerald-600">Lieu précis du dépot</div>
+                      <div className="text-sm font-black text-slate-900 italic">"{order.delivery_comment}"</div>
+                    </div>
+                  )}
+                </div>
+              )}
+
               <div className="grid grid-cols-2 gap-4">
                 {order.pickup_photo_url && (
                   <div className="space-y-2">
@@ -663,7 +688,7 @@ export default function AdminOrderDetails() {
                       </div>
                     ) : (
                       <div className="rounded-2xl border-2 border-dashed border-rose-200 p-6 flex flex-col items-center justify-center text-center bg-rose-50/50">
-                        <ImageIcon className="text-rose-200 mb-2" size={24} />
+                        <LucideImage className="text-rose-200 mb-2" size={24} />
                         <span className="text-[9px] font-bold text-rose-300 uppercase tracking-widest">Aucune photo jointe</span>
                       </div>
                     )}
