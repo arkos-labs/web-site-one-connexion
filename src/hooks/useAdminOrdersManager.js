@@ -27,7 +27,7 @@ export default function useAdminOrdersManager(searchParams) {
     const [query, setQuery] = useState("");
     const [lateOnly, _setLateOnly] = useState(false);
     const [missingOnly, _setMissingOnly] = useState(false);
-    const [sortMode, _setSortMode] = useState("deadline");
+    const [sortMode, _setSortMode] = useState("newest");
     const [isSearching, setIsSearching] = useState(false);
 
     const statusFilter = searchParams.get("status") || "Tous";
@@ -86,14 +86,15 @@ export default function useAdminOrdersManager(searchParams) {
             setDrivers(data.filter(p => p.role === 'courier' && p.is_online === true).map(p => ({
                 id: p.id,
                 name: p.details?.full_name || 'Chauffeur sans nom'
-            })));
-            setClients(data.filter(p => p.role === 'client').map(p => ({
-                id: p.id,
-                name: p.details?.company || p.details?.full_name || 'Client',
-                details: p.details
-            })));
+            })).sort((a, b) => a.name.localeCompare(b.name)));
+            setClients(data.filter(p => p.role === 'client').map(c => {
+                const clientName = c.details?.company || c.details?.full_name || 'Client';
+                const clientOrders = orders.filter(o => o.client_id === c.id);
+                const spend = clientOrders.reduce((sum, o) => sum + Number(o.price_ht || 0), 0);
+                return { ...c, name: clientName, siret: c.details?.siret || '—', spend, courses: clientOrders.length };
+            }).sort((a, b) => a.name.localeCompare(b.name)));
         }
-    }, []);
+    }, [orders]);
 
     useEffect(() => {
         let isMounted = true;
@@ -196,13 +197,16 @@ export default function useAdminOrdersManager(searchParams) {
     const sortOrders = useCallback((list) => {
         const sorted = [...list].sort((a, b) => {
             if (sortMode === "amount") return Number(b.total || 0) - Number(a.total || 0);
-            if (sortMode === "newest") return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-            const ad = derived.parseDeadlineMs(a);
-            const bd = derived.parseDeadlineMs(b);
-            if (ad == null && bd == null) return 0;
-            if (ad == null) return 1;
-            if (bd == null) return -1;
-            return ad - bd;
+            if (sortMode === "deadline") {
+                const ad = derived.parseDeadlineMs(a);
+                const bd = derived.parseDeadlineMs(b);
+                if (ad == null && bd == null) return 0;
+                if (ad == null) return 1;
+                if (bd == null) return -1;
+                return ad - bd;
+            }
+            // newest (default or explicit)
+            return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
         });
         return sorted;
     }, [derived, sortMode]);

@@ -40,6 +40,7 @@ const Addresses = lazy(() => import("../pages/client/Addresses.jsx"));
 const Profile = lazy(() => import("../pages/client/Profile.jsx"));
 const Settings = lazy(() => import("../pages/client/Settings.jsx"));
 const ClientChat = lazy(() => import("../pages/client/ClientChat.jsx"));
+const Claims = lazy(() => import("../pages/client/Claims.jsx"));
 
 // Admin Dashboard
 const DashboardAdmin = lazy(() => import("../pages/admin/DashboardAdmin.jsx"));
@@ -112,6 +113,7 @@ export const AppRoutes = () => {
           <Route path="profile" element={<Profile />} />
           <Route path="settings" element={<Settings />} />
           <Route path="chat" element={<ClientChat />} />
+          <Route path="claims" element={<Claims />} />
         </Route>
 
         {/* Admin Dashboard Routes */}

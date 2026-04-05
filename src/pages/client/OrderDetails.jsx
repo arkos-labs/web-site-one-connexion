@@ -209,6 +209,22 @@ export default function OrderDetails() {
       }
     };
 
+    const cancelOrder = async () => {
+      if (!confirm("Voulez-vous vraiment annuler cette commande ?")) return;
+      setLoading(true);
+      const { error } = await supabase
+        .from('orders')
+        .update({ status: 'cancelled' })
+        .eq('id', order.id);
+      
+      if (!error) {
+        setOrder({ ...order, status: 'cancelled' });
+      } else {
+        alert("Erreur lors de l'annulation.");
+      }
+      setLoading(false);
+    };
+
     const submitClaim = async () => {
       if (!claimNotes.trim()) return;
       setSubmittingClaim(true);
@@ -244,6 +260,14 @@ export default function OrderDetails() {
               }`}>
               {clientStatusLabel(order) || "—"}
             </div>
+            {['pending', 'accepted', 'assigned'].includes(order.status) && (
+              <button
+                onClick={cancelOrder}
+                className="rounded-full bg-rose-50 px-4 py-2 text-xs font-bold text-rose-600 hover:bg-rose-100 transition-all border border-rose-100"
+              >
+                Annuler la mission
+              </button>
+            )}
             <button
               onClick={downloadPdf}
               className="flex items-center gap-2 rounded-full bg-slate-900 px-4 py-2 text-xs font-bold text-white transition-transform hover:scale-105 shadow-lg active:scale-95"

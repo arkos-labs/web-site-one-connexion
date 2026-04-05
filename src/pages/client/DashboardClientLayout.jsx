@@ -1,5 +1,5 @@
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { Truck, FileText, MapPin, User, Settings, LogOut, LayoutDashboard, MessageSquare, Menu, X, Bell, ExternalLink } from "lucide-react";
+import { Truck, FileText, MapPin, User, Settings, LogOut, LayoutDashboard, MessageSquare, Menu, X, Bell, ExternalLink, AlertTriangle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "../../lib/supabase";
 import { Logo } from "@/components/ui/Logo";
@@ -87,6 +87,7 @@ export default function DashboardClientLayout() {
 
             <div className="mb-3 mt-8 px-4 text-[10px] font-black uppercase tracking-widest text-slate-400">Services</div>
             <NavItem icon={FileText} label="Facturation" to="/dashboard-client/invoices" active={isActive("/dashboard-client/invoices")} />
+            <NavItem icon={AlertTriangle} label="Mes Litiges" to="/dashboard-client/claims" active={isActive("/dashboard-client/claims")} />
             <NavItem icon={MessageSquare} label="Support Direct" to="/dashboard-client/chat" active={isActive("/dashboard-client/chat")} />
           </nav>
         </div>
@@ -167,6 +168,7 @@ export default function DashboardClientLayout() {
                   onClick={() => setIsMobileMenuOpen(false)}
                 />
                 <NavItem icon={FileText} label="Facturation" to="/dashboard-client/invoices" active={isActive("/dashboard-client/invoices")} onClick={() => setIsMobileMenuOpen(false)} />
+                <NavItem icon={AlertTriangle} label="Mes Litiges" to="/dashboard-client/claims" active={isActive("/dashboard-client/claims")} onClick={() => setIsMobileMenuOpen(false)} />
                 <NavItem icon={MapPin} label="Adresses" to="/dashboard-client/addresses" active={isActive("/dashboard-client/addresses")} onClick={() => setIsMobileMenuOpen(false)} />
                 <NavItem icon={MessageSquare} label="Support" to="/dashboard-client/chat" active={isActive("/dashboard-client/chat")} onClick={() => setIsMobileMenuOpen(false)} />
               </nav>

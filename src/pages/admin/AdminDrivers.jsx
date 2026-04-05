@@ -36,7 +36,7 @@ export default function AdminDrivers() {
   const fetchData = async (silent = false) => {
     if (!silent) setLoading(true);
     const [dRes, oRes] = await Promise.all([
-      supabase.from('profiles').select('*').eq('role', 'courier'),
+      supabase.from('profiles').select('*').eq('role', 'courier').order('created_at', { ascending: false }),
       supabase.from('orders').select('*')
     ]);
     if (dRes.data) setDrivers(dRes.data);
@@ -61,7 +61,7 @@ export default function AdminDrivers() {
         earningsToday: completedToday.reduce((sum, o) => sum + computeDriverPay(o), 0),
         earningsMonth: completedMonth.reduce((sum, o) => sum + computeDriverPay(o), 0),
       };
-    });
+    }).sort((a, b) => a.driver.name.localeCompare(b.driver.name));
   }, [orders, drivers]);
 
   const stats = useMemo(() => ({
@@ -127,6 +127,7 @@ export default function AdminDrivers() {
             <thead>
               <tr className="text-[9px] font-black uppercase tracking-[0.15em] text-slate-400 border-b border-slate-50">
                 <th className="px-8 py-4">Livreur</th>
+                <th className="px-8 py-4">Depuis le</th>
                 <th className="px-8 py-4">État</th>
                 <th className="px-8 py-4">Courses (auj.)</th>
                 <th className="px-8 py-4">Gains Jour</th>
@@ -160,6 +161,11 @@ export default function AdminDrivers() {
                         <div className="text-[9px] font-bold text-slate-400">{r.driver.details?.email}</div>
                       </div>
                     </div>
+                  </td>
+                  <td className="px-8 py-5">
+                    <span className="text-xs font-black text-slate-400 capitalize">
+                      {r.driver.created_at ? new Date(r.driver.created_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'}
+                    </span>
                   </td>
                   <td className="px-8 py-5">
                     <div className="space-y-1">
@@ -232,6 +238,9 @@ export default function AdminDrivers() {
                     <div className="text-sm font-black text-slate-900">{r.driver.name}</div>
                     <div className={`flex items-center gap-1.5 text-[9px] font-black uppercase tracking-widest ${r.status === "En mission" ? "text-amber-600" : "text-[#ed5518] opacity-60"}`}>
                       {r.status} • {r.driver.is_online ? "Connecté" : "OFFLINE"}
+                    </div>
+                    <div className="text-[8px] font-black text-slate-400 uppercase tracking-widest mt-1">
+                       Depuis le : {r.driver.created_at ? new Date(r.driver.created_at).toLocaleDateString() : '—'}
                     </div>
                   </div>
                 </div>

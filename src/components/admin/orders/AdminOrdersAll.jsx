@@ -174,10 +174,10 @@ export default function AdminOrdersAll({
                                     </div>
                                 </td>
                                 <td className="px-8 py-6">
-                                    <span className={`px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest ${
-                                        o.status === "delivered" ? "bg-emerald-50 text-emerald-600" : 
-                                        o.status === "cancelled" ? "bg-rose-50 text-rose-600" :
-                                        "bg-slate-900 text-white"
+                                    <span className={`px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest border ${
+                                        o.status === "delivered" ? "bg-emerald-50 text-emerald-700 border-emerald-100" : 
+                                        o.status === "cancelled" ? "bg-rose-50 text-rose-700 border-rose-100" :
+                                        "bg-amber-50 text-amber-700 border-amber-100"
                                     }`}>
                                         {o.status === "delivered" ? "Livrée" : o.status === "cancelled" ? "Annulée" : "En cours"}
                                     </span>
@@ -221,7 +221,7 @@ export default function AdminOrdersAll({
                                         </button>
                                         <button
                                             onClick={(e) => { e.stopPropagation(); navigate(`/admin/orders/${o.id}`); }}
-                                            className="px-4 py-1.5 rounded-lg bg-slate-900 text-white text-[10px] font-black uppercase tracking-widest hover:bg-[#ed5518] transition-all shadow-sm"
+                                            className="px-4 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-700 text-[10px] font-black uppercase tracking-widest hover:bg-slate-900 hover:text-white hover:border-slate-900 transition-all shadow-sm"
                                         >
                                             Gérer
                                         </button>

@@ -84,7 +84,8 @@ export default function AdminClients() {
         const clientInvoices = invoices.filter(i => i.client_id === c.id);
         const risk = computeClientRisk(clientInvoices);
         return { ...c, name: clientName, siret: c.details?.siret || '—', spend, courses: clientOrders.length, risk };
-      });
+      })
+      .sort((a, b) => a.name.localeCompare(b.name));
   }, [query, clients, orders, invoices]);
 
   // Stats
