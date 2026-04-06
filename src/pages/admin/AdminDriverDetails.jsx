@@ -198,23 +198,53 @@ export default function AdminDriverDetails() {
     </div>
   );
 
+  const avatarUrl = driverDetails.avatar_url || null;
+  const driverInitials = driverName.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+
   return (
     <div className="space-y-6 pb-20">
-      <AdminPageHeader
-        title={driverName}
-        subtitle={`Membre depuis le ${new Date(driver.created_at).toLocaleDateString('fr-FR')}`}
-        backTo="/admin/drivers"
-        actions={
-          <div className="flex items-center gap-3 flex-wrap">
-            {/* Online status badge */}
-            <div className={`flex items-center gap-2 rounded-2xl border px-4 py-2 ${driver.is_online ? 'bg-emerald-50 border-emerald-200' : 'bg-slate-50 border-slate-200'}`}>
-              <span className={`h-2 w-2 rounded-full ${driver.is_online ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400'}`} />
-              <span className={`text-[10px] font-black uppercase tracking-widest ${driver.is_online ? 'text-emerald-700' : 'text-slate-500'}`}>
-                {driver.is_online ? "En ligne" : "Hors ligne"}
-              </span>
+      {/* Rich hero header */}
+      <header className="pt-2 pb-2">
+        <button
+          onClick={() => navigate('/admin/drivers')}
+          className="mb-4 inline-flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-slate-700 transition-colors"
+        >
+          ← Retour à la flotte
+        </button>
+        <div className="flex flex-wrap items-center justify-between gap-5">
+          {/* Avatar + Identity */}
+          <div className="flex items-center gap-4">
+            <div className="relative flex-shrink-0">
+              {avatarUrl ? (
+                <img src={avatarUrl} alt={driverName} className="h-16 w-16 rounded-2xl object-cover border-4 border-white shadow-xl" />
+              ) : (
+                <div className="h-16 w-16 rounded-2xl bg-[#ed5518] text-white font-black text-xl grid place-items-center shadow-xl border-4 border-white">
+                  {driverInitials}
+                </div>
+              )}
+              <span className={`absolute -bottom-1 -right-1 h-4 w-4 rounded-full border-2 border-white ${driver.is_online ? 'bg-emerald-500' : 'bg-slate-300'}`} />
             </div>
+            <div>
+              <h1 className="text-2xl md:text-3xl font-black tracking-tight text-slate-900">{driverName}</h1>
+              <div className="flex items-center gap-3 mt-1 flex-wrap">
+                <span className="text-sm font-medium text-slate-400">Membre depuis le {new Date(driver.created_at).toLocaleDateString('fr-FR')}</span>
+                {driverDetails.vehicle_type && (
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-3 py-1 text-[10px] font-black text-slate-600 uppercase tracking-widest">
+                    🚗 {driverDetails.vehicle_type}
+                  </span>
+                )}
+                <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-widest ${
+                  driver.is_online ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-500'
+                }`}>
+                  <span className={`h-1.5 w-1.5 rounded-full ${driver.is_online ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400'}`} />
+                  {driver.is_online ? 'En ligne' : 'Hors ligne'}
+                </span>
+              </div>
+            </div>
+          </div>
 
-            {/* Role change */}
+          {/* Actions */}
+          <div className="flex items-center gap-3 flex-wrap">
             <select
               value={driver.role}
               onChange={async e => {
@@ -260,8 +290,8 @@ export default function AdminDriverDetails() {
               </div>
             )}
           </div>
-        }
-      />
+        </div>
+      </header>
 
       {/* KPIs */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

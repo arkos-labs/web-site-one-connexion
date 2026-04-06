@@ -153,9 +153,13 @@ export default function AdminDrivers() {
                 >
                   <td className="px-8 py-5">
                     <div className="flex items-center gap-3">
-                      <div className={`h-10 w-10 rounded-xl text-white text-[11px] font-black grid place-items-center shadow transition-all group-hover:scale-105 ${r.driver.is_online ? 'bg-[#ed5518] shadow-emerald-500/20' : 'bg-slate-400'}`}>
-                        {r.driver.name[0]?.toUpperCase()}
-                      </div>
+                    <div className={`h-10 w-10 rounded-xl overflow-hidden text-white text-[11px] font-black grid place-items-center shadow transition-all group-hover:scale-105 ${r.driver.is_online ? 'bg-[#ed5518] shadow-emerald-500/20' : 'bg-slate-400'}`}>
+                      {r.driver.details?.avatar_url ? (
+                        <img src={r.driver.details.avatar_url} alt={r.driver.name} className="h-full w-full object-cover" />
+                      ) : (
+                        r.driver.name[0]?.toUpperCase()
+                      )}
+                    </div>
                       <div>
                         <div className="text-sm font-black text-slate-900 group-hover:text-[#ed5518] transition-colors">{r.driver.name}</div>
                         <div className="text-[9px] font-bold text-slate-400">{r.driver.details?.email}</div>
@@ -231,8 +235,12 @@ export default function AdminDrivers() {
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className={`h-11 w-11 rounded-2xl text-white text-[12px] font-black grid place-items-center shadow ${r.driver.is_online ? 'bg-[#ed5518]' : 'bg-slate-400'}`}>
-                    {r.driver.name[0]?.toUpperCase()}
+                  <div className={`h-11 w-11 rounded-2xl overflow-hidden text-white text-[12px] font-black grid place-items-center shadow ${r.driver.is_online ? 'bg-[#ed5518]' : 'bg-slate-400'}`}>
+                    {r.driver.details?.avatar_url ? (
+                      <img src={r.driver.details.avatar_url} alt={r.driver.name} className="h-full w-full object-cover" />
+                    ) : (
+                      r.driver.name[0]?.toUpperCase()
+                    )}
                   </div>
                   <div>
                     <div className="text-sm font-black text-slate-900">{r.driver.name}</div>
