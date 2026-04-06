@@ -153,7 +153,7 @@ export default function AdminDrivers() {
                 >
                   <td className="px-8 py-5">
                     <div className="flex items-center gap-3">
-                    <div className={`h-14 w-14 rounded-2xl overflow-hidden text-white text-[16px] font-black grid place-items-center shadow transition-all group-hover:scale-105 ${r.driver.is_online ? 'bg-[#ed5518] shadow-emerald-500/20' : 'bg-slate-400'}`}>
+                    <div className={`h-20 w-20 rounded-[2rem] overflow-hidden text-white text-[24px] font-black grid place-items-center shadow-xl transition-all group-hover:scale-105 ${r.driver.is_online ? 'bg-[#ed5518] shadow-[#ed5518]/20' : 'bg-slate-400'}`}>
                       {r.driver.details?.avatar_url ? (
                         <img src={r.driver.details.avatar_url} alt={r.driver.name} className="h-full w-full object-cover" />
                       ) : (
@@ -235,7 +235,7 @@ export default function AdminDrivers() {
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className={`h-16 w-16 rounded-[1.5rem] overflow-hidden text-white text-[20px] font-black grid place-items-center shadow ${r.driver.is_online ? 'bg-[#ed5518]' : 'bg-slate-400'}`}>
+                  <div className={`h-24 w-24 rounded-[2.5rem] overflow-hidden text-white text-[32px] font-black grid place-items-center shadow-2xl ${r.driver.is_online ? 'bg-[#ed5518]' : 'bg-slate-400'}`}>
                     {r.driver.details?.avatar_url ? (
                       <img src={r.driver.details.avatar_url} alt={r.driver.name} className="h-full w-full object-cover" />
                     ) : (
