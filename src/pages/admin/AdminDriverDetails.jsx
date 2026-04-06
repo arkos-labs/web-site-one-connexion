@@ -216,13 +216,13 @@ export default function AdminDriverDetails() {
           <div className="flex items-center gap-4">
             <div className="relative flex-shrink-0">
               {avatarUrl ? (
-                <img src={avatarUrl} alt={driverName} className="h-16 w-16 rounded-2xl object-cover border-4 border-white shadow-xl" />
+                <img src={avatarUrl} alt={driverName} className="h-24 w-24 rounded-[2rem] object-cover border-4 border-white shadow-2xl" />
               ) : (
-                <div className="h-16 w-16 rounded-2xl bg-[#ed5518] text-white font-black text-xl grid place-items-center shadow-xl border-4 border-white">
+                <div className="h-24 w-24 rounded-[2rem] bg-[#ed5518] text-white font-black text-3xl grid place-items-center shadow-2xl border-4 border-white">
                   {driverInitials}
                 </div>
               )}
-              <span className={`absolute -bottom-1 -right-1 h-4 w-4 rounded-full border-2 border-white ${driver.is_online ? 'bg-emerald-500' : 'bg-slate-300'}`} />
+              <span className={`absolute bottom-1 right-1 h-6 w-6 rounded-full border-4 border-white shadow-sm ${driver.is_online ? 'bg-emerald-500' : 'bg-slate-300'}`} />
             </div>
             <div>
               <h1 className="text-2xl md:text-3xl font-black tracking-tight text-slate-900">{driverName}</h1>
