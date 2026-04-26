@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../lib/supabase";
-import { MapPin, Plus, Edit2, Trash2 } from "lucide-react";
+import { MapPin, Plus, Edit2, Trash2, Loader2 } from "lucide-react";
 import { autocompleteAddress } from "../../lib/autocomplete";
 
 const LOCATIONIQ_KEY = import.meta.env.VITE_LOCATIONIQ_API_KEY;
@@ -62,6 +62,7 @@ export default function Addresses() {
 
 
   const getPostcode = (str) => {
+    if (!str) return "";
     const match = str.match(/\b\d{5}\b/);
     return match ? match[0] : "";
   };
@@ -107,7 +108,10 @@ export default function Addresses() {
 
   const submit = async (e) => {
     e.preventDefault();
-    if (!form.name.trim() || !form.line.trim()) return;
+    if (!form.name.trim() || !form.line.trim()) {
+      alert("Veuillez remplir la référence du lieu et l'adresse.");
+      return;
+    }
 
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
@@ -126,15 +130,24 @@ export default function Addresses() {
         .update(payload)
         .eq('id', editingId);
 
-      if (!error) fetchAddresses();
+      if (!error) {
+        fetchAddresses();
+        setOpen(false);
+      } else {
+        alert("Erreur lors de la modification: " + error.message);
+      }
     } else {
       const { error } = await supabase
         .from('addresses')
         .insert(payload);
 
-      if (!error) fetchAddresses();
+      if (!error) {
+        fetchAddresses();
+        setOpen(false);
+      } else {
+        alert("Erreur lors de l'ajout: " + error.message);
+      }
     }
-    setOpen(false);
   };
 
   const askRemove = (id) => {
