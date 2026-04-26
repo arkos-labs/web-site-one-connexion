@@ -30,19 +30,19 @@ export default function PublicHeader() {
         </div>
 
         {/* Desktop Navigation */}
-        <nav className="hidden lg:flex items-center gap-12 text-xs font-bold uppercase tracking-[0.2em]">
-          <a href="/#features" className="hover:text-[#ed5518] transition-colors">Notre Vision</a>
-          <a href="/#expertises" className="hover:text-[#ed5518] transition-colors">Secteurs</a>
-          <a href="/#workflow" className="hover:text-[#ed5518] transition-colors">Logistique</a>
-          <a href="/#faq" className="hover:text-[#ed5518] transition-colors">FAQ</a>
+        <nav className="hidden lg:flex items-center gap-12 font-display italic text-lg">
+          <a href="/#features" className="hover:text-[#ed5518] transition-colors leading-none pt-1">Notre Vision</a>
+          <a href="/#expertises" className="hover:text-[#ed5518] transition-colors leading-none pt-1">Secteurs</a>
+          <a href="/#workflow" className="hover:text-[#ed5518] transition-colors leading-none pt-1">Logistique</a>
+          <a href="/#faq" className="hover:text-[#ed5518] transition-colors leading-none pt-1">FAQ</a>
         </nav>
 
         {/* Desktop Actions */}
-        <div className="hidden lg:flex items-center gap-8">
-          <Link to="/connexion" className="text-xs font-bold uppercase tracking-[0.2em] hover:text-[#ed5518] transition-colors">
+        <div className="hidden lg:flex items-center gap-8 font-display italic">
+          <Link to="/connexion" className="text-lg hover:text-[#ed5518] transition-colors pt-1">
             Se connecter
           </Link>
-          <Link to="/inscription" className="btn-premium py-3 px-8 text-xs uppercase tracking-[0.2em]">
+          <Link to="/inscription" className="btn-premium py-2.5 px-8 text-base not-italic font-bold uppercase tracking-[0.2em]">
             Créer un compte
           </Link>
         </div>
