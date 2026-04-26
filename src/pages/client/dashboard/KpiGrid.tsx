@@ -2,44 +2,57 @@ import { Clock, Check, FileText } from "lucide-react";
 
 export function KpiGrid({ stats }) {
   return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-10">
-      <div className="group relative overflow-hidden rounded-[2.5rem] bg-white p-8 shadow-sm ring-1 ring-slate-100 transition-all hover:-translate-y-2 hover:shadow-2xl hover:ring-[#ed5518]">
-        <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-orange-50 transition-transform group-hover:scale-150" />
-        <div className="relative z-10 flex items-start justify-between">
-          <div>
-            <h3 className="text-sm font-bold uppercase tracking-wider text-slate-400">Missions en cours</h3>
-            <div className="mt-4 flex items-end gap-3">
-              <span className="text-5xl font-black text-slate-900">{stats.activeCount || 0}</span>
-              <span className="mb-1 text-sm font-bold text-[#ed5518]">actives</span>
+    <div className="grid gap-6 md:grid-cols-3 mb-12">
+      {/* Active Missions */}
+      <div className="bg-white p-10 rounded-xl shadow-sm border border-noir/5 group hover:border-[#ed5518] transition-all relative overflow-hidden">
+        <div className="relative z-10">
+          <div className="flex items-center gap-3 mb-8">
+            <div className="w-10 h-10 rounded-lg bg-[#ed5518]/5 flex items-center justify-center text-[#ed5518]">
+              <Clock size={20} />
             </div>
+            <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-noir/40">Missions en cours</h3>
           </div>
-          <div className="rounded-3xl bg-orange-50 p-4 text-[#ed5518] group-hover:rotate-12 transition-transform shadow-inner"><Clock size={32} /></div>
+          <div className="flex items-end gap-3">
+            <span className="text-6xl font-display italic tracking-tight">{stats.activeCount || 0}</span>
+            <span className="text-[10px] uppercase font-bold tracking-widest text-[#ed5518] pb-2">Actives</span>
+          </div>
         </div>
       </div>
 
-      <div className="group relative overflow-hidden rounded-[2.5rem] bg-white p-8 shadow-sm ring-1 ring-slate-100 transition-all hover:-translate-y-2 hover:shadow-2xl hover:ring-blue-100">
-        <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-blue-50 transition-transform group-hover:scale-150" />
-        <div className="relative z-10 flex items-start justify-between">
-          <div>
-            <h3 className="text-sm font-bold uppercase tracking-wider text-slate-400">Total Missions</h3>
-            <div className="mt-4 flex items-end gap-3">
-              <span className="text-5xl font-black text-slate-900">{stats.completedCount || 0}</span>
-              <span className="mb-1 text-sm font-bold text-blue-500">réussies</span>
+      {/* Completed Missions */}
+      <div className="bg-white p-10 rounded-xl shadow-sm border border-noir/5 group hover:border-[#ed5518] transition-all relative overflow-hidden">
+        <div className="relative z-10">
+          <div className="flex items-center gap-3 mb-8">
+            <div className="w-10 h-10 rounded-lg bg-noir/5 flex items-center justify-center text-noir">
+              <Check size={20} />
             </div>
+            <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-noir/40">Total Missions</h3>
           </div>
-          <div className="rounded-3xl bg-blue-50 p-4 text-blue-500 group-hover:-rotate-12 transition-transform shadow-inner"><Check size={32} /></div>
+          <div className="flex items-end gap-3">
+            <span className="text-6xl font-display italic tracking-tight">{stats.completedCount || 0}</span>
+            <span className="text-[10px] uppercase font-bold tracking-widest text-noir/40 pb-2">Réussies</span>
+          </div>
         </div>
       </div>
 
-      <div className="group relative overflow-hidden rounded-[2.5rem] bg-white p-8 shadow-sm ring-1 ring-slate-100 transition-all hover:-translate-y-2 hover:shadow-2xl hover:ring-emerald-100">
-        <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-emerald-50 transition-transform group-hover:scale-150" />
-        <div className="relative z-10 flex items-start justify-between">
-          <div>
-            <h3 className="text-sm font-bold uppercase tracking-wider text-slate-400">Volume HT</h3>
-            <div className="mt-4 flex items-end gap-2 text-slate-900 text-4xl font-black tracking-tight">{(stats.totalPaid || 0).toFixed(2)}€</div>
-            {stats.totalPending > 0 && <div className="mt-2 text-xs font-bold text-slate-400"><span className="text-amber-500">Encours :</span> {stats.totalPending.toFixed(2)}€</div>}
+      ({/* Volume HT) */}
+      <div className="bg-noir p-10 rounded-xl shadow-2xl group relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-[#ed5518]/10 blur-3xl rounded-full"></div>
+        <div className="relative z-10">
+          <div className="flex items-center gap-3 mb-8">
+            <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center text-white">
+              <FileText size={20} />
+            </div>
+            <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">Volume HT</h3>
           </div>
-          <div className="rounded-3xl bg-emerald-50 p-4 text-emerald-500 group-hover:rotate-12 transition-transform shadow-inner"><FileText size={32} /></div>
+          <div className="flex flex-col">
+            <span className="text-4xl font-display italic tracking-tight text-white">{(stats.totalPaid || 0).toFixed(2)}€</span>
+            {stats.totalPending > 0 && (
+              <div className="mt-2 text-[9px] font-bold text-white/30 tracking-widest uppercase">
+                <span className="text-[#ed5518]">Encours :</span> {stats.totalPending.toFixed(2)}€
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

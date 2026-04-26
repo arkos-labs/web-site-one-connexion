@@ -62,19 +62,19 @@ export default function DashboardClientLayout() {
   };
 
   return (
-    <div className="flex h-screen bg-[#F8FAFC] font-sans text-slate-900 overflow-hidden selection:bg-[#ed5518]/30 selection:text-[#ed5518]">
+    <div className="flex h-screen bg-cream font-body text-noir overflow-hidden selection:bg-[#ed5518]/30 selection:text-[#ed5518]">
       {/* Sidebar - Desktop */}
-      <aside className="hidden w-72 flex-col justify-between bg-white px-4 py-8 border-r border-slate-100 lg:flex z-20">
+      <aside className="hidden w-72 flex-col justify-between bg-noir px-6 py-10 border-r border-noir/5 lg:flex z-20">
         <div>
           {/* Logo Section */}
-          <div className="mb-6 flex flex-col items-center">
-            <Logo size="lg" />
-            <span className="text-[10px] font-black tracking-[0.3em] text-[#ed5518] uppercase mt-2">Espace Client</span>
+          <div className="mb-10 flex flex-col items-center">
+            <Logo size="lg" variant="light" />
+            <span className="text-[10px] font-bold tracking-[0.4em] text-[#ed5518] uppercase mt-3">Espace Client</span>
           </div>
 
           {/* Navigation */}
-          <nav className="space-y-1">
-            <div className="mb-3 mt-8 px-4 text-[10px] font-black uppercase tracking-widest text-slate-400">Logistique</div>
+          <nav className="space-y-2 mt-12">
+            <div className="mb-4 px-4 text-[9px] font-bold uppercase tracking-[0.3em] text-white/30">Logistique urbaine</div>
             <NavItem icon={LayoutDashboard} label="Tableau de Bord" to="/dashboard-client" active={isActive("/dashboard-client")} />
             <NavItem
               icon={Truck}
@@ -85,7 +85,7 @@ export default function DashboardClientLayout() {
             />
             <NavItem icon={MapPin} label="Carnet d'Adresses" to="/dashboard-client/addresses" active={isActive("/dashboard-client/addresses")} />
 
-            <div className="mb-3 mt-8 px-4 text-[10px] font-black uppercase tracking-widest text-slate-400">Services</div>
+            <div className="mb-4 mt-10 px-4 text-[9px] font-bold uppercase tracking-[0.3em] text-white/30">Gestion & Support</div>
             <NavItem icon={FileText} label="Facturation" to="/dashboard-client/invoices" active={isActive("/dashboard-client/invoices")} />
             <NavItem icon={AlertTriangle} label="Mes Litiges" to="/dashboard-client/claims" active={isActive("/dashboard-client/claims")} />
             <NavItem icon={MessageSquare} label="Support Direct" to="/dashboard-client/chat" active={isActive("/dashboard-client/chat")} />
@@ -93,30 +93,30 @@ export default function DashboardClientLayout() {
         </div>
 
         {/* Bottom Section: Profile & Logout */}
-        <div className="space-y-4">
-          <div className="mx-2 rounded-2xl bg-slate-50 p-4 border border-slate-100">
+        <div className="space-y-6">
+          <div className="mx-2 rounded-xl bg-white/5 p-4 border border-white/5 backdrop-blur-sm">
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-full bg-slate-900 flex items-center justify-center text-white text-xs font-bold ring-2 ring-white shadow-sm overflow-hidden uppercase">
+              <div className="h-10 w-10 rounded-full bg-cream flex items-center justify-center text-noir text-xs font-bold ring-2 ring-white/10 shadow-sm overflow-hidden uppercase">
                 {profile?.first_name?.[0] || user?.email?.[0] || <User size={16} />}
               </div>
               <div className="flex flex-col min-w-0">
-                <span className="text-sm font-black text-slate-900 truncate uppercase tracking-tight">
-                  {profile?.details?.full_name || (profile?.first_name || profile?.last_name 
-                    ? `${profile.first_name || ''} ${profile.last_name || ''}`.trim() 
-                    : user?.user_metadata?.full_name || user?.user_metadata?.contact_name || user?.email?.split('@')[0] || "Client One")}
+                <span className="text-sm font-bold text-white truncate italic font-display tracking-tight">
+                  {profile?.details?.full_name || (profile?.first_name || profile?.last_name
+                    ? `${profile.first_name || ''} ${profile.last_name || ''}`.trim()
+                    : user?.email?.split('@')[0] || "Propriétaire")}
                 </span>
-                <span className="flex items-center gap-1 text-[10px] font-bold text-[#ed5518] uppercase tracking-wider opacity-90">
+                <span className="flex items-center gap-1.5 text-[10px] font-bold text-[#ed5518] uppercase tracking-wider opacity-90">
                   <span className="h-1 w-1 rounded-full bg-[#ed5518] animate-pulse"></span>
-                  {profile?.details?.company || profile?.company_name || user?.user_metadata?.company || user?.user_metadata?.company_name || "Compte Pro"}
+                  {profile?.details?.company || profile?.company_name || "Compte Partenaire"}
                 </span>
               </div>
             </div>
           </div>
           <button
             onClick={handleLogout}
-            className="group flex w-full items-center gap-3 rounded-2xl px-6 py-3.5 text-sm font-bold text-slate-400 transition-all hover:bg-rose-50 hover:text-rose-600 active:scale-95"
+            className="group flex w-full items-center gap-3 rounded-xl px-6 py-3.5 text-xs font-bold uppercase tracking-widest text-white/40 transition-all hover:bg-[#ed5518]/10 hover:text-[#ed5518] active:scale-95"
           >
-            <LogOut size={18} className="transition-transform group-hover:-translate-x-1" />
+            <LogOut size={16} className="transition-transform group-hover:-translate-x-1" />
             <span>Déconnexion</span>
           </button>
         </div>
@@ -125,39 +125,39 @@ export default function DashboardClientLayout() {
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Mobile Header */}
-        <header className="sticky top-0 z-40 bg-white border-b border-slate-100 px-6 py-4 flex items-center justify-between lg:hidden shadow-sm">
+        <header className="sticky top-0 z-40 bg-noir px-6 py-4 flex items-center justify-between lg:hidden shadow-lg">
           <div className="flex items-center gap-3">
-            <Logo size="sm" />
+            <Logo size="sm" variant="light" />
             <div className="flex flex-col">
-              <span className="text-[10px] font-black tracking-[0.2em] text-[#ed5518] uppercase leading-none">Espace</span>
-              <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest mt-1">Client</span>
+              <span className="text-[9px] font-bold tracking-[0.2em] text-[#ed5518] uppercase leading-none">Espace</span>
+              <span className="text-[7px] font-bold text-white/50 uppercase tracking-widest mt-1">Client</span>
             </div>
           </div>
           <button
             onClick={() => setIsMobileMenuOpen(true)}
-            className="flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-900 text-white shadow-xl transition-all active:scale-90"
+            className="flex h-10 w-10 items-center justify-center rounded-lg bg-cream text-noir shadow-xl transition-all active:scale-90"
             aria-label="Ouvrir le menu"
           >
-            <Menu size={22} strokeWidth={2.5} />
+            <Menu size={20} />
           </button>
         </header>
 
         {/* Mobile Sidebar Overlay */}
         {isMobileMenuOpen && (
           <div className="fixed inset-0 z-[100] lg:hidden">
-            <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={() => setIsMobileMenuOpen(false)} />
-            <div className="absolute left-0 top-0 bottom-0 w-72 bg-white shadow-2xl flex flex-col p-6 animate-in slide-in-from-left duration-300">
-              <div className="mb-8 flex flex-col items-center relative">
-                <button 
+            <div className="absolute inset-0 bg-noir/60 backdrop-blur-md" onClick={() => setIsMobileMenuOpen(false)} />
+            <div className="absolute left-0 top-0 bottom-0 w-72 bg-noir shadow-2xl flex flex-col p-6 animate-in slide-in-from-left duration-300 border-r border-white/5">
+              <div className="mb-10 flex flex-col items-center relative">
+                <button
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="absolute -right-2 -top-2 p-2 text-slate-400 hover:text-slate-900 transition-colors"
+                  className="absolute -right-2 -top-2 p-2 text-white/30 hover:text-white transition-colors"
                 >
                   <X size={20} />
                 </button>
-                <Logo size="lg" />
-                <span className="text-[10px] font-black tracking-[0.3em] text-[#ed5518] uppercase mt-2">Espace Client</span>
+                <Logo size="lg" variant="light" />
+                <span className="text-[10px] font-bold tracking-[0.3em] text-[#ed5518] uppercase mt-3">Espace Client</span>
               </div>
-              <nav className="space-y-1 overflow-y-auto flex-1">
+              <nav className="space-y-2 overflow-y-auto flex-1">
                 <NavItem icon={LayoutDashboard} label="Dashboard" to="/dashboard-client" active={isActive("/dashboard-client")} onClick={() => setIsMobileMenuOpen(false)} />
                 <NavItem
                   icon={Truck}
@@ -172,12 +172,12 @@ export default function DashboardClientLayout() {
                 <NavItem icon={MapPin} label="Adresses" to="/dashboard-client/addresses" active={isActive("/dashboard-client/addresses")} onClick={() => setIsMobileMenuOpen(false)} />
                 <NavItem icon={MessageSquare} label="Support" to="/dashboard-client/chat" active={isActive("/dashboard-client/chat")} onClick={() => setIsMobileMenuOpen(false)} />
               </nav>
-              <div className="mt-8 pt-6 border-t border-slate-100">
+              <div className="mt-8 pt-6 border-t border-white/5">
                 <button
                   onClick={() => { handleLogout(); setIsMobileMenuOpen(false); }}
-                  className="flex w-full items-center gap-3 rounded-2xl px-6 py-4 text-sm font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 transition-all"
+                  className="flex w-full items-center gap-3 rounded-xl px-6 py-4 text-xs font-bold uppercase tracking-widest text-[#ed5518] bg-[#ed5518]/10 hover:bg-[#ed5518]/20 transition-all font-display italic"
                 >
-                  <LogOut size={18} />
+                  <LogOut size={16} />
                   <span>Déconnexion</span>
                 </button>
               </div>
@@ -185,7 +185,7 @@ export default function DashboardClientLayout() {
           </div>
         )}
 
-        <main className="flex-1 overflow-y-auto p-4 md:p-8 lg:p-10">
+        <main className="flex-1 overflow-y-auto p-6 md:p-10 lg:p-12">
           <div className="mx-auto max-w-7xl">
             <Outlet />
           </div>
@@ -196,27 +196,24 @@ export default function DashboardClientLayout() {
 }
 
 function NavItem({ icon: Icon, label, active, badge, to, onClick }) {
-  const classes = `group relative flex w-full items-center justify-between rounded-xl px-4 py-3 text-sm font-bold transition-all duration-200 ${active
-    ? "bg-slate-900 text-white shadow-xl shadow-slate-900/10"
-    : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+  const classes = `group relative flex w-full items-center justify-between rounded-xl px-5 py-3.5 text-xs font-bold uppercase tracking-widest transition-all duration-300 ${active
+    ? "bg-[#ed5518] text-white shadow-lg shadow-orange-500/20"
+    : "text-white/60 hover:bg-white/5 hover:text-white"
     }`;
 
   return (
     <Link to={to} className={classes} onClick={onClick}>
       <div className="flex items-center gap-3.5">
         {Icon && (
-          <Icon size={18} className={`transition-all duration-300 ${active ? "text-[#ed5518] scale-110" : "group-hover:scale-110"}`} />
+          <Icon size={16} className={`transition-all duration-300 ${active ? "text-white scale-110" : "group-hover:text-[#ed5518] group-hover:scale-110"}`} />
         )}
-        <span className="tracking-tight">{label}</span>
+        <span className={`${active ? 'font-display italic tracking-normal' : ''}`}>{label}</span>
       </div>
       {badge && (
-        <span className={`flex h-5 min-w-[20px] items-center justify-center rounded-full px-1.5 text-[10px] font-black tracking-tighter ${active ? "bg-white text-slate-900" : "bg-[#ed5518] text-white shadow-lg shadow-primary/20"
+        <span className={`flex h-5 min-w-[20px] items-center justify-center rounded-full px-1.5 text-[9px] font-bold ${active ? "bg-white text-[#ed5518]" : "bg-[#ed5518] text-white shadow-md shadow-orange-500/30"
           }`}>
           {badge}
         </span>
-      )}
-      {active && (
-        <div className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-1 bg-[#ed5518] rounded-r-full" />
       )}
     </Link>
   );

@@ -134,24 +134,77 @@ export default function NouvelleCourse() {
         }
     };
 
-    const steps = [{ title: "Trajet", icon: MapPin }, { title: "Détails", icon: Package }, { title: "Validation", icon: ShieldCheck }];
+    const steps = [{ title: "Trajet", icon: MapPin }, { title: "Détails", icon: Package }, { title: "Lancement", icon: ShieldCheck }];
 
     return (
-        <div className="min-h-screen bg-[#f8fafc] md:p-4 space-y-8">
-            <div className="mx-auto max-w-4xl space-y-8">
-                <button onClick={() => navigate('/dashboard-client')} className="flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-slate-900 transition-colors"><ArrowLeft size={16} /> Retour au tableau de bord</button>
+        <div className="min-h-screen bg-cream md:p-8 space-y-12 font-body">
+            <div className="mx-auto max-w-4xl space-y-10">
+                {/* Header Section */}
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                    <div className="space-y-4">
+                        <button
+                            onClick={() => navigate('/dashboard-client')}
+                            className="group flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.3em] text-noir/40 hover:text-[#ed5518] transition-all"
+                        >
+                            <ArrowLeft size={14} className="transition-transform group-hover:-translate-x-1" />
+                            Retour Dashboard
+                        </button>
+                        <h1 className="text-5xl font-display italic text-noir leading-none">
+                            Nouvelle <span className="text-[#ed5518]">Course.</span>
+                        </h1>
+                    </div>
+
+                    <div className="flex items-center gap-4 text-noir/40">
+                        <div className="h-px w-8 bg-noir/10"></div>
+                        <span className="text-[10px] font-bold uppercase tracking-[0.4em]">Planification Premium</span>
+                    </div>
+                </div>
+
                 <CourseStepper step={step} steps={steps} />
-                <div className="bg-white rounded-[2.5rem] p-6 md:p-10 shadow-sm ring-1 ring-slate-100 relative min-h-[500px]">
+
+                <div className="bg-white rounded-[2rem] p-8 md:p-14 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] border border-noir/5 relative min-h-[500px]">
+                    <div className="absolute top-0 right-10 w-24 h-24 bg-[#ed5518]/5 blur-3xl rounded-full"></div>
+
                     {step === 1 && <Step1Trajet form={form} setForm={setForm} fetchSuggestions={fetchSuggestions} pickupSuggestions={pickupSuggestions} setPickupSuggestions={setPickupSuggestions} deliverySuggestions={deliverySuggestions} setDeliverySuggestions={setDeliverySuggestions} />}
                     {step === 2 && <Step2Details form={form} setForm={setForm} vehicles={["Moto", "Voiture"]} />}
                     {step === 3 && <Step3Review form={form} price={price} calculatingPrice={calculatingPrice} />}
                 </div>
-                <div className="flex items-center justify-between pt-4">
-                    <button onClick={() => setStep(s => Math.max(s - 1, 1))} className={`px-6 py-3 font-bold text-slate-500 ${step === 1 ? 'invisible' : ''}`}>Retour</button>
-                    {step < 3 ? <button onClick={() => setStep(s => s + 1)} className="flex items-center gap-2 px-8 py-3.5 rounded-2xl bg-slate-900 text-white font-bold">Continuer <ArrowRight size={18} /></button> : (
-                        <button onClick={submitOrder} disabled={!price || isSubmitting} className="px-10 py-4 rounded-2xl bg-[#ed5518] text-white font-black text-lg shadow-xl shadow-[#ed5518]/20">{isSubmitting ? <Loader2 className="animate-spin" /> : 'Valider la commande'}</button>
+
+                <div className="flex items-center justify-between">
+                    <button
+                        onClick={() => setStep(s => Math.max(s - 1, 1))}
+                        className={`px-8 py-4 text-[10px] font-bold uppercase tracking-[0.3em] text-noir/40 hover:text-noir transition-all ${step === 1 ? 'invisible' : ''}`}
+                    >
+                        Étape précédente
+                    </button>
+
+                    {step < 3 ? (
+                        <button
+                            onClick={() => setStep(s => s + 1)}
+                            className="group flex items-center gap-3 px-10 py-5 rounded-xl bg-noir text-white text-[11px] font-bold uppercase tracking-[0.3em] hover:bg-[#ed5518] transition-all shadow-xl shadow-noir/10"
+                        >
+                            Étape suivante <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+                        </button>
+                    ) : (
+                        <button
+                            onClick={submitOrder}
+                            disabled={!price || isSubmitting}
+                            className="group relative overflow-hidden px-14 py-6 rounded-xl bg-[#ed5518] text-white text-[11px] font-bold uppercase tracking-[0.4em] shadow-2xl shadow-orange-500/30 disabled:opacity-50 disabled:grayscale transition-all"
+                        >
+                            <span className="relative z-10 flex items-center gap-3">
+                                {isSubmitting ? <Loader2 className="animate-spin" /> : <>Finaliser la Réservation <div className="h-4 w-px bg-white/30 mx-1"></div> {price ? `${price}€` : '...'}</>}
+                            </span>
+                            <div className="absolute inset-0 bg-noir opacity-0 group-hover:opacity-10 transition-opacity"></div>
+                        </button>
                     )}
                 </div>
+            </div>
+
+            {/* Minimal support footer */}
+            <div className="max-w-4xl mx-auto pt-10 border-t border-noir/5 text-center">
+                <p className="text-[9px] font-bold uppercase tracking-[0.3em] text-noir/20 italic">
+                    Assistance One Connexion 24/7 · +33 1 00 00 00 00
+                </p>
             </div>
         </div>
     );

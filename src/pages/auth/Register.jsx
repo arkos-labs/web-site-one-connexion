@@ -92,43 +92,35 @@ export default function Register() {
     // ── Success screen ──
     if (success) {
         return (
-            <div className="min-h-screen font-sans flex items-center justify-center bg-[#fdfdfd] p-6 relative overflow-hidden">
-                {/* Background Decorations */}
-                <div className="absolute top-0 right-0 w-96 h-96 bg-[#ed5518]/5 rounded-full blur-3xl -mr-48 -mt-48 pointer-events-none" />
-                <div className="absolute bottom-0 left-0 w-96 h-96 bg-slate-900/5 rounded-full blur-3xl -ml-48 -mb-48 pointer-events-none" />
+            <div className="min-h-screen font-body flex items-center justify-center bg-cream p-6 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#ed5518]/5 rounded-full blur-[120px] -mr-64 -mt-64 pointer-events-none" />
 
-                <div className="w-full max-w-lg bg-white rounded-[2.5rem] p-10 md:p-16 shadow-[0_20px_50px_rgba(0,0,0,0.05)] ring-1 ring-slate-100 text-center relative z-10 animate-in fade-in zoom-in duration-500">
-                    <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-[#ed5518]/10 text-[#ed5518] mb-8 ring-8 ring-[#ed5518]/5">
-                        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#ed5518] text-white shadow-lg shadow-[#ed5518]/30">
-                            <CheckCircle2 size={32} strokeWidth={3} />
+                <div className="w-full max-w-xl bg-noir rounded-[2rem] p-12 md:p-20 shadow-2xl text-center relative z-10 animate-in fade-in zoom-in duration-700">
+                    <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-[#ed5518]/10 mb-10">
+                        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#ed5518] text-white">
+                            <CheckCircle2 size={32} />
                         </div>
                     </div>
 
-                    <div className="space-y-4 mb-10">
-                        <h1 className="text-3xl font-black text-slate-900 tracking-tight">
-                            Bienvenue chez One Connexion !
+                    <div className="space-y-6 mb-12">
+                        <h1 className="text-4xl md:text-5xl font-display italic text-white leading-tight">
+                            Bienvenue dans <br />
+                            <span className="text-[#ed5518]">le futur.</span>
                         </h1>
-                        <div className="h-1 w-12 bg-[#ed5518] mx-auto rounded-full" />
-                        <p className="text-slate-500 text-base leading-relaxed max-w-sm mx-auto">
-                            Votre compte entreprise a été créé. Un email de confirmation vient d'être envoyé à :
-                            <br />
-                            <span className="inline-block mt-2 font-bold text-slate-900 bg-slate-50 px-3 py-1 rounded-lg border border-slate-100">
-                                {form.email}
-                            </span>
+                        <p className="text-white/40 text-[11px] font-bold uppercase tracking-[0.3em] max-w-sm mx-auto leading-loose">
+                            Votre compte entreprise a été initialisé.
+                            Vérifiez l'email envoyé à <br />
+                            <span className="text-white mt-2 block">{form.email}</span>
                         </p>
                     </div>
 
-                    <div className="space-y-4">
+                    <div className="space-y-6">
                         <button
                             onClick={() => navigate('/connexion')}
-                            className="group w-full flex items-center justify-center gap-2 rounded-full bg-slate-900 py-4 text-sm font-black text-white hover:bg-[#ed5518] transition-all shadow-xl shadow-slate-900/10 active:scale-95"
+                            className="group w-full flex items-center justify-center gap-3 rounded-xl bg-[#ed5518] py-5 text-[11px] font-bold uppercase tracking-[0.3em] text-white shadow-xl shadow-orange-500/20 active:scale-95 transition-all"
                         >
-                            Accéder à mon espace client <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                            Accéder à mon espace <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                         </button>
-                        
-                        <p className="text-xs text-slate-400 font-medium">
-                            Vous n'avez pas reçu l'email ? Pensez à vérifier vos spams.
-                        </p>
                     </div>
                 </div>
             </div>
@@ -136,141 +128,149 @@ export default function Register() {
     }
 
     return (
-        <div className="min-h-screen flex font-sans">
+        <div className="min-h-screen flex font-body bg-cream">
             {/* ── LEFT PANEL ── */}
-            <div className="hidden lg:flex lg:w-[42%] relative flex-col justify-between p-12 overflow-hidden bg-slate-950">
+            <div className="hidden lg:flex lg:w-[40%] relative flex-col justify-between p-16 overflow-hidden bg-noir">
                 <div className="absolute inset-0 z-0">
                     <img
                         src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&q=80"
-                        alt="Équipe professionnelle"
-                        className="h-full w-full object-cover opacity-20"
+                        alt="Expertise One"
+                        className="h-full w-full object-cover opacity-10 grayscale"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-b from-slate-950/50 via-slate-950/80 to-slate-950" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-noir/50 via-noir to-noir" />
                 </div>
 
-                {/* Logo */}
                 <Logo variant="light" size="lg" className="relative z-10" />
 
-                {/* Content */}
-                <div className="relative z-10 space-y-10">
-                    <div className="space-y-4">
-                        <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-bold uppercase tracking-widest text-[#ed5518]">
-                            Accès Pro Gratuit
+                <div className="relative z-10 space-y-12">
+                    <div className="space-y-6">
+                        <div className="flex items-center gap-3">
+                            <div className="h-px w-6 bg-[#ed5518]"></div>
+                            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#ed5518]">
+                                Partenariat Stratégique
+                            </span>
                         </div>
-                        <h2 className="text-4xl font-black text-white leading-tight">
+                        <h2 className="text-5xl font-display text-white leading-tight">
                             Rejoignez le réseau<br />
                             <span className="text-[#ed5518] italic">One Connexion</span>
                         </h2>
-                        <p className="text-slate-400 text-sm leading-relaxed max-w-xs">
-                            Inscription en 2 minutes. Accès immédiat à votre dashboard. Aucun engagement.
+                        <p className="text-white/30 text-sm leading-relaxed max-w-xs font-light italic">
+                            Votre accès gratuit à une logistique premium. Inscription en 2 minutes.
                         </p>
                     </div>
-                    <ul className="space-y-3">
+                    <ul className="space-y-4">
                         {BENEFITS.map((b, i) => (
-                            <li key={i} className="flex items-center gap-3 text-sm font-medium text-slate-300">
-                                <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#ed5518]/20">
-                                    <CheckCircle2 size={12} className="text-[#ed5518]" />
+                            <li key={i} className="flex items-center gap-4 text-[10px] font-bold uppercase tracking-[0.2em] text-white/50">
+                                <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#ed5518]">
+                                    <CheckCircle2 size={10} className="text-white" />
                                 </div>
                                 {b}
                             </li>
                         ))}
                     </ul>
 
-                    {/* Testimonial mini */}
-                    <div className="rounded-2xl bg-white/5 border border-white/10 p-5 space-y-3">
+                    <div className="rounded-xl bg-white/5 border border-white/5 p-6 space-y-4 backdrop-blur-sm">
                         <div className="flex gap-1">
-                            {[...Array(5)].map((_, i) => <span key={i} className="text-[#ed5518] text-sm">★</span>)}
+                            {[...Array(5)].map((_, i) => <span key={i} className="text-[#ed5518] text-xs">★</span>)}
                         </div>
-                        <p className="text-sm text-slate-300 italic leading-relaxed">
-                            "On a réduit de 40% le temps admin grâce à la facturation mensuelle de One Connexion."
+                        <p className="text-xs text-white/60 italic leading-relaxed">
+                            "Une réactivité sans faille et une interface intuitive. One Connexion est devenu notre partenaire de confiance."
                         </p>
-                        <div className="text-xs text-slate-500 font-bold">— LogiNord, Client depuis 2025</div>
+                        <div className="text-[9px] text-[#ed5518] font-bold uppercase tracking-widest">— Groupe Logistique IDF</div>
                     </div>
                 </div>
 
-                <div className="relative z-10 text-xs text-slate-600">© 2026 One Connexion. Service B2B réservé aux professionnels.</div>
+                <div className="relative z-10 text-[9px] font-bold uppercase tracking-[0.3em] text-white/20 italic">
+                    One Connexion · L'Excellence du Dernier Kilomètre
+                </div>
             </div>
 
             {/* ── RIGHT PANEL ── */}
-            <div className="flex w-full flex-col bg-white overflow-y-auto lg:w-[58%]">
-                <div className="mx-auto w-full max-w-xl px-6 py-12 lg:px-12">
-                    {/* Mobile logo */}
-                    <Logo size="md" className="flex items-center gap-3 mb-10 lg:hidden" />
+            <div className="flex w-full flex-col bg-cream overflow-y-auto lg:w-[60%] relative">
+                <div className="absolute top-0 left-0 w-64 h-64 bg-noir/5 blur-3xl rounded-full"></div>
 
-                    <div className="mb-10">
-                        <h1 className="text-3xl font-black text-slate-900 tracking-tight">Créer un compte pro</h1>
-                        <p className="mt-2 text-slate-500 text-sm">Inscrivez votre entreprise pour profiter de tous nos services.</p>
+                <div className="mx-auto w-full max-w-2xl px-6 py-16 lg:px-20 relative z-10">
+                    <div className="lg:hidden mb-12">
+                        <Logo size="lg" variant="dark" />
                     </div>
 
-                    <form onSubmit={handleSubmit} className="space-y-6">
+                    <div className="mb-16">
+                        <h1 className="text-4xl md:text-5xl font-display italic text-noir leading-none">Créer un compte pro.</h1>
+                        <div className="mt-4 flex items-center gap-3">
+                            <div className="h-px w-4 bg-noir/20"></div>
+                            <p className="text-noir/40 text-[10px] font-bold uppercase tracking-[0.2em]">Inscrivez votre entreprise en quelques instants</p>
+                        </div>
+                    </div>
+
+                    <form onSubmit={handleSubmit} className="space-y-12">
                         {/* Section: Entreprise */}
-                        <div>
-                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4 flex items-center gap-2">
-                                <Building2 size={12} /> Informations de l'entreprise
-                            </p>
-                            <div className="grid md:grid-cols-2 gap-4">
-                                <Field label="Nom de l'entreprise *" placeholder="Ex: SARL Dupont Logistique" type="text" value={form.companyName} onChange={set('companyName')} icon={<Building2 size={16} />} required />
-                                <Field label="Contact principal *" placeholder="Prénom Nom" type="text" value={form.contactName} onChange={set('contactName')} icon={<User size={16} />} required />
+                        <div className="space-y-8">
+                            <h3 className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#ed5518] flex items-center gap-3">
+                                <span className="h-1 w-1 bg-[#ed5518] rounded-full"></span>
+                                Informations Entreprise
+                            </h3>
+                            <div className="grid md:grid-cols-2 gap-8">
+                                <Field label="Raison Sociale" placeholder="Nom de l'entreprise" type="text" value={form.companyName} onChange={set('companyName')} icon={<Building2 size={16} />} required />
+                                <Field label="Contact Référent" placeholder="Nom Complet" type="text" value={form.contactName} onChange={set('contactName')} icon={<User size={16} />} required />
                             </div>
                         </div>
 
                         {/* Section: Contact */}
-                        <div>
-                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4 flex items-center gap-2">
-                                <Mail size={12} /> Coordonnées
-                            </p>
-                            <div className="grid md:grid-cols-2 gap-4">
-                                <Field label="Email professionnel *" placeholder="contact@votre-bo.com" type="email" value={form.email} onChange={set('email')} icon={<Mail size={16} />} required />
-                                <Field label="Téléphone" placeholder="06 00 00 00 00" type="tel" value={form.phone} onChange={set('phone')} icon={<Phone size={16} />} />
+                        <div className="space-y-8">
+                            <h3 className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#ed5518] flex items-center gap-3">
+                                <span className="h-1 w-1 bg-[#ed5518] rounded-full"></span>
+                                Coordonnées Directes
+                            </h3>
+                            <div className="grid md:grid-cols-2 gap-8">
+                                <Field label="Email Professionnel" placeholder="contact@entreprise.com" type="email" value={form.email} onChange={set('email')} icon={<Mail size={16} />} required />
+                                <Field label="Téléphone Mobile" placeholder="06 00 00 00 00" type="tel" value={form.phone} onChange={set('phone')} icon={<Phone size={16} />} />
                             </div>
                         </div>
 
                         {/* Section: Adresse */}
-                        <div>
-                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4 flex items-center gap-2">
-                                <MapPin size={12} /> Adresse de facturation
-                            </p>
-                            <div className="space-y-4">
-                                <Field label="Rue *" placeholder="Numéro et nom de rue" type="text" value={form.billingAddress} onChange={set('billingAddress')} icon={<MapPin size={16} />} required />
-                                <div className="grid grid-cols-2 gap-4">
-                                    <Field label="Code postal *" placeholder="75001" type="text" value={form.zip} onChange={set('zip')} required />
-                                    <Field label="Ville *" placeholder="Paris" type="text" value={form.city} onChange={set('city')} required />
+                        <div className="space-y-8">
+                            <h3 className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#ed5518] flex items-center gap-3">
+                                <span className="h-1 w-1 bg-[#ed5518] rounded-full"></span>
+                                Siège & Facturation
+                            </h3>
+                            <div className="space-y-8">
+                                <Field label="Adresse" placeholder="Voie, numéro, complément" type="text" value={form.billingAddress} onChange={set('billingAddress')} icon={<MapPin size={16} />} required />
+                                <div className="grid grid-cols-2 gap-8">
+                                    <Field label="Code Postal" placeholder="75001" type="text" value={form.zip} onChange={set('zip')} required />
+                                    <Field label="Ville" placeholder="Paris" type="text" value={form.city} onChange={set('city')} required />
                                 </div>
                             </div>
                         </div>
 
                         {/* Section: Sécurité */}
-                        <div>
-                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4 flex items-center gap-2">
-                                <Lock size={12} /> Sécurité du compte
-                            </p>
-                            <div className="grid md:grid-cols-2 gap-4">
-                                <PasswordField label="Mot de passe *" placeholder="8 caractères minimum" value={form.password} onChange={set('password')} show={showPassword} onToggle={() => setShowPassword(v => !v)} required />
-                                <PasswordField label="Confirmer *" placeholder="Identique au mot de passe" value={form.confirmPassword} onChange={set('confirmPassword')} show={showConfirm} onToggle={() => setShowConfirm(v => !v)} required />
+                        <div className="space-y-8">
+                            <h3 className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#ed5518] flex items-center gap-3">
+                                <span className="h-1 w-1 bg-[#ed5518] rounded-full"></span>
+                                Accès Sécurisé
+                            </h3>
+                            <div className="grid md:grid-cols-2 gap-8">
+                                <PasswordField label="Mot de passe" placeholder="Minimum 8 caractères" value={form.password} onChange={set('password')} show={showPassword} onToggle={() => setShowPassword(v => !v)} required />
+                                <PasswordField label="Confirmation" placeholder="Re-saisir" value={form.confirmPassword} onChange={set('confirmPassword')} show={showConfirm} onToggle={() => setShowConfirm(v => !v)} required />
                             </div>
                         </div>
 
                         {/* Terms */}
-                        <label className="flex items-start gap-3 cursor-pointer group">
+                        <label className="flex items-start gap-4 cursor-pointer group p-4 rounded-xl border border-noir/5 bg-white/30">
                             <input
                                 type="checkbox"
-                                className="mt-0.5 h-4 w-4 rounded border-slate-300 text-slate-900 focus:ring-slate-900 cursor-pointer"
+                                className="mt-1 h-4 w-4 rounded-sm border-noir/20 text-noir focus:ring-noir cursor-pointer transition-all"
                                 checked={form.acceptTerms}
                                 onChange={e => setForm(f => ({ ...f, acceptTerms: e.target.checked }))}
                                 required
                             />
-                            <span className="text-sm text-slate-500 leading-relaxed group-hover:text-slate-700 transition-colors">
-                                J'accepte la{" "}
-                                <Link to="/confidentialite" className="font-bold text-slate-900 hover:text-[#ed5518] underline underline-offset-2 transition-colors">
-                                    politique de confidentialité
-                                </Link>{" "}
-                                et les conditions générales de vente de One Connexion.
+                            <span className="text-[11px] text-noir/50 leading-relaxed uppercase tracking-wider">
+                                J'accepte la politique de confidentialité de One Connexion.
                             </span>
                         </label>
 
                         {/* Error */}
                         {error && (
-                            <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-700">
+                            <div className="p-5 rounded-xl border border-rose-100 bg-rose-50 text-[10px] font-bold text-rose-600 uppercase tracking-widest leading-loose">
                                 {error}
                             </div>
                         )}
@@ -279,17 +279,17 @@ export default function Register() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="group w-full flex items-center justify-center gap-2 rounded-full bg-slate-900 py-4 text-sm font-black text-white shadow-xl shadow-slate-900/15 transition-all hover:bg-[#ed5518] hover:-translate-y-0.5 hover:shadow-primary/20 disabled:opacity-60 disabled:cursor-not-allowed"
+                            className="group w-full flex items-center justify-center gap-4 rounded-xl bg-noir py-6 text-[11px] font-bold uppercase tracking-[0.4em] text-white shadow-[0_20px_50px_rgba(0,0,0,0.2)] hover:bg-[#ed5518] transition-all disabled:opacity-60 disabled:cursor-not-allowed"
                         >
                             {loading
-                                ? <Loader2 className="animate-spin" size={18} />
-                                : <><ShieldCheck size={16} /> Créer mon compte entreprise <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" /></>
+                                ? <Loader2 className="animate-spin" size={20} />
+                                : <><ShieldCheck size={18} /> Initialiser le compte <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" /></>
                             }
                         </button>
 
-                        <p className="text-center text-sm text-slate-500">
-                            Déjà un compte ?{" "}
-                            <Link to="/connexion" className="font-black text-slate-900 hover:text-[#ed5518] transition-colors hover:underline">
+                        <p className="text-center text-[10px] font-bold uppercase tracking-widest text-noir/30">
+                            Déjà partenaire ?{" "}
+                            <Link to="/connexion" className="text-noir hover:text-[#ed5518] transition-colors underline underline-offset-4">
                                 Se connecter
                             </Link>
                         </p>
@@ -304,11 +304,11 @@ export default function Register() {
 
 function Field({ label, placeholder, type = "text", value, onChange, icon, required }) {
     return (
-        <div className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-600">{label}</label>
-            <div className={`relative ${icon ? "" : ""}`}>
+        <div className="space-y-3">
+            <label className="text-[9px] font-bold uppercase tracking-[0.3em] text-noir/40 ml-1">{label}</label>
+            <div className="relative">
                 {icon && (
-                    <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">{icon}</span>
+                    <span className="absolute left-5 top-1/2 -translate-y-1/2 text-noir/20 group-focus-within:text-[#ed5518] transition-colors">{icon}</span>
                 )}
                 <input
                     type={type}
@@ -316,7 +316,7 @@ function Field({ label, placeholder, type = "text", value, onChange, icon, requi
                     placeholder={placeholder}
                     value={value}
                     onChange={onChange}
-                    className={`w-full rounded-2xl border border-slate-200 bg-slate-50 py-3 ${icon ? "pl-10 pr-4" : "px-4"} text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:border-slate-900 focus:bg-white focus:outline-none focus:ring-4 focus:ring-slate-900/5 transition-all`}
+                    className={`w-full rounded-xl border border-noir/5 bg-white py-4 ${icon ? "pl-14" : "px-5"} text-sm font-medium text-noir placeholder:text-noir/20 focus:border-[#ed5518] focus:ring-0 transition-all shadow-sm`}
                 />
             </div>
         </div>
@@ -325,20 +325,20 @@ function Field({ label, placeholder, type = "text", value, onChange, icon, requi
 
 function PasswordField({ label, placeholder, value, onChange, show, onToggle, required }) {
     return (
-        <div className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-600">{label}</label>
+        <div className="space-y-3">
+            <label className="text-[9px] font-bold uppercase tracking-[0.3em] text-noir/40 ml-1">{label}</label>
             <div className="relative">
-                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+                <Lock className="absolute left-5 top-1/2 -translate-y-1/2 text-noir/20" size={16} />
                 <input
                     type={show ? "text" : "password"}
                     required={required}
                     placeholder={placeholder}
                     value={value}
                     onChange={onChange}
-                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 py-3 pl-10 pr-11 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:border-slate-900 focus:bg-white focus:outline-none focus:ring-4 focus:ring-slate-900/5 transition-all"
+                    className="w-full rounded-xl border border-noir/5 bg-white py-4 pl-14 pr-14 text-sm font-medium text-noir placeholder:text-noir/20 focus:border-[#ed5518] focus:ring-0 transition-all shadow-sm"
                 />
-                <button type="button" onClick={onToggle} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors">
-                    {show ? <EyeOff size={16} /> : <Eye size={16} />}
+                <button type="button" onClick={onToggle} className="absolute right-5 top-1/2 -translate-y-1/2 text-noir/20 hover:text-noir transition-colors">
+                    {show ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
             </div>
         </div>

@@ -10,19 +10,19 @@ function clientStatusLabel(order) {
   switch (status) {
     case "pending_acceptance":
     case "pending":
-      return "⌛ En attente";
+      return "En attente";
     case "accepted":
-      return "✅ Mission Validée";
+      return "Mission Validée";
     case "assigned":
-      return "📍 Recherche chauffeur";
+      return "Recherche chauffeur";
     case "driver_accepted":
-      return "🚚 Chauffeur en route";
+      return "Chauffeur en route";
     case "in_progress":
-      return "📦 Livraison en cours";
+      return "Livraison en cours";
     case "delivered":
-      return "🏁 Terminée";
+      return "Terminée";
     case "cancelled":
-      return "🚫 Annulée";
+      return "Annulée";
     default:
       return status || "—";
   }
@@ -41,15 +41,12 @@ export default function OrderDetails() {
   const [submittingClaim, setSubmittingClaim] = useState(false);
 
   useEffect(() => {
-    // If we have an order ID but the object lacks full details (like pickup_address)
-    // we must fetch the complete order data. This happens when coming from Dashboard stats.
     if ((!order || !order.pickup_address) && (id || order?.id)) {
       fetchFullOrder();
     } else if (order?.client_id) {
       fetchClient(order.client_id);
     }
 
-    // Subscribe to realtime updates for THIS order
     const orderId = id || order?.id;
     if (orderId) {
       const channel = supabase
@@ -58,7 +55,6 @@ export default function OrderDetails() {
           'postgres_changes',
           { event: 'UPDATE', schema: 'public', table: 'orders', filter: `id=eq.${orderId}` },
           (payload) => {
-            console.log('Real-time update received:', payload.new);
             setOrder(payload.new);
           }
         )
@@ -68,7 +64,7 @@ export default function OrderDetails() {
         supabase.removeChannel(channel);
       };
     }
-  }, [id, order?.id, order?.pickup_address, order?.client_id]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [id, order?.id, order?.pickup_address, order?.client_id]);
 
   const fetchFullOrder = async () => {
     setLoading(true);
@@ -88,22 +84,23 @@ export default function OrderDetails() {
 
   if (loading && !order?.pickup_address) {
     return (
-      <div className="flex justify-center p-20">
-        <Loader2 className="h-8 w-8 animate-spin text-slate-400" />
+      <div className="flex flex-col items-center justify-center py-40 space-y-4">
+        <Loader2 className="h-10 w-10 animate-spin text-noir/10" />
+        <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-noir/20">Récupération des détails</p>
       </div>
     );
   }
 
   if (!order || notFound) {
     return (
-      <div className="rounded-3xl bg-white p-6 shadow-sm">
-        <div className="mb-3 text-lg font-bold text-slate-900">Commande introuvable</div>
-        <p className="text-sm text-slate-500">Reviens à la liste des commandes.</p>
+      <div className="max-w-2xl mx-auto py-20 text-center space-y-6">
+        <h1 className="text-4xl font-display italic text-noir">Mission Introuvable.</h1>
+        <p className="text-noir/40 font-medium">Cette expédition n'existe pas ou a été archivée.</p>
         <button
           onClick={() => navigate(-1)}
-          className="mt-4 rounded-full bg-slate-900 px-4 py-2 text-xs font-bold text-white"
+          className="rounded-xl bg-noir px-8 py-4 text-[10px] font-bold uppercase tracking-widest text-white hover:bg-[#ed5518] transition-all"
         >
-          Retour
+          Retourner à la liste
         </button>
       </div>
     );
@@ -111,36 +108,32 @@ export default function OrderDetails() {
 
   try {
     const timeline = [
-      { 
-        label: "Commande passée", 
+      {
+        label: "Commande passée",
         value: order.created_at ? new Date(order.created_at).toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' }) : "—",
         done: true
       },
-      { 
-        label: "Validation Admin", 
+      {
+        label: "Validation Admin",
         value: ['accepted', 'assigned', 'driver_accepted', 'in_progress', 'delivered'].includes(order.status) ? "Mission validée" : "En attente",
         done: ['accepted', 'assigned', 'driver_accepted', 'in_progress', 'delivered'].includes(order.status)
       },
-      { 
-        label: "Prise en charge", 
+      {
+        label: "Prise en charge",
         value: ['driver_accepted', 'in_progress', 'delivered'].includes(order.status) ? "Chauffeur assigné" : "Recherche chauffeur",
         done: ['driver_accepted', 'in_progress', 'delivered'].includes(order.status)
       },
-      { 
-        label: "Livraison", 
+      {
+        label: "Livraison",
         value: order.status === 'delivered' ? (order.delivered_at ? new Date(order.delivered_at).toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' }) : "Livrée") : "En cours",
         done: order.status === 'delivered'
       }
     ];
 
-    // ======================
-    // Parse order.notes for precise data rendering
-    // ======================
     const notesStr = order.notes || "";
     const nEntreprisePick = notesStr.match(/Entreprise Pick: (.*?)(\.|$|Contact)/)?.[1]?.trim();
     const nContactPick = notesStr.match(/Contact Pick: (.*?)(\.|$|Phone|Email)/)?.[1]?.trim();
     const nPhonePick = notesStr.match(/Phone Pick: (.*?)(\.|$|Email|Code)/)?.[1]?.trim();
-    const nEmailEnlev = notesStr.match(/Email Enlev: (.*?)(\.|$|Entreprise|Contact|Instructions)/)?.[1]?.trim();
     const pCode = order.pickup_access_code || notesStr.match(/(?:Code Enlev:|Code :|Code:)\s?([^.]+)/)?.[1]?.trim();
 
     const nEntrepriseDeliv = notesStr.match(/Entreprise Deliv: (.*?)(\.|$|Contact)/)?.[1]?.trim();
@@ -152,34 +145,10 @@ export default function OrderDetails() {
     const nPNote = notesStr.match(/Instructions:\s*(.*?)\s*\//)?.[1]?.trim() || (nInstructions && !String(nInstructions).includes('/') ? nInstructions : null);
     const nDNote = notesStr.match(/Instructions:\s*(.*?)\s*\/\s*(.*)(?:\.|$)/)?.[2]?.trim();
 
-    // Guest order parsing
-    const gBillingMatch = notesStr.match(/Billing: (.*?) \| (.*?) \| (.*?)$/);
-    const gBillingName = gBillingMatch?.[1]?.trim();
-    const gBillingCompany = gBillingMatch?.[2]?.trim();
-    const gEmail = notesStr.match(/Email: ([^\s]+)/)?.[1]?.trim();
-    const gPhone = notesStr.match(/Phone: ([\d\s]+)/)?.[1]?.trim();
-    const gContact = notesStr.match(/Contact: ([^(]+)/)?.[1]?.trim();
-
     const pickupName = order.pickup_name || nEntreprisePick || nContactPick || "—";
-    const pickupPhone = order.pickup_phone || nPhonePick || gPhone || order.notes?.match(/Contact: ([\d\s]+)/)?.[1] || "—";
+    const pickupPhone = order.pickup_phone || nPhonePick || order.notes?.match(/Contact: ([\d\s]+)/)?.[1] || "—";
     const deliveryName = order.delivery_name || nEntrepriseDeliv || nContactDeliv || "—";
     const deliveryPhone = order.delivery_phone || nPhoneDeliv || "—";
-
-    // Client/Expediteur
-    const displayCompany = client?.details?.company || order.expediteur?.nom || gBillingCompany || nEntreprisePick || "";
-    const displayContactName = client?.details?.contact || client?.details?.full_name || order.nom_client || gBillingName || gContact || nContactPick || pickupName || "—";
-    const displayEmail = client?.details?.email || order.email_client || order.expediteur?.email || gEmail || nEmailEnlev || "—";
-    const displayPhone = client?.details?.phone || order.telephone_client || order.expediteur?.telephone || gPhone || pickupPhone || "—";
-    const displayTopName = String(displayCompany || displayContactName);
-
-    // Package
-    const packageNature = order.package_type || order.delivery_type || order.notes?.split(' - ')?.[0] || "—";
-
-    const gWeight = notesStr.match(/Poids: ([\d\w\s,.<>]+)/)?.[1];
-    const packageWeight = order.weight ? String(`${order.weight} kg`) : String(gWeight && gWeight !== "undefined" ? gWeight : "—");
-
-    const gDims = notesStr.match(/Dims: ([\d\w\sxX]+)/)?.[1] || notesStr.match(/Dimensions: ([^.]+)/)?.[1];
-    const packageDims = order.package_description || String(gDims && gDims !== "undefined" ? gDims : "");
 
     const downloadPdf = async () => {
       try {
@@ -193,35 +162,24 @@ export default function OrderDetails() {
         const d = latestClient?.details || {};
         const clientInfo = {
           name: d.full_name || d.contact_name || (latestClient?.first_name ? `${latestClient.first_name} ${latestClient.last_name || ""}` : (latestClient?.email?.split('@')[0] || "")),
-          firstName: d.first_name || latestClient?.first_name || (d.full_name || d.contact_name || "").split(' ')[0] || "",
-          lastName: d.last_name || latestClient?.last_name || (d.full_name || d.contact_name || "").split(' ').slice(1).join(' ') || "",
-          email: latestClient?.email || d.email || order?.sender_email || "",
-          phone: d.phone || d.phone_number || d.telephone || latestClient?.telephone || (order?.notes || "").match(/Phone: ([^|]+)/)?.[1]?.trim() || "",
-          company: d.company || latestClient?.company_name || order?.billing_company || "",
-          billingAddress: latestClient?.address || d.address || d.billing_address || order?.billing_address || "",
-          billingCity: latestClient?.city || d.city || d.billing_city || d.ville || order?.billing_city || "",
-          billingZip: latestClient?.postal_code || d.zip || d.postal_code || d.billing_zip || d.postcode || order?.billing_zip || ""
+          email: latestClient?.email || d.email || "",
+          phone: d.phone || d.phone_number || "",
+          company: d.company || latestClient?.company_name || "",
+          billingAddress: latestClient?.address || d.address || "",
+          billingCity: latestClient?.city || d.city || "",
+          billingZip: latestClient?.postal_code || d.zip || ""
         };
         await generateOrderPdf(order, clientInfo);
       } catch (err) {
-        console.error("PDF Fail Client:", err);
-        alert("Erreur lors de la génération du PDF.");
+        console.error("PDF Fail:", err);
       }
     };
 
     const cancelOrder = async () => {
       if (!confirm("Voulez-vous vraiment annuler cette commande ?")) return;
       setLoading(true);
-      const { error } = await supabase
-        .from('orders')
-        .update({ status: 'cancelled' })
-        .eq('id', order.id);
-      
-      if (!error) {
-        setOrder({ ...order, status: 'cancelled' });
-      } else {
-        alert("Erreur lors de l'annulation.");
-      }
+      const { error } = await supabase.from('orders').update({ status: 'cancelled' }).eq('id', order.id);
+      if (!error) setOrder({ ...order, status: 'cancelled' });
       setLoading(false);
     };
 
@@ -233,299 +191,284 @@ export default function OrderDetails() {
         claim_notes: claimNotes,
         claim_opened_at: new Date().toISOString()
       }).eq('id', order.id);
-      
+
       if (!error) {
         setOrder({ ...order, claim_status: 'pending', claim_notes: claimNotes });
         setShowClaimForm(false);
-      } else {
-        alert("Erreur lors de l'envoi de la réclamation.");
       }
       setSubmittingClaim(false);
     };
 
     return (
-      <div className="grid gap-6">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <div className="text-xs font-semibold uppercase tracking-wider text-slate-400">Commande</div>
-            <h1 className="text-2xl font-bold text-slate-900">#{String(order.id || "").slice(0, 8)}</h1>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className={`rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-widest ${
-              order.status === 'delivered' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' :
-              order.status === 'driver_accepted' || order.status === 'in_progress' ? 'bg-orange-50 text-[#ed5518] border border-orange-100' :
-              order.status === 'accepted' ? 'bg-blue-50 text-blue-600 border border-blue-100 animate-pulse' :
-              order.status === 'assigned' ? 'bg-amber-50 text-amber-600 border border-amber-100' :
-              'bg-slate-100 text-slate-500 border border-slate-200'
-              }`}>
-              {clientStatusLabel(order) || "—"}
+      <div className="grid gap-12 font-body pb-20">
+        {/* Header Section */}
+        <header className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between border-b border-noir/5 pb-10">
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => navigate(-1)}
+                className="group flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.3em] text-noir/30 hover:text-noir transition-colors"
+              >
+                <span>← Retour</span>
+              </button>
             </div>
+            <h1 className="text-6xl font-display italic text-noir leading-none">
+              Mission <span className="text-[#ed5518]">#{String(order.id || "").slice(0, 8)}</span>
+            </h1>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-4">
+            <span className={`px-5 py-3 rounded-xl text-[10px] font-bold uppercase tracking-[0.2em] border ${order.status === 'delivered' ? 'bg-emerald-500 text-white border-emerald-500' :
+              order.status === 'driver_accepted' || order.status === 'in_progress' ? 'bg-[#ed5518] text-white border-[#ed5518]' :
+                'bg-noir text-white border-noir'
+              }`}>
+              {clientStatusLabel(order)}
+            </span>
+
+            <button
+              onClick={downloadPdf}
+              className="flex items-center gap-3 rounded-xl bg-white border border-noir/10 px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-noir hover:bg-noir hover:text-white hover:border-noir transition-all active:scale-95 shadow-sm"
+            >
+              <FileText size={16} strokeWidth={1.5} />
+              <span>Bon de Commande</span>
+            </button>
+
             {['pending', 'accepted', 'assigned'].includes(order.status) && (
               <button
                 onClick={cancelOrder}
-                className="rounded-full bg-rose-50 px-4 py-2 text-xs font-bold text-rose-600 hover:bg-rose-100 transition-all border border-rose-100"
+                className="rounded-xl border border-red-100 bg-red-50 px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-red-600 hover:bg-red-600 hover:text-white transition-all"
               >
-                Annuler la mission
+                Annuler
               </button>
             )}
-            <button
-              onClick={downloadPdf}
-              className="flex items-center gap-2 rounded-full bg-slate-900 px-4 py-2 text-xs font-bold text-white transition-transform hover:scale-105 shadow-lg active:scale-95"
-            >
-              <FileText size={14} />
-              <span>Télécharger le BC (PDF)</span>
-            </button>
-            <button
-              onClick={() => navigate(-1)}
-              className="rounded-full bg-slate-100 px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-200"
-            >
-              Retour
-            </button>
           </div>
-        </div>
+        </header>
 
-        <div className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
-          <div className="rounded-3xl border border-slate-100 bg-white p-6 shadow-sm">
-            <div className="text-xs font-bold uppercase tracking-wider text-slate-400">Itinéraire</div>
-            <div className="mt-4 grid gap-4">
-              <div className="rounded-2xl bg-slate-50 p-4 border border-slate-100">
-                <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Enlèvement</div>
-                <div className="mt-2 text-sm font-bold text-slate-900 leading-none mb-1">{pickupName}</div>
-                <div className="text-xs text-slate-500 leading-snug mb-2">{order.pickup_address || "—"}</div>
-                <div className="text-xs font-semibold text-slate-900">
-                  {pCode && <span className="font-bold mr-2 text-[#ed5518]">Code: {pCode}</span>}
-                  {nPNote && nPNote !== "—" ? nPNote : "—"}
+        {/* Content Grid */}
+        <div className="grid gap-10 lg:grid-cols-12">
+          {/* Main Info */}
+          <div className="lg:col-span-8 space-y-10">
+            {/* Courier Proof (High impact) */}
+            {(order.delivery_comment || order.delivery_recipient) && (
+              <div className="rounded-3xl bg-emerald-500 p-8 text-white space-y-6">
+                <div className="flex items-center gap-3">
+                  <CheckCircle2 size={24} />
+                  <h2 className="text-[12px] font-bold uppercase tracking-[0.4em]">Preuve de Livraison</h2>
                 </div>
-              </div>
-              <div className="rounded-2xl bg-slate-50 p-4 border border-slate-100">
-                <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Livraison</div>
-                <div className="mt-2 text-sm font-bold text-slate-900 leading-none mb-1">{deliveryName}</div>
-                <div className="text-xs text-slate-500 leading-snug mb-2">{order.delivery_address || "—"}</div>
-                <div className="text-xs font-semibold text-slate-900">
-                  {dCode && <span className="font-bold mr-2 text-[#ed5518]">Code: {dCode}</span>}
-                  {nDNote && nDNote !== "—" ? nDNote : "—"}
-                </div>
-              </div>
-
-              {/* Détails de livraison effective (Preuves de dépot) */}
-              {(order.delivery_comment || order.delivery_recipient || order.delivery_department) && (
-                <div className="rounded-2xl bg-emerald-50 p-5 border border-emerald-100 animate-in fade-in slide-in-from-top-2 duration-500">
-                  <div className="flex items-center gap-2 mb-4">
-                    <CheckCircle2 size={16} className="text-emerald-600" />
-                    <span className="text-[11px] font-black uppercase tracking-widest text-emerald-600">Confirmation de livraison</span>
-                  </div>
-                  <div className="space-y-4">
-                    {order.delivery_recipient && (
-                      <div>
-                        <div className="text-[9px] font-black text-emerald-400 uppercase tracking-widest mb-1">Réceptionné par</div>
-                        <div className="text-sm font-black text-slate-900">{order.delivery_recipient}</div>
-                      </div>
-                    )}
-                    {order.delivery_department && (
-                      <div>
-                        <div className="text-[9px] font-black text-emerald-400 uppercase tracking-widest mb-1">Service / Bureau</div>
-                        <div className="text-sm font-black text-slate-900">{order.delivery_department}</div>
-                      </div>
-                    )}
-                    {order.delivery_comment && (
-                      <div className="pt-3 border-t border-emerald-100/30">
-                        <div className="text-[9px] font-black text-emerald-400 uppercase tracking-widest mb-1">Lieu précis du dépot</div>
-                        <div className="text-sm font-bold text-slate-700 italic leading-relaxed">"{order.delivery_comment}"</div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              <div className="grid gap-3 sm:grid-cols-2">
-                <div className="rounded-2xl bg-slate-50 p-4">
-                  <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Formule</div>
-                  <div className="mt-2 text-sm font-semibold text-slate-900 uppercase">{order.vehicle_type} {order.service_level}</div>
-                </div>
-                <div className="rounded-2xl bg-slate-50 p-4">
-                  <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Programmation</div>
-                  <div className="mt-2 text-sm font-semibold text-slate-900">
-                    {order.scheduled_at ? new Date(order.scheduled_at).toLocaleString() : "Immédiat"}
-                  </div>
-                </div>
-              </div>
-              <div className="grid gap-3 sm:grid-cols-2">
-                <div className="rounded-2xl bg-slate-50 p-4">
-                  <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Tél. Enlèvement</div>
-                  <div className="mt-2 text-sm font-semibold text-slate-900">
-                    {pickupPhone}
-                  </div>
-                </div>
-                <div className="rounded-2xl bg-slate-50 p-4">
-                  <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Tél. Livraison</div>
-                  <div className="mt-2 text-sm font-semibold text-slate-900">
-                    {deliveryPhone}
-                  </div>
-                </div>
-              </div>
-              <div className="grid gap-3">
-                <div className="rounded-2xl bg-slate-50 p-4 border border-slate-100">
-                  <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400 mb-3">Détails du Colis</div>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    <div>
-                      <div className="text-[10px] font-bold text-slate-400 uppercase">Nature</div>
-                      <div className="text-sm font-bold text-slate-900">
-                        {packageNature}
-                      </div>
+                <div className="grid md:grid-cols-2 gap-8">
+                  {order.delivery_recipient && (
+                    <div className="space-y-1">
+                      <p className="text-emerald-100 text-[10px] font-bold uppercase tracking-widest">Signataire</p>
+                      <p className="text-2xl font-display italic">{order.delivery_recipient}</p>
                     </div>
-                    <div>
-                      <div className="text-[10px] font-bold text-slate-400 uppercase">Poids</div>
-                      <div className="text-sm font-bold text-slate-900">
-                        {packageWeight}
-                      </div>
+                  )}
+                  {order.delivery_comment && (
+                    <div className="space-y-1">
+                      <p className="text-emerald-100 text-[10px] font-bold uppercase tracking-widest">Commentaire chauffeur</p>
+                      <p className="text-lg font-medium italic opacity-90">"{order.delivery_comment}"</p>
                     </div>
-                    <div>
-                      <div className="text-[10px] font-bold text-slate-400 uppercase">Contenu</div>
-                      <div className="text-sm font-bold text-slate-900">
-                        {packageDims || "—"}
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Itinerary */}
+            <section className="bg-white rounded-3xl border border-noir/5 overflow-hidden">
+              <div className="p-10 space-y-12">
+                <div className="grid md:grid-cols-2 gap-16 relative">
+                  {/* Decorative line */}
+                  <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-px bg-noir/5 -translate-x-1/2"></div>
+
+                  {/* Pickup */}
+                  <div className="space-y-6">
+                    <div className="flex items-center gap-4">
+                      <div className="h-2 w-2 rounded-full border-2 border-[#ed5518]"></div>
+                      <h3 className="text-[11px] font-bold uppercase tracking-[0.4em] text-noir/30">Départ / Enlèvement</h3>
+                    </div>
+                    <div className="space-y-3">
+                      <p className="text-2xl font-display italic text-noir leading-tight">{pickupName}</p>
+                      <p className="text-noir/50 leading-relaxed">{order.pickup_address}</p>
+                      <div className="pt-4 flex flex-wrap gap-4">
+                        {pCode && (
+                          <div className="px-3 py-1.5 rounded-lg bg-noir/5 flex items-center gap-2">
+                            <span className="text-[10px] font-bold text-noir/20 uppercase tracking-widest">Code Access</span>
+                            <span className="text-[11px] font-black text-[#ed5518]">{pCode}</span>
+                          </div>
+                        )}
+                        <div className="px-3 py-1.5 rounded-lg bg-noir/5 flex items-center gap-2">
+                          <span className="text-[10px] font-bold text-noir/20 uppercase tracking-widest">Tél</span>
+                          <span className="text-[11px] font-bold text-noir">{pickupPhone}</span>
+                        </div>
                       </div>
+                      {nPNote && nPNote !== "—" && (
+                        <p className="mt-4 p-4 rounded-xl bg-noir/[0.02] border border-noir/5 text-xs italic text-noir/60 leading-relaxed">
+                          "{nPNote}"
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Delivery */}
+                  <div className="space-y-6">
+                    <div className="flex items-center gap-4">
+                      <div className="h-2 w-2 rounded-full bg-[#ed5518]"></div>
+                      <h3 className="text-[11px] font-bold uppercase tracking-[0.4em] text-noir/30">Arrivée / Livraison</h3>
+                    </div>
+                    <div className="space-y-3">
+                      <p className="text-2xl font-display italic text-noir leading-tight">{deliveryName}</p>
+                      <p className="text-noir/50 leading-relaxed">{order.delivery_address}</p>
+                      <div className="pt-4 flex flex-wrap gap-4">
+                        {dCode && (
+                          <div className="px-3 py-1.5 rounded-lg bg-noir/5 flex items-center gap-2">
+                            <span className="text-[10px] font-bold text-noir/20 uppercase tracking-widest">Code Access</span>
+                            <span className="text-[11px] font-black text-[#ed5518]">{dCode}</span>
+                          </div>
+                        )}
+                        <div className="px-3 py-1.5 rounded-lg bg-noir/5 flex items-center gap-2">
+                          <span className="text-[10px] font-bold text-noir/20 uppercase tracking-widest">Tél</span>
+                          <span className="text-[11px] font-bold text-noir">{deliveryPhone}</span>
+                        </div>
+                      </div>
+                      {nDNote && nDNote !== "—" && (
+                        <p className="mt-4 p-4 rounded-xl bg-noir/[0.02] border border-noir/5 text-xs italic text-noir/60 leading-relaxed">
+                          "{nDNote}"
+                        </p>
+                      )}
                     </div>
                   </div>
                 </div>
+
+                {/* Logistics */}
+                <div className="pt-12 border-t border-noir/5 grid grid-cols-2 md:grid-cols-4 gap-8">
+                  <div className="space-y-1">
+                    <p className="text-[9px] font-bold text-noir/20 uppercase tracking-widest">Véhicule</p>
+                    <p className="text-sm font-bold text-noir uppercase tracking-wider">{order.vehicle_type}</p>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-[9px] font-bold text-noir/20 uppercase tracking-widest">Service</p>
+                    <p className="text-sm font-bold text-[#ed5518] uppercase tracking-wider">{order.service_level}</p>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-[9px] font-bold text-noir/20 uppercase tracking-widest">Poids</p>
+                    <p className="text-sm font-bold text-noir">{order.weight ? `${order.weight} kg` : "N/C"}</p>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-[9px] font-bold text-noir/20 uppercase tracking-widest">Dimensions</p>
+                    <p className="text-sm font-bold text-noir">{order.package_description || "Standard"}</p>
+                  </div>
+                </div>
               </div>
-              <div className="rounded-2xl bg-slate-50 p-4">
-                <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Client / Expéditeur</div>
-                <div className="mt-2 text-sm font-bold text-slate-900">{displayTopName}</div>
-                <div className="text-xs text-slate-500">{displayEmail}</div>
-                <div className="text-xs text-slate-500">{displayPhone}</div>
-              </div>
-            </div>
+            </section>
           </div>
 
-          <div className="rounded-3xl border border-slate-100 bg-white p-6 shadow-sm">
-            <div className="text-xs font-bold uppercase tracking-wider text-slate-400">Prix TTC</div>
-            <div className="mt-3 text-4xl font-bold text-slate-900">{(Number(order.price_ht || 0) * 1.2).toFixed(2)}€</div>
-            <div className="text-xs text-slate-400 mt-1 font-semibold">{Number(order.price_ht || 0).toFixed(2)}€ HT</div>
-            <div className="mt-6 rounded-2xl bg-slate-50 p-4">
-              <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Statut</div>
-              <div className="mt-2 text-sm font-semibold text-slate-900">{clientStatusLabel(order)}</div>
-            </div>
+          {/* Sidebar */}
+          <div className="lg:col-span-4 space-y-8">
+            {/* Financial Card */}
+            <section className="bg-noir rounded-3xl p-10 text-white shadow-2xl shadow-noir/20">
+              <div className="space-y-8">
+                <div className="space-y-1">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-white/30">Total TTC</p>
+                  <p className="text-6xl font-display italic leading-none">{(Number(order.price_ht || 0) * 1.2).toFixed(2)}€</p>
+                  <p className="text-xs font-bold text-white/40 pt-2 tracking-widest">{Number(order.price_ht || 0).toFixed(2)}€ HT</p>
+                </div>
 
-            {/* Reclamation / Claim Section */}
-            <div className="mt-4">
+                <div className="pt-8 border-t border-white/10 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-white/40">Statut Financier</span>
+                    <span className="text-[10px] font-bold uppercase text-emerald-400">Réglé / Compte</span>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* Timeline */}
+            <section className="bg-white rounded-3xl border border-noir/5 p-10 space-y-10">
+              <h3 className="text-[11px] font-bold uppercase tracking-[0.4em] text-noir/30">Suivi Logistique</h3>
+              <div className="space-y-8">
+                {timeline.map((t, idx) => (
+                  <div key={idx} className="relative flex items-start gap-4">
+                    {idx < timeline.length - 1 && (
+                      <div className={`absolute left-[5px] top-4 bottom-[-24px] w-px ${t.done && timeline[idx + 1].done ? 'bg-[#ed5518]' : 'bg-noir/5'}`}></div>
+                    )}
+                    <div className={`mt-1.5 h-2.5 w-2.5 rounded-full transition-all ${t.done ? 'bg-[#ed5518] shadow-[0_0_12px_rgba(237,85,24,0.6)]' : 'bg-noir/10'}`}></div>
+                    <div className="space-y-1">
+                      <p className={`text-[11px] font-bold uppercase tracking-widest ${t.done ? 'text-noir' : 'text-noir/20'}`}>{t.label}</p>
+                      <p className={`text-sm font-display italic ${t.done ? 'text-[#ed5518]' : 'text-noir/20'}`}>{t.value}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* Claim Section */}
+            <section className="bg-[#ed5518]/5 rounded-3xl p-8 border border-[#ed5518]/10">
               {!order.claim_status || order.claim_status === 'none' ? (
                 <>
                   {!showClaimForm ? (
                     <button
                       onClick={() => setShowClaimForm(true)}
-                      className="w-full flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white py-3 text-xs font-bold text-slate-600 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-100 transition-all"
+                      className="w-full group flex items-center justify-between text-left"
                     >
-                      <AlertTriangle size={14} />
-                      Signaler un problème
+                      <div className="space-y-1">
+                        <p className="text-[10px] font-bold uppercase tracking-widest text-noir/60 group-hover:text-[#ed5518] transition-colors">Signaler un litige</p>
+                        <p className="text-xs text-noir/30 font-medium">Retard, dégradation ou perte.</p>
+                      </div>
+                      <AlertTriangle size={18} className="text-noir/20 group-hover:text-[#ed5518] transition-colors" strokeWidth={1.5} />
                     </button>
                   ) : (
-                    <div className="space-y-3 p-4 bg-rose-50 rounded-2xl border border-rose-100 animate-in fade-in slide-in-from-top-2 duration-300">
-                      <div className="text-xs font-black text-rose-600 uppercase tracking-widest">Nouvelle Réclamation</div>
+                    <div className="space-y-6">
                       <textarea
-                        rows={3}
-                        placeholder="Décrivez votre problème (retard, colis dégradé...)"
-                        className="w-full rounded-xl border border-rose-100 bg-white p-3 text-xs focus:outline-none focus:ring-4 focus:ring-rose-500/5 focus:border-rose-300 transition-all"
+                        rows={4}
+                        placeholder="Détails de la réclamation..."
+                        className="w-full rounded-2xl bg-white border border-noir/5 p-5 text-sm focus:border-[#ed5518]/30 focus:shadow-xl transition-all outline-none"
                         value={claimNotes}
                         onChange={(e) => setClaimNotes(e.target.value)}
                       />
-                      <div className="flex gap-2">
+                      <div className="flex gap-4">
                         <button
                           onClick={submitClaim}
                           disabled={submittingClaim}
-                          className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-rose-600 py-2.5 text-xs font-bold text-white hover:bg-rose-700 transition-all shadow-lg shadow-rose-900/10 active:scale-95 disabled:opacity-50"
+                          className="flex-1 rounded-xl bg-noir py-4 text-[10px] font-bold uppercase tracking-widest text-white hover:bg-[#ed5518] transition-all disabled:opacity-50"
                         >
-                          {submittingClaim ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
-                          Envoyer
+                          {submittingClaim ? <Loader2 className="animate-spin h-4 w-4 mx-auto" /> : 'Envoyer'}
                         </button>
                         <button
                           onClick={() => setShowClaimForm(false)}
-                          className="px-4 rounded-xl bg-white border border-rose-100 text-xs font-bold text-rose-400"
+                          className="px-6 rounded-xl border border-noir/5 text-[10px] font-bold uppercase tracking-widest text-noir/40"
                         >
-                          Annuler
+                          X
                         </button>
                       </div>
                     </div>
                   )}
                 </>
               ) : (
-                <div className={`p-4 rounded-2xl border ${order.claim_status === 'resolved' ? 'bg-emerald-50 border-emerald-100' : 'bg-rose-50 border-rose-100'} animate-in zoom-in-95 duration-300`}>
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2">
-                      {order.claim_status === 'resolved' ? <CheckCircle2 size={14} className="text-emerald-600" /> : <AlertTriangle size={14} className="text-rose-600" />}
-                      <span className={`text-[10px] font-black uppercase tracking-widest ${order.claim_status === 'resolved' ? 'text-emerald-600' : 'text-rose-600'}`}>
-                        Réclamation {order.claim_status === 'resolved' ? 'résolue' : 'en cours'}
-                      </span>
-                    </div>
-                    {order.claim_status === 'pending' && <span className="h-1.5 w-1.5 rounded-full bg-rose-500 animate-ping" />}
+                <div className="space-y-6">
+                  <div className="flex items-center gap-2">
+                    <AlertTriangle size={16} className="text-[#ed5518]" strokeWidth={2.5} />
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-[#ed5518]">Litige {order.claim_status === 'resolved' ? 'Résolu' : 'En examen'}</span>
                   </div>
-                  <p className={`text-[11px] font-medium leading-relaxed ${order.claim_status === 'resolved' ? 'text-emerald-700' : 'text-rose-700'}`}>
-                    {order.claim_notes || "Aucun détail fourni."}
-                  </p>
-                    {order.claim_reply && (
-                      <div className="mt-4 p-3 bg-white/60 rounded-xl border border-white/80 shadow-sm animate-in slide-in-from-bottom-2 duration-500">
-                        <div className="flex items-center gap-1.5 mb-1.5">
-                          <div className="h-1 w-1 rounded-full bg-emerald-500" />
-                          <span className="text-[9px] font-black uppercase tracking-widest text-slate-800">Réponse de One Connexion</span>
-                        </div>
-                        <p className="text-[11px] font-bold text-slate-700 leading-relaxed italic">
-                          "{order.claim_reply}"
-                        </p>
-                      </div>
-                    )}
-                    {order.claim_proof_url && (
-                      <div className="mt-3 overflow-hidden rounded-xl border border-white/80 shadow-sm bg-white/40 group cursor-pointer" onClick={() => window.open(order.claim_proof_url, '_blank')}>
-                         <img src={order.claim_proof_url} alt="Preuve" className="w-full h-auto object-cover max-h-[300px] hover:scale-105 transition-transform duration-500" />
-                         <div className="p-2 bg-white/80 flex items-center justify-between">
-                            <span className="text-[8px] font-black uppercase tracking-widest text-slate-400">Photo de preuve jointe</span>
-                            <span className="text-[8px] font-black uppercase tracking-widest text-emerald-600 flex items-center gap-1">
-                               <LucideImage size={10} /> Agrandir
-                            </span>
-                         </div>
-                      </div>
-                    )}
-                    {order.claim_status === 'pending' && !order.claim_reply && (
-                      <div className="mt-3 text-[9px] font-bold text-rose-400 bg-white/50 rounded-lg p-2 border border-rose-100 italic">
-                        Notre équipe examine votre demande. Vous recevrez une réponse sous peu.
-                      </div>
-                    )}
+                  <p className="text-sm font-medium text-noir/70 italic leading-relaxed">"{order.claim_notes}"</p>
+                  {order.claim_reply && (
+                    <div className="pt-6 border-t border-noir/5">
+                      <p className="text-[9px] font-bold uppercase tracking-widest text-noir/30 mb-2">Réponse Concierge</p>
+                      <p className="text-sm font-display italic text-[#ed5518]">"{order.claim_reply}"</p>
+                    </div>
+                  )}
                 </div>
               )}
-            </div>
-          </div>
-        </div>
-
-        <div className="rounded-3xl border border-slate-100 bg-white p-6 shadow-sm">
-          <div className="mb-6 flex items-center justify-between">
-            <div className="text-xs font-bold uppercase tracking-wider text-slate-400">Historique de la commande</div>
-          </div>
-          <div className="relative grid gap-6">
-            <div className="absolute left-3 top-1 h-full w-px bg-slate-200" />
-            {timeline.map((t, idx) => (
-              <div key={t.label} className="relative flex items-start gap-4">
-                <div className={`mt-1 h-3 w-3 rounded-full transition-all duration-500 ${t.done ? "bg-[#ed5518] scale-110 shadow-[0_0_10px_rgba(237,85,24,0.5)]" : "bg-slate-200"}`} />
-                {idx < timeline.length - 1 && (
-                  <div className={`absolute left-[5px] top-4 h-full w-px transition-colors duration-500 ${t.done && timeline[idx+1].done ? "bg-[#ed5518]" : "bg-slate-200"}`} />
-                )}
-                <div className={`flex w-full items-center justify-between rounded-2xl px-4 py-3 transition-all ${t.done ? "bg-slate-50 border border-slate-100 shadow-sm" : "bg-white border border-transparent opacity-60"}`}>
-                  <div className={`text-sm font-bold ${t.done ? "text-slate-900" : "text-slate-400"}`}>{t.label}</div>
-                  <div className={`text-[10px] font-black uppercase tracking-tight ${t.done ? "text-[#ed5518]" : "text-slate-400"}`}>{t.value}</div>
-                </div>
-              </div>
-            ))}
+            </section>
           </div>
         </div>
       </div>
     );
   } catch (err) {
     return (
-      <div className="p-8 m-4 rounded-xl border border-red-200 bg-red-50 text-red-700">
-        <h2 className="text-xl font-bold mb-4">Une erreur technique est survenue !</h2>
-        <p className="mb-2">Message: {err.message}</p>
-        <pre className="text-xs whitespace-pre-wrap opacity-75">{err.stack}</pre>
+      <div className="max-w-xl mx-auto py-20 text-center bg-red-50 rounded-3xl border border-red-100 p-10">
+        <h2 className="text-2xl font-display italic text-red-600 mb-4">Une erreur technique est survenue.</h2>
+        <p className="text-sm text-red-400 font-medium leading-relaxed opacity-80">{err.message}</p>
+        <button onClick={() => window.location.reload()} className="mt-8 px-8 py-4 bg-red-600 text-white rounded-xl font-bold uppercase tracking-widest text-[10px]">Réessayer</button>
       </div>
     );
   }
 }
-
-
-
