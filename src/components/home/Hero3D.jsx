@@ -1,100 +1,63 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { ArrowUpRight, ShoppingCart } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 import "./Hero3D.css";
+
 /* ─── Arrière-plan Vidéo Unique ─────────────────────────────────────────── */
 function ProfessionalVideoCarousel() {
   return (
     <div className="hero-video-carousel">
-      <video 
-        autoPlay 
+      <video
+        autoPlay
         loop
-        muted 
-        playsInline 
+        muted
+        playsInline
         className="hero-fullscreen-video object-cover"
       >
         <source src="/images/hero-video.mp4" type="video/mp4" />
       </video>
-      
-      {/* Couche de gradient noir sur la gauche pour lire le texte */}
-      <div className="hero-video-overlay"></div>
+
+      {/* Restored Dark Editorial Overlay */}
+      <div className="hero-video-overlay bg-black/60"></div>
     </div>
   );
 }
 
 export default function Hero3D() {
-
-
   return (
     <section
       id="hero"
-      className="hero3d-section"
-      aria-label="Livraison express Paris et Île-de-France"
+      className="hero3d-section min-h-screen flex items-center justify-center bg-black relative overflow-hidden pt-12 md:pt-20"
+      aria-label="Livraison sur-mesure pour marques exigeantes"
     >
-      {/* ── Fullscreen Video-like Carousel Background ── */}
+      {/* ── Background Video ── */}
       <ProfessionalVideoCarousel />
 
+      <div className="container mx-auto px-6 md:px-12 lg:px-20 relative z-10">
+        <div className="max-w-6xl mx-auto flex flex-col items-center text-center">
 
-
-      {/* ── Layout principal ── */}
-      <div className="hero3d-layout">
-
-        {/* ── Contenu texte (gauche) ── */}
-        <div className="hero3d-content">
-
-
-          <h1 className="hero3d-title">
-            Livraison Express{" "}
-            <span className="hero3d-title__accent">B2B</span>
-            <br />
-            Paris & Île‑de‑France
+          <h1 className="text-5xl md:text-7xl lg:text-[7.5rem] font-display leading-[0.95] text-white mb-6 md:mb-8 animate-in fade-in slide-in-from-bottom duration-1000 delay-100">
+            La livraison <br />
+            <span className="italic text-[#ed5518]">sur-mesure</span> <br />
+            pour les marques exigeantes.
           </h1>
 
-          <p className="hero3d-desc">
-            Messagerie professionnelle 24/7 — colis urgents, plis sensibles
-            et tournées régulières avec facturation mensuelle claire.
+          <p className="text-base md:text-xl text-white/80 leading-relaxed font-light mb-8 md:mb-10 max-w-2xl animate-in fade-in duration-1000 delay-300">
+            One Connexion redéfinit la logistique urbaine en conciliant excellence opérationnelle et image de marque. Le partenaire de confiance de vos missions les plus critiques.
           </p>
 
-          {/* CTAs */}
-          <div className="hero3d-ctas">
-            <Link to="/commande-sans-compte" className="hero3d-cta hero3d-cta--primary">
-              <span className="hero3d-cta__text">Commander sans compte</span>
-              <div className="hero3d-cta__icon">
-                <ShoppingCart size={18} />
-              </div>
+          <div className="flex flex-col items-center justify-center animate-in fade-in duration-1000 delay-500">
+            <Link to="/commande-sans-compte" className="btn-premium flex items-center gap-4 shadow-2xl shadow-orange-500/30 px-12 py-5 text-lg group">
+              <span>Commander sans compte</span>
+              <ShoppingCart size={22} className="group-hover:scale-110 transition-transform" />
             </Link>
           </div>
         </div>
       </div>
 
       {/* ── Scroll indicator ── */}
-      <div className="hero3d-scroll" aria-hidden="true">
-        <div className="hero3d-scroll__line" />
-        <span className="hero3d-scroll__text">Défiler</span>
-      </div>
-
-      {/* ── Ticker Tape (Bottom) ── */}
-      <div className="hero3d-ticker">
-        <div className="hero3d-ticker__track">
-          {[
-            "MISSION MÉDICALE : DÉPART NANTERRE ➔ LIVRAISON PARIS 08 // EN COURS // ",
-            "COURSE AUTOMOBILE : DÉPART BOULOGNE ➔ LIVRAISON VERSAILLES // LIVRÉ // ",
-            "PLI JURIDIQUE : DÉPART PARIS 17 ➔ LIVRAISON BOBIGNY // RÉCEPTIONNÉ // ",
-            "TRANSPARENCE TOTALE ➔ SUIVI GPS LIVE // DISPATCH ACTIF // ",
-            "LIVRAISON URGENTE : DÉPART ORLY ➔ LIVRAISON PARIS 15 // EN TRANSIT // "
-          ].map((text, i) => (
-            <span key={i} className="hero3d-ticker__item">{text}</span>
-          ))}
-          {[
-            "MISSION MÉDICALE : DÉPART NANTERRE ➔ LIVRAISON PARIS 08 // EN COURS // ",
-            "COURSE AUTOMOBILE : DÉPART BOULOGNE ➔ LIVRAISON VERSAILLES // LIVRÉ // ",
-            "PLI JURIDIQUE : DÉPART PARIS 17 ➔ LIVRAISON BOBIGNY // RÉCEPTIONNÉ // ",
-            "TRANSPARENCE TOTALE ➔ SUIVI GPS LIVE // DISPATCH ACTIF // ",
-            "LIVRAISON URGENTE : DÉPART ORLY ➔ LIVRAISON PARIS 15 // EN TRANSIT // "
-          ].map((text, i) => (
-            <span key={i} className="hero3d-ticker__item">{text}</span>
-          ))}
-        </div>
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 opacity-50">
+        <div className="w-px h-12 bg-gradient-to-b from-white/0 via-white to-white/0 animate-pulse"></div>
       </div>
     </section>
   );

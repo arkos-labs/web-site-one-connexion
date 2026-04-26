@@ -11,71 +11,70 @@ export default function PublicHeader() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      // Le header devient opaque seulement après avoir défilé toute la section Hero
+      setIsScrolled(window.scrollY > window.innerHeight * 0.9);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
-    <header className={`fixed top-0 z-50 w-full transition-all duration-500 ${
-      (isScrolled || !isHomePage)
-        ? 'bg-[#0a0c14]/95 backdrop-blur-md border-b border-white/10 shadow-xl py-0.5' 
-        : 'bg-transparent border-b border-transparent py-2'
-    } text-white`}>
-      <div className="container mx-auto flex items-center justify-between px-6 md:px-12 h-12 md:h-16">
-        <div className="flex items-center shrink-0 -ml-2 md:-ml-4">
-          <Logo size="md" variant="light" />
+    <header className={`fixed top-0 z-50 w-full transition-all duration-300 ${(isScrolled || !isHomePage)
+      ? 'bg-noir py-3 shadow-2xl'
+      : 'bg-gradient-to-b from-black/80 via-black/40 to-transparent py-6'
+      } text-white`}>
+      <div className="container mx-auto flex items-center justify-between px-6 md:px-12 lg:px-20 h-16">
+        <div className="flex items-center shrink-0">
+          {/* Logo set to light variant for the dark header feel */}
+          <Logo size="md" variant="light" className="h-8 md:h-10 w-auto" />
         </div>
 
         {/* Desktop Navigation */}
-        <nav className="hidden flex-1 items-center justify-center gap-10 text-sm font-bold uppercase tracking-wider md:flex text-white/80">
-          <a href="/#features" className="hover:text-[#ed5518] transition-colors">Avantages</a>
+        <nav className="hidden lg:flex items-center gap-12 text-xs font-bold uppercase tracking-[0.2em]">
+          <a href="/#features" className="hover:text-[#ed5518] transition-colors">Notre Vision</a>
           <a href="/#expertises" className="hover:text-[#ed5518] transition-colors">Secteurs</a>
-          <a href="/#workflow" className="hover:text-[#ed5518] transition-colors">Solution Logistique</a>
-          <Link to="/contact" className="hover:text-[#ed5518] transition-colors font-black">Contact</Link>
+          <a href="/#workflow" className="hover:text-[#ed5518] transition-colors">Logistique</a>
+          <a href="/#faq" className="hover:text-[#ed5518] transition-colors">FAQ</a>
         </nav>
 
-        {/* Desktop Auth Buttons */}
-        <div className="hidden items-center gap-4 md:flex">
-          <Link to="/connexion" className="text-sm font-bold uppercase tracking-wider text-white/90 hover:text-[#ed5518] transition-colors">
+        {/* Desktop Actions */}
+        <div className="hidden lg:flex items-center gap-8">
+          <Link to="/connexion" className="text-xs font-bold uppercase tracking-[0.2em] hover:text-[#ed5518] transition-colors">
             Se connecter
           </Link>
-          <Link to="/inscription" className="rounded-full bg-[#ed5518] px-6 py-2.5 text-sm font-black uppercase tracking-wider text-white shadow-lg shadow-orange-500/20 transition-all hover:bg-[#c24514] hover:shadow-orange-500/30">
+          <Link to="/inscription" className="btn-premium py-3 px-8 text-xs uppercase tracking-[0.2em]">
             Créer un compte
           </Link>
         </div>
 
-        {/* Mobile Menu Button / 3 traits */}
+        {/* Mobile Menu Button */}
         <button
-          className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#ed5518] text-white shadow-xl transition-all active:scale-90 md:hidden border border-white/20"
+          className="lg:hidden flex h-10 w-10 items-center justify-center text-white"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           aria-label="Menu"
         >
-          {isMenuOpen ? <X size={28} strokeWidth={3.5} /> : <Menu size={28} strokeWidth={3.5} />}
+          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
 
       {/* Mobile Menu Overlay */}
       {isMenuOpen && (
-        <div className="fixed inset-0 top-12 z-50 w-full overflow-y-auto bg-[#0a0c14]/98 backdrop-blur-2xl p-8 md:hidden">
-          <nav className="flex flex-col gap-8 text-lg font-black uppercase tracking-widest text-white/80">
-            <a href="/#features" className="hover:text-[#ed5518] transition-colors border-b border-white/5 pb-2" onClick={() => setIsMenuOpen(false)}>Avantages</a>
-            <a href="/#expertises" className="hover:text-[#ed5518] transition-colors border-b border-white/5 pb-2" onClick={() => setIsMenuOpen(false)}>Secteurs</a>
-            <a href="/#workflow" className="hover:text-[#ed5518] transition-colors border-b border-white/5 pb-2" onClick={() => setIsMenuOpen(false)}>Solution Logistique</a>
-            <Link to="/contact" className="hover:text-[#ed5518] transition-colors" onClick={() => setIsMenuOpen(false)}>Contact</Link>
+        <div className="fixed inset-0 top-0 z-[60] w-full h-screen bg-noir p-12 lg:hidden flex flex-col justify-center animate-in fade-in zoom-in">
+          <button className="absolute top-8 right-8 text-white" onClick={() => setIsMenuOpen(false)}>
+            <X size={32} />
+          </button>
 
-            <hr className="my-2 border-white/10" />
-
-            <div className="flex flex-col gap-3">
-              <Link to="/connexion" className="flex w-full items-center justify-center rounded-full border border-white/10 px-5 py-3 text-sm font-bold text-white hover:bg-white/5 transition-colors" onClick={() => setIsMenuOpen(false)}>
-                SE CONNECTER
-              </Link>
-              <Link to="/inscription" className="flex w-full items-center justify-center rounded-full bg-[#ed5518] px-5 py-3 text-sm font-black text-white shadow-lg hover:bg-[#c24514] transition-colors" onClick={() => setIsMenuOpen(false)}>
-                CRÉER UN COMPTE
-              </Link>
-            </div>
+          <nav className="flex flex-col gap-8 text-4xl font-display italic text-white mb-12">
+            <a href="/#features" onClick={() => setIsMenuOpen(false)}>Notre Vision</a>
+            <a href="/#expertises" onClick={() => setIsMenuOpen(false)}>Secteurs</a>
+            <a href="/#workflow" onClick={() => setIsMenuOpen(false)}>Logistique</a>
+            <Link to="/contact" onClick={() => setIsMenuOpen(false)}>Contact</Link>
           </nav>
+
+          <div className="flex flex-col gap-4 text-center">
+            <Link to="/inscription" onClick={() => setIsMenuOpen(false)} className="btn-premium">Ouvrir un compte</Link>
+            <Link to="/connexion" onClick={() => setIsMenuOpen(false)} className="font-bold tracking-widest uppercase text-sm py-4 border border-white/10 rounded-full hover:bg-white hover:text-noir transition-all">Connexion</Link>
+          </div>
         </div>
       )}
     </header>

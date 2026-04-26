@@ -1,148 +1,125 @@
+import React from "react";
 import PublicHeader from "../../components/PublicHeader.jsx";
 import PublicFooter from "../../components/PublicFooter.jsx";
-import { Mail, Phone, MapPin, Clock, ArrowRight, CheckCircle2 } from "lucide-react";
+import { Mail, Phone, MapPin, ArrowUpRight, ShieldCheck, Zap, Globe } from "lucide-react";
 
 export default function Contact() {
   return (
-    <div className="min-h-screen bg-white font-sans">
+    <div className="min-h-screen bg-cream font-body selection:bg-[#ed5518] selection:text-white">
       <PublicHeader />
 
-      {/* Hero Section */}
-      <section className="bg-slate-50 pt-32 pb-16 md:pt-48 md:pb-24 border-b border-slate-200">
-        <div className="mx-auto max-w-7xl px-6 md:px-12 text-center">
-          <div className="inline-flex items-center gap-2 rounded-full bg-orange-50 px-4 py-2 text-xs font-bold uppercase tracking-widest text-[#ed5518] mb-6">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#ed5518] opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#ed5518]"></span>
-            </span>
-            Réponse en moins de 15 minutes
+      <section className="pt-32 pb-24 md:pt-48 md:pb-40">
+        <div className="container mx-auto px-6 md:px-12 lg:px-20">
+
+          {/* Section Header - Centered */}
+          <div className="max-w-4xl mx-auto mb-24 flex flex-col items-center text-center">
+            <div className="mb-6 flex items-center gap-4">
+              <div className="h-px w-8 bg-[#ed5518]"></div>
+              <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#ed5518]">
+                Contact B2B Prioritaire
+              </span>
+              <div className="h-px w-8 bg-[#ed5518]"></div>
+            </div>
+            <h1 className="text-4xl md:text-7xl font-display leading-tight">
+              parlons de votre <br />
+              <span className="italic text-[#ed5518]">prochaine mission</span>.
+            </h1>
           </div>
-          <h1 className="text-4xl font-black tracking-tight text-slate-900 md:text-6xl mb-6">
-            Parlons de votre <span className="text-[#ed5518]">logistique</span>
-          </h1>
-          <p className="mx-auto max-w-2xl text-lg text-slate-600 leading-relaxed">
-            Vous avez un besoin urgent ou vous souhaitez mettre en place des tournées régulières ?
-            Notre équipe B2B est à votre disposition pour optimiser vos flux de transport.
-          </p>
-        </div>
-      </section>
 
-      <section className="py-20 bg-white">
-        <div className="mx-auto max-w-7xl px-6 md:px-12">
-          <div className="grid gap-16 lg:grid-cols-2">
+          <div className="grid lg:grid-cols-12 gap-16 lg:gap-24 items-start">
 
-            {/* Left Column: Contact Info */}
-            <div className="space-y-12">
+            {/* Contact Details */}
+            <div className="lg:col-span-5 space-y-16">
               <div>
-                <h2 className="text-2xl font-bold text-slate-900 mb-8">Informations de contact</h2>
-                <div className="space-y-6">
-                  <div className="flex items-start gap-5">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-slate-50 text-[#ed5518] shadow-sm border border-slate-100">
-                      <Phone size={24} />
-                    </div>
-                    <div>
-                      <div className="text-sm font-bold uppercase tracking-widest text-slate-400 mb-1">Téléphone</div>
-                      <div className="text-xl font-bold text-slate-900">01 89 20 12 45</div>
-                      <div className="text-sm text-slate-500 mt-1">Ligne directe professionnels (7j/7)</div>
+                <h2 className="text-[10px] font-bold uppercase tracking-[0.3em] text-noir/40 mb-10">lignes directes</h2>
+                <div className="space-y-10">
+                  <div className="group">
+                    <div className="text-[9px] uppercase tracking-widest text-[#ed5518] font-bold mb-2">Conciergerie Paris</div>
+                    <div className="flex items-center justify-between border-b border-noir/10 pb-5 group-hover:border-[#ed5518] transition-colors">
+                      <a href="tel:0189201245" className="text-2xl md:text-3xl font-display italic hover:text-[#ed5518] transition-colors">01 89 20 12 45</a>
+                      <Phone size={20} className="text-noir/20 group-hover:text-[#ed5518] transition-colors" />
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-5">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-slate-50 text-[#ed5518] shadow-sm border border-slate-100">
-                      <Mail size={24} />
-                    </div>
-                    <div>
-                      <div className="text-sm font-bold uppercase tracking-widest text-slate-400 mb-1">Email</div>
-                      <div className="text-xl font-bold text-slate-900">contact@oneconnexion.com</div>
-                      <div className="text-sm text-slate-500 mt-1">Réponse prioritaire aux entreprises</div>
+                  <div className="group">
+                    <div className="text-[9px] uppercase tracking-widest text-[#ed5518] font-bold mb-2">Support Prioritaire</div>
+                    <div className="flex items-center justify-between border-b border-noir/10 pb-5 group-hover:border-[#ed5518] transition-colors">
+                      <a href="mailto:contact@oneconnexion.com" className="text-xl md:text-2xl font-display italic hover:text-[#ed5518] transition-colors break-all">contact@oneconnexion.com</a>
+                      <Mail size={20} className="text-noir/20 group-hover:text-[#ed5518] transition-colors" />
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-5">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-slate-50 text-[#ed5518] shadow-sm border border-slate-100">
-                      <MapPin size={24} />
-                    </div>
-                    <div>
-                      <div className="text-sm font-bold uppercase tracking-widest text-slate-400 mb-1">Siège social</div>
-                      <div className="text-xl font-bold text-slate-900">Paris & Île-de-France</div>
-                      <div className="text-sm text-slate-500 mt-1">Intervention sur toute la région capitale</div>
+                  <div className="group">
+                    <div className="text-[9px] uppercase tracking-widest text-[#ed5518] font-bold mb-2">Siège Social</div>
+                    <div className="flex items-center justify-between border-b border-noir/10 pb-5 group-hover:border-[#ed5518] transition-colors">
+                      <p className="text-xl md:text-2xl font-display italic">Paris IXe Arrondissement</p>
+                      <MapPin size={20} className="text-noir/20 group-hover:text-[#ed5518] transition-colors" />
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="rounded-3xl bg-slate-900 p-8 text-white shadow-2xl">
-                <h3 className="text-xl font-bold mb-4">Pourquoi nous appeler ?</h3>
-                <ul className="space-y-4">
-                  {[
-                    "Demande de devis immédiat",
-                    "Mise en place de navettes inter-sites",
-                    "Flux de santé (opticiens, dentistes)",
-                    "Ouverture de compte pro (Net 30)"
-                  ].map((item, id) => (
-                    <li key={id} className="flex items-center gap-3 text-slate-300">
-                      <CheckCircle2 size={18} className="text-[#ed5518]" />
-                      <span className="text-sm font-medium">{item}</span>
-                    </li>
-                  ))}
-                </ul>
-                <button className="w-full mt-8 flex items-center justify-center gap-2 rounded-full bg-[#ed5518] py-4 text-sm font-bold text-white transition-all hover:bg-[#ed5518]">
-                  Devenir client partenaire <ArrowRight size={18} />
-                </button>
+              {/* Trust Features Card */}
+              <div className="bg-noir p-10 text-white rounded-xl shadow-2xl relative overflow-hidden group">
+                <div className="absolute top-0 left-0 w-full h-1 bg-[#ed5518]"></div>
+                <h3 className="text-2xl font-display italic mb-6">Pourquoi nous choisir ?</h3>
+                <div className="grid gap-6">
+                  <div className="flex gap-4">
+                    <Zap size={18} className="text-[#ed5518] shrink-0 mt-1" />
+                    <p className="text-white/70 text-xs leading-relaxed"><span className="text-white font-bold tracking-wide">Réactivité chirurgicale.</span> Fin des attentes interminables.</p>
+                  </div>
+                  <div className="flex gap-4">
+                    <ShieldCheck size={18} className="text-[#ed5518] shrink-0 mt-1" />
+                    <p className="text-white/70 text-xs leading-relaxed"><span className="text-white font-bold tracking-wide">Sécurité absolue.</span> Protocoles confidentiels.</p>
+                  </div>
+                  <div className="flex gap-4">
+                    <Globe size={18} className="text-[#ed5518] shrink-0 mt-1" />
+                    <p className="text-white/70 text-xs leading-relaxed"><span className="text-white font-bold tracking-wide">Image de marque.</span> Excellence comportementale.</p>
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Right Column: Contact Form */}
-            <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-2xl shadow-slate-200/50">
-              <div className="mb-8">
-                <h2 className="text-2xl font-bold text-slate-900 mb-2">Envoyez-nous un message</h2>
-                <p className="text-slate-500">Remplissez ce formulaire pour toute demande de cotation.</p>
+            {/* Contact Form Section */}
+            <div className="lg:col-span-7 bg-white p-8 md:p-14 rounded-xl shadow-xl shadow-noir/5 border border-noir/5">
+              <div className="mb-12">
+                <h2 className="text-3xl md:text-4xl font-display mb-3 italic">Un projet à l'étude ?</h2>
+                <p className="text-noir/60 font-light text-base">Nos experts vous répondent sous 15 minutes.</p>
               </div>
 
-              <form className="space-y-6">
-                <div className="grid gap-6 md:grid-cols-2">
-                  <div className="space-y-2">
-                    <label className="text-xs font-black uppercase tracking-widest text-slate-400">Nom Complet</label>
-                    <input type="text" placeholder="Jean Dupont" className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm font-medium text-slate-900 focus:border-[#ed5518] focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#ed5518]/5 transition-all" />
+              <form className="space-y-8">
+                <div className="grid md:grid-cols-2 gap-8">
+                  <div className="relative group">
+                    <input type="text" id="name" placeholder=" " className="peer w-full bg-transparent border-b border-noir/10 py-2.5 text-lg focus:outline-none focus:border-[#ed5518] transition-all" />
+                    <label htmlFor="name" className="absolute left-0 top-2.5 text-noir/40 uppercase tracking-[0.2em] text-[9px] font-bold transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:top-2.5 peer-focus:-top-4 peer-focus:text-[#ed5518] peer-focus:text-[9px]">Nom complet</label>
                   </div>
-                  <div className="space-y-2">
-                    <label className="text-xs font-black uppercase tracking-widest text-slate-400">Entreprise</label>
-                    <input type="text" placeholder="Clinique / Cabinet / SARL" className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm font-medium text-slate-900 focus:border-[#ed5518] focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#ed5518]/5 transition-all" />
-                  </div>
-                </div>
-
-                <div className="grid gap-6 md:grid-cols-2">
-                  <div className="space-y-2">
-                    <label className="text-xs font-black uppercase tracking-widest text-slate-400">Email Pro</label>
-                    <input type="email" placeholder="nom@entreprise.fr" className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm font-medium text-slate-900 focus:border-[#ed5518] focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#ed5518]/5 transition-all" />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-xs font-black uppercase tracking-widest text-slate-400">Téléphone</label>
-                    <input type="tel" placeholder="06..." className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm font-medium text-slate-900 focus:border-[#ed5518] focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#ed5518]/5 transition-all" />
+                  <div className="relative group">
+                    <input type="text" id="company" placeholder=" " className="peer w-full bg-transparent border-b border-noir/10 py-2.5 text-lg focus:outline-none focus:border-[#ed5518] transition-all" />
+                    <label htmlFor="company" className="absolute left-0 top-2.5 text-noir/40 uppercase tracking-[0.2em] text-[9px] font-bold transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:top-2.5 peer-focus:-top-4 peer-focus:text-[#ed5518] peer-focus:text-[9px]">Entreprise</label>
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <label className="text-xs font-black uppercase tracking-widest text-slate-400">Type de besoin</label>
-                  <select className="w-full appearance-none rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm font-medium text-slate-900 focus:border-[#ed5518] focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#ed5518]/5 transition-all">
-                    <option>Course Express Ponctuelle</option>
-                    <option>Mise en place de tournées régulières</option>
-                    <option>Partenariat long terme</option>
-                    <option>Autre demande</option>
-                  </select>
+                <div className="grid md:grid-cols-2 gap-8">
+                  <div className="relative group">
+                    <input type="email" id="email" placeholder=" " className="peer w-full bg-transparent border-b border-noir/10 py-2.5 text-lg focus:outline-none focus:border-[#ed5518] transition-all" />
+                    <label htmlFor="email" className="absolute left-0 top-2.5 text-noir/40 uppercase tracking-[0.2em] text-[9px] font-bold transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:top-2.5 peer-focus:-top-4 peer-focus:text-[#ed5518] peer-focus:text-[9px]">Email professionnel</label>
+                  </div>
+                  <div className="relative group">
+                    <input type="tel" id="phone" placeholder=" " className="peer w-full bg-transparent border-b border-noir/10 py-2.5 text-lg focus:outline-none focus:border-[#ed5518] transition-all" />
+                    <label htmlFor="phone" className="absolute left-0 top-2.5 text-noir/40 uppercase tracking-[0.2em] text-[9px] font-bold transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:top-2.5 peer-focus:-top-4 peer-focus:text-[#ed5518] peer-focus:text-[9px]">Téléphone</label>
+                  </div>
                 </div>
 
-                <div className="space-y-2">
-                  <label className="text-xs font-black uppercase tracking-widest text-slate-400">Votre message</label>
-                  <textarea rows={4} placeholder="Détaillez votre besoin (volume, urgence, spécificités)..." className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm font-medium text-slate-900 focus:border-[#ed5518] focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#ed5518]/5 transition-all resize-none" />
+                <div className="relative group">
+                  <textarea id="message" rows={3} placeholder=" " className="peer w-full bg-transparent border-b border-noir/10 py-2.5 text-lg focus:outline-none focus:border-[#ed5518] transition-all resize-none" />
+                  <label htmlFor="message" className="absolute left-0 top-2.5 text-noir/40 uppercase tracking-[0.2em] text-[9px] font-bold transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:top-2.5 peer-focus:-top-4 peer-focus:text-[#ed5518] peer-focus:text-[9px]">Votre message</label>
                 </div>
 
-                <button type="button" className="w-full rounded-full bg-slate-900 py-5 text-sm font-black uppercase tracking-widest text-white shadow-xl transition-all hover:bg-[#ed5518] hover:shadow-primary/20 active:scale-95">
-                  Envoyer ma demande
+                <button type="submit" className="w-full bg-noir text-white py-5 text-[10px] font-bold uppercase tracking-[0.4em] rounded-full hover:bg-[#ed5518] transition-all flex items-center justify-center gap-3 group">
+                  Envoyer la requête <ArrowUpRight size={16} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                 </button>
               </form>
             </div>
-
           </div>
         </div>
       </section>
@@ -151,6 +128,3 @@ export default function Contact() {
     </div>
   );
 }
-
-
-

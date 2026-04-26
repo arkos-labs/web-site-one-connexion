@@ -1,60 +1,105 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Inter:wght@100..900&display=swap');
 
 
 :root {
   --brand-orange: #ed5518;
-  --font-title: "Archivo", sans-serif;
-  --font-body: "Archivo", sans-serif;
+  --font-display: "Fraunces", serif;
+  --font-body: "Inter", sans-serif;
+
+  --bg-cream: #F5F5F1;
+  --bg-noir: #0A0A0A;
+  --text-noir: #0A0A0A;
+  --text-cream: #F5F5F1;
 }
 
-html, body {
+html,
+body {
   overflow-x: hidden;
   max-width: 100%;
 }
 
 @layer base {
   body {
-    @apply bg-white text-slate-900 antialiased font-light;
+    @apply bg-white text-slate-900 antialiased font-normal;
     font-family: var(--font-body);
-    font-weight: 300;
     overflow-x: hidden;
   }
-  
-  h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-title);
-    font-weight: 900;
-    @apply tracking-tight uppercase;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+    @apply tracking-tight font-medium lowercase;
   }
 
-  /* Specific rule for numbers if user wants bold digits */
+  .font-display {
+    font-family: var(--font-display);
+  }
+
+  /* Specific rule for numbers */
   .font-numbers {
-    font-weight: 600;
+    font-family: var(--font-body);
+    font-weight: 400;
   }
 }
 
 @layer components {
-  .btn-primary {
-    @apply bg-[#ed5518] text-white font-black uppercase;
+  .btn-premium {
+    @apply bg-[#ed5518] text-white px-8 py-3 rounded-full font-bold transition-all hover:scale-105 hover:bg-[#c24514] active:scale-95;
+  }
+
+  .bg-cream {
+    background-color: var(--bg-cream);
+  }
+
+  .bg-noir {
+    background-color: var(--bg-noir);
+  }
+
+  .text-premium-orange {
+    color: var(--brand-orange);
+  }
+
+  .section-padding {
+    @apply py-20 md:py-32 px-6 md:px-12 lg:px-20;
   }
 
   .animate-in {
     animation-duration: 500ms;
     animation-fill-mode: forwards;
   }
+
   .fade-in {
     animation-name: fadeIn;
   }
+
   .zoom-in {
     animation-name: zoomIn;
   }
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes zoomIn {
-  from { transform: scale(0.95); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }

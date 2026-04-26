@@ -3,78 +3,53 @@ import { Logo } from "@/components/ui/Logo";
 
 export default function PublicFooter() {
   return (
-    <footer className="bg-[#0a0c14] text-white w-full mt-auto">
-      <div className="mx-auto max-w-7xl px-6 md:px-12 py-14">
-
-        {/* Main row: logo + 3 columns aligned */}
-        <div className="grid gap-12 md:grid-cols-[220px_repeat(3,minmax(0,1fr))] items-start">
-
-          {/* Logo block (left) */}
+    <footer className="bg-noir text-white w-full mt-auto py-20 border-t border-white/5 font-body">
+      <div className="container mx-auto px-6 md:px-12 lg:px-20">
+        <div className="grid gap-16 lg:grid-cols-2 mb-20">
           <div>
-            <Link to="/" className="block leading-none m-0 p-0">
-              <img
-                src="/logos/one-connexion-light.png"
-                alt="One Connexion"
-                className="w-[200px] aspect-[4/1] object-cover block m-0 p-0"
-              />
-            </Link>
-            <p className="text-[11px] leading-relaxed text-slate-400 font-medium mt-4 max-w-[180px]">
-              Messagerie B2B express Paris &amp; IDF. Disponible 24/7.
+            <Logo size="md" variant="light" className="mb-8" />
+            <p className="text-white text-xl font-display italic max-w-sm mb-12">
+              "Redéfinir le dernier kilomètre avec l'élégance et la rigueur des plus grandes maisons."
             </p>
-            <Link
-              to="/commande-sans-compte"
-              className="inline-block mt-3 text-[10px] font-black text-[#ed5518] uppercase tracking-widest hover:underline"
-            >
-              Commander sans compte →
-            </Link>
           </div>
 
-          {/* Société */}
-          <div className="mt-14">
-              <h3 className="text-[11px] font-black text-white uppercase tracking-widest mb-4">Société</h3>
-              <div className="space-y-2.5 text-[12px] text-slate-400">
-                <Link to="/about" className="block hover:text-white transition-colors">À propos</Link>
-                <Link to="/contact" className="block hover:text-white transition-colors">Contact</Link>
-                <Link to="/mentions-legales" className="block hover:text-white transition-colors">Mentions légales</Link>
-                <Link to="/confidentialite" className="block hover:text-white transition-colors">Confidentialité</Link>
-              </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-12">
+            <div>
+              <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-[#ed5518] mb-6">Exploration</h3>
+              <nav className="flex flex-col gap-4 text-sm font-bold text-white">
+                <a href="/#features" className="hover:text-[#ed5518] transition-colors">Notre Vision</a>
+                <a href="/#expertises" className="hover:text-[#ed5518] transition-colors">Secteurs</a>
+                <a href="/#workflow" className="hover:text-[#ed5518] transition-colors">Logistique</a>
+                <Link to="/contact" className="hover:text-[#ed5518] transition-colors">Contact</Link>
+              </nav>
             </div>
 
-          {/* Services */}
-          <div className="mt-14">
-              <h3 className="text-[11px] font-black text-white uppercase tracking-widest mb-4">Services</h3>
-              <div className="space-y-2.5 text-[12px] text-slate-400">
-                <Link to="/coursier-b2b-paris" className="block hover:text-white transition-colors">Coursier B2B Paris</Link>
-                <Link to="/coursier-ile-de-france" className="block hover:text-white transition-colors">Coursier Île-de-France</Link>
-                <Link to="/messagerie-express-ile-de-france" className="block hover:text-white transition-colors">Messagerie express IDF</Link>
-                <Link to="/navette-reguliere-ile-de-france" className="block hover:text-white transition-colors">Navettes régulières</Link>
-              </div>
+            <div>
+              <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-[#ed5518] mb-6">Juridique</h3>
+              <nav className="flex flex-col gap-4 text-sm font-bold text-white">
+                <Link to="/mentions-legales" className="hover:text-[#ed5518] transition-colors">Mentions légales</Link>
+                <Link to="/confidentialite" className="hover:text-[#ed5518] transition-colors">Confidentialité</Link>
+                <Link to="/cgv" className="hover:text-[#ed5518] transition-colors">CGV</Link>
+              </nav>
             </div>
 
-          {/* Secteurs */}
-          <div className="mt-14">
-            <h3 className="text-[11px] font-black text-white uppercase tracking-widest mb-4">Secteurs</h3>
-            <div className="space-y-2.5 text-[12px] text-slate-400">
-              <Link to="/coursier-opticien-paris" className="block hover:text-white transition-colors">Opticiens</Link>
-              <Link to="/coursier-dentiste-paris" className="block hover:text-white transition-colors">Dentistes</Link>
-              <Link to="/coursier-juridique-paris" className="block hover:text-white transition-colors">Juridique</Link>
-              <Link to="/coursier-evenementiel-paris" className="block hover:text-white transition-colors">Événementiel</Link>
-              <Link to="/coursier-automobile-paris" className="block hover:text-white transition-colors">Automobile</Link>
+            <div className="col-span-2 md:col-span-1">
+              <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-[#ed5518] mb-6">Présence</h3>
+              <p className="text-sm text-white leading-relaxed italic font-display font-medium">
+                Paris, IXe Arrondissement<br />
+                Île-de-France, France
+              </p>
             </div>
-          </div>
-
-        </div>
-
-        {/* Bottom bar */}
-        <div className="mt-10 pt-5 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-3 text-[10px] font-semibold text-slate-500 uppercase tracking-widest">
-          <span>© 2026 One Connexion. Tous droits réservés.</span>
-          <div className="flex items-center gap-6">
-            <a href="#" className="hover:text-white transition-colors">Facebook</a>
-            <a href="#" className="hover:text-white transition-colors">LinkedIn</a>
-            <a href="#" className="hover:text-white transition-colors">Instagram</a>
           </div>
         </div>
 
+        <div className="pt-12 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-8 text-[10px] font-bold uppercase tracking-[0.3em] text-white">
+          <span>© 2026 One Connexion — Excellence Logistique</span>
+          <div className="flex gap-10">
+            <a href="#" className="hover:text-[#ed5518] transition-colors">LinkedIn</a>
+            <a href="#" className="hover:text-[#ed5518] transition-colors">Instagram</a>
+          </div>
+        </div>
       </div>
     </footer>
   );
