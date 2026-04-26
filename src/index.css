@@ -4,8 +4,8 @@
 
 :root {
   --brand-orange: #ed5518;
-  --font-display: "Fraunces", serif;
-  --font-body: "Inter", sans-serif;
+  --font-title: 'Fraunces', serif;
+  --font-body: 'Fraunces', serif;
 
   --bg-cream: #F5F5F1;
   --bg-noir: #0A0A0A;
