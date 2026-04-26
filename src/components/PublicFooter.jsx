@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { Linkedin, Instagram } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
 
 export default function PublicFooter() {
@@ -45,9 +46,13 @@ export default function PublicFooter() {
 
         <div className="pt-12 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-8 text-[10px] font-bold uppercase tracking-[0.3em] text-white">
           <span>© 2026 One Connexion — Excellence Logistique</span>
-          <div className="flex gap-10">
-            <a href="#" className="hover:text-[#ed5518] transition-colors">LinkedIn</a>
-            <a href="#" className="hover:text-[#ed5518] transition-colors">Instagram</a>
+          <div className="flex gap-8">
+            <a href="https://fr.linkedin.com/company/one-connexion" target="_blank" rel="noopener noreferrer" className="hover:text-[#ed5518] transition-colors flex items-center gap-2">
+              <Linkedin size={16} /> LinkedIn
+            </a>
+            <a href="https://www.instagram.com/oneconnexion" target="_blank" rel="noopener noreferrer" className="hover:text-[#ed5518] transition-colors flex items-center gap-2">
+              <Instagram size={16} /> Instagram
+            </a>
           </div>
         </div>
       </div>
