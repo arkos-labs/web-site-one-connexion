@@ -133,15 +133,45 @@ export default function Landing() {
 
           <div className="grid md:grid-cols-2 gap-px bg-noir/5">
             {[
-              { title: "Luxe & Fashion", desc: "Mannequins, shooting, portants suspendus. Le soin absolu pour vos collections." },
-              { title: "Juridique & Finance", desc: "Discrétion totale et protocoles de remise sécurisés pour vos documents critiques." },
-              { title: "Médical & Tech", desc: "Urgence vitale ou composants sensibles. Le transport maîtrisé sous contrainte." },
-              { title: "Event & Showroom", desc: "Installation éphémère ou réassort express. Soyez prêt au moment M." },
+              {
+                title: "Luxe & Fashion",
+                desc: "Mannequins, shooting, portants suspendus. Le soin absolu pour vos collections.",
+                extended: "Des chauffeurs formés aux exigences de la haute couture. Chaque pièce est traitée avec le plus grand respect, des ateliers jusqu'aux boutiques.",
+                tags: ["Véhicules capitonnés", "Confidentialité absolue", "Livraison sur cintre"]
+              },
+              {
+                title: "Juridique & Finance",
+                desc: "Discrétion totale et protocoles de remise sécurisés pour vos documents critiques.",
+                extended: "Nous garantissons l'intégrité de vos plis confidentiels, contrats et actes notariés, remis exclusivement en main propre contre signature certifiée.",
+                tags: ["Remise en main propre", "Suivi temps réel", "Protocoles stricts"]
+              },
+              {
+                title: "Médical & Tech",
+                desc: "Urgence vitale ou composants sensibles. Le transport maîtrisé sous contrainte.",
+                extended: "Une logistique de précision répondant aux normes de sécurité, que ce soit pour des urgences biologiques ou la livraison de matériel high-tech délicat.",
+                tags: ["Haute urgence", "Matériel sécurisé", "Traçabilité"]
+              },
+              {
+                title: "Event & Showroom",
+                desc: "Installation éphémère ou réassort express. Soyez prêt au moment M.",
+                extended: "De la préparation de l'événement au démontage, nous synchronisons nos équipes pour assurer une fluidité logistique parfaite en coulisses.",
+                tags: ["Opérations sur site", "Manutention dédiée", "Flexibilité 24/7"]
+              },
             ].map((item, idx) => (
-              <div key={idx} className="bg-cream p-12 lg:p-20 group hover:bg-[#ed5518]/5 transition-colors flex flex-col justify-between min-h-[400px]">
+              <div key={idx} className="bg-cream p-12 lg:p-16 xl:p-20 group hover:bg-[#ed5518]/5 transition-colors flex flex-col justify-between min-h-[450px]">
                 <div>
-                  <h3 className="text-4xl text-noir mb-8 font-display italic">{item.title}</h3>
-                  <p className="text-noir/80 text-lg leading-relaxed font-light">{item.desc}</p>
+                  <h3 className="text-3xl lg:text-4xl text-noir mb-6 font-display italic">{item.title}</h3>
+                  <p className="text-noir/90 text-lg leading-relaxed font-semibold mb-3">{item.desc}</p>
+                  <p className="text-noir/60 text-sm leading-relaxed font-light mb-8">{item.extended}</p>
+
+                  <ul className="space-y-3">
+                    {item.tags.map((tag, i) => (
+                      <li key={i} className="flex items-center gap-3 text-xs font-bold uppercase tracking-widest text-noir/50">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#ed5518]/50 group-hover:bg-[#ed5518] transition-colors"></span>
+                        {tag}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
                 <div className="mt-12 flex justify-end">
                   <Link to="/contact" className="w-12 h-12 rounded-full border border-noir/10 flex items-center justify-center text-noir group-hover:bg-[#ed5518] group-hover:border-[#ed5518] group-hover:text-white transition-all">
