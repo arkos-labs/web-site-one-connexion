@@ -29,56 +29,59 @@ export default function ProtectedRoute({ children, allowedRoles = [] }) {
     const startLoadingTime = Date.now();
 
     const loadSessionAndRole = async (nextSession) => {
-      setSession(nextSession || null);
+      try {
+        setSession(nextSession || null);
 
-      if (!nextSession?.user?.id) {
+        if (!nextSession?.user?.id) {
+          setRole(null);
+          return;
+        }
+
+        const userId = nextSession.user.id;
+        const { data: profileData } = await supabase
+          .from("profiles")
+          .select("role")
+          .eq("id", userId)
+          .maybeSingle();
+
+        const normalizedProfileRole = normalizeRole(profileData?.role);
+        if (normalizedProfileRole) {
+          setRole(normalizedProfileRole);
+          return;
+        }
+
+        const { data: driverData } = await supabase
+          .from("drivers")
+          .select("id")
+          .eq("user_id", userId)
+          .maybeSingle();
+
+        if (driverData?.id) {
+          setRole("driver");
+          return;
+        }
+
+        const { data: clientData } = await supabase
+          .from("clients")
+          .select("id")
+          .eq("id", userId)
+          .maybeSingle();
+
+        setRole(clientData?.id ? "client" : null);
+      } catch (err) {
+        console.error("Auth Load Error:", err);
         setRole(null);
+      } finally {
         finishLoading();
-        return;
       }
-
-      const userId = nextSession.user.id;
-      const { data: profileData } = await supabase
-        .from("profiles")
-        .select("role")
-        .eq("id", userId)
-        .maybeSingle();
-
-      const normalizedProfileRole = normalizeRole(profileData?.role);
-      if (normalizedProfileRole) {
-        setRole(normalizedProfileRole);
-        finishLoading();
-        return;
-      }
-
-      const { data: driverData } = await supabase
-        .from("drivers")
-        .select("id")
-        .eq("user_id", userId)
-        .maybeSingle();
-
-      if (driverData?.id) {
-        setRole("driver");
-        finishLoading();
-        return;
-      }
-
-      const { data: clientData } = await supabase
-        .from("clients")
-        .select("id")
-        .eq("id", userId)
-        .maybeSingle();
-
-      setRole(clientData?.id ? "client" : null);
-      finishLoading();
     };
 
     const finishLoading = () => {
       const elapsed = Date.now() - startLoadingTime;
-      const remaining = Math.max(0, 5200 - elapsed);
+      const remaining = Math.max(0, 500 - elapsed);
       setTimeout(() => {
         setIsExiting(true);
-        setTimeout(() => setLoading(false), 1000); // Wait for the 1s fade animation
+        setTimeout(() => setLoading(false), 500); // 500ms fade animation
       }, remaining);
     };
 
