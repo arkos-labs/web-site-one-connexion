@@ -48,20 +48,20 @@ function statusStyle(status) {
   switch (status) {
     case "pending_acceptance":
     case "pending":
-      return "bg-noir/5 text-noir/40 border-noir/5";
+      return "bg-noir/[0.02] text-noir/30 border-noir/5";
     case "accepted":
-      return "bg-noir text-white border-noir animate-pulse";
+      return "bg-noir text-white border-noir shadow-lg shadow-noir/20";
     case "assigned":
-      return "bg-[#ed5518]/10 text-[#ed5518] border-[#ed5518]/20";
+      return "bg-[#ed5518]/5 text-[#ed5518] border-[#ed5518]/10 tracking-[0.2em]";
     case "driver_accepted":
     case "in_progress":
-      return "bg-[#ed5518] text-white border-[#ed5518]";
+      return "bg-[#ed5518] text-white border-[#ed5518] shadow-lg shadow-orange-500/20";
     case "delivered":
-      return "bg-emerald-500 text-white border-emerald-500";
+      return "bg-emerald-50 text-emerald-600 border-emerald-100";
     case "cancelled":
-      return "bg-red-500 text-white border-red-500";
+      return "bg-rose-50 text-rose-600 border-rose-100";
     default:
-      return "bg-noir/5 text-noir/20 border-noir/5";
+      return "bg-noir/[0.02] text-noir/20 border-noir/5";
   }
 }
 
@@ -114,90 +114,107 @@ export default function Orders() {
   };
 
   return (
-    <div className="min-h-screen pt-4 space-y-12 font-body">
-      <header className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between border-b border-noir/5 pb-10">
-        <div className="space-y-4">
+    <div className="min-h-screen pt-4 space-y-16 font-body pb-20">
+      <header className="flex flex-col gap-10 md:flex-row md:items-end md:justify-between border-b border-noir/5 pb-12">
+        <div className="space-y-6">
           <div className="flex items-center gap-3 text-noir/20">
-            <div className="h-px w-8 bg-noir/10"></div>
-            <span className="text-[10px] font-bold uppercase tracking-[0.4em]">Gestion Logistique</span>
+            <div className="h-px w-10 bg-[#ed5518]/40"></div>
+            <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-[#ed5518]/60">Suivi Logistique</span>
           </div>
-          <h1 className="text-6xl font-display italic text-noir leading-none">
-            Expéditions <span className="text-[#ed5518]">Récentes.</span>
+          <h1 className="text-6xl md:text-7xl font-display italic text-noir leading-tight">
+            Toutes vos <br />
+            <span className="text-[#ed5518]">Expéditions.</span>
           </h1>
         </div>
         <button
           onClick={() => navigate('/dashboard-client/nouvelle-course')}
-          className="group relative overflow-hidden rounded-xl bg-noir px-8 py-5 text-[11px] font-bold uppercase tracking-[0.3em] text-white shadow-2xl shadow-noir/20 hover:bg-[#ed5518] transition-all"
+          className="group relative overflow-hidden rounded-[1.25rem] bg-noir px-10 py-6 text-[11px] font-bold uppercase tracking-[0.4em] text-white shadow-2xl shadow-noir/20 hover:shadow-orange-500/20 active:scale-95 transition-all"
         >
-          <span className="relative z-10">Nouvelle Demande</span>
-          <div className="absolute inset-0 bg-[#ed5518] opacity-0 group-hover:opacity-100 transition-opacity"></div>
+          <span className="relative z-10">Créer une Mission</span>
+          <div className="absolute inset-0 bg-[#ed5518] translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
         </button>
       </header>
 
-      <div className="space-y-6">
+      <div className="space-y-8">
         {loadingOrders ? (
-          <div className="flex flex-col items-center justify-center py-20 space-y-4">
-            <Loader2 className="animate-spin text-noir/10" size={40} />
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-noir/20">Synchronisation des données</p>
+          <div className="flex flex-col items-center justify-center py-32 space-y-6">
+            <div className="relative">
+              <Loader2 className="animate-spin text-[#ed5518]" size={48} strokeWidth={1} />
+              <div className="absolute inset-0 blur-xl bg-[#ed5518]/20 animate-pulse"></div>
+            </div>
+            <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-noir/20">Accès sécurisé à vos données</p>
           </div>
         ) : orders.length === 0 ? (
-          <div className="text-center py-24 bg-white rounded-[2rem] border border-noir/5 shadow-sm">
-            <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-noir/20">Historique des courses vide</p>
+          <div className="text-center py-32 bg-white rounded-[2.5rem] border border-noir/5 shadow-sm space-y-4">
+            <div className="h-16 w-16 border border-noir/5 rounded-full flex items-center justify-center mx-auto text-noir/5">
+              <Truck size={32} strokeWidth={1} />
+            </div>
+            <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-noir/20">Votre carnet de route est vide</p>
           </div>
         ) : (
-          <div className="grid gap-4">
+          <div className="grid gap-6">
             {orders.map((order) => (
               <div
                 key={order.id}
                 onClick={() => navigate(`/dashboard-client/orders/${order.id}`, { state: { order } })}
-                className="group relative flex w-full cursor-pointer flex-col md:flex-row md:items-center justify-between gap-6 rounded-2xl bg-white p-6 border border-noir/5 hover:border-[#ed5518]/30 hover:shadow-2xl hover:shadow-[#ed5518]/5 transition-all duration-500"
+                className="group relative flex w-full cursor-pointer flex-col md:flex-row md:items-center justify-between gap-8 rounded-[2.5rem] bg-white p-10 border border-noir/5 hover:border-[#ed5518]/20 hover:shadow-2xl hover:shadow-noir/[0.03] transition-all duration-700"
               >
-                <div className="flex items-center gap-6">
+                <div className="flex items-center gap-10">
                   <div className={`
-                    h-14 w-14 rounded-xl flex items-center justify-center transition-all duration-500
-                    ${order.status === 'delivered' ? 'bg-emerald-50 text-emerald-500' : 'bg-noir/5 text-noir/40 group-hover:bg-[#ed5518]/10 group-hover:text-[#ed5518]'}
+                    h-20 w-20 rounded-2xl flex items-center justify-center transition-all duration-700 shadow-sm
+                    ${order.status === 'delivered' ? 'bg-emerald-50 text-emerald-500 border border-emerald-100' : 'bg-noir/[0.02] text-noir/10 border border-noir/5 group-hover:bg-[#ed5518]/5 group-hover:text-[#ed5518] group-hover:border-[#ed5518]/10'}
                   `}>
-                    {order.status === 'delivered' ? <Truck size={24} strokeWidth={1.5} /> : <Clock size={24} strokeWidth={1.5} />}
+                    {order.status === 'delivered' ? <Truck size={28} strokeWidth={1} /> : <Clock size={28} strokeWidth={1} />}
                   </div>
 
-                  <div className="space-y-2">
-                    <div className="text-[11px] font-bold text-noir/20 uppercase tracking-[0.3em]">
-                      #{order.id.slice(0, 8)} · {new Date(order.created_at).toLocaleDateString('fr-FR')}
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <div className="text-[10px] font-bold text-[#ed5518]/40 uppercase tracking-[0.3em]">
+                        #{order.id.slice(0, 8).toUpperCase()}
+                      </div>
+                      <span className="h-1 w-1 bg-noir/10 rounded-full"></span>
+                      <div className="text-[10px] font-bold text-noir/20 uppercase tracking-[0.3em]">
+                        {new Date(order.created_at).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+                      </div>
                     </div>
-                    <div className="text-lg font-display italic text-noir leading-none group-hover:text-[#ed5518] transition-colors">
-                      {order.pickup_city || 'Départ'} <span className="mx-2 text-noir/20 non-italic text-sm">→</span> {order.delivery_city || 'Arrivée'}
+                    <div className="text-3xl font-display italic text-noir leading-none group-hover:text-[#ed5518] transition-colors pr-4">
+                      {order.pickup_city || 'Départ'} <span className="mx-2 text-noir/5 not-italic font-sans text-xl">→</span> {order.delivery_city || 'Arrivée'}
                     </div>
                     {order.claim_status && order.claim_status !== 'none' && (
-                      <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest ${order.claim_status === 'resolved' ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-600 animate-pulse'}`}>
-                        <AlertTriangle size={10} />
-                        {order.claim_status === 'resolved' ? 'Litige résolu' : 'Litige en cours'}
+                      <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-[0.2em] ${order.claim_status === 'resolved' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600 animate-pulse'}`}>
+                        <AlertTriangle size={12} strokeWidth={2.5} />
+                        {order.claim_status === 'resolved' ? 'Litige résolu' : 'Anomalie signalée'}
                       </div>
                     )}
                   </div>
                 </div>
 
-                <div className="hidden lg:block flex-1 max-w-sm">
-                  <div className="text-[10px] text-noir/30 font-medium truncate italic px-10">
-                    {order.pickup_address.split(',')[0]} ... {order.delivery_address.split(',')[0]}
+                <div className="hidden xl:block flex-1 max-w-sm border-l border-noir/5 px-12">
+                  <div className="space-y-1">
+                    <p className="text-[9px] font-bold text-noir/20 uppercase tracking-[0.3em]">Détails du trajet</p>
+                    <div className="text-xs text-noir/40 leading-relaxed italic truncate font-display">
+                      {order.pickup_address?.split(',')[0]} ... {order.delivery_address?.split(',')[0]}
+                    </div>
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between md:justify-end gap-10 pt-4 md:pt-0 border-t md:border-t-0 border-noir/5">
+                <div className="flex items-center justify-between md:justify-end gap-12 pt-8 md:pt-0 border-t md:border-t-0 border-noir/[0.03]">
                   <div className="text-left md:text-right">
-                    <div className="text-2xl font-display italic text-noir">
+                    <div className="text-3xl font-display italic text-noir">
                       {(Number(order.price_ht) * 1.2).toFixed(2)}€
                     </div>
-                    <div className="text-[9px] font-bold text-noir/20 uppercase tracking-[0.4em]">Montant TTC</div>
+                    <div className="text-[9px] font-bold text-noir/20 uppercase tracking-[0.4em]">Valeur TTC</div>
                   </div>
 
-                  <div className="flex items-center gap-4">
-                    <span className={`px-4 py-2 rounded-lg text-[9px] font-bold uppercase tracking-[0.2em] border transition-colors ${statusStyle(order.status)}`}>
+                  <div className="flex items-center gap-6">
+                    <span className={`px-6 py-3 rounded-xl text-[9px] font-black uppercase tracking-[0.25em] border transition-all duration-500 whitespace-nowrap ${statusStyle(order.status)}`}>
                       {clientStatusLabel(order)}
                     </span>
 
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
+                        // ... pdf generation logic remains identical
                         const clientInfo = {
                           name: profile?.details?.full_name || profile?.details?.contact || profile?.email?.split('@')[0] || "Client",
                           email: profile?.email || profile?.details?.email || "",
@@ -209,10 +226,10 @@ export default function Orders() {
                         };
                         generateOrderPdf(order, clientInfo);
                       }}
-                      className="group/pdf flex items-center justify-center h-10 w-10 rounded-full border border-noir/5 bg-white text-noir hover:bg-noir hover:text-white transition-all shadow-sm"
+                      className="group/pdf flex items-center justify-center h-14 w-14 rounded-full border border-noir/5 bg-white text-noir/20 hover:border-[#ed5518] hover:text-[#ed5518] hover:bg-[#ed5518]/5 transition-all shadow-sm active:scale-90"
                       title="Télécharger Bon de Commande"
                     >
-                      <FileText size={16} strokeWidth={1.5} />
+                      <FileText size={20} strokeWidth={1.5} />
                     </button>
                   </div>
                 </div>
@@ -222,14 +239,14 @@ export default function Orders() {
         )}
       </div>
 
-      {/* Decorative support note */}
-      <div className="flex items-center justify-center pt-10 opacity-30 group hover:opacity-100 transition-opacity">
-        <div className="flex items-center gap-3">
-          <div className="h-px w-10 bg-noir/20"></div>
-          <p className="text-[9px] font-bold uppercase tracking-[0.4em] text-noir/60 italic">
-            Besoin d'aide ? Contactez notre concierge logistique 24/7
+      {/* Modern Footer Branding */}
+      <div className="flex items-center justify-center py-20 border-t border-noir/[0.02]">
+        <div className="flex flex-col items-center gap-6 group">
+          <div className="h-px w-20 bg-[#ed5518]/20 transition-all group-hover:w-40"></div>
+          <p className="text-[10px] font-bold uppercase tracking-[0.5em] text-noir/20 italic hover:text-[#ed5518] transition-colors cursor-default text-center leading-loose">
+            One Connexion Prestige <br />
+            <span className="text-[8px] tracking-[0.8em] not-italic opacity-40">24/7 Global Support</span>
           </p>
-          <div className="h-px w-10 bg-noir/20"></div>
         </div>
       </div>
     </div>

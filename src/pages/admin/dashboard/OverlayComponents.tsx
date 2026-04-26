@@ -4,24 +4,31 @@ import { Package, Users, Truck, CreditCard, ArrowRight } from "lucide-react";
 export function QuickLinks() {
   const navigate = useNavigate();
   const LINKS = [
-    { label: "Toutes les commandes", href: "/admin/orders", icon: Package },
-    { label: "Clients", href: "/admin/clients", icon: Users },
-    { label: "Livreurs", href: "/admin/drivers", icon: Truck },
-    { label: "Factures", href: "/admin/invoices", icon: CreditCard },
+    { label: "Gestion des Missions", href: "/admin/orders", icon: Package },
+    { label: "Base Clients", href: "/admin/clients", icon: Users },
+    { label: "Réseau Livreurs", href: "/admin/drivers", icon: Truck },
+    { label: "Comptabilité", href: "/admin/invoices", icon: CreditCard },
   ];
   return (
-    <div className="bg-slate-900 rounded-[2rem] p-5 space-y-3 relative overflow-hidden">
-      <div className="absolute -top-6 -right-6 h-24 w-24 bg-[#ed5518]/10 rounded-full blur-2xl" />
+    <div className="bg-noir rounded-[2rem] p-8 space-y-6 relative overflow-hidden shadow-2xl">
+      <div className="absolute -top-10 -right-10 h-32 w-32 bg-[#ed5518]/10 rounded-full blur-3xl group-hover:bg-[#ed5518]/20 transition-all duration-700" />
       <div className="relative z-10">
-        <h3 className="text-xs font-black uppercase tracking-widest text-white mb-4">Accès Rapides</h3>
-        {LINKS.map((link, i) => (
-          <button key={i} onClick={() => navigate(link.href)} className="w-full flex items-center justify-between py-2.5 px-3 rounded-xl hover:bg-white/10 transition-all group text-left mb-1">
-            <div className="flex items-center gap-3 text-slate-300 group-hover:text-white">
-              <link.icon size={14} /> <span className="text-xs font-bold">{link.label}</span>
-            </div>
-            <ArrowRight size={12} className="text-slate-600 group-hover:text-[#ed5518]" />
-          </button>
-        ))}
+        <h3 className="text-xl font-display italic text-white mb-8 tracking-tight">Accès Directs.</h3>
+        <div className="space-y-1">
+          {LINKS.map((link, i) => (
+            <button
+              key={i}
+              onClick={() => navigate(link.href)}
+              className="w-full flex items-center justify-between py-4 px-5 rounded-2xl border border-white/5 bg-white/5 hover:bg-white/10 hover:border-white/10 transition-all group text-left"
+            >
+              <div className="flex items-center gap-4 text-white/60 group-hover:text-white transition-colors">
+                <link.icon size={16} strokeWidth={1.5} />
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em]">{link.label}</span>
+              </div>
+              <ArrowRight size={14} className="text-white/20 group-hover:text-[#ed5518] group-hover:translate-x-1 transition-all" />
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -30,17 +37,31 @@ export function QuickLinks() {
 export function NewOrderNotification({ order, onClose, onView }) {
   if (!order) return null;
   return (
-    <div className="fixed bottom-8 right-8 z-[100] animate-in slide-in-from-bottom-4 fade-in duration-300">
-      <div className="bg-slate-900 text-white px-6 py-5 rounded-2xl shadow-2xl flex items-center gap-4 max-w-xs border border-white/10">
-        <div className="h-12 w-12 rounded-2xl bg-[#ed5518]/20 text-[#ed5518] flex items-center justify-center text-xl shrink-0">🔔</div>
-        <div className="flex-1 min-w-0">
-          <div className="font-black text-sm">Nouvelle commande !</div>
-          <div className="text-xs text-slate-400 mt-0.5 truncate">{order.pickup_city || '—'} → {order.delivery_city || '—'}</div>
-          <div className="flex gap-2 mt-3">
-            <button onClick={onView} className="px-3 py-1.5 bg-white text-slate-900 text-xs font-black rounded-xl">Voir</button>
-            <button onClick={onClose} className="px-3 py-1.5 bg-white/10 text-slate-300 text-xs font-bold rounded-xl">Fermer</button>
+    <div className="fixed bottom-12 right-12 z-[100] animate-in slide-in-from-right-10 fade-in duration-700">
+      <div className="bg-noir text-white p-8 rounded-[2rem] shadow-[0_32px_64px_-12px_rgba(0,0,0,0.5)] flex flex-col gap-6 max-w-sm border border-white/10">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="h-10 w-10 rounded-full bg-[#ed5518]/20 text-[#ed5518] flex items-center justify-center shadow-[0_0_20px_rgba(237,85,24,0.3)]">
+              <Package size={18} strokeWidth={2.5} />
+            </div>
+            <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#ed5518]">Alerte Flux</span>
           </div>
+          <button onClick={onClose} className="text-white/20 hover:text-white transition-colors uppercase text-[10px] font-bold">X</button>
         </div>
+
+        <div className="space-y-2">
+          <div className="text-2xl font-display italic leading-tight">Nouvelle mission détectée.</div>
+          <p className="text-[10px] font-bold text-white/30 uppercase tracking-widest italic truncate">
+            {order.pickup_city || '—'} → {order.delivery_city || '—'}
+          </p>
+        </div>
+
+        <button
+          onClick={onView}
+          className="w-full bg-white text-noir py-4 rounded-xl text-[10px] font-bold uppercase tracking-[0.3em] hover:bg-cream transition-all active:scale-95 shadow-lg"
+        >
+          Ouvrir le Dispatch
+        </button>
       </div>
     </div>
   );

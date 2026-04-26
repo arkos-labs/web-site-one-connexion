@@ -30,43 +30,44 @@ export default function AdminOrders() {
   const claimCount = (orders || []).filter(o => o.claim_status === 'pending').length;
 
   const TABS = [
-    { id: "dispatch", label: "Missions du Jour", icon: MapPin, count: kanbanList.length },
+    { id: "dispatch", label: "Missions Actives", icon: MapPin, count: kanbanList.length },
     { id: "all", label: "Toutes les Missions", icon: Package, count: allMissions.length, badge: claimCount },
     { id: "history", label: "Historique (Finies/Refusées)", icon: CheckCircle2, count: historyOrders.length },
   ];
 
   return (
-    <div className="space-y-6 pb-20">
+    <div className="space-y-12 pb-32">
       <AdminPageHeader
         title="Gestion des Missions"
-        subtitle="Dispatch en temps réel et historique de toutes les commandes."
+        subtitle="Dispatch en temps réel et historique exhaustif des flux."
         badge={{ label: "Opérations", count: kanbanList.length }}
         actions={
           <>
             {view === "all" && (
               <button
                 onClick={exportCsv}
-                className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-xs font-bold text-slate-700 shadow-sm hover:bg-slate-50 transition-all"
+                className="group flex items-center gap-3 rounded-2xl border border-noir/5 bg-white px-6 py-4 text-[10px] font-bold uppercase tracking-[0.2em] text-noir shadow-sm hover:bg-noir hover:text-white transition-all"
               >
-                <Download size={16} /> Exporter Global
+                <Download size={16} strokeWidth={1.5} />
+                <span>Exporter Global</span>
               </button>
             )}
-            <div className="flex bg-slate-100 rounded-2xl p-1.5 gap-1">
+            <div className="flex bg-cream p-1.5 rounded-2xl border border-noir/5 gap-1 shadow-inner">
               {TABS.map(tab => (
                 <button
                   key={tab.id}
                   onClick={() => setView(tab.id)}
-                  className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black transition-all duration-200 ${view === tab.id ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+                  className={`flex items-center gap-3 px-6 py-3.5 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all duration-300 ${view === tab.id ? 'bg-noir text-white shadow-xl' : 'text-noir/40 hover:text-noir'}`}
                 >
-                  <tab.icon size={13} className={view === tab.id ? "text-[#ed5518]" : ""} />
-                  {tab.label}
-                  <div className="flex items-center gap-1">
+                  <tab.icon size={14} strokeWidth={view === tab.id ? 2.5 : 1.5} />
+                  <span>{tab.label}</span>
+                  <div className="flex items-center gap-2">
                     {tab.badge > 0 && (
-                      <span className="h-4 min-w-4 px-1 rounded-full bg-rose-500 text-white text-[9px] font-black grid place-items-center animate-bounce">
+                      <span className="h-5 min-w-[20px] rounded-full bg-[#ed5518] text-white text-[9px] font-bold grid place-items-center shadow-[0_0_15px_rgba(237,85,24,0.3)]">
                         {tab.badge}
                       </span>
                     )}
-                    <span className={`h-4 min-w-4 px-1 rounded-full text-[9px] font-black grid place-items-center ${view === tab.id ? 'bg-[#ed5518] text-white' : 'bg-slate-200 text-slate-500'}`}>
+                    <span className={`h-5 min-w-[20px] rounded-full text-[9px] font-bold grid place-items-center ${view === tab.id ? 'bg-white/20 text-white' : 'bg-noir/10 text-noir/40'}`}>
                       {tab.count}
                     </span>
                   </div>
@@ -82,27 +83,30 @@ export default function AdminOrders() {
 
       {/* Persistent Litige Alert if any pending */}
       {claimCount > 0 && (
-        <div 
+        <div
           onClick={() => setView("all")}
-          className="bg-rose-50 border border-rose-100 rounded-[2rem] p-6 flex items-center justify-between cursor-pointer hover:bg-rose-100 transition-all group shadow-lg shadow-rose-500/5 animate-in slide-in-from-top-4 duration-500"
+          className="bg-white border border-red-500/10 rounded-[2.5rem] p-10 flex flex-col md:flex-row items-center justify-between cursor-pointer hover:shadow-2xl transition-all group relative overflow-hidden"
         >
-          <div className="flex items-center gap-4">
-            <div className="h-12 w-12 rounded-2xl bg-rose-500 flex items-center justify-center text-white animate-pulse shadow-lg shadow-rose-500/20">
-              <AlertTriangle size={24} />
+          <div className="absolute top-0 right-0 h-full w-1/3 bg-gradient-to-l from-red-500/5 to-transparent pointer-events-none" />
+          <div className="flex items-center gap-8 relative z-10">
+            <div className="h-20 w-20 rounded-[2rem] bg-red-500 text-white flex items-center justify-center shadow-[0_20px_40px_-10px_rgba(239,68,68,0.4)] group-hover:scale-110 transition-transform duration-500">
+              <AlertTriangle size={36} strokeWidth={1.5} />
             </div>
             <div>
-              <div className="text-sm font-black text-rose-900 uppercase tracking-widest leading-none mb-1">Attention : {claimCount} Litige(s) en attente</div>
-              <p className="text-[11px] font-bold text-rose-600/80 uppercase">Des clients ont signalé des problèmes sur leurs commandes.</p>
+              <div className="text-3xl font-display italic text-noir leading-none mb-3">Conflits détectés en flux.</div>
+              <p className="text-[10px] font-bold text-red-600/60 uppercase tracking-[0.4em]">
+                {claimCount} Litige(s) en attente de résolution prioritaire.
+              </p>
             </div>
           </div>
-          <button className="px-6 py-2.5 rounded-xl bg-rose-600 text-white text-[10px] font-black uppercase tracking-widest group-hover:bg-rose-700 transition-all">
-            Voir les dossiers
+          <button className="mt-8 md:mt-0 px-10 py-5 rounded-2xl bg-noir text-white text-[10px] font-bold uppercase tracking-[0.3em] group-hover:bg-[#ed5518] transition-all shadow-xl">
+            Ouvrir la médiation
           </button>
         </div>
       )}
 
-      {/* Content Area - Tables handle their own headers now for "History" and "All" */}
-      <div className="min-h-[500px]">
+      {/* Content Area */}
+      <div className="min-h-[600px]">
         {view === "history" ? (
           <AdminOrdersHistory
             query={query} setQuery={setQuery}
@@ -114,7 +118,7 @@ export default function AdminOrders() {
             allMissions={allMissions} clients={clients} navigate={navigate}
           />
         ) : (
-          <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden">
+          <div className="bg-white rounded-[3rem] border border-noir/5 shadow-sm overflow-hidden p-8 md:p-12">
             <AdminOrdersKanban
               kanbanList={kanbanList} navigate={navigate} drivers={drivers}
               openDecision={openDecision} openDispatch={openDispatch} derived={derived}

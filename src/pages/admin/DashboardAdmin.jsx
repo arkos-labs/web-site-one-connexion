@@ -51,13 +51,13 @@ export default function DashboardAdmin() {
   useEffect(() => {
     Promise.all([fetchOrders(), fetchInvoices(), fetchDriverPayments(), fetchProfiles()]).finally(() => setLoading(false));
     const ordersChannel = supabase.channel('admin-updates-v2')
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'orders' }, (p) => { 
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'orders' }, (p) => {
         console.log("Realtime: New order detected", p.new.id);
-        if (latestOrderIdRef.current !== p.new.id) { 
-          latestOrderIdRef.current = p.new.id; 
-          setNewOrderAlert(p.new); 
-          fetchOrders(); 
-        } 
+        if (latestOrderIdRef.current !== p.new.id) {
+          latestOrderIdRef.current = p.new.id;
+          setNewOrderAlert(p.new);
+          fetchOrders();
+        }
       })
       .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, (p) => {
         console.log("Realtime: Order update", p.new?.id);
@@ -166,7 +166,7 @@ export default function DashboardAdmin() {
   }), [ordersAll, drivers]);
 
   const clientRows = useMemo(() => clients.map(c => {
-    const last = invoicesAll.filter(i => i.client_id === c.id).sort((a,b)=> new Date(b.created_at)-new Date(a.created_at))[0];
+    const last = invoicesAll.filter(i => i.client_id === c.id).sort((a, b) => new Date(b.created_at) - new Date(a.created_at))[0];
     return { id: c.id, name: c.name, status: !last ? "SANS FACTURE" : (last.status === 'paid' ? "À JOUR" : "À RECOUVRER"), cls: !last ? "bg-slate-50 text-slate-400 border-slate-100" : (last.status === 'paid' ? "bg-emerald-50 text-emerald-600 border-emerald-100" : "bg-rose-50 text-rose-600 border-rose-100") };
   }), [clients, invoicesAll]);
 
@@ -178,37 +178,90 @@ export default function DashboardAdmin() {
   };
 
   return (
-    <div className="p-6 md:p-8 space-y-8 pt-0">
-      <header className="pt-8 flex flex-wrap items-start justify-between gap-6">
-        <div>
-          <div className="flex items-center gap-3 mb-3">
-            <span className="inline-flex rounded-full bg-slate-900 px-3 py-1 text-[10px] font-black text-white uppercase tracking-widest">Live</span>
-            <span className="text-xs font-bold text-slate-400 capitalize">{new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</span>
-            <div className="flex items-center gap-1.5"><span className="relative flex h-2 w-2"><span className="animate-ping absolute h-full w-full rounded-full bg-[#ed5518] opacity-75" /><span className="relative h-2 w-2 rounded-full bg-[#ed5518]" /></span><span className="text-[10px] font-black text-[#ed5518] uppercase tracking-widest">Opérationnel</span></div>
+    <div className="flex flex-col gap-12 font-body selection:bg-[#ed5518]/30 selection:text-[#ed5518]">
+      {/* Editorial Header */}
+      <header className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between border-b border-noir/5 pb-10">
+        <div className="space-y-4">
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute h-full w-full rounded-full bg-[#ed5518] opacity-75"></span>
+                <span className="relative h-2 w-2 rounded-full bg-[#ed5518]"></span>
+              </span>
+              <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#ed5518]">Système Actif</span>
+            </div>
+            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-noir/20">
+              {new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}
+            </span>
           </div>
-          <h1 className="text-4xl font-black text-slate-900 lg:text-5xl">Tableau de bord 👋</h1>
+          <h1 className="text-6xl font-display italic text-noir leading-none tracking-tight">
+            Plateforme <span className="text-noir/20 decoration-[#ed5518]/20 underline underline-offset-8">Admin</span>.
+          </h1>
         </div>
-        <div className="flex flex-wrap gap-3">
-          <button onClick={() => setOpen(true)} className="flex-1 min-w-[160px] flex items-center justify-center gap-2 rounded-2xl bg-[#ed5518] px-5 py-4 text-sm font-black text-white shadow-lg shadow-primary/20 hover:-translate-y-0.5 transition-all">
-            <Plus size={18} /> Nouvelle mission
+
+        <div className="flex flex-wrap items-center gap-4">
+          <button
+            onClick={() => setOpen(true)}
+            className="flex items-center gap-3 rounded-xl bg-[#ed5518] px-8 py-4 text-[10px] font-bold uppercase tracking-widest text-white shadow-xl shadow-orange-500/20 hover:bg-noir transition-all active:scale-95"
+          >
+            <Plus size={16} strokeWidth={2.5} />
+            <span>Nouvelle Mission</span>
           </button>
-          <button onClick={() => navigate('/admin/orders')} className="flex-1 min-w-[160px] flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-4 text-sm font-bold text-slate-700 hover:bg-slate-50">
-            Suivi des missions <ArrowRight size={16} />
+          <button
+            onClick={() => navigate('/admin/orders')}
+            className="flex items-center gap-3 rounded-xl bg-white border border-noir/10 px-8 py-4 text-[10px] font-bold uppercase tracking-widest text-noir hover:bg-noir hover:text-white hover:border-noir transition-all active:scale-95 shadow-sm"
+          >
+            <span>Flux de Missions</span>
+            <ArrowRight size={16} strokeWidth={1.5} />
           </button>
         </div>
       </header>
+
+      {/* KPI Section */}
       <KpiSection kpis={kpis} driversCount={drivers.length} />
-      <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
-        <OperationsCenter orders={ordersAll} operationView={operationView} setOperationView={setOperationView} tabConfig={TAB_CONFIG} handleQuickAccept={handleQuickAccept} openDispatch={openDispatch} />
-        <div className="flex flex-col gap-5">
+
+      {/* Operations Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+        <div className="lg:col-span-8">
+          <OperationsCenter
+            orders={ordersAll}
+            operationView={operationView}
+            setOperationView={setOperationView}
+            tabConfig={TAB_CONFIG}
+            handleQuickAccept={handleQuickAccept}
+            openDispatch={openDispatch}
+          />
+        </div>
+
+        <div className="lg:col-span-4 flex flex-col gap-8">
           <FleetStatus drivers={driverRows} driversCount={drivers.length} />
           <ClientSolvability clients={clientRows} />
           <QuickLinks />
         </div>
       </div>
-      <NewOrderNotification order={newOrderAlert} onClose={() => setNewOrderAlert(null)} onView={() => { setNewOrderAlert(null); navigate(`/admin/orders/${newOrderAlert.id}`); }} />
+
+      {/* Modals & Notifications */}
+      <NewOrderNotification
+        order={newOrderAlert}
+        onClose={() => setNewOrderAlert(null)}
+        onView={() => { setNewOrderAlert(null); navigate(`/admin/orders/${newOrderAlert.id}`); }}
+      />
       {open && <CreateOrderModal isOpen={open} onClose={() => setOpen(false)} onSubmit={handleCreateOrder} />}
-      <AdminOrderModals dispatchOpen={dispatchOpen} setDispatchOpen={setDispatchOpen} dispatchDriver={dispatchDriver} setDispatchDriver={setDispatchDriver} drivers={drivers} dispatchNote={dispatchNote} setDispatchNote={setDispatchNote} confirmDispatch={confirmDispatch} decisionOpen={false} setDecisionOpen={()=>{}} reason="" setReason={()=>{}} confirmDecision={()=>{}} />
+      <AdminOrderModals
+        dispatchOpen={dispatchOpen}
+        setDispatchOpen={setDispatchOpen}
+        dispatchDriver={dispatchDriver}
+        setDispatchDriver={setDispatchDriver}
+        drivers={drivers}
+        dispatchNote={dispatchNote}
+        setDispatchNote={setDispatchNote}
+        confirmDispatch={confirmDispatch}
+        decisionOpen={false}
+        setDecisionOpen={() => { }}
+        reason=""
+        setReason={() => { }}
+        confirmDecision={() => { }}
+      />
     </div>
   );
 }

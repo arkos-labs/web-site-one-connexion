@@ -156,7 +156,7 @@ export default function useAdminOrdersManager(searchParams) {
             supabase.removeChannel(ordersChannel);
             supabase.removeChannel(profileChannel);
         };
-    }, [fetchOrders, fetchProfiles]);
+    }, []); // Empty dependency array prevents infinite loops from useCallback regenerating
 
     const derived = useMemo(() => {
         const parseDeadlineMs = (o) => {
@@ -228,11 +228,9 @@ export default function useAdminOrdersManager(searchParams) {
 
     const kanbanList = useMemo(
         () => {
-            const todayStr = new Date().toLocaleDateString();
+            // Show all active missions (not cancelled and not delivered) regardless of creation date
             return sortOrders(baseList.filter((o) => {
-                const orderDate = new Date(o.created_at).toLocaleDateString();
-                const isToday = orderDate === todayStr;
-                return isToday && o.status !== "cancelled" && o.status !== "delivered";
+                return o.status !== "cancelled" && o.status !== "delivered";
             }));
         },
         [baseList, sortOrders]

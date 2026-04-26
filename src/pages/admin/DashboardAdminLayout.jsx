@@ -96,48 +96,50 @@ export default function DashboardAdminLayout() {
   };
 
   return (
-    <div className="flex h-screen bg-[#F8FAFC] font-sans text-slate-900 overflow-hidden">
-      {/* Sidebar */}
-      <aside className="hidden w-72 flex-col justify-between bg-white px-4 py-8 border-r border-slate-100 lg:flex z-20">
+    <div className="flex h-screen bg-cream font-body text-noir overflow-hidden selection:bg-[#ed5518]/30 selection:text-[#ed5518]">
+      {/* Sidebar - Desktop */}
+      <aside className="hidden w-72 flex-col justify-between bg-noir px-6 py-10 border-r border-noir/5 lg:flex z-20">
         <div>
-          {/* Logo */}
-          <div className="mb-6 flex flex-col items-center">
-            <Logo size="lg" />
-            <span className="text-[10px] font-black tracking-[0.3em] text-[#ed5518] uppercase mt-2">Plateforme Admin</span>
+          {/* Logo Section */}
+          <div className="mb-10 flex flex-col items-center">
+            <Logo size="lg" variant="light" />
+            <span className="text-[10px] font-bold tracking-[0.4em] text-[#ed5518] uppercase mt-3">Administration</span>
           </div>
 
           {/* Navigation */}
-          <nav className="space-y-1">
-            <div className="mb-3 mt-8 px-4 text-[10px] font-black uppercase tracking-widest text-slate-400">Main Fleet</div>
-            <NavItem icon={LayoutDashboard} label="Dashboard" to="/admin" active={isActive("/admin")} />
+          <nav className="space-y-2 mt-12">
+            <div className="mb-4 px-4 text-[9px] font-bold uppercase tracking-[0.3em] text-white/20">Fleet Management</div>
+            <NavItem icon={LayoutDashboard} label="Tableau de Bord" to="/admin" active={isActive("/admin")} />
             <NavItem
               icon={Truck}
-              label="Suivi des Missions"
+              label="Suivi Missions"
               badge={activeCount > 0 ? activeCount : null}
               to="/admin/orders"
               active={isActive("/admin/orders")}
             />
             <NavItem icon={Users} label="Livreurs" to="/admin/drivers" active={isActive("/admin/drivers")} />
 
-            <div className="mb-3 mt-8 px-4 text-[10px] font-black uppercase tracking-widest text-slate-400">Finance & CRM</div>
-            <NavItem icon={FileText} label="Facturation" to="/admin/invoices" active={isActive("/admin/invoices")} />
+            <div className="mb-4 mt-10 px-4 text-[9px] font-bold uppercase tracking-[0.3em] text-white/20">Finance & CRM</div>
+            <NavItem icon={FileText} label="Comptabilité" to="/admin/invoices" active={isActive("/admin/invoices")} />
             <NavItem icon={Users} label="Comptes Clients" to="/admin/clients" active={isActive("/admin/clients")} />
 
-            <div className="mb-3 mt-8 px-4 text-[10px] font-black uppercase tracking-widest text-slate-400">Communication</div>
-            <NavItem icon={MessageSquare} label="Support Client" to="/admin/chat" active={isActive("/admin/chat")} />
+            <div className="mb-4 mt-10 px-4 text-[9px] font-bold uppercase tracking-[0.3em] text-white/20">Communication</div>
+            <NavItem icon={MessageSquare} label="Support Direct" to="/admin/chat" active={isActive("/admin/chat")} />
           </nav>
         </div>
 
         {/* Bottom Section: Profile & Logout */}
-        <div className="space-y-4">
-          <div className="mx-2 rounded-2xl bg-slate-50 p-4 border border-slate-100">
+        <div className="space-y-6">
+          <div className="mx-2 rounded-2xl bg-white/5 p-4 border border-white/5 backdrop-blur-sm">
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-full bg-slate-900 flex items-center justify-center text-white text-xs font-bold ring-2 ring-white shadow-sm overflow-hidden">
-                {user?.email?.[0].toUpperCase() || "A"}
+              <div className="h-10 w-10 rounded-full bg-cream flex items-center justify-center text-noir text-xs font-bold ring-2 ring-white/10 shadow-sm overflow-hidden uppercase">
+                {user?.email?.[0] || "A"}
               </div>
               <div className="flex flex-col min-w-0">
-                <span className="text-xs font-bold text-slate-900 truncate">{user?.email || "Administrateur"}</span>
-                <span className="flex items-center gap-1 text-[9px] font-bold text-[#ed5518] uppercase tracking-wider">
+                <span className="text-sm font-bold text-white truncate italic font-display tracking-tight">
+                  {user?.email?.split('@')[0] || "Administrateur"}
+                </span>
+                <span className="flex items-center gap-1.5 text-[9px] font-bold text-[#ed5518] uppercase tracking-wider opacity-90">
                   <span className="h-1 w-1 rounded-full bg-[#ed5518] animate-pulse"></span>
                   Super Admin
                 </span>
@@ -146,70 +148,63 @@ export default function DashboardAdminLayout() {
           </div>
           <button
             onClick={handleLogout}
-            className="group flex w-full items-center gap-3 rounded-2xl px-6 py-3.5 text-sm font-bold text-slate-400 transition-all hover:bg-rose-50 hover:text-rose-600 active:scale-95"
+            className="group flex w-full items-center gap-3 rounded-xl px-6 py-3.5 text-xs font-bold uppercase tracking-widest text-white/30 transition-all hover:bg-[#ed5518]/10 hover:text-[#ed5518] active:scale-95"
           >
-            <LogOut size={18} className="transition-transform group-hover:-translate-x-1" />
+            <LogOut size={16} className="transition-transform group-hover:-translate-x-1" />
             <span>Déconnexion</span>
           </button>
         </div>
       </aside>
 
-      {/* Main Content */}
+      {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Mobile Header */}
-        <header className="sticky top-0 z-40 bg-white border-b border-slate-100 px-6 py-4 flex items-center justify-between lg:hidden shadow-sm">
+        <header className="sticky top-0 z-40 bg-noir px-6 py-4 flex items-center justify-between lg:hidden shadow-lg">
           <div className="flex items-center gap-3">
-            <Logo size="sm" />
+            <Logo size="sm" variant="light" />
             <div className="flex flex-col">
-              <span className="text-[10px] font-black tracking-[0.2em] text-[#ed5518] uppercase leading-none">Admin</span>
-              <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest mt-1">Plateforme</span>
+              <span className="text-[9px] font-bold tracking-[0.2em] text-[#ed5518] uppercase leading-none">Administration</span>
+              <span className="text-[7px] font-bold text-white/50 uppercase tracking-widest mt-1">One Connexion</span>
             </div>
           </div>
           <button
             onClick={() => setIsMobileMenuOpen(true)}
-            className="flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-900 text-white shadow-xl transition-all active:scale-90"
+            className="flex h-10 w-10 items-center justify-center rounded-lg bg-cream text-noir shadow-xl transition-all active:scale-90"
             aria-label="Ouvrir le menu"
           >
-            <Menu size={22} strokeWidth={2.5} />
+            <Menu size={20} />
           </button>
         </header>
 
-        {/* Custom Mobile Menu Overseas */}
+        {/* Mobile Sidebar Overlay */}
         {isMobileMenuOpen && (
           <div className="fixed inset-0 z-[100] lg:hidden">
-            <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={() => setIsMobileMenuOpen(false)} />
-            <div className="absolute left-0 top-0 bottom-0 w-72 bg-white shadow-2xl flex flex-col p-6 animate-in slide-in-from-left duration-300">
-              <div className="mb-8 flex flex-col items-center relative">
-                <button 
+            <div className="absolute inset-0 bg-noir/60 backdrop-blur-md" onClick={() => setIsMobileMenuOpen(false)} />
+            <div className="absolute left-0 top-0 bottom-0 w-72 bg-noir shadow-2xl flex flex-col p-6 animate-in slide-in-from-left duration-300 border-r border-white/5">
+              <div className="mb-10 flex flex-col items-center relative">
+                <button
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="absolute -right-2 -top-2 p-2 text-slate-400 hover:text-slate-900 transition-colors"
+                  className="absolute -right-2 -top-2 p-2 text-white/30 hover:text-white transition-colors"
                 >
                   <X size={20} />
                 </button>
-                <Logo size="lg" />
-                <span className="text-[10px] font-black tracking-[0.3em] text-[#ed5518] uppercase mt-2">Plateforme Admin</span>
+                <Logo size="lg" variant="light" />
+                <span className="text-[10px] font-bold tracking-[0.3em] text-[#ed5518] uppercase mt-3">Gestion Admin</span>
               </div>
-              <nav className="space-y-1 overflow-y-auto flex-1">
+              <nav className="space-y-2 overflow-y-auto flex-1">
                 <NavItem icon={LayoutDashboard} label="Dashboard" to="/admin" active={isActive("/admin")} onClick={() => setIsMobileMenuOpen(false)} />
-                <NavItem
-                  icon={Truck}
-                  label="Suivi des Missions"
-                  badge={activeCount > 0 ? activeCount : null}
-                  to="/admin/orders"
-                  active={isActive("/admin/orders")}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                />
+                <NavItem icon={Truck} label="Missions" badge={activeCount > 0 ? activeCount : null} to="/admin/orders" active={isActive("/admin/orders")} onClick={() => setIsMobileMenuOpen(false)} />
                 <NavItem icon={Users} label="Livreurs" to="/admin/drivers" active={isActive("/admin/drivers")} onClick={() => setIsMobileMenuOpen(false)} />
-                <NavItem icon={FileText} label="Facturation" to="/admin/invoices" active={isActive("/admin/invoices")} onClick={() => setIsMobileMenuOpen(false)} />
-                <NavItem icon={Users} label="Comptes Clients" to="/admin/clients" active={isActive("/admin/clients")} onClick={() => setIsMobileMenuOpen(false)} />
+                <NavItem icon={FileText} label="Comptabilité" to="/admin/invoices" active={isActive("/admin/invoices")} onClick={() => setIsMobileMenuOpen(false)} />
+                <NavItem icon={Users} label="Clients" to="/admin/clients" active={isActive("/admin/clients")} onClick={() => setIsMobileMenuOpen(false)} />
                 <NavItem icon={MessageSquare} label="Support" to="/admin/chat" active={isActive("/admin/chat")} onClick={() => setIsMobileMenuOpen(false)} />
               </nav>
-              <div className="mt-8 pt-6 border-t border-slate-100">
+              <div className="mt-8 pt-6 border-t border-white/5">
                 <button
                   onClick={() => { handleLogout(); setIsMobileMenuOpen(false); }}
-                  className="flex w-full items-center gap-3 rounded-2xl px-6 py-4 text-sm font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 transition-all font-sans"
+                  className="flex w-full items-center gap-3 rounded-xl px-6 py-4 text-xs font-bold uppercase tracking-widest text-[#ed5518] bg-[#ed5518]/10 hover:bg-[#ed5518]/20 transition-all font-display italic"
                 >
-                  <LogOut size={18} />
+                  <LogOut size={16} />
                   <span>Déconnexion</span>
                 </button>
               </div>
@@ -217,61 +212,59 @@ export default function DashboardAdminLayout() {
           </div>
         )}
 
-        <main className="flex-1 overflow-y-auto p-4 md:p-8 lg:p-10 relative">
-          <div className="mx-auto max-w-7xl">
-          <Outlet />
-        </div>
-      </main>
-    </div>
+        <main className="flex-1 overflow-y-auto p-6 md:p-10 lg:p-12">
+          <div className="mx-auto max-w-7xl animate-fade-in">
+            <Outlet />
+          </div>
+        </main>
+      </div>
 
-      {/* New Order Notification Popup - Even more Premium */}
+      {/* New Order Notification Popup - Editorial Noir */}
       {newOrderPopup && (
-        <div className="fixed bottom-8 right-8 z-[100] w-full max-w-sm animate-in fade-in slide-in-from-bottom-5 duration-500">
-          <div className="relative overflow-hidden rounded-3xl bg-slate-900 text-white shadow-2xl shadow-indigo-500/20 ring-1 ring-white/10 p-1">
-            {/* Top Accent Bar */}
-            <div className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-primary via-rose-500 to-indigo-500" />
-
-            <div className="p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#ed5518]/20 text-[#ed5518]">
-                    <Bell size={16} className="animate-pulse" />
+        <div className="fixed bottom-10 right-10 z-[100] w-full max-w-md animate-in fade-in slide-in-from-right duration-700">
+          <div className="relative overflow-hidden rounded-[2rem] bg-noir text-white shadow-[0_32px_64px_-16px_rgba(0,0,0,0.4)] border border-white/10 p-1">
+            <div className="p-8">
+              <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center gap-4">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#ed5518]/20 text-[#ed5518] shadow-[0_0_20px_rgba(237,85,24,0.3)]">
+                    <Bell size={18} className="animate-pulse" />
                   </div>
-                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#ed5518]">Alerte Dispatch</span>
+                  <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#ed5518]">Nouvelle Mission</span>
                 </div>
                 <button
                   onClick={() => setNewOrderPopup(null)}
-                  className="rounded-full p-1 text-white/40 hover:bg-white/10 hover:text-white transition-colors"
+                  className="rounded-full p-2 text-white/20 hover:bg-white/10 hover:text-white transition-all"
                 >
-                  <X size={16} />
+                  <X size={20} />
                 </button>
               </div>
 
-              <h3 className="text-xl font-bold leading-tight">Nouvelle commande entrante</h3>
-              <p className="mt-1 text-xs font-medium text-slate-400 line-clamp-1">{newOrderPopup.client}</p>
+              <h3 className="text-3xl font-display italic leading-tight mb-2 tracking-tight">
+                Commande de <span className="text-[#ed5518]">{newOrderPopup.client}</span>.
+              </h3>
 
-              <div className="mt-4 rounded-2xl bg-white/5 border border-white/10 p-4">
-                <div className="flex items-center justify-between gap-4">
-                  <div className="flex flex-col">
-                    <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wider">Itinéraire</span>
-                    <span className="text-sm font-bold">{newOrderPopup.route}</span>
+              <div className="mt-8 rounded-2xl bg-white/5 border border-white/5 p-6 hover:bg-white/10 transition-colors cursor-default">
+                <div className="flex items-center justify-between gap-6">
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[9px] font-bold text-white/30 uppercase tracking-[0.2em]">Trajectoire</span>
+                    <span className="text-sm font-semibold tracking-wide italic font-display">{newOrderPopup.route}</span>
                   </div>
-                  <div className="text-right flex flex-col">
-                    <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wider">Montant</span>
-                    <span className="text-sm font-black text-[#ed5518]">{newOrderPopup.price}€</span>
+                  <div className="text-right flex flex-col gap-1">
+                    <span className="text-[9px] font-bold text-white/30 uppercase tracking-[0.2em]">Net HT</span>
+                    <span className="text-lg font-black text-[#ed5518] tracking-wider">{newOrderPopup.price}€</span>
                   </div>
                 </div>
               </div>
 
-              <div className="mt-5 flex gap-2">
+              <div className="mt-8 pt-2 flex gap-4">
                 <button
                   onClick={() => {
                     navigate(`/admin/orders/${newOrderPopup.id}`);
                     setNewOrderPopup(null);
                   }}
-                  className="flex-1 flex gap-2 items-center justify-center rounded-xl bg-white py-2.5 text-xs font-bold text-slate-900 shadow-xl transition-all hover:bg-slate-100 hover:-translate-y-0.5"
+                  className="flex-1 flex gap-3 items-center justify-center rounded-xl bg-white py-4 text-[10px] font-bold uppercase tracking-[0.3em] text-noir shadow-xl transition-all hover:bg-cream hover:-translate-y-1 active:scale-95"
                 >
-                  Ouvrir <ExternalLink size={14} />
+                  Détails Mission <ArrowUpRight size={16} strokeWidth={2.5} />
                 </button>
               </div>
             </div>
@@ -282,30 +275,25 @@ export default function DashboardAdminLayout() {
   );
 }
 
-function NavItem({ icon: IconComponent, label, active, badge, to, onClick }) {
-  const classes = `group relative flex w-full items-center justify-between rounded-xl px-4 py-3 text-sm font-bold transition-all duration-200 ${active
-    ? "bg-slate-900 text-white shadow-xl shadow-slate-900/10"
-    : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+function NavItem({ icon: Icon, label, active, badge, to, onClick }) {
+  const classes = `group relative flex w-full items-center justify-between rounded-xl px-5 py-3.5 text-xs font-bold uppercase tracking-widest transition-all duration-300 ${active
+    ? "bg-[#ed5518] text-white shadow-lg shadow-orange-500/20"
+    : "text-white/40 hover:bg-white/5 hover:text-white"
     }`;
-
-  const Icon = IconComponent;
 
   return (
     <Link to={to} className={classes} onClick={onClick}>
       <div className="flex items-center gap-3.5">
-        {Icon ? (
-          <Icon size={18} className={`transition-all duration-300 ${active ? "text-[#ed5518] scale-110" : "group-hover:scale-110"}`} />
-        ) : null}
-        <span className="tracking-tight">{label}</span>
+        {Icon && (
+          <Icon size={16} className={`transition-all duration-300 ${active ? "text-white scale-110" : "group-hover:text-[#ed5518] group-hover:scale-110"}`} />
+        )}
+        <span className={`${active ? 'font-display italic tracking-normal' : ''}`}>{label}</span>
       </div>
       {badge && (
-        <span className={`flex h-5 min-w-[20px] items-center justify-center rounded-full px-1.5 text-[10px] font-black tracking-tighter ${active ? "bg-white text-slate-900" : "bg-[#ed5518] text-white shadow-lg shadow-primary/20"
+        <span className={`flex h-5 min-w-[20px] items-center justify-center rounded-full px-1.5 text-[9px] font-bold ${active ? "bg-white text-[#ed5518]" : "bg-[#ed5518] text-white shadow-md shadow-orange-500/30"
           }`}>
           {badge}
         </span>
-      )}
-      {active && (
-        <div className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-1 bg-[#ed5518] rounded-r-full" />
       )}
     </Link>
   );

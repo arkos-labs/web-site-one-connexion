@@ -15,33 +15,48 @@ export default function AdminPageHeader({ title, subtitle, badge, actions, backT
     const navigate = useNavigate();
 
     return (
-        <header className="pt-2 pb-2">
-            <div className="flex flex-wrap items-start justify-between gap-6">
-                <div>
+        <header className="pb-12 border-b border-noir/5 mb-10">
+            <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+                <div className="space-y-4">
                     {backTo && (
                         <button
                             onClick={() => navigate(backTo)}
-                            className="mb-4 inline-flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-slate-700 transition-colors"
+                            className="group flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.3em] text-noir/30 hover:text-noir transition-colors"
                         >
-                            <ArrowLeft size={14} /> Retour
+                            <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
+                            <span>Retour</span>
                         </button>
                     )}
-                    <div className="flex items-center gap-3 flex-wrap">
-                        <h1 className="text-2xl md:text-3xl font-black tracking-tight text-slate-900">{title}</h1>
-                        {badge && (
-                            <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-3 py-1 text-xs font-black text-slate-600">
-                                {badge.label}
-                                {badge.count !== undefined && (
-                                    <span className="rounded-full bg-slate-900 text-white text-[9px] font-black px-1.5 py-0.5 min-w-[18px] text-center">{badge.count}</span>
-                                )}
-                            </span>
+
+                    <div className="flex flex-col gap-2">
+                        <div className="flex items-center gap-4 flex-wrap">
+                            <h1 className="text-5xl font-display italic tracking-tight text-noir">
+                                {title}.
+                            </h1>
+                            {badge && (
+                                <span className="inline-flex items-center gap-2 rounded-full border border-noir/5 bg-cream px-4 py-1.5 text-[9px] font-bold uppercase tracking-[0.2em] text-noir/40">
+                                    <span className="relative flex h-1.5 w-1.5 mr-1">
+                                        <span className="animate-ping absolute h-full w-full rounded-full bg-[#ed5518] opacity-75"></span>
+                                        <span className="relative h-1.5 w-1.5 rounded-full bg-[#ed5518]"></span>
+                                    </span>
+                                    {badge.label}
+                                    {badge.count !== undefined && (
+                                        <span className="ml-1 text-noir font-black">{badge.count}</span>
+                                    )}
+                                </span>
+                            )}
+                        </div>
+                        {subtitle && (
+                            <p className="text-sm font-medium text-noir/40 italic">{subtitle}</p>
                         )}
                     </div>
-                    {subtitle && (
-                        <p className="mt-1.5 text-sm font-medium text-slate-400">{subtitle}</p>
-                    )}
                 </div>
-                {actions && <div className="flex items-center gap-3 flex-wrap">{actions}</div>}
+
+                {actions && (
+                    <div className="flex items-center gap-4 flex-wrap pb-1">
+                        {actions}
+                    </div>
+                )}
             </div>
         </header>
     );
