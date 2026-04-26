@@ -16,7 +16,7 @@ export default function Invoices() {
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState(null);
-  const [orders, setOrders] = useState([]); // Orders for the selected invoice
+  const [orders, setOrders] = useState([]);
   const [loadingOrders, setLoadingOrders] = useState(false);
   const [profile, setProfile] = useState(null);
 
@@ -58,7 +58,6 @@ export default function Invoices() {
     setLoading(false);
   };
 
-  // Fetch orders when an invoice is selected
   useEffect(() => {
     if (!selected) {
       setOrders([]);
@@ -69,8 +68,6 @@ export default function Invoices() {
       setLoadingOrders(true);
       const { data: { user } } = await supabase.auth.getUser();
 
-      // Logique simplifiée: on récupère les commandes dans la période de la facture
-      // Idéalement, il faudrait une table de liaison invoice_items ou une colonne invoice_id dans orders
       const { data, error } = await supabase
         .from('orders')
         .select('*')
@@ -96,8 +93,7 @@ export default function Invoices() {
     if (!selected) return;
     const periodStr = new Date(selected.period_start).toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
     const { generateInvoicePdf } = await import("../../lib/pdf-generator");
-    
-    // Construct robust client info
+
     const info = {
       name: profile?.full_name || profile?.contact_name || "",
       firstName: (profile?.full_name || "").split(' ')[0] || "",
@@ -112,120 +108,164 @@ export default function Invoices() {
     generateInvoicePdf({ ...selected, period: periodStr }, orders, info);
   };
 
-  if (loading) return <div className="flex h-64 items-center justify-center"><Loader2 className="animate-spin text-slate-400" /></div>;
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center py-40 space-y-4">
+        <Loader2 className="h-10 w-10 animate-spin text-noir/10" />
+        <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-noir/20">Accès aux archives</p>
+      </div>
+    );
+  }
 
   if (invoices.length === 0) {
     return (
-      <div>
-        <header className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-900">Factures</h1>
-          <p className="text-sm text-slate-500">Aucune facture disponible pour le moment.</p>
+      <div className="max-w-3xl mx-auto py-20 text-center space-y-12">
+        <header className="space-y-4">
+          <h1 className="text-6xl font-display italic text-noir">Mes Factures.</h1>
+          <p className="text-noir/40 font-medium tracking-wide">Documents comptables et paiements.</p>
         </header>
-        <div className="flex flex-col items-center justify-center rounded-[2.5rem] bg-white p-12 text-center shadow-sm">
-          <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-slate-50">
-            <FileText className="text-slate-400" size={32} />
+
+        <div className="p-20 rounded-[3rem] border border-noir/5 bg-white/50 flex flex-col items-center space-y-6">
+          <div className="h-20 w-20 rounded-full border border-noir/5 flex items-center justify-center text-noir/10">
+            <FileText size={40} strokeWidth={1} />
           </div>
-          <h3 className="text-lg font-bold text-slate-900">Tout est en ordre</h3>
-          <p className="mt-2 text-sm text-slate-500">Vos factures apparaîtront ici une fois générées chaque fin de mois.</p>
+          <div className="space-y-2">
+            <h3 className="text-xl font-display italic text-noir">Tout est en ordre.</h3>
+            <p className="text-sm text-noir/40 max-w-xs mx-auto">
+              Vos factures apparaîtront ici automatiquement à la fin de chaque période d'activité.
+            </p>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="pt-4 md:pt-6">
-      <header className="mb-6">
-        <h1 className="text-4xl font-extrabold text-slate-900">Mes Factures 📄</h1>
-        <p className="mt-2 text-base font-medium text-slate-500">Consultez et téléchargez vos documents comptables simplement.</p>
+    <div className="font-body pb-20">
+      <header className="mb-16 space-y-4 border-b border-noir/5 pb-10">
+        <h1 className="text-6xl font-display italic text-noir leading-none">
+          Mes <span className="text-[#ed5518]">Factures.</span>
+        </h1>
+        <p className="text-noir/40 font-medium tracking-[0.1em]">Gérez vos documents financiers et votre comptabilité.</p>
       </header>
 
-      <div className="grid gap-6 lg:grid-cols-[0.75fr_1.25fr]">
-        <div className="rounded-[2.5rem] bg-white p-6 shadow-sm">
-          <div className="text-xs font-semibold uppercase tracking-wider text-slate-400">Historique</div>
-          <div className="mt-4 grid gap-3">
+      <div className="grid gap-12 lg:grid-cols-12">
+        {/* Sidebar Historique */}
+        <div className="lg:col-span-4 space-y-6">
+          <h3 className="text-[11px] font-bold uppercase tracking-[0.4em] text-noir/30 flex items-center gap-3 px-2">
+            Archives <span className="h-px flex-1 bg-noir/5"></span>
+          </h3>
+          <div className="space-y-3">
             {invoices.map((inv) => (
               <button
                 key={inv.id}
                 onClick={() => setSelected(inv)}
-                className={`flex items-center justify-between rounded-2xl px-4 py-3 text-left transition ${selected?.id === inv.id ? "bg-slate-900 text-white" : "bg-slate-50 text-slate-900 hover:bg-slate-100"}`}
+                className={`w-full group relative flex items-center justify-between rounded-2xl p-6 transition-all border ${selected?.id === inv.id
+                  ? "bg-noir text-white border-noir shadow-xl shadow-noir/20"
+                  : "bg-white text-noir border-noir/5 hover:border-noir/10"
+                  }`}
               >
-                <div>
-                  <div className="text-xs font-semibold uppercase tracking-wider opacity-70">
+                <div className="text-left space-y-1">
+                  <p className={`text-[10px] font-bold uppercase tracking-widest ${selected?.id === inv.id ? "text-white/40" : "text-noir/30"}`}>
                     {new Date(inv.period_start).toLocaleDateString(undefined, { month: 'long', year: 'numeric' })}
-                  </div>
-                  <div className="text-sm font-bold">#{inv.id.slice(0, 8)}</div>
+                  </p>
+                  <p className="text-lg font-display italic">#{inv.id.slice(0, 8)}</p>
                 </div>
-                <span className={`rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide ${inv.status === "paid" ? "bg-emerald-50 text-emerald-600" : "bg-amber-50 text-amber-600"}`}>
-                  {inv.status === 'paid' ? 'Payée' : inv.status}
-                </span>
+                <div className="text-right">
+                  <span className={`text-[9px] font-black uppercase tracking-[0.15em] px-3 py-1.5 rounded-lg border ${inv.status === "paid"
+                    ? (selected?.id === inv.id ? "bg-white/10 border-white/10 text-white" : "bg-emerald-50 border-emerald-100 text-emerald-600")
+                    : (selected?.id === inv.id ? "bg-[#ed5518] border-[#ed5518] text-white" : "bg-amber-50 border-amber-100 text-amber-600")
+                    }`}>
+                    {inv.status === 'paid' ? 'Payée' : 'En attente'}
+                  </span>
+                </div>
               </button>
             ))}
           </div>
         </div>
 
+        {/* Detail Content */}
         {selected && (
-          <div className="rounded-[2.5rem] bg-white p-8 shadow-sm">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-xs font-semibold uppercase tracking-wider text-slate-400">Facture</div>
-                <div className="text-2xl font-bold text-slate-900">#{selected.id.slice(0, 8)}</div>
-                <div className="text-sm text-slate-500">
-                  {new Date(selected.period_start).toLocaleDateString()} - {new Date(selected.period_end).toLocaleDateString()}
+          <div className="lg:col-span-8">
+            <div className="bg-white rounded-[2.5rem] border border-noir/5 overflow-hidden flex flex-col shadow-sm">
+              {/* Facture Header */}
+              <div className="p-10 border-b border-noir/5 bg-noir/[0.01] flex flex-wrap items-center justify-between gap-6">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-3">
+                    <span className="text-[11px] font-bold uppercase tracking-[0.4em] text-noir/20">Facture de services</span>
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#ed5518]"></span>
+                  </div>
+                  <h2 className="text-4xl font-display italic text-noir leading-none">#{selected.id.slice(0, 8)}</h2>
+                  <p className="text-xs text-noir/40 font-medium font-body tracking-wider">
+                    {new Date(selected.period_start).toLocaleDateString('fr-FR')} — {new Date(selected.period_end).toLocaleDateString('fr-FR')}
+                  </p>
+                </div>
+
+                <button
+                  onClick={downloadInvoice}
+                  className="flex items-center gap-4 rounded-xl bg-noir px-8 py-5 text-[10px] font-bold uppercase tracking-[0.2em] text-white hover:bg-[#ed5518] transition-all hover:-translate-y-1 active:translate-y-0"
+                >
+                  <Download size={16} />
+                  <span>Exporter (PDF)</span>
+                </button>
+              </div>
+
+              {/* Table Table */}
+              <div className="p-10">
+                <table className="w-full">
+                  <thead>
+                    <tr className="text-[10px] font-bold uppercase tracking-[0.3em] text-noir/20 border-b border-noir/5">
+                      <th className="pb-6 text-left font-bold">Mission</th>
+                      <th className="pb-6 text-left font-bold">Date</th>
+                      <th className="pb-6 text-left font-bold">Détails</th>
+                      <th className="pb-6 text-right font-bold">Montant HT</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-noir/[0.03]">
+                    {loadingOrders ? (
+                      <tr><td colSpan="4" className="py-20 text-center"><Loader2 className="animate-spin h-6 w-6 mx-auto text-noir/10" /></td></tr>
+                    ) : orders.length === 0 ? (
+                      <tr><td colSpan="4" className="py-12 text-center text-noir/30 italic text-sm">Aucune activité enregistrée.</td></tr>
+                    ) : (
+                      orders.map((o) => (
+                        <tr key={o.id} className="group hover:bg-noir/[0.01] transition-colors">
+                          <td className="py-6 font-display italic text-lg text-noir group-hover:text-[#ed5518] transition-colors">#{o.id.slice(0, 8)}</td>
+                          <td className="py-6 text-[11px] font-medium text-noir/50 uppercase tracking-wider">{new Date(o.created_at).toLocaleDateString('fr-FR')}</td>
+                          <td className="py-6 text-[13px] text-noir/60">{o.pickup_city || "Course Locale"}</td>
+                          <td className="py-6 text-right font-display italic text-lg text-noir">{Number(o.price_ht).toFixed(2)}€</td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Total Card */}
+              <div className="mt-auto p-10 bg-noir text-white flex flex-col md:flex-row md:items-end md:justify-between gap-10">
+                <div className="space-y-1">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-white/30">Total Honoraires TTC</p>
+                  <p className="text-7xl font-display italic leading-none">
+                    {(orders.reduce((sum, o) => sum + (Number(o.price_ht) || 0), 0) * 1.2).toFixed(2)}€
+                  </p>
+                  <div className="flex items-center gap-4 pt-4">
+                    <p className="text-xs font-bold text-white/20 tracking-widest">Comprenant {(orders.reduce((sum, o) => sum + (Number(o.price_ht) || 0), 0) * 0.2).toFixed(2)}€ de TVA (20%)</p>
+                  </div>
+                </div>
+
+                <div className="flex flex-col items-end gap-3">
+                  <div className="flex items-center gap-3 text-emerald-400">
+                    <div className="h-1.5 w-1.5 rounded-full bg-emerald-400"></div>
+                    <span className="text-[10px] font-black uppercase tracking-widest">Facturation Terminée</span>
+                  </div>
+                  <p className="text-[10px] text-white/30 font-medium tracking-widest italic leading-relaxed text-right md:max-w-xs">
+                    Le règlement a été traité sur votre compte client One Connexion.
+                  </p>
                 </div>
               </div>
-              <span className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wide ${selected.status === "paid" ? "bg-emerald-50 text-emerald-600" : "bg-amber-50 text-amber-600"}`}>
-                {selected.status}
-              </span>
             </div>
-
-            <div className="mt-6 overflow-x-auto">
-              <table className="w-full text-left">
-                <thead>
-                  <tr className="text-xs font-bold uppercase tracking-wider text-slate-400 border-b border-slate-100">
-                    <th className="pb-3">Commande</th>
-                    <th className="pb-3">Date</th>
-                    <th className="pb-3">Départ</th>
-                    <th className="pb-3 text-right">Prix HT</th>
-                  </tr>
-                </thead>
-                <tbody className="text-sm">
-                  {loadingOrders ? (
-                    <tr><td colSpan="4" className="py-4 text-center text-slate-400">Chargement...</td></tr>
-                  ) : orders.length === 0 ? (
-                    <tr><td colSpan="4" className="py-4 text-center text-slate-400 italic">Aucune commande associée.</td></tr>
-                  ) : (
-                    orders.map((o) => (
-                      <tr key={o.id} className="border-b border-slate-50 last:border-0">
-                        <td className="py-3 font-semibold text-slate-900">#{o.id.slice(0, 8)}</td>
-                        <td className="py-3 text-slate-500">{new Date(o.created_at).toLocaleDateString()}</td>
-                        <td className="py-3 text-slate-500">{o.pickup_city}</td>
-                        <td className="py-3 text-right font-semibold text-slate-900">{Number(o.price_ht).toFixed(2)}€</td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
-
-            <div className="mt-8 flex items-center justify-between border-t border-slate-100 pt-6">
-              <div>
-                <div className="text-xs font-bold uppercase tracking-wider text-slate-400">Total TTC</div>
-                <div className="text-3xl font-bold text-slate-900">
-                  {(orders.reduce((sum, o) => sum + (Number(o.price_ht) || 0), 0) * 1.2).toFixed(2)}€
-                </div>
-              </div>
-              <button onClick={downloadInvoice} className="flex items-center gap-2 rounded-full bg-slate-900 px-5 py-3 text-xs font-bold text-white hover:bg-slate-800 transition-colors">
-                <Download size={16} />
-                Télécharger PDF
-              </button>
-            </div>
-
           </div>
         )}
       </div>
     </div>
   );
 }
-
-
-
