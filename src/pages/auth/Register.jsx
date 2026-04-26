@@ -200,6 +200,9 @@ export default function Register() {
                             <div className="h-px w-4 bg-noir/20"></div>
                             <p className="text-noir/40 text-[10px] font-bold uppercase tracking-[0.2em]">Inscrivez votre entreprise en quelques instants</p>
                         </div>
+                        <p className="mt-6 text-sm text-noir/60 leading-relaxed font-light max-w-lg">
+                            Rejoignez le réseau exclusif One Connexion et bénéficiez d'une facturation centralisée, de tarifs négociés et d'un tableau de bord professionnel dédié pour piloter l'ensemble de vos flux logistiques.
+                        </p>
                     </div>
 
                     <form onSubmit={handleSubmit} className="space-y-12">
