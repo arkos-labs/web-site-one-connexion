@@ -113,10 +113,6 @@ export default function Login() {
               <div className="h-px w-4 bg-noir/20"></div>
               <p className="text-noir/40 text-[10px] font-bold uppercase tracking-[0.2em]">Accédez à votre espace partenaire</p>
             </div>
-            <p className="mt-6 text-sm text-noir/60 leading-relaxed font-light">
-              Connectez-vous pour piloter l'ensemble de vos expéditions B2B. Suivez vos chauffeurs en temps réel,
-              consultez vos factures centralisées, et gérez vos expéditions prioritaires en toute simplicité.
-            </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
