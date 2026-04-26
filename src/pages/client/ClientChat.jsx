@@ -31,7 +31,6 @@ export default function ClientChat() {
                 setProfile(p);
             }
 
-            // Fetch any admin to send message to
             const { data: admins } = await supabase
                 .from('profiles')
                 .select('id')
@@ -55,7 +54,6 @@ export default function ClientChat() {
 
         const channelId = `chat-${[currentUser.id, adminId].sort().join('-')}`;
 
-        // Realtime subscription
         const channel = supabase
             .channel(channelId)
             .on('postgres_changes', {
@@ -84,12 +82,10 @@ export default function ClientChat() {
             })
             .on('broadcast', { event: 'new_message' }, (payload) => {
                 const msg = payload.payload;
-                // Broadcast message received from admin
                 setMessages(prev => (prev.some(m => m.id === msg.id) ? prev : [...prev, msg]));
             })
             .subscribe((status) => {
                 if (status === 'SUBSCRIBED') {
-                    // Chat channel subscribed
                 }
             });
 
@@ -167,7 +163,6 @@ export default function ClientChat() {
             setMessages(prev => prev.filter(m => m.id !== tempId));
             alert("Erreur d'envoi");
         } else if (data) {
-            // Broadcast for zero-latency
             window._currentClientChatChannel?.send({
                 type: 'broadcast',
                 event: 'new_message',
@@ -179,61 +174,75 @@ export default function ClientChat() {
         setSending(false);
     };
 
-    if (loading) return <div className="flex justify-center p-20"><Loader2 className="animate-spin text-slate-400" /></div>;
+    if (loading) {
+        return (
+            <div className="flex flex-col items-center justify-center h-[60vh] space-y-4">
+                <Loader2 className="h-10 w-10 animate-spin text-noir/10" />
+                <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-noir/20">Connexion au support</p>
+            </div>
+        );
+    }
 
     return (
-        <div className="flex flex-col h-[calc(100vh-120px)] pt-4 md:pt-6">
-            <header className="mb-8">
-                <h1 className="text-4xl font-extrabold text-slate-900">
-                    {profile?.role === 'courier' ? 'Messagerie Chauffeur' : 'Support Client'}
+        <div className="flex flex-col h-[calc(100vh-140px)] font-body">
+            <header className="mb-12 space-y-4 border-b border-noir/5 pb-8">
+                <h1 className="text-6xl font-display italic text-noir leading-none">
+                    {profile?.role === 'courier' ? <span>Chat <span className="text-[#ed5518]">Chauffeur.</span></span> : <span>Support <span className="text-[#ed5518]">Direct.</span></span>}
                 </h1>
-                <p className="text-base font-medium text-slate-500 mt-1">Posez vos questions directement à notre équipe logistique.</p>
+                <p className="text-noir/40 font-medium tracking-[0.1em]">Échangez en temps réel avec notre équipe logistique.</p>
             </header>
 
-            <div className="flex-1 bg-white rounded-[2rem] shadow-xl shadow-slate-200/40 border border-slate-100 flex flex-col overflow-hidden">
-                {/* Chat Header */}
-                <div className="px-8 py-5 border-b border-slate-50 flex items-center gap-4 bg-white">
-                    <div className="relative">
-                        <div className="h-12 w-12 rounded-full bg-[#ed5518] flex items-center justify-center text-white font-black text-lg shadow-md shadow-[#ed5518]/20">
-                            OC
+            <div className="flex-1 bg-white rounded-[2.5rem] border border-noir/5 flex flex-col overflow-hidden shadow-2xl shadow-noir/[0.02]">
+                <div className="px-10 py-6 border-b border-noir/[0.03] flex items-center justify-between bg-white">
+                    <div className="flex items-center gap-5">
+                        <div className="relative group">
+                            <div className="h-14 w-14 rounded-2xl bg-noir flex items-center justify-center text-white font-display italic text-xl shadow-xl shadow-noir/20 overflow-hidden relative">
+                                <div className="absolute inset-0 bg-gradient-to-tr from-[#ed5518]/20 to-transparent"></div>
+                                OC
+                            </div>
+                            <div className="absolute -bottom-1 -right-1 h-4 w-4 rounded-full border-4 border-white bg-emerald-500 shadow-sm"></div>
                         </div>
-                        <div className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-white bg-[#ed5518]"></div>
-                    </div>
-                    <div>
-                        <div className="text-xl font-bold text-slate-900">Support One Connexion</div>
-                        <div className="text-xs font-bold text-[#ed5518] uppercase tracking-widest">Équipe en ligne</div>
+                        <div className="space-y-0.5">
+                            <div className="text-lg font-display italic text-noir leading-none">One Connexion Support</div>
+                            <div className="flex items-center gap-2">
+                                <span className="text-[10px] font-black uppercase tracking-[0.15em] text-[#ed5518]">En Ligne</span>
+                                <span className="h-1 w-1 rounded-full bg-[#ed5518]/30"></span>
+                                <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-noir/20">Temps de réponse habituel : &lt; 5 min</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                {/* Messages List */}
-                <div className="flex-1 overflow-y-auto p-8 space-y-6 bg-white">
+                <div className="flex-1 overflow-y-auto px-10 py-10 space-y-8 bg-noir/[0.005]">
                     {messages.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center h-full text-slate-300">
-                            <div className="h-20 w-20 rounded-full bg-slate-50 flex items-center justify-center mb-4">
-                                <MessageSquare size={32} className="opacity-20" />
+                        <div className="h-full flex flex-col items-center justify-center space-y-8 py-20 grayscale opacity-20">
+                            <div className="h-32 w-32 rounded-[3rem] border border-noir/10 flex items-center justify-center">
+                                <MessageSquare size={48} strokeWidth={1} />
                             </div>
-                            <p className="text-sm font-medium">Posez votre première question ici.</p>
+                            <p className="text-[10px] font-bold uppercase tracking-[0.3em] max-w-[180px] text-center leading-relaxed">
+                                Démarrer une conversation confidentielle
+                            </p>
                         </div>
                     ) : (
                         messages.map((m) => {
-                            const _isFromAdmin = m.is_admin_message === true;
-                            const isFromMe = m.sender_id === currentUser?.id;
-                            const isMe = isFromMe; // For the client/driver, 'Me' is whoever is logged in
+                            const isMe = m.sender_id === currentUser?.id;
 
                             return (
-                                <div key={m.id} className={`flex ${isMe ? "justify-end" : "justify-start"}`}>
-                                    <div className={`max-w-[75%] group relative flex flex-col ${isMe ? "items-end" : "items-start"}`}>
-                                        <div className={`mb-1 text-xs font-semibold uppercase tracking-widest ${isMe ? "text-slate-400" : "text-[#ed5518]"}`}>
-                                            {isMe ? "Vous" : "Support"}
+                                <div key={m.id} className={`flex ${isMe ? "justify-end" : "justify-start"} animate-in fade-in slide-in-from-bottom-4 duration-500`}>
+                                    <div className={`max-w-[70%] space-y-2 flex flex-col ${isMe ? "items-end" : "items-start"}`}>
+                                        <div className={`flex items-center gap-3 px-1 ${isMe ? "flex-row-reverse" : "flex-row"}`}>
+                                            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-noir/20">
+                                                {isMe ? "Votre Message" : "One Connexion"}
+                                            </span>
+                                            <span className="text-[9px] font-bold text-noir/10">
+                                                {new Date(m.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                            </span>
                                         </div>
-                                        <div className={`px-6 py-3.5 text-[17px] font-medium shadow-sm transition-all ${isMe
-                                            ? "bg-[#0f172a] text-white rounded-[2rem] rounded-br-none hover:shadow-md"
-                                            : "bg-[#f1f5f9] text-slate-700 rounded-[2rem] rounded-bl-none hover:bg-slate-200"
+                                        <div className={`px-8 py-5 text-[15px] leading-relaxed shadow-sm transition-all border ${isMe
+                                            ? "bg-noir text-white rounded-[2rem] rounded-tr-sm border-noir shadow-xl shadow-noir/10"
+                                            : "bg-white text-noir/80 rounded-[2rem] rounded-tl-sm border-noir/5 shadow-sm"
                                             }`}>
                                             {m.content}
-                                        </div>
-                                        <div className={`mt-1.5 px-2 text-xs font-bold text-slate-300 ${isMe ? "text-right" : "text-left"}`}>
-                                            {new Date(m.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                         </div>
                                     </div>
                                 </div>
@@ -241,38 +250,43 @@ export default function ClientChat() {
                         })
                     )}
                     {isPartnerTyping && (
-                        <div className="flex items-center gap-2 text-xs font-bold text-[#ed5518] animate-pulse pb-4">
-                            <div className="flex gap-1">
-                                <span className="h-1.5 w-1.5 rounded-full bg-[#ed5518] animate-bounce [animation-delay:-0.3s]"></span>
-                                <span className="h-1.5 w-1.5 rounded-full bg-[#ed5518] animate-bounce [animation-delay:-0.15s]"></span>
-                                <span className="h-1.5 w-1.5 rounded-full bg-[#ed5518] animate-bounce"></span>
+                        <div className="flex items-center gap-4 px-2 animate-pulse">
+                            <div className="flex gap-1.5">
+                                <span className="h-1 w-1 rounded-full bg-[#ed5518] animate-bounce [animation-delay:-0.3s]"></span>
+                                <span className="h-1 w-1 rounded-full bg-[#ed5518] animate-bounce [animation-delay:-0.15s]"></span>
+                                <span className="h-1 w-1 rounded-full bg-[#ed5518] animate-bounce"></span>
                             </div>
-                            Support est en train d'écrire...
+                            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-[#ed5518]">Support rédige une réponse</span>
                         </div>
                     )}
                     <div ref={messagesEndRef} />
                 </div>
 
-                {/* Input Area */}
-                <form onSubmit={sendMessage} className="p-6 bg-white border-t border-slate-50 flex gap-3">
-                    <input
-                        className="flex-1 rounded-full border border-slate-200 bg-slate-50/50 px-6 py-4 text-base font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-100 focus:bg-white transition-all"
-                        placeholder="Comment pouvons-nous vous aider ?"
-                        value={newMessage}
-                        onChange={(e) => {
-                            setNewMessage(e.target.value);
-                            handleTyping();
-                        }}
-                    />
-                    <button
-                        type="submit"
-                        disabled={sending || !newMessage.trim() || !adminId}
-                        className="rounded-full bg-[#64748b] px-8 py-4 text-white font-bold text-sm uppercase tracking-wider shadow-lg shadow-slate-200 disabled:opacity-50 disabled:shadow-none transition-all hover:bg-slate-700 hover:scale-105 active:scale-95 flex items-center gap-2"
-                    >
-                        <span>Envoyer</span>
-                        <Send size={14} className="-mt-0.5" />
-                    </button>
-                </form>
+                <div className="p-8 bg-white border-t border-noir/[0.03]">
+                    <form onSubmit={sendMessage} className="relative flex items-center">
+                        <input
+                            className="w-full bg-noir/[0.01] border border-noir/5 rounded-[2rem] px-8 py-6 pr-40 text-sm font-medium focus:outline-none focus:bg-white focus:border-[#ed5518]/30 transition-all placeholder:italic placeholder:text-noir/20"
+                            placeholder="Décrivez votre demande ou question ici..."
+                            value={newMessage}
+                            onChange={(e) => {
+                                setNewMessage(e.target.value);
+                                handleTyping();
+                            }}
+                        />
+                        <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                            {newMessage.trim() && (
+                                <button
+                                    type="submit"
+                                    disabled={sending || !adminId}
+                                    className="bg-noir text-white px-8 py-3.5 rounded-[1.5rem] text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-[#ed5518] transition-all transform active:scale-95 flex items-center gap-3 shadow-xl shadow-noir/10"
+                                >
+                                    Envoyer
+                                    <Send size={12} className="-rotate-12" />
+                                </button>
+                            )}
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     );

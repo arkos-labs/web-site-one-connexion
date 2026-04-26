@@ -17,7 +17,6 @@ export default function Addresses() {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [confirmId, setConfirmId] = useState(null);
 
-  // Autocomplete state
   const [suggestions, setSuggestions] = useState([]);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
 
@@ -154,58 +153,88 @@ export default function Addresses() {
   };
 
   return (
-    <div className="p-4 md:p-8 pt-4 md:pt-6 space-y-8">
-      <header className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-        <header className="mb-6">
-          <h1 className="text-4xl font-extrabold text-slate-900">Carnet d'Adresses 📍</h1>
-          <p className="mt-2 text-base font-medium text-slate-500">Enregistrez vos lieux fréquents pour commander plus vite.</p>
-        </header>
-        <button onClick={openCreate} className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-slate-900/20 transition-transform hover:scale-105">
-          <Plus size={16} /> Ajouter une adresse
+    <div className="font-body pb-20">
+      <header className="mb-16 space-y-4 border-b border-noir/5 pb-10 flex flex-col md:flex-row md:items-end md:justify-between">
+        <div className="space-y-4">
+          <h1 className="text-6xl font-display italic text-noir leading-none">
+            Mon <span className="text-[#ed5518]">Carnet.</span>
+          </h1>
+          <p className="text-noir/40 font-medium tracking-[0.1em]">Gérez vos lieux fréquents pour commander en quelques secondes.</p>
+        </div>
+        <button
+          onClick={openCreate}
+          className="px-8 py-5 rounded-xl bg-noir text-white text-[10px] font-bold uppercase tracking-[0.25em] hover:bg-[#ed5518] transition-all hover:-translate-y-1 active:translate-y-0 shadow-xl shadow-noir/20 flex items-center gap-4"
+        >
+          <Plus size={16} />
+          <span>Nouveau Lieu</span>
         </button>
       </header>
 
       {loading ? (
-        <div className="text-center py-20 text-slate-400">Chargement...</div>
+        <div className="flex flex-col items-center justify-center py-40 space-y-4">
+          <Loader2 className="h-10 w-10 animate-spin text-noir/10" />
+          <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-noir/20">Synchronisation des points</p>
+        </div>
       ) : items.length === 0 ? (
-        <div className="text-center py-20 rounded-[2rem] bg-slate-50 border border-slate-100">
-          <MapPin className="mx-auto h-12 w-12 text-slate-300 mb-4" />
-          <h3 className="text-lg font-bold text-slate-900">Aucune adresse enregistrée</h3>
-          <p className="text-slate-500 mb-6">Ajoutez vos lieux fréquents pour gagner du temps.</p>
-          <button onClick={openCreate} className="px-6 py-2 rounded-full bg-white border border-slate-200 text-slate-700 font-bold hover:bg-slate-50">Ajouter maintenant</button>
+        <div className="max-w-3xl mx-auto py-20 text-center space-y-12">
+          <div className="p-20 rounded-[3rem] border border-noir/5 bg-white/50 flex flex-col items-center space-y-8">
+            <div className="h-24 w-24 rounded-full border border-noir/5 flex items-center justify-center text-noir/10 bg-noir/[0.01]">
+              <MapPin size={40} strokeWidth={1} />
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-2xl font-display italic text-noir">Carnet d'adresses vide.</h3>
+              <p className="text-sm text-noir/40 max-w-sm mx-auto leading-relaxed">
+                Enregistrez vos adresses favorites pour ne plus avoir à les saisir lors de vos prochaines expéditions.
+              </p>
+            </div>
+            <button
+              onClick={openCreate}
+              className="px-10 py-5 rounded-xl border border-noir/10 text-noir text-[10px] font-bold uppercase tracking-[0.2em] hover:border-noir transition-all"
+            >
+              Ajouter une première adresse
+            </button>
+          </div>
         </div>
       ) : (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {items.map((a) => (
-            <div key={a.id} className="group relative overflow-hidden rounded-[2rem] bg-white p-6 shadow-sm border border-slate-100 hover:shadow-md transition-all">
-              <div className="mb-4 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-50 text-[#ed5518]">
-                    <MapPin size={20} />
+            <div key={a.id} className="group relative bg-white rounded-[2.5rem] border border-noir/5 p-8 flex flex-col justify-between shadow-sm hover:shadow-2xl hover:shadow-noir/5 transition-all hover:border-[#ed5518]/20 group">
+              <div className="space-y-6 flex-1 flex flex-col">
+                <div className="flex items-start justify-between">
+                  <div className="space-y-1">
+                    <p className="text-[10px] font-black uppercase tracking-[0.25em] text-noir/20">Destination</p>
+                    <h3 className="text-2xl font-display italic text-noir leading-none group-hover:text-[#ed5518] transition-colors">{a.name}</h3>
                   </div>
-                  <div>
-                    <h3 className="font-bold text-slate-900 leading-tight">{a.name}</h3>
-                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">{a.city || 'Ville inconnue'}</p>
+                  <div className="h-12 w-12 rounded-2xl bg-noir/[0.02] border border-noir/5 flex items-center justify-center text-noir/10 group-hover:text-[#ed5518]/30 transition-all">
+                    <MapPin size={24} strokeWidth={1} />
                   </div>
+                </div>
+
+                <div className="p-5 rounded-2xl bg-noir/[0.01] border border-noir/5 flex-1 max-h-[100px] overflow-hidden">
+                  <p className="text-xs font-medium text-noir/60 leading-relaxed italic">
+                    {a.address_line}
+                  </p>
+                  {a.city && (
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-[#ed5518] mt-2 opacity-70">
+                      {a.city} • {a.postal_code}
+                    </p>
+                  )}
                 </div>
               </div>
 
-              <p className="text-sm text-slate-600 mb-6 leading-relaxed bg-slate-50 p-3 rounded-xl border border-slate-100">
-                {a.address_line}
-              </p>
-
-              <div className="flex gap-2">
+              <div className="mt-8 pt-8 border-t border-noir/5 flex items-center gap-3">
                 <button
                   onClick={() => openEdit(a)}
-                  className="flex-1 rounded-xl bg-slate-900 px-4 py-2.5 text-xs font-bold text-white transition-colors hover:bg-slate-800 flex items-center justify-center gap-2"
+                  className="flex-1 py-4 px-4 rounded-xl bg-noir text-white text-[10px] font-bold uppercase tracking-[0.15em] hover:bg-[#ed5518] transition-all flex items-center justify-center gap-3"
                 >
-                  <Edit2 size={14} /> Modifier
+                  <Edit2 size={12} />
+                  <span>Editer</span>
                 </button>
                 <button
                   onClick={() => askRemove(a.id)}
-                  className="rounded-xl bg-rose-50 px-4 py-2.5 text-xs font-bold text-rose-600 transition-colors hover:bg-rose-100 flex items-center justify-center"
+                  className="h-[52px] w-[52px] rounded-xl flex items-center justify-center bg-rose-50 text-rose-600 border border-rose-100 hover:bg-rose-100 transition-colors"
                 >
-                  <Trash2 size={16} />
+                  <Trash2 size={18} strokeWidth={1.5} />
                 </button>
               </div>
             </div>
@@ -213,77 +242,110 @@ export default function Addresses() {
         </div>
       )}
 
+      {/* Modal Form */}
       {open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm">
-          <div className="w-full max-w-md rounded-[2rem] bg-white p-6 shadow-2xl">
-            <div className="mb-6 flex items-center justify-between">
-              <h3 className="text-lg font-bold text-slate-900">{editingId ? "Modifier l'adresse" : "Nouvelle adresse"}</h3>
-              <button onClick={() => setOpen(false)} className="h-8 w-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-slate-100 hover:text-slate-900">✕</button>
-            </div>
-            <form onSubmit={submit} className="space-y-4">
-              <div>
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-400 ml-1">Nom du lieu</label>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-noir/40 backdrop-blur-sm p-4">
+          <div className="w-full max-w-lg rounded-[2.5rem] bg-white p-12 shadow-2xl border border-noir/5 relative">
+            <button
+              onClick={() => setOpen(false)}
+              className="absolute top-12 right-12 text-noir/20 hover:text-noir transition-colors text-[10px] font-bold uppercase tracking-widest"
+            >
+              Fermer
+            </button>
+
+            <header className="mb-10 space-y-2">
+              <h3 className="text-4xl font-display italic text-noir leading-none">
+                {editingId ? "Editer." : "Ajouter."}
+              </h3>
+              <p className="text-xs text-noir/40 font-medium tracking-wide italic">Détails de l'emplacement récurrent.</p>
+            </header>
+
+            <form onSubmit={submit} className="space-y-8">
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-noir/30 ml-1">Référence du lieu</label>
                 <input
-                  className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm focus:outline-none focus:ring-4 focus:ring-slate-100 transition-all placeholder:text-slate-300"
-                  placeholder="Ex: Siège Social, Entrepôt B..."
+                  className="w-full rounded-2xl border border-noir/5 bg-noir/[0.01] px-6 py-4 text-sm font-medium focus:bg-white focus:border-[#ed5518]/30 transition-all outline-none"
+                  placeholder="Ex: Entrepôt Nord, Siège, etc."
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  autoFocus
                 />
               </div>
-              <div className="relative">
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-400 ml-1">Adresse complète</label>
-                <div className="relative">
-                  <textarea
-                    rows={3}
-                    className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm focus:outline-none focus:ring-4 focus:ring-slate-100 transition-all placeholder:text-slate-300 resize-none"
-                    placeholder="Ex: 14 Rue des Lilas, 75019 Paris"
-                    value={form.line}
-                    onChange={handleAddressChange}
-                  />
-                  {loadingSuggestions && (
-                    <div className="absolute right-4 top-[50%] -translate-y-[50%] pt-2">
-                      <div className="h-4 w-4 animate-spin rounded-full border-2 border-slate-200 border-t-slate-500"></div>
-                    </div>
-                  )}
+
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-noir/30 ml-1">Adresse précise</label>
+                  <div className="relative">
+                    <textarea
+                      rows={3}
+                      className="w-full rounded-2xl border border-noir/5 bg-noir/[0.01] px-6 py-4 text-sm font-medium focus:bg-white focus:border-[#ed5518]/30 transition-all outline-none resize-none placeholder:italic"
+                      placeholder="Saisissez l'adresse..."
+                      value={form.line}
+                      onChange={handleAddressChange}
+                    />
+                    {loadingSuggestions && (
+                      <div className="absolute right-6 bottom-6">
+                        <Loader2 className="animate-spin text-noir/10 h-5 w-5" />
+                      </div>
+                    )}
+                  </div>
                 </div>
+
                 {suggestions.length > 0 && (
-                  <div className="absolute z-10 mt-2 w-full overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-xl">
+                  <div className="overflow-hidden rounded-2xl border border-noir/5 bg-white shadow-xl max-h-64 overflow-y-auto">
                     {suggestions.map((s, i) => (
                       <button
                         type="button"
                         key={i}
                         onClick={() => selectSuggestion(s)}
-                        className="w-full border-b border-slate-50 px-4 py-3 text-left text-sm hover:bg-slate-50 last:border-0"
+                        className="w-full border-b border-noir/[0.03] px-6 py-4 text-left text-xs font-medium hover:bg-noir/[0.02] last:border-0 group flex items-center gap-4"
                       >
-                        <div className="font-medium text-slate-900">{s.label}</div>
+                        <MapPin size={14} className="text-noir/20 group-hover:text-[#ed5518]" />
+                        <span className="text-noir/60">{s.label}</span>
                       </button>
                     ))}
                   </div>
                 )}
               </div>
-              <div className="flex gap-3 pt-2">
-                <button type="button" onClick={() => setOpen(false)} className="flex-1 rounded-xl bg-slate-100 px-5 py-3 text-sm font-bold text-slate-700 hover:bg-slate-200 transition-colors">Annuler</button>
-                <button type="submit" className="flex-1 rounded-xl bg-slate-900 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-slate-900/20 hover:scale-105 transition-transform">Enregistrer</button>
+
+              <div className="flex gap-4 pt-6">
+                <button type="button" onClick={() => setOpen(false)} className="flex-1 py-5 text-[10px] font-bold uppercase tracking-widest text-noir/30 hover:text-noir transition-colors">
+                  Annuler
+                </button>
+                <button type="submit" className="flex-[2] py-5 rounded-xl bg-noir text-white text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-[#ed5518] shadow-xl shadow-noir/20 transition-all">
+                  Enregistrer l'adresse
+                </button>
               </div>
             </form>
           </div>
         </div>
       )}
 
+      {/* Confirm Remove */}
       {confirmOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm">
-          <div className="w-full max-w-sm rounded-[2rem] bg-white p-6 shadow-2xl text-center">
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-rose-50 text-rose-500">
-              <Trash2 size={32} />
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-noir/40 backdrop-blur-sm p-4">
+          <div className="w-full max-w-sm rounded-[3rem] bg-white p-12 shadow-2xl border border-noir/5 text-center space-y-8">
+            <div className="mx-auto h-20 w-20 rounded-full bg-rose-50 border border-rose-100 flex items-center justify-center text-rose-500">
+              <Trash2 size={32} strokeWidth={1} />
             </div>
-            <h3 className="mb-2 text-lg font-bold text-slate-900">Confirmer la suppression ?</h3>
-            <p className="text-sm text-slate-500 mb-6">
-              Cette action est irréversible. L'adresse sera retirée de votre carnet.
-            </p>
-            <div className="grid grid-cols-2 gap-3">
-              <button onClick={() => { setConfirmOpen(false); setConfirmId(null); }} className="rounded-xl bg-slate-100 px-5 py-3 text-sm font-bold text-slate-700 hover:bg-slate-200 transition-colors">Annuler</button>
-              <button onClick={confirmRemove} className="rounded-xl bg-rose-500 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-rose-500/30 hover:bg-rose-600 transition-colors">Supprimer</button>
+            <div className="space-y-2">
+              <h3 className="text-2xl font-display italic text-noir leading-none">Supprimer ?</h3>
+              <p className="text-xs text-noir/40 leading-relaxed italic">
+                Cette action est irréversible. Le point de passage sera retiré de votre base de données.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <button
+                onClick={() => { setConfirmOpen(false); setConfirmId(null); }}
+                className="py-4 text-[9px] font-black uppercase tracking-widest text-noir/30 hover:text-noir transition-colors"
+              >
+                Garder
+              </button>
+              <button
+                onClick={confirmRemove}
+                className="py-4 rounded-xl bg-rose-500 text-white text-[9px] font-black uppercase tracking-widest shadow-lg shadow-rose-900/20 hover:bg-rose-600 transition-colors"
+              >
+                Confirmer
+              </button>
             </div>
           </div>
         </div>

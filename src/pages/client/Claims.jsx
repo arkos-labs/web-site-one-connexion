@@ -11,7 +11,7 @@ export default function Claims() {
 
   useEffect(() => {
     fetchClaims();
-    
+
     const channel = supabase
       .channel('client-claims-updates')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, () => fetchClaims())
@@ -45,80 +45,95 @@ export default function Claims() {
 
   const getStatusLabel = (status) => {
     switch (status) {
-      case 'pending': return 'En attente';
-      case 'resolved': return 'Résolu';
+      case 'pending': return 'Instruction';
+      case 'resolved': return 'Clôturé';
       default: return status;
     }
   };
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-32 gap-3 text-slate-400">
-        <Loader2 className="animate-spin" size={24} />
-        <span className="text-sm font-bold tracking-widest uppercase">Chargement de vos dossiers…</span>
+      <div className="flex flex-col items-center justify-center py-40 space-y-4">
+        <Loader2 className="h-10 w-10 animate-spin text-noir/10" />
+        <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-noir/20">Accès aux dossiers</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6 pb-20">
-      <header className="mb-8">
-        <h1 className="text-4xl font-extrabold text-slate-900">Mes Litiges ⚖️</h1>
-        <p className="mt-2 text-base font-medium text-slate-500">Suivez l'état de vos réclamations et échangez avec notre support.</p>
+    <div className="font-body pb-20">
+      <header className="mb-16 space-y-4 border-b border-noir/5 pb-10">
+        <h1 className="text-6xl font-display italic text-noir leading-none">
+          Mes <span className="text-[#ed5518]">Litiges.</span>
+        </h1>
+        <p className="text-noir/40 font-medium tracking-[0.1em]">Suivi de vos réclamations et assistance technique.</p>
       </header>
 
       {orders.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-[2.5rem] bg-white p-20 text-center shadow-sm border border-slate-100">
-          <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-3xl bg-slate-50 text-slate-400">
-            <AlertTriangle size={40} strokeWidth={1.5} />
+        <div className="max-w-3xl mx-auto py-20 text-center space-y-12">
+          <div className="p-20 rounded-[3rem] border border-noir/5 bg-white/50 flex flex-col items-center space-y-6">
+            <div className="h-20 w-20 rounded-full border border-noir/5 flex items-center justify-center text-noir/10">
+              <AlertTriangle size={40} strokeWidth={1} />
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-xl font-display italic text-noir">Aucun litige en cours.</h3>
+              <p className="text-sm text-noir/40 max-w-xs mx-auto leading-relaxed">
+                Tous vos dossiers sont en ordre. Si vous rencontrez un problème, signalez-le depuis les détails de la commande concernée.
+              </p>
+            </div>
           </div>
-          <h3 className="text-xl font-bold text-slate-900">Aucun litige en cours</h3>
-          <p className="mt-2 max-w-sm text-sm text-slate-500">Tous vos dossiers sont en ordre. Si vous rencontrez un problème avec une mission, signalez-le depuis les détails de la commande.</p>
         </div>
       ) : (
-        <div className="grid gap-4">
+        <div className="grid gap-6">
           {orders.map((o) => (
             <div
               key={o.id}
               onClick={() => navigate(`/dashboard-client/orders/${o.id}`)}
-              className="group relative flex flex-col md:flex-row md:items-center justify-between gap-4 rounded-[2rem] bg-white p-6 shadow-sm border border-slate-100 hover:border-[#ed5518]/30 transition-all cursor-pointer hover:shadow-md"
+              className="group relative bg-white rounded-[2rem] border border-noir/5 p-8 flex flex-col lg:flex-row lg:items-center justify-between gap-8 transition-all hover:border-[#ed5518]/20 hover:shadow-xl hover:shadow-noir/5 cursor-pointer overflow-hidden"
             >
-              <div className="flex items-center gap-4">
-                <div className={`flex h-14 w-14 items-center justify-center rounded-2xl ${o.claim_status === 'resolved' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600 shadow-lg shadow-rose-900/5'}`}>
-                  <AlertTriangle size={24} />
+              <div className="flex items-center gap-6">
+                <div className={`shrink-0 h-16 w-16 flex items-center justify-center rounded-2xl border ${o.claim_status === 'resolved'
+                  ? 'bg-emerald-50 border-emerald-100 text-emerald-600'
+                  : 'bg-rose-50 border-rose-100 text-rose-600'
+                  }`}>
+                  <AlertTriangle size={24} strokeWidth={1.5} />
                 </div>
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Mission #{o.id.slice(0, 8)}</span>
-                    <span className={`h-1.5 w-1.5 rounded-full ${o.claim_status === 'resolved' ? 'bg-emerald-500' : 'bg-rose-500 animate-pulse'}`} />
+
+                <div className="space-y-1">
+                  <div className="flex items-center gap-3">
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-noir/30">Dossier #{o.id.slice(0, 8)}</span>
+                    <span className={`h-1 w-1 rounded-full ${o.claim_status === 'resolved' ? 'bg-emerald-500' : 'bg-rose-500 animate-pulse'}`} />
                   </div>
-                  <h4 className="text-sm font-black text-slate-900 group-hover:text-[#ed5518] transition-colors">{o.pickup_city} → {o.delivery_city}</h4>
-                  <div className="mt-1 flex items-center gap-3">
-                    <div className="flex items-center gap-1 text-[10px] font-bold text-slate-500 uppercase tracking-tight">
-                       <Clock size={10} /> Ouvert le {new Date(o.claim_opened_at || o.created_at).toLocaleDateString()}
-                    </div>
+                  <h4 className="text-2xl font-display italic text-noir group-hover:text-[#ed5518] transition-colors leading-none pb-1">
+                    {o.pickup_city} → {o.delivery_city}
+                  </h4>
+                  <div className="flex items-center gap-4 text-[10px] font-bold text-noir/20 uppercase tracking-widest">
+                    <span className="flex items-center gap-1.5"><Clock size={12} /> Ouvert le {new Date(o.claim_opened_at || o.created_at).toLocaleDateString('fr-FR')}</span>
                   </div>
                 </div>
               </div>
 
-              <div className="flex flex-col md:items-end gap-3">
-                <div className="flex items-center gap-2">
-                   {o.claim_reply && (
-                     <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-600 border border-blue-100 text-[10px] font-black uppercase tracking-widest">
-                        <MessageSquare size={10} /> Réponse reçue
-                     </div>
-                   )}
-                   <div className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border ${o.claim_status === 'resolved' ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : 'bg-rose-50 text-rose-600 border-rose-200'}`}>
+              <div className="flex flex-col lg:items-end gap-3 lg:pr-10">
+                <div className="flex items-center gap-3">
+                  {o.claim_reply && (
+                    <span className="px-4 py-2 rounded-lg bg-noir text-white text-[9px] font-black uppercase tracking-[0.2em]">
+                      Message Reçu
+                    </span>
+                  )}
+                  <span className={`px-4 py-2 rounded-lg text-[9px] font-black uppercase tracking-[0.2em] border ${o.claim_status === 'resolved'
+                    ? 'bg-emerald-50 border-emerald-100 text-emerald-600'
+                    : 'bg-rose-50 border-rose-100 text-rose-600'
+                    }`}>
                     {getStatusLabel(o.claim_status)}
-                   </div>
+                  </span>
                 </div>
-                <div className="max-w-md md:text-right">
-                  <p className="text-xs text-slate-500 italic truncate italic">"{o.claim_notes || "Aucun détail..."}"</p>
+                <div className="max-w-md lg:text-right">
+                  <p className="text-sm text-noir/50 italic leading-relaxed truncate lg:max-w-xs">"{o.claim_notes || "Aucun détail..."}"</p>
                 </div>
               </div>
-              
-              <div className="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all translate-x-2 group-hover:translate-x-0 hidden md:block">
-                 <ArrowRight size={20} className="text-[#ed5518]" />
+
+              <div className="absolute right-8 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all translate-x-4 group-hover:translate-x-0 hidden lg:block">
+                <ArrowRight size={24} className="text-[#ed5518]" strokeWidth={1} />
               </div>
             </div>
           ))}
