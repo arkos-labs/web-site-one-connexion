@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://web-site-one-connexion.vercel.app/sitemap.xml

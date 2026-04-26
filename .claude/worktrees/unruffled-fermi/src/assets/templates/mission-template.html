@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmation de Prise en Charge - Logistique Services</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1a4d8c;
+            --primary-dark: #0e3a6b;
+            --accent: #e67e22;
+            --gray-light: #f8f9fa;
+            --gray: #6c757d;
+            --border: #dee2e6;
+            --success: #28a745;
+            --shadow: 0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.02);
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            font-size: 12px;
+            line-height: 1.5;
+            background: linear-gradient(135deg, #e9ecef 0%, #f1f3f5 100%);
+            padding: 30px 20px;
+            min-height: 100vh;
+        }
+
+        /* Conteneur principal avec effet de profondeur */
+        .document-container {
+            max-width: 210mm;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* Style A4 avec ombre moderne */
+        .page {
+            width: 100%;
+            min-height: 297mm;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.2);
+            padding: 12mm 15mm 15mm 15mm;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        /* Bouton d'impression flottant stylisé */
+        .print-actions {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            display: flex;
+            gap: 12px;
+            z-index: 1000;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(26,77,140,0.3);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        /* Header avec design épuré */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .logo-area {
+            flex: 1.2;
+        }
+
+        .logo-area h1 {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--primary);
+            margin: 0 0 8px 0;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .company-details {
+            color: var(--gray);
+            font-size: 10px;
+            line-height: 1.4;
+            border-left: 3px solid var(--accent);
+            padding-left: 12px;
+            margin-top: 6px;
+        }
+
+        .info-dossier {
+            flex: 1;
+            background: var(--gray-light);
+            padding: 15px 18px;
+            border-radius: 16px;
+            border-right: 4px solid var(--primary);
+        }
+
+        .info-dossier h2 {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--primary);
+            margin: 0 0 12px 0;
+            letter-spacing: 0.5px;
+            border-left: 4px solid var(--accent);
+            padding-left: 10px;
+        }
+
+        .dossier-number {
+            background: white;
+            padding: 8px 12px;
+            border-radius: 12px;
+            margin-top: 12px;
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--primary-dark);
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        /* Section adresses avec cartes */
+        .section-addresses {
+            display: flex;
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .address-card {
+            flex: 1;
+            background: linear-gradient(to bottom, #ffffff, #fefefe);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 16px 18px;
+            transition: all 0.2s;
+            box-shadow: var(--shadow);
+        }
+
+        .address-card h3 {
+            font-size: 13px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 2px dashed var(--border);
+            padding-bottom: 8px;
+        }
+
+        .address-content {
+            line-height: 1.55;
+            font-size: 11.5px;
+            color: #2c3e4f;
+        }
+
+        .badge-date {
+            background: #eef2ff;
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 30px;
+            font-size: 10px;
+            font-weight: 600;
+            margin-top: 10px;
+            color: var(--primary);
+        }
+
+        /* Tableau moderne */
+        .services-table {
+            width: 100%;
+            margin: 20px 0 25px;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .services-table th {
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+            font-size: 12px;
+            padding: 14px 12px;
+            text-align: left;
+        }
+
+        .services-table td {
+            padding: 14px 12px;
+            border-bottom: 1px solid var(--border);
+            background-color: white;
+        }
+
+        .services-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .services-table tr:hover td {
+            background-color: #fafcff;
+        }
+
+        /* Section total stylisée */
+        .total-section {
+            background: linear-gradient(95deg, #f8f9fc 0%, #ffffff 100%);
+            border-radius: 20px;
+            padding: 18px 24px;
+            margin: 20px 0 25px;
+            text-align: right;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+
+        .total-amount {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--primary);
+            display: inline-block;
+            background: white;
+            padding: 6px 20px;
+            border-radius: 60px;
+            letter-spacing: 1px;
+        }
+
+        .total-label {
+            font-size: 14px;
+            font-weight: 600;
+            margin-right: 15px;
+            color: #2c3e50;
+        }
+
+        /* Pied de page élégant */
+        .footer-note {
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 2px dotted var(--border);
+            font-size: 9px;
+            color: #6c86a3;
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .footer-note p {
+            margin: 4px 0;
+        }
+
+        .legal-mention {
+            font-weight: 500;
+            color: var(--accent);
+        }
+
+        /* badge supplémentaire */
+        .urgent-badge {
+            background: #fff3e0;
+            color: #e67e22;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 9px;
+            font-weight: bold;
+            margin-left: 8px;
+            display: inline-block;
+        }
+
+        /* Aperçu avant impression (simulation) */
+        .preview-notice {
+            background: #fef9e3;
+            border-left: 5px solid var(--accent);
+            padding: 10px 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            font-size: 11px;
+            color: #8a6e2b;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        /* Style pour l'impression */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+                margin: 0;
+            }
+            .page {
+                box-shadow: none;
+                border-radius: 0;
+                padding: 15mm;
+                margin: 0;
+                width: 100%;
+                min-height: 0;
+            }
+            .print-actions, .preview-notice {
+                display: none;
+            }
+            .address-card {
+                break-inside: avoid;
+                box-shadow: none;
+                border: 1px solid #ccc;
+            }
+            .services-table {
+                box-shadow: none;
+            }
+            .total-section {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+            .badge-date {
+                background: #eee;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 700px) {
+            .section-addresses {
+                flex-direction: column;
+            }
+            .header {
+                flex-direction: column;
+            }
+            .print-actions {
+                bottom: 15px;
+                right: 15px;
+                gap: 8px;
+            }
+            .btn {
+                padding: 8px 16px;
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="document-container">
+    <!-- Bandeau d'info aperçu avant impression -->
+    <div class="preview-notice" id="previewNotice">
+        <span>🖨️</span> Aperçu avant impression — Vérifiez les informations. Cliquez sur « Imprimer / PDF » pour générer un document officiel.
+        <span style="margin-left: auto;">📄 Format A4</span>
+    </div>
+
+    <div class="page" id="invoicePage">
+        <!-- EN-TÊTE -->
+        <div class="header">
+            <div class="logo-area">
+                <h1>LOGISTIQUE SERVICES</h1>
+                <div class="company-details">
+                    18 RUE DES ENTREPRENEURS • 75017 PARIS<br>
+                    📞 +33 (0)1 42 73 45 67 • ✉️ contact@logistique.fr<br>
+                    TVA : FR 12 3456789 • RCS Paris B 123 456 789
+                </div>
+            </div>
+            <div class="info-dossier">
+                <h2>📄 CONFIRMATION DE PRISE EN CHARGE</h2>
+                <div><strong>Client à facturer :</strong><br>ASSISTANCE PUBLIQUE - HÔPITAUX DE PARIS<br>
+                SIRET : 267 500 452 01928<br>
+                N° Engagement : 4512117140</div>
+                <div class="dossier-number">
+                    📁 DOSSIER N° 8968762
+                </div>
+            </div>
+        </div>
+
+        <!-- ADRESSES AVEC DESIGN CARTES -->
+        <div class="section-addresses">
+            <div class="address-card">
+                <h3>📍 ENLÈVEMENT <span class="urgent-badge">Prévu le 06/03/26 à 09:00</span></h3>
+                <div class="address-content">
+                    <strong>BICETRE POLYCLINIQUE</strong><br>
+                    78 RUE DU GENERAL LECLERC<br>
+                    94270 KREMLIN BICETRE<br>
+                    📞 01.45.21.21.21<br>
+                    <span class="badge-date">⚡ Horaire impératif</span>
+                </div>
+            </div>
+            <div class="address-card">
+                <h3>🚚 LIVRAISON <span class="urgent-badge">Avant 10:45</span></h3>
+                <div class="address-content">
+                    <strong>INSTITUT DU COEUR</strong><br>
+                    61 RUE FOIDEVEAU<br>
+                    75014 PARIS<br>
+                    Contact : Accueil Services — <strong>Plateforme logistique</strong><br>
+                    <span class="badge-date">⌛ Livraison express sanitaire</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- TABLEAU DES PRESTATIONS (dynamique amélioré) -->
+        <table class="services-table" id="servicesTable">
+            <thead>
+                <tr>
+                    <th>📦 Prestation</th>
+                    <th style="width: 100px;">Quantité</th>
+                    <th style="width: 130px; text-align: right;">Montant HT (€)</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <!-- Les lignes de prestations seront gérées dynamiquement pour évolutivité -->
+                <tr>
+                    <td><strong>COURSE EXPRESS 2 ROUES - URGENCE SANITAIRE</strong><br><span style="font-size: 10px; color: #6c757d;">Transport prioritaire, chrono dédié</span></td>
+                    <td>1,00</td>
+                    <td style="text-align: right; font-weight: 500;">13,00 €</td>
+                </tr>
+                <!-- Exemple ligne supplémentaire : possibilité d'ajouter plus de prestations via JS (démo) -->
+            </tbody>
+        </table>
+
+        <!-- ZONE TOTAL DYNAMIQUE -->
+        <div class="total-section" id="totalSection">
+            <span class="total-label">💰 TOTAL PRESTATIONS HT</span>
+            <span class="total-amount" id="totalAmount">13,00 €</span>
+            <div style="font-size: 10px; margin-top: 8px; color: #2c6e9e;">
+                TVA non applicable, art. 293 B du CGI
+            </div>
+        </div>
+
+        <!-- PIED DE PAGE AVEC INFORMATIONS LÉGALES -->
+        <div class="footer-note">
+            <div>
+                <p>🕒 Saisi le 05/03/2026 à 13:31 — Document généré numériquement et faisant foi.</p>
+                <p>🔒 PRIX HT CONVENU au moment de la prise de commande sous réserve de modifications contractuelles.</p>
+            </div>
+            <div class="legal-mention">
+                ✔️ Confirmation acceptée par le transporteur le 05/03/2026
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="print-actions">
+    <button class="btn btn-secondary" id="previewBtn" title="Aperçu avant impression">👁️ Aperçu rapide</button>
+    <button class="btn btn-primary" id="printBtn">🖨️ Imprimer / PDF</button>
+</div>
+
+<script>
+    // Données métier supplémentaires : on rend le tableau modifiable/évolutif pour plus de robustesse
+    // On permet également de calculer automatiquement le total si plusieurs prestations sont ajoutées.
+    // Pour améliorer l'expérience, on a rendu possible l'ajout d'une ligne de prestation supplémentaire (démonstration),
+    // mais on garde la cohérence avec le code élégant.
+    
+    // Configuration des prestations actuelles (on peut ajouter plus de prestations facilement)
+    let services = [
+        { description: "COURSE EXPRESS 2 ROUES - URGENCE SANITAIRE", detail: "Transport prioritaire, chrono dédié", quantity: 1.00, unitPrice: 13.00 }
+    ];
+
+    // Fonction pour recalculer et mettre à jour l'affichage du tableau et du total
+    function updateTableAndTotal() {
+        const tbody = document.getElementById('tableBody');
+        tbody.innerHTML = '';
+        let totalHT = 0;
+        
+        services.forEach((service, index) => {
+            const row = tbody.insertRow();
+            const amount = service.quantity * service.unitPrice;
+            totalHT += amount;
+            
+            // Colonne description
+            const cellDesc = row.insertCell(0);
+            cellDesc.innerHTML = `<strong>${escapeHtml(service.description)}</strong><br><span style="font-size: 10px; color: #6c757d;">${escapeHtml(service.detail)}</span>`;
+            
+            // Colonne quantité
+            const cellQty = row.insertCell(1);
+            cellQty.innerHTML = `${service.quantity.toFixed(2)}`;
+            cellQty.style.textAlign = 'center';
+            
+            // Colonne montant HT
+            const cellAmount = row.insertCell(2);
+            cellAmount.innerHTML = `${amount.toFixed(2)} €`;
+            cellAmount.style.textAlign = 'right';
+            cellAmount.style.fontWeight = '500';
+        });
+        
+        // Mise à jour du total
+        const totalSpan = document.getElementById('totalAmount');
+        if (totalSpan) {
+            totalSpan.innerText = `${totalHT.toFixed(2)} €`;
+        }
+        
+        // Option : on peut aussi ajouter une note si total = 0, mais pas nécessaire
+    }
+    
+    // Fonction utilitaire anti-XSS
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+            return c;
+        });
+    }
+    
+    // Initialisation du tableau avec données existantes + ajout d'une ligne de démonstration (optionnel pour montrer la flexibilité)
+    // On peut décider d'ajouter une ligne de prestation supplémentaire si on veut montrer l'évolutivité, mais on ne modifie pas le contenu initial.
+    // On permet toutefois de cloner ou d'ajouter, mais pour rester cohérent avec le visuel initial, on garde la prestation d'origine
+    // Cependant l'utilisateur pourra voir que le code supporte plusieurs lignes.
+    // Pour l'élégance et la robustesse, nous allons ajouter une ligne optionnelle seulement si un paramètre est actif? Non, on reste conforme au brief mais en améliorant la maintenabilité.
+    // Afin de ne pas dénaturer la demande initiale, on laisse exactement la même prestation mais on permet de débloquer l'ajout facilement.
+    // Pour un vrai besoin métier, on pourrait permettre d'ajouter une ligne via une UI mais cela dépérit le cadre.
+    // Cependant on va conserver la même donnée mais avec une gestion améliorée.
+    
+    // Ajout d'une fonctionnalité élégante : un double clic sur le total pour afficher le détail des prestations (interaction subtile)
+    const totalDiv = document.getElementById('totalSection');
+    if (totalDiv) {
+        totalDiv.addEventListener('dblclick', function() {
+            alert(`Détail des prestations :\n${services.map(s => `${s.description} x${s.quantity} = ${(s.quantity * s.unitPrice).toFixed(2)}€`).join('\n')}`);
+        });
+    }
+    
+    // Gestion de l'impression / PDF
+    const printBtn = document.getElementById('printBtn');
+    if (printBtn) {
+        printBtn.addEventListener('click', () => {
+            window.print();
+        });
+    }
+    
+    // Aperçu rapide : fait défiler jusqu'au document et montre une notification subtile
+    const previewBtn = document.getElementById('previewBtn');
+    if (previewBtn) {
+        previewBtn.addEventListener('click', () => {
+            const pageElement = document.getElementById('invoicePage');
+            if (pageElement) {
+                pageElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // Effet flash temporaire pour attirer l'attention
+                pageElement.style.transition = 'box-shadow 0.2s';
+                pageElement.style.boxShadow = '0 0 0 3px rgba(26,77,140,0.4)';
+                setTimeout(() => {
+                    pageElement.style.boxShadow = '';
+                }, 800);
+                // Optionnel : petit message discret
+                const notice = document.getElementById('previewNotice');
+                if (notice) {
+                    const originalText = notice.innerHTML;
+                    notice.style.backgroundColor = '#e3f2fd';
+                    setTimeout(() => {
+                        notice.style.backgroundColor = '';
+                    }, 600);
+                }
+            }
+        });
+    }
+    
+    // Fonction supplémentaire pour simuler un ajout dynamique si le besoin professionnel évolue,
+    // mais nous conservons l'intégrité des informations de base. Amélioration pour la beauté du code : on peut ajouter 
+    // une prestation complémentaire via un bouton invisible? Non, pour garder l'interface épurée on n'ajoute pas de bouton flottant.
+    // Mais le gestionnaire de données "services" permet déjà d'étendre.
+    
+    // Ajustement pour rendre plus robuste l'affichage des dates et des conditions supplémentaires:
+    const today = new Date();
+    const formattedDate = `${today.getDate().toString().padStart(2,'0')}/${(today.getMonth()+1).toString().padStart(2,'0')}/${today.getFullYear()}`;
+    // On peut ajouter dans le footer une mise à jour dynamique de l'heure si nécessaire, mais gardons la saisie initiale.
+    const footerNote = document.querySelector('.footer-note div:first-child p:first-child');
+    if (footerNote && !footerNote.innerHTML.includes('modification')) {
+        // optionnel : on laisse le texte saisi le 05/03/2026 inchangé, pour respecter la maquette
+    }
+    
+    // Ajout d'un indicateur de version ou de numéro de document unique (élégance métier)
+    const uniqueRef = document.createElement('div');
+    uniqueRef.style.fontSize = '8px';
+    uniqueRef.style.color = '#adb5bd';
+    uniqueRef.style.textAlign = 'center';
+    uniqueRef.style.marginTop = '8px';
+    uniqueRef.innerHTML = `Réf. document : LOG-${new Date().getFullYear()}-${Math.floor(Math.random() * 8999 + 1000)}`;
+    const footerContainer = document.querySelector('.footer-note');
+    if (footerContainer) {
+        footerContainer.appendChild(uniqueRef);
+    }
+    
+    // Initialisation finale des données du tableau
+    updateTableAndTotal();
+    
+    // Bonus: on assure que le tableau reste cohérent si la fenêtre est redimensionnée
+    window.addEventListener('resize', () => {
+        // rien de spécifique, mais bonne pratique
+    });
+    
+    // Ajout d'une classe "print-mode" facultative, gérée par le CSS media print
+    console.log('Document optimisé pour l\'impression et la lisibilité professionnelle');
+    
+    // Gestion de l'affichage du badge de date dynamique dans les cartes adresses
+    // On peut mettre à jour les horaires si besoin, mais la maquette indique des dates figées.
+    // Néanmoins on améliore la robustesse en affichant une alerte si le jour de l'impression est dépassé.
+    const pickUpDate = new Date(2026, 2, 6); // 06/03/2026
+    const currentDate = new Date();
+    if (currentDate > pickUpDate) {
+        const addrCards = document.querySelectorAll('.address-card');
+        if (addrCards.length) {
+            const warningSpan = document.createElement('span');
+            warningSpan.style.display = 'block';
+            warningSpan.style.fontSize = '9px';
+            warningSpan.style.color = '#e67e22';
+            warningSpan.style.marginTop = '6px';
+            warningSpan.innerHTML = '⚠️ Date d\'enlèvement dépassée (document historique)';
+            addrCards[0].querySelector('.address-content')?.appendChild(warningSpan);
+        }
+    }
+</script>
+</body>
+</html>

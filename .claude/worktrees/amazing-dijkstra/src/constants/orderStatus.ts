@@ -1,0 +1,33 @@
+export const ORDER_STATUS = {
+    PENDING_ACCEPTANCE: 'pending_acceptance',
+    ACCEPTED: 'accepted',
+    ASSIGNED: 'assigned',
+    DRIVER_ACCEPTED: 'driver_accepted',
+    IN_PROGRESS: 'in_progress',
+    DELIVERED: 'delivered',
+    CANCELLED: 'cancelled',
+} as const;
+
+export const ORDER_STATUS_LABELS: Record<string, string> = {
+    'pending_acceptance': 'En attente',
+    'accepted': 'Acceptée',
+    'assigned': 'Assignée',
+    'driver_accepted': 'Chauffeur a accepté',
+    'in_progress': 'En cours',
+    'delivered': 'Livrée',
+    'cancelled': 'Annulée',
+};
+
+export const ORDER_STATUS_COLORS: Record<string, string> = {
+    'pending_acceptance': 'bg-[#ed5518]',
+    'accepted': 'bg-blue-500',
+    'assigned': 'bg-purple-500',
+    'driver_accepted': 'bg-teal-500',
+    'in_progress': 'bg-indigo-500',
+    'delivered': 'bg-green-500',
+    'cancelled': 'bg-red-500',
+};
+
+export type OrderStatus = typeof ORDER_STATUS[keyof typeof ORDER_STATUS];
+
+

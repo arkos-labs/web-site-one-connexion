@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+
+:root {
+  --brand-orange: #ed5518;
+  --font-title: "Archivo", sans-serif;
+  --font-body: "Archivo", sans-serif;
+}
+
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+@layer base {
+  body {
+    @apply bg-white text-slate-900 antialiased font-light;
+    font-family: var(--font-body);
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-title);
+    font-weight: 900;
+    @apply tracking-tight uppercase;
+  }
+
+  /* Specific rule for numbers if user wants bold digits */
+  .font-numbers {
+    font-weight: 600;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-[#ed5518] text-white font-black uppercase;
+  }
+
+  .animate-in {
+    animation-duration: 500ms;
+    animation-fill-mode: forwards;
+  }
+  .fade-in {
+    animation-name: fadeIn;
+  }
+  .zoom-in {
+    animation-name: zoomIn;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes zoomIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}

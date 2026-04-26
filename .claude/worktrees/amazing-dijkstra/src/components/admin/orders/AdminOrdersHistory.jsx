@@ -1,0 +1,129 @@
+import { FileText, Search } from "lucide-react";
+import { generateOrderPdf } from "@/lib/pdf-generator";
+
+export default function AdminOrdersHistory({
+    query,
+    setQuery,
+    statusFilter,
+    setSearchParams,
+    historyFiltered,
+    clients,
+    navigate
+}) {
+    return (
+        <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden flex flex-col min-h-[600px]">
+            <div className="p-8 border-b border-slate-50 bg-slate-50/30 flex flex-wrap items-center justify-between gap-4">
+                <div className="relative flex-1 max-w-md">
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                    <input
+                        type="text"
+                        placeholder="Rechercher une mission, un client..."
+                        className="w-full bg-slate-100 border-none rounded-2xl pl-12 pr-4 py-3.5 text-sm font-medium focus:ring-2 focus:ring-slate-900 transition-all shadow-inner"
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                    />
+                </div>
+
+                <div className="flex items-center gap-2">
+                    {[{ label: "Toutes", status: "Tous" }, { label: "Terminées", status: "delivered" }, { label: "Refusées", status: "cancelled" }].map(({ label, status }) => (
+                        <button
+                            key={status}
+                            onClick={() => setSearchParams({ status })}
+                            className={`rounded-xl px-5 py-2.5 text-xs font-black uppercase tracking-widest transition-all ${statusFilter === status
+                                ? "bg-slate-900 text-white shadow-lg shadow-slate-900/10"
+                                : "bg-slate-100 text-slate-400 hover:text-slate-600"
+                                }`}
+                        >
+                            {label}
+                        </button>
+                    ))}
+                    <div className="h-8 w-px bg-slate-200 mx-2"></div>
+                    <div className="text-[10px] font-black uppercase tracking-widest text-slate-300">{historyFiltered.length} Résultats</div>
+                </div>
+            </div>
+
+            <div className="overflow-x-auto">
+                <table className="w-full text-left text-sm">
+                    <thead className="bg-slate-50/50">
+                        <tr className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                            <th className="px-8 py-5">Référence</th>
+                            <th className="px-8 py-5">Client</th>
+                            <th className="px-8 py-5">Trajet</th>
+                            <th className="px-8 py-5">Date</th>
+                            <th className="px-8 py-5">Statut</th>
+                            <th className="px-8 py-5">Montant</th>
+                            <th className="px-8 py-5 text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-50">
+                        {historyFiltered.map((o) => (
+                            <tr key={o.id} className="hover:bg-slate-50/80 transition-all cursor-pointer" onClick={() => navigate(`/admin/orders/${o.id}`)}>
+                                <td className="px-8 py-6">
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-xs font-black text-slate-400">#{o.id.slice(0, 8)}</span>
+                                        {o.claim_status && o.claim_status !== 'none' && (
+                                            <span className={`h-2 w-2 rounded-full animate-pulse ${o.claim_status === 'resolved' ? 'bg-emerald-500' : 'bg-rose-500'}`} title={o.claim_status === 'resolved' ? 'Litige résolu' : 'Litige en cours'} />
+                                        )}
+                                    </div>
+                                </td>
+                                <td className="px-8 py-6">
+                                    <div className="flex flex-col">
+                                        <span className="text-sm font-black text-slate-900">{o.client}</span>
+                                        {o.isGuest && <span className="text-[9px] font-black text-rose-500 uppercase tracking-tighter mt-0.5">Invité</span>}
+                                    </div>
+                                </td>
+                                <td className="px-8 py-6">
+                                    <div className="flex items-center gap-2 text-xs font-black text-slate-600 line-clamp-1">
+                                        {o.pickup_city} <span className="text-slate-300">→</span> {o.delivery_city}
+                                    </div>
+                                </td>
+                                <td className="px-8 py-6">
+                                    <span className="text-xs font-black text-slate-500">{o.date}</span>
+                                </td>
+                                <td className="px-8 py-6">
+                                    <span className={`px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest ${o.status === "delivered" ? "bg-emerald-50 text-emerald-700 border border-emerald-100" : "bg-rose-50 text-rose-700 border border-rose-100"
+                                        }`}>
+                                        {o.status === "delivered" ? "Livrée" : "Annulée"}
+                                    </span>
+                                </td>
+                                <td className="px-8 py-6 font-black text-slate-900">{o.total}€</td>
+                                <td className="px-8 py-6">
+                                    <div className="flex justify-end gap-2">
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                const fullClient = clients.find(c => c.id === o.client_id);
+                                                const d = fullClient?.details || {};
+                                                const clientInfo = {
+                                                    name: d.full_name || d.contact_name || o.client || "",
+                                                    firstName: d.first_name || (d.full_name || "").split(' ')[0] || "",
+                                                    lastName: d.last_name || (d.full_name || "").split(' ').slice(1).join(' ') || "",
+                                                    email: d.email || fullClient?.email || o.sender_email || "",
+                                                    phone: d.phone || d.phone_number || o.pickup_phone || "",
+                                                    company: d.company || o.billing_company || "",
+                                                    billingAddress: d.address || o.billing_address || "",
+                                                    billingCity: d.city || o.billing_city || "",
+                                                    billingZip: d.zip || d.postal_code || o.billing_zip || ""
+                                                };
+                                                generateOrderPdf(o, clientInfo);
+                                            }}
+                                            className="h-8 w-8 flex items-center justify-center rounded-lg bg-slate-100 text-slate-400 hover:bg-slate-900 hover:text-white transition-all"
+                                        >
+                                            <FileText size={14} />
+                                        </button>
+                                        <button
+                                            onClick={(e) => { e.stopPropagation(); navigate(`/admin/orders/${o.id}`); }}
+                                            className="px-4 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-700 text-[10px] font-black uppercase tracking-widest hover:bg-slate-900 hover:text-white hover:border-slate-900 transition-all shadow-sm"
+                                        >
+                                            Détails
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    );
+}

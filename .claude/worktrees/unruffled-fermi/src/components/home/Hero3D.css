@@ -1,0 +1,605 @@
+/* ═══════════════════════════════════════════════════════════
+   HERO 3D — CSS Animations & Styles
+   One Connexion — Livraison Express Paris & IDF
+═══════════════════════════════════════════════════════════ */
+
+/* ── Section principale ─────────────────────────────────── */
+.hero3d-section {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #050505;
+  padding: 0 24px;
+  overflow-x: hidden;
+}
+
+/* ── Fond : gradient + grille ───────────────────────────── */
+.hero3d-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.hero3d-gradient {
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse 70% 70% at 60% 50%, #1a0800 0%, #080808 60%),
+    radial-gradient(ellipse 100% 80% at 50% 0%, #0a0500 0%, #050505 60%);
+}
+
+.hero3d-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 80px 80px;
+  animation: gridDrift 30s linear infinite;
+}
+
+@keyframes gridDrift {
+  0%   { transform: translate(0, 0); }
+  100% { transform: translate(60px, 60px); }
+}
+
+/* ── Lueurs ambiantes ───────────────────────────────────── */
+.hero3d-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  animation: glowPulse 6s ease-in-out infinite alternate;
+}
+
+.hero3d-glow--orange {
+  width: 600px;
+  height: 600px;
+  top: -100px;
+  right: 5%;
+  background: radial-gradient(circle, #ed551822, transparent);
+  animation-delay: 0s;
+}
+
+.hero3d-glow--blue {
+  width: 500px;
+  height: 500px;
+  bottom: -80px;
+  left: 5%;
+  background: radial-gradient(circle, #1e3a6e22, transparent);
+  animation-delay: 3s;
+}
+
+@keyframes glowPulse {
+  0%   { opacity: 0.4; transform: scale(1); }
+  100% { opacity: 1;   transform: scale(1.2); }
+}
+
+/* ── Cubes 3D flottants ─────────────────────────────────── */
+.hero3d-cubes {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.box3d-wrapper {
+  animation: boxFloat 7s ease-in-out infinite;
+}
+
+.box3d-wrapper:nth-child(1)  { animation-duration: 6s;   animation-delay: 0s;   }
+.box3d-wrapper:nth-child(2)  { animation-duration: 9s;   animation-delay: 1.5s; }
+.box3d-wrapper:nth-child(3)  { animation-duration: 7.5s; animation-delay: 0.8s; }
+.box3d-wrapper:nth-child(4)  { animation-duration: 8s;   animation-delay: 2.2s; }
+.box3d-wrapper:nth-child(5)  { animation-duration: 10s;  animation-delay: 3s;   }
+.box3d-wrapper:nth-child(6)  { animation-duration: 7s;   animation-delay: 1s;   }
+
+.box3d {
+  animation: boxSpin 20s linear infinite;
+}
+.box3d-wrapper:nth-child(2) .box3d { animation-direction: reverse; animation-duration: 15s; }
+.box3d-wrapper:nth-child(4) .box3d { animation-duration: 25s; }
+.box3d-wrapper:nth-child(6) .box3d { animation-direction: reverse; animation-duration: 18s; }
+
+@keyframes boxFloat {
+  0%, 100% { transform: translateY(0px) translateX(0px); }
+  33%       { transform: translateY(-18px) translateX(5px); }
+  66%       { transform: translateY(-8px) translateX(-5px); }
+}
+
+@keyframes boxSpin {
+  0%   { transform: rotateX(20deg) rotateY(0deg); }
+  100% { transform: rotateX(20deg) rotateY(360deg); }
+}
+
+/* ── Particules ─────────────────────────────────────────── */
+.hero3d-particles {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.hero-particle {
+  position: absolute;
+  border-radius: 50%;
+  animation: particleFloat linear infinite;
+  opacity: 0;
+}
+
+@keyframes particleFloat {
+  0%   { opacity: 0;    transform: translateY(0px) scale(0.5); }
+  20%  { opacity: 0.8; }
+  80%  { opacity: 0.8; }
+  100% { opacity: 0;    transform: translateY(-80px) scale(1.2); }
+}
+
+/* ── Layout ─────────────────────────────────────────────── */
+.hero3d-layout {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .hero3d-layout {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 40px;
+  }
+  .hero3d-stats,
+  .hero3d-ctas,
+  .hero3d-trust {
+    justify-content: center;
+  }
+  .hero3d-visual {
+    order: -1;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+}
+
+/* ── Contenu texte ──────────────────────────────────────── */
+.hero3d-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  background: radial-gradient(circle at center, rgba(0, 0, 0, 0.4) 0%, transparent 80%);
+  padding: 40px;
+  border-radius: 40px;
+}
+
+/* Badge live */
+.hero3d-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(237, 85, 24, 0.12);
+  border: 1px solid rgba(237, 85, 24, 0.3);
+  border-radius: 100px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #f97316;
+  width: fit-content;
+  animation: fadeSlideIn 0.6s ease both;
+}
+
+.hero3d-badge__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ed5518;
+  box-shadow: 0 0 8px #ed5518;
+  animation: dotPulse 2s ease-in-out infinite;
+}
+
+@keyframes dotPulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 6px #ed5518; }
+  50%       { opacity: 0.6; box-shadow: 0 0 14px #ed5518; }
+}
+
+/* Titre */
+.hero3d-title {
+  font-size: clamp(2.5rem, 6vw, 4.2rem);
+  font-weight: 900; 
+  line-height: 1.05;
+  color: #ffffff;
+  letter-spacing: -0.04em;
+  margin: 0;
+  text-transform: uppercase;
+  animation: fadeSlideIn 0.7s ease 0.1s both;
+  font-family: var(--font-title);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.hero3d-title__accent {
+  background: linear-gradient(135deg, #ed5518, #f97316, #fbbf24);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: inline-block;
+}
+
+.hero3d-title__sub {
+  color: #ffffff;
+  display: block;
+  font-size: 0.85em;
+  font-weight: 900;
+  margin-top: 8px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Description */
+.hero3d-desc {
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.6;
+  color: #ffffff;
+  max-width: 650px;
+  margin: 0 auto;
+  animation: fadeSlideIn 0.7s ease 0.2s both;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.4);
+}
+
+/* CTAs */
+.hero3d-ctas {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 30px;
+  animation: fadeSlideIn 0.7s ease 0.4s both;
+}
+
+.hero3d-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 100px;
+  padding: 14px 28px;
+  font-size: 0.95rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.hero3d-cta--primary {
+  background: linear-gradient(135deg, #ed5518, #f97316);
+  color: #fff;
+  box-shadow: 0 8px 32px rgba(237, 85, 24, 0.35);
+}
+
+.hero3d-cta--primary:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 12px 40px rgba(237, 85, 24, 0.5);
+}
+
+.hero3d-cta__icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.25s ease;
+}
+
+.hero3d-cta--primary:hover .hero3d-cta__icon {
+  transform: rotate(45deg);
+}
+
+.hero3d-cta--ghost {
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.hero3d-cta--ghost:hover {
+  background: rgba(0, 0, 0, 0.9);
+  transform: translateY(-2px);
+  border-color: rgba(237, 85, 24, 0.5);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+}
+
+/* ── Globe visuel ───────────────────────────────────────── */
+.hero3d-visual {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  aspect-ratio: 1;
+  max-width: 460px;
+  justify-self: center;
+  animation: fadeSlideIn 0.7s ease 0.3s both;
+}
+
+.hero3d-visual__ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(237, 85, 24, 0.15);
+  animation: ringRotate 25s linear infinite;
+}
+
+.hero3d-visual__ring--outer {
+  width: 102%;
+  height: 102%;
+  animation-duration: 30s;
+  border-style: dashed;
+}
+
+.hero3d-visual__ring--middle {
+  width: 80%;
+  height: 80%;
+  animation-direction: reverse;
+  animation-duration: 20s;
+  border-color: rgba(148, 163, 184, 0.1);
+}
+
+@keyframes ringRotate {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Globe SVG */
+.globe-container {
+  width: 70%;
+  animation: globeSpin 35s linear infinite;
+  filter: drop-shadow(0 0 40px rgba(237, 85, 24, 0.2));
+}
+
+.globe-svg {
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes globeSpin {
+  0%   { transform: rotateY(0deg); }
+  100% { transform: rotateY(360deg); }
+}
+
+/* Pulsing ring sur les nodes */
+.pulse-ring {
+  animation: pulseRingAnim 2s ease-out infinite;
+}
+
+@keyframes pulseRingAnim {
+  0%   { r: 3.5; stroke-opacity: 0.8; }
+  100% { r: 12;  stroke-opacity: 0; }
+}
+
+/* Route dot */
+.route-dot {
+  filter: drop-shadow(0 0 4px #fed7aa);
+}
+
+/* ── Premium Video Carousel (Fullscreen Background) ──────────────────────── */
+.hero-video-carousel {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+  background: #050505;
+}
+
+.hero-fullscreen-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: bottom;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.hero-video-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.6) 100%),
+              linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 0%, transparent 40%);
+  z-index: 10;
+}
+
+.hero3d-title, .hero3d-desc, .hero3d-title__sub {
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+}
+
+/* Sur mobile, on assombrit l'image entière pour que le texte soit lisible partout */
+@media (max-width: 900px) {
+  .hero-video-overlay {
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.6) 0%, transparent 40%, rgba(0, 0, 0, 0.2) 100%);
+  }
+}
+
+.hero-video-text {
+  position: absolute;
+  bottom: 80px;
+  right: 6%;
+  max-width: 400px;
+  text-align: right;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+@media (max-width: 900px) {
+  .hero-video-text {
+    display: none; /* Cache le texte secondaire sur mobile pour éviter la surcharge */
+  }
+}
+
+.hero-video-subtitle {
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: #ed5518;
+  margin-bottom: 8px;
+  animation: slideVideoTextRight 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  opacity: 0;
+}
+
+.hero-video-title {
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: #fff;
+  line-height: 1.1;
+  margin: 0 0 12px 0;
+  animation: slideVideoTextRight 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  animation-delay: 0.15s;
+  opacity: 0;
+}
+
+.hero-video-desc {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #cbd5e1;
+  margin: 0;
+  animation: slideVideoTextRight 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  animation-delay: 0.3s;
+  opacity: 0;
+  line-height: 1.5;
+}
+
+/* ── Scroll indicator ───────────────────────────────────── */
+.hero3d-scroll {
+  display: none; /* Removed as it takes too much space in small hero */
+}
+
+.hero3d-scroll__line {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, #ed5518, transparent);
+  animation: scrollLine 2s ease-in-out infinite;
+}
+
+@keyframes scrollLine {
+  0%   { opacity: 1; transform: scaleY(1) translateY(0); }
+  100% { opacity: 0; transform: scaleY(0.5) translateY(8px); }
+}
+
+.hero3d-scroll__text {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #476070;
+}
+
+/* ── Animation d'entrée ─────────────────────────────────── */
+@keyframes fadeSlideIn {
+  0%   { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Ticker Tape (Bottom) ────────────────────────────────── */
+.hero3d-ticker {
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  background: #000000;
+  border-top: 1px solid rgba(237, 85, 24, 0.2);
+  padding: 14px 0;
+  z-index: 20;
+}
+
+.hero3d-ticker__track {
+  display: flex;
+  width: max-content;
+  animation: tickerScroll 30s linear infinite;
+}
+
+.hero3d-ticker__item {
+  padding: 0 40px;
+  font-family: var(--font-title);
+  font-size: 0.75rem;
+  font-weight: 900;
+  color: #ed5518;
+  letter-spacing: 0.25em;
+  opacity: 0.9;
+  text-transform: uppercase;
+}
+
+@keyframes tickerScroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ── Live Logistics Map ──────────────────────────────── */
+.hero-logistics-map {
+  position: absolute;
+  inset: 0;
+  z-index: 15;
+  pointer-events: none;
+}
+
+.logistics-svg {
+  width: 100%;
+  height: 100%;
+  opacity: 0.4;
+}
+
+.logistics-path {
+  fill: none;
+  stroke: rgba(237, 85, 24, 0.4);
+  stroke-width: 0.15;
+  stroke-dasharray: 1, 1;
+  stroke-linecap: round;
+}
+
+.logistics-pulse {
+  animation: pulsePoint 4s ease-out infinite;
+  transform-origin: center;
+}
+
+@keyframes pulsePoint {
+  0% { r: 0.8; stroke-opacity: 1; }
+  100% { r: 4; stroke-opacity: 0; }
+}
+
+.moving-delivery {
+  filter: drop-shadow(0 0 2px #ed5518);
+}
+
+.logistics-label {
+  position: absolute;
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: rgba(5, 5, 5, 0.6);
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid rgba(237, 85, 24, 0.2);
+  transform: translate(10px, -50%);
+  white-space: nowrap;
+  backdrop-filter: blur(4px);
+  opacity: 0.8;
+}
+
