@@ -22,7 +22,8 @@ export async function POST(req: Request) {
     // Stripe takes amounts in cents
     const unitAmount = Math.round(price * 100);
 
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+    const origin = req.headers.get('origin') || process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+    const baseUrl = origin;
 
     if (clientType === 'entreprise') {
       // Pour les pros: SetupIntent ou Session Setup pour enregistrer la carte.
