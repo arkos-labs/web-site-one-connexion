@@ -16,11 +16,10 @@ export async function POST(req: Request) {
       pickupAddress,
       dropoffAddress,
       orderId,
-      email,
-      price: providedPrice
+      email
     } = body;
 
-    const price = providedPrice || calculatePrice(pickupAddress, dropoffAddress, service as ServiceLevel);
+    const price = calculatePrice(pickupAddress, dropoffAddress, service as ServiceLevel);
     // Stripe takes amounts in cents
     const unitAmount = Math.round(price * 100);
 

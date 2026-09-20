@@ -125,7 +125,6 @@ export default function OrderForm() {
           dropoffAddress,
           orderId: trackingCode,
           email: contactEmail,
-          price: estimatedPrice,
         })
       });
 
