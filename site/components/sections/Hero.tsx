@@ -24,7 +24,7 @@ export default function Hero() {
   const [dropoff, setDropoff] = useState("");
 
   return (
-    <section id="top" className="relative border-b border-white/10 bg-ink text-white overflow-hidden">
+    <section id="top" className="relative border-b border-white/10 bg-ink text-white">
       <video
         autoPlay
         loop

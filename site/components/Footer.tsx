@@ -49,6 +49,11 @@ function ColLabel({ children }: { children: React.ReactNode }) {
 const PAYMENT_METHODS = [
   { name: "Stripe", src: "/payments/stripe.svg", width: 48, height: 32 },
   { name: "Visa", src: "/payments/visa.svg", width: 48, height: 32 },
+  { name: "Mastercard", src: "/payments/mastercard.svg", width: 48, height: 32 },
+  { name: "American Express", src: "/payments/amex.svg", width: 48, height: 32 },
+  { name: "Apple Pay", src: "/payments/apple-pay.svg", width: 48, height: 32 },
+  { name: "Google Pay", src: "/payments/google-pay.svg", width: 48, height: 32 },
+  { name: "Prélèvement SEPA", src: "/payments/sepa.svg", width: 48, height: 32 },
 ];
 
 export default function Footer() {
