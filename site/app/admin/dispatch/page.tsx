@@ -22,6 +22,8 @@ type Course = {
   price: number | null;
   createdAt: string;
   driverId: string | null;
+  // Navette active dont le planning (days_of_week) ne couvre pas aujourd'hui
+  offPlan?: boolean;
   stops: { address: string; contact_name?: string; contact_phone?: string }[] | null;
   point_progress?: Record<string, any> | null;
   delai?: string | null;
@@ -106,6 +108,7 @@ function AdminCoursesPageInner() {
   const clientFilterName = searchParams.get("name");
   const [drivers, setDrivers] = useState<Driver[]>([]);
   const [courses, setCourses] = useState<Course[]>([]);
+  const [unplanned, setUnplanned] = useState<Course[]>([]);
   const [filter, setFilter] = useQueryParam("filter", "to_dispatch");
   const [search, setSearch] = useQueryParam("q", "");
   const [lastRefresh, setLastRefresh] = useState<Date | null>(null);
@@ -125,8 +128,7 @@ function AdminCoursesPageInner() {
       supabase
         .from("navettes")
         .select("id, name, pickup_address, dropoff_address, status, driver_id, last_dispatch_date, days_of_week, created_at, user_id, stops, point_progress, picked_up_at, delivered_at, delivery_recipient, delivery_department, delivery_comment, delivery_photo_url")
-        .eq("status", "active")
-        .contains("days_of_week", [todayId()]),
+        .eq("status", "active"),
     ]);
 
     setDrivers((driversData ?? []) as Driver[]);
@@ -213,9 +215,11 @@ function AdminCoursesPageInner() {
       const confirmedToday = n.driver_id && n.last_dispatch_date === today;
       const lastCompletedAt = n.point_progress?.last_completed_at;
       const completedToday = lastCompletedAt && new Date(lastCompletedAt).toDateString() === todayStr;
+      const scheduledToday = Array.isArray(n.days_of_week) && n.days_of_week.includes(todayId());
 
       return {
         key: `navette-${n.id}`,
+        offPlan: !scheduledToday,
         id: n.id,
         type: "navette",
         label: n.name,
@@ -270,7 +274,11 @@ function AdminCoursesPageInner() {
       };
     });
 
-    setCourses([...orderCourses, ...navetteCourses]);
+    // Une navette hors planning n'entre dans les listes/compteurs habituels qu'une fois
+    // dispatchée aujourd'hui ; sinon elle reste dans le filtre dédié "Hors planning".
+    const isUnplanned = (c: Course) => c.offPlan && !c.driverId;
+    setCourses([...orderCourses, ...navetteCourses.filter((c) => !isUnplanned(c))]);
+    setUnplanned(navetteCourses.filter(isUnplanned));
     setLastRefresh(new Date());
   }, [supabase]);
 
@@ -309,7 +317,7 @@ function AdminCoursesPageInner() {
 
   const visible = useMemo(() => {
     const q = search.trim().toLowerCase();
-    return courses.filter((c) => {
+    return (filter === "unplanned" ? unplanned : courses).filter((c) => {
       if (clientFilter && c.clientId !== clientFilter) return false;
 
       const isPending = c.status === "en_attente" || c.status === "pending";
@@ -331,7 +339,7 @@ function AdminCoursesPageInner() {
         c.dropoff.toLowerCase().includes(q)
       );
     });
-  }, [courses, filter, search, clientFilter]);
+  }, [courses, unplanned, filter, search, clientFilter]);
 
   const firstPending = courses.find((c) => !c.driverId && c.status !== "livree" && c.status !== "annulee" && c.status !== "en_attente" && c.status !== "pending") ?? null;
 
@@ -416,7 +424,8 @@ function AdminCoursesPageInner() {
               ["to_dispatch", "À dispatcher", toDispatchCount],
               ["in_progress", "En cours", inProgressCount],
               ["finished", "Terminées", finishedCount],
-            ] as const).map(([key, label, count]) => (
+              ["unplanned", "Hors planning", unplanned.length],
+            ] as const).filter(([key, , count]) => key !== "unplanned" || count > 0 || filter === key).map(([key, label, count]) => (
             <button
               key={key}
               onClick={() => setFilter(key)}
@@ -464,6 +473,11 @@ function AdminCoursesPageInner() {
                       <span className={`rounded-full px-2 py-0.5 text-[11px] font-bold uppercase ${c.driverId ? "bg-green-50 text-green-700" : "bg-amber-50 text-amber-700"}`}>
                         {c.driverId ? `Dispatchée${c.driverAcceptedAt ? ` à ${formatTime(c.driverAcceptedAt)}` : ""}` : "À dispatcher"}
                       </span>
+                      {c.offPlan && (
+                        <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-bold uppercase text-slate-600" title="Le planning de cette navette ne couvre pas aujourd'hui">
+                          Hors planning
+                        </span>
+                      )}
                       <AnomalyBadge items={anomalies.forMission(c.id)} />
                     </div>
 
