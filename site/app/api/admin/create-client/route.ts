@@ -59,7 +59,7 @@ export async function POST(req: Request) {
       email_confirm: true,
       user_metadata: {
         full_name: `${firstName} ${lastName}`,
-        company: accountType === 'pro' ? company : null,
+        company_name: accountType === 'pro' ? company : null,
         phone,
       }
     });
@@ -68,18 +68,16 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: createError.message }, { status: 400 });
     }
 
-    // 4. Update profile with full_name, company, email, phone
+    // Le trigger handle_new_user crée profiles + clients ; on complète clients (SIRET, téléphone).
     if (newUser?.user) {
-      const { error: updateError } = await adminSupabase.from('profiles').update({
-        full_name: `${firstName} ${lastName}`,
-        company: accountType === 'pro' ? company : null,
-        email: email,
-        phone: phone,
+      const { error: updateError } = await adminSupabase.from('clients').update({
+        company_name: accountType === 'pro' ? company : '',
         siret: siret || null,
+        contact_phone: phone || null,
       }).eq('id', newUser.user.id);
 
       if (updateError) {
-        console.error('Profile update error:', updateError);
+        console.error('Client update error:', updateError);
       }
     }
 

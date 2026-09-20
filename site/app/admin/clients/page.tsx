@@ -45,14 +45,18 @@ function AdminClientsPageInner() {
     startOfMonth.setDate(1);
     startOfMonth.setHours(0, 0, 0, 0);
 
-    const [{ data: profiles }, { data: orders }, { data: navettes }, monthOrders] = await Promise.all([
-      supabase.from("profiles").select("id, full_name, company, phone, created_at").eq("role", "client").order("created_at", { ascending: false }),
+    const [{ data: profilesData }, { data: clientsData }, { data: orders }, { data: navettes }, monthOrders] = await Promise.all([
+      supabase.from("profiles").select("id, full_name, phone, created_at").eq("role", "client").order("created_at", { ascending: false }),
+      supabase.from("clients").select("id, company_name"),
       supabase.from("orders").select("user_id, price_estimate, status"),
       supabase.from("navettes").select("user_id").eq("status", "active"),
       supabase.from("orders").select("id", { count: "exact", head: true }).gte("created_at", startOfMonth.toISOString()).neq("status", "annulee"),
     ]);
 
-    const rows: ClientRow[] = (profiles ?? []).map((p) => {
+    const companyById = new Map((clientsData ?? []).map((c) => [c.id, c.company_name as string | null]));
+    const profiles = (profilesData ?? []).map((p) => ({ ...p, company: companyById.get(p.id) || null }));
+
+    const rows: ClientRow[] = profiles.map((p) => {
       const own = (orders ?? []).filter((o) => o.user_id === p.id);
       const revenue = own.filter((o) => o.status !== "annulee").reduce((sum, o) => sum + (o.price_estimate ?? 0), 0);
       const activeNavettes = (navettes ?? []).filter((n) => n.user_id === p.id).length;

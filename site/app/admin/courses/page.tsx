@@ -148,7 +148,7 @@ function AdminCoursesPageInner() {
   };
 
   const load = useCallback(async () => {
-    const [{ data: driversData }, { data: orders }, { data: navettes }, { data: profilesData }] = await Promise.all([
+    const [{ data: driversData }, { data: orders }, { data: navettes }, { data: clientProfiles }, { data: clientDetails }] = await Promise.all([
       supabase.from("drivers").select("id, name, phone, vehicle, status, auth_id").order("name"),
       supabase
         .from("orders")
@@ -160,7 +160,8 @@ function AdminCoursesPageInner() {
         .select("id, name, pickup_address, dropoff_address, status, driver_id, last_dispatch_date, days_of_week, created_at, user_id, stops, point_progress, driver_accepted_at, delivery_recipient, delivery_department, delivery_comment, delivery_photo_url, picked_up_at, delivered_at")
         .eq("status", "active")
         .contains("days_of_week", [todayId()]),
-      supabase.from("profiles").select("id, full_name, company, email").order("full_name")
+      supabase.from("profiles").select("id, full_name").eq("role", "client").order("full_name"),
+      supabase.from("clients").select("id, company_name, siret, contact_email"),
     ]);
 
     const orderRows = orders ?? [];
@@ -170,9 +171,11 @@ function AdminCoursesPageInner() {
       ...navetteRows.map((n) => n.user_id)
     ].filter(Boolean))];
 
-    // Charger ALL profiles pour le modal, en priorité ceux qui ont des commandes
-    const { data: allClientsData } = await supabase.from("profiles").select("id, full_name, company, email").order("full_name");
-    setAllProfiles(allClientsData ?? []);
+    const detailsById = new Map((clientDetails ?? []).map((c) => [c.id, c]));
+    setAllProfiles((clientProfiles ?? []).map((p) => {
+      const d = detailsById.get(p.id);
+      return { id: p.id, full_name: p.full_name, company: d?.company_name || null, siret: d?.siret || null, email: d?.contact_email || null };
+    }));
     setDrivers((driversData ?? []) as Driver[]);
 
     const { data: profiles } = userIds.length
