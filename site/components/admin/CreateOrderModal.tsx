@@ -77,9 +77,11 @@ export function CreateOrderModal({ isOpen, onClose, onSuccess, profiles, drivers
   };
 
   return (
-    <div className="fixed inset-0 z-[100] p-4 bg-black/50 backdrop-blur-sm overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-      <div className="bg-white rounded-2xl w-full max-w-xl shadow-xl flex flex-col my-8 mx-auto relative">
-        <div className="sticky top-0 z-10 flex items-center justify-between p-6 border-b border-gray-100 bg-white rounded-t-2xl">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+      <div className="relative z-10 w-full max-w-xl flex flex-col rounded-2xl bg-white shadow-xl max-h-[95vh] sm:max-h-[90vh]">
+        
+        {/* Header Fixe */}
+        <div className="shrink-0 flex items-center justify-between p-6 border-b border-gray-100 bg-white rounded-t-2xl">
           <div>
             <p className="text-[11px] font-bold uppercase tracking-widest text-accent">Administration</p>
             <h2 className="text-xl font-bold text-ink">Saisir une commande</h2>
@@ -89,7 +91,8 @@ export function CreateOrderModal({ isOpen, onClose, onSuccess, profiles, drivers
           </button>
         </div>
         
-        <div className="p-6">
+        {/* Contenu Défilant */}
+        <div className="flex-1 overflow-y-auto p-6 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           <form onSubmit={handleSubmit} className="flex flex-col gap-6">
             
             <div className="flex flex-col gap-4">
