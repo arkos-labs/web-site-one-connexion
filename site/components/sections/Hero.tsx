@@ -31,7 +31,6 @@ export default function Hero() {
         muted
         playsInline
         preload="metadata"
-        poster="/hero-poster.jpg"
         aria-hidden="true"
         className="absolute inset-0 w-full h-full object-cover object-[center_60%] z-0"
       >
