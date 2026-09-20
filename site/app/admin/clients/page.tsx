@@ -17,6 +17,8 @@ type ClientRow = {
   ordersCount: number;
   revenue: number;
   activeNavettes: number;
+  email?: string | null;
+  guest?: boolean;
 };
 
 function initialsOf(name: string) {
@@ -48,7 +50,7 @@ function AdminClientsPageInner() {
     const [{ data: profilesData }, { data: clientsData }, { data: orders }, { data: navettes }, monthOrders] = await Promise.all([
       supabase.from("profiles").select("id, full_name, phone, created_at").eq("role", "client").order("created_at", { ascending: false }),
       supabase.from("clients").select("id, company_name"),
-      supabase.from("orders").select("user_id, price_estimate, status"),
+      supabase.from("orders").select("user_id, price_estimate, status, client_type, contact_name, contact_email, contact_phone, created_at"),
       supabase.from("navettes").select("user_id").eq("status", "active"),
       supabase.from("orders").select("id", { count: "exact", head: true }).gte("created_at", startOfMonth.toISOString()).neq("status", "annulee"),
     ]);
@@ -63,7 +65,29 @@ function AdminClientsPageInner() {
       return { id: p.id, full_name: p.full_name, company: p.company, phone: p.phone, createdAt: p.created_at, ordersCount: own.length, revenue, activeNavettes };
     });
 
-    setClients(rows);
+    // Clients de la page publique : pas de compte, seulement les coordonnées saisies sur la commande.
+    const guests = new Map<string, ClientRow & { pro: boolean }>();
+    for (const o of orders ?? []) {
+      const email = o.contact_email?.trim().toLowerCase();
+      if (o.user_id || !email) continue;
+      const g = guests.get(email) ?? {
+        id: `guest:${email}`, guest: true, email, pro: false,
+        full_name: null, company: null, phone: null,
+        createdAt: o.created_at, ordersCount: 0, revenue: 0, activeNavettes: 0,
+      };
+      g.ordersCount += 1;
+      if (o.status !== "annulee") g.revenue += o.price_estimate ?? 0;
+      if (o.client_type === "entreprise") g.pro = true;
+      if (o.created_at < g.createdAt) g.createdAt = o.created_at;
+      g.full_name = o.contact_name || g.full_name;
+      g.phone = o.contact_phone || g.phone;
+      guests.set(email, g);
+    }
+    const guestRows = [...guests.values()].map(({ pro, ...g }) => (
+      pro ? { ...g, company: g.full_name, full_name: null } : g
+    ));
+
+    setClients([...rows, ...guestRows].sort((a, b) => b.createdAt.localeCompare(a.createdAt)));
     setOrdersThisMonth(monthOrders.count ?? 0);
     setLastRefresh(new Date());
   }, [supabase]);
@@ -87,7 +111,7 @@ function AdminClientsPageInner() {
       if (filter === "company" && !c.company) return false;
       if (filter === "particulier" && c.company) return false;
       if (!q) return true;
-      return (c.full_name ?? "").toLowerCase().includes(q) || (c.company ?? "").toLowerCase().includes(q) || (c.phone ?? "").includes(q);
+      return (c.full_name ?? "").toLowerCase().includes(q) || (c.company ?? "").toLowerCase().includes(q) || (c.phone ?? "").includes(q) || (c.email ?? "").toLowerCase().includes(q);
     });
   }, [clients, filter, search]);
 
@@ -167,7 +191,7 @@ function AdminClientsPageInner() {
                   c.company ? "before:bg-accent" : "before:bg-blue-500"
                 }`}
               >
-                <Link href={`/admin/clients/${c.id}`} className="group flex items-center gap-3">
+                <Link href={c.guest ? "#" : `/admin/clients/${c.id}`} className="group flex items-center gap-3" onClick={c.guest ? (e) => e.preventDefault() : undefined}>
                   <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-ink text-[12px] font-bold text-white">
                     {initialsOf(c.full_name ?? "")}
                   </div>
@@ -181,8 +205,13 @@ function AdminClientsPageInner() {
                       ) : (
                         <span className="rounded-full bg-blue-50 px-2 py-0.5 text-[11px] font-bold text-blue-700">Particulier</span>
                       )}
+                      {c.guest && (
+                        <span className="rounded-full bg-gray-100 px-2 py-0.5 text-[11px] font-medium text-gray-600">Sans compte</span>
+                      )}
                     </div>
-                    <div className="mt-0.5 text-[12.5px] text-muted">{c.phone || "Téléphone non renseigné"}</div>
+                    <div className="mt-0.5 text-[12.5px] text-muted">
+                      {[c.phone || "Téléphone non renseigné", c.guest ? c.email : null].filter(Boolean).join(" · ")}
+                    </div>
                   </div>
                 </Link>
                 <div className="flex items-center gap-5 pl-14 sm:pl-0">
@@ -199,12 +228,14 @@ function AdminClientsPageInner() {
                     <div className="text-[11px] font-bold uppercase tracking-wide text-label">CA généré</div>
                     <div className="text-[14px] font-bold text-ink">{c.revenue.toFixed(2)} €</div>
                   </div>
-                  <Link
-                    href={`/admin/clients/${c.id}`}
-                    className="flex items-center justify-center whitespace-nowrap rounded-lg bg-ink px-4 py-2 text-[13px] font-bold text-white transition-colors hover:bg-ink/85"
-                  >
-                    Voir la fiche
-                  </Link>
+                  {!c.guest && (
+                    <Link
+                      href={`/admin/clients/${c.id}`}
+                      className="flex items-center justify-center whitespace-nowrap rounded-lg bg-ink px-4 py-2 text-[13px] font-bold text-white transition-colors hover:bg-ink/85"
+                    >
+                      Voir la fiche
+                    </Link>
+                  )}
                 </div>
               </div>
             ))}
