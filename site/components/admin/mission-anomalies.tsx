@@ -12,6 +12,7 @@ export type Anomaly = {
   comment: string | null;
   resolved: boolean;
   created_at: string;
+  point_index?: number | null;
 };
 
 const STEP_LABEL: Record<Anomaly["step"], string> = {
@@ -29,7 +30,7 @@ export function useMissionAnomalies(supabase: SupabaseClient, channelName: strin
   const load = useCallback(async () => {
     const { data } = await supabase
       .from("mission_anomalies")
-      .select("id, mission_id, step, type, comment, resolved, created_at")
+      .select("id, mission_id, step, type, comment, resolved, created_at, point_index")
       .order("created_at", { ascending: false });
     setAnomalies((data ?? []) as Anomaly[]);
   }, [supabase]);
@@ -69,6 +70,7 @@ export function ClientAnomalies({ items }: { items: Anomaly[] }) {
           <div key={a.id} className="flex items-start justify-between gap-3 text-[13px]">
             <div className="min-w-0">
               <p className="font-semibold text-ink">
+                {a.point_index != null && <span className="font-bold text-red-600 mr-1.5">[Point N°{a.point_index + 1}]</span>}
                 {STEP_LABEL[a.step]} · {a.type}
                 <span className="ml-1.5 font-normal text-muted">{time(a.created_at)}</span>
               </p>
@@ -106,6 +108,7 @@ export function AnomalyList({ items, onResolve }: { items: Anomaly[]; onResolve:
         >
           <div className="min-w-0 text-[12.5px]">
             <p className="font-bold text-red-800">
+              {a.point_index != null && <span className="mr-1.5 bg-red-100 px-1.5 py-0.5 rounded text-[10px] uppercase tracking-wider text-red-700">Point N°{a.point_index + 1}</span>}
               {STEP_LABEL[a.step]} · {a.type}
               <span className="ml-1.5 font-medium text-red-400">{time(a.created_at)}</span>
             </p>
