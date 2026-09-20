@@ -24,9 +24,22 @@ export async function POST(req: Request) {
 
     if (webhookSecret) {
       event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
-    } else {
-      // Pour les tests sans webhook secret
+    } else if (process.env.NODE_ENV !== 'production') {
+      // Pour les tests sans webhook secret (jamais en production : n'importe qui pourrait marquer une facture payée)
       event = JSON.parse(body);
+    } else {
+      throw new Error('STRIPE_WEBHOOK_SECRET manquant');
+    }
+
+    if (event.type === 'invoice.paid' || event.type === 'invoice.payment_failed') {
+      const stripeInvoice = event.data.object as Stripe.Invoice;
+      const paid = event.type === 'invoice.paid';
+      await supabase
+        .from('invoices')
+        .update(paid
+          ? { status: 'payee', payment_date: new Date().toISOString().slice(0, 10) }
+          : { status: 'echec' })
+        .eq('stripe_invoice_id', stripeInvoice.id);
     }
 
     if (event.type === 'checkout.session.completed') {

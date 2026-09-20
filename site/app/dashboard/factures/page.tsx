@@ -12,12 +12,12 @@ const eur = (n: number) => `${n.toLocaleString("fr-FR", { minimumFractionDigits:
 export default function FacturesPage() {
   const supabase = createClient();
   const router = useRouter();
-  const [orders, setOrders] = useState<any[]>([]);
+  const [rows, setRows] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    const loadOrders = async () => {
+    const loadInvoices = async () => {
       try {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) {
@@ -25,83 +25,47 @@ export default function FacturesPage() {
           return;
         }
 
-        const [ordersRes, navettesRes] = await Promise.all([
-          supabase
-            .from("orders")
-            .select("*")
-            .eq("user_id", user.id)
-            .order("created_at", { ascending: false }),
-          supabase
-            .from("navettes")
-            .select("id, name, estimated_price, created_at, status, delivered_at, user_id")
-            .eq("user_id", user.id),
-        ]);
+        const { data } = await supabase
+          .from("invoices")
+          .select("id, invoice_number, billing_period_start, status, total_amount, invoice_items(count)")
+          .eq("client_id", user.id)
+          .order("billing_period_start", { ascending: false });
 
-        const ordersData = (ordersRes.data || []).map((o: any) => ({ ...o, _type: "order" as const }));
-        const navettesData = (navettesRes.data || []).map((n: any) => ({
-          ...n,
-          _type: "navette" as const,
-          price_estimate: n.estimated_price,
-        }));
-
-        setOrders([...ordersData, ...navettesData]);
+        setRows(data || []);
       } catch (err) {
-        console.error("Erreur de chargement des courses:", err);
+        console.error("Erreur de chargement des factures:", err);
       } finally {
         setLoading(false);
       }
     };
 
-    loadOrders();
+    loadInvoices();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Regroupe les courses (hors annulées) par mois : la facture du mois en cours
-  // s'ouvre dès la première course et grossit au fil des commandes, comme un
-  // compte pro classique — elle n'attend pas la livraison ni la fin du mois.
-  const invoices = useMemo(() => {
-    const now = new Date();
-    const currentKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
-
-    const groups: Record<string, { monthLabel: string; courses: number; navettes: number; amount: number }> = {};
-
-    orders
-      .filter((o) => o.status !== "annulee")
-      .forEach((o) => {
-        const date = new Date(o.created_at);
-        const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
-        const monthLabel = date.toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
-
-        if (!groups[key]) {
-          groups[key] = { monthLabel, courses: 0, navettes: 0, amount: 0 };
-        }
-        if (o._type === "navette") {
-          groups[key].navettes += 1;
-        } else {
-          groups[key].courses += 1;
-        }
-        groups[key].amount += o.price_estimate ? Number(o.price_estimate) * 1.2 : 0;
-      });
-
-    return Object.entries(groups)
-      .sort(([a], [b]) => (a < b ? 1 : -1))
-      .map(([key, val]) => ({
-        id: `FA-${key}`,
-        date: val.monthLabel,
-        amount: val.amount,
-        courses: val.courses,
-        navettes: val.navettes,
-        status: key === currentKey ? "en_cours" : "en_attente",
-      }));
-  }, [orders]);
+  // Une facture par mois : elle s'ouvre à la première course livrée, grossit à chaque
+  // livraison, puis est émise (et envoyée par email) au début du mois suivant.
+  const invoices = useMemo(
+    () =>
+      rows.map((r) => ({
+        id: r.id as string,
+        number: r.invoice_number as string,
+        date: new Date(r.billing_period_start).toLocaleDateString("fr-FR", { month: "long", year: "numeric" }),
+        amount: Number(r.total_amount),
+        courses: (r.invoice_items?.[0]?.count ?? 0) as number,
+        navettes: 0,
+        status: r.status as string,
+      })),
+    [rows]
+  );
 
   const filteredInvoices = useMemo(() => {
     const q = search.trim().toLowerCase();
     if (!q) return invoices;
-    return invoices.filter((i) => i.id.toLowerCase().includes(q) || i.date.toLowerCase().includes(q));
+    return invoices.filter((i) => i.number.toLowerCase().includes(q) || i.date.toLowerCase().includes(q));
   }, [invoices, search]);
 
-  const pendingTotal = invoices.reduce((sum, i) => sum + i.amount, 0);
+  const pendingTotal = invoices.filter((i) => i.status === "emise" || i.status === "echec").reduce((sum, i) => sum + i.amount, 0);
   const currentMonth = invoices.find((i) => i.status === "en_cours");
 
   const volume = (i: { courses: number; navettes: number }) =>
@@ -115,6 +79,8 @@ export default function FacturesPage() {
   const Status = ({ status }: { status: string }) =>
     status === "payee" ? (
       <StatusPill tone="green">Réglée</StatusPill>
+    ) : status === "echec" ? (
+      <StatusPill tone="red">Paiement échoué</StatusPill>
     ) : status === "en_cours" ? (
       <StatusPill tone="blue">En cours</StatusPill>
     ) : (
@@ -145,7 +111,7 @@ export default function FacturesPage() {
         <EmptyState
           icon={FileText}
           title={invoices.length === 0 ? "Aucune facture pour le moment" : "Aucun résultat"}
-          text={invoices.length === 0 ? "Votre relevé du mois s'ouvrira dès votre première commande." : "Essayez une autre recherche."}
+          text={invoices.length === 0 ? "Votre facture du mois s'ouvrira dès votre première course livrée." : "Essayez une autre recherche."}
           action={
             invoices.length === 0 ? (
               <Link href="/dashboard/commander" className={`${BTN_PRIMARY} text-white hover:text-white`}>
@@ -181,7 +147,7 @@ export default function FacturesPage() {
                       onClick={(e) => e.stopPropagation()}
                       className="font-mono text-[13px] font-bold text-ink hover:text-accent-dark"
                     >
-                      {invoice.id}
+                      {invoice.number}
                     </Link>
                   </td>
                   <td className={`${TD} whitespace-nowrap capitalize text-muted`}>{invoice.date}</td>
@@ -201,7 +167,7 @@ export default function FacturesPage() {
               <li key={invoice.id}>
                 <Link href={`/dashboard/factures/${invoice.id}`} className="flex flex-col gap-2 px-5 py-4 text-ink hover:bg-paper-card hover:text-ink">
                   <div className="flex items-center justify-between gap-3">
-                    <span className="font-mono text-[13px] font-bold">{invoice.id}</span>
+                    <span className="font-mono text-[13px] font-bold">{invoice.number}</span>
                     <Status status={invoice.status} />
                   </div>
                   <div className="flex items-baseline justify-between gap-3">

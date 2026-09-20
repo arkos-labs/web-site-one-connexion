@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
@@ -63,10 +63,12 @@ type AddressRow = {
 
 type Invoice = {
   id: string;
+  number: string;
   monthLabel: string;
   courses: number;
   amount: number;
-  status: "en_cours" | "en_attente";
+  status: string;
+  url: string | null;
 };
 
 function initialsOf(name: string) {
@@ -91,6 +93,7 @@ export default function AdminClientDetailPage() {
   const [orders, setOrders] = useState<OrderRow[]>([]);
   const [navettes, setNavettes] = useState<NavetteRow[]>([]);
   const [addresses, setAddresses] = useState<AddressRow[]>([]);
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
 
@@ -130,7 +133,7 @@ export default function AdminClientDetailPage() {
       return;
     }
 
-    const [{ data: p }, { data: c }, { data: o }, { data: n }, { data: a }] = await Promise.all([
+    const [{ data: p }, { data: c }, { data: o }, { data: n }, { data: a }, { data: inv }] = await Promise.all([
       supabase.from("profiles").select("id, full_name, phone, created_at").eq("id", clientId).eq("role", "client").maybeSingle(),
       supabase.from("clients").select("company_name, siret, tax_id, billing_address, billing_postal_code, billing_city, contact_email").eq("id", clientId).maybeSingle(),
       supabase
@@ -144,6 +147,11 @@ export default function AdminClientDetailPage() {
         .eq("user_id", clientId)
         .order("created_at", { ascending: false }),
       supabase.from("addresses").select("id, label, address, is_default, contact_name, contact_phone").eq("user_id", clientId),
+      supabase
+        .from("invoices")
+        .select("id, invoice_number, billing_period_start, status, total_amount, hosted_invoice_url, invoice_items(count)")
+        .eq("client_id", clientId)
+        .order("billing_period_start", { ascending: false }),
     ]);
 
     if (!p) {
@@ -168,6 +176,17 @@ export default function AdminClientDetailPage() {
     setOrders(o ?? []);
     setNavettes(n ?? []);
     setAddresses(a ?? []);
+    setInvoices(
+      (inv ?? []).map((r: any) => ({
+        id: r.id,
+        number: r.invoice_number,
+        monthLabel: new Date(r.billing_period_start).toLocaleDateString("fr-FR", { month: "long", year: "numeric" }),
+        courses: r.invoice_items?.[0]?.count ?? 0,
+        amount: Number(r.total_amount),
+        status: r.status,
+        url: r.hosted_invoice_url,
+      }))
+    );
     setLoading(false);
   }, [supabase, clientId, guestEmail]);
 
@@ -175,40 +194,10 @@ export default function AdminClientDetailPage() {
     load();
   }, [load]);
 
-  // Regroupe les courses par mois pour simuler la facturation, à l'identique
-  // de app/dashboard/factures/page.tsx : il n'existe pas de table "invoices",
-  // le statut de règlement n'est donc pas suivi — seul "en cours" (mois en
-  // cours) vs "en attente" (mois passés) peut être déduit honnêtement.
-  const invoices: Invoice[] = useMemo(() => {
-    const now = new Date();
-    const currentKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
-    const groups: Record<string, { monthLabel: string; courses: number; amount: number }> = {};
-
-    orders
-      .filter((o) => o.status !== "annulee")
-      .forEach((o) => {
-        const date = new Date(o.created_at);
-        const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
-        const monthLabel = date.toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
-        if (!groups[key]) groups[key] = { monthLabel, courses: 0, amount: 0 };
-        groups[key].courses += 1;
-        groups[key].amount += o.price_estimate ? Number(o.price_estimate) : 0;
-      });
-
-    return Object.entries(groups)
-      .sort(([a], [b]) => (a < b ? 1 : -1))
-      .map(([key, val]) => ({
-        id: `FA-${key}`,
-        monthLabel: val.monthLabel,
-        courses: val.courses,
-        amount: val.amount,
-        status: key === currentKey ? "en_cours" : "en_attente",
-      }));
-  }, [orders]);
 
   const revenue = orders.filter((o) => o.status !== "annulee").reduce((sum, o) => sum + (o.price_estimate ?? 0), 0);
   const activeOrders = orders.filter((o) => !["livree", "annulee"].includes(o.status));
-  const unpaidTotal = invoices.filter((i) => i.status === "en_attente").reduce((sum, i) => sum + i.amount, 0);
+  const unpaidTotal = invoices.filter((i) => i.status === "emise" || i.status === "echec").reduce((sum, i) => sum + i.amount, 0);
 
   const back = { href: "/admin/clients", label: "Retour aux clients" };
 
@@ -274,22 +263,37 @@ export default function AdminClientDetailPage() {
             <div className="border-b border-line p-5">
               <h2 className="text-[15px] font-bold text-ink">Facturation</h2>
               <p className="mt-0.5 text-[12.5px] font-medium text-muted">
-                Regroupement mensuel des commandes — aucun suivi de paiement n&apos;existe encore dans l&apos;outil, seul le statut &quot;en cours / à régler&quot; est déduit du mois.
+                Une facture par mois, alimentée à chaque course livrée, envoyée par Stripe au début du mois suivant.
               </p>
             </div>
             <div className="flex flex-col divide-y divide-line">
               {invoices.length === 0 && (
-                <div className="p-6 text-center text-[13px] font-medium text-muted">Aucune commande facturable pour l&apos;instant.</div>
+                <div className="p-6 text-center text-[13px] font-medium text-muted">
+                  {profile.guest ? "Client sans compte : chaque course est payée en ligne à la commande." : "Aucune course livrée facturable pour l'instant."}
+                </div>
               )}
               {invoices.map((inv) => (
                 <div key={inv.id} className="flex items-center justify-between gap-3 p-4">
                   <div>
                     <div className="font-bold capitalize text-ink">{inv.monthLabel}</div>
-                    <div className="text-[12.5px] text-muted">{inv.courses} course{inv.courses > 1 ? "s" : ""}</div>
+                    <div className="text-[12.5px] text-muted">
+                      {inv.number} · {inv.courses} course{inv.courses > 1 ? "s" : ""}
+                      {inv.url && (
+                        <> · <a href={inv.url} target="_blank" rel="noreferrer" className="font-bold text-accent-dark underline">Voir</a></>
+                      )}
+                    </div>
                   </div>
                   <div className="flex items-center gap-3">
-                    <span className="text-[15px] font-bold text-ink">{inv.amount.toFixed(2)} €</span>
-                    {inv.status === "en_cours" ? (
+                    <span className="text-[15px] font-bold text-ink">{inv.amount.toFixed(2)} € TTC</span>
+                    {inv.status === "payee" ? (
+                      <span className="flex items-center gap-1.5 rounded-full bg-green-50 px-2.5 py-1 text-[11px] font-bold text-green-700">
+                        <CheckCircle2 size={12} /> Réglée
+                      </span>
+                    ) : inv.status === "echec" ? (
+                      <span className="flex items-center gap-1.5 rounded-full bg-red-50 px-2.5 py-1 text-[11px] font-bold text-red-700">
+                        <Clock size={12} /> Paiement échoué
+                      </span>
+                    ) : inv.status === "en_cours" ? (
                       <span className="flex items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-1 text-[11px] font-bold text-blue-700">
                         <RefreshCw size={12} /> En cours
                       </span>
