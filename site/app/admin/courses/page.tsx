@@ -163,15 +163,18 @@ function AdminCoursesPageInner() {
       supabase.from("profiles").select("id, full_name, company, email").order("full_name")
     ]);
 
-    setAllProfiles(profilesData ?? []);
-    setDrivers((driversData ?? []) as Driver[]);
-
     const orderRows = orders ?? [];
     const navetteRows = navettes ?? [];
     const userIds = [...new Set([
       ...orderRows.map((o) => o.user_id),
       ...navetteRows.map((n) => n.user_id)
     ].filter(Boolean))];
+
+    // Charger ALL profiles pour le modal, en priorité ceux qui ont des commandes
+    const { data: allClientsData } = await supabase.from("profiles").select("id, full_name, company, email").order("full_name");
+    setAllProfiles(allClientsData ?? []);
+    setDrivers((driversData ?? []) as Driver[]);
+
     const { data: profiles } = userIds.length
       ? await supabase.from("profiles").select("id, full_name").in("id", userIds)
       : { data: [] as { id: string; full_name: string | null }[] };
