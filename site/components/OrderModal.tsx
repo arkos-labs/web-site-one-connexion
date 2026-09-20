@@ -142,7 +142,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
         <div className="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
 
           {/* Panneau principal */}
-          <div className="relative transform rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-8 w-full max-w-4xl flex flex-col">
+          <div className="relative transform rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-8 w-full max-w-3xl flex flex-col">
 
             {/* Header (Fixe) */}
             <div className="flex items-center justify-between border-b border-gray-100 bg-white px-6 py-4 shrink-0">
@@ -376,7 +376,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
               </div>
 
               {/* Récapitulatif (Droite) */}
-              <div className="w-full md:w-[350px] bg-gray-50 p-6 flex flex-col shrink-0">
+              <div className="w-full md:w-[300px] bg-gray-50 p-6 flex flex-col shrink-0">
                 <h3 className="text-sm font-bold text-gray-800 mb-6 flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-[#ed5518]" />
                   Récapitulatif de votre commande
