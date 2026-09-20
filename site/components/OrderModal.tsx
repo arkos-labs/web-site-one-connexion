@@ -142,7 +142,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
         <div className="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
 
           {/* Panneau principal */}
-          <div className="relative transform rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-8 w-full max-w-3xl flex flex-col">
+          <div className="relative transform rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-8 w-full max-w-3xl flex flex-col max-h-[95dvh] sm:max-h-[90vh] overflow-hidden">
 
             {/* Header (Fixe) */}
             <div className="flex items-center justify-between border-b border-gray-100 bg-white px-6 py-4 shrink-0">
@@ -160,10 +160,11 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
             </div>
 
             {/* Contenu (2 colonnes) */}
-            <div className="flex flex-col md:flex-row flex-1">
+            <div className="flex flex-col md:flex-row flex-1 min-h-0">
               
-              {/* Formulaire (Gauche) */}
-              <div className="flex-1 px-6 py-6 md:border-r border-gray-100">
+              {/* Colonne Gauche (Formulaire) */}
+              <div className="flex-1 flex flex-col min-h-0 md:border-r border-gray-100">
+                <div className="flex-1 overflow-y-auto px-6 py-6">
           {submitted ? (
             <div className="py-12 text-center">
               <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-green-50 text-emerald-500">
@@ -354,29 +355,34 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                   </div>
                 )}
 
-                {/* Navigation */}
-                <div className="flex items-center justify-between border-t border-gray-100 pt-4">
-                  {step > 1 ? (
-                    <button type="button" onClick={() => setStep(step - 1)} className="flex items-center gap-1.5 rounded-lg px-4 py-2.5 text-sm font-semibold text-gray-600 hover:bg-gray-100 transition-colors">
-                      <ChevronLeft size={16} /> Retour
-                    </button>
-                  ) : <div />}
-                  <button
-                    type="submit"
-                    disabled={submitting}
-                    className="ml-auto flex items-center gap-2 rounded-lg bg-accent px-6 py-2.5 text-sm font-bold text-white hover:bg-accent-dark transition-colors disabled:opacity-60"
-                  >
-                    {submitting ? "Redirection…" : step < 3 ? "Étape suivante" : "Commander"}
-                    {!submitting && (step < 3 ? <ChevronRight size={16} /> : <CheckCircle2 size={16} />)}
-                  </button>
-                </div>
               </form>
             </>
           )}
+                </div>
+
+                {/* Footer Fixe (Navigation) */}
+                {!submitted && (
+                  <div className="shrink-0 flex items-center justify-between border-t border-gray-100 bg-white px-6 py-4">
+                    {step > 1 ? (
+                      <button type="button" onClick={() => setStep(step - 1)} className="flex items-center gap-1.5 rounded-lg px-4 py-2.5 text-sm font-semibold text-gray-600 hover:bg-gray-100 transition-colors">
+                        <ChevronLeft size={16} /> Retour
+                      </button>
+                    ) : <div />}
+                    <button
+                      type="button"
+                      onClick={handleSubmit}
+                      disabled={submitting}
+                      className="ml-auto flex items-center gap-2 rounded-lg bg-accent px-6 py-2.5 text-sm font-bold text-white hover:bg-accent-dark transition-colors disabled:opacity-60"
+                    >
+                      {submitting ? "Redirection…" : step < 3 ? "Étape suivante" : "Commander"}
+                      {!submitting && (step < 3 ? <ChevronRight size={16} /> : <CheckCircle2 size={16} />)}
+                    </button>
+                  </div>
+                )}
               </div>
 
               {/* Récapitulatif (Droite) */}
-              <div className="w-full md:w-[300px] bg-gray-50 p-6 flex flex-col shrink-0">
+              <div className="w-full md:w-[300px] bg-gray-50 p-6 flex flex-col shrink-0 overflow-y-auto">
                 <h3 className="text-sm font-bold text-gray-800 mb-6 flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-[#ed5518]" />
                   Récapitulatif de votre commande
