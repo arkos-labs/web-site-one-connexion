@@ -39,6 +39,9 @@ export async function POST(req: Request) {
     if (!email || !firstName || !lastName) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
+    if (accountType === 'pro' && (!company || !siret)) {
+      return NextResponse.json({ error: 'Société et SIRET requis pour un client professionnel' }, { status: 400 });
+    }
 
     // 3. Admin create user using service role key
     if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {

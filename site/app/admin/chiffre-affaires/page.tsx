@@ -100,7 +100,7 @@ function AdminChiffreAffairesPageInner() {
   const [lastRefresh, setLastRefresh] = useState<Date | null>(null);
 
   const load = useCallback(async () => {
-    const [{ data: orderRows }, { data: navetteRows }, { data: profileRows }] = await Promise.all([
+    const [{ data: orderRows }, { data: navetteRows }, { data: profileRows }, { data: clientRows }] = await Promise.all([
       supabase
         .from("orders")
         .select("price_estimate, status, created_at, tracking_code, pickup_address, dropoff_address, user_id")
@@ -110,11 +110,13 @@ function AdminChiffreAffairesPageInner() {
         .from("navettes")
         .select("name, estimated_price, status, created_at, last_dispatch_date, pickup_address, dropoff_address, user_id")
         .eq("status", "active"),
-      supabase.from("profiles").select("id, full_name, company"),
+      supabase.from("profiles").select("id, full_name"),
+      supabase.from("clients").select("id, company_name"),
     ]);
 
+    const companyById = new Map((clientRows ?? []).map((c) => [c.id, c.company_name]));
     const profileById: Record<string, { full_name: string | null; company: string | null }> = Object.fromEntries(
-      (profileRows ?? []).map((p) => [p.id, { full_name: p.full_name, company: p.company }])
+      (profileRows ?? []).map((p) => [p.id, { full_name: p.full_name, company: companyById.get(p.id) || null }])
     );
     const clientOf = (userId: string | null) => {
       const p = userId ? profileById[userId] : null;

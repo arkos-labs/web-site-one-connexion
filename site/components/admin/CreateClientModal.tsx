@@ -10,6 +10,7 @@ export function CreateClientModal({ isOpen, onClose, onSuccess }: { isOpen: bool
   const [phone, setPhone] = useState("");
   const [company, setCompany] = useState("");
   const [siret, setSiret] = useState("");
+  const [accountType, setAccountType] = useState<"pro" | "particulier">("pro");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -29,9 +30,9 @@ export function CreateClientModal({ isOpen, onClose, onSuccess }: { isOpen: bool
           lastName,
           email,
           phone,
-          company,
-          siret,
-          accountType: "pro",
+          company: accountType === "pro" ? company : "",
+          siret: accountType === "pro" ? siret : "",
+          accountType,
         }),
       });
 
@@ -41,7 +42,7 @@ export function CreateClientModal({ isOpen, onClose, onSuccess }: { isOpen: bool
       if (onSuccess) onSuccess();
       onClose();
       // Reset form
-      setFirstName(""); setLastName(""); setEmail(""); setPhone(""); setCompany("");
+      setFirstName(""); setLastName(""); setEmail(""); setPhone(""); setCompany(""); setSiret(""); setAccountType("pro");
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -66,6 +67,19 @@ export function CreateClientModal({ isOpen, onClose, onSuccess }: { isOpen: bool
             </div>
             <div className="p-6">
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+            <div className="flex p-1 bg-gray-100 rounded-xl">
+              {(["pro", "particulier"] as const).map((t) => (
+                <button
+                  key={t}
+                  type="button"
+                  onClick={() => setAccountType(t)}
+                  className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all ${accountType === t ? "bg-white text-ink shadow-sm" : "text-gray-500 hover:text-gray-700"}`}
+                >
+                  {t === "pro" ? "Professionnel" : "Particulier"}
+                </button>
+              ))}
+            </div>
+
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1.5">Prénom *</label>
@@ -80,18 +94,22 @@ export function CreateClientModal({ isOpen, onClose, onSuccess }: { isOpen: bool
               </div>
             </div>
 
-            <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1.5">Société *</label>
-              <div className="relative">
-                <Building2 size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                <input required value={company} onChange={e => setCompany(e.target.value)} className="w-full pl-9 pr-3 py-2.5 border rounded-xl bg-gray-50 text-sm focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent" />
-              </div>
-            </div>
+            {accountType === "pro" && (
+              <>
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1.5">Société *</label>
+                  <div className="relative">
+                    <Building2 size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                    <input required value={company} onChange={e => setCompany(e.target.value)} className="w-full pl-9 pr-3 py-2.5 border rounded-xl bg-gray-50 text-sm focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent" />
+                  </div>
+                </div>
 
-            <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1.5">Numéro de SIRET *</label>
-              <input required value={siret} onChange={e => setSiret(e.target.value)} placeholder="14 chiffres" className="w-full px-4 py-2.5 border rounded-xl bg-gray-50 text-sm focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent" />
-            </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1.5">Numéro de SIRET *</label>
+                  <input required value={siret} onChange={e => setSiret(e.target.value)} placeholder="14 chiffres" className="w-full px-4 py-2.5 border rounded-xl bg-gray-50 text-sm focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent" />
+                </div>
+              </>
+            )}
 
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1.5">Email *</label>

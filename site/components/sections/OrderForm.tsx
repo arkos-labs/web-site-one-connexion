@@ -102,6 +102,7 @@ export default function OrderForm() {
         contact_email: contactEmail,
         contact_phone: contactPhone,
         status: "en_attente",
+        price_estimate: estimatedPrice,
         client_type: clientType,
         source: "page_publique",
       });

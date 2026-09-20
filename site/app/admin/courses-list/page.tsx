@@ -79,8 +79,12 @@ function CoursesListInner() {
 
     const userIds = [...new Set(rows.map((o) => o.user_id).filter(Boolean))];
     if (userIds.length) {
-      const { data } = await supabase.from("profiles").select("id, full_name, company").in("id", userIds);
-      setProfiles(new Map((data ?? []).map((p) => [p.id, p])));
+      const [{ data }, { data: clientRows }] = await Promise.all([
+        supabase.from("profiles").select("id, full_name").in("id", userIds),
+        supabase.from("clients").select("id, company_name").in("id", userIds),
+      ]);
+      const companyById = new Map((clientRows ?? []).map((c) => [c.id, c.company_name]));
+      setProfiles(new Map((data ?? []).map((p) => [p.id, { ...p, company: companyById.get(p.id) || null }])));
     }
 
     const { data: driversData } = await supabase.from("drivers").select("id, name, auth_id");

@@ -109,10 +109,16 @@ export default function AdminOverviewPage() {
 
     const orderRows = ordersAwaiting.data ?? [];
     const userIds = [...new Set(orderRows.map((o) => o.user_id).filter(Boolean))];
-    const { data: profiles } = userIds.length
-      ? await supabase.from("profiles").select("id, full_name, company").in("id", userIds)
-      : { data: [] as { id: string; full_name: string | null; company: string | null }[] };
-    const profileById = new Map((profiles ?? []).map((p) => [p.id, p]));
+    const [{ data: profileRows }, { data: clientRows }] = userIds.length
+      ? await Promise.all([
+          supabase.from("profiles").select("id, full_name").in("id", userIds),
+          supabase.from("clients").select("id, company_name").in("id", userIds),
+        ])
+      : [{ data: [] as { id: string; full_name: string | null }[] }, { data: [] as { id: string; company_name: string | null }[] }];
+    const companyById = new Map((clientRows ?? []).map((c) => [c.id, c.company_name]));
+    const profileById = new Map<string, { id: string; full_name: string | null; company: string | null }>(
+      (profileRows ?? []).map((p: { id: string; full_name: string | null }) => [p.id, { ...p, company: companyById.get(p.id) || null }])
+    );
 
     const pendingOrders: PendingItem[] = orderRows.map((o) => {
       const profile = o.user_id ? profileById.get(o.user_id) : null;

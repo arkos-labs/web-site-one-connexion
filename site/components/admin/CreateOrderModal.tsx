@@ -34,6 +34,7 @@ export function CreateOrderModal({ isOpen, onClose, onSuccess, profiles, drivers
   const [newClientSiret, setNewClientSiret] = useState("");
   const [newClientEmail, setNewClientEmail] = useState("");
   const [newClientPhone, setNewClientPhone] = useState("");
+  const [newClientType, setNewClientType] = useState<"pro" | "particulier">("pro");
 
   const supabase = createClient();
 
@@ -56,9 +57,10 @@ export function CreateOrderModal({ isOpen, onClose, onSuccess, profiles, drivers
 
     try {
       let finalClientId = clientId;
+      const isNewPro = newClientType === "pro";
 
       if (clientId === "NEW_CLIENT") {
-        if (!newClientFirstName || !newClientLastName || !newClientEmail || !newClientCompany || !newClientSiret) {
+        if (!newClientFirstName || !newClientLastName || !newClientEmail || (isNewPro && (!newClientCompany || !newClientSiret))) {
           throw new Error("Veuillez remplir tous les champs du nouveau client.");
         }
 
@@ -70,9 +72,9 @@ export function CreateOrderModal({ isOpen, onClose, onSuccess, profiles, drivers
             lastName: newClientLastName,
             email: newClientEmail,
             phone: newClientPhone,
-            company: newClientCompany,
-            siret: newClientSiret,
-            accountType: "pro",
+            company: isNewPro ? newClientCompany : "",
+            siret: isNewPro ? newClientSiret : "",
+            accountType: newClientType,
           }),
         });
 
@@ -95,7 +97,7 @@ export function CreateOrderModal({ isOpen, onClose, onSuccess, profiles, drivers
         status: driverId ? "confirmee" : "en_attente",
         driver_id: driverId || null,
         price_estimate: price,
-        client_type: 'entreprise',
+        client_type: (clientId === "NEW_CLIENT" ? isNewPro : !!profiles.find((p: any) => p.id === clientId)?.company) ? 'entreprise' : 'particulier',
         source: 'admin',
       });
 
@@ -105,7 +107,7 @@ export function CreateOrderModal({ isOpen, onClose, onSuccess, profiles, drivers
       onClose();
       // Reset
       setClientId(""); setDriverId(""); setPickupAddress(""); setDropoffAddress(""); setNotes(""); setPrice(null);
-      setNewClientFirstName(""); setNewClientLastName(""); setNewClientEmail(""); setNewClientCompany(""); setNewClientSiret(""); setNewClientPhone("");
+      setNewClientFirstName(""); setNewClientLastName(""); setNewClientEmail(""); setNewClientCompany(""); setNewClientSiret(""); setNewClientPhone(""); setNewClientType("pro");
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -136,7 +138,7 @@ export function CreateOrderModal({ isOpen, onClose, onSuccess, profiles, drivers
                 <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1.5">Client *</label>
                 <select required value={clientId} onChange={e => setClientId(e.target.value)} className="w-full px-4 py-3 border rounded-xl bg-gray-50 text-sm focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent">
                   <option value="">-- Sélectionner un client --</option>
-                  <option value="NEW_CLIENT" className="font-bold text-accent">+ Créer un nouveau client Pro</option>
+                  <option value="NEW_CLIENT" className="font-bold text-accent">+ Créer un nouveau client</option>
                   {profiles.length === 0 ? (
                     <option disabled>Aucun client disponible</option>
                   ) : (
@@ -150,14 +152,25 @@ export function CreateOrderModal({ isOpen, onClose, onSuccess, profiles, drivers
               {clientId === "NEW_CLIENT" && (
                 <div className="bg-orange-50 border border-orange-100 p-4 rounded-xl flex flex-col gap-3">
                   <div className="text-xs font-bold uppercase tracking-widest text-accent mb-2">Informations du nouveau client</div>
+                  <div className="flex p-1 bg-white/70 rounded-lg">
+                    {(["pro", "particulier"] as const).map((t) => (
+                      <button key={t} type="button" onClick={() => setNewClientType(t)} className={`flex-1 py-1.5 rounded-md text-sm font-bold transition-all ${newClientType === t ? "bg-white text-ink shadow-sm" : "text-gray-500"}`}>
+                        {t === "pro" ? "Professionnel" : "Particulier"}
+                      </button>
+                    ))}
+                  </div>
                   <div className="grid grid-cols-2 gap-3">
                     <input required value={newClientFirstName} onChange={e => setNewClientFirstName(e.target.value)} placeholder="Prénom *" className="w-full px-3 py-2 border rounded-lg bg-white text-sm focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent" />
                     <input required value={newClientLastName} onChange={e => setNewClientLastName(e.target.value)} placeholder="Nom *" className="w-full px-3 py-2 border rounded-lg bg-white text-sm focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent" />
                   </div>
                   <input required type="email" value={newClientEmail} onChange={e => setNewClientEmail(e.target.value)} placeholder="Email professionnel *" className="w-full px-3 py-2 border rounded-lg bg-white text-sm focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent" />
                   <input required value={newClientPhone} onChange={e => setNewClientPhone(e.target.value)} placeholder="Téléphone *" className="w-full px-3 py-2 border rounded-lg bg-white text-sm focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent" />
-                  <input required value={newClientCompany} onChange={e => setNewClientCompany(e.target.value)} placeholder="Nom de l'entreprise *" className="w-full px-3 py-2 border rounded-lg bg-white text-sm focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent" />
-                  <input required value={newClientSiret} onChange={e => setNewClientSiret(e.target.value)} placeholder="Numéro de SIRET (14 chiffres) *" className="w-full px-3 py-2 border rounded-lg bg-white text-sm focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent" />
+                  {newClientType === "pro" && (
+                    <>
+                      <input required value={newClientCompany} onChange={e => setNewClientCompany(e.target.value)} placeholder="Nom de l'entreprise *" className="w-full px-3 py-2 border rounded-lg bg-white text-sm focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent" />
+                      <input required value={newClientSiret} onChange={e => setNewClientSiret(e.target.value)} placeholder="Numéro de SIRET (14 chiffres) *" className="w-full px-3 py-2 border rounded-lg bg-white text-sm focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent" />
+                    </>
+                  )}
                 </div>
               )}
 
