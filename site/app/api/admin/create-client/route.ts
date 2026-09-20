@@ -68,8 +68,19 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: createError.message }, { status: 400 });
     }
 
-    if (newUser?.user && siret) {
-      await adminSupabase.from('profiles').update({ siret }).eq('id', newUser.user.id);
+    // 4. Update profile with full_name, company, email, phone
+    if (newUser?.user) {
+      const { error: updateError } = await adminSupabase.from('profiles').update({
+        full_name: `${firstName} ${lastName}`,
+        company: accountType === 'pro' ? company : null,
+        email: email,
+        phone: phone,
+        siret: siret || null,
+      }).eq('id', newUser.user.id);
+
+      if (updateError) {
+        console.error('Profile update error:', updateError);
+      }
     }
 
     return NextResponse.json({ success: true, user: newUser.user });
