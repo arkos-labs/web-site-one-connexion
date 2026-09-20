@@ -5,7 +5,7 @@
 
 export const PHONE_DISPLAY = "06 66 02 67 07";
 export const PHONE_TEL = "+33666026707";
-export const EMAIL = "contact@oneconnexion.fr";
+export const EMAIL = "contact@oneconnexion.com";
 export const FOUNDED_YEAR = "2026";
 
 export const SITE_URL = "https://www.oneconnexion.fr";
