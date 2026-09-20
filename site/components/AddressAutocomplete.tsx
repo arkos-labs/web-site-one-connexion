@@ -71,8 +71,8 @@ export function AddressAutocomplete({
             return idfDepartments.includes(dept);
           });
           
-          // Ne garder que les 12 meilleurs résultats
-          setSuggestions(filteredFeatures.slice(0, 12));
+          // Ne garder que les 5 meilleurs résultats
+          setSuggestions(filteredFeatures.slice(0, 5));
           setIsOpen(true);
         }
       } catch (error) {

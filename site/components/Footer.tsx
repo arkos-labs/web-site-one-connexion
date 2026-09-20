@@ -164,9 +164,14 @@ export default function Footer() {
           className="mx-auto flex flex-wrap items-center justify-between gap-x-4 gap-y-3 px-[clamp(20px,4vw,32px)] py-4"
           style={{ maxWidth: "1240px" }}
         >
-          <span className="font-mono text-[9px] tracking-[0.16em] uppercase" style={{ color: "rgba(244,242,238,0.3)" }}>
-            Paiement sécurisé
-          </span>
+          <div>
+            <div className="font-mono text-[9px] tracking-[0.16em] uppercase" style={{ color: "rgba(244,242,238,0.3)" }}>
+              Paiements sécurisés
+            </div>
+            <div className="text-[11px] font-semibold mt-1" style={{ color: "rgba(244,242,238,0.6)" }}>
+              Vos transactions en toute confiance
+            </div>
+          </div>
           <ul className="flex flex-wrap items-center justify-end gap-3" aria-label="Moyens de paiement acceptés">
             {PAYMENT_METHODS.map((method) => (
               <li key={method.name} title={method.name} aria-label={method.name}>
