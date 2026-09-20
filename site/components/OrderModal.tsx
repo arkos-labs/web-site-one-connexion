@@ -352,6 +352,41 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                       <label className="mb-1.5 block text-sm font-bold text-ink">Consignes au coursier</label>
                       <textarea rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Ex: Colis à l'accueil, demander M. Martin…" className="w-full resize-none rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none" />
                     </div>
+
+                    {/* Récapitulatif Prix (Mobile Uniquement) */}
+                    <div className="md:hidden bg-orange-50/50 border border-orange-100 rounded-2xl p-6 mt-2">
+                      <h3 className="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2">
+                        <CheckCircle2 className="w-4 h-4 text-[#ed5518]" />
+                        Récapitulatif de votre commande
+                      </h3>
+                      <div className="space-y-2 text-[14px] text-gray-600 mb-4">
+                        <div className="flex justify-between gap-4">
+                          <span>Départ :</span>
+                          <span className="font-medium text-gray-900 truncate text-right">{pickupAddress || "À renseigner"}</span>
+                        </div>
+                        <div className="flex justify-between gap-4">
+                          <span>Arrivée :</span>
+                          <span className="font-medium text-gray-900 truncate text-right">{dropoffAddress || "À renseigner"}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Format :</span>
+                          <span className="font-medium text-gray-900">{format === 'doc' ? 'Pli/Doc' : format === 'petit' ? 'Petit Colis' : 'Volumineux'}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Délai :</span>
+                          <span className="font-medium text-gray-900">{delai === 'standard' ? 'Normal' : delai === 'urgent' ? 'Urgent' : 'Super Urgent'}</span>
+                        </div>
+                      </div>
+                      <div className="border-t border-orange-200/60 pt-4 flex items-end justify-between">
+                        <div>
+                          <div className="text-[11px] font-bold uppercase tracking-wider text-orange-600/80 mb-0.5">Tarif estimé (HT)</div>
+                          <div className="text-xs text-gray-500">Paiement sécurisé par carte</div>
+                        </div>
+                        <div className="text-2xl font-extrabold text-[#ed5518]">
+                          {estimatedPrice !== null ? `${estimatedPrice.toFixed(2)} €` : '-- €'}
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 )}
 
@@ -381,8 +416,8 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                 )}
               </div>
 
-              {/* Récapitulatif (Droite) */}
-              <div className="w-full md:w-[300px] bg-gray-50 p-6 flex flex-col shrink-0 overflow-y-auto">
+              {/* Récapitulatif (Droite - Desktop Uniquement) */}
+              <div className="hidden md:flex w-[300px] bg-gray-50 p-6 flex-col shrink-0 overflow-y-auto">
                 <h3 className="text-sm font-bold text-gray-800 mb-6 flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-[#ed5518]" />
                   Récapitulatif de votre commande
