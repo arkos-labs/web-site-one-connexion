@@ -499,8 +499,10 @@ function AdminCoursesPageInner() {
                       <span className={`rounded-full px-2 py-0.5 text-[11px] font-bold uppercase ${c.type === "navette" ? "bg-blue-50 text-blue-700" : "bg-slate-100 text-slate-700"}`}>
                         {c.type === "navette" ? "Navette" : c.label}
                       </span>
-                      {(c.delai === 'urgent' || c.delai === 'flash') && (
-                        <span className="rounded-full bg-red-50 px-2 py-0.5 text-[11px] font-bold text-red-600">Flash</span>
+                      {c.delai && c.type !== "navette" && (
+                        <span className={`rounded-full px-2 py-0.5 text-[11px] font-bold uppercase ${c.delai === 'flash' ? 'bg-red-50 text-red-700' : c.delai === 'urgent' ? 'bg-orange-50 text-orange-700' : 'bg-slate-100 text-slate-700'}`}>
+                          {c.delai === 'flash' ? 'Super Urgent 1h' : c.delai === 'urgent' ? 'Urgent 1h30' : c.delai === 'standard' ? 'Normal 3h' : c.delai}
+                        </span>
                       )}
                       {c.type === "commande" && c.status !== "en_attente" && c.status !== "pending" ? (
                         <select

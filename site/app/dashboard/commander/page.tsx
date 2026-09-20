@@ -278,6 +278,8 @@ export default function CommanderPage() {
         contact_name: contactName,
         contact_phone: contactPhone,
         status: "en_attente",
+        client_type: "entreprise",
+        source: "dashboard",
       })
       .select("tracking_code")
       .single();
