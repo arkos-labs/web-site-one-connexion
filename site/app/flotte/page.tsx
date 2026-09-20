@@ -4,9 +4,17 @@ import Link from "next/link";
 import { PHONE_TEL, PHONE_DISPLAY } from "@/lib/site-content";
 
 export const metadata = {
-  title: "Notre flotte de coursiers moto — ONE CONNEXION",
+  title: "Notre flotte de coursiers moto",
   description: "Flotte exclusive de deux-roues optimisée pour la livraison express à Paris et en Île-de-France. Scooters agiles et motos routières, équipés et assurés.",
   alternates: { canonical: "/flotte" },
+  openGraph: {
+    title: "Notre flotte de coursiers moto — ONE CONNEXION",
+    description:
+      "Scooters agiles et motos routières, équipés et assurés, pour la livraison express à Paris et en Île-de-France.",
+    url: "/flotte",
+    type: "website",
+    locale: "fr_FR",
+  },
 };
 
 const STATS = [
@@ -66,7 +74,7 @@ export default function FlottePage() {
     <main>
 
       {/* ── Hero ── */}
-      <section className="relative bg-ink text-white" style={{ backgroundImage: "url('/images/flotte-bg-new.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
+      <section className="relative bg-ink text-white" style={{ backgroundImage: "url('/images/flotte-bg-opt.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <div className="absolute inset-0 bg-ink/85"></div>
         <div className="relative z-10 mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-20 pt-16">
           <div className="mb-5 font-mono text-[11px] uppercase tracking-[0.16em] text-accent">

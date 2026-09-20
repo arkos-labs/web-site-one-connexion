@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Contact — ONE CONNEXION | Coursier Paris & Île-de-France",
+  title: "Contact",
   description:
     "Contactez One Connexion pour vos livraisons urgentes à Paris et en Île-de-France. Devis gratuit, réponse rapide. Téléphone, email ou formulaire.",
+  alternates: { canonical: "/contact" },
   openGraph: {
+    url: "/contact",
     title: "Contact — ONE CONNEXION",
     description:
       "Contactez-nous pour vos livraisons urgentes à Paris et en Île-de-France.",

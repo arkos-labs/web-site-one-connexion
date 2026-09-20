@@ -49,7 +49,7 @@ export default function ServicesIndexPage() {
     <>
       <JsonLd data={breadcrumbSchema} />
 
-      <section className="relative bg-ink text-white" style={{ backgroundImage: "url('/images/services-bg-new.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
+      <section className="relative bg-ink text-white" style={{ backgroundImage: "url('/images/services-bg-opt.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <div className="absolute inset-0 bg-ink/85"></div>
         <div className="relative mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-16 pt-12">
           <nav

@@ -68,11 +68,7 @@ export default async function ServicePage({
     description: service.seo.description,
     serviceType: service.card.tag,
     areaServed: { "@type": "AdministrativeArea", name: "Île-de-France" },
-    provider: {
-      "@type": "Organization",
-      name: "ONE CONNEXION",
-      url: SITE_URL,
-    },
+    provider: { "@id": `${SITE_URL}/#organization` },
     url: pageUrl,
   };
 

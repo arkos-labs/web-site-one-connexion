@@ -33,3 +33,13 @@
 - [ ] Claim/optimize Google Business Profile; keep NAP identical to schema (5 Square Nungesser, 94160 Saint-Mandé).
 - [ ] Publish 1–2 informational guides per month (pricing, délais, plis huissier/notaire, transport de prélèvements).
 - [ ] Re-run this audit against the deployed URL for CWV and crawl data.
+
+---
+## Correctifs appliqués le 2026-09-20 (build de production vérifié)
+Fil d'Ariane des zones · canonical d'accueil · poster/preload/aria-hidden de la vidéo (20 Mo → 0,7 Mo) · fonds JPEG (2,5–7,5 Mo → 0,1–0,7 Mo) · og:image + Twitter card · `title.template` + titres raccourcis · OG dédiés flotte/références/méthode · schema (LocalBusiness seul, entité `#organization` référencée par `@id`, Service pour zones, `containsPlace` retiré) · sitemap (+/contact, champs factices retirés) · robots (+/admin/, connexion/inscription en noindex) · en-têtes de sécurité + X-Robots-Tag privé · `sizes` sur l'image À propos · icône Événementiel · H1/eyebrow avec « Coursier B2B Paris ».
+
+## Reste à faire (nécessite une décision ou du contenu réel)
+- Justifier ou retirer « 99,4 % » et « 3,5 M€ » ; vrais logos/témoignages (bandeau `Hero.tsx`).
+- Enrichir les 118 pages de zones (contenu local unique) ou les regrouper/noindex.
+- Page À propos/équipe, études de cas, guides ; `sameAs` + fiche Google Business Profile.
+- Search Console + GA4 (`NEXT_PUBLIC_GA_MEASUREMENT_ID`), mesure Core Web Vitals sur l'URL déployée.

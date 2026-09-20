@@ -6,7 +6,6 @@
 "use client";
 
 import { useState } from "react";
-import { FOUNDED_YEAR } from "@/lib/site-content";
 import { MapPin, Flag } from "lucide-react";
 
 const COMMITMENTS = [
@@ -23,28 +22,29 @@ export default function Hero() {
   const [pickup, setPickup] = useState("");
   const [dropoff, setDropoff] = useState("");
 
-  const orderUrl = `/?pickup=${encodeURIComponent(pickup)}&dropoff=${encodeURIComponent(dropoff)}#commander`;
-
   return (
     <section id="top" className="relative border-b border-white/10 bg-ink text-white overflow-hidden">
-      <video 
-        autoPlay 
-        loop 
-        muted 
-        playsInline 
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        preload="metadata"
+        poster="/hero-poster.jpg"
+        aria-hidden="true"
         className="absolute inset-0 w-full h-full object-cover object-[center_60%] z-0"
       >
-        <source src="/videos/hero-video.mp4" type="video/mp4" />
+        <source src="/videos/hero-video-opt.mp4" type="video/mp4" />
       </video>
       <div className="absolute inset-0 bg-ink/40 z-10 pointer-events-none"></div>
       <div className="relative z-20 mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)]">
         <div className="grid items-end gap-8 pt-8 sm:grid-cols-[1.15fr_0.85fr]">
           <div className="min-w-0">
             <div className="mb-4 inline-block rounded-full bg-black/40 backdrop-blur-sm px-3 py-1 font-mono text-[11px] tracking-[0.16em] text-accent uppercase border border-white/10 shadow-lg">
-              Transport urgent · Depuis {FOUNDED_YEAR}
+              Coursier B2B · Paris &amp; Île-de-France
             </div>
             <h1 className="mb-4 text-balance text-[clamp(36px,5vw,64px)] font-bold leading-[1.05] tracking-[-0.035em]">
-              Le dernier kilomètre, tenu à l&rsquo;heure depuis {FOUNDED_YEAR}.
+              Le dernier kilomètre, tenu à l&rsquo;heure.
             </h1>
             <p className="mb-6 max-w-[56ch] text-pretty text-[16px] leading-[1.6] text-white/66">
               One Connexion opère les livraisons urgentes des cabinets juridiques,

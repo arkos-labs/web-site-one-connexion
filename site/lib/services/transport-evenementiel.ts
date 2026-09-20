@@ -9,7 +9,7 @@ export const transportEvenementiel: Service = {
     note: "Dédiée",
   },
   seo: {
-    title: "Coursier événementiel et logistique RP Paris — ONE CONNEXION",
+    title: "Coursier événementiel et logistique RP Paris",
     description: "Le partenaire logistique de vos événements, pop-up stores et opérations RP à Paris. Livraison VIP, accréditations, et transport sous haute discrétion.",
     keywords: ["coursier événementiel", "livraison RP paris", "transport VIP", "logistique événementielle paris"],
   },

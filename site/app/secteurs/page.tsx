@@ -11,7 +11,7 @@ import { SITE_URL } from "@/lib/site-content";
 import { Scale, Activity, ShoppingBag, Briefcase, Stethoscope, Building2 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Secteurs d'activité — Coursier B2B spécialisé Paris | ONE CONNEXION",
+  title: "Secteurs d'activité — Coursier B2B Paris",
   description:
     "One Connexion opère pour les cabinets juridiques, laboratoires, e-commerçants, agences et entreprises d'Île-de-France. Découvrez nos solutions par secteur.",
   alternates: { canonical: "/secteurs" },

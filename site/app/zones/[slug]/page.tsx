@@ -9,9 +9,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import JsonLd from "@/components/JsonLd";
 import { SITE_URL, PHONE_DISPLAY, PHONE_TEL, EMAIL } from "@/lib/site-content";
-import { ZONES, getZone } from "@/lib/zones/data";
+import { ZONES, getZone, isZoneIndexed } from "@/lib/zones/data";
 import {
-  Scale, Activity, ShoppingBag, Briefcase, Stethoscope, Building2,
+  Scale, Activity, ShoppingBag, Briefcase, CalendarDays, Building2,
   MapPin, Phone, Clock, CheckCircle, ArrowRight, ChevronRight
 } from "lucide-react";
 
@@ -35,7 +35,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!zone) return {};
 
   return {
-    title: zone.seo.title,
+    title: { absolute: zone.seo.title },
     description: zone.seo.description,
     keywords: zone.seo.keywords,
     alternates: { canonical: `/zones/${slug}` },
@@ -46,7 +46,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: "website",
       locale: "fr_FR",
     },
-    robots: { index: true, follow: true },
+    robots: { index: isZoneIndexed(zone), follow: true },
   };
 }
 
@@ -57,7 +57,7 @@ const SECTOR_ICONS: Record<string, React.ElementType> = {
   "Médical & Laboratoires": Activity,
   "E-commerce & Luxe":      ShoppingBag,
   "Corporate & Agences":    Briefcase,
-  "Événementiel":           Stethoscope,
+  "Événementiel":           CalendarDays,
   "Grands comptes":         Building2,
   // fallbacks
   "Médical":                Activity,
@@ -124,38 +124,20 @@ export default async function ZonePage({ params }: Props) {
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "Accueil", item: SITE_URL },
       { "@type": "ListItem", position: 2, name: "Zones", item: `${SITE_URL}/zones` },
-      { "@type": "ListItem", position: 3, name: categoryLabel(zone.category), item: `${SITE_URL}/zones/${zone.category === "paris" ? "paris" : zone.category}` },
-      { "@type": "ListItem", position: 4, name: zone.fullName, item: `${SITE_URL}/zones/${slug}` },
+      { "@type": "ListItem", position: 3, name: zone.fullName, item: `${SITE_URL}/zones/${slug}` },
     ],
   };
 
-  const localBusinessSchema = {
+  const serviceSchema = {
     "@context": "https://schema.org",
-    "@type": ["LocalBusiness", "MovingCompany"],
-    "@id": `${SITE_URL}/zones/${slug}#business`,
-    name: "ONE CONNEXION",
+    "@type": "Service",
+    "@id": `${SITE_URL}/zones/${slug}#service`,
+    name: `Coursier express — ${zone.fullName}`,
+    serviceType: "Coursier B2B",
     description: zone.seo.description,
     url: `${SITE_URL}/zones/${slug}`,
-    telephone: PHONE_TEL,
-    email: EMAIL,
-    address: {
-      "@type": "PostalAddress",
-      streetAddress: "5 Square Nungesser",
-      addressLocality: "Saint-Mandé",
-      postalCode: "94160",
-      addressRegion: "Île-de-France",
-      addressCountry: "FR",
-    },
-    areaServed: {
-      "@type": "City",
-      name: zone.fullName,
-      containsPlace: zone.landmarks.map((l) => ({
-        "@type": "LandmarksOrHistoricalBuildings",
-        name: l,
-      })),
-    },
-    openingHours: "Mo-Su 07:00-23:00",
-    priceRange: zone.pricingZone === "standard" ? "€€" : "Sur devis",
+    provider: { "@id": `${SITE_URL}/#organization` },
+    areaServed: { "@type": "Place", name: zone.fullName },
   };
 
   /* Zones voisines à suggérer */
@@ -166,7 +148,7 @@ export default async function ZonePage({ params }: Props) {
   return (
     <>
       <JsonLd data={breadcrumbSchema} />
-      <JsonLd data={localBusinessSchema} />
+      <JsonLd data={serviceSchema} />
 
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
       <section className="bg-ink text-white">

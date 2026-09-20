@@ -16,7 +16,7 @@ export const plisConfidentiels: Service = {
   },
 
   seo: {
-    title: "Coursier juridique à Paris — plis confidentiels remis contre signature",
+    title: "Coursier juridique Paris — plis confidentiels",
     description:
       "Transport de plis confidentiels pour cabinets d’avocats, études notariales et offices d’huissiers à Paris et en petite couronne. Course dédiée, remise contre signature, preuve horodatée.",
     keywords: [

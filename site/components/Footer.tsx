@@ -6,7 +6,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { SERVICES } from "@/lib/services";
-import { EMAIL, FOUNDED_YEAR, LEGAL, PHONE_DISPLAY, PHONE_TEL } from "@/lib/site-content";
+import { EMAIL, LEGAL, PHONE_DISPLAY, PHONE_TEL } from "@/lib/site-content";
 
 const ACCENT = "#ed5518";
 
@@ -158,7 +158,7 @@ export default function Footer() {
             className="font-mono text-[10px] tracking-[0.12em] uppercase"
             style={{ color: "rgba(244,242,238,0.16)" }}
           >
-            © {FOUNDED_YEAR}–2026 One Connexion · Tous droits réservés
+            © 2026 One Connexion · Tous droits réservés
           </span>
           <span
             className="font-mono text-[10px] tracking-[0.12em] uppercase"

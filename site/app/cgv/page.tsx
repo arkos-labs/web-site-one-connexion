@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { LEGAL, EMAIL } from "@/lib/site-content";
 
 export const metadata: Metadata = {
-  title: "Conditions Générales de Vente — ONE CONNEXION",
+  title: "Conditions Générales de Vente",
+  alternates: { canonical: "/cgv" },
   robots: { index: true, follow: true },
 };
 

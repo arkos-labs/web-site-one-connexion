@@ -7,12 +7,21 @@ import { LEGAL, PHONE_TEL, EMAIL, SITE_URL } from "@/lib/site-content";
 
 const organizationSchema = {
   "@context": "https://schema.org",
-  "@type": ["LocalBusiness", "MovingCompany"],
+  "@type": "LocalBusiness",
   "@id": `${SITE_URL}/#organization`,
   name: LEGAL.denomination,
   legalName: LEGAL.denomination,
   url: SITE_URL,
   logo: `${SITE_URL}/logo.png`,
+  image: `${SITE_URL}/og-image.jpg`,
+  contactPoint: {
+    "@type": "ContactPoint",
+    contactType: "customer service",
+    telephone: PHONE_TEL,
+    email: EMAIL,
+    areaServed: "FR",
+    availableLanguage: "fr",
+  },
   telephone: PHONE_TEL,
   email: EMAIL,
   address: {

@@ -10,7 +10,7 @@ import { SERVICES } from "@/lib/services";
 import { MapPin } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Coursier petite couronne Paris (92, 93, 94) | ONE CONNEXION",
+  title: "Coursier petite couronne Paris (92, 93, 94)",
   description:
     "Livraison express en petite couronne parisienne : Hauts-de-Seine (92), Seine-Saint-Denis (93), Val-de-Marne (94). Coursier moto dédié, enlèvement < 45 min.",
   alternates: { canonical: "/zones/petite-couronne" },

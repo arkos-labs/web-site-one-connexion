@@ -10,7 +10,7 @@ import { SERVICES } from "@/lib/services";
 import { MapPin } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Coursier La Défense & Hauts-de-Seine (92) — Livraison express | ONE CONNEXION",
+  title: "Coursier La Défense & Hauts-de-Seine (92)",
   description:
     "Coursier moto dédié à La Défense, Nanterre, Neuilly, Boulogne-Billancourt et tout le 92. Enlèvement < 45 min, suivi en temps réel. Devis sous 2 h.",
   alternates: { canonical: "/zones/la-defense" },

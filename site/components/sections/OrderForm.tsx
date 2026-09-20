@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { createClient } from "@/lib/supabase/client";
 import { AddressAutocomplete } from "@/components/AddressAutocomplete";
+import { calculatePrice, ServiceLevel } from "@/lib/pricing";
 
 export default function OrderForm() {
   const [step, setStep] = useState(1);
@@ -29,15 +30,24 @@ export default function OrderForm() {
   // Form state
   const [clientType, setClientType] = useState<'entreprise' | 'particulier'>('entreprise');
   const [format, setFormat] = useState('doc');
-  const [delai, setDelai] = useState('urgent');
+  const [delai, setDelai] = useState('standard');
   const [pickupAddress, setPickupAddress] = useState("");
   const [dropoffAddress, setDropoffAddress] = useState("");
   const [contactName, setContactName] = useState("");
   const [contactPhone, setContactPhone] = useState("");
   const [contactEmail, setContactEmail] = useState("");
   const [notes, setNotes] = useState("");
+  const [estimatedPrice, setEstimatedPrice] = useState<number | null>(null);
 
   const supabase = createClient();
+
+  useEffect(() => {
+    if (pickupAddress && dropoffAddress) {
+      setEstimatedPrice(calculatePrice(pickupAddress, dropoffAddress, delai as ServiceLevel));
+    } else {
+      setEstimatedPrice(null);
+    }
+  }, [pickupAddress, dropoffAddress, delai]);
 
   useEffect(() => {
     const search = window.location.search;
@@ -73,7 +83,7 @@ export default function OrderForm() {
     // de relire la commande après l'avoir créée.
     const trackingCode = `OC-${crypto.randomUUID().slice(0, 8).toUpperCase()}`;
 
-    const { error } = await supabase
+    const { data: orderData, error } = await supabase
       .from("orders")
       .insert({
         user_id: user?.id ?? null,
@@ -90,16 +100,39 @@ export default function OrderForm() {
         status: "en_attente",
       });
 
-    setSubmitting(false);
-
     if (error) {
       console.error("Supabase insert error:", error);
       alert("Erreur lors de l'envoi : " + error.message);
+      setSubmitting(false);
       return;
     }
 
-    setTrackingCode(trackingCode);
-    setSubmitted(true);
+    try {
+      const res = await fetch('/api/stripe/create-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          clientType,
+          service: delai,
+          pickupAddress,
+          dropoffAddress,
+          orderId: trackingCode,
+          email: contactEmail,
+        })
+      });
+
+      const data = await res.json();
+      
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error(data.error || "Erreur inconnue");
+      }
+    } catch (err: any) {
+      console.error("Stripe Checkout Error:", err);
+      alert("Erreur lors de l'initialisation du paiement : " + err.message);
+      setSubmitting(false);
+    }
   };
 
   const prevStep = () => {
@@ -122,7 +155,7 @@ export default function OrderForm() {
           </p>
         </div>
 
-        <div id="commander-form" className="mx-auto max-w-xl bg-white rounded-3xl p-6 sm:p-10 shadow-sm border border-gray-100 relative overflow-hidden scroll-mt-24 pb-32">
+        <div id="commander-form" className="mx-auto max-w-xl bg-white rounded-3xl p-6 sm:p-10 shadow-sm border border-gray-100 relative scroll-mt-24 pb-32">
           {submitted ? (
             <div className="text-center py-16">
               <div className="mb-6 inline-flex h-20 w-20 items-center justify-center rounded-full bg-green-50 text-emerald-500">
@@ -354,22 +387,32 @@ export default function OrderForm() {
                       <div>
                         <label className="block text-sm font-bold text-gray-800 mb-3">Délai de prise en charge</label>
                         <div className="flex flex-wrap gap-3">
-                          <button type="button" onClick={() => setDelai('urgent')} className={`flex items-center gap-2 px-5 py-3 rounded-xl transition-all ${delai === 'urgent' ? 'bg-[#ed5518] text-white shadow-md shadow-accent/20' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
-                            <Zap className="w-5 h-5" />
-                            <span className="font-semibold">Urgent ({'<'} 1h)</span>
-                          </button>
                           <button type="button" onClick={() => setDelai('standard')} className={`flex items-center gap-2 px-5 py-3 rounded-xl transition-all ${delai === 'standard' ? 'bg-[#ed5518] text-white shadow-md shadow-accent/20' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
                             <Clock className="w-5 h-5" />
-                            <span className="font-semibold">Standard (3h)</span>
+                            <span className="font-semibold">NORMAL : 3h</span>
                           </button>
-                          <button type="button" onClick={() => setDelai('direct')} className={`flex items-center gap-2 px-5 py-3 rounded-xl transition-all ${delai === 'direct' ? 'bg-[#ed5518] text-white shadow-md shadow-accent/20' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
+                          <button type="button" onClick={() => setDelai('urgent')} className={`flex items-center gap-2 px-5 py-3 rounded-xl transition-all ${delai === 'urgent' ? 'bg-[#ed5518] text-white shadow-md shadow-accent/20' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
+                            <Zap className="w-5 h-5" />
+                            <div className="flex flex-col text-left">
+                              <span className="font-semibold leading-tight">URGENT : 1h30</span>
+                              <span className="text-xs opacity-80">+50% du tarif</span>
+                            </div>
+                          </button>
+                          <button type="button" onClick={() => setDelai('flash')} className={`flex items-center gap-2 px-5 py-3 rounded-xl transition-all ${delai === 'flash' ? 'bg-[#ed5518] text-white shadow-md shadow-accent/20' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
+                            <Zap className="w-5 h-5 text-red-500" />
+                            <div className="flex flex-col text-left">
+                              <span className="font-semibold leading-tight">SUPER : 1h</span>
+                              <span className="text-xs opacity-80">+100% du tarif</span>
+                            </div>
+                          </button>
+                          <button type="button" onClick={() => setDelai('navette')} className={`flex items-center gap-2 px-5 py-3 rounded-xl transition-all ${delai === 'navette' ? 'bg-[#ed5518] text-white shadow-md shadow-accent/20' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
                             <Calendar className="w-5 h-5" />
-                            <span className="font-semibold">Programmé</span>
+                            <span className="font-semibold">Navette (Programmé)</span>
                           </button>
                         </div>
                       </div>
                       
-                      {delai === 'direct' && (
+                      {delai === 'navette' && (
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2 duration-300">
                           <div>
                             <label className="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-wide">Date d'enlèvement</label>
@@ -385,6 +428,41 @@ export default function OrderForm() {
                       <div>
                         <label className="block text-sm font-bold text-gray-800 mb-2">Consignes au coursier</label>
                         <textarea rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Ex: Le colis est à l'accueil, demander M. Martin..." className="w-full bg-gray-50 border border-gray-200 rounded-xl px-5 py-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-400 resize-none transition-colors"></textarea>
+                      </div>
+
+                      {/* Récapitulatif Prix */}
+                      <div className="bg-orange-50/50 border border-orange-100 rounded-2xl p-6 mt-4">
+                        <h3 className="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2">
+                          <CheckCircle2 className="w-4 h-4 text-[#ed5518]" />
+                          Récapitulatif de votre commande
+                        </h3>
+                        <div className="space-y-2 text-[14px] text-gray-600 mb-4">
+                          <div className="flex justify-between">
+                            <span>Départ :</span>
+                            <span className="font-medium text-gray-900 truncate max-w-[200px] sm:max-w-[300px]">{pickupAddress || "À renseigner"}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Arrivée :</span>
+                            <span className="font-medium text-gray-900 truncate max-w-[200px] sm:max-w-[300px]">{dropoffAddress || "À renseigner"}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Format :</span>
+                            <span className="font-medium text-gray-900">{format === 'doc' ? 'Pli/Doc' : format === 'petit' ? 'Petit Colis' : 'Volumineux'}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Délai :</span>
+                            <span className="font-medium text-gray-900">{delai === 'standard' ? 'Normal' : delai === 'urgent' ? 'Urgent' : delai === 'flash' ? 'Super Urgent' : 'Navette'}</span>
+                          </div>
+                        </div>
+                        <div className="border-t border-orange-200/60 pt-4 flex items-end justify-between">
+                          <div>
+                            <div className="text-[11px] font-bold uppercase tracking-wider text-orange-600/80 mb-0.5">Tarif estimé (HT)</div>
+                            <div className="text-xs text-gray-500">Paiement sécurisé par carte</div>
+                          </div>
+                          <div className="text-2xl font-extrabold text-[#ed5518]">
+                            {estimatedPrice !== null ? `${estimatedPrice.toFixed(2)} €` : '-- €'}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -409,7 +487,7 @@ export default function OrderForm() {
                     className="flex items-center gap-2 bg-black text-white px-8 py-3.5 rounded-xl font-bold hover:bg-gray-800 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 ml-auto disabled:opacity-60"
                   >
                     {submitting
-                      ? 'Envoi en cours…'
+                      ? 'Redirection paiement…'
                       : step < 3
                         ? 'Étape suivante'
                         : 'Commander la course'

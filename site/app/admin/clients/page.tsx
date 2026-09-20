@@ -5,7 +5,8 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { AdminPage } from "@/components/dashboard/ui";
 import { useQueryParam } from "@/lib/use-query-state";
-import { Briefcase, Building2, Calendar, Clock, Euro, Search, ShoppingBag, Users } from "lucide-react";
+import { Briefcase, Building2, Calendar, Clock, Euro, Search, ShoppingBag, Users, Plus } from "lucide-react";
+import { CreateClientModal } from "@/components/admin/CreateClientModal";
 
 type ClientRow = {
   id: string;
@@ -37,6 +38,7 @@ function AdminClientsPageInner() {
   const [filter, setFilter] = useQueryParam("filter", "all");
   const [search, setSearch] = useQueryParam("q", "");
   const [lastRefresh, setLastRefresh] = useState<Date | null>(null);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   const load = useCallback(async () => {
     const startOfMonth = new Date();
@@ -92,6 +94,13 @@ function AdminClientsPageInner() {
       actions={
         <>
         <button
+          onClick={() => setIsCreateModalOpen(true)}
+          className="flex items-center gap-2 rounded-xl bg-accent px-4 py-2.5 text-[13px] font-bold text-white transition-colors hover:bg-accent-dark"
+        >
+          <Plus size={16} />
+          Nouveau client
+        </button>
+        <button
           onClick={load}
           className="flex items-center gap-2 rounded-xl border border-white/20 bg-white/[0.07] px-4 py-2.5 text-[13px] font-semibold text-white transition-colors hover:bg-white/15 hover:text-white"
         >
@@ -101,6 +110,11 @@ function AdminClientsPageInner() {
         </>
       }
     >
+      <CreateClientModal 
+        isOpen={isCreateModalOpen} 
+        onClose={() => setIsCreateModalOpen(false)} 
+        onSuccess={load} 
+      />
 
       <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         <StatCard icon={Users} label="Total clients" value={String(total)} sub={newThisMonth > 0 ? `+${newThisMonth} ce mois-ci` : "Portefeuille actif"} />

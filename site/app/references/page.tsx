@@ -3,9 +3,17 @@ import { Scale, Activity, Briefcase, ShoppingBag, Star, Quote, ArrowRight } from
 import Link from "next/link";
 
 export const metadata = {
-  title: "Nos références clients — ONE CONNEXION",
+  title: "Nos références clients",
   description: "Cabinets juridiques, laboratoires, agences et e-commerçants : découvrez les entreprises qui font confiance à One Connexion pour leurs livraisons express en Île-de-France.",
   alternates: { canonical: "/references" },
+  openGraph: {
+    title: "Nos références clients — ONE CONNEXION",
+    description:
+      "Cabinets juridiques, laboratoires, agences et e-commerçants qui confient leurs livraisons express à One Connexion.",
+    url: "/references",
+    type: "website",
+    locale: "fr_FR",
+  },
 };
 
 const SECTEURS = [
@@ -80,7 +88,7 @@ export default function ReferencesPage() {
     <main>
 
       {/* ── Hero ── */}
-      <section className="relative bg-ink text-white" style={{ backgroundImage: "url('/images/references-bg-new.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
+      <section className="relative bg-ink text-white" style={{ backgroundImage: "url('/images/references-bg-opt.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <div className="absolute inset-0 bg-ink/85"></div>
         <div className="relative z-10 mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-20 pt-16">
           <div className="mb-5 font-mono text-[11px] uppercase tracking-[0.16em] text-accent">

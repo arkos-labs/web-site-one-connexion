@@ -7,6 +7,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { X, Package, Mail, Truck, Zap, Clock, Calendar, User, Building2, ChevronRight, ChevronLeft, CheckCircle2, CreditCard } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { AddressAutocomplete } from "@/components/AddressAutocomplete";
+import { calculatePrice, ServiceLevel } from "@/lib/pricing";
 
 interface OrderModalProps {
   open: boolean;
@@ -22,15 +24,24 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
   const [trackingCode, setTrackingCode] = useState<string | null>(null);
   const [clientType, setClientType] = useState<"entreprise" | "particulier">("entreprise");
   const [format, setFormat] = useState("doc");
-  const [delai, setDelai] = useState("urgent");
+  const [delai, setDelai] = useState("standard");
   const [pickupAddress, setPickupAddress] = useState(initialPickup);
   const [dropoffAddress, setDropoffAddress] = useState(initialDropoff);
   const [contactName, setContactName] = useState("");
   const [contactPhone, setContactPhone] = useState("");
   const [contactEmail, setContactEmail] = useState("");
   const [notes, setNotes] = useState("");
+  const [estimatedPrice, setEstimatedPrice] = useState<number | null>(null);
 
   const supabase = createClient();
+
+  useEffect(() => {
+    if (pickupAddress && dropoffAddress) {
+      setEstimatedPrice(calculatePrice(pickupAddress, dropoffAddress, delai as ServiceLevel));
+    } else {
+      setEstimatedPrice(null);
+    }
+  }, [pickupAddress, dropoffAddress, delai]);
 
   // Reset quand la modal ouvre
   useEffect(() => {
@@ -71,7 +82,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
     // de relire la commande après l'avoir créée.
     const trackingCode = `OC-${crypto.randomUUID().slice(0, 8).toUpperCase()}`;
 
-    const { error } = await supabase
+    const { data: orderData, error } = await supabase
       .from("orders")
       .insert({
         user_id: user?.id ?? null,
@@ -88,25 +99,48 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
         status: "en_attente",
       });
 
-    setSubmitting(false);
-
     if (error) {
       console.error("Supabase modal error:", error);
       alert("Erreur : " + error.message);
+      setSubmitting(false);
       return;
     }
 
-    setTrackingCode(trackingCode);
-    setSubmitted(true);
+    try {
+      const res = await fetch('/api/stripe/create-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          clientType,
+          service: delai,
+          pickupAddress,
+          dropoffAddress,
+          orderId: trackingCode,
+          email: contactEmail,
+        })
+      });
+
+      const data = await res.json();
+      
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error(data.error || "Erreur inconnue");
+      }
+    } catch (err: any) {
+      console.error("Stripe Checkout Error:", err);
+      alert("Erreur lors de l'initialisation du paiement : " + err.message);
+      setSubmitting(false);
+    }
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[100] p-4 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
       {/* Overlay */}
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
+      <div className="fixed inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
 
       {/* Panneau */}
-      <div className="relative z-10 w-full max-w-lg max-h-[90dvh] overflow-y-auto rounded-2xl bg-white shadow-2xl">
+      <div className="relative z-10 w-full max-w-lg mx-auto my-8 flex flex-col rounded-2xl bg-white shadow-2xl">
         {/* Header */}
         <div className="sticky top-0 z-10 flex items-center justify-between border-b border-gray-100 bg-white px-6 py-4">
           <div>
@@ -206,13 +240,11 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                       <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">
                         Adresse d'enlèvement <span className="text-accent">*</span>
                       </label>
-                      <input
-                        type="text"
-                        value={pickupAddress}
-                        onChange={(e) => setPickupAddress(e.target.value)}
-                        required
-                        placeholder="Rue, ville..."
-                        className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
+                      <AddressAutocomplete 
+                        value={pickupAddress} 
+                        onChange={setPickupAddress} 
+                        placeholder="Rue, ville..." 
+                        required 
                       />
                     </div>
 
@@ -224,13 +256,11 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                       <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">
                         Adresse de livraison <span className="text-accent">*</span>
                       </label>
-                      <input
-                        type="text"
-                        value={dropoffAddress}
-                        onChange={(e) => setDropoffAddress(e.target.value)}
-                        required
-                        placeholder="Rue, ville..."
-                        className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
+                      <AddressAutocomplete 
+                        value={dropoffAddress} 
+                        onChange={setDropoffAddress} 
+                        placeholder="Rue, ville..." 
+                        required 
                       />
                     </div>
                   </div>
@@ -289,25 +319,31 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
 
                     <div>
                       <label className="mb-3 block text-sm font-bold text-ink">Délai de prise en charge</label>
-                      <div className="flex flex-wrap gap-2">
-                        {[
-                          { id: "urgent", label: "Urgent (< 1h)", Icon: Zap },
-                          { id: "standard", label: "Standard (3h)", Icon: Clock },
-                          { id: "direct", label: "Programmé", Icon: Calendar },
-                        ].map(({ id, label, Icon }) => (
-                          <button
-                            key={id}
-                            type="button"
-                            onClick={() => setDelai(id)}
-                            className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all ${delai === id ? "bg-accent text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}
-                          >
-                            <Icon size={16} /> {label}
-                          </button>
-                        ))}
+                      <div className="flex flex-col gap-2">
+                        <button type="button" onClick={() => setDelai('standard')} className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${delai === 'standard' ? 'bg-accent text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
+                          <Clock size={16} /> <span>NORMAL : 3h</span>
+                        </button>
+                        <button type="button" onClick={() => setDelai('urgent')} className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${delai === 'urgent' ? 'bg-accent text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
+                          <Zap size={16} /> 
+                          <div className="flex flex-col text-left">
+                            <span className="leading-tight">URGENT : 1h30</span>
+                            <span className="text-[10px] opacity-80">+50% du tarif</span>
+                          </div>
+                        </button>
+                        <button type="button" onClick={() => setDelai('flash')} className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${delai === 'flash' ? 'bg-accent text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
+                          <Zap size={16} className={delai === 'flash' ? "text-white" : "text-red-500"} /> 
+                          <div className="flex flex-col text-left">
+                            <span className="leading-tight">SUPER : 1h</span>
+                            <span className="text-[10px] opacity-80">+100% du tarif</span>
+                          </div>
+                        </button>
+                        <button type="button" onClick={() => setDelai('navette')} className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${delai === 'navette' ? 'bg-accent text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
+                          <Calendar size={16} /> <span>Navette (Programmé)</span>
+                        </button>
                       </div>
                     </div>
 
-                    {delai === "direct" && (
+                    {delai === "navette" && (
                       <div className="grid grid-cols-2 gap-3">
                         <div>
                           <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">Date</label>
@@ -324,6 +360,41 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                       <label className="mb-1.5 block text-sm font-bold text-ink">Consignes au coursier</label>
                       <textarea rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Ex: Colis à l'accueil, demander M. Martin…" className="w-full resize-none rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none" />
                     </div>
+
+                    {/* Récapitulatif Prix */}
+                    <div className="bg-orange-50/50 border border-orange-100 rounded-2xl p-6 mt-2">
+                      <h3 className="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2">
+                        <CheckCircle2 className="w-4 h-4 text-[#ed5518]" />
+                        Récapitulatif de votre commande
+                      </h3>
+                      <div className="space-y-2 text-[14px] text-gray-600 mb-4">
+                        <div className="flex justify-between">
+                          <span>Départ :</span>
+                          <span className="font-medium text-gray-900 truncate max-w-[150px] sm:max-w-[200px]">{pickupAddress || "À renseigner"}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Arrivée :</span>
+                          <span className="font-medium text-gray-900 truncate max-w-[150px] sm:max-w-[200px]">{dropoffAddress || "À renseigner"}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Format :</span>
+                          <span className="font-medium text-gray-900">{format === 'doc' ? 'Pli/Doc' : format === 'petit' ? 'Petit Colis' : 'Volumineux'}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Délai :</span>
+                          <span className="font-medium text-gray-900">{delai === 'standard' ? 'Normal' : delai === 'urgent' ? 'Urgent' : delai === 'flash' ? 'Super Urgent' : 'Navette'}</span>
+                        </div>
+                      </div>
+                      <div className="border-t border-orange-200/60 pt-4 flex items-end justify-between">
+                        <div>
+                          <div className="text-[11px] font-bold uppercase tracking-wider text-orange-600/80 mb-0.5">Tarif estimé (HT)</div>
+                          <div className="text-xs text-gray-500">Paiement sécurisé par carte</div>
+                        </div>
+                        <div className="text-2xl font-extrabold text-[#ed5518]">
+                          {estimatedPrice !== null ? `${estimatedPrice.toFixed(2)} €` : '-- €'}
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 )}
 
@@ -339,7 +410,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                     disabled={submitting}
                     className="ml-auto flex items-center gap-2 rounded-lg bg-accent px-6 py-2.5 text-sm font-bold text-white hover:bg-accent-dark transition-colors disabled:opacity-60"
                   >
-                    {submitting ? "Envoi…" : step < 3 ? "Étape suivante" : "Commander"}
+                    {submitting ? "Redirection…" : step < 3 ? "Étape suivante" : "Commander"}
                     {!submitting && (step < 3 ? <ChevronRight size={16} /> : <CheckCircle2 size={16} />)}
                   </button>
                 </div>

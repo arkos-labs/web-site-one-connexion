@@ -208,9 +208,11 @@ export default function Header() {
         <div className="flex h-[80px] items-center justify-between border-b border-white/10 px-5">
           <Link href="/" onClick={() => setMenuOpen(false)}>
             {isDashboard ? (
-              <img
+              <Image
                 src="/logo-x.png"
                 alt="One Connexion Logo"
+                width={400}
+                height={150}
                 className="w-[115px] h-auto object-contain drop-shadow-sm"
               />
             ) : (

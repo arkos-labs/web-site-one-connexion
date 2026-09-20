@@ -475,6 +475,25 @@ export const ZONES: Zone[] = [
 
 export const ZONE_SLUGS = ZONES.map((z) => z.slug);
 
+/**
+ * Zones indexées par Google : les 20 arrondissements (contenu rédigé à la main)
+ * et quelques pôles d'affaires ou communes proches du siège. Les autres pages
+ * restent accessibles mais en noindex, hors sitemap, tant qu'elles n'ont pas
+ * de contenu local propre. Pour en activer une : ajouter son slug ici.
+ */
+const INDEXED_BANLIEUE_SLUGS = new Set([
+  "nanterre", "courbevoie", "puteaux", "rueil-malmaison", "saint-cloud",
+  "saint-ouen", "aubervilliers", "pantin", "bobigny",
+  "saint-maurice", "charenton-le-pont", "nogent-sur-marne", "maisons-alfort",
+  "versailles", "massy", "orly",
+]);
+
+export function isZoneIndexed(zone: Zone): boolean {
+  return zone.category === "paris" || INDEXED_BANLIEUE_SLUGS.has(zone.slug);
+}
+
+export const INDEXED_ZONE_SLUGS = ZONES.filter(isZoneIndexed).map((z) => z.slug);
+
 export function getZone(slug: string): Zone | undefined {
   return ZONES.find((z) => z.slug === slug);
 }

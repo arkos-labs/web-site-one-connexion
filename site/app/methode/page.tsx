@@ -3,9 +3,17 @@ import Contact from "@/components/sections/Contact";
 import { ShieldCheck, Zap, PhoneCall, Smartphone } from "lucide-react";
 
 export const metadata = {
-  title: "Notre méthode de livraison express par coursier — ONE CONNEXION",
+  title: "Notre méthode de livraison express par coursier",
   description: "Découvrez le fonctionnement de One Connexion pour vos livraisons express à Paris et en Île-de-France. Coursier moto, transport urgent et suivi en temps réel B2B.",
   alternates: { canonical: "/methode" },
+  openGraph: {
+    title: "Notre méthode de livraison express — ONE CONNEXION",
+    description:
+      "Comment One Connexion opère vos courses urgentes : prise en charge, suivi en temps réel, preuve de remise.",
+    url: "/methode",
+    type: "website",
+    locale: "fr_FR",
+  },
 };
 
 const ENGAGEMENTS = [
@@ -34,7 +42,7 @@ const ENGAGEMENTS = [
 export default function MethodePage() {
   return (
     <main>
-      <section className="relative bg-ink text-white" style={{ backgroundImage: "url('/images/methode-bg-new.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
+      <section className="relative bg-ink text-white" style={{ backgroundImage: "url('/images/methode-bg-opt.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <div className="absolute inset-0 bg-ink/85"></div>
         <div className="relative mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pt-20 pb-16">
           <h1 className="mb-6 text-[clamp(40px,5vw,64px)] font-bold leading-[1.1] tracking-[-0.03em]">

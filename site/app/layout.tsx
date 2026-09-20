@@ -34,7 +34,11 @@ const ibmPlexMono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "ONE CONNEXION — Coursier B2B, Paris & Île-de-France",
+  title: {
+    default: "ONE CONNEXION — Coursier B2B, Paris & Île-de-France",
+    template: "%s | ONE CONNEXION",
+  },
+  alternates: { canonical: "/" },
   description:
     "One Connexion opère les livraisons urgentes des cabinets juridiques, laboratoires et e-commerçants d'Île-de-France. Flotte deux-roues, traçabilité complète, interlocuteur unique.",
   keywords: [
@@ -51,6 +55,15 @@ export const metadata: Metadata = {
       "Le dernier kilomètre, tenu à l'heure. Flotte deux-roues, traçabilité complète, interlocuteur unique.",
     type: "website",
     locale: "fr_FR",
+    siteName: "ONE CONNEXION",
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION — Coursier B2B Paris & Île-de-France" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ONE CONNEXION — Coursier B2B, Paris & Île-de-France",
+    description:
+      "Le dernier kilomètre, tenu à l'heure. Flotte deux-roues, traçabilité complète, interlocuteur unique.",
+    images: ["/og-image.jpg"],
   },
   robots: { index: true, follow: true },
 };

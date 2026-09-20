@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { LEGAL, EMAIL, SITE_URL } from "@/lib/site-content";
 
 export const metadata: Metadata = {
-  title: "Mentions légales — ONE CONNEXION",
+  title: "Mentions légales",
+  alternates: { canonical: "/mentions-legales" },
   robots: { index: true, follow: true },
 };
 

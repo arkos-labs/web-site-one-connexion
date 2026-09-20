@@ -11,7 +11,7 @@ import { SERVICES } from "@/lib/services";
 import { Clock, MapPin, Zap, Shield } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Coursier Paris intramuros — Livraison express 75 | ONE CONNEXION",
+  title: "Coursier Paris intramuros — Livraison express 75",
   description:
     "Coursier moto dédié dans tout Paris intramuros (1er–20e). Enlèvement en moins de 45 min, suivi GPS en temps réel, preuve de remise horodatée. Devis gratuit sous 2 h.",
   alternates: { canonical: "/zones/paris" },
@@ -34,17 +34,15 @@ const breadcrumbSchema = {
   ],
 };
 
-const localBusinessSchema = {
+const serviceSchema = {
   "@context": "https://schema.org",
-  "@type": "LocalBusiness",
-  name: "ONE CONNEXION — Coursier Paris",
-  telephone: PHONE_TEL,
-  areaServed: {
-    "@type": "City",
-    name: "Paris",
-    containedInPlace: { "@type": "AdministrativeArea", name: "Île-de-France" },
-  },
+  "@type": "Service",
+  "@id": `${SITE_URL}/zones/paris#service`,
+  name: "Coursier express — Paris intramuros",
+  serviceType: "Coursier B2B",
   url: `${SITE_URL}/zones/paris`,
+  provider: { "@id": `${SITE_URL}/#organization` },
+  areaServed: { "@type": "City", name: "Paris" },
 };
 
 const ARRONDISSEMENTS = [
@@ -66,7 +64,7 @@ export default function ZoneParis() {
   return (
     <>
       <JsonLd data={breadcrumbSchema} />
-      <JsonLd data={localBusinessSchema} />
+      <JsonLd data={serviceSchema} />
 
       {/* ── Hero ── */}
       <section className="bg-ink text-white">

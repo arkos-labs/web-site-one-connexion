@@ -5,7 +5,8 @@ import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { AdminPage } from "@/components/dashboard/ui";
 import { useQueryParam } from "@/lib/use-query-state";
-import { Check, Clock, Search, Truck, X, Zap } from "lucide-react";
+import { Check, Clock, Search, Truck, X, Zap, Plus } from "lucide-react";
+import { CreateOrderModal } from "@/components/admin/CreateOrderModal";
 
 const STATUS_DISPLAY: Record<string, string> = {
   en_attente: "En attente",
@@ -65,6 +66,7 @@ function CoursesListInner() {
   const [search, setSearch] = useQueryParam("q", "");
   const [lastRefresh, setLastRefresh] = useState<Date | null>(null);
   const [selectedOrder, setSelectedOrder] = useState<string | null>(null);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   const load = useCallback(async () => {
     const { data: ordersData } = await supabase
@@ -133,6 +135,9 @@ function CoursesListInner() {
       title={<>Courses</>}
       actions={
         <>
+        <button onClick={() => setIsCreateModalOpen(true)} className="flex items-center gap-2 rounded-xl bg-accent px-4 py-2.5 text-[13px] font-bold text-white transition-colors hover:bg-accent-dark">
+          <Plus size={16} /> Nouvelle commande
+        </button>
         <button onClick={load} className="flex items-center gap-2 rounded-xl border border-white/20 bg-white/[0.07] px-4 py-2.5 text-[13px] font-semibold text-white transition-colors hover:bg-white/15 hover:text-white">
           <Clock size={15} />
           {lastRefresh ? `Actualisé à ${new Intl.DateTimeFormat("fr-FR", { hour: "2-digit", minute: "2-digit" }).format(lastRefresh)}` : "Actualiser"}
@@ -140,6 +145,13 @@ function CoursesListInner() {
         </>
       }
     >
+      <CreateOrderModal 
+        isOpen={isCreateModalOpen} 
+        onClose={() => setIsCreateModalOpen(false)} 
+        onSuccess={load}
+        profiles={Array.from(profiles.values()) as any[]}
+        drivers={Array.from(drivers.entries()).map(([id, name]) => ({ id, name }))}
+      />
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-wrap gap-2">
