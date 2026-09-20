@@ -160,7 +160,7 @@ function AdminCoursesPageInner() {
         .select("id, name, pickup_address, dropoff_address, status, driver_id, last_dispatch_date, days_of_week, created_at, user_id, stops, point_progress, driver_accepted_at, delivery_recipient, delivery_department, delivery_comment, delivery_photo_url, picked_up_at, delivered_at")
         .eq("status", "active")
         .contains("days_of_week", [todayId()]),
-      supabase.from("profiles").select("id, full_name, company").order("full_name")
+      supabase.from("profiles").select("id, full_name, company, email").order("full_name")
     ]);
 
     setAllProfiles(profilesData ?? []);

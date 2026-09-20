@@ -137,9 +137,13 @@ export function CreateOrderModal({ isOpen, onClose, onSuccess, profiles, drivers
                 <select required value={clientId} onChange={e => setClientId(e.target.value)} className="w-full px-4 py-3 border rounded-xl bg-gray-50 text-sm focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent">
                   <option value="">-- Sélectionner un client --</option>
                   <option value="NEW_CLIENT" className="font-bold text-accent">+ Créer un nouveau client Pro</option>
-                  {profiles.map((p: any) => (
-                    <option key={p.id} value={p.id}>{p.full_name} {p.company ? `(${p.company})` : ""} {p.siret ? `— SIRET: ${p.siret}` : ""}</option>
-                  ))}
+                  {profiles.length === 0 ? (
+                    <option disabled>Aucun client disponible</option>
+                  ) : (
+                    profiles.map((p: any) => (
+                      <option key={p.id} value={p.id}>{p.full_name || p.email || p.id} {p.company ? `(${p.company})` : ""}</option>
+                    ))
+                  )}
                 </select>
               </div>
 
