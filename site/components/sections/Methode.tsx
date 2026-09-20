@@ -16,7 +16,7 @@ const STEPS = [
   {
     step: "ÉTAPE 03",
     title: "Suivi pendant la course",
-    body: "Position live partageable avec votre destinataire. En cas d'imprévu, nous appelons avant que vous ayez à le faire.",
+    body: "L'avancement de votre course est visible en ligne à chaque étape. En cas d'imprévu, nous appelons avant que vous ayez à le faire.",
   },
   {
     step: "ÉTAPE 04",

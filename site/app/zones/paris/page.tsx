@@ -13,9 +13,10 @@ import { Clock, MapPin, Zap, Shield } from "lucide-react";
 export const metadata: Metadata = {
   title: { absolute: "Coursier Paris intramuros — Livraison express 75" },
   description:
-    "Coursier moto dédié dans tout Paris intramuros (1er–20e). Enlèvement en moins de 45 min, suivi de chaque course en ligne, preuve de remise horodatée. Devis gratuit sous 2 h.",
+    "Coursier moto dédié dans tout Paris (1er–20e). Enlèvement en moins de 45 min, suivi en ligne, preuve de remise horodatée. Devis gratuit sous 2 h.",
   alternates: { canonical: "/zones/paris" },
   openGraph: {
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION — Coursier B2B Paris & Île-de-France" }],
     title: "Coursier Paris intramuros — ONE CONNEXION",
     description: "Livraison express dans tout Paris (75). Course dédiée, sans regroupement, remise contre signature.",
     url: "/zones/paris",

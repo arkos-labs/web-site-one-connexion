@@ -4,9 +4,10 @@ import Link from "next/link";
 
 export const metadata = {
   title: "Nos références clients",
-  description: "Cabinets juridiques, laboratoires, agences et e-commerçants : découvrez les entreprises qui font confiance à One Connexion pour leurs livraisons express en Île-de-France.",
+  description: "Cabinets juridiques, laboratoires, agences et e-commerçants : les secteurs pour lesquels One Connexion assure des livraisons express en Île-de-France.",
   alternates: { canonical: "/references" },
   openGraph: {
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION — Coursier B2B Paris & Île-de-France" }],
     title: "Nos références clients — ONE CONNEXION",
     description:
       "Cabinets juridiques, laboratoires, agences et e-commerçants qui confient leurs livraisons express à One Connexion.",
@@ -71,7 +72,7 @@ const TEMOIGNAGES = [
   {
     nom: "Sarah Kone",
     poste: "Head of Operations — Agence Lumière",
-    texte: "Pour nos envois de maquettes ou de dossiers sensibles, One Connexion est notre réflexe. Le suivi en temps réel rassure nos clients et le service client est vraiment disponible.",
+    texte: "Pour nos envois de maquettes ou de dossiers sensibles, One Connexion est notre réflexe. Le suivi en ligne rassure nos clients et le service client est vraiment disponible.",
     note: 5,
   },
 ];
@@ -215,7 +216,7 @@ export default function ReferencesPage() {
               La confiance des décideurs franciliens.
             </h2>
             <p className="mb-6 text-[15.5px] leading-[1.7] text-muted">
-              Dans un environnement où chaque minute compte, One Connexion s'est imposée comme la référence du transport express B2B en Île-de-France. Notre modèle — flotte exclusive, dispatcheurs dédiés, suivi en temps réel — garantit des performances constantes, quelle que soit la complexité de la mission.
+              Dans un environnement où chaque minute compte, One Connexion s'est imposée comme la référence du transport express B2B en Île-de-France. Notre modèle — flotte exclusive, dispatcheurs dédiés, suivi en ligne — garantit des performances constantes, quelle que soit la complexité de la mission.
             </p>
             <p className="text-[15.5px] leading-[1.7] text-muted">
               La fidélité de nos clients atteste de cette constance. Notre taux de recommandation avoisine les 95 % et notre dispatch répond en moins de 2 minutes.

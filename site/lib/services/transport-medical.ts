@@ -65,8 +65,8 @@ export const transportMedical: Service = {
       body: "Course dédiée, sans regroupement ni rupture de charge. Le deux-roues s’affranchit des congestions qui constituent le principal risque sur les délais courts.",
     },
     {
-      title: "Suivi en temps réel",
-      body: "La position du coursier est consultable pendant toute la course. Le laboratoire destinataire peut anticiper la réception.",
+      title: "Suivi en ligne de chaque course",
+      body: "L'avancement de la course est consultable en ligne. Vous pouvez ainsi prévenir le laboratoire destinataire de l'arrivée.",
     },
     {
       title: "Remise et traçabilité",
@@ -79,7 +79,7 @@ export const transportMedical: Service = {
     "Contenant isotherme adapté, convenu à la commande",
     "Relevé de température sur demande",
     "Confirmation de faisabilité avant engagement de la course",
-    "Suivi de position en temps réel",
+    "Suivi de chaque course en ligne",
     "Remise en main propre horodatée et nominative",
     "Coursier joignable pendant toute la course",
   ],

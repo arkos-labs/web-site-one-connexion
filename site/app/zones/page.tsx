@@ -10,7 +10,7 @@ import { SITE_URL } from "@/lib/site-content";
 export const metadata: Metadata = {
   title: { absolute: "Zones de livraison express Paris & Île-de-France" },
   description:
-    "One Connexion couvre Paris intramuros, la petite couronne (92, 93, 94) et toute l'Île-de-France. Retrouvez les détails par zone : délais, tarifs et villes couvertes.",
+    "One Connexion couvre Paris, la petite couronne (92, 93, 94) et toute l'Île-de-France. Retrouvez par zone les délais, tarifs et villes couvertes.",
   alternates: { canonical: "/zones" },
 };
 

@@ -39,6 +39,7 @@ export async function generateMetadata({
     description: service.seo.description,
     alternates: { canonical: url },
     openGraph: {
+      images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION — Coursier B2B Paris & Île-de-France" }],
       title: service.seo.title,
       description: service.seo.description,
       url,

@@ -8,6 +8,7 @@ export const metadata = {
   description: "Flotte exclusive de deux-roues optimisée pour la livraison express à Paris et en Île-de-France. Scooters agiles et motos routières, équipés et assurés.",
   alternates: { canonical: "/flotte" },
   openGraph: {
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION — Coursier B2B Paris & Île-de-France" }],
     title: "Notre flotte de coursiers moto — ONE CONNEXION",
     description:
       "Scooters agiles et motos routières, équipés et assurés, pour la livraison express à Paris et en Île-de-France.",
@@ -40,8 +41,8 @@ const VEHICLES = [
   {
     icon: ShieldCheck,
     title: "Équipement professionnel",
-    tags: ["Top-cases sécurisés", "GPS temps réel", "Étanche & verrouillé"],
-    desc: "Chaque véhicule est équipé d'un top-case verrouillé et étanche (jusqu'à 18 kg), d'un traceur GPS pour le suivi en direct, et d'une tablette de signature électronique pour la preuve de remise.",
+    tags: ["Top-cases sécurisés", "Preuve de remise", "Étanche & verrouillé"],
+    desc: "Chaque véhicule est équipé d'un top-case verrouillé et étanche (jusqu'à 18 kg). Chaque remise est horodatée, avec le nom du destinataire, pour une preuve de livraison fiable.",
   },
   {
     icon: MapPin,
@@ -53,7 +54,7 @@ const VEHICLES = [
 
 const FEATURES = [
   { Icon: Award, title: "Assurance professionnelle", desc: "Tous nos coursiers sont couverts par une assurance RC Pro et marchandises transportées." },
-  { Icon: Route, title: "Optimisation d'itinéraire", desc: "Algorithme de dispatch en temps réel pour affecter le coursier le plus proche." },
+  { Icon: Route, title: "Optimisation d'itinéraire", desc: "Dispatch assuré par notre équipe pour affecter le coursier le plus adapté." },
   { Icon: Clock, title: "Disponibilité étendue", desc: "Plages horaires 7h–23h en standard, interventions d'urgence nocturnes sur accord." },
   { Icon: CheckCircle2, title: "Coursiers vérifiés", desc: "Permis et casier judiciaire vérifiés, formation interne obligatoire avant prise de poste." },
 ];
@@ -84,7 +85,7 @@ export default function FlottePage() {
             Une flotte dédiée à l'urgence.
           </h1>
           <p className="max-w-[55ch] text-[17px] leading-[1.65] text-white/65">
-            120 coursiers deux-roues déployés sur Paris et toute l'Île-de-France. Chaque véhicule est tracé en temps réel, chaque livraison horodatée et signée électroniquement.
+            Une flotte de coursiers deux-roues sur Paris et toute l'Île-de-France. Chaque livraison est horodatée, avec une preuve de remise.
           </p>
         </div>
 

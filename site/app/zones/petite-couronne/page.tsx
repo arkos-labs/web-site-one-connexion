@@ -15,6 +15,7 @@ export const metadata: Metadata = {
     "Livraison express en petite couronne parisienne : Hauts-de-Seine (92), Seine-Saint-Denis (93), Val-de-Marne (94). Coursier moto dédié, enlèvement < 45 min.",
   alternates: { canonical: "/zones/petite-couronne" },
   openGraph: {
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION — Coursier B2B Paris & Île-de-France" }],
     title: "Coursier petite couronne — Hauts-de-Seine, Seine-Saint-Denis, Val-de-Marne | ONE CONNEXION",
     description: "Livraison urgente B2B dans les 3 départements de petite couronne parisienne. Course dédiée, traçabilité complète.",
     url: "/zones/petite-couronne",
@@ -181,7 +182,7 @@ export default function ZonePetiteCouronne() {
             {[
               { num: "01", title: "Demande immédiate", desc: "Un simple appel ou un formulaire en ligne suffit pour obtenir un devis immédiat pour n'importe quelle ville du 92, 93 ou 94." },
               { num: "02", title: "Prise en charge < 45 min", desc: "Peu importe votre emplacement en petite couronne, notre maillage garantit l'arrivée d'un coursier en moins de 45 minutes." },
-              { num: "03", title: "Livraison & Suivi", desc: "Chaque course est tracée en temps réel. Une preuve de livraison électronique vous est envoyée dès la remise." }
+              { num: "03", title: "Livraison & Suivi", desc: "L'avancement de chaque course est visible en ligne. Une preuve de remise horodatée est disponible dès la livraison." }
             ].map((step) => (
               <div key={step.num} className="flex flex-col items-center text-center p-6 bg-white rounded-2xl border border-line shadow-sm">
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-accent text-[16px] font-bold text-white shadow-md">

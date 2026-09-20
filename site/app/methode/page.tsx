@@ -4,12 +4,13 @@ import { ShieldCheck, Zap, PhoneCall, Smartphone } from "lucide-react";
 
 export const metadata = {
   title: { absolute: "Notre méthode de livraison express par coursier" },
-  description: "Découvrez le fonctionnement de One Connexion pour vos livraisons express à Paris et en Île-de-France. Coursier moto, transport urgent et suivi en temps réel B2B.",
+  description: "Le fonctionnement de One Connexion : coursier moto pour vos livraisons express à Paris et en Île-de-France, transport urgent et suivi en ligne B2B.",
   alternates: { canonical: "/methode" },
   openGraph: {
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION — Coursier B2B Paris & Île-de-France" }],
     title: "Notre méthode de livraison express — ONE CONNEXION",
     description:
-      "Comment One Connexion opère vos courses urgentes : prise en charge, suivi en temps réel, preuve de remise.",
+      "Comment One Connexion opère vos courses urgentes : prise en charge, suivi en ligne, preuve de remise.",
     url: "/methode",
     type: "website",
     locale: "fr_FR",

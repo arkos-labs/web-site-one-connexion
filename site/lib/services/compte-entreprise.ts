@@ -11,7 +11,7 @@ export const compteEntreprise: Service = {
   card: {
     tag: "04 — Comptes entreprises",
     title: "Suivi & facturation",
-    body: "Position en temps réel, justificatifs de livraison archivés, facturation mensuelle centralisée et export comptable.",
+    body: "Suivi de chaque course, justificatifs de livraison archivés, facturation mensuelle centralisée et export comptable.",
     note: "Interlocuteur unique",
   },
 
@@ -27,7 +27,7 @@ export const compteEntreprise: Service = {
     ],
   },
 
-  h1: "Compte entreprise : suivi en temps réel et facturation centralisée",
+  h1: "Compte entreprise : suivi en ligne et facturation centralisée",
 
   intro:
     "Le compte entreprise regroupe les courses de tous vos collaborateurs et de tous vos sites sous une facturation unique. Un interlocuteur, une échéance mensuelle, et des justificatifs archivés que vous pouvez retrouver des mois plus tard.",
@@ -57,8 +57,8 @@ export const compteEntreprise: Service = {
       body: "Chaque collaborateur autorisé commande par téléphone ou par courriel. Les courses sont rattachées automatiquement au compte, sans avance de frais.",
     },
     {
-      title: "Suivi en temps réel",
-      body: "La position du coursier est consultable pendant la course, pour le demandeur comme pour le destinataire.",
+      title: "Suivi en ligne de chaque course",
+      body: "L'avancement de la course est consultable en ligne par le demandeur.",
     },
     {
       title: "Justificatifs archivés",
@@ -73,7 +73,7 @@ export const compteEntreprise: Service = {
   included: [
     "Interlocuteur unique pour l’ensemble du compte",
     "Commandes par plusieurs collaborateurs, sans avance de frais",
-    "Suivi de position en temps réel",
+    "Suivi de chaque course en ligne",
     "Justificatifs de livraison archivés et restituables",
     "Facture mensuelle unique et détaillée",
     "Export comptable et imputation par dossier ou service",

@@ -34,7 +34,7 @@ export const transportEvenementiel: Service = {
   ],
   included: [
     "Véhicules sécurisés et discrets",
-    "Confirmation de livraison en temps réel",
+    "Confirmation de livraison",
     "Attente sur site possible (sur devis)",
     "Traitement minutieux des objets fragiles (prototypes, maquettes)",
   ],

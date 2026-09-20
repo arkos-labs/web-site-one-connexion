@@ -16,6 +16,7 @@ export const metadata: Metadata = {
     "One Connexion opère pour les cabinets juridiques, laboratoires, e-commerçants, agences et entreprises d'Île-de-France. Découvrez nos solutions par secteur.",
   alternates: { canonical: "/secteurs" },
   openGraph: {
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION — Coursier B2B Paris & Île-de-France" }],
     title: "Secteurs desservis — Coursier B2B Paris | ONE CONNEXION",
     description: "Solutions de transport express par secteur : juridique, médical, e-commerce, corporate. Paris & IDF.",
     url: "/secteurs",
@@ -75,7 +76,7 @@ const SECTEURS = [
     tag: "03 — Commerce en ligne",
     color: "border-orange-200 bg-orange-50",
     iconBg: "bg-orange-100 text-orange-700",
-    desc: "E-commerçants, boutiques de luxe, showrooms et places de marché. Livraison même jour (J+0) avec remise en main propre et signature électronique.",
+    desc: "E-commerçants, boutiques de luxe, showrooms et places de marché. Livraison même jour (J+0) avec remise en main propre et preuve de livraison horodatée.",
     detail: [
       "Livraison same-day en petite couronne",
       "Remise en main propre pour le luxe",

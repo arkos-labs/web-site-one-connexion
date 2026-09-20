@@ -16,6 +16,7 @@ export const metadata: Metadata = {
     "Logique tarifaire de One Connexion pour vos courses urgentes à Paris et en Île-de-France : tarif à la course ou compte mensuel. Devis gratuit sous 2 h.",
   alternates: { canonical: "/tarifs" },
   openGraph: {
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION — Coursier B2B Paris & Île-de-France" }],
     title: "Tarifs coursier express Paris — ONE CONNEXION",
     description:
       "Tarif à la course ou compte entreprise mensuel pour vos livraisons urgentes en Île-de-France. Devis gratuit sous 2 h.",
@@ -66,7 +67,7 @@ const FORMULES = [
     priceNote: "réponse sous 2 h",
     items: [
       "Enlèvement en moins de 45 min",
-      "Suivi en temps réel",
+      "Suivi en ligne de chaque course",
       "Preuve de livraison horodatée",
       "Assurance marchandises incluse",
       "Paiement à la course",

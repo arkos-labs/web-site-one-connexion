@@ -59,7 +59,7 @@ export const plisConfidentiels: Service = {
     },
     {
       title: "Transport dédié",
-      body: "Course directe, sans regroupement ni passage par un centre de tri. La position du coursier est suivie en temps réel pendant tout le trajet.",
+      body: "Course directe, sans regroupement ni passage par un centre de tri. L'avancement de la course est visible en ligne à chaque étape.",
     },
     {
       title: "Remise contre signature",
@@ -75,7 +75,7 @@ export const plisConfidentiels: Service = {
     "Course dédiée, sans regroupement avec d’autres plis",
     "Remise en main propre contre signature numérique",
     "Nom du signataire, horodatage et lieu consignés",
-    "Suivi de position en temps réel pendant le transport",
+    "Suivi de chaque course en ligne pendant le transport",
     "Justificatif de livraison archivé et restituable",
     "Coursier identifiable et joignable pendant la course",
     "Assurance marchandises jusqu’à 3,5 M€",

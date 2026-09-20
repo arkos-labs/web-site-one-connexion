@@ -39,6 +39,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: zone.seo.description,
     alternates: { canonical: `/zones/${slug}` },
     openGraph: {
+      images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION — Coursier B2B Paris & Île-de-France" }],
       title: zone.seo.title,
       description: zone.seo.description,
       url: `/zones/${slug}`,

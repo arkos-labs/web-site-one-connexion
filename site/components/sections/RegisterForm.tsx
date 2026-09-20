@@ -110,7 +110,7 @@ export default function RegisterForm() {
           </h1>
 
           <p className="mb-10 text-lg leading-relaxed text-muted md:text-xl">
-            La solution de coursier sur-mesure pour les entreprises exigeantes. Enlèvement immédiat, dispatch en direct et suivi temps réel par GPS.
+            La solution de coursier sur-mesure pour les entreprises exigeantes. Enlèvement immédiat, dispatch en direct et suivi de chaque course en ligne.
           </p>
 
           <div className="flex flex-col gap-4">
