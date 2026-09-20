@@ -1,0 +1,103 @@
+{
+  "summary": {
+    "health_score": 62,
+    "business_type": "Local service — B2B courier (Île-de-France)",
+    "top_findings": [
+      "Zone breadcrumb JSON-LD links to non-existent /zones/{department} URLs on ~98 pages",
+      "20 MB autoplay hero video without poster and ~16 MB of unoptimized CSS-background JPEGs",
+      "Homepage has no canonical while Hero generates query-string URLs",
+      "No og:image or Twitter card; three pages inherit the homepage OG data",
+      "118 factory-generated zone pages risk thin/doorway classification"
+    ],
+    "quick_wins": [
+      "Fix zone breadcrumb level 3",
+      "Add canonical '/' to the homepage",
+      "Add poster to hero video (hero-poster.jpg already exists)",
+      "Add title.template and shorten long titles",
+      "Add default OG image and Twitter card"
+    ]
+  },
+  "categories": [
+    {
+      "name": "Technical SEO",
+      "score": 62,
+      "what_works": ["metadataBase set", "canonicals on most pages", "robots.ts and sitemap.ts generated from data", "404 is noindex", "middleware scoped away from public pages"],
+      "findings": [
+        {"title": "Broken breadcrumb URLs on zone pages", "severity": "Critical", "description": "app/zones/[slug]/page.tsx:127 links to /zones/{category}; hauts-de-seine, seine-saint-denis, val-de-marne have no route.", "recommendation": "Remove level 3 or add department hub routes."},
+        {"title": "No homepage canonical", "severity": "High", "description": "Hero builds /?pickup=&dropoff= URLs; root layout has no alternates.", "recommendation": "Set canonical '/' and avoid query-string links."},
+        {"title": "Sitemap gaps and fake lastModified", "severity": "Medium", "description": "/contact missing; lastModified is new Date().", "recommendation": "Add /contact, use real dates."},
+        {"title": "/admin not disallowed; auth pages lack noindex", "severity": "Medium", "description": "robots.ts disallows /dashboard/, /connexion, /inscription only.", "recommendation": "Add /admin/ and noindex metadata."},
+        {"title": "No security headers configured", "severity": "Medium", "description": "next.config.ts defines no headers().", "recommendation": "Add CSP (report-only), nosniff, Referrer-Policy, Permissions-Policy."}
+      ]
+    },
+    {
+      "name": "Content Quality",
+      "score": 72,
+      "what_works": ["Clear service positioning", "Unique zone intros", "FAQ per service", "Legal pages present"],
+      "findings": [
+        {"title": "Unverified statistics repeated", "severity": "High", "description": "99,4 % punctuality in 8 places; 3,5 M€ insurance.", "recommendation": "Document source/period or remove."},
+        {"title": "Placeholder client logos", "severity": "High", "description": "Hero.tsx CLIENT_LOGO_SLOTS placeholder.", "recommendation": "Ship real logos/testimonials or remove."},
+        {"title": "Templated programmatic zone pages", "severity": "High", "description": "factory.ts reuses the same six sector blocks across 118 pages.", "recommendation": "Add local unique content or consolidate/noindex."},
+        {"title": "No About/team or informational content", "severity": "Medium", "description": "Weak E-E-A-T and no top-of-funnel content.", "recommendation": "Add About page, case studies, guides."}
+      ]
+    },
+    {
+      "name": "On-Page SEO",
+      "score": 66,
+      "what_works": ["Unique titles/descriptions", "One H1 per page", "Good zone/service cross-linking"],
+      "findings": [
+        {"title": "No title template; long titles", "severity": "Medium", "description": "Some titles ~72 chars; brand inconsistently included.", "recommendation": "title.template and <=60 chars."},
+        {"title": "Homepage H1 lacks keyword", "severity": "Medium", "description": "H1 is brand-voice only.", "recommendation": "Include 'coursier B2B à Paris'."},
+        {"title": "OG inheritance", "severity": "Medium", "description": "flotte, references, methode inherit home OG.", "recommendation": "Define per-page openGraph."}
+      ]
+    },
+    {
+      "name": "Schema / Structured Data",
+      "score": 58,
+      "what_works": ["Service, BreadcrumbList, FAQPage on service pages", "Consistent NAP and opening hours"],
+      "findings": [
+        {"title": "Wrong business type MovingCompany", "severity": "Medium", "description": "Applied on home and all zone pages.", "recommendation": "Use LocalBusiness only."},
+        {"title": "118 duplicate LocalBusiness entities", "severity": "Medium", "description": "One per zone page with same address.", "recommendation": "Single #organization; reference via @id."},
+        {"title": "Thin organization entity", "severity": "Low", "description": "No sameAs, image, geo, contactPoint.", "recommendation": "Add them."}
+      ]
+    },
+    {
+      "name": "Performance (CWV)",
+      "score": 45,
+      "what_works": ["next/font with swap", "Logo uses priority"],
+      "findings": [
+        {"title": "20 MB hero video, no poster", "severity": "High", "description": "public/videos/hero-video.mp4; hero-poster.jpg unused.", "recommendation": "Re-encode, add poster/preload."},
+        {"title": "Unoptimized CSS-background JPEGs", "severity": "High", "description": "services-bg-new.jpg 7.7 MB plus four 2.6–3.2 MB files.", "recommendation": "next/image with sizes; compress."},
+        {"title": "Lenis on every page; missing sizes on About image", "severity": "Medium", "description": "Main-thread cost and oversized image requests.", "recommendation": "Scope Lenis; add sizes."}
+      ]
+    },
+    {
+      "name": "AI Search Readiness",
+      "score": 60,
+      "what_works": ["Crawlers allowed", "FAQ and stat blocks"],
+      "findings": [
+        {"title": "Few corroborating entity signals", "severity": "Medium", "description": "No sameAs, GBP link, named people, sourced stats.", "recommendation": "Add About page, sameAs, sourced claims."}
+      ]
+    },
+    {
+      "name": "Images",
+      "score": 40,
+      "what_works": ["Alt text on logos and About image"],
+      "findings": [
+        {"title": "No OG image; heavy unused assets", "severity": "Medium", "description": "No social image; default Next SVGs and unused JPEGs in public/.", "recommendation": "Create OG image; prune assets."}
+      ]
+    }
+  ],
+  "action_plan": {
+    "phases": [
+      {"name": "Phase 1: Critical Fixes", "timeframe": "Week 1", "items": ["Fix zone breadcrumb 404s", "Homepage canonical", "Hero video poster and re-encode", "Compress/convert hero JPEGs"]},
+      {"name": "Phase 2: High-Impact Improvements", "timeframe": "Weeks 2-3", "items": ["Substantiate or remove stats; real client logos", "Zone page content strategy", "OG image + Twitter card + title template", "Schema cleanup (LocalBusiness, @id references)"]},
+      {"name": "Phase 3: Content & Authority", "timeframe": "Month 2", "items": ["About/team page and case studies", "Informational guides", "Google Business Profile and sameAs links"]},
+      {"name": "Phase 4: Monitoring & Iteration", "timeframe": "Ongoing", "items": ["Search Console + GA4", "Re-audit deployed URL with CWV data", "Track zone-page indexation"]}
+    ]
+  },
+  "artifacts": {
+    "findings_dir": "findings/",
+    "screenshots_dir": "screenshots/"
+  }
+}
