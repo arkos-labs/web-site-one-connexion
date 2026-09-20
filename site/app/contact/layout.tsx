@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import PageSchema from "@/components/PageSchema";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -18,5 +19,9 @@ export default function ContactLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return children;
+  return (
+    <PageSchema path="/contact" name="Contact" pageType="ContactPage">
+      {children}
+    </PageSchema>
+  );
 }

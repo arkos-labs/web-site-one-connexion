@@ -37,7 +37,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: { absolute: zone.seo.title },
     description: zone.seo.description,
-    keywords: zone.seo.keywords,
     alternates: { canonical: `/zones/${slug}` },
     openGraph: {
       title: zone.seo.title,
@@ -372,7 +371,7 @@ export default async function ZonePage({ params }: Props) {
             {[
               { num: "01", title: "Demande immédiate", desc: "Contactez-nous par téléphone ou via notre formulaire. Devis en moins de 2 minutes." },
               { num: "02", title: "Enlèvement < 45 min", desc: `Un coursier spécialisé se présente à vos bureaux à ${zone.name} en moins de 45 minutes.` },
-              { num: "03", title: "Livraison & Suivi", desc: "Suivez l'acheminement en temps réel jusqu'à la signature électronique à la réception." }
+              { num: "03", title: "Livraison & Suivi", desc: "Suivez l'avancement de votre course en ligne jusqu'à la remise, horodatée à la réception." }
             ].map((step) => (
               <div key={step.num} className="relative flex flex-col items-center text-center p-6 bg-white rounded-2xl border border-gray-100 shadow-sm">
                 <div className="absolute -top-4 flex h-10 w-10 items-center justify-center rounded-full bg-accent text-[15px] font-bold text-white shadow-md">

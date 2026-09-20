@@ -21,7 +21,7 @@ export const transportMedical: Service = {
   seo: {
     title: "Coursier médical Paris — prélèvements et labos",
     description:
-      "Transport urgent de prélèvements, échantillons et matériel technique pour laboratoires, cliniques et cabinets d’Île-de-France. Course dédiée, contenants isothermes, traçabilité de bout en bout.",
+      "Transport urgent de prélèvements et échantillons pour laboratoires, cliniques et cabinets d’Île-de-France. Course dédiée, contenants isothermes, traçabilité.",
     keywords: [
       "coursier médical Paris",
       "transport prélèvements laboratoire",

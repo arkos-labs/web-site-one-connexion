@@ -19,7 +19,7 @@ const organizationSchema = {
     contactType: "customer service",
     telephone: PHONE_TEL,
     email: EMAIL,
-    areaServed: "FR",
+    areaServed: "FR-IDF",
     availableLanguage: "fr",
   },
   telephone: PHONE_TEL,
@@ -32,6 +32,11 @@ const organizationSchema = {
     addressRegion: "Île-de-France",
     addressCountry: "FR",
   },
+  geo: {
+    "@type": "GeoCoordinates",
+    latitude: 48.8386,
+    longitude: 2.4181,
+  },
   areaServed: {
     "@type": "AdministrativeArea",
     name: "Île-de-France",
@@ -40,7 +45,7 @@ const organizationSchema = {
   priceRange: "€€",
   vatID: LEGAL.tva,
   taxID: LEGAL.siren,
-  foundingDate: LEGAL.dateCreation,
+  foundingDate: LEGAL.dateCreationISO,
   description:
     "Coursier B2B spécialisé à Paris et en Île-de-France : plis confidentiels, transport médical, livraison e-commerce et tournées régulières. Flotte deux-roues, traçabilité complète, interlocuteur unique.",
 };

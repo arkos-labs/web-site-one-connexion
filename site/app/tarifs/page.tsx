@@ -13,7 +13,7 @@ import { CheckCircle2, Clock, MapPin, Shield } from "lucide-react";
 export const metadata: Metadata = {
   title: "Tarifs coursier express Paris — Devis en 2 h",
   description:
-    "Découvrez la logique tarifaire de One Connexion pour vos courses urgentes à Paris et en Île-de-France. Tarif à la course ou compte entreprise mensuel. Devis gratuit sous 2 h.",
+    "Logique tarifaire de One Connexion pour vos courses urgentes à Paris et en Île-de-France : tarif à la course ou compte mensuel. Devis gratuit sous 2 h.",
   alternates: { canonical: "/tarifs" },
   openGraph: {
     title: "Tarifs coursier express Paris — ONE CONNEXION",

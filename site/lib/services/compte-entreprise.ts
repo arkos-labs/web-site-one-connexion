@@ -18,7 +18,7 @@ export const compteEntreprise: Service = {
   seo: {
     title: "Compte entreprise coursier — facturation centralisée",
     description:
-      "Ouvrez un compte coursier pour votre entreprise à Paris : commandes par plusieurs collaborateurs, justificatifs archivés, facturation mensuelle unique et export comptable.",
+      "Compte coursier pour votre entreprise à Paris : commandes multi-collaborateurs, justificatifs archivés, facturation mensuelle unique et export comptable.",
     keywords: [
       "compte coursier entreprise",
       "facturation mensuelle coursier",

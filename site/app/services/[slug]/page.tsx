@@ -35,9 +35,8 @@ export async function generateMetadata({
   const url = `/services/${service.slug}`;
 
   return {
-    title: service.seo.title,
+    title: { absolute: service.seo.title },
     description: service.seo.description,
-    keywords: service.seo.keywords,
     alternates: { canonical: url },
     openGraph: {
       title: service.seo.title,

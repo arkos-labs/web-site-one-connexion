@@ -37,7 +37,7 @@ const ZONES_75: Zone[] = [
     keyClients: ["Études Notariales","Haute Joaillerie (Vendôme)","Tribunaux (Île de la Cité)","Sièges sociaux"],
     distanceParis: "Hyper-centre",
     pricingZone: "standard",
-    seo: { title: "Coursier Paris 1er — Châtelet, Louvre, Vendôme | ONE CONNEXION", description: "Coursier express Paris 1er (75001). Spécialiste des plis juridiques (Tribunal de Commerce) et livraisons luxe (Vendôme). Enlèvement < 45 min.", keywords: ["coursier Paris 1er","coursier Châtelet","coursier Vendôme","livraison express 75001"] },
+    seo: { title: "Coursier Paris 1er — Châtelet, Louvre, Vendôme", description: "Coursier express Paris 1er (75001). Spécialiste des plis juridiques (Tribunal de Commerce) et livraisons luxe (Vendôme). Enlèvement < 45 min.", keywords: ["coursier Paris 1er","coursier Châtelet","coursier Vendôme","livraison express 75001"] },
   },
   {
     slug: "paris-2e",
@@ -59,7 +59,7 @@ const ZONES_75: Zone[] = [
     keyClients: ["Showrooms (Le Sentier)","Start-ups & Fintechs","Cabinets de Conseil (Bourse)","Presse"],
     distanceParis: "Hyper-centre",
     pricingZone: "standard",
-    seo: { title: "Coursier Paris 2e — Bourse, Sentier, Start-ups | ONE CONNEXION", description: "Coursier express Paris 2e (75002). Expert en livraison de prototypes (Sentier), plis financiers et navettes start-ups. Enlèvement < 45 min.", keywords: ["coursier Paris 2e","coursier Bourse","coursier Sentier","livraison mode Paris 2"] },
+    seo: { title: "Coursier Paris 2e — Bourse, Sentier, Start-ups", description: "Coursier express Paris 2e (75002). Expert en livraison de prototypes (Sentier), plis financiers et navettes start-ups. Enlèvement < 45 min.", keywords: ["coursier Paris 2e","coursier Bourse","coursier Sentier","livraison mode Paris 2"] },
   },
   {
     slug: "paris-3e",
@@ -81,7 +81,7 @@ const ZONES_75: Zone[] = [
     keyClients: ["Galeries d'art contemporain","Boutiques de créateurs","Agences de relations presse","Designers"],
     distanceParis: "Hyper-centre",
     pricingZone: "standard",
-    seo: { title: "Coursier Paris 3e — Le Marais, Galeries d'Art | ONE CONNEXION", description: "Coursier express Paris 3e (75003). Spécialiste du transport d'art, livraisons VIP pour les boutiques du Marais et agences RP. Discrétion et sécurité.", keywords: ["coursier Paris 3e","coursier Le Marais","transport art Paris 3","coursier luxe 75003"] },
+    seo: { title: "Coursier Paris 3e — Le Marais, Galeries d'Art", description: "Coursier express Paris 3e (75003). Spécialiste du transport d'art, livraisons VIP pour les boutiques du Marais et agences RP. Discrétion et sécurité.", keywords: ["coursier Paris 3e","coursier Le Marais","transport art Paris 3","coursier luxe 75003"] },
   },
   {
     slug: "paris-4e",
@@ -103,7 +103,7 @@ const ZONES_75: Zone[] = [
     keyClients: ["Mairie de Paris","Institutions Culturelles","Commerces Beaubourg","Cabinets institutionnels"],
     distanceParis: "Hyper-centre",
     pricingZone: "standard",
-    seo: { title: "Coursier Paris 4e — Hôtel de Ville, Beaubourg | ONE CONNEXION", description: "Coursier express Paris 4e (75004). Appels d'offres Hôtel de Ville, plis institutionnels, transport pour galeries d'art (Beaubourg, Marais).", keywords: ["coursier Paris 4e","coursier Hôtel de Ville","coursier Beaubourg","livraison express 75004"] },
+    seo: { title: "Coursier Paris 4e — Hôtel de Ville, Beaubourg", description: "Coursier express Paris 4e (75004). Appels d'offres Hôtel de Ville, plis institutionnels, transport pour galeries d'art (Beaubourg, Marais).", keywords: ["coursier Paris 4e","coursier Hôtel de Ville","coursier Beaubourg","livraison express 75004"] },
   },
   {
     slug: "paris-5e",
@@ -125,7 +125,7 @@ const ZONES_75: Zone[] = [
     keyClients: ["Instituts de Recherche (Curie)","Universités (Sorbonne)","Maisons d'édition","Librairies"],
     distanceParis: "Rive Gauche",
     pricingZone: "standard",
-    seo: { title: "Coursier Paris 5e — Quartier Latin, Institut Curie | ONE CONNEXION", description: "Coursier express Paris 5e (75005). Spécialiste du transport médical urgent (Curie) et liaisons pour les universités et l'édition. Enlèvement < 45 min.", keywords: ["coursier Paris 5e","coursier Quartier Latin","coursier médical Paris 5","coursier Sorbonne"] },
+    seo: { title: "Coursier Paris 5e — Quartier Latin, Institut Curie", description: "Coursier express Paris 5e (75005). Spécialiste du transport médical urgent (Curie) et liaisons pour les universités et l'édition. Enlèvement < 45 min.", keywords: ["coursier Paris 5e","coursier Quartier Latin","coursier médical Paris 5","coursier Sorbonne"] },
   },
   {
     slug: "paris-6e",
@@ -147,7 +147,7 @@ const ZONES_75: Zone[] = [
     keyClients: ["Institutions (Sénat)","Cabinets d'avocats prestigieux","Galeries d'art","Marques de luxe"],
     distanceParis: "Rive Gauche",
     pricingZone: "standard",
-    seo: { title: "Coursier Paris 6e — Saint-Germain, Sénat, Luxe | ONE CONNEXION", description: "Coursier express Paris 6e (75006). Livraison premium, plis ultra-confidentiels (Sénat, Avocats) et transport d'œuvres d'art. Discrétion absolue.", keywords: ["coursier Paris 6e","coursier Saint-Germain-des-Prés","coursier Sénat","coursier luxe 75006"] },
+    seo: { title: "Coursier Paris 6e — Saint-Germain, Sénat, Luxe", description: "Coursier express Paris 6e (75006). Livraison premium, plis ultra-confidentiels (Sénat, Avocats) et transport d'œuvres d'art. Discrétion absolue.", keywords: ["coursier Paris 6e","coursier Saint-Germain-des-Prés","coursier Sénat","coursier luxe 75006"] },
   },
   {
     slug: "paris-7e",
@@ -169,7 +169,7 @@ const ZONES_75: Zone[] = [
     keyClients: ["Ministères","Ambassades","Assemblée Nationale","Family Offices"],
     distanceParis: "Rive Gauche",
     pricingZone: "standard",
-    seo: { title: "Coursier Paris 7e — Invalides, Ministères, Ambassades | ONE CONNEXION", description: "Coursier express Paris 7e (75007). Habilités aux accès ministères et ambassades. Plis diplomatiques et confidentiels remis en main propre.", keywords: ["coursier Paris 7e","coursier ambassade Paris","coursier Invalides","livraison express 75007"] },
+    seo: { title: "Coursier Paris 7e — Invalides, Ministères, Ambassades", description: "Coursier express Paris 7e (75007). Habilités aux accès ministères et ambassades. Plis diplomatiques et confidentiels remis en main propre.", keywords: ["coursier Paris 7e","coursier ambassade Paris","coursier Invalides","livraison express 75007"] },
   },
   {
     slug: "paris-8e",
@@ -191,7 +191,7 @@ const ZONES_75: Zone[] = [
     keyClients: ["Sièges CAC40","Banques d'Affaires","Cabinets Internationaux","Maisons de Haute Couture"],
     distanceParis: "Hyper-centre",
     pricingZone: "standard",
-    seo: { title: "Coursier Paris 8e — Champs-Élysées, Triangle d'Or | ONE CONNEXION", description: "Coursier express Paris 8e (75008). Spécialiste finance, luxe et grands comptes. Enlèvement < 45 min sur les Champs-Élysées et Haussmann.", keywords: ["coursier Paris 8e","coursier Champs-Élysées","coursier Triangle d'Or","livraison express 75008"] },
+    seo: { title: "Coursier Paris 8e — Champs-Élysées, Triangle d'Or", description: "Coursier express Paris 8e (75008). Spécialiste finance, luxe et grands comptes. Enlèvement < 45 min sur les Champs-Élysées et Haussmann.", keywords: ["coursier Paris 8e","coursier Champs-Élysées","coursier Triangle d'Or","livraison express 75008"] },
   },
   {
     slug: "paris-9e",
@@ -213,7 +213,7 @@ const ZONES_75: Zone[] = [
     keyClients: ["Start-ups & Scale-ups","Grands Magasins","Théâtres & Opéra","Sièges d'assurances"],
     distanceParis: "Hyper-centre",
     pricingZone: "standard",
-    seo: { title: "Coursier Paris 9e — Opéra, Grands Boulevards, Start-ups | ONE CONNEXION", description: "Coursier express Paris 9e (75009). Spécialiste tech, start-ups et retail (Grands Magasins). Livraison informatique et plis urgents < 45 min.", keywords: ["coursier Paris 9e","coursier Opéra","coursier Grands Boulevards","livraison express 75009"] },
+    seo: { title: "Coursier Paris 9e — Opéra, Grands Boulevards, Start-ups", description: "Coursier express Paris 9e (75009). Spécialiste tech, start-ups et retail (Grands Magasins). Livraison informatique et plis urgents < 45 min.", keywords: ["coursier Paris 9e","coursier Opéra","coursier Grands Boulevards","livraison express 75009"] },
   },
   {
     slug: "paris-10e",
@@ -235,7 +235,7 @@ const ZONES_75: Zone[] = [
     keyClients: ["Hôpital Saint-Louis","Agences créatives","Studios de production","Logistique gares"],
     distanceParis: "Nord",
     pricingZone: "standard",
-    seo: { title: "Coursier Paris 10e — Gares, Canal Saint-Martin, Hôpital | ONE CONNEXION", description: "Coursier express Paris 10e (75010). Urgences médicales (Hôpital Saint-Louis), liaisons Gare du Nord/Est et navettes pour les agences du Canal.", keywords: ["coursier Paris 10e","coursier Gare du Nord","coursier hôpital Saint-Louis","livraison express 75010"] },
+    seo: { title: "Coursier Paris 10e — Gares, Canal Saint-Martin, Hôpital", description: "Coursier express Paris 10e (75010). Urgences médicales (Hôpital Saint-Louis), liaisons Gare du Nord/Est et navettes pour les agences du Canal.", keywords: ["coursier Paris 10e","coursier Gare du Nord","coursier hôpital Saint-Louis","livraison express 75010"] },
   },
   {
     slug: "paris-11e",
@@ -257,7 +257,7 @@ const ZONES_75: Zone[] = [
     keyClients: ["Espaces de Coworking","Start-ups","Artisans & Créateurs","Salles de concert"],
     distanceParis: "Est",
     pricingZone: "standard",
-    seo: { title: "Coursier Paris 11e — Bastille, Oberkampf, Nation | ONE CONNEXION", description: "Coursier express Paris 11e (75011). Partenaire des start-ups, espaces de coworking et artisans de Bastille à Nation. Enlèvement < 45 min.", keywords: ["coursier Paris 11e","coursier Bastille","coursier Oberkampf","livraison express 75011"] },
+    seo: { title: "Coursier Paris 11e — Bastille, Oberkampf, Nation", description: "Coursier express Paris 11e (75011). Partenaire des start-ups, espaces de coworking et artisans de Bastille à Nation. Enlèvement < 45 min.", keywords: ["coursier Paris 11e","coursier Bastille","coursier Oberkampf","livraison express 75011"] },
   },
   {
     slug: "paris-12e",
@@ -279,7 +279,7 @@ const ZONES_75: Zone[] = [
     keyClients: ["Ministère de l'Économie","Hôpitaux (Saint-Antoine, Trousseau)","Accor Arena","Cabinets d'audit"],
     distanceParis: "Est",
     pricingZone: "standard",
-    seo: { title: "Coursier Paris 12e — Bercy, Gare de Lyon, Hôpitaux | ONE CONNEXION", description: "Coursier express Paris 12e (75012). Plis officiels (Bercy), urgences médicales (Saint-Antoine) et relais Gare de Lyon. Enlèvement < 45 min.", keywords: ["coursier Paris 12e","coursier Bercy","coursier Gare de Lyon","livraison express 75012"] },
+    seo: { title: "Coursier Paris 12e — Bercy, Gare de Lyon, Hôpitaux", description: "Coursier express Paris 12e (75012). Plis officiels (Bercy), urgences médicales (Saint-Antoine) et relais Gare de Lyon. Enlèvement < 45 min.", keywords: ["coursier Paris 12e","coursier Bercy","coursier Gare de Lyon","livraison express 75012"] },
   },
   {
     slug: "paris-13e",
@@ -301,7 +301,7 @@ const ZONES_75: Zone[] = [
     keyClients: ["Hôpital Pitié-Salpêtrière","Start-ups (Station F)","Institutions (BnF)","Sièges bancaires"],
     distanceParis: "Sud",
     pricingZone: "standard",
-    seo: { title: "Coursier Paris 13e — Station F, Pitié-Salpêtrière | ONE CONNEXION", description: "Coursier express Paris 13e (75013). Expert en logistique médicale (Pitié-Salpêtrière) et transports urgents IT pour les start-ups (Station F).", keywords: ["coursier Paris 13e","coursier Station F","coursier hôpital Pitié-Salpêtrière","livraison express 75013"] },
+    seo: { title: "Coursier Paris 13e — Station F, Pitié-Salpêtrière", description: "Coursier express Paris 13e (75013). Expert en logistique médicale (Pitié-Salpêtrière) et transports urgents IT pour les start-ups (Station F).", keywords: ["coursier Paris 13e","coursier Station F","coursier hôpital Pitié-Salpêtrière","livraison express 75013"] },
   },
   {
     slug: "paris-14e",
@@ -323,7 +323,7 @@ const ZONES_75: Zone[] = [
     keyClients: ["Tour Montparnasse","Gare Montparnasse","Hôpital Cochin","Sièges d'assurances"],
     distanceParis: "Sud",
     pricingZone: "standard",
-    seo: { title: "Coursier Paris 14e — Montparnasse, Hôpital Cochin | ONE CONNEXION", description: "Coursier express Paris 14e (75014). Livraisons urgentes Tour Montparnasse, urgences médicales (Cochin) et liaisons TGV. Enlèvement < 45 min.", keywords: ["coursier Paris 14e","coursier Montparnasse","coursier Cochin","livraison express 75014"] },
+    seo: { title: "Coursier Paris 14e — Montparnasse, Hôpital Cochin", description: "Coursier express Paris 14e (75014). Livraisons urgentes Tour Montparnasse, urgences médicales (Cochin) et liaisons TGV. Enlèvement < 45 min.", keywords: ["coursier Paris 14e","coursier Montparnasse","coursier Cochin","livraison express 75014"] },
   },
   {
     slug: "paris-15e",
@@ -345,7 +345,7 @@ const ZONES_75: Zone[] = [
     keyClients: ["Parc des Expositions","Hôpitaux (HEGP, Necker)","Chaînes de Télévision","Grands sièges sociaux"],
     distanceParis: "Ouest",
     pricingZone: "standard",
-    seo: { title: "Coursier Paris 15e — Porte de Versailles, HEGP, Médias | ONE CONNEXION", description: "Coursier express Paris 15e (75015). Spécialiste logistique salons (Porte de Versailles), transport audiovisuel et médical (HEGP).", keywords: ["coursier Paris 15e","coursier Porte de Versailles","coursier audiovisuel Paris","livraison express 75015"] },
+    seo: { title: "Coursier Paris 15e — Porte de Versailles, HEGP, Médias", description: "Coursier express Paris 15e (75015). Spécialiste logistique salons (Porte de Versailles), transport audiovisuel et médical (HEGP).", keywords: ["coursier Paris 15e","coursier Porte de Versailles","coursier audiovisuel Paris","livraison express 75015"] },
   },
   {
     slug: "paris-16e",
@@ -367,7 +367,7 @@ const ZONES_75: Zone[] = [
     keyClients: ["Ambassades","Family Offices","Organisateurs sportifs (Roland Garros)","Cliniques privées"],
     distanceParis: "Ouest",
     pricingZone: "standard",
-    seo: { title: "Coursier Paris 16e — Ambassades, Luxe, Événementiel | ONE CONNEXION", description: "Coursier express Paris 16e (75016). Livraison VIP discrète, plis diplomatiques, navettes ambassades et logistique d'événements sportifs.", keywords: ["coursier Paris 16e","coursier ambassade Paris","coursier VIP Paris","livraison express 75016"] },
+    seo: { title: "Coursier Paris 16e — Ambassades, Luxe, Événementiel", description: "Coursier express Paris 16e (75016). Livraison VIP discrète, plis diplomatiques, navettes ambassades et logistique d'événements sportifs.", keywords: ["coursier Paris 16e","coursier ambassade Paris","coursier VIP Paris","livraison express 75016"] },
   },
   {
     slug: "paris-17e",
@@ -389,7 +389,7 @@ const ZONES_75: Zone[] = [
     keyClients: ["Tribunal de Paris (Palais de Justice)","Cabinets d'Avocats","Palais des Congrès","Sièges sociaux"],
     distanceParis: "Ouest",
     pricingZone: "standard",
-    seo: { title: "Coursier Paris 17e — Tribunal de Paris, Batignolles | ONE CONNEXION", description: "Coursier express Paris 17e (75017). Expert des dépôts juridiques au Tribunal de Paris (Batignolles). Enlèvement immédiat, course dédiée spécialisée.", keywords: ["coursier Paris 17e","coursier Tribunal de Paris","coursier avocat Paris","livraison express 75017"] },
+    seo: { title: "Coursier Paris 17e — Tribunal de Paris, Batignolles", description: "Coursier express Paris 17e (75017). Expert des dépôts juridiques au Tribunal de Paris (Batignolles). Enlèvement immédiat, course dédiée spécialisée.", keywords: ["coursier Paris 17e","coursier Tribunal de Paris","coursier avocat Paris","livraison express 75017"] },
   },
   {
     slug: "paris-18e",
@@ -411,7 +411,7 @@ const ZONES_75: Zone[] = [
     keyClients: ["Hôpital Bichat","Salles de spectacles (Pigalle)","Artisans (Montmartre)","Studios de production"],
     distanceParis: "Nord",
     pricingZone: "standard",
-    seo: { title: "Coursier Paris 18e — Montmartre, Hôpital Bichat, Pigalle | ONE CONNEXION", description: "Coursier express Paris 18e (75018). Spécialiste logistique pour l'Hôpital Bichat, livraisons événementielles pour les salles de spectacles et théâtres.", keywords: ["coursier Paris 18e","coursier Montmartre","coursier Hôpital Bichat","livraison express 75018"] },
+    seo: { title: "Coursier Paris 18e — Montmartre, Hôpital Bichat, Pigalle", description: "Coursier express Paris 18e (75018). Spécialiste logistique pour l'Hôpital Bichat, livraisons événementielles pour les salles de spectacles et théâtres.", keywords: ["coursier Paris 18e","coursier Montmartre","coursier Hôpital Bichat","livraison express 75018"] },
   },
   {
     slug: "paris-19e",
@@ -433,7 +433,7 @@ const ZONES_75: Zone[] = [
     keyClients: ["Hôpital Robert-Debré","Philharmonie de Paris","La Villette (Expositions)","Institutions publiques"],
     distanceParis: "Nord",
     pricingZone: "standard",
-    seo: { title: "Coursier Paris 19e — La Villette, Hôpital Robert-Debré | ONE CONNEXION", description: "Coursier express Paris 19e (75019). Transport médical pédiatrique (Robert-Debré), logistique événementielle lourde (La Villette).", keywords: ["coursier Paris 19e","coursier La Villette","coursier médical 75019","livraison express Paris 19"] },
+    seo: { title: "Coursier Paris 19e — La Villette, Hôpital Robert-Debré", description: "Coursier express Paris 19e (75019). Transport médical pédiatrique (Robert-Debré), logistique événementielle lourde (La Villette).", keywords: ["coursier Paris 19e","coursier La Villette","coursier médical 75019","livraison express Paris 19"] },
   },
   {
     slug: "paris-20e",
@@ -455,7 +455,7 @@ const ZONES_75: Zone[] = [
     keyClients: ["Hôpital Tenon (AP-HP)","Start-ups et Pépinières","Ateliers d'artistes","Commerces de bouche"],
     distanceParis: "Est",
     pricingZone: "standard",
-    seo: { title: "Coursier Paris 20e — Hôpital Tenon, Belleville, Père-Lachaise | ONE CONNEXION", description: "Coursier express Paris 20e (75020). Urgences médicales Hôpital Tenon, navettes pour start-ups et galeries de Belleville. Enlèvement < 45 min.", keywords: ["coursier Paris 20e","coursier Hôpital Tenon","coursier Belleville","livraison express 75020"] },
+    seo: { title: "Coursier Paris 20e — Tenon, Belleville, Père-Lachaise", description: "Coursier express Paris 20e (75020). Urgences médicales Hôpital Tenon, navettes pour start-ups et galeries de Belleville. Enlèvement < 45 min.", keywords: ["coursier Paris 20e","coursier Hôpital Tenon","coursier Belleville","livraison express 75020"] },
   },
 ];
 

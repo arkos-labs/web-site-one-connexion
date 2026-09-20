@@ -3,7 +3,7 @@ import Contact from "@/components/sections/Contact";
 import { ShieldCheck, Zap, PhoneCall, Smartphone } from "lucide-react";
 
 export const metadata = {
-  title: "Notre méthode de livraison express par coursier",
+  title: { absolute: "Notre méthode de livraison express par coursier" },
   description: "Découvrez le fonctionnement de One Connexion pour vos livraisons express à Paris et en Île-de-France. Coursier moto, transport urgent et suivi en temps réel B2B.",
   alternates: { canonical: "/methode" },
   openGraph: {
@@ -19,8 +19,8 @@ export const metadata = {
 const ENGAGEMENTS = [
   {
     icon: <Smartphone className="mb-4 h-8 w-8 text-accent" strokeWidth={1.5} />,
-    title: "Technologie embarquée",
-    desc: "Suivi GPS en temps réel, signature électronique et horodatage. Vous savez exactement où se trouve votre pli à chaque instant, sans avoir à nous appeler.",
+    title: "Suivi et preuve de remise",
+    desc: "L'avancement de votre course est visible en ligne à chaque étape, et la remise est horodatée avec le nom du destinataire. Vous n'avez pas à nous appeler pour savoir où en est votre pli.",
   },
   {
     icon: <ShieldCheck className="mb-4 h-8 w-8 text-accent" strokeWidth={1.5} />,

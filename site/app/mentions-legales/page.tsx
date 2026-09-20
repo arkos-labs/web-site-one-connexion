@@ -67,8 +67,11 @@ export default function MentionsLegales() {
         <div>
           <h2 className="mb-2 text-lg font-bold text-ink">Cookies</h2>
           <p>
-            Ce site utilise des cookies strictement nécessaires à son fonctionnement. Aucun cookie
-            publicitaire ou de traçage n&apos;est utilisé.
+            Ce site utilise des cookies strictement nécessaires à son fonctionnement et, avec votre
+            accord, des cookies de mesure d&apos;audience. Détails dans notre{" "}
+            <a href="/politique-de-confidentialite" className="text-accent hover:underline">
+              politique de confidentialité
+            </a>.
           </p>
         </div>
       </section>

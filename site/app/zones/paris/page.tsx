@@ -11,9 +11,9 @@ import { SERVICES } from "@/lib/services";
 import { Clock, MapPin, Zap, Shield } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Coursier Paris intramuros — Livraison express 75",
+  title: { absolute: "Coursier Paris intramuros — Livraison express 75" },
   description:
-    "Coursier moto dédié dans tout Paris intramuros (1er–20e). Enlèvement en moins de 45 min, suivi GPS en temps réel, preuve de remise horodatée. Devis gratuit sous 2 h.",
+    "Coursier moto dédié dans tout Paris intramuros (1er–20e). Enlèvement en moins de 45 min, suivi de chaque course en ligne, preuve de remise horodatée. Devis gratuit sous 2 h.",
   alternates: { canonical: "/zones/paris" },
   openGraph: {
     title: "Coursier Paris intramuros — ONE CONNEXION",
@@ -85,8 +85,8 @@ export default function ZoneParis() {
           </h1>
           <p className="max-w-[58ch] text-pretty text-[17px] leading-[1.6] text-white/66">
             One Connexion couvre les 20 arrondissements de Paris avec sa flotte de
-            scooters et motos. Enlèvement en moins de 45 minutes, suivi GPS en
-            continu, preuve de remise électronique à chaque livraison.
+            scooters et motos. Enlèvement en moins de 45 minutes, suivi de
+            chaque course en ligne, preuve de remise horodatée à chaque livraison.
           </p>
           <div className="mt-10 flex flex-wrap gap-3">
             <a
