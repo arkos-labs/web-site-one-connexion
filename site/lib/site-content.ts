@@ -8,7 +8,7 @@ export const PHONE_TEL = "+33666026707";
 export const EMAIL = "contact@oneconnexion.com";
 export const FOUNDED_YEAR = "2026";
 
-export const SITE_URL = "https://www.oneconnexion.fr";
+export const SITE_URL = "https://www.oneconnexion.com";
 
 // Informations légales ONE CONNEXION — SAS immatriculée le 21/02/2026
 export const LEGAL = {
