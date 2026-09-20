@@ -72,13 +72,6 @@ export default function AuthForm() {
             Gérez vos courses, suivez vos livraisons et accédez à vos factures.
           </p>
 
-          {/* Dev Banner */}
-          <div className="mb-6 bg-yellow-50 border border-yellow-200 text-yellow-800 p-3 rounded-lg text-[13px] shadow-sm">
-            <strong>Dev Test Account (Admin):</strong><br />
-            Email: <code className="bg-white px-1 py-0.5 rounded ml-1 border border-yellow-100">admin@one-connexion.dev</code><br />
-            Pass: <code className="bg-white px-1 py-0.5 rounded ml-1 border border-yellow-100">DevAdmin!2026</code>
-          </div>
-
           <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
             {/* Email */}
             <div className="flex flex-col gap-1.5">
