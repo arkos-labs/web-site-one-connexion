@@ -129,18 +129,15 @@ export function CreateOrderModal({ isOpen, onClose, onSuccess, profiles, drivers
 
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1.5">Délai</label>
-              <div className="grid grid-cols-2 gap-2">
-                <button type="button" onClick={() => setDelai('standard')} className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all ${delai === 'standard' ? 'bg-accent text-white' : 'bg-gray-100 text-gray-600'}`}>
-                  <Clock size={16} /> NORMAL : 3h
+              <div className="flex flex-col gap-2">
+                <button type="button" onClick={() => setDelai('standard')} className={`flex items-center justify-between rounded-xl px-4 py-2.5 text-sm font-semibold transition-all ${delai === 'standard' ? 'bg-accent text-white' : 'bg-gray-100 text-gray-600'}`}>
+                  <div className="flex items-center gap-2"><Clock size={16} /> NORMAL : 3h</div>
                 </button>
-                <button type="button" onClick={() => setDelai('urgent')} className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all ${delai === 'urgent' ? 'bg-accent text-white' : 'bg-gray-100 text-gray-600'}`}>
-                  <Zap size={16} /> URGENT : 1h30
+                <button type="button" onClick={() => setDelai('urgent')} className={`flex items-center justify-between rounded-xl px-4 py-2.5 text-sm font-semibold transition-all ${delai === 'urgent' ? 'bg-accent text-white' : 'bg-gray-100 text-gray-600'}`}>
+                  <div className="flex items-center gap-2"><Zap size={16} /> URGENT : 1h30</div>
                 </button>
-                <button type="button" onClick={() => setDelai('flash')} className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all ${delai === 'flash' ? 'bg-accent text-white' : 'bg-gray-100 text-gray-600'}`}>
-                  <Zap size={16} className={delai === "flash" ? "text-white" : "text-red-500"} /> SUPER : 1h
-                </button>
-                <button type="button" onClick={() => setDelai('navette')} className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all ${delai === 'navette' ? 'bg-accent text-white' : 'bg-gray-100 text-gray-600'}`}>
-                  <Calendar size={16} /> Programmé
+                <button type="button" onClick={() => setDelai('flash')} className={`flex items-center justify-between rounded-xl px-4 py-2.5 text-sm font-semibold transition-all ${delai === 'flash' ? 'bg-accent text-white' : 'bg-gray-100 text-gray-600'}`}>
+                  <div className="flex items-center gap-2"><Zap size={16} className={delai === "flash" ? "text-white" : "text-red-500"} /> SUPER : 1h</div>
                 </button>
               </div>
             </div>

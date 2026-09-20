@@ -61,11 +61,9 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
   useEffect(() => {
     if (open) {
       document.addEventListener("keydown", handleKey);
-      document.body.style.overflow = "hidden";
     }
     return () => {
       document.removeEventListener("keydown", handleKey);
-      document.body.style.overflow = "";
     };
   }, [open, handleKey]);
 
@@ -343,24 +341,8 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                             <span className="text-[10px] opacity-80">+100% du tarif</span>
                           </div>
                         </button>
-                        <button type="button" onClick={() => setDelai('navette')} className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${delai === 'navette' ? 'bg-accent text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
-                          <Calendar size={16} /> <span>Navette (Programmé)</span>
-                        </button>
                       </div>
                     </div>
-
-                    {delai === "navette" && (
-                      <div className="grid grid-cols-2 gap-3">
-                        <div>
-                          <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">Date</label>
-                          <input type="date" required className="w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-accent focus:outline-none" />
-                        </div>
-                        <div>
-                          <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">Heure</label>
-                          <input type="time" required className="w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-accent focus:outline-none" />
-                        </div>
-                      </div>
-                    )}
 
                     <div>
                       <label className="mb-1.5 block text-sm font-bold text-ink">Consignes au coursier</label>
@@ -388,7 +370,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                         </div>
                         <div className="flex justify-between">
                           <span>Délai :</span>
-                          <span className="font-medium text-gray-900">{delai === 'standard' ? 'Normal' : delai === 'urgent' ? 'Urgent' : delai === 'flash' ? 'Super Urgent' : 'Navette'}</span>
+                          <span className="font-medium text-gray-900">{delai === 'standard' ? 'Normal' : delai === 'urgent' ? 'Urgent' : 'Super Urgent'}</span>
                         </div>
                       </div>
                       <div className="border-t border-orange-200/60 pt-4 flex items-end justify-between">
