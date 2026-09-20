@@ -24,26 +24,25 @@ import {
 } from "lucide-react";
 import { AddressAutocomplete } from "@/components/AddressAutocomplete";
 import { createClient } from "@/lib/supabase/client";
+import { calculatePrice, ServiceLevel } from "@/lib/pricing";
 
 /* ── Données métier ───────────────────────────────────────────────────── */
 
 const STEPS = ["Trajet", "Format", "Délai", "Validation"] as const;
 
 const FORMATS = [
-  { id: "pli", name: "Pli / Document", weight: "Jusqu'à 1 kg", example: "Enveloppe, contrat, clé", vehicle: "Vélo express ou moto", icon: Package },
-  { id: "petit", name: "Petit colis", weight: "Jusqu'à 8 kg", example: "Format boîte à chaussures", vehicle: "Vélo cargo ou scooter", icon: Box },
-  { id: "volumineux", name: "Volumineux", weight: "Jusqu'à 30 kg+", example: "Cartons multiples", vehicle: "Fourgonnette 100 % électrique", icon: Truck },
+  { id: "pli", name: "Pli / Document", weight: "Jusqu'à 1 kg", example: "Enveloppe, contrat, clé", vehicle: "Moto express", icon: Package },
+  { id: "petit", name: "Petit colis", weight: "Jusqu'à 8 kg", example: "Format boîte à chaussures", vehicle: "Moto ou scooter", icon: Box },
+  { id: "volumineux", name: "Volumineux", weight: "Jusqu'à 30 kg+", example: "Cartons multiples", vehicle: "Moto ou fourgonnette 100 % électrique", icon: Truck },
 ] as const;
 
 const DELAIS = [
-  { id: "flash", name: "Flash immédiat", hint: "30 à 45 min garanties", icon: Zap },
-  { id: "standard", name: "Standard 2 heures", hint: "Avant 13h00", icon: Clock },
-  { id: "programme", name: "Programmé", hint: "Choisir date & heure", icon: CalendarClock },
+  { id: "flash", name: "Super Urgent 1h", hint: "+100% du tarif", icon: Zap },
+  { id: "urgent", name: "Urgent 1h30", hint: "+50% du tarif", icon: Zap },
+  { id: "standard", name: "Normal 3h", hint: "Tarif de base", icon: Clock },
 ] as const;
 
-/* Tarif d'affichage (l'estimation n'est pas encore calculée côté serveur). */
-const PRICE_HT = 24.5;
-const PRICE_TTC = PRICE_HT * 1.2;
+/* Tarif d'affichage (dynamique) */
 const eur = (n: number) => n.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 /* ── Styles partagés ──────────────────────────────────────────────────── */
@@ -225,8 +224,17 @@ export default function CommanderPage() {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [trackingCode, setTrackingCode] = useState<string | null>(null);
   const [favoriteAddresses, setFavoriteAddresses] = useState<Favorite[]>([]);
+  const [estimatedPrice, setEstimatedPrice] = useState<number | null>(null);
 
   const supabase = createClient();
+
+  useEffect(() => {
+    if (pickupAddress && dropoffAddress) {
+      setEstimatedPrice(calculatePrice(pickupAddress, dropoffAddress, delai as ServiceLevel));
+    } else {
+      setEstimatedPrice(null);
+    }
+  }, [pickupAddress, dropoffAddress, delai]);
 
   useEffect(() => {
     supabase.from("addresses").select("id, label, address").then(({ data }: { data: Favorite[] | null }) => {
@@ -253,15 +261,6 @@ export default function CommanderPage() {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) { setSubmitError("Session expirée. Veuillez vous reconnecter."); setSubmitting(false); return; }
 
-    let scheduled_at = null;
-    if (delai === "programme" && scheduledDate && scheduledTime) {
-      try {
-        scheduled_at = new Date(`${scheduledDate}T${scheduledTime}:00`).toISOString();
-      } catch (e) {
-        console.error("Invalid date format", e);
-      }
-    }
-
     const { data, error } = await supabase
       .from("orders")
       .insert({
@@ -279,7 +278,6 @@ export default function CommanderPage() {
         contact_name: contactName,
         contact_phone: contactPhone,
         status: "en_attente",
-        scheduled_at,
       })
       .select("tracking_code")
       .single();
@@ -306,10 +304,7 @@ export default function CommanderPage() {
 
   const currentFormat = FORMATS.find((f) => f.id === format) ?? FORMATS[0];
   const currentDelai = DELAIS.find((d) => d.id === delai) ?? DELAIS[0];
-  const delaiDetail =
-    delai === "programme" && scheduledDate && scheduledTime
-      ? `Le ${new Date(scheduledDate).toLocaleDateString("fr-FR")} à ${scheduledTime}`
-      : currentDelai.hint;
+  const delaiDetail = currentDelai.hint;
 
   const done = step === 5;
 
@@ -580,34 +575,6 @@ export default function CommanderPage() {
                     })}
                   </div>
 
-                  {delai === "programme" && (
-                    <div className="step-enter grid grid-cols-1 gap-3 sm:grid-cols-2">
-                      <div>
-                        <label htmlFor="sched-date" className={`${LABEL} mb-1.5 block`}>Date d'enlèvement</label>
-                        <input
-                          id="sched-date"
-                          type="date"
-                          value={scheduledDate}
-                          min={new Date().toISOString().slice(0, 10)}
-                          onChange={(e) => setScheduledDate(e.target.value)}
-                          className={INPUT}
-                          required
-                        />
-                      </div>
-                      <div>
-                        <label htmlFor="sched-time" className={`${LABEL} mb-1.5 block`}>Heure d'enlèvement</label>
-                        <input
-                          id="sched-time"
-                          type="time"
-                          value={scheduledTime}
-                          onChange={(e) => setScheduledTime(e.target.value)}
-                          className={INPUT}
-                          required
-                        />
-                      </div>
-                    </div>
-                  )}
-
                   <div className="grid grid-cols-1 gap-4 border-t border-line pt-4 md:grid-cols-2">
                     <div className="flex flex-col">
                       <label htmlFor="notes" className={`${LABEL} mb-1.5 block`}>Consignes au coursier</label>
@@ -726,7 +693,7 @@ export default function CommanderPage() {
                 )}
                 <div className="whitespace-nowrap lg:hidden">
                   <span className="label-mono block text-[11px] font-medium text-muted">Tarif estimé</span>
-                  <span className="text-base font-extrabold text-ink">{eur(PRICE_HT)} € <span className="text-xs font-semibold text-muted">HT</span></span>
+                  <span className="text-base font-extrabold text-ink">{estimatedPrice !== null ? `${eur(estimatedPrice)} €` : '-- €'} <span className="text-xs font-semibold text-muted">HT</span></span>
                 </div>
               </div>
 
@@ -805,18 +772,10 @@ export default function CommanderPage() {
             <div className="border-t border-white/10 px-6 py-5">
               <span className="label-mono text-xs font-medium text-white/60">Tarif estimé</span>
               <div className="mt-1 flex items-baseline gap-2">
-                <span className="text-[34px] font-extrabold leading-none tracking-tight">{eur(PRICE_HT)} €</span>
+                <span className="text-[34px] font-extrabold leading-none tracking-tight">{estimatedPrice !== null ? eur(estimatedPrice) : '--'} €</span>
                 <span className="text-sm font-semibold text-white/60">HT</span>
               </div>
-              <p className="mt-1 text-xs font-medium text-white/60">{eur(PRICE_TTC)} € TTC · Facturation différée</p>
-
-              <div className="mt-4 flex items-center justify-between rounded-lg bg-white/[0.06] px-3.5 py-2.5">
-                <span className="flex items-center gap-2 text-xs font-semibold text-white/80">
-                  <Clock size={14} className="text-accent" />
-                  Prise en charge
-                </span>
-                <span className="text-sm font-bold text-green-400">~ 12 min</span>
-              </div>
+              <p className="mt-1 text-xs font-medium text-white/60">{estimatedPrice !== null ? eur(estimatedPrice * 1.2) : '--'} € TTC · Facturation différée</p>
 
               <ul className="mt-4 flex flex-col gap-1.5 text-xs font-medium text-white/60">
                 <li className="flex items-center gap-2">
