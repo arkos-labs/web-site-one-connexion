@@ -34,6 +34,8 @@ type Course = {
   deliveryComment?: string | null;
   deliveryPhotoUrl?: string | null;
   point_progress?: Record<string, any> | null;
+  clientType?: string | null;
+  source?: string | null;
   updateDriver: (driverId: string | null) => Promise<void>;
   updateStatus?: (status: string) => Promise<void>;
   updateTime?: (field: string, timeStr: string) => Promise<void>;
@@ -147,7 +149,7 @@ function AdminCoursesPageInner() {
       supabase.from("drivers").select("id, name, phone, vehicle, status, auth_id").order("name"),
       supabase
         .from("orders")
-        .select("id, pickup_address, dropoff_address, status, driver_id, tracking_code, price_estimate, created_at, user_id, stops, point_progress, delai, format, contact_name, contact_phone, driver_accepted_at, picked_up_at, delivered_at, delivery_recipient, delivery_department, delivery_comment, delivery_photo_url")
+        .select("id, pickup_address, dropoff_address, status, driver_id, tracking_code, price_estimate, created_at, user_id, stops, point_progress, delai, format, contact_name, contact_phone, driver_accepted_at, picked_up_at, delivered_at, delivery_recipient, delivery_department, delivery_comment, delivery_photo_url, client_type, source")
         .neq("status", "annulee")
         .order("created_at", { ascending: false }),
       supabase
@@ -175,7 +177,7 @@ function AdminCoursesPageInner() {
       type: "commande",
       label: o.tracking_code ?? o.id.slice(0, 8),
       clientId: o.user_id,
-      clientName: (o.user_id && (profileById.get(o.user_id)?.company || profileById.get(o.user_id)?.full_name)) || "Client particulier",
+      clientName: (o.user_id && (profileById.get(o.user_id)?.company || profileById.get(o.user_id)?.full_name)) || o.contact_name || "Client particulier",
       pickup: o.pickup_address,
       dropoff: o.dropoff_address,
       status: o.status,
@@ -195,6 +197,8 @@ function AdminCoursesPageInner() {
       deliveryComment: o.delivery_comment,
       deliveryPhotoUrl: o.delivery_photo_url,
       point_progress: o.point_progress,
+      clientType: o.client_type,
+      source: o.source,
       updateDriver: async (driverId: string | null) => {
         const driver = driverId ? driverById.get(driverId) : null;
         const authId = driver?.auth_id ?? driverId;
@@ -477,6 +481,16 @@ function AdminCoursesPageInner() {
                   <div>
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="font-bold text-ink">{c.clientName}</span>
+                      {c.clientType && (
+                        <span className={`rounded-full px-2 py-0.5 text-[11px] font-bold uppercase ${c.clientType === 'entreprise' ? "bg-blue-50 text-blue-700" : "bg-orange-50 text-orange-700"}`}>
+                          {c.clientType === 'entreprise' ? 'PRO' : 'Particulier'}
+                        </span>
+                      )}
+                      {c.source && (
+                        <span className="rounded-full bg-gray-100 px-2 py-0.5 text-[11px] font-medium text-gray-600">
+                          {c.source === 'page_publique' ? 'Page publique' : c.source === 'admin' ? 'Admin' : c.source}
+                        </span>
+                      )}
                       <span className={`rounded-full px-2 py-0.5 text-[11px] font-bold uppercase ${c.type === "navette" ? "bg-blue-50 text-blue-700" : "bg-slate-100 text-slate-700"}`}>
                         {c.type === "navette" ? "Navette" : c.label}
                       </span>

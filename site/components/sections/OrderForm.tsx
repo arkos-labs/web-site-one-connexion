@@ -59,6 +59,10 @@ export default function OrderForm() {
       if (d) setDropoffAddress(d);
     }
 
+    if (clientType === 'particulier' && delai === 'navette') {
+      setDelai('standard');
+    }
+
     const handleUpdate = (e: any) => {
       if (e.detail?.pickup) setPickupAddress(e.detail.pickup);
       if (e.detail?.dropoff) setDropoffAddress(e.detail.dropoff);
@@ -98,6 +102,8 @@ export default function OrderForm() {
         contact_email: contactEmail,
         contact_phone: contactPhone,
         status: "en_attente",
+        client_type: clientType,
+        source: "page_publique",
       });
 
     if (error) {
@@ -230,6 +236,12 @@ export default function OrderForm() {
                       <div className="mb-8 p-4 bg-orange-50 border border-orange-100 rounded-xl flex gap-3 text-sm text-orange-800">
                         <CreditCard className="w-5 h-5 text-orange-500 shrink-0" />
                         <p>En tant que particulier, <strong>le paiement devra être effectué par carte bancaire</strong> avant la prise en charge de la course.</p>
+                      </div>
+                    )}
+                    {clientType === 'entreprise' && (
+                      <div className="mb-8 p-4 bg-blue-50 border border-blue-100 rounded-xl flex gap-3 text-sm text-blue-800">
+                        <CreditCard className="w-5 h-5 text-blue-500 shrink-0" />
+                        <p>En tant que professionnel, <strong>vous serez facturé à 30 jours</strong>. Veuillez enregistrer une carte bancaire (ou un RIB) pour le prélèvement automatique.</p>
                       </div>
                     )}
 
@@ -405,10 +417,12 @@ export default function OrderForm() {
                               <span className="text-xs opacity-80">+100% du tarif</span>
                             </div>
                           </button>
-                          <button type="button" onClick={() => setDelai('navette')} className={`flex items-center gap-2 px-5 py-3 rounded-xl transition-all ${delai === 'navette' ? 'bg-[#ed5518] text-white shadow-md shadow-accent/20' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
-                            <Calendar className="w-5 h-5" />
-                            <span className="font-semibold">Navette (Programmé)</span>
-                          </button>
+                          {clientType === 'entreprise' && (
+                            <button type="button" onClick={() => setDelai('navette')} className={`flex items-center gap-2 px-5 py-3 rounded-xl transition-all ${delai === 'navette' ? 'bg-[#ed5518] text-white shadow-md shadow-accent/20' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
+                              <Calendar className="w-5 h-5" />
+                              <span className="font-semibold">Navette (Programmé)</span>
+                            </button>
+                          )}
                         </div>
                       </div>
                       

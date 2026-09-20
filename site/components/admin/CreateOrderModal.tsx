@@ -61,6 +61,8 @@ export function CreateOrderModal({ isOpen, onClose, onSuccess, profiles, drivers
         status: driverId ? "confirmee" : "en_attente",
         driver_id: driverId || null,
         price_estimate: price,
+        client_type: 'entreprise',
+        source: 'admin',
       });
 
       if (insertError) throw new Error(insertError.message);

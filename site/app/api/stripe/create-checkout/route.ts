@@ -31,7 +31,7 @@ export async function POST(req: Request) {
       // mais le plus simple ici est de prendre l'empreinte de carte via un mode 'setup'.
       
       const session = await stripe.checkout.sessions.create({
-        payment_method_types: ['card'],
+        payment_method_types: ['card', 'sepa_debit'],
         mode: 'setup',
         customer_email: email,
         success_url: `${baseUrl}/commande/succes?session_id={CHECKOUT_SESSION_ID}&order_id=${orderId}`,
