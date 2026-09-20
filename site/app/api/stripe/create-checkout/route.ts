@@ -55,8 +55,8 @@ export async function POST(req: Request) {
             price_data: {
               currency: 'eur',
               product_data: {
-                name: 'Course de livraison express',
-                description: `De ${pickupAddress.substring(0, 20)}... à ${dropoffAddress.substring(0, 20)}...`,
+                name: '⚡ Livraison Express Paris & Île-de-France',
+                description: `Enlèvement sécurisé • Suivi en temps réel • Garantie de confidentialité\n\nDe ${pickupAddress} à ${dropoffAddress}`,
               },
               unit_amount: unitAmount,
             },
