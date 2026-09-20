@@ -49,7 +49,7 @@ export function CreateClientModal({ isOpen, onClose, onSuccess }: { isOpen: bool
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-      <div className="relative z-10 w-full max-w-lg flex flex-col rounded-2xl bg-white shadow-xl max-h-[95vh] sm:max-h-[90vh]">
+      <div className="relative z-10 w-full max-w-lg flex flex-col rounded-2xl bg-white shadow-xl max-h-[95dvh] sm:max-h-[90dvh] overflow-hidden">
         
         {/* Header Fixe */}
         <div className="shrink-0 flex items-center justify-between p-6 border-b border-gray-100 bg-white rounded-t-2xl">

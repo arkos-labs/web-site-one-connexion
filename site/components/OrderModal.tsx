@@ -140,7 +140,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
 
       {/* Panneau */}
-      <div className="relative z-10 w-full max-w-lg flex flex-col rounded-2xl bg-white shadow-2xl max-h-[95vh] sm:max-h-[90vh]">
+      <div className="relative z-10 w-full max-w-lg flex flex-col rounded-2xl bg-white shadow-2xl max-h-[95dvh] sm:max-h-[90dvh] overflow-hidden">
         {/* Header (Fixe) */}
         <div className="shrink-0 flex items-center justify-between border-b border-gray-100 bg-white px-6 py-4 rounded-t-2xl">
           <div>
