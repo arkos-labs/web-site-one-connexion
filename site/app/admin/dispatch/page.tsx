@@ -136,7 +136,11 @@ function AdminCoursesPageInner() {
     setDrivers((driversData ?? []) as Driver[]);
 
     const orderRows = orders ?? [];
-    const userIds = [...new Set(orderRows.map((o) => o.user_id).filter(Boolean))];
+    const navetteRows = navettes ?? [];
+    const userIds = [...new Set([
+      ...orderRows.map((o) => o.user_id),
+      ...navetteRows.map((n) => n.user_id)
+    ].filter(Boolean))];
     const { data: profiles } = userIds.length
       ? await supabase.from("profiles").select("id, full_name, company").in("id", userIds)
       : { data: [] as { id: string; full_name: string | null; company: string | null }[] };
