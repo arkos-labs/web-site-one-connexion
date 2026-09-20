@@ -252,7 +252,7 @@ function AdminCoursesPageInner() {
         type: "navette",
         label: n.name,
         clientId: n.user_id,
-        clientName: "Navette récurrente",
+        clientName: (n.user_id && (profileById.get(n.user_id)?.company || profileById.get(n.user_id)?.full_name)) || "Navette récurrente",
         pickup: n.pickup_address,
         dropoff: n.dropoff_address,
         status: confirmedToday 
@@ -270,6 +270,7 @@ function AdminCoursesPageInner() {
         deliveryDepartment: n.delivery_department,
         deliveryComment: n.delivery_comment,
         deliveryPhotoUrl: n.delivery_photo_url,
+        clientType: 'entreprise',
         updateDriver: async (driverId: string | null) => {
           const driver = driverId ? driverById.get(driverId) : null;
           const authId = driver?.auth_id ?? driverId;
