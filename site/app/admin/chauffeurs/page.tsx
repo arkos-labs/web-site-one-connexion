@@ -62,6 +62,9 @@ function AdminChauffeursPageInner() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [vehicle, setVehicle] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [creating, setCreating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useQueryParam("filter", "all");
   const [search, setSearch] = useQueryParam("q", "");
@@ -147,15 +150,30 @@ function AdminChauffeursPageInner() {
     e.preventDefault();
     setError(null);
     if (!name.trim()) return;
-    const { error } = await supabase.from("drivers").insert({ name, phone, vehicle });
-    if (error) {
+    setCreating(true);
+    try {
+      // Crée le compte de connexion ET la fiche chauffeur : sans compte, le chauffeur ne peut pas se connecter
+      const res = await fetch("/api/admin/create-driver", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, phone, vehicle, email, password }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || "Impossible d'ajouter le chauffeur.");
+        return;
+      }
+      setName("");
+      setPhone("");
+      setVehicle("");
+      setEmail("");
+      setPassword("");
+      load();
+    } catch {
       setError("Impossible d'ajouter le chauffeur.");
-      return;
+    } finally {
+      setCreating(false);
     }
-    setName("");
-    setPhone("");
-    setVehicle("");
-    load();
   };
 
   const updateStatus = async (id: string, status: Driver["status"]) => {
@@ -216,7 +234,7 @@ function AdminChauffeursPageInner() {
           <span className="h-1.5 w-1.5 rounded-full bg-accent" />
           <h2 className="text-[13px] font-bold uppercase tracking-wider text-ink">Ajout rapide d&apos;un chauffeur</h2>
         </div>
-        <form onSubmit={handleAdd} className="flex flex-col gap-3 sm:flex-row sm:items-end">
+        <form onSubmit={handleAdd} className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end">
           <div className="flex flex-1 flex-col gap-1.5">
             <label className="text-[11px] font-bold uppercase tracking-wide text-label">Nom &amp; prénom</label>
             <input
@@ -247,8 +265,33 @@ function AdminChauffeursPageInner() {
               className="rounded-xl border border-line px-3.5 py-2.5 text-[13px] font-medium text-ink placeholder:text-label"
             />
           </div>
-          <button type="submit" className="flex items-center justify-center gap-2 rounded-xl bg-accent px-5 py-2.5 text-[13px] font-bold text-white transition-colors hover:bg-accent-dark">
-            <Plus size={16} /> Ajouter
+          <div className="flex min-w-[200px] flex-1 flex-col gap-1.5">
+            <label className="text-[11px] font-bold uppercase tracking-wide text-label">Email de connexion</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="chauffeur@exemple.com"
+              autoComplete="off"
+              className="rounded-xl border border-line px-3.5 py-2.5 text-[13px] font-medium text-ink placeholder:text-label"
+              required
+            />
+          </div>
+          <div className="flex min-w-[200px] flex-1 flex-col gap-1.5">
+            <label className="text-[11px] font-bold uppercase tracking-wide text-label">Mot de passe</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              minLength={8}
+              placeholder="8 caractères minimum"
+              autoComplete="new-password"
+              className="rounded-xl border border-line px-3.5 py-2.5 text-[13px] font-medium text-ink placeholder:text-label"
+              required
+            />
+          </div>
+          <button type="submit" disabled={creating} className="flex items-center justify-center gap-2 rounded-xl bg-accent px-5 py-2.5 text-[13px] font-bold text-white transition-colors hover:bg-accent-dark disabled:opacity-60">
+            <Plus size={16} /> {creating ? "Création…" : "Ajouter"}
           </button>
         </form>
         {error && <p className="text-[13px] font-medium text-red-500">{error}</p>}

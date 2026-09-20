@@ -197,6 +197,14 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
   const INPUT_SM = INPUT.replace("h-11", "h-10");
   const ADDRESS_WRAP =
     "[&_input]:h-11 [&_input]:rounded-lg [&_input]:bg-white [&_input]:py-0 [&_input]:pl-10 [&_input]:pr-3.5 [&_input]:font-medium [&_input]:focus:ring-2 [&_input]:focus:ring-accent/15";
+  // Les champs d'adresse (Controller) ne reçoivent pas le focus automatique de react-hook-form :
+  // on amène donc la première erreur affichée à l'écran.
+  const onInvalid = () => {
+    requestAnimationFrame(() => {
+      document.querySelector('[role="alert"]')?.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+  };
+
   const err = (m?: string) => (m ? <span role="alert" className="mt-1 block text-xs font-medium text-red-600">{m}</span> : null);
 
   if (submitSuccess) {
@@ -232,7 +240,7 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start">
+    <form onSubmit={handleSubmit(onSubmit, onInvalid)} className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start">
       <div className="flex min-w-0 flex-col gap-4">
         {/* Type */}
         <Panel title="Type de navette">
