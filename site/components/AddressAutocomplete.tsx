@@ -71,8 +71,8 @@ export function AddressAutocomplete({
             return idfDepartments.includes(dept);
           });
           
-          // Ne garder que les 5 meilleurs résultats
-          setSuggestions(filteredFeatures.slice(0, 6));
+          // Ne garder que les 12 meilleurs résultats
+          setSuggestions(filteredFeatures.slice(0, 12));
           setIsOpen(true);
         }
       } catch (error) {
@@ -123,7 +123,7 @@ export function AddressAutocomplete({
       />
       
       {isOpen && suggestions.length > 0 && (
-        <ul className="absolute left-0 right-0 z-[100] mt-1 max-h-60 overflow-auto rounded-xl border border-line bg-white py-1 shadow-2xl">
+        <ul className="absolute left-0 right-0 z-[100] mt-1 max-h-96 overflow-auto rounded-xl border border-line bg-white py-1 shadow-2xl">
           {suggestions.map((feature) => (
             <li
               key={feature.properties.id}

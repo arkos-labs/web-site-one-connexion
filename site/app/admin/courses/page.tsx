@@ -6,7 +6,8 @@ import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { AdminPage } from "@/components/dashboard/ui";
 import { useQueryParam } from "@/lib/use-query-state";
-import { AlertTriangle, ArrowRight, ChevronDown, ChevronUp, Clock, MapPin, Search, Send, Truck, Users, X, Zap } from "lucide-react";
+import { AlertTriangle, ArrowRight, ChevronDown, ChevronUp, Clock, MapPin, Search, Send, Truck, Users, X, Zap, Plus } from "lucide-react";
+import { CreateOrderModal } from "@/components/admin/CreateOrderModal";
 
 type Course = {
   key: string;
@@ -129,6 +130,8 @@ function AdminCoursesPageInner() {
   const [sending, setSending] = useState<string | null>(null);
   const [expandedCourse, setExpandedCourse] = useState<string | null>(null);
   const [anomalies, setAnomalies] = useState<Anomaly[]>([]);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [allProfiles, setAllProfiles] = useState<any[]>([]);
 
   const loadAnomalies = useCallback(async () => {
     const { data } = await supabase
@@ -145,7 +148,7 @@ function AdminCoursesPageInner() {
   };
 
   const load = useCallback(async () => {
-    const [{ data: driversData }, { data: orders }, { data: navettes }] = await Promise.all([
+    const [{ data: driversData }, { data: orders }, { data: navettes }, { data: profilesData }] = await Promise.all([
       supabase.from("drivers").select("id, name, phone, vehicle, status, auth_id").order("name"),
       supabase
         .from("orders")
@@ -157,8 +160,10 @@ function AdminCoursesPageInner() {
         .select("id, name, pickup_address, dropoff_address, status, driver_id, last_dispatch_date, days_of_week, created_at, user_id, stops, point_progress, driver_accepted_at, delivery_recipient, delivery_department, delivery_comment, delivery_photo_url, picked_up_at, delivered_at")
         .eq("status", "active")
         .contains("days_of_week", [todayId()]),
+      supabase.from("profiles").select("id, full_name, company").order("full_name")
     ]);
 
+    setAllProfiles(profilesData ?? []);
     setDrivers((driversData ?? []) as Driver[]);
 
     const orderRows = orders ?? [];
@@ -461,14 +466,24 @@ function AdminCoursesPageInner() {
             </button>
           ))}
         </div>
-        <div className="relative">
-          <Search size={15} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-label" />
-          <input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Rechercher code, adresse, client…"
-            className="w-full rounded-xl border border-line bg-white py-2.5 pl-10 pr-4 text-[13px] font-medium text-ink placeholder:text-label sm:w-[260px]"
-          />
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <button
+            onClick={() => setIsCreateModalOpen(true)}
+            className="flex h-[42px] items-center justify-center gap-2 rounded-xl bg-accent px-4 text-[13px] font-bold text-white transition-colors hover:bg-accent-dark"
+          >
+            <Plus size={16} />
+            <span className="hidden sm:inline">Nouvelle course</span>
+            <span className="sm:hidden">Créer</span>
+          </button>
+          <div className="relative w-full sm:w-auto">
+            <Search size={15} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-label" />
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Rechercher code, adresse, client…"
+              className="w-full rounded-xl border border-line bg-white py-2.5 pl-10 pr-4 text-[13px] font-medium text-ink placeholder:text-label sm:w-[260px]"
+            />
+          </div>
         </div>
       </div>
 
@@ -725,6 +740,16 @@ function AdminCoursesPageInner() {
           </div>
         </div>
 
+      <CreateOrderModal 
+        isOpen={isCreateModalOpen} 
+        onClose={() => setIsCreateModalOpen(false)} 
+        onSuccess={() => {
+          setIsCreateModalOpen(false);
+          load();
+        }}
+        profiles={allProfiles}
+        drivers={drivers}
+      />
     </AdminPage>
   );
 }
