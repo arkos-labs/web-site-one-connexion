@@ -52,10 +52,10 @@ function AdminNavettesPageInner() {
         .from("navettes")
         .select("id, user_id, name, pickup_address, dropoff_address, days_str, start_time, end_time, status, estimated_price, stops, delivery_recipient, delivery_department, delivery_comment, delivered_at")
         .order("created_at", { ascending: false }),
-      supabase.from("profiles").select("id, full_name, company"),
+      supabase.from("profiles").select("id, full_name"),
     ]);
     setNavettes(data ?? []);
-    setClients(Object.fromEntries((profiles ?? []).map((p) => [p.id, { full_name: p.full_name, company: p.company }])));
+    setClients(Object.fromEntries((profiles ?? []).map((p) => [p.id, { full_name: p.full_name }])));
     setLastRefresh(new Date());
   }, [supabase]);
 
@@ -85,7 +85,6 @@ function AdminNavettesPageInner() {
         n.name.toLowerCase().includes(q) ||
         n.pickup_address.toLowerCase().includes(q) ||
         n.dropoff_address.toLowerCase().includes(q) ||
-        (client?.company ?? "").toLowerCase().includes(q) ||
         (client?.full_name ?? "").toLowerCase().includes(q)
       );
     });
@@ -153,7 +152,7 @@ function AdminNavettesPageInner() {
       <div className="flex flex-col gap-3">
         {visible.map((n) => {
           const client = n.user_id ? clients[n.user_id] : null;
-          const clientName = client?.company || client?.full_name || "Client particulier";
+          const clientName = client?.full_name || "Client particulier";
           const stops = Array.isArray(n.stops) ? n.stops : [];
           const totalPoints = 2 + stops.length;
           const isOpen = expanded === n.id;
@@ -179,6 +178,12 @@ function AdminNavettesPageInner() {
                       ) : (
                         <span className="rounded-full bg-paper px-2 py-0.5 text-[11px] font-bold text-muted">Client inconnu</span>
                       )}
+                      <span className="rounded-full bg-blue-50 px-2 py-0.5 text-[11px] font-bold text-blue-700">
+                        PRO
+                      </span>
+                      <span className="rounded-full bg-gray-100 px-2 py-0.5 text-[11px] font-medium text-gray-600">
+                        Navette
+                      </span>
                       <span className="rounded-full bg-blue-50 px-2 py-0.5 text-[11px] font-bold text-blue-600">
                         {totalPoints} points
                       </span>
