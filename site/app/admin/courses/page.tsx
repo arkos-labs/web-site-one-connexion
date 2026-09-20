@@ -493,7 +493,7 @@ function AdminCoursesPageInner() {
                       )}
                       {c.source && (
                         <span className="rounded-full bg-gray-100 px-2 py-0.5 text-[11px] font-medium text-gray-600">
-                          {c.source === 'page_publique' ? 'Page publique' : c.source === 'admin' ? 'Admin' : c.source}
+                          {c.source === 'page_publique' ? 'Page publique' : c.source === 'admin' ? 'Admin' : c.source === 'dashboard' ? 'Espace Pro' : c.source}
                         </span>
                       )}
                       <span className={`rounded-full px-2 py-0.5 text-[11px] font-bold uppercase ${c.type === "navette" ? "bg-blue-50 text-blue-700" : "bg-slate-100 text-slate-700"}`}>
@@ -518,7 +518,7 @@ function AdminCoursesPageInner() {
                         </select>
                       ) : (
                         <span className={`rounded-full px-2 py-0.5 text-[11px] font-bold uppercase ${c.status === "en_attente" || c.status === "pending" ? "bg-amber-50 text-amber-700" : (c.status === "assigned" || c.status === "en_cours" || c.status === "picked_up") ? "bg-blue-50 text-blue-700" : "bg-green-50 text-green-700"}`}>
-                          {c.status === "en_attente" || c.status === "pending" ? "À accepter" : STATUS_DISPLAY[c.status] ?? c.status}
+                          {c.status === "en_attente" || c.status === "pending" ? (c.type === "navette" ? "À dispatcher" : "À accepter") : STATUS_DISPLAY[c.status] ?? c.status}
                         </span>
                       )}
                       {openAnomalies(c.id).length > 0 && (

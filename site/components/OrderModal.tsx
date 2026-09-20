@@ -95,6 +95,8 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
         contact_email: contactEmail,
         contact_phone: contactPhone,
         status: "en_attente",
+        client_type: clientType,
+        source: "page_publique",
       });
 
     if (error) {
@@ -236,7 +238,19 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                     {clientType === "particulier" && (
                       <div className="flex gap-3 rounded-xl border border-orange-100 bg-orange-50 p-4 text-sm text-orange-800">
                         <CreditCard size={18} className="mt-0.5 shrink-0 text-accent" />
-                        <p>En tant que particulier, <strong>le paiement s'effectue par carte bancaire</strong> avant la prise en charge.</p>
+                        <div>
+                          <p className="font-bold text-orange-900 mb-1">Paiement direct sécurisé</p>
+                          <p>En tant que particulier, le règlement s'effectue par carte bancaire avant la prise en charge de votre course. Vous serez redirigé vers notre partenaire Stripe pour un paiement 100% sécurisé.</p>
+                        </div>
+                      </div>
+                    )}
+                    {clientType === "entreprise" && (
+                      <div className="flex gap-3 rounded-xl border border-blue-100 bg-blue-50 p-4 text-sm text-blue-800">
+                        <CreditCard size={18} className="mt-0.5 shrink-0 text-blue-600" />
+                        <div>
+                          <p className="font-bold text-blue-900 mb-1">Facturation différée à 30 jours</p>
+                          <p>Vous allez être redirigé vers Stripe pour enregistrer votre moyen de paiement en toute sécurité. <strong>Aucun montant ne sera prélevé aujourd'hui.</strong> Vous serez facturé et débité tous les 30 jours pour l'ensemble de vos courses.</p>
+                        </div>
                       </div>
                     )}
 

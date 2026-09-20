@@ -777,12 +777,15 @@ export default function CommanderPage() {
                 <span className="text-[34px] font-extrabold leading-none tracking-tight">{estimatedPrice !== null ? eur(estimatedPrice) : '--'} €</span>
                 <span className="text-sm font-semibold text-white/60">HT</span>
               </div>
-              <p className="mt-1 text-xs font-medium text-white/60">{estimatedPrice !== null ? eur(estimatedPrice * 1.2) : '--'} € TTC · Facturation différée</p>
+              <div className="mt-3 rounded-lg bg-white/5 border border-white/10 p-3 text-xs text-white/80">
+                <p className="font-bold text-white mb-1 flex items-center gap-1.5"><CalendarClock size={14} className="text-accent" /> Facturation mensuelle</p>
+                <p>En tant que client pro, vos courses sont cumulées et prélevées automatiquement tous les 30 jours via votre moyen de paiement enregistré.</p>
+              </div>
 
               <ul className="mt-4 flex flex-col gap-1.5 text-xs font-medium text-white/60">
                 <li className="flex items-center gap-2">
                   <ShieldCheck size={14} className="shrink-0 text-green-400" />
-                  Paiement sécurisé SSL 256-bit
+                  Paiement sécurisé par Stripe
                 </li>
                 <li className="flex items-center gap-2">
                   <Radio size={14} className="shrink-0 text-green-400" />
