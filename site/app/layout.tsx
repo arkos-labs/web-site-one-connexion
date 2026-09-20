@@ -10,6 +10,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import OrderModalProvider from "@/components/OrderModalProvider";
 import { SITE_URL } from "@/lib/site-content";
+import { Analytics } from "@vercel/analytics/next";
 
 const archivo = Archivo({
   subsets: ["latin"],
@@ -80,6 +81,7 @@ export default function RootLayout({
         <OrderModalProvider />
         <ClientShell>{children}</ClientShell>
         <Footer />
+        <Analytics />
       </body>
     </html>
   );
