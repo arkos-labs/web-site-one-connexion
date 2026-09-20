@@ -168,8 +168,8 @@ function AdminCoursesPageInner() {
       ...navetteRows.map((n) => n.user_id)
     ].filter(Boolean))];
     const { data: profiles } = userIds.length
-      ? await supabase.from("profiles").select("id, full_name, company").in("id", userIds)
-      : { data: [] as { id: string; full_name: string | null; company: string | null }[] };
+      ? await supabase.from("profiles").select("id, full_name").in("id", userIds)
+      : { data: [] as { id: string; full_name: string | null }[] };
     const profileById = new Map((profiles ?? []).map((p) => [p.id, p]));
 
     const driverById = new Map((driversData ?? []).map((d: Driver) => [d.id, d]));
@@ -181,7 +181,7 @@ function AdminCoursesPageInner() {
       type: "commande",
       label: o.tracking_code ?? o.id.slice(0, 8),
       clientId: o.user_id,
-      clientName: (o.user_id && (profileById.get(o.user_id)?.company || profileById.get(o.user_id)?.full_name)) || o.contact_name || "Client particulier",
+      clientName: (o.user_id && profileById.get(o.user_id)?.full_name) || o.contact_name || "Client particulier",
       pickup: o.pickup_address,
       dropoff: o.dropoff_address,
       status: o.status,
@@ -256,7 +256,7 @@ function AdminCoursesPageInner() {
         type: "navette",
         label: n.name,
         clientId: n.user_id,
-        clientName: (n.user_id && (profileById.get(n.user_id)?.company || profileById.get(n.user_id)?.full_name)) || "Navette récurrente",
+        clientName: (n.user_id && profileById.get(n.user_id)?.full_name) || "Navette récurrente",
         pickup: n.pickup_address,
         dropoff: n.dropoff_address,
         status: confirmedToday 
