@@ -142,7 +142,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
         <div className="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
 
           {/* Panneau principal */}
-          <div className="relative transform rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-8 w-full max-w-lg max-h-[calc(100vh-2rem)] flex flex-col">
+          <div className="relative transform rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-8 w-full max-w-4xl flex flex-col">
 
             {/* Header (Fixe) */}
             <div className="flex items-center justify-between border-b border-gray-100 bg-white px-6 py-4 shrink-0">
@@ -159,8 +159,11 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
               </button>
             </div>
 
-            {/* Contenu (Défilable) */}
-            <div className="px-6 py-6 overflow-y-auto">
+            {/* Contenu (2 colonnes) */}
+            <div className="flex flex-col md:flex-row flex-1">
+              
+              {/* Formulaire (Gauche) */}
+              <div className="flex-1 px-6 py-6 md:border-r border-gray-100">
           {submitted ? (
             <div className="py-12 text-center">
               <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-green-50 text-emerald-500">
@@ -348,41 +351,6 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                       <label className="mb-1.5 block text-sm font-bold text-ink">Consignes au coursier</label>
                       <textarea rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Ex: Colis à l'accueil, demander M. Martin…" className="w-full resize-none rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none" />
                     </div>
-
-                    {/* Récapitulatif Prix */}
-                    <div className="bg-orange-50/50 border border-orange-100 rounded-2xl p-6 mt-2">
-                      <h3 className="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2">
-                        <CheckCircle2 className="w-4 h-4 text-[#ed5518]" />
-                        Récapitulatif de votre commande
-                      </h3>
-                      <div className="space-y-2 text-[14px] text-gray-600 mb-4">
-                        <div className="flex justify-between">
-                          <span>Départ :</span>
-                          <span className="font-medium text-gray-900 truncate max-w-[150px] sm:max-w-[200px]">{pickupAddress || "À renseigner"}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span>Arrivée :</span>
-                          <span className="font-medium text-gray-900 truncate max-w-[150px] sm:max-w-[200px]">{dropoffAddress || "À renseigner"}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span>Format :</span>
-                          <span className="font-medium text-gray-900">{format === 'doc' ? 'Pli/Doc' : format === 'petit' ? 'Petit Colis' : 'Volumineux'}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span>Délai :</span>
-                          <span className="font-medium text-gray-900">{delai === 'standard' ? 'Normal' : delai === 'urgent' ? 'Urgent' : 'Super Urgent'}</span>
-                        </div>
-                      </div>
-                      <div className="border-t border-orange-200/60 pt-4 flex items-end justify-between">
-                        <div>
-                          <div className="text-[11px] font-bold uppercase tracking-wider text-orange-600/80 mb-0.5">Tarif estimé (HT)</div>
-                          <div className="text-xs text-gray-500">Paiement sécurisé par carte</div>
-                        </div>
-                        <div className="text-2xl font-extrabold text-[#ed5518]">
-                          {estimatedPrice !== null ? `${estimatedPrice.toFixed(2)} €` : '-- €'}
-                        </div>
-                      </div>
-                    </div>
                   </div>
                 )}
 
@@ -405,6 +373,50 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
               </form>
             </>
           )}
+              </div>
+
+              {/* Récapitulatif (Droite) */}
+              <div className="w-full md:w-[350px] bg-gray-50 p-6 flex flex-col shrink-0">
+                <h3 className="text-sm font-bold text-gray-800 mb-6 flex items-center gap-2">
+                  <CheckCircle2 className="w-5 h-5 text-[#ed5518]" />
+                  Récapitulatif de votre commande
+                </h3>
+                
+                <div className="flex-1 space-y-4 text-[14px] text-gray-600">
+                  <div className="flex flex-col gap-1 border-b border-gray-200 pb-3">
+                    <span className="text-xs font-semibold uppercase text-gray-400">Départ</span>
+                    <span className="font-medium text-gray-900">{pickupAddress || "À renseigner"}</span>
+                  </div>
+                  
+                  <div className="flex flex-col gap-1 border-b border-gray-200 pb-3">
+                    <span className="text-xs font-semibold uppercase text-gray-400">Arrivée</span>
+                    <span className="font-medium text-gray-900">{dropoffAddress || "À renseigner"}</span>
+                  </div>
+                  
+                  <div className="flex flex-col gap-1 border-b border-gray-200 pb-3">
+                    <span className="text-xs font-semibold uppercase text-gray-400">Format</span>
+                    <span className="font-medium text-gray-900">{format === 'doc' ? 'Pli/Doc' : format === 'petit' ? 'Petit Colis' : 'Volumineux'}</span>
+                  </div>
+                  
+                  <div className="flex flex-col gap-1 pb-3">
+                    <span className="text-xs font-semibold uppercase text-gray-400">Délai</span>
+                    <span className="font-medium text-gray-900">{delai === 'standard' ? 'Normal (3h)' : delai === 'urgent' ? 'Urgent (1h30)' : 'Super Urgent (1h)'}</span>
+                  </div>
+                </div>
+                
+                <div className="mt-8 pt-6 border-t border-gray-200">
+                  <div className="flex items-end justify-between">
+                    <div>
+                      <div className="text-[11px] font-bold uppercase tracking-wider text-orange-600 mb-1">Tarif estimé (HT)</div>
+                      <div className="text-[10px] text-gray-500">Paiement sécurisé</div>
+                    </div>
+                    <div className="text-3xl font-extrabold text-[#ed5518]">
+                      {estimatedPrice !== null ? `${estimatedPrice.toFixed(2)} €` : '-- €'}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>
