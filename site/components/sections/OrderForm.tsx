@@ -471,7 +471,8 @@ export default function OrderForm() {
                         <div className="border-t border-orange-200/60 pt-4 flex items-end justify-between">
                           <div>
                             <div className="text-[11px] font-bold uppercase tracking-wider text-orange-600/80 mb-0.5">Tarif estimé (HT)</div>
-                            <div className="text-xs text-gray-500">Paiement sécurisé par carte</div>
+                            <div className="text-[10px] text-gray-400 mb-1 uppercase tracking-wider font-semibold">Paiement sécurisé</div>
+                            <div className="text-xs text-gray-600 font-medium">Vos transactions protégées</div>
                           </div>
                           <div className="text-2xl font-extrabold text-[#ed5518]">
                             {estimatedPrice !== null ? `${estimatedPrice.toFixed(2)} €` : '-- €'}
