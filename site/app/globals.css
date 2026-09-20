@@ -1,0 +1,125 @@
+/**
+ * globals.css — Tailwind v4 CSS-first configuration
+ * Tous les tokens design ONE CONNEXION sont définis ici via @theme.
+ * Registre sobre : noir mat + blanc cassé, orange en accent seulement
+ * (pas de lueurs, pas de typo géante, pas de grain) — une identité
+ * qui doit se lire "établie depuis un moment", pas "startup flashy".
+ */
+
+/* ── Tailwind v4 ─────────────────────────────────────────────────────── */
+@import "tailwindcss";
+
+/* ── Design Tokens via @theme (Tailwind v4) ─────────────────────────── */
+@theme {
+  /* ── Couleurs — noir mat (header, hero, flotte, footer) ──────────────── */
+  --color-ink: #0E0F10;
+
+  /* ── Couleurs — blanc cassé (corps du site) ──────────────────────────── */
+  --color-paper: #F4F2EE;
+  --color-paper-card: #FBFAF8;
+  --color-line: #DFDCD6;
+  --color-muted: #4A4845;
+  --color-label: #8C8882;
+
+  /* ── Accent — orange, jamais décoratif ────────────────────────────────
+     accent = boutons pleins et bandeau CTA ; accent-dark = hover des
+     boutons pleins + liens texte (cf. `a { color: accent-dark }` dans la
+     maquette). */
+  --color-accent: #ed5518;
+  --color-accent-dark: #c94410;
+
+  /* ── Border radius ─────────────────────────────────────────────────── */
+  --radius-brand: 2px;
+
+  /* ── Typographie ────────────────────────────────────────────────────── */
+  --font-family-sans: var(--font-body), Helvetica, Arial, sans-serif;
+  --font-family-mono: var(--font-mono), monospace;
+}
+
+/* ── Reset ───────────────────────────────────────────────────────────── */
+/* IMPORTANT : ce reset doit vivre dans @layer base. Tailwind v4 émet toutes
+   ses utilities (dont mr-*, px-*, py-*, gap-*...) dans des cascade layers.
+   Une règle hors-layer bat TOUJOURS une règle en layer, quelle que soit sa
+   spécificité ou son ordre — donc un reset non-layé ici écraserait
+   silencieusement toutes les marges/paddings Tailwind du site. */
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: auto; /* Lenis prend le relais */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background-color: #F4F2EE;
+    color: #0E0F10;
+    font-family: var(--font-family-sans);
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  a {
+    color: var(--color-accent-dark);
+    text-decoration: none;
+  }
+  a:hover {
+    color: var(--color-ink);
+  }
+
+  /* ── Label mono style ──────────────────────────────────────────────── */
+  /* Pas de couleur figée ici : chaque usage pose déjà sa propre classe
+     (text-label, text-muted, text-accent...). currentColor + @layer base
+     laisse les utilities Tailwind décider. */
+  .label-mono {
+    font-family: var(--font-family-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: currentColor;
+  }
+}
+
+/* ── Selection ───────────────────────────────────────────────────────── */
+::selection { background-color: #ed5518; color: #fff; }
+
+/* ── Focus visible custom ────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid #ed5518;
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+/* ── Entrée d'étape (formulaire de commande) ────────────────────────── */
+@keyframes step-enter {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+.step-enter { animation: step-enter 240ms ease-out both; }
+
+/* ── Prefers reduced motion ─────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
