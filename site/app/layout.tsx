@@ -12,6 +12,7 @@ import OrderModalProvider from "@/components/OrderModalProvider";
 import { SITE_URL } from "@/lib/site-content";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import Script from "next/script";
 
 const archivo = Archivo({
   subsets: ["latin"],
@@ -42,15 +43,7 @@ export const metadata: Metadata = {
   },
   alternates: { canonical: "/" },
   description:
-    "One Connexion opère les livraisons urgentes des cabinets juridiques, laboratoires et e-commerçants d'Île-de-France. Flotte deux-roues, traçabilité complète, interlocuteur unique.",
-  keywords: [
-    "coursier Paris",
-    "livraison express Paris",
-    "coursier moto",
-    "transport plis confidentiels",
-    "transport urgent laboratoire",
-    "livraison jour même e-commerce",
-  ],
+    "One Connexion opère les livraisons urgentes des cabinets juridiques, laboratoires et e-commerçants d'Île-de-France. Flotte deux-roues, traçabilité complète.",
   openGraph: {
     title: "ONE CONNEXION — Coursier B2B, Paris & Île-de-France",
     description:
@@ -76,8 +69,27 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr" className={`${archivo.variable} ${ibmPlexMono.variable} ${barlowCondensed.variable}`}>
+      <html lang="fr" className={`${archivo.variable} ${ibmPlexMono.variable} ${barlowCondensed.variable}`}>
+      <head>
+        <Script id="google-tag-manager" strategy="afterInteractive">
+          {`
+            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','GTM-PD8DT425');
+          `}
+        </Script>
+      </head>
       <body className="bg-paper text-ink antialiased">
+        <noscript>
+          <iframe 
+            src="https://www.googletagmanager.com/ns.html?id=GTM-PD8DT425"
+            height="0" 
+            width="0" 
+            style={{ display: "none", visibility: "hidden" }}
+          ></iframe>
+        </noscript>
         <Header />
         <OrderModalProvider />
         <ClientShell>{children}</ClientShell>
