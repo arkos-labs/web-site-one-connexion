@@ -202,6 +202,7 @@ export default function SuiviPage() {
             <AlertTriangle size={14} className={`mt-px shrink-0 ${a.resolved ? "text-label" : "text-red-600"}`} />
             <div className="min-w-0">
               <p className="font-bold">
+                {a.point_index != null && <span className="mr-1.5 bg-red-200/50 px-1.5 py-0.5 rounded text-[10px] uppercase tracking-wider text-red-800">Point N°{a.point_index + 1}</span>}
                 {ANOMALY_STEP[a.step]} · {a.type}
                 <span className="ml-2 font-semibold opacity-70">{a.resolved ? "Résolue" : "En cours de traitement"}</span>
               </p>

@@ -131,7 +131,7 @@ function AdminCoursesPageInner() {
   const loadAnomalies = useCallback(async () => {
     const { data } = await supabase
       .from("mission_anomalies")
-      .select("id, mission_id, step, type, comment, resolved, created_at")
+      .select("id, mission_id, step, type, comment, resolved, created_at, point_index")
       .order("created_at", { ascending: false });
     setAnomalies((data ?? []) as Anomaly[]);
   }, [supabase]);
@@ -514,6 +514,7 @@ function AdminCoursesPageInner() {
                           <div key={a.id} className={`flex items-start justify-between gap-3 rounded-lg border px-3 py-2 ${a.resolved ? "border-line bg-paper opacity-60" : "border-red-100 bg-red-50"}`}>
                             <div className="min-w-0 text-[12.5px]">
                               <p className="font-bold text-red-800">
+                                {a.point_index != null && <span className="mr-1.5 bg-red-100 px-1.5 py-0.5 rounded text-[10px] uppercase tracking-wider text-red-700">Point N°{a.point_index + 1}</span>}
                                 {ANOMALY_STEP[a.step]} · {a.type}
                                 <span className="ml-1.5 font-medium text-red-400">{formatTime(a.created_at)}</span>
                               </p>
