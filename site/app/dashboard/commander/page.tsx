@@ -31,15 +31,15 @@ import { calculatePrice, ServiceLevel } from "@/lib/pricing";
 const STEPS = ["Trajet", "Format", "Délai", "Validation"] as const;
 
 const FORMATS = [
-  { id: "pli", name: "Pli / Document", weight: "Jusqu'à 1 kg", example: "Enveloppe, contrat, clé", vehicle: "Moto express", icon: Package },
+  { id: "doc", name: "Pli / Document", weight: "Jusqu'à 1 kg", example: "Enveloppe, contrat, clé", vehicle: "Moto express", icon: Package },
   { id: "petit", name: "Petit colis", weight: "Jusqu'à 8 kg", example: "Format boîte à chaussures", vehicle: "Moto ou scooter", icon: Box },
   { id: "volumineux", name: "Volumineux", weight: "Jusqu'à 30 kg+", example: "Cartons multiples", vehicle: "Moto ou fourgonnette 100 % électrique", icon: Truck },
 ] as const;
 
 const DELAIS = [
-  { id: "flash", name: "Super Urgent 1h", hint: "+100% du tarif", icon: Zap },
-  { id: "urgent", name: "Urgent 1h30", hint: "+50% du tarif", icon: Zap },
   { id: "standard", name: "Normal 3h", hint: "Tarif de base", icon: Clock },
+  { id: "urgent", name: "Urgent 1h30", hint: "+50% du tarif", icon: Zap },
+  { id: "flash", name: "Super Urgent 1h", hint: "+100% du tarif", icon: Zap },
 ] as const;
 
 /* Tarif d'affichage (dynamique) */
@@ -205,8 +205,8 @@ function RoutePoint({
 
 export default function CommanderPage() {
   const [step, setStep] = useState(1);
-  const [format, setFormat] = useState<string>("pli");
-  const [delai, setDelai] = useState<string>("flash");
+  const [format, setFormat] = useState<string>("doc");
+  const [delai, setDelai] = useState<string>("standard");
   const [scheduledDate, setScheduledDate] = useState("");
   const [scheduledTime, setScheduledTime] = useState("");
 

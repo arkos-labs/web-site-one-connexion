@@ -34,7 +34,7 @@ export async function POST(req: Request) {
 
     // 2. Parse body
     const body = await req.json();
-    const { email, firstName, lastName, company, phone, accountType } = body;
+    const { email, firstName, lastName, company, phone, accountType, siret } = body;
 
     if (!email || !firstName || !lastName) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
@@ -66,6 +66,10 @@ export async function POST(req: Request) {
 
     if (createError) {
       return NextResponse.json({ error: createError.message }, { status: 400 });
+    }
+
+    if (newUser?.user && siret) {
+      await adminSupabase.from('profiles').update({ siret }).eq('id', newUser.user.id);
     }
 
     return NextResponse.json({ success: true, user: newUser.user });

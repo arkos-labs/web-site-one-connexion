@@ -9,6 +9,7 @@ export function CreateClientModal({ isOpen, onClose, onSuccess }: { isOpen: bool
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [company, setCompany] = useState("");
+  const [siret, setSiret] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -29,6 +30,7 @@ export function CreateClientModal({ isOpen, onClose, onSuccess }: { isOpen: bool
           email,
           phone,
           company,
+          siret,
           accountType: "pro",
         }),
       });
@@ -84,6 +86,11 @@ export function CreateClientModal({ isOpen, onClose, onSuccess }: { isOpen: bool
                 <Building2 size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                 <input required value={company} onChange={e => setCompany(e.target.value)} className="w-full pl-9 pr-3 py-2.5 border rounded-xl bg-gray-50 text-sm focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent" />
               </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1.5">Numéro de SIRET *</label>
+              <input required value={siret} onChange={e => setSiret(e.target.value)} placeholder="14 chiffres" className="w-full px-4 py-2.5 border rounded-xl bg-gray-50 text-sm focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent" />
             </div>
 
             <div>

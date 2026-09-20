@@ -27,6 +27,14 @@ export function CreateOrderModal({ isOpen, onClose, onSuccess, profiles, drivers
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  // New Client States
+  const [newClientFirstName, setNewClientFirstName] = useState("");
+  const [newClientLastName, setNewClientLastName] = useState("");
+  const [newClientCompany, setNewClientCompany] = useState("");
+  const [newClientSiret, setNewClientSiret] = useState("");
+  const [newClientEmail, setNewClientEmail] = useState("");
+  const [newClientPhone, setNewClientPhone] = useState("");
+
   const supabase = createClient();
 
   useEffect(() => {
@@ -47,11 +55,37 @@ export function CreateOrderModal({ isOpen, onClose, onSuccess, profiles, drivers
     setError("");
 
     try {
+      let finalClientId = clientId;
+
+      if (clientId === "NEW_CLIENT") {
+        if (!newClientFirstName || !newClientLastName || !newClientEmail || !newClientCompany || !newClientSiret) {
+          throw new Error("Veuillez remplir tous les champs du nouveau client.");
+        }
+
+        const res = await fetch("/api/admin/create-client", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            firstName: newClientFirstName,
+            lastName: newClientLastName,
+            email: newClientEmail,
+            phone: newClientPhone,
+            company: newClientCompany,
+            siret: newClientSiret,
+            accountType: "pro",
+          }),
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Erreur lors de la création du client");
+        finalClientId = data.user.id;
+      }
+
       const trackingCode = `OC-${crypto.randomUUID().slice(0, 8).toUpperCase()}`;
       
       const { error: insertError } = await supabase.from("orders").insert({
         tracking_code: trackingCode,
-        user_id: clientId,
+        user_id: finalClientId,
         pickup_address: pickupAddress,
         dropoff_address: dropoffAddress,
         stops: [],
@@ -71,6 +105,7 @@ export function CreateOrderModal({ isOpen, onClose, onSuccess, profiles, drivers
       onClose();
       // Reset
       setClientId(""); setDriverId(""); setPickupAddress(""); setDropoffAddress(""); setNotes(""); setPrice(null);
+      setNewClientFirstName(""); setNewClientLastName(""); setNewClientEmail(""); setNewClientCompany(""); setNewClientSiret(""); setNewClientPhone("");
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -101,11 +136,26 @@ export function CreateOrderModal({ isOpen, onClose, onSuccess, profiles, drivers
                 <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1.5">Client *</label>
                 <select required value={clientId} onChange={e => setClientId(e.target.value)} className="w-full px-4 py-3 border rounded-xl bg-gray-50 text-sm focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent">
                   <option value="">-- Sélectionner un client --</option>
-                  {profiles.map(p => (
-                    <option key={p.id} value={p.id}>{p.full_name} {p.company ? `(${p.company})` : ""}</option>
+                  <option value="NEW_CLIENT" className="font-bold text-accent">+ Créer un nouveau client Pro</option>
+                  {profiles.map((p: any) => (
+                    <option key={p.id} value={p.id}>{p.full_name} {p.company ? `(${p.company})` : ""} {p.siret ? `— SIRET: ${p.siret}` : ""}</option>
                   ))}
                 </select>
               </div>
+
+              {clientId === "NEW_CLIENT" && (
+                <div className="bg-orange-50 border border-orange-100 p-4 rounded-xl flex flex-col gap-3">
+                  <div className="text-xs font-bold uppercase tracking-widest text-accent mb-2">Informations du nouveau client</div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <input required value={newClientFirstName} onChange={e => setNewClientFirstName(e.target.value)} placeholder="Prénom *" className="w-full px-3 py-2 border rounded-lg bg-white text-sm focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent" />
+                    <input required value={newClientLastName} onChange={e => setNewClientLastName(e.target.value)} placeholder="Nom *" className="w-full px-3 py-2 border rounded-lg bg-white text-sm focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent" />
+                  </div>
+                  <input required type="email" value={newClientEmail} onChange={e => setNewClientEmail(e.target.value)} placeholder="Email professionnel *" className="w-full px-3 py-2 border rounded-lg bg-white text-sm focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent" />
+                  <input required value={newClientPhone} onChange={e => setNewClientPhone(e.target.value)} placeholder="Téléphone *" className="w-full px-3 py-2 border rounded-lg bg-white text-sm focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent" />
+                  <input required value={newClientCompany} onChange={e => setNewClientCompany(e.target.value)} placeholder="Nom de l'entreprise *" className="w-full px-3 py-2 border rounded-lg bg-white text-sm focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent" />
+                  <input required value={newClientSiret} onChange={e => setNewClientSiret(e.target.value)} placeholder="Numéro de SIRET (14 chiffres) *" className="w-full px-3 py-2 border rounded-lg bg-white text-sm focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent" />
+                </div>
+              )}
 
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1.5">Adresse d'enlèvement *</label>

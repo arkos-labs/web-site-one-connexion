@@ -74,16 +74,7 @@ export async function POST(req: Request) {
               currency: 'eur',
               product_data: {
                 name: '⚡ Livraison Express Paris & Île-de-France',
-                description: `✓ Enlèvement sécurisé
-✓ Confirmation de livraison
-✓ Garantie de confidentialité
-
-Formule: ${formatLabel}
-Délai: ${serviceLabel}
-Tarif: ${price.toFixed(2)}€
-
-De: ${pickupAddress}
-À: ${dropoffAddress}`,
+                description: `✓ Enlèvement sécurisé  •  Confirmation de livraison  •  Garantie de confidentialité\n\nFORMULE: ${formatLabel} | DÉLAI: ${serviceLabel} | TARIF: ${price.toFixed(2)}€\n\nDe: ${pickupAddress}\nÀ: ${dropoffAddress}`,
               },
               unit_amount: unitAmount,
             },
