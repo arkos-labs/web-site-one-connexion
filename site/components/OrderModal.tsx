@@ -140,12 +140,12 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
       {/* Conteneur de défilement natif */}
       <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
         <div className="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
-          
+
           {/* Panneau principal */}
-          <div className="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-8 w-full max-w-lg">
-            
+          <div className="relative transform rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-8 w-full max-w-lg max-h-[calc(100vh-2rem)] flex flex-col">
+
             {/* Header (Fixe) */}
-            <div className="flex items-center justify-between border-b border-gray-100 bg-white px-6 py-4">
+            <div className="flex items-center justify-between border-b border-gray-100 bg-white px-6 py-4 shrink-0">
               <div>
                 <p className="text-[11px] font-bold uppercase tracking-widest text-accent">Commander une course</p>
                 <h2 className="text-lg font-extrabold text-ink">Course express Paris &amp; IDF</h2>
@@ -159,8 +159,8 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
               </button>
             </div>
 
-            {/* Contenu (Laissé à sa taille naturelle) */}
-            <div className="px-6 py-6">
+            {/* Contenu (Défilable) */}
+            <div className="px-6 py-6 overflow-y-auto">
           {submitted ? (
             <div className="py-12 text-center">
               <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-green-50 text-emerald-500">
