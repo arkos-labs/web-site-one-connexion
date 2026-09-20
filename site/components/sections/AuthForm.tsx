@@ -97,7 +97,7 @@ export default function AuthForm() {
             <div className="flex flex-col gap-1.5">
               <div className="flex items-center justify-between">
                 <label className="text-[12px] font-bold uppercase tracking-wider text-ink">Mot de passe</label>
-                <Link href="#" className="text-[12px] font-semibold text-accent hover:text-accent-dark hover:underline">
+                <Link href="/mot-de-passe-oublie" className="text-[12px] font-semibold text-accent hover:text-accent-dark hover:underline">
                   Mot de passe oublié ?
                 </Link>
               </div>
