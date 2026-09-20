@@ -27,6 +27,8 @@ type Profile = {
   siret: string | null;
   vat_number: string | null;
   billing_address: string | null;
+  email: string | null;
+  guest: boolean;
 };
 
 type OrderRow = {
@@ -82,7 +84,8 @@ const ORDER_STATUS_LABEL: Record<string, string> = {
 export default function AdminClientDetailPage() {
   const supabase = createClient();
   const params = useParams();
-  const clientId = params.id as string;
+  const clientId = decodeURIComponent(params.id as string);
+  const guestEmail = clientId.startsWith("guest:") ? clientId.slice("guest:".length) : null;
 
   const [profile, setProfile] = useState<Profile | null>(null);
   const [orders, setOrders] = useState<OrderRow[]>([]);
@@ -92,8 +95,44 @@ export default function AdminClientDetailPage() {
   const [notFound, setNotFound] = useState(false);
 
   const load = useCallback(async () => {
-    const [{ data: p }, { data: o }, { data: n }, { data: a }] = await Promise.all([
-      supabase.from("profiles").select("id, full_name, company, phone, created_at, siret, vat_number, billing_address").eq("id", clientId).maybeSingle(),
+    // Client de la page publique : pas de compte, on reconstitue la fiche depuis ses commandes.
+    if (guestEmail) {
+      const { data: rows } = await supabase
+        .from("orders")
+        .select("id, tracking_code, pickup_address, dropoff_address, status, price_estimate, created_at, driver_id, client_type, contact_name, contact_phone")
+        .is("user_id", null)
+        .ilike("contact_email", guestEmail.replace(/[\\%_]/g, "\\$&"))
+        .order("created_at", { ascending: false });
+
+      if (!rows || rows.length === 0) {
+        setNotFound(true);
+        setLoading(false);
+        return;
+      }
+      const pro = rows.some((r) => r.client_type === "entreprise");
+      const name = rows[0].contact_name || null;
+      setProfile({
+        id: clientId,
+        full_name: pro ? null : name,
+        company: pro ? name : null,
+        phone: rows[0].contact_phone || null,
+        created_at: rows[rows.length - 1].created_at,
+        siret: null,
+        vat_number: null,
+        billing_address: null,
+        email: guestEmail,
+        guest: true,
+      });
+      setOrders(rows);
+      setNavettes([]);
+      setAddresses([]);
+      setLoading(false);
+      return;
+    }
+
+    const [{ data: p }, { data: c }, { data: o }, { data: n }, { data: a }] = await Promise.all([
+      supabase.from("profiles").select("id, full_name, phone, created_at").eq("id", clientId).eq("role", "client").maybeSingle(),
+      supabase.from("clients").select("company_name, siret, tax_id, billing_address, billing_postal_code, billing_city, contact_email").eq("id", clientId).maybeSingle(),
       supabase
         .from("orders")
         .select("id, tracking_code, pickup_address, dropoff_address, status, price_estimate, created_at, driver_id")
@@ -113,12 +152,24 @@ export default function AdminClientDetailPage() {
       return;
     }
 
-    setProfile(p);
+    const billing = [c?.billing_address, [c?.billing_postal_code, c?.billing_city].filter(Boolean).join(" ")]
+      .filter((part) => part && part !== "À remplir")
+      .join(", ");
+
+    setProfile({
+      ...p,
+      company: c?.company_name || null,
+      siret: c?.siret || null,
+      vat_number: c?.tax_id || null,
+      billing_address: billing || null,
+      email: c?.contact_email || null,
+      guest: false,
+    });
     setOrders(o ?? []);
     setNavettes(n ?? []);
     setAddresses(a ?? []);
     setLoading(false);
-  }, [supabase, clientId]);
+  }, [supabase, clientId, guestEmail]);
 
   useEffect(() => {
     load();
@@ -192,17 +243,21 @@ export default function AdminClientDetailPage() {
       subtitle={[
         profile.company,
         profile.phone || "Téléphone non renseigné",
+        profile.email,
+        profile.guest ? "Commande sans compte" : null,
         `Client depuis le ${new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "long", year: "numeric" }).format(new Date(profile.created_at))}`,
       ]
         .filter(Boolean)
         .join(" · ")}
       actions={
-        <Link
-          href={`/admin/courses?client=${profile.id}&name=${encodeURIComponent(profile.company || profile.full_name || "")}`}
-          className="flex h-10 shrink-0 items-center justify-center whitespace-nowrap rounded-xl bg-accent px-4 text-[13px] font-bold text-white transition-colors hover:bg-accent-dark hover:text-white"
-        >
-          Voir dans Courses &amp; dispatch
-        </Link>
+        profile.guest ? undefined : (
+          <Link
+            href={`/admin/courses?client=${profile.id}&name=${encodeURIComponent(profile.company || profile.full_name || "")}`}
+            className="flex h-10 shrink-0 items-center justify-center whitespace-nowrap rounded-xl bg-accent px-4 text-[13px] font-bold text-white transition-colors hover:bg-accent-dark hover:text-white"
+          >
+            Voir dans Courses &amp; dispatch
+          </Link>
+        )
       }
     >
       <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
@@ -315,11 +370,17 @@ export default function AdminClientDetailPage() {
         {/* Colonne latérale */}
         <div className="flex flex-col gap-4">
           <div className="rounded-2xl border border-line bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
-            <h3 className="text-[13px] font-bold text-ink">Informations société</h3>
+            <h3 className="text-[13px] font-bold text-ink">{profile.company ? "Informations société" : "Coordonnées"}</h3>
             <div className="mt-3 flex flex-col gap-2.5 text-[12.5px]">
-              <InfoRow label="SIRET" value={profile.siret} />
-              <InfoRow label="N° TVA" value={profile.vat_number} />
-              <InfoRow label="Adresse de facturation" value={profile.billing_address} />
+              <InfoRow label="Email" value={profile.email} />
+              <InfoRow label="Téléphone" value={profile.phone} />
+              {profile.company && !profile.guest && (
+                <>
+                  <InfoRow label="SIRET" value={profile.siret} />
+                  <InfoRow label="N° TVA" value={profile.vat_number} />
+                  <InfoRow label="Adresse de facturation" value={profile.billing_address} />
+                </>
+              )}
             </div>
           </div>
 

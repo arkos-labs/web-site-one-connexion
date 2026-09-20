@@ -191,7 +191,7 @@ function AdminClientsPageInner() {
                   c.company ? "before:bg-accent" : "before:bg-blue-500"
                 }`}
               >
-                <Link href={c.guest ? "#" : `/admin/clients/${c.id}`} className="group flex items-center gap-3" onClick={c.guest ? (e) => e.preventDefault() : undefined}>
+                <Link href={`/admin/clients/${encodeURIComponent(c.id)}`} className="group flex items-center gap-3">
                   <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-ink text-[12px] font-bold text-white">
                     {initialsOf(c.full_name ?? "")}
                   </div>
@@ -228,14 +228,12 @@ function AdminClientsPageInner() {
                     <div className="text-[11px] font-bold uppercase tracking-wide text-label">CA généré</div>
                     <div className="text-[14px] font-bold text-ink">{c.revenue.toFixed(2)} €</div>
                   </div>
-                  {!c.guest && (
-                    <Link
-                      href={`/admin/clients/${c.id}`}
-                      className="flex items-center justify-center whitespace-nowrap rounded-lg bg-ink px-4 py-2 text-[13px] font-bold text-white transition-colors hover:bg-ink/85"
-                    >
-                      Voir la fiche
-                    </Link>
-                  )}
+                  <Link
+                    href={`/admin/clients/${encodeURIComponent(c.id)}`}
+                    className="flex items-center justify-center whitespace-nowrap rounded-lg bg-ink px-4 py-2 text-[13px] font-bold text-white transition-colors hover:bg-ink/85"
+                  >
+                    Voir la fiche
+                  </Link>
                 </div>
               </div>
             ))}
