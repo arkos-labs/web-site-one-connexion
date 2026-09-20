@@ -164,13 +164,13 @@ export default function Footer() {
       {/* Moyens de paiement */}
       <div style={{ borderTop: "1px solid rgba(244,242,238,0.06)" }}>
         <div
-          className="mx-auto flex flex-wrap items-center gap-x-4 gap-y-3 px-[clamp(20px,4vw,32px)] py-4"
+          className="mx-auto flex flex-wrap items-center justify-between gap-x-4 gap-y-3 px-[clamp(20px,4vw,32px)] py-4"
           style={{ maxWidth: "1240px" }}
         >
           <span className="font-mono text-[9px] tracking-[0.16em] uppercase" style={{ color: "rgba(244,242,238,0.3)" }}>
             Paiement sécurisé
           </span>
-          <ul className="flex flex-wrap items-center gap-2" aria-label="Moyens de paiement acceptés">
+          <ul className="flex flex-wrap items-center justify-end gap-2" aria-label="Moyens de paiement acceptés">
             <PayBadge label="Stripe" bg="#635BFF">
               <span style={{ color: "#fff", fontWeight: 700, fontSize: 15, letterSpacing: "-0.03em" }}>stripe</span>
             </PayBadge>

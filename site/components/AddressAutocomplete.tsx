@@ -8,13 +8,15 @@ interface AddressAutocompleteProps {
   onChange: (value: string) => void;
   placeholder?: string;
   required?: boolean;
+  className?: string;
 }
 
 export function AddressAutocomplete({
   value,
   onChange,
   placeholder = "Numéro et nom de rue",
-  required = false
+  required = false,
+  className = "w-full rounded-xl border border-line bg-[#FAFAFA] px-4 py-3 text-sm font-semibold text-ink focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
 }: AddressAutocompleteProps) {
   const [query, setQuery] = useState(value);
   const [suggestions, setSuggestions] = useState<any[]>([]);
@@ -116,7 +118,7 @@ export function AddressAutocomplete({
           if (suggestions.length > 0) setIsOpen(true);
         }}
         placeholder={placeholder}
-        className="w-full rounded-xl border border-line bg-[#FAFAFA] px-4 py-3 text-sm font-semibold text-ink focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+        className={className}
         required={required}
       />
       

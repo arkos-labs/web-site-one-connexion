@@ -7,6 +7,7 @@
 
 import { useState } from "react";
 import { MapPin, Flag } from "lucide-react";
+import { AddressAutocomplete } from "@/components/AddressAutocomplete";
 
 const COMMITMENTS = [
   { label: "Prise en charge", value: "< 45 min", sub: "dès validation commande", fill: 70 },
@@ -113,26 +114,24 @@ export default function Hero() {
         
         {/* Barre de commande rapide pleine largeur */}
         <div className="mb-6 mt-2 bg-[#11111E]/90 backdrop-blur-md p-3 rounded-2xl flex flex-col md:flex-row gap-3 border border-white/10 shadow-2xl relative z-10">
-          <div className="relative flex-1">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <div className="relative flex-1 z-20">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10">
               <MapPin className="h-5 w-5 text-[#E60000]" />
             </div>
-            <input 
-              type="text" 
+            <AddressAutocomplete 
               value={pickup}
-              onChange={(e) => setPickup(e.target.value)}
+              onChange={setPickup}
               placeholder="59 Rivoli, Rue de Rivoli, Paris" 
               className="w-full bg-white rounded-xl pl-10 pr-4 py-3 text-[14px] font-medium text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#E60000]" 
             />
           </div>
-          <div className="relative flex-1">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <div className="relative flex-1 z-10">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10">
               <Flag className="h-5 w-5 text-[#E60000]" />
             </div>
-            <input 
-              type="text" 
+            <AddressAutocomplete 
               value={dropoff}
-              onChange={(e) => setDropoff(e.target.value)}
+              onChange={setDropoff}
               placeholder="51 Avenue d'Iéna, Paris" 
               className="w-full bg-white rounded-xl pl-10 pr-4 py-3 text-[14px] font-medium text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#E60000]" 
             />

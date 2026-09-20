@@ -122,7 +122,7 @@ function AdminCoursesPageInner() {
   const clientFilterName = searchParams.get("name");
   const [drivers, setDrivers] = useState<Driver[]>([]);
   const [courses, setCourses] = useState<Course[]>([]);
-  const [filter, setFilter] = useQueryParam("filter", "to_dispatch");
+  const [filter, setFilter] = useQueryParam("filter", "to_accept");
   const [search, setSearch] = useQueryParam("q", "");
   const [lastRefresh, setLastRefresh] = useState<Date | null>(null);
   const [selection, setSelection] = useState<Record<string, string>>({});
