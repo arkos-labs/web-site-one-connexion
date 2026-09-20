@@ -46,6 +46,19 @@ function ColLabel({ children }: { children: React.ReactNode }) {
   );
 }
 
+function PayBadge({ label, bg = "#fff", children }: { label: string; bg?: string; children: React.ReactNode }) {
+  return (
+    <li
+      title={label}
+      aria-label={label}
+      className="flex h-[30px] min-w-[52px] items-center justify-center px-2"
+      style={{ background: bg, borderRadius: "4px" }}
+    >
+      {children}
+    </li>
+  );
+}
+
 export default function Footer() {
   return (
     <footer className="bg-ink text-paper">
@@ -145,6 +158,43 @@ export default function Footer() {
             </Link>
           </div>
 
+        </div>
+      </div>
+
+      {/* Moyens de paiement */}
+      <div style={{ borderTop: "1px solid rgba(244,242,238,0.06)" }}>
+        <div
+          className="mx-auto flex flex-wrap items-center gap-x-4 gap-y-3 px-[clamp(20px,4vw,32px)] py-4"
+          style={{ maxWidth: "1240px" }}
+        >
+          <span className="font-mono text-[9px] tracking-[0.16em] uppercase" style={{ color: "rgba(244,242,238,0.3)" }}>
+            Paiement sécurisé
+          </span>
+          <ul className="flex flex-wrap items-center gap-2" aria-label="Moyens de paiement acceptés">
+            <PayBadge label="Stripe" bg="#635BFF">
+              <span style={{ color: "#fff", fontWeight: 700, fontSize: 15, letterSpacing: "-0.03em" }}>stripe</span>
+            </PayBadge>
+            <PayBadge label="Visa">
+              <span style={{ color: "#1A1F71", fontWeight: 800, fontStyle: "italic", fontSize: 15, letterSpacing: "-0.02em" }}>VISA</span>
+            </PayBadge>
+            <PayBadge label="Mastercard">
+              <svg width="30" height="19" viewBox="0 0 30 19" aria-hidden="true">
+                <circle cx="10" cy="9.5" r="9" fill="#EB001B" />
+                <circle cx="20" cy="9.5" r="9" fill="#F79E1B" fillOpacity="0.9" />
+              </svg>
+            </PayBadge>
+            <PayBadge label="Carte Bancaire (CB)">
+              <span style={{ color: "#fff", background: "#0B5DA7", fontWeight: 700, fontSize: 11, padding: "1px 6px", borderRadius: 2 }}>CB</span>
+            </PayBadge>
+            <PayBadge label="American Express" bg="#2E77BC">
+              <span style={{ color: "#fff", fontWeight: 700, fontSize: 10, letterSpacing: "0.04em" }}>AMEX</span>
+            </PayBadge>
+            <PayBadge label="Virement SEPA">
+              <span style={{ color: "#10298E", fontWeight: 800, fontSize: 13, letterSpacing: "0.04em" }}>
+                SEPA<span style={{ color: "#F5B400" }}> ★</span>
+              </span>
+            </PayBadge>
+          </ul>
         </div>
       </div>
 

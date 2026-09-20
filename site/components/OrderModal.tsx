@@ -166,7 +166,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
               
               {/* Colonne Gauche (Formulaire) */}
               <div className="flex-1 flex flex-col min-h-0 md:border-r border-gray-100">
-                <div className="flex-1 overflow-y-auto px-6 py-6">
+                <div className="flex-1 overflow-y-auto px-6 py-6 pb-32">
           {submitted ? (
             <div className="py-12 text-center">
               <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-green-50 text-emerald-500">
