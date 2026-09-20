@@ -120,10 +120,12 @@ export default function OrderForm() {
         body: JSON.stringify({
           clientType,
           service: delai,
+          format,
           pickupAddress,
           dropoffAddress,
           orderId: trackingCode,
           email: contactEmail,
+          price: estimatedPrice,
         })
       });
 

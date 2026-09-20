@@ -9,18 +9,36 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder'
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { 
-      clientType, 
-      service, 
-      pickupAddress, 
-      dropoffAddress, 
+    const {
+      clientType,
+      service,
+      format,
+      pickupAddress,
+      dropoffAddress,
       orderId,
-      email 
+      email,
+      price: providedPrice
     } = body;
 
-    const price = calculatePrice(pickupAddress, dropoffAddress, service as ServiceLevel);
+    const price = providedPrice || calculatePrice(pickupAddress, dropoffAddress, service as ServiceLevel);
     // Stripe takes amounts in cents
     const unitAmount = Math.round(price * 100);
+
+    // Format service labels
+    const formatLabels: Record<string, string> = {
+      'doc': 'Pli/Doc',
+      'petit': 'Petit colis',
+      'volumineux': 'Volumineux'
+    };
+    const serviceLabels: Record<string, string> = {
+      'standard': 'Normal (3h)',
+      'urgent': 'Urgent (1h30)',
+      'flash': 'Super (1h)',
+      'navette': 'Navette'
+    };
+
+    const formatLabel = formatLabels[format] || format;
+    const serviceLabel = serviceLabels[service] || service;
 
     const origin = req.headers.get('origin') || process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
     const baseUrl = origin;
@@ -56,7 +74,16 @@ export async function POST(req: Request) {
               currency: 'eur',
               product_data: {
                 name: '⚡ Livraison Express Paris & Île-de-France',
-                description: `Enlèvement sécurisé • Suivi en temps réel • Garantie de confidentialité\n\nDe ${pickupAddress} à ${dropoffAddress}`,
+                description: `✓ Enlèvement sécurisé
+✓ Confirmation de livraison
+✓ Garantie de confidentialité
+
+Formule: ${formatLabel}
+Délai: ${serviceLabel}
+Tarif: ${price.toFixed(2)}€
+
+De: ${pickupAddress}
+À: ${dropoffAddress}`,
               },
               unit_amount: unitAmount,
             },
