@@ -118,8 +118,8 @@ export function CreateOrderModal({ isOpen, onClose, onSuccess, profiles, drivers
       <div className="fixed inset-0 bg-black/70 backdrop-blur-sm transition-opacity" onClick={onClose} />
       <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
         <div className="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
-          <div className="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-8 w-full max-w-xl">
-            <div className="flex items-center justify-between border-b border-gray-100 bg-white px-6 py-4">
+          <div className="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-8 w-full max-w-xl flex flex-col max-h-[95dvh] sm:max-h-[90vh]">
+            <div className="flex items-center justify-between border-b border-gray-100 bg-white px-6 py-4 shrink-0">
               <div>
                 <p className="text-[11px] font-bold uppercase tracking-widest text-accent">Administration</p>
                 <h2 className="text-xl font-bold text-ink">Saisir une commande</h2>
@@ -128,7 +128,7 @@ export function CreateOrderModal({ isOpen, onClose, onSuccess, profiles, drivers
                 <X size={20} />
               </button>
             </div>
-            <div className="p-6">
+            <div className="p-6 overflow-y-auto pb-32">
           <form onSubmit={handleSubmit} className="flex flex-col gap-6">
             
             <div className="flex flex-col gap-4">
