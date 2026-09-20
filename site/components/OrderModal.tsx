@@ -135,29 +135,34 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+    <div className="relative z-[100]" aria-labelledby="modal-title" role="dialog" aria-modal="true">
       {/* Overlay */}
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
+      <div className="fixed inset-0 bg-black/70 backdrop-blur-sm transition-opacity" onClick={onClose} />
 
-      {/* Panneau */}
-      <div className="relative z-10 w-full max-w-lg flex flex-col rounded-2xl bg-white shadow-2xl max-h-[95dvh] sm:max-h-[90dvh] overflow-hidden">
-        {/* Header (Fixe) */}
-        <div className="shrink-0 flex items-center justify-between border-b border-gray-100 bg-white px-6 py-4 rounded-t-2xl">
-          <div>
-            <p className="text-[11px] font-bold uppercase tracking-widest text-accent">Commander une course</p>
-            <h2 className="text-lg font-extrabold text-ink">Course express Paris &amp; IDF</h2>
-          </div>
-          <button
-            onClick={onClose}
-            className="flex h-9 w-9 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700"
-            aria-label="Fermer"
-          >
-            <X size={20} />
-          </button>
-        </div>
+      {/* Conteneur de défilement natif */}
+      <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+        <div className="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+          
+          {/* Panneau principal */}
+          <div className="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-8 w-full max-w-lg">
+            
+            {/* Header (Fixe) */}
+            <div className="flex items-center justify-between border-b border-gray-100 bg-white px-6 py-4">
+              <div>
+                <p className="text-[11px] font-bold uppercase tracking-widest text-accent">Commander une course</p>
+                <h2 className="text-lg font-extrabold text-ink">Course express Paris &amp; IDF</h2>
+              </div>
+              <button
+                onClick={onClose}
+                className="flex h-9 w-9 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700"
+                aria-label="Fermer"
+              >
+                <X size={20} />
+              </button>
+            </div>
 
-        {/* Contenu (Défilant) */}
-        <div className="flex-1 overflow-y-auto px-6 py-6 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+            {/* Contenu (Laissé à sa taille naturelle) */}
+            <div className="px-6 py-6">
           {submitted ? (
             <div className="py-12 text-center">
               <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-green-50 text-emerald-500">
@@ -418,6 +423,8 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
               </form>
             </>
           )}
+            </div>
+          </div>
         </div>
       </div>
     </div>

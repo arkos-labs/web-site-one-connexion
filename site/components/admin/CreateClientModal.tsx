@@ -48,22 +48,21 @@ export function CreateClientModal({ isOpen, onClose, onSuccess }: { isOpen: bool
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-      <div className="relative z-10 w-full max-w-lg flex flex-col rounded-2xl bg-white shadow-xl max-h-[95dvh] sm:max-h-[90dvh] overflow-hidden">
-        
-        {/* Header Fixe */}
-        <div className="shrink-0 flex items-center justify-between p-6 border-b border-gray-100 bg-white rounded-t-2xl">
-          <div>
-            <p className="text-[11px] font-bold uppercase tracking-widest text-accent">Administration</p>
-            <h2 className="text-xl font-bold text-ink">Nouveau Client</h2>
-          </div>
-          <button type="button" onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full text-gray-500 transition-colors">
-            <X size={20} />
-          </button>
-        </div>
-        
-        {/* Contenu Défilant */}
-        <div className="flex-1 overflow-y-auto p-6 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+    <div className="relative z-[100]" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+      <div className="fixed inset-0 bg-black/70 backdrop-blur-sm transition-opacity" onClick={onClose} />
+      <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+        <div className="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+          <div className="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-8 w-full max-w-lg">
+            <div className="flex items-center justify-between border-b border-gray-100 bg-white px-6 py-4">
+              <div>
+                <p className="text-[11px] font-bold uppercase tracking-widest text-accent">Administration</p>
+                <h2 className="text-xl font-bold text-ink">Nouveau Client</h2>
+              </div>
+              <button type="button" onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full text-gray-500 transition-colors">
+                <X size={20} />
+              </button>
+            </div>
+            <div className="p-6">
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <div className="grid grid-cols-2 gap-4">
               <div>
@@ -109,6 +108,8 @@ export function CreateClientModal({ isOpen, onClose, onSuccess }: { isOpen: bool
               {loading ? <Loader2 className="animate-spin" size={18} /> : "Créer la fiche client"}
             </button>
           </form>
+            </div>
+          </div>
         </div>
       </div>
     </div>
