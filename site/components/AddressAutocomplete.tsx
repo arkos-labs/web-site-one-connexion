@@ -123,7 +123,7 @@ export function AddressAutocomplete({
       />
       
       {isOpen && suggestions.length > 0 && (
-        <ul className="absolute left-0 right-0 z-[9999] mt-1 max-h-96 overflow-auto rounded-xl border border-line bg-white py-1 shadow-2xl">
+        <ul className="absolute left-0 right-0 z-[9999] mt-1 max-h-[500px] overflow-auto rounded-xl border border-line bg-white py-1 shadow-2xl">
           {suggestions.map((feature) => (
             <li
               key={feature.properties.id}
