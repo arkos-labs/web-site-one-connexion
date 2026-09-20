@@ -2,6 +2,7 @@ import Hero from "@/components/sections/Hero";
 import About from "@/components/sections/About";
 import OrderForm from "@/components/sections/OrderForm";
 import Contact from "@/components/sections/Contact";
+import Faq from "@/components/sections/Faq";
 import JsonLd from "@/components/JsonLd";
 import { LEGAL, PHONE_TEL, EMAIL, SITE_URL } from "@/lib/site-content";
 
@@ -57,6 +58,7 @@ export default function Home() {
       <Hero />
       <About />
       <OrderForm />
+      <Faq />
       <Contact />
     </>
   );
