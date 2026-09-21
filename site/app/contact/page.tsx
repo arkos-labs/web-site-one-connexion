@@ -10,18 +10,31 @@ export default function ContactPage() {
     email: "",
     company: "",
     message: "",
+    website: "", // champ piège anti-robots
   });
 
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSending, setIsSending] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulation d'envoi
-    setIsSubmitted(true);
-    setTimeout(() => {
-      setIsSubmitted(false);
-      setFormData({ name: "", email: "", company: "", message: "" });
-    }, 3000);
+    setIsSending(true);
+    setError("");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      if (!res.ok) throw new Error();
+      setIsSubmitted(true);
+      setFormData({ name: "", email: "", company: "", message: "", website: "" });
+    } catch {
+      setError(`Envoi impossible pour le moment. Appelez-nous au ${PHONE_DISPLAY} ou écrivez à ${EMAIL}.`);
+    } finally {
+      setIsSending(false);
+    }
   };
 
   return (
@@ -59,10 +72,20 @@ export default function ContactPage() {
                   <Send size={24} className="text-green-600" />
                 </div>
                 <h3 className="mb-2 text-lg font-bold">Message Envoyé !</h3>
-                <p className="text-sm">Notre équipe de régulation a bien reçu votre demande et vous contactera rapidement.</p>
+                <p className="text-sm">Nous avons bien enregistré votre demande et vous répondrons dans les plus brefs délais.</p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+                <input
+                  type="text"
+                  name="website"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                  value={formData.website}
+                  onChange={(e) => setFormData({ ...formData, website: e.target.value })}
+                  className="absolute -left-[9999px] h-0 w-0 opacity-0"
+                />
                 <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                   <div className="flex flex-col gap-1.5">
                     <label className="text-xs font-bold uppercase tracking-wider text-ink">Nom complet</label>
@@ -111,11 +134,16 @@ export default function ContactPage() {
                   ></textarea>
                 </div>
 
+                {error && (
+                  <p role="alert" className="rounded-[6px] bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>
+                )}
+
                 <button
                   type="submit"
-                  className="group mt-4 flex items-center justify-center gap-2 rounded-[6px] bg-accent py-4 text-[14px] font-bold text-white transition-colors hover:bg-accent-dark"
+                  disabled={isSending}
+                  className="group mt-4 disabled:opacity-60 flex items-center justify-center gap-2 rounded-[6px] bg-accent py-4 text-[14px] font-bold text-white transition-colors hover:bg-accent-dark"
                 >
-                  Envoyer le message
+                  {isSending ? "Envoi…" : "Envoyer le message"}
                   <ArrowRight size={17} className="transition-transform group-hover:translate-x-1" strokeWidth={2.5} />
                 </button>
               </form>
