@@ -482,10 +482,10 @@ export const ZONE_SLUGS = ZONES.map((z) => z.slug);
  * de contenu local propre. Pour en activer une : ajouter son slug ici.
  */
 const INDEXED_BANLIEUE_SLUGS = new Set([
-  "nanterre", "courbevoie", "puteaux", "rueil-malmaison", "saint-cloud",
-  "saint-ouen", "aubervilliers", "pantin", "bobigny",
+  // Pôle La Défense
+  "nanterre", "courbevoie", "puteaux",
+  // Proches du siège (Saint-Mandé)
   "saint-maurice", "charenton-le-pont", "nogent-sur-marne", "maisons-alfort",
-  "versailles", "massy", "orly",
 ]);
 
 export function isZoneIndexed(zone: Zone): boolean {
