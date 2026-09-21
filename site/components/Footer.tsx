@@ -1,10 +1,13 @@
 /**
  * components/Footer.tsx
  * Footer 4 colonnes — charte ONE CONNEXION (ink/orange/paper), moto B2B Paris.
- * Server Component pur.
+ * Server Component pur. Tagline diversifiée selon la page.
  */
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { SERVICES } from "@/lib/services";
 import { EMAIL, LEGAL, PHONE_DISPLAY, PHONE_TEL } from "@/lib/site-content";
 
@@ -13,13 +16,44 @@ const ACCENT = "#ed5518";
 const NAV_LINKS = [
   { label: "Notre méthode", href: "/methode" },
   { label: "Flotte & couverture", href: "/flotte" },
-  { label: "Références clients", href: "/references" },
   { label: "Tarifs", href: "/tarifs" },
-  { label: "Guides pratiques", href: "/guides" },
   { label: "Mentions légales", href: "/mentions-legales" },
   { label: "CGV", href: "/cgv" },
   { label: "Confidentialité", href: "/politique-de-confidentialite" },
 ];
+
+// Taglines par page pour éviter la répétition identique
+const TAGLINES: Record<string, string> = {
+  "/": "Livraisons urgentes pour cabinets juridiques, laboratoires et entreprises d'Île-de-France.",
+  "/tarifs": "Des tarifs clairs et adaptés à vos volumes. Devis en moins de 2 heures.",
+  "/zones": "Couverture intégrale de Paris et Île-de-France. Enlèvement express en moins de 45 min.",
+  "/zones/paris": "Paris intramuros livré en moins de 45 minutes. Disponible 7j/7, 7h–23h.",
+  "/zones/petite-couronne": "Petite couronne couverte 24/7. Clients réguliers : compte mensuel sans surprise.",
+  "/zones/la-defense": "La Défense et Hauts-de-Seine : enlèvement rapide, preuve de remise horodatée.",
+  "/services": "Plis confidentiels, transport médical, livraison e-commerce, tournées régulières.",
+  "/services/plis-confidentiels": "Plis strictement confidentiels en course dédiée. Horaires flexibles, 7j/7.",
+  "/services/transport-medical": "Transport de prélèvements et matériel médical aux normes de sécurité.",
+  "/methode": "Notre approche : transparence, flexibilité et engagement de service mesuré.",
+  "/flotte": "Flotte deux-roues dédiée. Traçabilité GPS en temps réel, photos de remise.",
+  "/references": "Nos clients nous font confiance : cabinets juridiques, laboratoires, e-commerçants.",
+  "/secteurs": "Solutions sur mesure pour chaque secteur d'activité francilien.",
+  "/contact": "Contactez-nous pour un devis ou une question : réponse en moins de 2 heures.",
+};
+
+function getTagline(pathname: string): string {
+  // Correspondance exacte d'abord
+  if (TAGLINES[pathname]) return TAGLINES[pathname];
+
+  // Sinon, correspondance par préfixe
+  for (const [pattern, tagline] of Object.entries(TAGLINES)) {
+    if (pathname.startsWith(pattern) && pattern !== "/") {
+      return tagline;
+    }
+  }
+
+  // Par défaut (accueil)
+  return TAGLINES["/"];
+}
 
 const SECTEUR_LINKS = [
   { label: "Cabinets juridiques", href: "/secteurs#juridique" },
@@ -59,6 +93,9 @@ const PAYMENT_METHODS = [
 ];
 
 export default function Footer() {
+  const pathname = usePathname();
+  const tagline = getTagline(pathname);
+
   return (
     <footer className="bg-ink text-paper">
       {/* Liseré orange */}
@@ -77,8 +114,7 @@ export default function Footer() {
             className="w-[140px] h-auto object-contain"
           />
           <p className="text-[13px] leading-[1.7] max-w-[480px]" style={{ color: "rgba(244,242,238,0.40)" }}>
-            Livraisons urgentes pour cabinets juridiques, laboratoires et entreprises d&apos;Île-de-France.
-            Flotte deux-roues, traçabilité complète, interlocuteur unique.
+            {tagline}
           </p>
         </div>
 
@@ -202,12 +238,6 @@ export default function Footer() {
             style={{ color: "rgba(244,242,238,0.16)" }}
           >
             © 2026 One Connexion · Tous droits réservés
-          </span>
-          <span
-            className="font-mono text-[10px] tracking-[0.12em] uppercase"
-            style={{ color: "rgba(244,242,238,0.16)" }}
-          >
-            SIREN {LEGAL.siren} · TVA {LEGAL.tva}
           </span>
         </div>
       </div>

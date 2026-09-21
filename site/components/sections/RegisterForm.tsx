@@ -83,15 +83,6 @@ export default function RegisterForm() {
   return (
     <div className="relative mx-auto flex min-h-[calc(100vh-76px)] max-w-[1240px] items-center justify-center px-[clamp(20px,4vw,28px)] py-12">
       
-      {/* Background Dots Pattern (optional, subtle styling) */}
-      <div 
-        className="pointer-events-none absolute inset-0 z-[-1] opacity-40" 
-        style={{
-          backgroundImage: 'radial-gradient(#DFDCD6 1px, transparent 1px)',
-          backgroundSize: '24px 24px'
-        }}
-      />
-
       <div className="grid w-full max-w-[1100px] grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
         
         {/* Colonne Gauche : Argumentaire */}
