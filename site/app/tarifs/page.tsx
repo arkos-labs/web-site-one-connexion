@@ -69,7 +69,7 @@ const FORMULES = [
       "Enlèvement en moins de 45 min",
       "Suivi en ligne de chaque course",
       "Preuve de livraison horodatée",
-      "Assurance marchandises incluse",
+      "Course dédiée, sans regroupement",
       "Paiement à la course",
     ],
     cta: "Commander une course",
@@ -253,7 +253,7 @@ export default function TarifsPage() {
           </table>
         </div>
         <p className="mt-4 text-[12px] text-muted/70">
-          * Tarifs HT, hors options (prise en charge après 21h, week-end, assurance renforcée). TVA 20 % applicable.
+          * Tarifs HT, hors options (prise en charge après 21h, week-end). TVA 20 % applicable.
         </p>
       </section>
 

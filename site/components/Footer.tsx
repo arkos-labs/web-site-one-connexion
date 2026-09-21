@@ -206,7 +206,7 @@ export default function Footer() {
             className="font-mono text-[10px] tracking-[0.12em] uppercase"
             style={{ color: "rgba(244,242,238,0.16)" }}
           >
-            SIREN {LEGAL.siren} · TVA {LEGAL.tva} · Assurance 3,5 M€ · RC Pro
+            SIREN {LEGAL.siren} · TVA {LEGAL.tva}
           </span>
         </div>
       </div>

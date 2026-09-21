@@ -36,7 +36,7 @@ export const plisConfidentiels: Service = {
   stats: [
     { value: "< 45 min", label: "Prise en charge" },
     { value: "99,4 %", label: "Ponctualité constatée" },
-    { value: "3,5 M€", label: "Assurance marchandises" },
+    { value: "< 2 h", label: "Devis entreprise" },
   ],
 
   context: {
@@ -78,7 +78,7 @@ export const plisConfidentiels: Service = {
     "Suivi de chaque course en ligne pendant le transport",
     "Justificatif de livraison archivé et restituable",
     "Coursier identifiable et joignable pendant la course",
-    "Assurance marchandises jusqu’à 3,5 M€",
+    "Course dédiée, sans regroupement avec d’autres colis",
   ],
 
   useCases: [

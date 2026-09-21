@@ -8,7 +8,7 @@ import { FOUNDED_YEAR } from "@/lib/site-content";
 const STATS = [
   { value: "18 kg", label: "Charge par course" },
   { value: "60 × 40 cm", label: "Volume top-case" },
-  { value: "3,5 M€", label: "Assurance marchandises" },
+  { value: "7j/7", label: "7h – 23h, jours fériés inclus" },
 ];
 
 const COVERAGE = ["Paris 1–20", "92", "93", "94", "Roissy · Orly sur devis"];

@@ -5,13 +5,13 @@ import { PHONE_TEL, PHONE_DISPLAY } from "@/lib/site-content";
 
 export const metadata = {
   title: "Notre flotte de coursiers moto",
-  description: "Flotte exclusive de deux-roues optimisée pour la livraison express à Paris et en Île-de-France. Scooters agiles et motos routières, équipés et assurés.",
+  description: "Flotte exclusive de deux-roues optimisée pour la livraison express à Paris et en Île-de-France. Scooters agiles et motos routières, équipés pour la livraison professionnelle.",
   alternates: { canonical: "/flotte" },
   openGraph: {
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION — Coursier B2B Paris & Île-de-France" }],
     title: "Notre flotte de coursiers moto — ONE CONNEXION",
     description:
-      "Scooters agiles et motos routières, équipés et assurés, pour la livraison express à Paris et en Île-de-France.",
+      "Scooters agiles et motos routières équipés pour la livraison professionnelle, pour la livraison express à Paris et en Île-de-France.",
     url: "/flotte",
     type: "website",
     locale: "fr_FR",
@@ -53,7 +53,7 @@ const VEHICLES = [
 ];
 
 const FEATURES = [
-  { Icon: Award, title: "Assurance professionnelle", desc: "Tous nos coursiers sont couverts par une assurance RC Pro et marchandises transportées." },
+  { Icon: Award, title: "Discrétion & rigueur", desc: "Nos coursiers sont sensibilisés aux exigences juridiques et médicales et travaillent en toute discrétion." },
   { Icon: Route, title: "Optimisation d'itinéraire", desc: "Dispatch assuré par notre équipe pour affecter le coursier le plus adapté." },
   { Icon: Clock, title: "Disponibilité étendue", desc: "Plages horaires 7h–23h en standard, interventions d'urgence nocturnes sur accord." },
   { Icon: CheckCircle2, title: "Coursiers vérifiés", desc: "Permis et casier judiciaire vérifiés, formation interne obligatoire avant prise de poste." },
