@@ -15,6 +15,7 @@ const NAV_LINKS = [
   { label: "Flotte & couverture", href: "/flotte" },
   { label: "Références clients", href: "/references" },
   { label: "Tarifs", href: "/tarifs" },
+  { label: "Guides pratiques", href: "/guides" },
   { label: "Mentions légales", href: "/mentions-legales" },
   { label: "CGV", href: "/cgv" },
   { label: "Confidentialité", href: "/politique-de-confidentialite" },

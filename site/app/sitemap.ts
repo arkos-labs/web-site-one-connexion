@@ -7,6 +7,7 @@ import type { MetadataRoute } from "next";
 import { SERVICE_SLUGS } from "@/lib/services";
 import { SITE_URL } from "@/lib/site-content";
 import { INDEXED_ZONE_SLUGS, getZone } from "@/lib/zones/data";
+import { GUIDE_SLUGS } from "@/lib/guides";
 import { lastModified } from "@/lib/lastmod";
 
 const STATIC_PATHS = [
@@ -18,6 +19,7 @@ const STATIC_PATHS = [
   "/tarifs",
   "/contact",
   "/secteurs",
+  "/guides",
   "/zones",
   "/zones/paris",
   "/zones/la-defense",
@@ -35,6 +37,7 @@ function sourceFiles(path: string): string[] {
     const slug = path.slice("/services/".length);
     return ["app/services/[slug]/page.tsx", `lib/services/${slug}.ts`];
   }
+  if (path.startsWith("/guides/")) return ["app/guides/[slug]/page.tsx", "lib/guides.ts"];
   if (path.startsWith("/zones/")) {
     const slug = path.slice("/zones/".length);
     if (STATIC_ZONE_PAGES.has(slug)) return [`app/zones${path.slice(6)}/page.tsx`];
@@ -49,6 +52,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const paths = [
     ...STATIC_PATHS,
     ...SERVICE_SLUGS.map((slug) => `/services/${slug}`),
+    ...GUIDE_SLUGS.map((slug) => `/guides/${slug}`),
     ...INDEXED_ZONE_SLUGS.map((slug) => `/zones/${slug}`),
   ];
 
