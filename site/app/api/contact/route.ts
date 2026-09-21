@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
+import { notifyNewContact } from "@/lib/contact-notify";
 
 const schema = z.object({
   name: z.string().trim().min(1).max(120),
@@ -53,5 +54,6 @@ export async function POST(req: Request) {
     console.error("contact_messages insert failed:", error.message);
     return NextResponse.json({ error: "Envoi impossible." }, { status: 500 });
   }
+  await notifyNewContact(data);
   return NextResponse.json({ ok: true });
 }
