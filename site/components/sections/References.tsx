@@ -6,8 +6,9 @@
 import { SHOW_TESTIMONIALS } from "@/lib/site-content";
 
 const STATS = [
-  { value: "12 000+", label: "Courses livrées" },
-  { value: "98 %", label: "Livrées dans le créneau" },
+  { value: "7j/7", label: "Amplitude 7h–23h, jours fériés inclus" },
+  { value: "< 45 min", label: "Prise en charge dès validation" },
+  { value: "< 2 h", label: "Devis entreprise" },
 ];
 
 // PLACEHOLDER : témoignages réels à intégrer avant mise en ligne.
@@ -27,7 +28,7 @@ export default function References({ hideHeader = false }: { hideHeader?: boolea
                 Références
               </div>
               <h2 className="mb-8 max-w-[22ch] text-[clamp(28px,3vw,40px)] font-bold leading-[1.1] tracking-[-0.03em]">
-                Des chiffres tenus sur la durée.
+                Nos engagements de service.
               </h2>
             </>
           )}

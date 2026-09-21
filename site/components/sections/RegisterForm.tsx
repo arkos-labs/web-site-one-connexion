@@ -120,7 +120,7 @@ export default function RegisterForm() {
               </div>
               <div>
                 <h3 className="font-bold text-ink">Courses Flash en 30 à 45 minutes</h3>
-                <p className="mt-1 text-sm text-muted">Mise à disposition immédiate de motocyclistes ou vélos cargos dédiés.</p>
+                <p className="mt-1 text-sm text-muted">Mise à disposition immédiate d'un coursier deux-roues dédié à votre course.</p>
               </div>
             </div>
 
@@ -130,8 +130,8 @@ export default function RegisterForm() {
                 <ShieldCheck size={20} strokeWidth={2.5} />
               </div>
               <div>
-                <h3 className="font-bold text-ink">Flotte 100% Décarbonée & Certifiée</h3>
-                <p className="mt-1 text-sm text-muted">Zéro émission intra-muros avec nos utilitaires et vélos bi-porteurs électriques.</p>
+                <h3 className="font-bold text-ink">Un coursier dédié par course</h3>
+                <p className="mt-1 text-sm text-muted">Une course, un coursier : sans regroupement ni passage par un centre de tri.</p>
               </div>
             </div>
 
