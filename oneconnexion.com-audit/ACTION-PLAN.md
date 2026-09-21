@@ -5,7 +5,7 @@ Aucun.
 
 ## Élevé (cette semaine)
 - [x] Pages zones : section « Ils nous font confiance / clients types » (EDF, Schneider…) renommée « Acteurs présents à X » ; « expert / habilités / partenaire » retirés des metas. Fausses mentions de fourgons/camions 20 m³ retirées (flotte = deux-roues).
-- [ ] Enrichir les pages zones avec du contenu vraiment local (clients types, accès, délais réels, FAQ locale) ; noindex/fusion pour les communes sans demande.
+- [ ] (reste) Enrichir les pages zones avec du contenu vraiment local (clients types, accès, délais réels, FAQ locale) ; 9 communes passées en noindex (Rueil, Saint-Cloud, Saint-Ouen, Aubervilliers, Pantin, Bobigny, Versailles, Massy, Orly) ; à ré-évaluer avec la Search Console.
 - [ ] Créer ou vérifier la fiche Google Business Profile (zone d'intervention, Saint-Mandé) et créer la page LinkedIn ; ajouter les deux dans `sameAs`.
 
 ## Moyen (sous un mois)
@@ -19,5 +19,5 @@ Aucun.
 
 ## Faible (backlog)
 - [x] En-tête CSP ; alt du logo plus descriptif. (CSP à tester en preview : commande, Stripe.)
-- [ ] Petit hub de guides (plis confidentiels, transport de prélèvements, tarifs de coursier) pour les requêtes d'information et la citation par les IA.
+- [x] Petit hub de guides (plis confidentiels, transport de prélèvements, tarifs de coursier) pour les requêtes d'information et la citation par les IA.
 - [ ] Lancer PageSpeed/CrUX et connecter la Search Console pour contrôler l'indexation des pages zones.
