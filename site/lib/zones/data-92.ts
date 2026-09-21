@@ -44,7 +44,7 @@ export const ZONES_92: Zone[] = [
     keyClients: ["EDF", "Schneider Electric", "Bouygues", "Sièges multinationales La Défense"],
     distanceParis: "~15 min de Paris 17e",
     pricingZone: "standard",
-    seoTitle: "Coursier Courbevoie — EDF, Schneider Electric, La Défense 92",
+    seoTitle: "Coursier Courbevoie — La Défense, sièges sociaux",
     seoDesc: "Coursier express à Courbevoie (92). EDF, Schneider Electric, sièges La Défense. Course dédiée, enlèvement < 45 min. Traçabilité complète, devis en 2 h.",
     seoKeywords: ["coursier Courbevoie", "livraison express 92400", "coursier La Défense Courbevoie"],
   }),

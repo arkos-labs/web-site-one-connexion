@@ -114,7 +114,7 @@ export const ZONES_94: Zone[] = [
     distanceParis: "~10 min de Paris 12e",
     pricingZone: "standard",
     seoTitle: "Coursier Saint-Maurice — Hôpital National, 94410",
-    seoDesc: "Coursier express à Saint-Maurice (94). Hôpital National, transport médical urgent. Enlèvement < 15 min (siège One Connexion).",
+    seoDesc: "Coursier express à Saint-Maurice (94). Hôpital National, transport médical urgent, plis confidentiels. Enlèvement < 15 min depuis notre siège.",
     seoKeywords: ["coursier Saint-Maurice 94", "livraison express 94410", "coursier hôpital Saint-Maurice"],
   }),
   makeZone({

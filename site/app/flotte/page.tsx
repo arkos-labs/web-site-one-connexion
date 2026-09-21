@@ -5,7 +5,7 @@ import { PHONE_TEL, PHONE_DISPLAY } from "@/lib/site-content";
 
 export const metadata = {
   title: "Notre flotte de coursiers moto",
-  description: "Flotte exclusive de deux-roues optimisée pour la livraison express à Paris et en Île-de-France. Scooters agiles et motos routières, équipés pour la livraison professionnelle.",
+  description: "Flotte de scooters et motos pour la livraison express à Paris et en Île-de-France, équipée pour un usage professionnel. Coursiers vérifiés.",
   alternates: { canonical: "/flotte" },
   openGraph: {
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION — Coursier B2B Paris & Île-de-France" }],

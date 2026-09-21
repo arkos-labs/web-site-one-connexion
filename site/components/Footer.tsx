@@ -70,7 +70,7 @@ export default function Footer() {
         <div className="mb-8 flex flex-col gap-2 border-b pb-8" style={{ borderColor: "rgba(244,242,238,0.08)" }}>
           <Image
             src="/logo-white.png"
-            alt="ONE CONNEXION — Coursier moto B2B Paris"
+            alt="Logo ONE CONNEXION, coursier moto B2B à Paris et en Île-de-France"
             width={400}
             height={150}
             className="w-[140px] h-auto object-contain"

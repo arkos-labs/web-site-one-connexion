@@ -11,7 +11,7 @@ import { SITE_URL, PHONE_DISPLAY, PHONE_TEL } from "@/lib/site-content";
 import { CheckCircle2, Clock, MapPin, Shield } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Tarifs coursier express Paris — Devis en 2 h",
+  title: "Tarifs coursier express Paris — Devis 2 h",
   description:
     "Logique tarifaire de One Connexion pour vos courses urgentes à Paris et en Île-de-France : tarif à la course ou compte mensuel. Devis gratuit sous 2 h.",
   alternates: { canonical: "/tarifs" },

@@ -345,7 +345,7 @@ const ZONES_75: Zone[] = [
     keyClients: ["Parc des Expositions","Hôpitaux (HEGP, Necker)","Chaînes de Télévision","Grands sièges sociaux"],
     distanceParis: "Ouest",
     pricingZone: "standard",
-    seo: { title: "Coursier Paris 15e — Porte de Versailles, HEGP, Médias", description: "Coursier express Paris 15e (75015). Spécialiste logistique salons (Porte de Versailles), transport audiovisuel et médical (HEGP).", keywords: ["coursier Paris 15e","coursier Porte de Versailles","coursier audiovisuel Paris","livraison express 75015"] },
+    seo: { title: "Coursier Paris 15e — Porte de Versailles, HEGP, Médias", description: "Coursier express Paris 15e (75015). Spécialiste logistique salons (Porte de Versailles), transport audiovisuel et médical (HEGP). Enlèvement < 45 min.", keywords: ["coursier Paris 15e","coursier Porte de Versailles","coursier audiovisuel Paris","livraison express 75015"] },
   },
   {
     slug: "paris-16e",
@@ -433,7 +433,7 @@ const ZONES_75: Zone[] = [
     keyClients: ["Hôpital Robert-Debré","Philharmonie de Paris","La Villette (Expositions)","Institutions publiques"],
     distanceParis: "Nord",
     pricingZone: "standard",
-    seo: { title: "Coursier Paris 19e — La Villette, Hôpital Robert-Debré", description: "Coursier express Paris 19e (75019). Transport médical pédiatrique (Robert-Debré), logistique événementielle lourde (La Villette).", keywords: ["coursier Paris 19e","coursier La Villette","coursier médical 75019","livraison express Paris 19"] },
+    seo: { title: "Coursier Paris 19e — La Villette, Hôpital Robert-Debré", description: "Coursier express Paris 19e (75019). Transport médical pédiatrique (Robert-Debré), logistique événementielle lourde (La Villette). Enlèvement < 45 min.", keywords: ["coursier Paris 19e","coursier La Villette","coursier médical 75019","livraison express Paris 19"] },
   },
   {
     slug: "paris-20e",

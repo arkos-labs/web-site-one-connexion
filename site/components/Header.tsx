@@ -114,7 +114,7 @@ export default function Header() {
           <Link href="/" className={`flex shrink-0 items-center overflow-visible ${isDashboard ? "order-2" : ""}`}>
             <Image
               src="/logo-white.png"
-              alt="ONE CONNEXION — coursier B2B Paris"
+              alt="Logo ONE CONNEXION, coursier moto B2B à Paris et en Île-de-France"
               width={400}
               height={150}
               className="w-[130px] sm:w-[150px] md:w-[180px] h-auto origin-left object-contain"
@@ -210,7 +210,7 @@ export default function Header() {
             {isDashboard ? (
               <Image
                 src="/logo-x.png"
-                alt="ONE CONNEXION — coursier B2B Paris"
+                alt="Logo ONE CONNEXION, coursier moto B2B à Paris et en Île-de-France"
                 width={400}
                 height={150}
                 className="w-[115px] h-auto object-contain drop-shadow-sm"
@@ -218,7 +218,7 @@ export default function Header() {
             ) : (
               <Image
                 src="/logo-white.png"
-                alt="ONE CONNEXION — coursier B2B Paris"
+                alt="Logo ONE CONNEXION, coursier moto B2B à Paris et en Île-de-France"
                 width={400}
                 height={150}
                 className="w-[120px] h-auto object-contain"
