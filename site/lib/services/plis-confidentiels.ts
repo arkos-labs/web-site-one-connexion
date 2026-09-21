@@ -35,7 +35,7 @@ export const plisConfidentiels: Service = {
 
   stats: [
     { value: "< 45 min", label: "Prise en charge" },
-    { value: "99,4 %", label: "Ponctualité constatée" },
+    { value: "Sans regroupement", label: "Course dédiée" },
     { value: "< 2 h", label: "Devis entreprise" },
   ],
 

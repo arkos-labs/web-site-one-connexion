@@ -38,7 +38,7 @@ export const transportMedical: Service = {
 
   stats: [
     { value: "< 45 min", label: "Prise en charge" },
-    { value: "99,4 %", label: "Ponctualité constatée" },
+    { value: "7j/7", label: "7h – 23h" },
     { value: "Sans regroupement", label: "Course dédiée" },
   ],
 

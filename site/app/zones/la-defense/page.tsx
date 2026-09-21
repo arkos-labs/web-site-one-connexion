@@ -43,7 +43,7 @@ const VILLES = [
 
 const STATS = [
   { value: "< 45 min", label: "Prise en charge" },
-  { value: "99,4 %", label: "Ponctualité" },
+  { value: "< 2 h", label: "Devis entreprise" },
   { value: "7j/7", label: "7h–23h" },
   { value: "92", label: "Dépt. couvert" },
 ];

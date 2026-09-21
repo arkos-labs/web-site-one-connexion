@@ -11,7 +11,7 @@ import { AddressAutocomplete } from "@/components/AddressAutocomplete";
 
 const COMMITMENTS = [
   { label: "Prise en charge", value: "< 45 min", sub: "dès validation commande", fill: 70 },
-  { label: "Ponctualité", value: "99,4 %", sub: "sur 12 mois glissants", fill: 99 },
+  { label: "Course", value: "Dédiée", sub: "un coursier, sans regroupement", fill: null },
   { label: "Amplitude", value: "7j/7", sub: "7h – 23h, jours fériés inclus", fill: null },
   { label: "Devis entreprise", value: "< 2 h", sub: "réponse garantie", fill: 85 },
 ];

@@ -20,7 +20,7 @@ export const metadata = {
 
 const STATS = [
   { value: "120+", label: "Coursiers actifs" },
-  { value: "99,4%", label: "Taux de ponctualité" },
+  { value: "18 kg", label: "Charge par course" },
   { value: "< 45 min", label: "Prise en charge moyenne" },
   { value: "7j/7", label: "Disponibilité" },
 ];

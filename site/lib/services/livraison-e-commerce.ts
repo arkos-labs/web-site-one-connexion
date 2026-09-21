@@ -35,7 +35,7 @@ export const livraisonEcommerce: Service = {
 
   stats: [
     { value: "Jour même", label: "Délai de livraison" },
-    { value: "99,4 %", label: "Ponctualité constatée" },
+    { value: "< 2 h", label: "Devis entreprise" },
     { value: "18 kg", label: "Charge par course" },
   ],
 

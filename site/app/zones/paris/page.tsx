@@ -56,7 +56,7 @@ const ARRONDISSEMENTS = [
 
 const STATS = [
   { value: "< 30 min", label: "Délai moyen intramuros" },
-  { value: "99,4 %", label: "Ponctualité constatée" },
+  { value: "< 2 h", label: "Devis entreprise" },
   { value: "7j/7", label: "7h–23h" },
   { value: "20/20", label: "Arrondissements couverts" },
 ];
