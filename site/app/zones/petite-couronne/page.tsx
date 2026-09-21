@@ -231,7 +231,7 @@ export default function ZonePetiteCouronne() {
             {[
               { q: "Couvrez-vous vraiment toute la petite couronne ?", a: "Oui, notre flotte est répartie de manière optimale pour couvrir l'intégralité des Hauts-de-Seine (92), de la Seine-Saint-Denis (93) et du Val-de-Marne (94)." },
               { q: "Le tarif est-il plus élevé pour la banlieue ?", a: "Nos tarifs sont basés sur des grilles kilométriques transparentes. Les liaisons Paris ↔ Banlieue ou Banlieue ↔ Banlieue sont très compétitives grâce à notre maillage local." },
-              { q: "Pouvez-vous transporter des colis lourds ou volumineux ?", a: "Bien sûr. En plus de nos motos pour l'extrême urgence, nous disposons d'une flotte de fourgons et camions de 20m³ pour répondre aux besoins industriels ou logistiques." }
+              { q: "Pouvez-vous transporter des colis lourds ou volumineux ?", a: "Notre flotte est composée de deux-roues (scooters et motos) : elle convient aux plis, colis et matériel léger. Pour un volume ou un gabarit important, contactez-nous avant de commander, nous vous dirons si nous pouvons le prendre en charge." }
             ].map((faq, i) => (
               <div key={i} className="rounded-xl border border-line bg-white p-5 hover:border-accent/30 transition-colors">
                 <h3 className="mb-2 text-[15.5px] font-bold text-ink">{faq.q}</h3>

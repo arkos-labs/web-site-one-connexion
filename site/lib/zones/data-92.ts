@@ -45,7 +45,7 @@ export const ZONES_92: Zone[] = [
     distanceParis: "~15 min de Paris 17e",
     pricingZone: "standard",
     seoTitle: "Coursier Courbevoie — La Défense, sièges sociaux",
-    seoDesc: "Coursier express à Courbevoie (92). EDF, Schneider Electric, sièges La Défense. Course dédiée, enlèvement < 45 min. Traçabilité complète, devis en 2 h.",
+    seoDesc: "Coursier express à Courbevoie (92). Sièges sociaux de La Défense. Course dédiée, enlèvement < 45 min. Traçabilité complète, devis en 2 h.",
     seoKeywords: ["coursier Courbevoie", "livraison express 92400", "coursier La Défense Courbevoie"],
   }),
   makeZone({

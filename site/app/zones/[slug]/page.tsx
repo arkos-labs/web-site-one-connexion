@@ -370,7 +370,7 @@ export default async function ZonePage({ params }: Props) {
           </div>
           <div className="grid gap-8 md:grid-cols-3">
             {[
-              { num: "01", title: "Demande immédiate", desc: "Contactez-nous par téléphone ou via notre formulaire. Devis en moins de 2 minutes." },
+              { num: "01", title: "Demande immédiate", desc: "Contactez-nous par téléphone ou via notre formulaire. Devis gratuit sous 2 h." },
               { num: "02", title: "Enlèvement < 45 min", desc: `Un coursier spécialisé se présente à vos bureaux à ${zone.name} en moins de 45 minutes.` },
               { num: "03", title: "Livraison & Suivi", desc: "Suivez l'avancement de votre course en ligne jusqu'à la remise, horodatée à la réception." }
             ].map((step) => (
@@ -401,7 +401,7 @@ export default async function ZonePage({ params }: Props) {
         <div className="flex flex-col gap-4">
           {[
             { q: `Quels sont les délais d'enlèvement à ${zone.name} ?`, a: `Pour toute urgence, un coursier intervient à ${zone.name} en moins de 45 minutes après validation de la commande, quel que soit le quartier.` },
-            { q: `Effectuez-vous des livraisons volumineuses depuis ${zone.name} ?`, a: "Oui, notre flotte comprend des motos, mais aussi des utilitaires et camions de 20m³ pour répondre à tous vos besoins de fret léger et lourd." },
+            { q: `Effectuez-vous des livraisons volumineuses depuis ${zone.name} ?`, a: "Notre flotte est composée de deux-roues (scooters et motos) : elle convient aux plis, colis et matériel léger. Pour un volume ou un gabarit important, contactez-nous avant de commander, nous vous dirons si nous pouvons le prendre en charge." },
             { q: `Puis-je regrouper mes expéditions depuis ${zone.name} ?`, a: "Absolument. Nous proposons des tournées régulières et la création de comptes entreprise pour optimiser vos coûts logistiques au quotidien." }
           ].map((faq, i) => (
             <div key={i} className="rounded-xl border border-gray-200 bg-white p-5 hover:border-accent/30 transition-colors">

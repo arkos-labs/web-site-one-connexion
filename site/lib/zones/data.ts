@@ -333,7 +333,7 @@ const ZONES_75: Zone[] = [
     category: "paris",
     landmarks: ["Hôpital Européen Georges-Pompidou (HEGP)","Parc des Expositions (Porte de Versailles)","Beaugrenelle","Tour Montparnasse (limite)"],
     intro: "Le plus peuplé des arrondissements est un géant économique. Il accueille les sièges de médias audiovisuels prestigieux, le Parc des Expositions de la Porte de Versailles et un grand pôle de santé publique.",
-    logisticsContext: "La diversité des activités (salons pros, télévision, santé) fait du 15e une zone nécessitant une grande adaptabilité, des camions avec hayon pour VIParis aux deux-roues pressés pour les JT.",
+    logisticsContext: "La diversité des activités (salons pros, télévision, santé) fait du 15e une zone nécessitant une grande adaptabilité, du matériel d'exposition des salons aux deux-roues pressés pour les JT.",
     sectors: [
       { name: "Événementiel", example: "Transport de stands, PLV et matériels pour les congrès mondiaux à la Porte de Versailles.", serviceHref: "/services/transport-evenementiel", serviceLabel: "Transport fret" },
       { name: "Corporate & Agences", example: "Acheminement de rushs vidéo et supports de communication pour les chaînes de télévision.", serviceHref: "/services/plis-confidentiels", serviceLabel: "Course dédiée" },
@@ -421,7 +421,7 @@ const ZONES_75: Zone[] = [
     category: "paris",
     landmarks: ["La Villette","Parc des Buttes-Chaumont","Hôpital Robert-Debré","Philharmonie de Paris","Cité des Sciences"],
     intro: "Le 19e arrondissement est le cœur vert et culturel du Nord-Est parisien. Le pôle de la Villette attire expositions et congrès géants, tandis que l'Hôpital Robert-Debré s'impose comme une référence en pédiatrie.",
-    logisticsContext: "L'accès aux grands parcs et au périphérique (Porte de Pantin) offre d'excellents axes de dégagement. Nos véhicules utilitaires y opèrent fréquemment pour les livraisons volumineuses liées aux événements de La Villette.",
+    logisticsContext: "L'accès aux grands parcs et au périphérique (Porte de Pantin) offre d'excellents axes de dégagement. Nous intervenons pour les livraisons de matériel léger liées aux événements de La Villette.",
     sectors: [
       { name: "Médical & Laboratoires", example: "Transferts d'urgence, laits maternels et prélèvements pour l'Hôpital universitaire Robert-Debré.", serviceHref: "/services/transport-medical", serviceLabel: "Transport médical" },
       { name: "Événementiel", example: "Acheminement lourd d'instruments et de décors pour la Philharmonie et la Grande Halle de la Villette.", serviceHref: "/services/transport-evenementiel", serviceLabel: "Transport de matériel" },
