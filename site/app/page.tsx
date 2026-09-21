@@ -43,6 +43,7 @@ const organizationSchema = {
     name: "Île-de-France",
   },
   hasMap: MAPS_URL,
+  sameAs: ["https://share.google/XuYslOmCjc7YpqLmf"],
   openingHours: "Mo-Su 07:00-23:00",
   priceRange: "€€",
   vatID: LEGAL.tva,
