@@ -26,6 +26,7 @@ export default function OrderForm() {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [trackingCode, setTrackingCode] = useState<string | null>(null);
+  const [formError, setFormError] = useState("");
 
   // Form state
   const [clientType, setClientType] = useState<'entreprise' | 'particulier'>('entreprise');
@@ -74,6 +75,24 @@ export default function OrderForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setFormError("");
+
+    // `required` accepte une valeur faite uniquement d'espaces : on vérifie à la main.
+    if (step === 1 && (!pickupAddress.trim() || !dropoffAddress.trim())) {
+      setFormError("Renseignez une adresse d'enlèvement et une adresse de livraison (des caractères, pas seulement des espaces).");
+      return;
+    }
+    if (step === 2) {
+      if (!contactName.trim()) {
+        setFormError("Renseignez votre nom (des caractères, pas seulement des espaces).");
+        return;
+      }
+      if (contactPhone.replace(/\D/g, "").length < 9) {
+        setFormError("Renseignez un numéro de téléphone valide.");
+        return;
+      }
+    }
+
     if (step < 3) {
       setStep(step + 1);
       return;
@@ -92,15 +111,15 @@ export default function OrderForm() {
       .insert({
         user_id: user?.id ?? null,
         tracking_code: trackingCode,
-        pickup_address: pickupAddress,
-        dropoff_address: dropoffAddress,
+        pickup_address: pickupAddress.trim(),
+        dropoff_address: dropoffAddress.trim(),
         stops: [],
         format,
         delai,
         notes,
-        contact_name: contactName,
-        contact_email: contactEmail,
-        contact_phone: contactPhone,
+        contact_name: contactName.trim(),
+        contact_email: contactEmail.trim(),
+        contact_phone: contactPhone.trim(),
         status: "en_attente",
         price_estimate: estimatedPrice,
         client_type: clientType,
@@ -483,6 +502,12 @@ export default function OrderForm() {
                       </div>
                     </div>
                   </div>
+                )}
+
+                {formError && (
+                  <p role="alert" className="mt-6 rounded-xl bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+                    {formError}
+                  </p>
                 )}
 
                 {/* Footer Buttons */}

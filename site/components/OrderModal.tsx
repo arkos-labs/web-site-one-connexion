@@ -22,6 +22,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [trackingCode, setTrackingCode] = useState<string | null>(null);
+  const [formError, setFormError] = useState("");
   const [clientType, setClientType] = useState<"entreprise" | "particulier">("entreprise");
   const [format, setFormat] = useState("doc");
   const [delai, setDelai] = useState("standard");
@@ -71,6 +72,29 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setFormError("");
+
+    // Le bouton n'est pas un submit : `required` n'est jamais appliqué. On vérifie à la main,
+    // en refusant aussi les valeurs faites uniquement d'espaces.
+    if (step === 1 && (!pickupAddress.trim() || !dropoffAddress.trim())) {
+      setFormError("Renseignez une adresse d'enlèvement et une adresse de livraison (des caractères, pas seulement des espaces).");
+      return;
+    }
+    if (step === 2) {
+      if (!contactName.trim()) {
+        setFormError("Renseignez votre nom (des caractères, pas seulement des espaces).");
+        return;
+      }
+      if (contactPhone.replace(/\D/g, "").length < 9) {
+        setFormError("Renseignez un numéro de téléphone valide.");
+        return;
+      }
+      if (!/^\S+@\S+\.\S+$/.test(contactEmail.trim())) {
+        setFormError("Renseignez une adresse email valide.");
+        return;
+      }
+    }
+
     if (step < 3) { setStep(step + 1); return; }
 
     setSubmitting(true);
@@ -85,15 +109,15 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
       .insert({
         user_id: user?.id ?? null,
         tracking_code: trackingCode,
-        pickup_address: pickupAddress,
-        dropoff_address: dropoffAddress,
+        pickup_address: pickupAddress.trim(),
+        dropoff_address: dropoffAddress.trim(),
         stops: [],
         format,
         delai,
         notes,
-        contact_name: contactName,
-        contact_email: contactEmail,
-        contact_phone: contactPhone,
+        contact_name: contactName.trim(),
+        contact_email: contactEmail.trim(),
+        contact_phone: contactPhone.trim(),
         status: "en_attente",
         client_type: clientType,
         source: "page_publique",
@@ -408,6 +432,12 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
             </>
           )}
                 </div>
+
+                {formError && (
+                  <p role="alert" className="mx-6 mb-2 rounded-lg bg-red-50 px-4 py-2.5 text-sm font-medium text-red-700">
+                    {formError}
+                  </p>
+                )}
 
                 {/* Footer Fixe (Navigation) */}
                 {!submitted && (
