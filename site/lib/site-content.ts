@@ -10,6 +10,10 @@ export const FOUNDED_YEAR = "2026";
 
 export const SITE_URL = "https://www.oneconnexion.com";
 
+// Lien Google Maps vers le siège (schema.org hasMap, page contact).
+export const MAPS_URL =
+  "https://www.google.com/maps/search/?api=1&query=5+Square+Nungesser+94160+Saint-Mand%C3%A9";
+
 // Informations légales ONE CONNEXION — SAS immatriculée le 21/02/2026
 export const LEGAL = {
   denomination: "ONE CONNEXION",

@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Mail, Phone, MapPin, Clock, ArrowRight, Send } from "lucide-react";
-import { PHONE_DISPLAY, PHONE_TEL, EMAIL, LEGAL } from "@/lib/site-content";
+import { PHONE_DISPLAY, PHONE_TEL, EMAIL, LEGAL, MAPS_URL } from "@/lib/site-content";
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -159,6 +159,18 @@ export default function ContactPage() {
                   <div>
                     <div className="font-mono text-[11px] uppercase tracking-wider text-white/50">Horaires d'opération</div>
                     <div className="mt-1 text-[15px] font-medium">7j/7 — 7h00 à 23h00</div>
+                    <div className="mt-1 text-[13px] text-white/60">Interventions de nuit possibles sur accord.</div>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10 text-white">
+                    <Send size={18} strokeWidth={2.5} />
+                  </div>
+                  <div>
+                    <div className="font-mono text-[11px] uppercase tracking-wider text-white/50">Délai de devis</div>
+                    <div className="mt-1 text-[15px] font-medium">Devis gratuit sous 2 h</div>
+                    <div className="mt-1 text-[13px] text-white/60">Pour une course urgente, appelez le dispatching.</div>
                   </div>
                 </div>
 
@@ -171,6 +183,14 @@ export default function ContactPage() {
                     <div className="mt-1 text-[15px] font-medium leading-relaxed">
                       {LEGAL.adresse}
                     </div>
+                    <a
+                      href={MAPS_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-1 inline-block text-[13px] text-accent hover:underline"
+                    >
+                      Voir sur Google Maps
+                    </a>
                   </div>
                 </div>
               </div>

@@ -4,7 +4,7 @@ import OrderForm from "@/components/sections/OrderForm";
 import Contact from "@/components/sections/Contact";
 import Faq from "@/components/sections/Faq";
 import JsonLd from "@/components/JsonLd";
-import { LEGAL, PHONE_TEL, EMAIL, SITE_URL } from "@/lib/site-content";
+import { LEGAL, PHONE_TEL, EMAIL, SITE_URL, MAPS_URL } from "@/lib/site-content";
 
 const organizationSchema = {
   "@context": "https://schema.org",
@@ -42,6 +42,7 @@ const organizationSchema = {
     "@type": "AdministrativeArea",
     name: "Île-de-France",
   },
+  hasMap: MAPS_URL,
   openingHours: "Mo-Su 07:00-23:00",
   priceRange: "€€",
   vatID: LEGAL.tva,
