@@ -19,7 +19,7 @@ export async function notifyNewContact(msg: ContactMessage): Promise<void> {
     return;
   }
 
-  const from = process.env.CONTACT_FROM ?? "ONE CONNEXION <onboarding@resend.dev>";
+  const from = process.env.CONTACT_FROM ?? `ONE CONNEXION <${EMAIL}>`;
   const to = process.env.CONTACT_NOTIFY_TO ?? EMAIL;
   const who = oneLine(msg.company ? `${msg.name} (${msg.company})` : msg.name);
 
