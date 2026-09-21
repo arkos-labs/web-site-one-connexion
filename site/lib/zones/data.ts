@@ -59,7 +59,7 @@ const ZONES_75: Zone[] = [
     keyClients: ["Showrooms (Le Sentier)","Start-ups & Fintechs","Cabinets de Conseil (Bourse)","Presse"],
     distanceParis: "Hyper-centre",
     pricingZone: "standard",
-    seo: { title: "Coursier Paris 2e — Bourse, Sentier, Start-ups", description: "Coursier express Paris 2e (75002). Expert en livraison de prototypes (Sentier), plis financiers et navettes start-ups. Enlèvement < 45 min.", keywords: ["coursier Paris 2e","coursier Bourse","coursier Sentier","livraison mode Paris 2"] },
+    seo: { title: "Coursier Paris 2e — Bourse, Sentier, Start-ups", description: "Coursier express Paris 2e (75002). Livraison de prototypes (Sentier), plis financiers et navettes start-ups. Enlèvement < 45 min.", keywords: ["coursier Paris 2e","coursier Bourse","coursier Sentier","livraison mode Paris 2"] },
   },
   {
     slug: "paris-3e",
@@ -169,7 +169,7 @@ const ZONES_75: Zone[] = [
     keyClients: ["Ministères","Ambassades","Assemblée Nationale","Family Offices"],
     distanceParis: "Rive Gauche",
     pricingZone: "standard",
-    seo: { title: "Coursier Paris 7e — Invalides, Ministères, Ambassades", description: "Coursier express Paris 7e (75007). Habilités aux accès ministères et ambassades. Plis diplomatiques et confidentiels remis en main propre.", keywords: ["coursier Paris 7e","coursier ambassade Paris","coursier Invalides","livraison express 75007"] },
+    seo: { title: "Coursier Paris 7e — Invalides, Ministères, Ambassades", description: "Coursier express Paris 7e (75007). Plis confidentiels remis en main propre aux ministères et ambassades du 7e. Enlèvement < 45 min.", keywords: ["coursier Paris 7e","coursier ambassade Paris","coursier Invalides","livraison express 75007"] },
   },
   {
     slug: "paris-8e",
@@ -257,7 +257,7 @@ const ZONES_75: Zone[] = [
     keyClients: ["Espaces de Coworking","Start-ups","Artisans & Créateurs","Salles de concert"],
     distanceParis: "Est",
     pricingZone: "standard",
-    seo: { title: "Coursier Paris 11e — Bastille, Oberkampf, Nation", description: "Coursier express Paris 11e (75011). Partenaire des start-ups, espaces de coworking et artisans de Bastille à Nation. Enlèvement < 45 min.", keywords: ["coursier Paris 11e","coursier Bastille","coursier Oberkampf","livraison express 75011"] },
+    seo: { title: "Coursier Paris 11e — Bastille, Oberkampf, Nation", description: "Coursier express Paris 11e (75011). Livraisons pour start-ups, coworkings et artisans de Bastille à Nation. Enlèvement < 45 min.", keywords: ["coursier Paris 11e","coursier Bastille","coursier Oberkampf","livraison express 75011"] },
   },
   {
     slug: "paris-12e",
@@ -301,7 +301,7 @@ const ZONES_75: Zone[] = [
     keyClients: ["Hôpital Pitié-Salpêtrière","Start-ups (Station F)","Institutions (BnF)","Sièges bancaires"],
     distanceParis: "Sud",
     pricingZone: "standard",
-    seo: { title: "Coursier Paris 13e — Station F, Pitié-Salpêtrière", description: "Coursier express Paris 13e (75013). Expert en logistique médicale (Pitié-Salpêtrière) et transports urgents IT pour les start-ups (Station F).", keywords: ["coursier Paris 13e","coursier Station F","coursier hôpital Pitié-Salpêtrière","livraison express 75013"] },
+    seo: { title: "Coursier Paris 13e — Station F, Pitié-Salpêtrière", description: "Coursier express Paris 13e (75013). Logistique médicale (Pitié-Salpêtrière) et transports urgents IT pour les start-ups (Station F).", keywords: ["coursier Paris 13e","coursier Station F","coursier hôpital Pitié-Salpêtrière","livraison express 75013"] },
   },
   {
     slug: "paris-14e",
@@ -389,7 +389,7 @@ const ZONES_75: Zone[] = [
     keyClients: ["Tribunal de Paris (Palais de Justice)","Cabinets d'Avocats","Palais des Congrès","Sièges sociaux"],
     distanceParis: "Ouest",
     pricingZone: "standard",
-    seo: { title: "Coursier Paris 17e — Tribunal de Paris, Batignolles", description: "Coursier express Paris 17e (75017). Expert des dépôts juridiques au Tribunal de Paris (Batignolles). Enlèvement immédiat, course dédiée spécialisée.", keywords: ["coursier Paris 17e","coursier Tribunal de Paris","coursier avocat Paris","livraison express 75017"] },
+    seo: { title: "Coursier Paris 17e — Tribunal de Paris, Batignolles", description: "Coursier express Paris 17e (75017). Dépôts juridiques au Tribunal de Paris (Batignolles). Enlèvement immédiat, course dédiée spécialisée.", keywords: ["coursier Paris 17e","coursier Tribunal de Paris","coursier avocat Paris","livraison express 75017"] },
   },
   {
     slug: "paris-18e",

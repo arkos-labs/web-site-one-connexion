@@ -334,10 +334,10 @@ export default async function ZonePage({ params }: Props) {
             <div className="mb-8">
               <div className="mb-3 flex items-center gap-3 font-mono text-[10px] tracking-[0.16em] text-accent uppercase">
                 <span className="h-px w-6 bg-accent" />
-                Ils nous font confiance
+                Tissu économique local
               </div>
               <h2 className="text-[clamp(20px,2.5vw,28px)] font-bold text-ink">
-                Nos clients types à {zone.name}
+                Acteurs présents à {zone.name}
               </h2>
             </div>
             <div className="flex flex-wrap gap-3">
