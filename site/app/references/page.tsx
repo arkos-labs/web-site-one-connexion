@@ -1,5 +1,5 @@
 import Contact from "@/components/sections/Contact";
-import { Scale, Activity, Briefcase, ShoppingBag, Star, Quote, ArrowRight } from "lucide-react";
+import { Scale, Activity, Briefcase, ShoppingBag, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 export const metadata = {
@@ -53,27 +53,6 @@ const SECTEURS = [
     clients: ["Maisons de luxe", "Boutiques en ligne", "Showrooms", "Places de marché"],
     color: "bg-amber-50 text-amber-700",
     border: "border-amber-100",
-  },
-];
-
-const TEMOIGNAGES = [
-  {
-    nom: "Maître Claire Fontaine",
-    poste: "Associée — Cabinet Fontaine & Moreau",
-    texte: "One Connexion gère tous nos dépôts urgents en juridiction. Leurs coursiers connaissent les procédures, respectent les délais et nous envoient une preuve de remise dans la foulée. Indispensable.",
-    note: 5,
-  },
-  {
-    nom: "Dr. Marc Tessier",
-    poste: "Directeur — Laboratoire Tessier Analyses",
-    texte: "Nous leur faisons confiance pour le transport de prélèvements biologiques dès l'ouverture. Rigueur, ponctualité et discrétion. Jamais une défaillance sur des centaines de missions.",
-    note: 5,
-  },
-  {
-    nom: "Sarah Kone",
-    poste: "Head of Operations — Agence Lumière",
-    texte: "Pour nos envois de maquettes ou de dossiers sensibles, One Connexion est notre réflexe. Le suivi en ligne rassure nos clients et le service client est vraiment disponible.",
-    note: 5,
   },
 ];
 
@@ -171,37 +150,6 @@ export default function ReferencesPage() {
               </div>
             );
           })}
-        </div>
-      </section>
-
-      {/* ── Témoignages ── */}
-      <section className="bg-paper">
-        <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-10">
-          <div className="mb-4 font-mono text-[11px] uppercase tracking-[0.16em] text-accent">
-            Témoignages
-          </div>
-          <h2 className="mb-16 text-[clamp(26px,3vw,38px)] font-bold leading-[1.15] tracking-[-0.02em]">
-            Ce que disent nos clients.
-          </h2>
-          <div className="grid gap-6 md:grid-cols-3">
-            {TEMOIGNAGES.map((t) => (
-              <div key={t.nom} className="flex flex-col justify-between gap-6 rounded-2xl border border-line bg-white p-7 shadow-sm">
-                <div>
-                  <div className="mb-4 flex gap-0.5">
-                    {Array.from({ length: t.note }).map((_, i) => (
-                      <Star key={i} size={14} className="fill-amber-400 text-amber-400" strokeWidth={0} />
-                    ))}
-                  </div>
-                  <Quote size={20} className="mb-3 text-accent/30" />
-                  <p className="text-[14.5px] leading-[1.7] text-muted italic">{t.texte}</p>
-                </div>
-                <div className="border-t border-line pt-4">
-                  <p className="font-bold text-ink">{t.nom}</p>
-                  <p className="text-[12px] text-muted">{t.poste}</p>
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 

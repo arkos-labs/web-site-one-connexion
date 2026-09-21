@@ -26,8 +26,8 @@ export const LEGAL = {
   clotureExercice: "30 septembre",
 };
 
-// Bascule pour afficher/masquer les témoignages.
-export const SHOW_TESTIMONIALS = true;
+// Bascule pour afficher/masquer les témoignages (désactivée : aucun retour client réel à publier pour l'instant).
+export const SHOW_TESTIMONIALS = false;
 
 // Date de dernière mise à jour du contenu public (sitemap <lastmod>, pages légales).
 export const SITE_LAST_UPDATED = new Date("2026-09-21");

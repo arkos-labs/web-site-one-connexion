@@ -8,7 +8,6 @@ import { SHOW_TESTIMONIALS } from "@/lib/site-content";
 const STATS = [
   { value: "12 000+", label: "Courses livrées" },
   { value: "98 %", label: "Livrées dans le créneau" },
-  { value: "4,9/5", label: "Satisfaction clients" },
 ];
 
 // PLACEHOLDER : témoignages réels à intégrer avant mise en ligne.

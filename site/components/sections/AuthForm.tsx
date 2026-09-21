@@ -11,7 +11,6 @@ import {
   EyeOff,
   ShieldCheck,
   CheckCircle2,
-  Star,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
@@ -191,26 +190,6 @@ export default function AuthForm() {
             </div>
           </div>
 
-          {/* Témoignage */}
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
-            <div className="mb-3 flex gap-0.5">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <Star key={i} size={13} className="fill-amber-400 text-amber-400" strokeWidth={0} />
-              ))}
-            </div>
-            <p className="mb-4 text-[14px] leading-[1.7] text-white/75 italic">
-              "One Connexion est devenu notre prestataire exclusif pour tous les dépôts urgents en juridiction. Fiabilité et ponctualité irréprochables depuis 3 ans."
-            </p>
-            <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-accent text-[11px] font-bold text-white">
-                CF
-              </div>
-              <div>
-                <p className="text-[13px] font-bold text-white">Maître Claire Fontaine</p>
-                <p className="text-[11px] text-white/50">Cabinet Fontaine &amp; Moreau — Paris 8e</p>
-              </div>
-            </div>
-          </div>
         </div>
 
       </div>

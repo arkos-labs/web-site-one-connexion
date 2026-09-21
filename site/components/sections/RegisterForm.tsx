@@ -10,8 +10,7 @@ import {
   Building2,
   AtSign,
   ArrowRight,
-  CheckCircle2,
-  Star
+  CheckCircle2
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
@@ -148,25 +147,6 @@ export default function RegisterForm() {
             </div>
           </div>
 
-          <div className="mt-10 flex items-center gap-4 border-t border-line pt-6">
-            <div className="flex -space-x-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-paper-card bg-ink text-xs font-bold text-white">LR</div>
-              <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-paper-card bg-accent text-xs font-bold text-white">MD</div>
-              <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-paper-card bg-yellow-500 text-xs font-bold text-white">KB</div>
-              <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-paper-card bg-blue-600 text-xs font-bold text-white">+2k</div>
-            </div>
-            <div>
-              <div className="flex items-center gap-1 text-yellow-500">
-                <Star size={14} fill="currentColor" strokeWidth={0} />
-                <Star size={14} fill="currentColor" strokeWidth={0} />
-                <Star size={14} fill="currentColor" strokeWidth={0} />
-                <Star size={14} fill="currentColor" strokeWidth={0} />
-                <Star size={14} fill="currentColor" strokeWidth={0} />
-                <span className="ml-1 text-sm font-bold text-ink">4.9/5</span>
-              </div>
-              <p className="text-xs text-muted">+2 500 entreprises et cabinets d'avocats nous font confiance.</p>
-            </div>
-          </div>
         </div>
 
         {/* Colonne Droite : Formulaire */}
