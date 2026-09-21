@@ -42,7 +42,6 @@ export default function ContactPage() {
       
       {/* ── HEADER HERO ── */}
       <section className="relative overflow-hidden bg-ink py-20 text-white lg:py-28">
-        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#ffffff 1px, transparent 1px)', backgroundSize: '24px 24px' }}></div>
         <div className="relative mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] text-center">
           <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/10 px-3 py-1.5 text-xs font-bold uppercase tracking-widest text-accent">
             <span className="h-1.5 w-1.5 rounded-full bg-accent"></span>
