@@ -34,6 +34,13 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
   const [notes, setNotes] = useState("");
   const [estimatedPrice, setEstimatedPrice] = useState<number | null>(null);
 
+  // Champs B2B
+  const [siret, setSiret] = useState("");
+  const [raisonSociale, setRaisonSociale] = useState("");
+  const [adresseFacturation, setAdresseFacturation] = useState("");
+  const [tva, setTva] = useState("");
+  const [validatingSiret, setValidatingSiret] = useState(false);
+
   const supabase = createClient();
 
   useEffect(() => {
@@ -53,6 +60,43 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
       setDropoffAddress(initialDropoff);
     }
   }, [open, initialPickup, initialDropoff]);
+
+  // Valider SIRET via API
+  const validateSiretHandler = async () => {
+    if (!siret.trim()) return;
+
+    setValidatingSiret(true);
+    setFormError("");
+
+    try {
+      const response = await fetch("/api/validate-siret", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          siret,
+          raison_sociale: raisonSociale,
+          email: contactEmail,
+          nom_contact: contactName,
+          adresse_facturation: adresseFacturation,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.valid && result.sireneData) {
+        setTva(result.sireneData.tva_number || "");
+        setFormError("");
+      } else {
+        setFormError(result.errors?.join(" ") || "SIRET invalide.");
+        setTva("");
+      }
+    } catch (err) {
+      setFormError("Erreur lors de la validation du SIRET.");
+      setTva("");
+    } finally {
+      setValidatingSiret(false);
+    }
+  };
 
   // Ferme avec Escape
   const handleKey = useCallback((e: KeyboardEvent) => {
@@ -97,6 +141,26 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
         setFormError("Renseignez une adresse email valide.");
         return;
       }
+
+      // Validation B2B si professionnel
+      if (clientType === "entreprise") {
+        if (!siret.trim()) {
+          setFormError("SIRET obligatoire pour une commande professionnelle.");
+          return;
+        }
+        if (!raisonSociale.trim()) {
+          setFormError("Raison sociale obligatoire.");
+          return;
+        }
+        if (!adresseFacturation.trim()) {
+          setFormError("Adresse de facturation obligatoire.");
+          return;
+        }
+        if (!tva) {
+          setFormError("SIRET non validé. Cliquez sur 'Vérifier SIRET' d'abord.");
+          return;
+        }
+      }
     }
 
     if (step < 3) { setStep(step + 1); return; }
@@ -125,6 +189,11 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
         status: "en_attente",
         client_type: clientType,
         source: "page_publique",
+        // Données B2B
+        siret: clientType === "entreprise" ? siret : null,
+        raison_sociale: clientType === "entreprise" ? raisonSociale : null,
+        adresse_facturation: clientType === "entreprise" ? adresseFacturation : null,
+        tva_number: clientType === "entreprise" ? tva : null,
       });
 
     if (error) {
@@ -348,6 +417,57 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                         <input type="email" required value={contactEmail} onChange={(e) => setContactEmail(e.target.value)} placeholder="contact@societe.fr" className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30" />
                       </div>
                     </div>
+
+                    {/* Champs B2B si entreprise */}
+                    {clientType === "entreprise" && (
+                      <div className="flex flex-col gap-4 rounded-xl border border-blue-200 bg-blue-50 p-4 mt-4">
+                        <div>
+                          <label className="text-xs font-bold uppercase tracking-wider text-blue-900">Infos B2B - Validation requise</label>
+                          <p className="mt-1 text-xs text-blue-700">Vos informations seront vérifiées auprès de l'INSEE.</p>
+                        </div>
+
+                        <div className="flex gap-2">
+                          <input
+                            type="text"
+                            value={siret}
+                            onChange={(e) => setSiret(e.target.value.replace(/\D/g, "").slice(0, 14))}
+                            maxLength={14}
+                            placeholder="SIRET (14 chiffres)"
+                            className="flex-1 rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
+                          />
+                          <button
+                            type="button"
+                            onClick={validateSiretHandler}
+                            disabled={validatingSiret || !siret}
+                            className="rounded-xl bg-accent px-4 py-3 text-sm font-bold text-white hover:bg-accent-dark disabled:opacity-60 whitespace-nowrap"
+                          >
+                            {validatingSiret ? "..." : "Vérifier"}
+                          </button>
+                        </div>
+
+                        <input
+                          type="text"
+                          value={raisonSociale}
+                          onChange={(e) => setRaisonSociale(e.target.value)}
+                          placeholder="Raison Sociale"
+                          className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
+                        />
+
+                        <input
+                          type="text"
+                          value={adresseFacturation}
+                          onChange={(e) => setAdresseFacturation(e.target.value)}
+                          placeholder="Adresse de facturation"
+                          className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
+                        />
+
+                        {tva && (
+                          <div className="flex items-center gap-2 rounded-lg bg-green-100 p-3 text-green-900 text-sm font-bold">
+                            ✓ TVA : {tva}
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 )}
 

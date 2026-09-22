@@ -10,7 +10,9 @@ import {
   Building2,
   AtSign,
   ArrowRight,
-  CheckCircle2
+  CheckCircle2,
+  AlertCircle,
+  Loader2
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
@@ -23,11 +25,56 @@ export default function RegisterForm() {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  // Champs B2B
+  const [siret, setSiret] = useState("");
+  const [raisonSociale, setRaisonSociale] = useState("");
+  const [adresseFacturation, setAdresseFacturation] = useState("");
+  const [tva, setTva] = useState("");
+
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [validatingSiret, setValidatingSiret] = useState(false);
   const [checkEmail, setCheckEmail] = useState(false);
   const router = useRouter();
   const supabase = createClient();
+
+  // Valider SIRET via API
+  const validateSiretHandler = async () => {
+    if (!siret.trim()) return;
+
+    setValidatingSiret(true);
+    setError(null);
+
+    try {
+      const response = await fetch("/api/validate-siret", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          siret,
+          raison_sociale: raisonSociale,
+          email,
+          nom_contact: `${firstName} ${lastName}`,
+          adresse_facturation: adresseFacturation,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.valid && result.sireneData) {
+        setTva(result.sireneData.tva_number || "");
+        setError(null);
+      } else {
+        setError(result.errors?.join(" ") || "SIRET invalide.");
+        setTva("");
+      }
+    } catch (err) {
+      setError("Erreur lors de la validation du SIRET.");
+      setTva("");
+    } finally {
+      setValidatingSiret(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,6 +82,27 @@ export default function RegisterForm() {
       setError("Les mots de passe ne correspondent pas.");
       return;
     }
+
+    // Validation B2B si pro
+    if (accountType === "pro") {
+      if (!siret.trim()) {
+        setError("SIRET obligatoire pour un compte professionnel.");
+        return;
+      }
+      if (!raisonSociale.trim()) {
+        setError("Raison sociale obligatoire.");
+        return;
+      }
+      if (!adresseFacturation.trim()) {
+        setError("Adresse de facturation obligatoire.");
+        return;
+      }
+      if (!tva) {
+        setError("SIRET non validé. Cliquez sur 'Vérifier SIRET' d'abord.");
+        return;
+      }
+    }
+
     setLoading(true);
     setError(null);
     const { data, error } = await supabase.auth.signUp({
@@ -45,6 +113,11 @@ export default function RegisterForm() {
           full_name: `${firstName} ${lastName}`,
           company: accountType === "pro" ? company : null,
           phone,
+          // Données B2B
+          siret: accountType === "pro" ? siret : null,
+          raison_sociale: accountType === "pro" ? raisonSociale : null,
+          adresse_facturation: accountType === "pro" ? adresseFacturation : null,
+          tva_number: accountType === "pro" ? tva : null,
         },
       },
     });
@@ -204,20 +277,81 @@ export default function RegisterForm() {
               </div>
 
               {accountType === "pro" && (
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-bold uppercase tracking-wider text-muted">Entreprise</label>
-                  <div className="relative">
-                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-label">
-                      <Building2 size={18} strokeWidth={1.5} />
+                <div className="flex flex-col gap-4 rounded-lg border border-blue-100 bg-blue-50 p-4">
+                  <div>
+                    <label className="text-xs font-bold uppercase tracking-wider text-blue-900">Infos B2B - Validation obligatoire</label>
+                    <p className="mt-1 text-xs text-blue-700">Vos informations seront vérifiées auprès de l'INSEE.</p>
+                  </div>
+
+                  {/* SIRET */}
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-bold uppercase tracking-wider text-muted">SIRET <span className="text-accent">*</span></label>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        placeholder="14 chiffres : 12345678901234"
+                        value={siret}
+                        onChange={(e) => setSiret(e.target.value.replace(/\D/g, "").slice(0, 14))}
+                        maxLength={14}
+                        className="flex-1 rounded-[4px] border border-line bg-transparent px-4 py-2.5 text-sm text-ink placeholder:text-line focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+                        required
+                      />
+                      <button
+                        type="button"
+                        onClick={validateSiretHandler}
+                        disabled={validatingSiret || !siret}
+                        className="rounded-[4px] bg-accent px-4 py-2.5 text-sm font-bold text-white hover:bg-accent-dark disabled:opacity-60"
+                      >
+                        {validatingSiret ? <Loader2 size={16} className="animate-spin" /> : "Vérifier"}
+                      </button>
                     </div>
+                  </div>
+
+                  {/* Raison Sociale */}
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-bold uppercase tracking-wider text-muted">Raison Sociale <span className="text-accent">*</span></label>
                     <input
                       type="text"
                       placeholder="ex. Studio Créatif SARL"
-                      value={company}
-                      onChange={(e) => setCompany(e.target.value)}
-                      className="w-full rounded-[4px] border border-line bg-transparent py-2.5 pl-10 pr-4 text-sm text-ink placeholder:text-line focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+                      value={raisonSociale}
+                      onChange={(e) => setRaisonSociale(e.target.value)}
+                      className="w-full rounded-[4px] border border-line bg-transparent px-4 py-2.5 text-sm text-ink placeholder:text-line focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+                      required
                     />
                   </div>
+
+                  {/* Adresse Facturation */}
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-bold uppercase tracking-wider text-muted">Adresse de Facturation <span className="text-accent">*</span></label>
+                    <input
+                      type="text"
+                      placeholder="ex. 123 Rue de la Paix, 75000 Paris"
+                      value={adresseFacturation}
+                      onChange={(e) => setAdresseFacturation(e.target.value)}
+                      className="w-full rounded-[4px] border border-line bg-transparent px-4 py-2.5 text-sm text-ink placeholder:text-line focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+                      required
+                    />
+                  </div>
+
+                  {/* TVA (lecture seule) */}
+                  {tva && (
+                    <div className="flex items-center gap-2 rounded-lg bg-green-50 p-3">
+                      <CheckCircle2 size={16} className="text-green-600" strokeWidth={2.5} />
+                      <div>
+                        <p className="text-xs font-bold text-green-900">Validé ✓</p>
+                        <p className="text-xs text-green-700">TVA : {tva}</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {accountType === "pro" && !tva && (
+                <div className="flex items-start gap-3 rounded-lg border border-orange-200 bg-orange-50 p-3">
+                  <AlertCircle size={16} className="mt-0.5 shrink-0 text-orange-600" strokeWidth={2.5} />
+                  <p className="text-xs text-orange-700">
+                    <strong>Vérification SIRET requise</strong> pour valider votre compte professionnel.
+                  </p>
                 </div>
               )}
 
