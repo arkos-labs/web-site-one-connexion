@@ -1,5 +1,8 @@
 {
   "crons": [
-    { "path": "/api/cron/monthly-invoices", "schedule": "0 5 1 * *" }
+    {
+      "path": "/api/keep-alive",
+      "schedule": "0 0 */5 * *"
+    }
   ]
 }
