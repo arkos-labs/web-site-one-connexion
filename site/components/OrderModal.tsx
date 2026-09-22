@@ -85,8 +85,12 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
         setFormError("Renseignez votre nom (des caractères, pas seulement des espaces).");
         return;
       }
-      if (contactPhone.replace(/\D/g, "").length < 9) {
-        setFormError("Renseignez un numéro de téléphone valide.");
+      // Validation téléphone : 10 chiffres (0X...) ou +33 (11 chiffres)
+      const phoneDigits = contactPhone.replace(/\D/g, "");
+      const isValidFR = (phoneDigits.length === 10 && phoneDigits.startsWith("0")) ||
+                        (phoneDigits.length === 11 && contactPhone.trim().startsWith("+33"));
+      if (!isValidFR) {
+        setFormError("Renseignez un numéro de téléphone valide (0X XX XX XX XX ou +33X XX XX XX XX).");
         return;
       }
       if (!/^\S+@\S+\.\S+$/.test(contactEmail.trim())) {
@@ -328,7 +332,16 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                       </div>
                       <div>
                         <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">Téléphone <span className="text-accent">*</span></label>
-                        <input type="tel" required value={contactPhone} onChange={(e) => setContactPhone(e.target.value)} placeholder="01 23 45 67 89" className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30" />
+                        <input
+                          type="tel"
+                          required
+                          value={contactPhone}
+                          onChange={(e) => setContactPhone(e.target.value)}
+                          placeholder="06 12 34 56 78 ou +33 6 12 34 56 78"
+                          pattern="^(0[1-9]|(\+33)[1-9])[0-9 ]{8,9}$"
+                          title="Numéro français valide : 06 12 34 56 78 ou +33 6 12 34 56 78"
+                          className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
+                        />
                       </div>
                       <div>
                         <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">Email <span className="text-accent">*</span></label>
