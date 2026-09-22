@@ -11,9 +11,9 @@ import { SITE_URL, PHONE_DISPLAY, PHONE_TEL } from "@/lib/site-content";
 import { CheckCircle2, Clock, MapPin, Shield } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Tarifs coursier express Paris — Devis 2 h",
+  title: "Tarif coursier Paris pas cher — Devis gratuit 2 h",
   description:
-    "Logique tarifaire de One Connexion pour vos courses urgentes à Paris et en Île-de-France : tarif à la course ou compte mensuel. Devis gratuit sous 2 h.",
+    "Tarif coursier Paris : logique tarifaire transparente pour vos courses urgentes. À la course ou compte entreprise mensuel. Devis gratuit en moins de 2 heures.",
   alternates: { canonical: "/tarifs" },
   openGraph: {
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION — Coursier B2B Paris & Île-de-France" }],
@@ -127,10 +127,10 @@ export default function TarifsPage() {
       {/* ── Facteurs de prix ── */}
       <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
         <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
-          Ce qui détermine le prix
+          Les 4 critères du prix coursier Paris
         </div>
         <h2 className="mb-14 max-w-[24ch] text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-          4 paramètres entrent dans chaque calcul.
+          Comment se calcule le prix d'une course.
         </h2>
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {FACTORS.map(({ icon: Icon, title, desc }) => (

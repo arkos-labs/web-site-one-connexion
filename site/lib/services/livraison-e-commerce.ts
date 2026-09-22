@@ -16,9 +16,9 @@ export const livraisonEcommerce: Service = {
   },
 
   seo: {
-    title: "Livraison jour même à Paris — coursier e-commerce",
+    title: "Livraison coursier Paris — Livraison jour même e-commerce",
     description:
-      "Collecte en boutique ou entrepôt, livraison le jour même à Paris et en petite couronne. Créneau choisi, suivi en ligne, preuve de livraison.",
+      "Livraison coursier Paris : collecte en boutique ou entrepôt, livraison le jour même à Paris et en petite couronne. Créneau choisi, suivi en ligne, preuve de livraison.",
     keywords: [
       "livraison jour même Paris",
       "coursier e-commerce Paris",

@@ -11,9 +11,9 @@ import { SERVICES } from "@/lib/services";
 import { SITE_URL } from "@/lib/site-content";
 
 export const metadata: Metadata = {
-  title: { absolute: "Prestations — coursier B2B à Paris et en Île-de-France" },
+  title: { absolute: "Service coursier Paris — Prestations B2B & solutions sur-mesure" },
   description:
-    "Prestations de coursier B2B en Île-de-France : plis confidentiels, transport médical, livraison e-commerce, compte entreprise. Course dédiée, suivi en ligne.",
+    "Service coursier Paris B2B : plis confidentiels, transport médical, livraison e-commerce, tournées régulières. Course dédiée, traçabilité GPS, suivi en ligne.",
   alternates: { canonical: "/services" },
   openGraph: {
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION — Coursier B2B Paris & Île-de-France" }],

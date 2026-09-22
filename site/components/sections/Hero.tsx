@@ -47,9 +47,9 @@ export default function Hero() {
               Le dernier kilomètre, tenu à l&rsquo;heure.
             </h1>
             <p className="mb-6 max-w-[56ch] text-pretty text-[16px] leading-[1.6] text-white/66">
-              One Connexion opère les livraisons urgentes des cabinets juridiques,
-              laboratoires et e-commerçants d&rsquo;Île-de-France. Une flotte deux-roues,
-              une traçabilité complète, un interlocuteur unique.
+              One Connexion opère les coursiers moto pour livraisons urgentes des cabinets juridiques,
+              laboratoires et e-commerçants d&rsquo;Île-de-France. Flotte deux-roues dédiée,
+              traçabilité complète, un interlocuteur unique.
             </p>
             
             <div className="mb-8 flex flex-wrap gap-3">
