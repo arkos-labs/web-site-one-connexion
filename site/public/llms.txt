@@ -14,22 +14,30 @@
 - Tarification : à la course ou compte entreprise avec facturation mensuelle
 
 ## Prestations
-- [Plis confidentiels](https://www.oneconnexion.com/services/plis-confidentiels)
-- [Transport médical](https://www.oneconnexion.com/services/transport-medical)
-- [Livraison e-commerce](https://www.oneconnexion.com/services/livraison-e-commerce)
-- [Tournées régulières](https://www.oneconnexion.com/services/tournees-regulieres)
-- [Transport événementiel](https://www.oneconnexion.com/services/transport-evenementiel)
-- [Compte entreprise](https://www.oneconnexion.com/services/compte-entreprise)
+- [Plis confidentiels](https://www.oneconnexion.com/services/plis-confidentiels): transport de plis pour avocats, notaires et huissiers, course dédiée, remise contre signature, preuve horodatée
+- [Transport médical](https://www.oneconnexion.com/services/transport-medical): prélèvements et échantillons pour laboratoires, cliniques et cabinets, contenants isothermes, traçabilité
+- [Livraison e-commerce](https://www.oneconnexion.com/services/livraison-e-commerce): collecte en boutique ou entrepôt, livraison le jour même à Paris et en petite couronne
+- [Tournées régulières](https://www.oneconnexion.com/services/tournees-regulieres): navettes inter-sites et tournées planifiées en Île-de-France
+- [Transport événementiel](https://www.oneconnexion.com/services/transport-evenementiel): logistique d'événements, pop-up stores et opérations RP à Paris
+- [Compte entreprise](https://www.oneconnexion.com/services/compte-entreprise): commandes multi-collaborateurs, justificatifs archivés, facturation mensuelle unique
+
+## Guides pratiques
+- [Envoyer un pli confidentiel à Paris](https://www.oneconnexion.com/guides/envoyer-un-pli-confidentiel-paris): conditionnement, remise en main propre, preuve de remise
+- [Transport de prélèvements médicaux](https://www.oneconnexion.com/guides/transport-de-prelevements-medicaux): délai de stabilité, température, remise et traçabilité
+- [Prix d'un coursier express à Paris](https://www.oneconnexion.com/guides/prix-coursier-express-paris): distance, délai, nature du transport et volume, les critères qui font varier le tarif
 
 ## Pages principales
-- [Toutes les prestations](https://www.oneconnexion.com/services)
-- [Notre méthode](https://www.oneconnexion.com/methode)
-- [Flotte et couverture](https://www.oneconnexion.com/flotte)
-- [Tarifs](https://www.oneconnexion.com/tarifs)
-- [Zones desservies](https://www.oneconnexion.com/zones)
-- [Secteurs](https://www.oneconnexion.com/secteurs)
-- [Contact](https://www.oneconnexion.com/contact)
-- [Références clients](https://www.oneconnexion.com/references)
+- [Toutes les prestations](https://www.oneconnexion.com/services): vue d'ensemble des services de coursier B2B
+- [Notre méthode](https://www.oneconnexion.com/methode): fonctionnement d'une course, de la commande à la preuve de remise
+- [Flotte et couverture](https://www.oneconnexion.com/flotte): scooters et motos équipés pour un usage professionnel
+- [Tarifs](https://www.oneconnexion.com/tarifs): logique tarifaire, à la course ou compte entreprise mensuel
+- [Zones desservies](https://www.oneconnexion.com/zones): Paris, petite couronne et Île-de-France
+- [Coursier à Paris](https://www.oneconnexion.com/zones/paris): couverture des 20 arrondissements
+- [Coursier à La Défense](https://www.oneconnexion.com/zones/la-defense): livraison express à La Défense et dans les Hauts-de-Seine (92)
+- [Coursier en petite couronne](https://www.oneconnexion.com/zones/petite-couronne): Hauts-de-Seine, Seine-Saint-Denis, Val-de-Marne
+- [Secteurs](https://www.oneconnexion.com/secteurs): juridique, médical, e-commerce, corporate
+- [Références clients](https://www.oneconnexion.com/references): types de clients accompagnés
+- [Contact](https://www.oneconnexion.com/contact): demande de devis et coordonnées
 
 ## Informations légales
 - [Mentions légales](https://www.oneconnexion.com/mentions-legales)
