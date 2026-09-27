@@ -53,11 +53,10 @@ export const metadata: Metadata = {
     siteName: "ONE CONNEXION",
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION — Coursier B2B Paris & Île-de-France" }],
   },
+  // Pas de title/description ici : ils seraient hérités par toutes les pages.
+  // X/Twitter reprend alors og:title et og:description, propres à chaque page.
   twitter: {
     card: "summary_large_image",
-    title: "ONE CONNEXION — Coursier B2B, Paris & Île-de-France",
-    description:
-      "Le dernier kilomètre, tenu à l'heure. Flotte deux-roues, traçabilité complète, interlocuteur unique.",
     images: ["/og-image.jpg"],
   },
   robots: { index: true, follow: true },

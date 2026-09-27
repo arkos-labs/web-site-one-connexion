@@ -12,6 +12,14 @@ export const metadata: Metadata = {
   description:
     "One Connexion couvre Paris, la petite couronne (92, 93, 94) et toute l'Île-de-France. Retrouvez par zone les délais, tarifs et villes couvertes.",
   alternates: { canonical: "/zones" },
+  openGraph: {
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION — Coursier B2B Paris & Île-de-France" }],
+    title: "Zones de livraison express Paris & Île-de-France — ONE CONNEXION",
+    description: "Paris, petite couronne (92, 93, 94) et Île-de-France : délais, tarifs et villes couvertes par zone.",
+    url: "/zones",
+    type: "website",
+    locale: "fr_FR",
+  },
 };
 
 const breadcrumbSchema = {

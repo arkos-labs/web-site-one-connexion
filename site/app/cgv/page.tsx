@@ -3,7 +3,16 @@ import { LEGAL, EMAIL } from "@/lib/site-content";
 
 export const metadata: Metadata = {
   title: "Conditions Générales de Vente",
+  description:
+    "Conditions générales de vente de ONE CONNEXION : prestations, tarifs, commandes, paiement, responsabilité et annulation des courses de coursier B2B à Paris et en Île-de-France.",
   alternates: { canonical: "/cgv" },
+  openGraph: {
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION — Coursier B2B Paris & Île-de-France" }],
+    title: "Conditions Générales de Vente — ONE CONNEXION",
+    url: "/cgv",
+    type: "website",
+    locale: "fr_FR",
+  },
   robots: { index: true, follow: true },
 };
 

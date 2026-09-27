@@ -6,6 +6,13 @@ export const metadata: Metadata = {
   description:
     "Comment ONE CONNEXION collecte, utilise et protège vos données personnelles : finalités, destinataires, durées de conservation et exercice de vos droits (RGPD).",
   alternates: { canonical: "/politique-de-confidentialite" },
+  openGraph: {
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION — Coursier B2B Paris & Île-de-France" }],
+    title: "Politique de confidentialité — ONE CONNEXION",
+    url: "/politique-de-confidentialite",
+    type: "website",
+    locale: "fr_FR",
+  },
   robots: { index: true, follow: true },
 };
 
