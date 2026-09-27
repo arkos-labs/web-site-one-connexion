@@ -3,7 +3,16 @@ import { LEGAL, EMAIL, SITE_URL } from "@/lib/site-content";
 
 export const metadata: Metadata = {
   title: "Mentions légales",
+  description:
+    "Mentions légales du site oneconnexion.com : éditeur ONE CONNEXION (SIREN, siège, TVA), contact, hébergement, propriété intellectuelle, données personnelles et cookies.",
   alternates: { canonical: "/mentions-legales" },
+  openGraph: {
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION — Coursier B2B Paris & Île-de-France" }],
+    title: "Mentions légales — ONE CONNEXION",
+    url: "/mentions-legales",
+    type: "website",
+    locale: "fr_FR",
+  },
   robots: { index: true, follow: true },
 };
 
