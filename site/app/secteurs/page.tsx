@@ -34,6 +34,16 @@ const breadcrumbSchema = {
   ],
 };
 
+const webPageSchema = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "@id": `${SITE_URL}/secteurs#webpage`,
+  url: `${SITE_URL}/secteurs`,
+  name: "Secteurs desservis",
+  inLanguage: "fr-FR",
+  isPartOf: { "@id": `${SITE_URL}/#organization` },
+};
+
 const SECTEURS = [
   {
     icon: Scale,
@@ -143,6 +153,7 @@ export default function SecteursPage() {
   return (
     <>
       <JsonLd data={breadcrumbSchema} />
+      <JsonLd data={webPageSchema} />
 
       {/* ── Hero ── */}
       <section className="bg-ink text-white">
