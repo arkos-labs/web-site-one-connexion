@@ -187,6 +187,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
         contact_email: contactEmail.trim(),
         contact_phone: contactPhone.trim(),
         status: "en_attente",
+        price_estimate: estimatedPrice,
         client_type: clientType,
         source: "page_publique",
         // Données B2B
