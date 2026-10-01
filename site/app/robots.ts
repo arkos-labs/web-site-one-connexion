@@ -13,6 +13,17 @@ export default function robots(): MetadataRoute.Robots {
         allow: "/",
         disallow: ["/dashboard/", "/admin/"],
       },
+      // AI search crawlers (citations in Google AI, ChatGPT, Perplexity)
+      {
+        userAgent: ["GPTBot", "OAI-SearchBot", "ClaudeBot", "PerplexityBot"],
+        allow: "/",
+        disallow: ["/dashboard/", "/admin/"],
+      },
+      // Google's Gemini and vertex AI opt-out
+      {
+        userAgent: "Google-Extended",
+        allow: "/",
+      },
     ],
     sitemap: `${SITE_URL}/sitemap.xml`,
   };
