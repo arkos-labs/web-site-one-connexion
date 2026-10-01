@@ -81,7 +81,7 @@ export async function fetchKpis(): Promise<Kpis> {
       .order("created_at", { ascending: false })
       .limit(1)
       .maybeSingle(),
-    supabase.from("site_visits").select("pages").eq("visit_date", today),
+    supabase.rpc("site_visit_stats", { p_date: today }).single<{ visites: number; pages: number }>(),
   ]);
 
   // Mieux vaut ne pas éditer le message que d'afficher des zéros trompeurs.
@@ -103,8 +103,8 @@ export async function fetchKpis(): Promise<Kpis> {
     chauffeursTotal: driverRows.length,
     inscriptionsJour: inscriptions.count ?? 0,
     messagesNonTraites: messages.count ?? 0,
-    visitesJour: visites.data?.length ?? 0,
-    pagesVuesJour: (visites.data ?? []).reduce((sum, v) => sum + v.pages, 0),
+    visitesJour: visites.data?.visites ?? 0,
+    pagesVuesJour: visites.data?.pages ?? 0,
     derniereCourse: derniere.data
       ? { createdAt: derniere.data.created_at, pickup: derniere.data.pickup_address, dropoff: derniere.data.dropoff_address }
       : null,
