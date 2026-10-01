@@ -20,6 +20,7 @@ import {
 import { createClient } from "@/lib/supabase/client";
 import { AddressAutocomplete } from "@/components/AddressAutocomplete";
 import { calculatePrice, ServiceLevel } from "@/lib/pricing";
+import { notifyNewOrder } from "@/lib/notify-new-order";
 
 export default function OrderForm() {
   const [step, setStep] = useState(1);
@@ -132,6 +133,8 @@ export default function OrderForm() {
       setSubmitting(false);
       return;
     }
+
+    notifyNewOrder();
 
     try {
       const res = await fetch('/api/stripe/create-checkout', {

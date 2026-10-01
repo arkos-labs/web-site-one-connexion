@@ -25,6 +25,7 @@ import {
 import { AddressAutocomplete } from "@/components/AddressAutocomplete";
 import { createClient } from "@/lib/supabase/client";
 import { calculatePrice, ServiceLevel } from "@/lib/pricing";
+import { notifyNewOrder } from "@/lib/notify-new-order";
 
 /* ── Données métier ───────────────────────────────────────────────────── */
 
@@ -290,6 +291,7 @@ export default function CommanderPage() {
       setSubmitting(false);
     } else {
       setTrackingCode(data.tracking_code);
+      notifyNewOrder();
       setStep(5);
       setSubmitting(false);
     }

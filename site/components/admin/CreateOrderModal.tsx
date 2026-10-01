@@ -5,6 +5,7 @@ import { X, MapPin, Loader2, User, Zap, Clock, Calendar } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { calculatePrice, ServiceLevel } from "@/lib/pricing";
 import { AddressAutocomplete } from "@/components/AddressAutocomplete";
+import { notifyNewOrder } from "@/lib/notify-new-order";
 
 type Profile = { id: string; full_name: string | null; company: string | null };
 type Driver = { id: string; name: string };
@@ -102,6 +103,7 @@ export function CreateOrderModal({ isOpen, onClose, onSuccess, profiles, drivers
       });
 
       if (insertError) throw new Error(insertError.message);
+      notifyNewOrder();
 
       if (onSuccess) onSuccess();
       onClose();
