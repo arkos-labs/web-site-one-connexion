@@ -9,6 +9,7 @@ import { X, Package, Mail, Truck, Zap, Clock, Calendar, User, Building2, Chevron
 import { createClient } from "@/lib/supabase/client";
 import { AddressAutocomplete } from "@/components/AddressAutocomplete";
 import { calculatePrice, ServiceLevel } from "@/lib/pricing";
+import { notifyNewOrder } from "@/lib/notify-new-order";
 
 interface OrderModalProps {
   open: boolean;
@@ -203,6 +204,8 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
       setSubmitting(false);
       return;
     }
+
+    notifyNewOrder();
 
     try {
       const res = await fetch('/api/stripe/create-checkout', {
