@@ -14,22 +14,33 @@
 - Tarification : à la course ou compte entreprise avec facturation mensuelle
 
 ## Prestations
-- [Plis confidentiels](https://www.oneconnexion.com/services/plis-confidentiels)
-- [Transport médical](https://www.oneconnexion.com/services/transport-medical)
-- [Livraison e-commerce](https://www.oneconnexion.com/services/livraison-e-commerce)
-- [Tournées régulières](https://www.oneconnexion.com/services/tournees-regulieres)
-- [Transport événementiel](https://www.oneconnexion.com/services/transport-evenementiel)
-- [Compte entreprise](https://www.oneconnexion.com/services/compte-entreprise)
+- [Plis confidentiels](https://www.oneconnexion.com/services/plis-confidentiels): remise en main propre de documents sensibles (contrats, actes, dossiers judiciaires), course dédiée et preuve de remise horodatée
+- [Transport médical](https://www.oneconnexion.com/services/transport-medical): acheminement de prélèvements et échantillons entre cabinets, cliniques et laboratoires, dans le respect des délais de stabilité
+- [Livraison e-commerce](https://www.oneconnexion.com/services/livraison-e-commerce): livraison le jour même pour les e-commerçants à Paris et en Île-de-France
+- [Tournées régulières](https://www.oneconnexion.com/services/tournees-regulieres): navettes inter-sites et tournées planifiées pour les entreprises en Île-de-France
+- [Transport événementiel](https://www.oneconnexion.com/services/transport-evenementiel): logistique d'événements, pop-up stores et opérations RP à Paris
+- [Compte entreprise](https://www.oneconnexion.com/services/compte-entreprise): commandes en ligne, suivi et facturation mensuelle pour les clients professionnels
+
+## Guides pratiques
+- [Prix d'un coursier express à Paris](https://www.oneconnexion.com/guides/prix-coursier-express-paris): distance, délai, nature du transport et volume, les critères qui font varier le tarif et comment demander un devis
+- [Envoyer un pli confidentiel à Paris](https://www.oneconnexion.com/guides/envoyer-un-pli-confidentiel-paris): conditionnement, remise en main propre, preuve de remise et course dédiée
+- [Transport de prélèvements médicaux](https://www.oneconnexion.com/guides/transport-de-prelevements-medicaux): conditionnement, délai de stabilité, température, remise et traçabilité
+- [Tous les guides](https://www.oneconnexion.com/guides): index des guides One Connexion
+
+## Zones desservies
+- [Paris intramuros](https://www.oneconnexion.com/zones/paris): livraison express dans les 20 arrondissements de Paris (75)
+- [La Défense](https://www.oneconnexion.com/zones/la-defense): livraison express professionnelle à La Défense et dans les Hauts-de-Seine (92)
+- [Petite couronne](https://www.oneconnexion.com/zones/petite-couronne): livraison urgente B2B dans les Hauts-de-Seine (92), la Seine-Saint-Denis (93) et le Val-de-Marne (94)
+- [Toutes les zones](https://www.oneconnexion.com/zones): liste des villes et arrondissements desservis
 
 ## Pages principales
-- [Toutes les prestations](https://www.oneconnexion.com/services)
-- [Notre méthode](https://www.oneconnexion.com/methode)
-- [Flotte et couverture](https://www.oneconnexion.com/flotte)
-- [Tarifs](https://www.oneconnexion.com/tarifs)
-- [Zones desservies](https://www.oneconnexion.com/zones)
-- [Secteurs](https://www.oneconnexion.com/secteurs)
-- [Contact](https://www.oneconnexion.com/contact)
-- [Références clients](https://www.oneconnexion.com/references)
+- [Toutes les prestations](https://www.oneconnexion.com/services): vue d'ensemble des services de coursier B2B
+- [Notre méthode](https://www.oneconnexion.com/methode): fonctionnement d'une course, de la commande à la preuve de remise
+- [Flotte et couverture](https://www.oneconnexion.com/flotte): scooters et motos équipés pour un usage professionnel, coursiers vérifiés
+- [Tarifs](https://www.oneconnexion.com/tarifs): logique tarifaire, paiement à la course ou compte entreprise mensuel, devis en moins de 2 heures
+- [Secteurs](https://www.oneconnexion.com/secteurs): solutions par secteur (juridique, médical, e-commerce, corporate)
+- [Références clients](https://www.oneconnexion.com/references): cabinets juridiques, laboratoires, agences et e-commerçants servis
+- [Contact](https://www.oneconnexion.com/contact): demande de devis et coordonnées
 
 ## Informations légales
 - [Mentions légales](https://www.oneconnexion.com/mentions-legales)
