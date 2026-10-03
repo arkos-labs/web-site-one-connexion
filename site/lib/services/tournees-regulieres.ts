@@ -9,11 +9,11 @@ export const tourneesRegulieres: Service = {
     note: "Sur-mesure",
   },
   seo: {
-    title: "Tournées régulières et navettes coursier B2B Paris",
+    title: "Tournées régulières B2B et navettes coursier à Paris",
     description: "Confiez vos navettes inter-sites et tournées régulières en Île-de-France à nos coursiers. Flexibilité, ponctualité et suivi quotidien garantis.",
-    keywords: ["tournées régulières", "navette entreprise paris", "coursier dédié", "navette inter-sites"],
+    keywords: ["tournées régulières", "livraison régulière B2B", "navette entreprise paris", "coursier dédié", "navette inter-sites"],
   },
-  h1: "Vos navettes inter-sites et tournées régulières.",
+  h1: "Tournées régulières B2B et navettes inter-sites à Paris et en Île-de-France",
   intro: "Une organisation logistique sur-mesure pour vos flux récurrents, assurée par un dispatcheur dédié et des coursiers familiers de vos exigences.",
   stats: [
     { value: "100%", label: "Respect des horaires" },

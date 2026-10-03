@@ -253,7 +253,7 @@ export default async function ZonePage({ params }: Props) {
                 Logistique locale
               </div>
               <h2 className="mb-4 text-[clamp(22px,2.5vw,30px)] font-bold tracking-tight text-ink">
-                Notre connaissance du terrain à {zone.name}
+                Coursier moto à {zone.name} : notre connaissance du terrain
               </h2>
               <p className="text-[15px] leading-[1.7] text-muted max-w-[60ch]">
                 {zone.logisticsContext}
@@ -288,7 +288,7 @@ export default async function ZonePage({ params }: Props) {
             Tous secteurs
           </div>
           <h2 className="text-[clamp(24px,3vw,36px)] font-bold tracking-tight text-ink">
-            Nos solutions à {zone.name}, secteur par secteur
+            Livraison express à {zone.name}, secteur par secteur
           </h2>
           <p className="mt-3 text-[15px] text-muted max-w-[58ch]">
             Chaque métier a ses contraintes. Nos procédures s&apos;adaptent à votre secteur,
@@ -365,7 +365,7 @@ export default async function ZonePage({ params }: Props) {
               <span className="h-px w-6 bg-accent" />
             </div>
             <h2 className="text-[clamp(24px,3vw,36px)] font-bold tracking-tight text-ink">
-              Votre course à {zone.name} en 3 étapes
+              Commander un coursier à {zone.name} en 3 étapes
             </h2>
           </div>
           <div className="grid gap-8 md:grid-cols-3">
@@ -395,12 +395,13 @@ export default async function ZonePage({ params }: Props) {
             <span className="h-px w-6 bg-accent" />
           </div>
           <h2 className="text-[clamp(24px,3vw,36px)] font-bold tracking-tight text-ink">
-            Vos questions sur nos services à {zone.name}
+            Coursier à {zone.name} : questions fréquentes
           </h2>
         </div>
         <div className="flex flex-col gap-4">
           {[
             { q: `Quels sont les délais d'enlèvement à ${zone.name} ?`, a: `Pour toute urgence, un coursier intervient à ${zone.name} en moins de 45 minutes après validation de la commande, quel que soit le quartier.` },
+            { q: `Combien coûte un coursier à ${zone.name} ?`, a: zone.pricingZone === "standard" ? `Une course au départ ou à destination de ${zone.name} relève de notre tarif standard ; le prix dépend de la distance, du délai demandé et de la nature de l'envoi. Les entreprises reçoivent un devis en moins de 2 heures.` : `Les courses au départ ou à destination de ${zone.name} sont établies sur devis, selon la distance, le délai demandé et la nature de l'envoi. Les entreprises reçoivent un devis en moins de 2 heures.` },
             { q: `Effectuez-vous des livraisons volumineuses depuis ${zone.name} ?`, a: "Notre flotte est composée de deux-roues (scooters et motos) : elle convient aux plis, colis et matériel léger. Pour un volume ou un gabarit important, contactez-nous avant de commander, nous vous dirons si nous pouvons le prendre en charge." },
             { q: `Puis-je regrouper mes expéditions depuis ${zone.name} ?`, a: "Absolument. Nous proposons des tournées régulières et la création de comptes entreprise pour optimiser vos coûts logistiques au quotidien." }
           ].map((faq, i) => (
