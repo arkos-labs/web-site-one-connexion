@@ -27,7 +27,7 @@ export const compteEntreprise: Service = {
     ],
   },
 
-  h1: "Compte entreprise : suivi en ligne et facturation centralisée",
+  h1: "Compte coursier entreprise : suivi en ligne et facturation centralisée",
 
   intro:
     "Le compte entreprise regroupe les courses de tous vos collaborateurs et de tous vos sites sous une facturation unique. Un interlocuteur, une échéance mensuelle, et des justificatifs archivés que vous pouvez retrouver des mois plus tard.",

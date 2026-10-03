@@ -13,7 +13,7 @@ export const transportEvenementiel: Service = {
     description: "Le partenaire logistique de vos événements, pop-up stores et opérations RP à Paris. Livraison VIP, accréditations, et transport sous haute discrétion.",
     keywords: ["coursier événementiel", "livraison RP paris", "transport VIP", "logistique événementielle paris"],
   },
-  h1: "Le partenaire logistique de vos événements d'exception.",
+  h1: "Coursier événementiel à Paris : logistique RP, livraisons VIP et pop-up stores",
   intro: "Défiez les imprévus. Qu'il s'agisse de la Fashion Week, d'un séminaire ou d'une opération de relations publiques, nous assurons des livraisons VIP au cordeau.",
   stats: [
     { value: "24/24", label: "Astreinte possible" },

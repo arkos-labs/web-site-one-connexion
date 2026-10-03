@@ -11,13 +11,13 @@ import { SERVICES } from "@/lib/services";
 import { Clock, MapPin, Zap, Shield } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: { absolute: "Coursier Paris intramuros — Livraison express 75" },
+  title: { absolute: "Coursier Paris — coursier express et moto, 20 arrondissements" },
   description:
-    "Coursier moto dédié dans tout Paris (1er–20e). Enlèvement en moins de 45 min, suivi en ligne, preuve de remise horodatée. Devis gratuit sous 2 h.",
+    "Coursier express à Paris : coursier moto et scooter dédié dans les 20 arrondissements (75). Enlèvement en moins de 45 min, preuve de remise horodatée, devis sous 2 h.",
   alternates: { canonical: "/zones/paris" },
   openGraph: {
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION — Coursier B2B Paris & Île-de-France" }],
-    title: "Coursier Paris intramuros — ONE CONNEXION",
+    title: "Coursier Paris — coursier express et moto — ONE CONNEXION",
     description: "Livraison express dans tout Paris (75). Course dédiée, sans regroupement, remise contre signature.",
     url: "/zones/paris",
     type: "website",
@@ -82,7 +82,7 @@ export default function ZoneParis() {
             Zone couverte · Paris 75
           </div>
           <h1 className="mb-6 max-w-[20ch] text-balance text-[clamp(36px,5vw,64px)] font-bold leading-[1.05] tracking-[-0.035em]">
-            Coursier express dans tout Paris intramuros.
+            Coursier express à Paris, dans les 20 arrondissements.
           </h1>
           <p className="max-w-[58ch] text-pretty text-[17px] leading-[1.6] text-white/66">
             One Connexion couvre les 20 arrondissements de Paris avec sa flotte de
@@ -123,7 +123,7 @@ export default function ZoneParis() {
           Couverture complète
         </div>
         <h2 className="mb-10 text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-          Les 20 arrondissements, sans exception.
+          Un coursier dans chaque arrondissement de Paris.
         </h2>
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
           {ARRONDISSEMENTS.map((arr) => {
@@ -146,7 +146,7 @@ export default function ZoneParis() {
             Pourquoi choisir One Connexion à Paris
           </div>
           <h2 className="mb-14 max-w-[24ch] text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-            Conçu pour la densité parisienne.
+            Coursier moto et scooter, conçu pour la densité parisienne.
           </h2>
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {[
@@ -172,7 +172,7 @@ export default function ZoneParis() {
         <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
           <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase text-center">Processus simple</div>
           <h2 className="mb-12 text-center text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-            Votre livraison dans la capitale en 3 étapes.
+            Commander un coursier à Paris en 3 étapes.
           </h2>
           <div className="grid gap-8 md:grid-cols-3">
             {[
@@ -196,7 +196,7 @@ export default function ZoneParis() {
       <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
         <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">Nos prestations parisiennes</div>
         <h2 className="mb-10 text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-          Une solution pour chaque urgence intramuros.
+          Nos prestations de coursier à Paris.
         </h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {SERVICES.map((s) => (
@@ -220,13 +220,15 @@ export default function ZoneParis() {
           <div className="mb-10 text-center">
             <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">Foire Aux Questions</div>
             <h2 className="text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-              Livrer à Paris : vos questions fréquentes
+              Coursier à Paris : vos questions fréquentes
             </h2>
           </div>
           <div className="flex flex-col gap-4">
             {[
               { q: "Comment gérez-vous la circulation parisienne (ZFE, embouteillages) ?", a: "Notre flotte est majoritairement composée de deux-roues et de véhicules récents répondant aux normes Crit'Air. Nos coursiers expérimentés connaissent les meilleurs itinéraires pour éviter les axes engorgés." },
               { q: "Quels sont les horaires d'enlèvement à Paris intramuros ?", a: "Nous opérons 7j/7, de 7h à 23h. En journée, nous garantissons un enlèvement en moins de 45 minutes quel que soit l'arrondissement." },
+              { q: "Combien coûte un coursier express à Paris ?", a: "Le prix d'une course dépend de la distance, du délai demandé et de la nature de l'envoi. Une course dans Paris intramuros relève de notre tarif standard ; vous pouvez payer à la course ou ouvrir un compte entreprise avec facturation mensuelle. Les entreprises reçoivent un devis en moins de 2 heures." },
+              { q: "Intervenez-vous aussi en Île-de-France, hors de Paris ?", a: "Oui. Nos coursiers desservent la petite couronne (92, 93, 94) aux mêmes conditions d'enlèvement, et le reste de l'Île-de-France sur devis." },
               { q: "Livrez-vous aussi bien les particuliers que les entreprises ?", a: "Notre service est principalement orienté B2B (plis confidentiels, médical, événementiel) mais nous assurons également la livraison du dernier kilomètre pour les commandes e-commerce premium destinées aux particuliers." }
             ].map((faq, i) => (
               <div key={i} className="rounded-xl border border-line bg-white p-5 hover:border-accent/30 transition-colors">
