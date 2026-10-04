@@ -19,6 +19,7 @@ export async function POST(req: Request) {
       orderId,
       email,
       paymentMode,
+      debitMethod,
       companyName,
       siret
     } = body;
@@ -47,30 +48,43 @@ export async function POST(req: Request) {
     const baseUrl = origin;
 
     if (clientType === 'entreprise' && paymentMode === 'fin_de_mois') {
-      // Pro en paiement différé : on enregistre seulement la carte (mode 'setup'),
-      // aucun montant n'est prélevé aujourd'hui. Le cron deferred-payments la débite à 30 jours.
-      // Le client Stripe est créé d'abord pour que la carte lui soit rattachée et réutilisable.
+      // Pro en paiement différé : on enregistre seulement la carte ou le RIB (mandat SEPA) en mode
+      // 'setup', aucun montant n'est prélevé aujourd'hui. Le cron deferred-payments prélève à 30 jours.
+      // Le client Stripe est créé d'abord pour que le moyen de paiement lui soit rattaché et réutilisable.
+      const isSepa = debitMethod === 'sepa';
       const customer = await stripe.customers.create({
         email,
         name: companyName || undefined,
         metadata: { orderId, siret: siret || '' },
       });
 
-      const session = await stripe.checkout.sessions.create({
-        // 'sepa_debit' n'est pas activé sur le compte Stripe : l'ajouter ici casse toute la session.
-        // L'activer d'abord dans le dashboard (Paramètres > Moyens de paiement) avant de le remettre.
-        payment_method_types: ['card'],
-        mode: 'setup',
-        customer: customer.id,
-        success_url: `${baseUrl}/commande/succes?session_id={CHECKOUT_SESSION_ID}&order_id=${orderId}`,
-        cancel_url: `${baseUrl}/#commander-form`,
-        metadata: {
-          orderId: orderId,
-          clientType: 'entreprise',
-          paymentMode: 'fin_de_mois',
-          price: price.toString(),
-        },
-      });
+      let session: Stripe.Checkout.Session;
+      try {
+        session = await stripe.checkout.sessions.create({
+          payment_method_types: isSepa ? ['sepa_debit'] : ['card'],
+          mode: 'setup',
+          customer: customer.id,
+          success_url: `${baseUrl}/commande/succes?session_id={CHECKOUT_SESSION_ID}&order_id=${orderId}`,
+          cancel_url: `${baseUrl}/#commander-form`,
+          metadata: {
+            orderId: orderId,
+            clientType: 'entreprise',
+            paymentMode: 'fin_de_mois',
+            debitMethod: isSepa ? 'sepa' : 'card',
+            price: price.toString(),
+          },
+        });
+      } catch (err: any) {
+        // Le prélèvement SEPA doit être activé dans le dashboard Stripe (Paramètres > Moyens de paiement).
+        if (isSepa && String(err?.message).includes('sepa_debit')) {
+          await stripe.customers.del(customer.id).catch(() => {});
+          return NextResponse.json(
+            { error: "Le prélèvement par RIB n'est pas encore disponible. Choisissez le prélèvement par carte." },
+            { status: 400 }
+          );
+        }
+        throw err;
+      }
 
       return NextResponse.json({ url: session.url });
     } else {

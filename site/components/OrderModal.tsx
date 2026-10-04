@@ -42,6 +42,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
   const [tva, setTva] = useState("");
   const [validatingSiret, setValidatingSiret] = useState(false);
   const [paymentMode, setPaymentMode] = useState<"carte" | "fin_de_mois">("carte");
+  const [debitMethod, setDebitMethod] = useState<"card" | "sepa">("card");
 
   const supabase = createClient();
 
@@ -220,6 +221,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
           orderId: trackingCode,
           email: contactEmail,
           paymentMode: clientType === "entreprise" ? paymentMode : "carte",
+          debitMethod,
           companyName: clientType === "entreprise" ? raisonSociale.trim() : "",
           siret: clientType === "entreprise" ? siret : "",
         })
@@ -354,7 +356,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                         <CreditCard size={18} className="mt-0.5 shrink-0 text-blue-600" />
                         <div>
                           <p className="font-bold text-blue-900 mb-1">Carte maintenant ou fin de mois</p>
-                          <p>Payez la course tout de suite par carte, ou enregistrez votre carte pour être <strong>débité en fin de mois (30 jours)</strong>. Vous choisirez à la dernière étape. Paiement sécurisé par Stripe.</p>
+                          <p>Payez la course tout de suite par carte, ou soyez <strong>prélevé en fin de mois (30 jours)</strong> sur votre carte ou votre RIB. Vous choisirez à la dernière étape. Paiement sécurisé par Stripe.</p>
                         </div>
                       </div>
                     )}
@@ -533,7 +535,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                         <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                           {([
                             { id: "carte", label: "Carte maintenant", sub: "Payé tout de suite", Icon: CreditCard },
-                            { id: "fin_de_mois", label: "Fin de mois", sub: "Carte enregistrée, débit à 30 jours", Icon: Calendar },
+                            { id: "fin_de_mois", label: "Fin de mois", sub: "Prélevé à 30 jours", Icon: Calendar },
                           ] as const).map(({ id, label, sub, Icon }) => (
                             <button
                               key={id}
@@ -550,6 +552,28 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                             </button>
                           ))}
                         </div>
+
+                        {paymentMode === "fin_de_mois" && (
+                          <div className="mt-3">
+                            <p className="mb-2 text-xs font-bold uppercase tracking-wider text-gray-600">Prélevé par</p>
+                            <div className="flex rounded-xl bg-gray-100 p-1">
+                              {([
+                                { id: "card", label: "Carte bancaire" },
+                                { id: "sepa", label: "RIB (prélèvement)" },
+                              ] as const).map(({ id, label }) => (
+                                <button
+                                  key={id}
+                                  type="button"
+                                  onClick={() => setDebitMethod(id)}
+                                  aria-pressed={debitMethod === id}
+                                  className={`flex flex-1 items-center justify-center rounded-lg py-2 text-sm font-bold transition-all ${debitMethod === id ? "bg-white text-ink shadow-sm" : "text-gray-500 hover:text-gray-700"}`}
+                                >
+                                  {label}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     )}
 
@@ -585,7 +609,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                       <div className="border-t border-orange-200/60 pt-4 flex items-end justify-between">
                         <div>
                           <div className="text-[11px] font-bold uppercase tracking-wider text-orange-600/80 mb-0.5">Tarif estimé (HT)</div>
-                          <div className="text-xs text-gray-500">{clientType === "entreprise" && paymentMode === "fin_de_mois" ? "Débité en fin de mois (30 jours)" : "Paiement sécurisé par carte"}</div>
+                          <div className="text-xs text-gray-500">{clientType === "entreprise" && paymentMode === "fin_de_mois" ? (debitMethod === "sepa" ? "Prélevé sur RIB à 30 jours" : "Prélevé sur carte à 30 jours") : "Paiement sécurisé par carte"}</div>
                         </div>
                         <div className="text-2xl font-extrabold text-[#ed5518]">
                           {estimatedPrice !== null ? `${estimatedPrice.toFixed(2)} €` : '-- €'}
@@ -660,7 +684,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                   <div className="flex items-end justify-between">
                     <div>
                       <div className="text-[11px] font-bold uppercase tracking-wider text-orange-600 mb-1">Tarif estimé (HT)</div>
-                      <div className="text-[10px] text-gray-500">{clientType === "entreprise" && paymentMode === "fin_de_mois" ? "Débité en fin de mois (30 jours)" : "Paiement sécurisé par carte"}</div>
+                      <div className="text-[10px] text-gray-500">{clientType === "entreprise" && paymentMode === "fin_de_mois" ? (debitMethod === "sepa" ? "Prélevé sur RIB à 30 jours" : "Prélevé sur carte à 30 jours") : "Paiement sécurisé par carte"}</div>
                     </div>
                     <div className="text-3xl font-extrabold text-[#ed5518]">
                       {estimatedPrice !== null ? `${estimatedPrice.toFixed(2)} €` : '-- €'}

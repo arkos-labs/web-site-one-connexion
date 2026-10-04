@@ -41,6 +41,7 @@ export default function OrderForm() {
   const [notes, setNotes] = useState("");
   const [estimatedPrice, setEstimatedPrice] = useState<number | null>(null);
   const [paymentMode, setPaymentMode] = useState<'carte' | 'fin_de_mois'>('carte');
+  const [debitMethod, setDebitMethod] = useState<'card' | 'sepa'>('card');
 
   const supabase = createClient();
 
@@ -150,6 +151,7 @@ export default function OrderForm() {
           orderId: trackingCode,
           email: contactEmail,
           paymentMode: clientType === 'entreprise' ? paymentMode : 'carte',
+          debitMethod,
           companyName: clientType === 'entreprise' ? contactName.trim() : '',
         })
       });
@@ -268,7 +270,7 @@ export default function OrderForm() {
                     {clientType === 'entreprise' && (
                       <div className="mb-8 p-4 bg-blue-50 border border-blue-100 rounded-xl flex gap-3 text-sm text-blue-800">
                         <CreditCard className="w-5 h-5 text-blue-500 shrink-0" />
-                        <p>En tant que professionnel, <strong>payez tout de suite par carte ou en fin de mois (30 jours)</strong>. Vous choisirez à la dernière étape.</p>
+                        <p>En tant que professionnel, <strong>payez tout de suite par carte, ou en fin de mois (30 jours) par carte ou RIB</strong>. Vous choisirez à la dernière étape.</p>
                       </div>
                     )}
 
@@ -472,7 +474,7 @@ export default function OrderForm() {
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             {([
                               { id: 'carte', label: 'Carte maintenant', sub: 'Payé tout de suite', Icon: CreditCard },
-                              { id: 'fin_de_mois', label: 'Fin de mois', sub: 'Carte enregistrée, débit à 30 jours', Icon: Calendar },
+                              { id: 'fin_de_mois', label: 'Fin de mois', sub: 'Prélevé à 30 jours', Icon: Calendar },
                             ] as const).map(({ id, label, sub, Icon }) => (
                               <button
                                 key={id}
@@ -489,6 +491,28 @@ export default function OrderForm() {
                               </button>
                             ))}
                           </div>
+
+                          {paymentMode === 'fin_de_mois' && (
+                            <div className="mt-4">
+                              <p className="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-wide">Prélevé par</p>
+                              <div className="flex bg-gray-100 p-1 rounded-xl">
+                                {([
+                                  { id: 'card', label: 'Carte bancaire' },
+                                  { id: 'sepa', label: 'RIB (prélèvement)' },
+                                ] as const).map(({ id, label }) => (
+                                  <button
+                                    key={id}
+                                    type="button"
+                                    onClick={() => setDebitMethod(id)}
+                                    aria-pressed={debitMethod === id}
+                                    className={`flex-1 flex items-center justify-center py-2.5 rounded-lg text-sm font-bold transition-all ${debitMethod === id ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                                  >
+                                    {label}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          )}
                         </div>
                       )}
 
@@ -525,7 +549,7 @@ export default function OrderForm() {
                           <div>
                             <div className="text-[11px] font-bold uppercase tracking-wider text-orange-600/80 mb-0.5">Tarif estimé (HT)</div>
                             <div className="text-[10px] text-gray-400 mb-1 uppercase tracking-wider font-semibold">Paiement sécurisé</div>
-                            <div className="text-xs text-gray-600 font-medium">{clientType === 'entreprise' && paymentMode === 'fin_de_mois' ? 'Débité en fin de mois (30 jours)' : 'Payé par carte maintenant'}</div>
+                            <div className="text-xs text-gray-600 font-medium">{clientType === 'entreprise' && paymentMode === 'fin_de_mois' ? (debitMethod === 'sepa' ? 'Prélevé sur RIB à 30 jours' : 'Prélevé sur carte à 30 jours') : 'Payé par carte maintenant'}</div>
                           </div>
                           <div className="text-2xl font-extrabold text-[#ed5518]">
                             {estimatedPrice !== null ? `${estimatedPrice.toFixed(2)} €` : '-- €'}

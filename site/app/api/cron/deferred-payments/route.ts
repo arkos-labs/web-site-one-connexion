@@ -6,8 +6,8 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder'
 
 const CANCELLED = ['annulee', 'cancelled'];
 
-// Appelée chaque jour : débite la carte enregistrée des pros « fin de mois » dont la commande
-// a 30 jours. Une facture Stripe (TVA 20 %) est émise et payée avec la carte du client.
+// Appelée chaque jour : prélève le moyen de paiement enregistré (carte ou RIB/SEPA) des pros
+// « fin de mois » dont la commande a 30 jours. Une facture Stripe (TVA 20 %) est émise et payée.
 export async function GET(req: Request) {
   const secret = process.env.CRON_SECRET;
   if (!secret || req.headers.get('authorization') !== `Bearer ${secret}`) {
@@ -83,6 +83,11 @@ export async function GET(req: Request) {
           .update({ billing_status: 'paye', paid_at: new Date().toISOString() })
           .eq('id', order.id);
         results.push({ order: ref, ok: true });
+      } else if (invoice.status === 'open') {
+        // Prélèvement SEPA (RIB) : il met plusieurs jours à aboutir. Le webhook invoice.paid /
+        // invoice.payment_failed passera la commande en 'paye' ou 'echec'.
+        await supabase.from('orders').update({ billing_status: 'prelevement_en_cours' }).eq('id', order.id);
+        results.push({ order: ref, ok: true, detail: 'prélèvement SEPA en cours' });
       } else {
         throw new Error(`Facture Stripe au statut ${invoice.status}`);
       }
