@@ -34,56 +34,39 @@ export async function validateSiretViaINSEE(
     };
   }
 
+  const sirenNumber = cleanSiret.substring(0, 9);
+  const tvaNumber = `FR${calculateTvaKey(sirenNumber)}${sirenNumber}`;
+
   try {
-    // API Sirene publique (données open data INSEE)
+    // API Recherche d'entreprises (data.gouv.fr) : publique, sans clé, alimentée par Sirene
     const response = await fetch(
-      `https://api.insee.fr/entreprises/sirene/V3/sirets/${cleanSiret}`,
-      {
-        headers: {
-          "Accept": "application/json",
-          // Note: API INSEE publique peut nécessiter une clé - on va utiliser un fallback
-        },
-      }
+      `https://recherche-entreprises.api.gouv.fr/search?q=${cleanSiret}&page=1&per_page=1`,
+      { headers: { Accept: "application/json" }, signal: AbortSignal.timeout(8000) }
     );
 
-    // Fallback : utiliser l'API open data alternative
+    // API indisponible (panne, rate limit) : on ne bloque pas la commande pour autant
     if (!response.ok) {
-      return validateSiretViaAlternative(cleanSiret, companyName);
+      console.warn("Recherche entreprises indisponible:", response.status);
+      return { valid: true, siret: cleanSiret, siren: sirenNumber, tva_number: tvaNumber };
     }
 
     const data = await response.json();
+    const entreprise = data.results?.[0];
+    const etablissement = entreprise?.matching_etablissements?.find(
+      (e: { siret?: string }) => e.siret === cleanSiret
+    );
 
-    // Extraire les données
-    const sirenNumber = cleanSiret.substring(0, 9);
-    const tvaNumber = `FR${calculateLuhnKey(sirenNumber)}${sirenNumber}`;
-    const raison_sociale =
-      data.etablissement?.uniteLegale?.denominationUniteLegale || "";
-    const adresse =
-      data.etablissement?.adresseEtablissement?.libelleVoie || "";
-
-    // Vérifier si l'entreprise est assujettie à la TVA
-    const assujetti_tva =
-      data.etablissement?.uniteLegale?.typeVentilationCA === "Assujetti TVA" ||
-      data.etablissement?.uniteLegale?.assujettieVAT === true;
-
-    // Vérifier que la raison sociale correspond (si fournie)
-    if (companyName) {
-      const similarity = stringSimilarity(
-        raison_sociale.toUpperCase(),
-        companyName.toUpperCase()
-      );
-      if (similarity < 0.7) {
-        return {
-          valid: false,
-          error: `La raison sociale ne correspond pas. Sirene: "${raison_sociale}", fourni: "${companyName}"`,
-        };
-      }
-    }
-
-    if (!assujetti_tva) {
+    if (!entreprise || entreprise.siren !== sirenNumber || !etablissement) {
       return {
         valid: false,
-        error: "Cette entreprise n'est pas assujettie à la TVA.",
+        error: "SIRET introuvable dans le répertoire Sirene. Vérifiez les 14 chiffres.",
+      };
+    }
+
+    if (etablissement.etat_administratif === "F") {
+      return {
+        valid: false,
+        error: "Cet établissement est fermé selon le répertoire Sirene.",
       };
     }
 
@@ -91,102 +74,22 @@ export async function validateSiretViaINSEE(
       valid: true,
       siret: cleanSiret,
       siren: sirenNumber,
-      raison_sociale,
-      adresse,
+      raison_sociale: entreprise.nom_raison_sociale || entreprise.nom_complet || companyName || "",
+      adresse: etablissement.adresse || "",
       tva_number: tvaNumber,
-      assujetti_tva: true,
     };
   } catch (err) {
     console.error("Sirene validation error:", err);
-    return validateSiretViaAlternative(cleanSiret, companyName);
+    return { valid: true, siret: cleanSiret, siren: sirenNumber, tva_number: tvaNumber };
   }
 }
 
 /**
- * API alternative (open data) pour la validation Sirene
- * Utilise pappers.io ou data.gouv.fr
+ * Clé du N° TVA intracommunautaire français : (12 + 3 × (SIREN mod 97)) mod 97
  */
-async function validateSiretViaAlternative(
-  siret: string,
-  companyName?: string
-): Promise<SireneValidationResult> {
-  try {
-    // Essayer avec l'API open data Sirene
-    const response = await fetch(
-      `https://www.sirene.fr/sirene/public/recherche?nom=${siret}`
-    );
-
-    if (!response.ok) {
-      return {
-        valid: false,
-        error: "Impossible de vérifier le SIRET. Veuillez réessayer.",
-      };
-    }
-
-    // Pour une vraie intégration, il faudrait parser la réponse HTML
-    // Pour maintenant, on accepte le SIRET s'il est au bon format
-    const siren = siret.substring(0, 9);
-    const tvaNumber = `FR${calculateLuhnKey(siren)}${siren}`;
-
-    return {
-      valid: true,
-      siret,
-      siren,
-      tva_number: tvaNumber,
-      error: "Validation basique (pas de vérification en temps réel). À configurer avec clé API INSEE.",
-    };
-  } catch {
-    return {
-      valid: false,
-      error: "Impossible de vérifier le SIRET. Veuillez réessayer plus tard.",
-    };
-  }
-}
-
-/**
- * Calculer la clé Luhn pour générer le N° TVA
- * La clé TVA française = 12 % (97 - (SIREN % 97))
- */
-function calculateLuhnKey(siren: string): string {
-  const key = 12 + (3 * (Number(siren) % 97)) % 97;
+function calculateTvaKey(siren: string): string {
+  const key = (12 + 3 * (Number(siren) % 97)) % 97;
   return key.toString().padStart(2, "0");
-}
-
-/**
- * Comparer deux chaînes de caractères (similarité Levenshtein simple)
- */
-function stringSimilarity(a: string, b: string): number {
-  const longer = a.length > b.length ? a : b;
-  const shorter = a.length > b.length ? b : a;
-
-  if (longer.length === 0) return 1.0;
-
-  const editDistance = getEditDistance(longer, shorter);
-  return (longer.length - editDistance) / longer.length;
-}
-
-/**
- * Distance Levenshtein
- */
-function getEditDistance(s1: string, s2: string): number {
-  const costs = [];
-  for (let i = 0; i <= s1.length; i++) {
-    let lastValue = i;
-    for (let j = 0; j <= s2.length; j++) {
-      if (i === 0) {
-        costs[j] = j;
-      } else if (j > 0) {
-        let newValue = costs[j - 1];
-        if (s1.charAt(i - 1) !== s2.charAt(j - 1)) {
-          newValue = Math.min(Math.min(newValue, lastValue), costs[j]) + 1;
-        }
-        costs[j - 1] = lastValue;
-        lastValue = newValue;
-      }
-    }
-    if (i > 0) costs[s2.length] = lastValue;
-  }
-  return costs[s2.length];
 }
 
 /**
