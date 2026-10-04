@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { calculatePrice, ServiceLevel } from '@/lib/pricing';
+import { vatRateId } from '@/lib/stripe-vat';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder', {
   apiVersion: '2025-02-24.acacia',
@@ -16,7 +17,10 @@ export async function POST(req: Request) {
       pickupAddress,
       dropoffAddress,
       orderId,
-      email
+      email,
+      paymentMode,
+      companyName,
+      siret
     } = body;
 
     const price = calculatePrice(pickupAddress, dropoffAddress, service as ServiceLevel);
@@ -42,27 +46,35 @@ export async function POST(req: Request) {
     const origin = req.headers.get('origin') || process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
     const baseUrl = origin;
 
-    if (clientType === 'entreprise') {
-      // Pour les pros: SetupIntent ou Session Setup pour enregistrer la carte.
-      // Une autre option est de créer une facture avec un délai de 30 jours, 
-      // mais le plus simple ici est de prendre l'empreinte de carte via un mode 'setup'.
-      
+    if (clientType === 'entreprise' && paymentMode === 'fin_de_mois') {
+      // Pro en paiement différé : on enregistre seulement la carte (mode 'setup'),
+      // aucun montant n'est prélevé aujourd'hui. Le cron deferred-payments la débite à 30 jours.
+      // Le client Stripe est créé d'abord pour que la carte lui soit rattachée et réutilisable.
+      const customer = await stripe.customers.create({
+        email,
+        name: companyName || undefined,
+        metadata: { orderId, siret: siret || '' },
+      });
+
       const session = await stripe.checkout.sessions.create({
-        payment_method_types: ['card'], // sepa_debit non activé sur le compte Stripe : l'activer dans le dashboard avant de le remettre
+        // 'sepa_debit' n'est pas activé sur le compte Stripe : l'ajouter ici casse toute la session.
+        // L'activer d'abord dans le dashboard (Paramètres > Moyens de paiement) avant de le remettre.
+        payment_method_types: ['card'],
         mode: 'setup',
-        customer_email: email,
+        customer: customer.id,
         success_url: `${baseUrl}/commande/succes?session_id={CHECKOUT_SESSION_ID}&order_id=${orderId}`,
         cancel_url: `${baseUrl}/#commander-form`,
         metadata: {
           orderId: orderId,
           clientType: 'entreprise',
+          paymentMode: 'fin_de_mois',
           price: price.toString(),
         },
       });
 
       return NextResponse.json({ url: session.url });
     } else {
-      // Pour les particuliers: Paiement immédiat
+      // Particuliers, et pros qui paient tout de suite : paiement immédiat par carte
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
         mode: 'payment',
@@ -78,13 +90,17 @@ export async function POST(req: Request) {
               unit_amount: unitAmount,
             },
             quantity: 1,
+            // Tarif pro affiché HT : TVA 20 % ajoutée, comme sur le débit à 30 jours
+            ...(clientType === 'entreprise' ? { tax_rates: [await vatRateId(stripe)] } : {}),
           },
         ],
         success_url: `${baseUrl}/commande/succes?session_id={CHECKOUT_SESSION_ID}&order_id=${orderId}`,
         cancel_url: `${baseUrl}/#commander-form`,
         metadata: {
           orderId: orderId,
-          clientType: 'particulier',
+          clientType: clientType === 'entreprise' ? 'entreprise' : 'particulier',
+          paymentMode: 'carte',
+          price: price.toString(),
         },
       });
 

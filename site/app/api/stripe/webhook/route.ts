@@ -40,35 +40,69 @@ export async function POST(req: Request) {
           ? { status: 'payee', payment_date: new Date().toISOString().slice(0, 10) }
           : { status: 'echec' })
         .eq('stripe_invoice_id', stripeInvoice.id);
+
+      // Débit à 30 jours d'une commande pro (facture créée par le cron deferred-payments)
+      if (stripeInvoice.metadata?.order_id) {
+        await supabase
+          .from('orders')
+          .update(paid
+            ? { payment_status: 'paye', paid_at: new Date().toISOString() }
+            : { payment_status: 'echec' })
+          .eq('stripe_invoice_id', stripeInvoice.id);
+      }
     }
 
     if (event.type === 'checkout.session.completed') {
       const session = event.data.object as Stripe.Checkout.Session;
       const orderId = session.metadata?.orderId;
-      const clientType = session.metadata?.clientType;
 
       if (orderId) {
         let updateData: any = {};
-        
-        if (clientType === 'particulier') {
-          updateData = { status: 'paye' };
-        } else if (clientType === 'entreprise') {
-          // Pour un pro, on a enregistré la carte. On valide la commande.
-          updateData = { status: 'valide' };
-          // TODO: Gérer la logique de prélèvement à 30 jours via l'API Stripe
-          // en utilisant le setup_intent lié à cette session (session.setup_intent).
+        const amountDue = session.metadata?.price ? Number(session.metadata.price) : null;
+
+        if (session.mode === 'payment') {
+          // Particulier, ou pro qui a payé tout de suite par carte
+          updateData = {
+            status: 'paye',
+            payment_mode: 'carte',
+            payment_status: 'paye',
+            amount_due: amountDue,
+            paid_at: new Date().toISOString(),
+          };
+        } else if (session.mode === 'setup') {
+          // Pro en paiement fin de mois : carte enregistrée, débitée par le cron deferred-payments à J+30.
+          const setupIntent = await stripe.setupIntents.retrieve(session.setup_intent as string);
+          const paymentMethodId = setupIntent.payment_method as string;
+          const customerId = session.customer as string;
+
+          await stripe.customers.update(customerId, {
+            invoice_settings: { default_payment_method: paymentMethodId },
+          });
+
+          const dueDate = new Date(Date.now() + 30 * 86400000).toISOString().slice(0, 10);
+          updateData = {
+            status: 'valide',
+            payment_mode: 'fin_de_mois',
+            payment_status: 'a_debiter',
+            amount_due: amountDue,
+            payment_due_date: dueDate,
+            stripe_customer_id: customerId,
+            stripe_payment_method_id: paymentMethodId,
+          };
         }
 
         const { error } = await supabase
           .from('orders')
           .update(updateData)
-          .eq('id', orderId); // Si 'id' est un UUID. Si c'est tracking_code, faire .eq('tracking_code', orderId)
-          
+          .eq('tracking_code', orderId); // orderId = code de suivi (OC-XXXXXXXX)
+
         if (error) {
-          // Si jamais la mise à jour par UUID échoue, on tente par tracking_code
+          // Colonnes de paiement absentes (migration 20261004_deferred_payment non appliquée) :
+          // on enregistre au moins le statut, comme avant.
+          console.error('Webhook order update error:', error.message);
           await supabase
             .from('orders')
-            .update(updateData)
+            .update({ status: updateData.status })
             .eq('tracking_code', orderId);
         }
       }

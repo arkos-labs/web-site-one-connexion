@@ -41,6 +41,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
   const [adresseFacturation, setAdresseFacturation] = useState("");
   const [tva, setTva] = useState("");
   const [validatingSiret, setValidatingSiret] = useState(false);
+  const [paymentMode, setPaymentMode] = useState<"carte" | "fin_de_mois">("carte");
 
   const supabase = createClient();
 
@@ -218,6 +219,9 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
           dropoffAddress,
           orderId: trackingCode,
           email: contactEmail,
+          paymentMode: clientType === "entreprise" ? paymentMode : "carte",
+          companyName: clientType === "entreprise" ? raisonSociale.trim() : "",
+          siret: clientType === "entreprise" ? siret : "",
         })
       });
 
@@ -349,8 +353,8 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                       <div className="flex gap-3 rounded-xl border border-blue-100 bg-blue-50 p-4 text-sm text-blue-800">
                         <CreditCard size={18} className="mt-0.5 shrink-0 text-blue-600" />
                         <div>
-                          <p className="font-bold text-blue-900 mb-1">Facturation différée à 30 jours</p>
-                          <p>Vous allez être redirigé vers Stripe pour enregistrer votre moyen de paiement en toute sécurité. <strong>Aucun montant ne sera prélevé aujourd'hui.</strong> Vous serez facturé et débité tous les 30 jours pour l'ensemble de vos courses.</p>
+                          <p className="font-bold text-blue-900 mb-1">Carte maintenant ou fin de mois</p>
+                          <p>Payez la course tout de suite par carte, ou enregistrez votre carte pour être <strong>débité en fin de mois (30 jours)</strong>. Vous choisirez à la dernière étape. Paiement sécurisé par Stripe.</p>
                         </div>
                       </div>
                     )}
@@ -523,6 +527,32 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                       </div>
                     </div>
 
+                    {clientType === "entreprise" && (
+                      <div>
+                        <label className="mb-3 block text-sm font-bold text-ink">Mode de paiement</label>
+                        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                          {([
+                            { id: "carte", label: "Carte maintenant", sub: "Payé tout de suite", Icon: CreditCard },
+                            { id: "fin_de_mois", label: "Fin de mois", sub: "Carte enregistrée, débit à 30 jours", Icon: Calendar },
+                          ] as const).map(({ id, label, sub, Icon }) => (
+                            <button
+                              key={id}
+                              type="button"
+                              onClick={() => setPaymentMode(id)}
+                              aria-pressed={paymentMode === id}
+                              className={`flex items-center gap-3 rounded-xl border-2 p-3 text-left transition-all ${paymentMode === id ? "border-accent bg-accent/5" : "border-gray-100 bg-white hover:border-gray-200"}`}
+                            >
+                              <Icon size={20} className={`shrink-0 ${paymentMode === id ? "text-accent" : "text-gray-400"}`} />
+                              <div className="flex flex-col">
+                                <span className={`text-sm font-bold ${paymentMode === id ? "text-accent" : "text-gray-700"}`}>{label}</span>
+                                <span className={`text-[11px] ${paymentMode === id ? "text-accent/70" : "text-gray-400"}`}>{sub}</span>
+                              </div>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
                     <div>
                       <label className="mb-1.5 block text-sm font-bold text-ink">Consignes au coursier</label>
                       <textarea rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Ex: Colis à l'accueil, demander M. Martin…" className="w-full resize-none rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none" />
@@ -555,7 +585,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                       <div className="border-t border-orange-200/60 pt-4 flex items-end justify-between">
                         <div>
                           <div className="text-[11px] font-bold uppercase tracking-wider text-orange-600/80 mb-0.5">Tarif estimé (HT)</div>
-                          <div className="text-xs text-gray-500">Paiement sécurisé par carte</div>
+                          <div className="text-xs text-gray-500">{clientType === "entreprise" && paymentMode === "fin_de_mois" ? "Débité en fin de mois (30 jours)" : "Paiement sécurisé par carte"}</div>
                         </div>
                         <div className="text-2xl font-extrabold text-[#ed5518]">
                           {estimatedPrice !== null ? `${estimatedPrice.toFixed(2)} €` : '-- €'}
@@ -630,7 +660,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                   <div className="flex items-end justify-between">
                     <div>
                       <div className="text-[11px] font-bold uppercase tracking-wider text-orange-600 mb-1">Tarif estimé (HT)</div>
-                      <div className="text-[10px] text-gray-500">Paiement sécurisé</div>
+                      <div className="text-[10px] text-gray-500">{clientType === "entreprise" && paymentMode === "fin_de_mois" ? "Débité en fin de mois (30 jours)" : "Paiement sécurisé par carte"}</div>
                     </div>
                     <div className="text-3xl font-extrabold text-[#ed5518]">
                       {estimatedPrice !== null ? `${estimatedPrice.toFixed(2)} €` : '-- €'}

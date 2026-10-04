@@ -1,21 +1,8 @@
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
+import { vatRateId } from '@/lib/stripe-vat';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder');
-
-async function vatRateId(): Promise<string> {
-  const rates = await stripe.taxRates.list({ active: true, limit: 100 });
-  const existing = rates.data.find((r) => r.percentage === 20 && !r.inclusive && r.country === 'FR');
-  if (existing) return existing.id;
-  const created = await stripe.taxRates.create({
-    display_name: 'TVA',
-    percentage: 20,
-    inclusive: false,
-    country: 'FR',
-    jurisdiction: 'FR',
-  });
-  return created.id;
-}
 
 const parisDate = (d: Date) =>
   new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Paris', year: 'numeric', month: '2-digit', day: '2-digit' }).format(d);
@@ -40,7 +27,7 @@ export async function GET(req: Request) {
 
   if (error) return Response.json({ error: error.message }, { status: 500 });
 
-  const taxRate = (invoices ?? []).length ? await vatRateId() : null;
+  const taxRate = (invoices ?? []).length ? await vatRateId(stripe) : null;
   const results: { invoice: string; ok: boolean; detail?: string }[] = [];
 
   for (const inv of invoices ?? []) {

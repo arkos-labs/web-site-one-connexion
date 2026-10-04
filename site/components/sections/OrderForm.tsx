@@ -40,6 +40,7 @@ export default function OrderForm() {
   const [contactEmail, setContactEmail] = useState("");
   const [notes, setNotes] = useState("");
   const [estimatedPrice, setEstimatedPrice] = useState<number | null>(null);
+  const [paymentMode, setPaymentMode] = useState<'carte' | 'fin_de_mois'>('carte');
 
   const supabase = createClient();
 
@@ -148,6 +149,8 @@ export default function OrderForm() {
           dropoffAddress,
           orderId: trackingCode,
           email: contactEmail,
+          paymentMode: clientType === 'entreprise' ? paymentMode : 'carte',
+          companyName: clientType === 'entreprise' ? contactName.trim() : '',
         })
       });
 
@@ -265,7 +268,7 @@ export default function OrderForm() {
                     {clientType === 'entreprise' && (
                       <div className="mb-8 p-4 bg-blue-50 border border-blue-100 rounded-xl flex gap-3 text-sm text-blue-800">
                         <CreditCard className="w-5 h-5 text-blue-500 shrink-0" />
-                        <p>En tant que professionnel, <strong>vous serez facturé à 30 jours</strong>. Veuillez enregistrer une carte bancaire (ou un RIB) pour le prélèvement automatique.</p>
+                        <p>En tant que professionnel, <strong>payez tout de suite par carte ou en fin de mois (30 jours)</strong>. Vous choisirez à la dernière étape.</p>
                       </div>
                     )}
 
@@ -463,6 +466,32 @@ export default function OrderForm() {
                         </div>
                       )}
 
+                      {clientType === 'entreprise' && (
+                        <div>
+                          <label className="block text-sm font-bold text-gray-800 mb-3">Mode de paiement</label>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            {([
+                              { id: 'carte', label: 'Carte maintenant', sub: 'Payé tout de suite', Icon: CreditCard },
+                              { id: 'fin_de_mois', label: 'Fin de mois', sub: 'Carte enregistrée, débit à 30 jours', Icon: Calendar },
+                            ] as const).map(({ id, label, sub, Icon }) => (
+                              <button
+                                key={id}
+                                type="button"
+                                onClick={() => setPaymentMode(id)}
+                                aria-pressed={paymentMode === id}
+                                className={`flex items-center gap-3 px-5 py-3 rounded-xl border-2 text-left transition-all ${paymentMode === id ? 'border-[#ed5518] bg-orange-50' : 'border-gray-100 bg-white hover:border-gray-200'}`}
+                              >
+                                <Icon className={`w-5 h-5 shrink-0 ${paymentMode === id ? 'text-[#ed5518]' : 'text-gray-400'}`} />
+                                <div className="flex flex-col">
+                                  <span className={`font-semibold leading-tight ${paymentMode === id ? 'text-[#ed5518]' : 'text-gray-700'}`}>{label}</span>
+                                  <span className="text-xs text-gray-500">{sub}</span>
+                                </div>
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
                       <div>
                         <label className="block text-sm font-bold text-gray-800 mb-2">Consignes au coursier</label>
                         <textarea rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Ex: Le colis est à l'accueil, demander M. Martin..." className="w-full bg-gray-50 border border-gray-200 rounded-xl px-5 py-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-400 resize-none transition-colors"></textarea>
@@ -496,7 +525,7 @@ export default function OrderForm() {
                           <div>
                             <div className="text-[11px] font-bold uppercase tracking-wider text-orange-600/80 mb-0.5">Tarif estimé (HT)</div>
                             <div className="text-[10px] text-gray-400 mb-1 uppercase tracking-wider font-semibold">Paiement sécurisé</div>
-                            <div className="text-xs text-gray-600 font-medium">Vos transactions protégées</div>
+                            <div className="text-xs text-gray-600 font-medium">{clientType === 'entreprise' && paymentMode === 'fin_de_mois' ? 'Débité en fin de mois (30 jours)' : 'Payé par carte maintenant'}</div>
                           </div>
                           <div className="text-2xl font-extrabold text-[#ed5518]">
                             {estimatedPrice !== null ? `${estimatedPrice.toFixed(2)} €` : '-- €'}
