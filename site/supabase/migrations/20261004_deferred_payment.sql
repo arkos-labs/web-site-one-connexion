@@ -1,5 +1,6 @@
 -- Paiement des pros : carte tout de suite, ou carte enregistrée débitée 30 jours après la commande.
 -- payment_status : a_debiter (en attente des 30 jours) -> paye | echec ; annule si la course est annulée.
+-- ATTENTION : payment_status existait déjà en prod ; remplacé par billing_status dans 20261004b_fix_payment_status.
 -- Colonnes remplies uniquement côté serveur (webhook Stripe, cron) avec la clé service_role.
 
 alter table public.orders

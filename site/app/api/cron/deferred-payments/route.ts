@@ -20,7 +20,7 @@ export async function GET(req: Request) {
   const { data: orders, error } = await supabase
     .from('orders')
     .select('id, tracking_code, status, pickup_address, dropoff_address, amount_due, stripe_customer_id, stripe_payment_method_id, stripe_invoice_id')
-    .eq('payment_status', 'a_debiter')
+    .eq('billing_status', 'a_debiter')
     .lte('payment_due_date', today);
 
   if (error) return Response.json({ error: error.message }, { status: 500 });
@@ -33,7 +33,7 @@ export async function GET(req: Request) {
     try {
       // Course annulée entre-temps : rien à débiter.
       if (CANCELLED.includes(order.status)) {
-        await supabase.from('orders').update({ payment_status: 'annule' }).eq('id', order.id);
+        await supabase.from('orders').update({ billing_status: 'annule' }).eq('id', order.id);
         results.push({ order: ref, ok: true, detail: 'annulée, non débitée' });
         continue;
       }
@@ -80,7 +80,7 @@ export async function GET(req: Request) {
       if (invoice.status === 'paid') {
         await supabase
           .from('orders')
-          .update({ payment_status: 'paye', paid_at: new Date().toISOString() })
+          .update({ billing_status: 'paye', paid_at: new Date().toISOString() })
           .eq('id', order.id);
         results.push({ order: ref, ok: true });
       } else {
@@ -91,7 +91,7 @@ export async function GET(req: Request) {
       // Autre erreur (Stripe ou réseau indisponible) : on laisse 'a_debiter' pour réessayer demain.
       console.error('Deferred payment error', ref, err);
       if (err?.type === 'StripeCardError' || !(err instanceof Stripe.errors.StripeError)) {
-        await supabase.from('orders').update({ payment_status: 'echec' }).eq('id', order.id);
+        await supabase.from('orders').update({ billing_status: 'echec' }).eq('id', order.id);
       }
       results.push({ order: ref, ok: false, detail: err.message });
     }

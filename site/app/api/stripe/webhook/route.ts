@@ -46,8 +46,8 @@ export async function POST(req: Request) {
         await supabase
           .from('orders')
           .update(paid
-            ? { payment_status: 'paye', paid_at: new Date().toISOString() }
-            : { payment_status: 'echec' })
+            ? { billing_status: 'paye', paid_at: new Date().toISOString() }
+            : { billing_status: 'echec' })
           .eq('stripe_invoice_id', stripeInvoice.id);
       }
     }
@@ -65,7 +65,7 @@ export async function POST(req: Request) {
           updateData = {
             status: 'paye',
             payment_mode: 'carte',
-            payment_status: 'paye',
+            billing_status: 'paye',
             amount_due: amountDue,
             paid_at: new Date().toISOString(),
           };
@@ -83,7 +83,7 @@ export async function POST(req: Request) {
           updateData = {
             status: 'valide',
             payment_mode: 'fin_de_mois',
-            payment_status: 'a_debiter',
+            billing_status: 'a_debiter',
             amount_due: amountDue,
             payment_due_date: dueDate,
             stripe_customer_id: customerId,
