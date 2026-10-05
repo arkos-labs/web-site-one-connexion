@@ -7,7 +7,11 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder'
 const parisDate = (d: Date) =>
   new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Paris', year: 'numeric', month: '2-digit', day: '2-digit' }).format(d);
 
+type PendingInvoice = { id: string; client_id: string; invoice_number: string; billing_period_start: string; total_amount: number };
+
 // Appelée le 1er de chaque mois : émet via Stripe les factures des mois écoulés (courses livrées).
+// Un client reçoit UNE seule facture regroupant toutes ses courses pas encore facturées,
+// même si elles s'étalent sur plusieurs mois.
 export async function GET(req: Request) {
   const secret = process.env.CRON_SECRET;
   if (!secret || req.headers.get('authorization') !== `Bearer ${secret}`) {
@@ -23,22 +27,30 @@ export async function GET(req: Request) {
     .select('id, client_id, invoice_number, billing_period_start, total_amount')
     .eq('status', 'en_cours')
     .lt('billing_period_start', firstOfMonth)
-    .gt('total_amount', 0);
+    .gt('total_amount', 0)
+    .order('billing_period_start');
 
   if (error) return Response.json({ error: error.message }, { status: 500 });
 
-  const taxRate = (invoices ?? []).length ? await vatRateId(stripe) : null;
-  const results: { invoice: string; ok: boolean; detail?: string }[] = [];
+  const byClient = new Map<string, PendingInvoice[]>();
+  for (const inv of (invoices ?? []) as PendingInvoice[]) {
+    byClient.set(inv.client_id, [...(byClient.get(inv.client_id) ?? []), inv]);
+  }
 
-  for (const inv of invoices ?? []) {
+  const taxRate = byClient.size ? await vatRateId(stripe) : null;
+  const results: { client: string; invoices: string[]; ok: boolean; detail?: string }[] = [];
+
+  for (const [clientId, group] of byClient) {
+    const numbers = group.map((inv) => inv.invoice_number);
     try {
       // Garde-fou anti double paiement : une course déjà réglée via Stripe (mode de paiement
       // enregistré, ou commande publique de particulier payée par carte à la commande) est
       // retirée de la facture mensuelle avant émission.
+      const invoiceIds = group.map((inv) => inv.id);
       const { data: rawItems } = await supabase
         .from('invoice_items')
-        .select('id, order_id, total_price')
-        .eq('invoice_id', inv.id);
+        .select('id, invoice_id, order_id, description, total_price')
+        .in('invoice_id', invoiceIds);
       const orderIds = (rawItems ?? []).map((i) => i.order_id).filter(Boolean);
       const { data: linkedOrders } = orderIds.length
         ? await supabase.from('orders').select('id, payment_mode, source, client_type').in('id', orderIds)
@@ -49,24 +61,28 @@ export async function GET(req: Request) {
           .map((o) => o.id)
       );
       const paidItems = (rawItems ?? []).filter((i) => alreadyPaid.has(i.order_id));
+      const items = (rawItems ?? []).filter((i) => !alreadyPaid.has(i.order_id));
+
       if (paidItems.length) {
         await supabase.from('invoice_items').delete().in('id', paidItems.map((i) => i.id));
-        const sub = Math.round(
-          (rawItems ?? []).filter((i) => !alreadyPaid.has(i.order_id)).reduce((s, i) => s + Number(i.total_price), 0) * 100
-        ) / 100;
-        const tax = Math.round(sub * 20) / 100;
-        await supabase.from('invoices').update({ subtotal: sub, tax_amount: tax, total_amount: sub + tax }).eq('id', inv.id);
-        inv.total_amount = sub + tax;
-        if (sub <= 0) {
-          results.push({ invoice: inv.invoice_number, ok: true, detail: 'courses déjà payées via Stripe, rien à facturer' });
-          continue;
+        for (const inv of group) {
+          const sub = Math.round(
+            items.filter((i) => i.invoice_id === inv.id).reduce((s, i) => s + Number(i.total_price), 0) * 100
+          ) / 100;
+          const tax = Math.round(sub * 20) / 100;
+          await supabase.from('invoices').update({ subtotal: sub, tax_amount: tax, total_amount: sub + tax }).eq('id', inv.id);
+          inv.total_amount = sub + tax;
         }
+      }
+      if (!items.length) {
+        results.push({ client: clientId, invoices: numbers, ok: true, detail: 'courses déjà payées via Stripe, rien à facturer' });
+        continue;
       }
 
       const { data: client } = await supabase
         .from('clients')
         .select('id, company_name, contact_name, contact_email, stripe_customer_id')
-        .eq('id', inv.client_id)
+        .eq('id', clientId)
         .single();
       if (!client) throw new Error('Client introuvable');
 
@@ -90,12 +106,12 @@ export async function GET(req: Request) {
       const customer = (await stripe.customers.retrieve(customerId)) as Stripe.Customer;
       const hasCard = !!customer.invoice_settings?.default_payment_method;
 
-      const { data: items } = await supabase
-        .from('invoice_items')
-        .select('id, description, total_price')
-        .eq('invoice_id', inv.id);
-
-      const monthLabel = new Date(inv.billing_period_start).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+      // Seuls les mois qui ont encore des courses à facturer entrent dans la facture.
+      const billed = group.filter((inv) => items.some((i) => i.invoice_id === inv.id));
+      const months = billed.map((inv) =>
+        new Date(inv.billing_period_start).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })
+      );
+      const primary = billed[billed.length - 1];
 
       const draft = await stripe.invoices.create(
         {
@@ -106,14 +122,19 @@ export async function GET(req: Request) {
           pending_invoice_items_behavior: 'exclude',
           currency: 'eur',
           default_tax_rates: taxRate ? [taxRate] : undefined,
-          description: `Courses de ${monthLabel}`,
-          custom_fields: [{ name: 'Réf.', value: inv.invoice_number }],
-          metadata: { invoice_id: inv.id, invoice_number: inv.invoice_number },
+          description: `Courses de ${months.join(', ')}`,
+          custom_fields: [{ name: 'Réf.', value: primary.invoice_number }],
+          // invoice_ids : toutes les factures internes réglées par cette facture Stripe (lu par le webhook).
+          metadata: {
+            invoice_id: primary.id,
+            invoice_number: primary.invoice_number,
+            invoice_ids: billed.map((inv) => inv.id).join(','),
+          },
         },
-        { idempotencyKey: `invoice-${inv.id}` }
+        { idempotencyKey: `invoice-${clientId}-${firstOfMonth}` }
       );
 
-      for (const item of items ?? []) {
+      for (const item of items) {
         await stripe.invoiceItems.create(
           {
             customer: customerId,
@@ -126,30 +147,34 @@ export async function GET(req: Request) {
         );
       }
 
-      const finalized = await stripe.invoices.finalizeInvoice(draft.id, { auto_advance: hasCard });
-      if (!hasCard) await stripe.invoices.sendInvoice(draft.id);
+      const finalized = await stripe.invoices.finalizeInvoice(draft.id!, { auto_advance: hasCard });
+      if (!hasCard) await stripe.invoices.sendInvoice(draft.id!);
 
-      const expected = Math.round(Number(inv.total_amount) * 100);
-      await supabase
-        .from('invoices')
-        .update({
-          status: 'emise',
-          stripe_invoice_id: finalized.id,
-          hosted_invoice_url: finalized.hosted_invoice_url,
-          pdf_url: finalized.invoice_pdf,
-          invoice_date: today,
-          due_date: new Date(new Date(today).getTime() + 30 * 86400000).toISOString().slice(0, 10),
-        })
-        .eq('id', inv.id);
+      const emitted = {
+        status: 'emise',
+        hosted_invoice_url: finalized.hosted_invoice_url,
+        pdf_url: finalized.invoice_pdf,
+        invoice_date: today,
+        due_date: new Date(new Date(today).getTime() + 30 * 86400000).toISOString().slice(0, 10),
+      };
+      // stripe_invoice_id est unique : il ne va que sur la facture principale, les autres
+      // sont retrouvées par le webhook via metadata.invoice_ids.
+      await supabase.from('invoices').update({ ...emitted, stripe_invoice_id: finalized.id }).eq('id', primary.id);
+      const others = billed.filter((inv) => inv.id !== primary.id).map((inv) => inv.id);
+      if (others.length) await supabase.from('invoices').update(emitted).in('id', others);
 
+      const expected = Math.round(billed.reduce((s, inv) => s + Number(inv.total_amount), 0) * 100);
       results.push({
-        invoice: inv.invoice_number,
+        client: clientId,
+        invoices: billed.map((inv) => inv.invoice_number),
         ok: true,
-        detail: finalized.total === expected ? undefined : `Total Stripe ${finalized.total} ≠ attendu ${expected} (centimes)`,
+        detail: Math.abs((finalized.total ?? 0) - expected) <= billed.length
+          ? undefined
+          : `Total Stripe ${finalized.total} ≠ attendu ${expected} (centimes)`,
       });
     } catch (err: any) {
-      console.error('Monthly invoice error', inv.invoice_number, err);
-      results.push({ invoice: inv.invoice_number, ok: false, detail: err.message });
+      console.error('Monthly invoice error', numbers.join(', '), err);
+      results.push({ client: clientId, invoices: numbers, ok: false, detail: err.message });
     }
   }
 

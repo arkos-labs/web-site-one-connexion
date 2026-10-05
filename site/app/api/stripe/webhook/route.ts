@@ -34,12 +34,20 @@ export async function POST(req: Request) {
     if (event.type === 'invoice.paid' || event.type === 'invoice.payment_failed') {
       const stripeInvoice = event.data.object as Stripe.Invoice;
       const paid = event.type === 'invoice.paid';
+      const invoiceUpdate = paid
+        ? { status: 'payee', payment_date: new Date().toISOString().slice(0, 10) }
+        : { status: 'echec' };
       await supabase
         .from('invoices')
-        .update(paid
-          ? { status: 'payee', payment_date: new Date().toISOString().slice(0, 10) }
-          : { status: 'echec' })
+        .update(invoiceUpdate)
         .eq('stripe_invoice_id', stripeInvoice.id);
+
+      // Facture mensuelle regroupant plusieurs mois : les autres factures internes réglées
+      // par cette même facture Stripe (voir cron monthly-invoices).
+      const groupedIds = stripeInvoice.metadata?.invoice_ids?.split(',').filter(Boolean) ?? [];
+      if (groupedIds.length) {
+        await supabase.from('invoices').update(invoiceUpdate).in('id', groupedIds);
+      }
 
       // Commande pro fin de mois : débit carte/RIB (cron deferred-payments) ou virement reçu
       if (stripeInvoice.metadata?.order_id) {
