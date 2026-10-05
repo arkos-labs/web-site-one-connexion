@@ -38,6 +38,7 @@ export default function OrderForm() {
   const [contactName, setContactName] = useState("");
   const [contactPhone, setContactPhone] = useState("");
   const [contactEmail, setContactEmail] = useState("");
+  const [contactEmailConfirm, setContactEmailConfirm] = useState("");
   const [notes, setNotes] = useState("");
   const [estimatedPrice, setEstimatedPrice] = useState<number | null>(null);
   const [paymentMode, setPaymentMode] = useState<'carte' | 'fin_de_mois'>('carte');
@@ -92,6 +93,15 @@ export default function OrderForm() {
       }
       if (contactPhone.replace(/\D/g, "").length < 9) {
         setFormError("Renseignez un numéro de téléphone valide.");
+        return;
+      }
+      if (!/^\S+@\S+\.\S+$/.test(contactEmail.trim())) {
+        setFormError("Renseignez une adresse email valide.");
+        return;
+      }
+      // Les factures des pros partent par email : une faute de frappe et elles n'arrivent jamais.
+      if (clientType === 'entreprise' && contactEmail.trim().toLowerCase() !== contactEmailConfirm.trim().toLowerCase()) {
+        setFormError("Les deux adresses email ne correspondent pas.");
         return;
       }
     }
@@ -398,6 +408,19 @@ export default function OrderForm() {
                           <input type="email" required value={contactEmail} onChange={(e) => setContactEmail(e.target.value)} placeholder="contact@masociete.com" className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-12 pr-5 py-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-400 transition-colors" />
                         </div>
                       </div>
+                      {clientType === 'entreprise' && (
+                        <div>
+                          <label className="block text-sm font-bold text-gray-800 mb-2">
+                            Confirmez l'email <span className="text-[#ed5518]">*</span>
+                          </label>
+                          <div className="relative">
+                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                              <Mail className="h-5 w-5 text-gray-400" />
+                            </div>
+                            <input type="email" required value={contactEmailConfirm} onChange={(e) => setContactEmailConfirm(e.target.value)} onPaste={(e) => e.preventDefault()} autoComplete="off" placeholder="Retapez votre email (vos factures y seront envoyées)" className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-12 pr-5 py-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-400 transition-colors" />
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}

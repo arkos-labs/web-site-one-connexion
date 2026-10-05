@@ -32,6 +32,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
   const [contactName, setContactName] = useState("");
   const [contactPhone, setContactPhone] = useState("");
   const [contactEmail, setContactEmail] = useState("");
+  const [contactEmailConfirm, setContactEmailConfirm] = useState("");
   const [notes, setNotes] = useState("");
   const [estimatedPrice, setEstimatedPrice] = useState<number | null>(null);
 
@@ -142,6 +143,11 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
       }
       if (!/^\S+@\S+\.\S+$/.test(contactEmail.trim())) {
         setFormError("Renseignez une adresse email valide.");
+        return;
+      }
+      // Les factures des pros partent par email : une faute de frappe et elles n'arrivent jamais.
+      if (clientType === "entreprise" && contactEmail.trim().toLowerCase() !== contactEmailConfirm.trim().toLowerCase()) {
+        setFormError("Les deux adresses email ne correspondent pas.");
         return;
       }
 
@@ -436,6 +442,12 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                         <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">Email <span className="text-accent">*</span></label>
                         <input type="email" required value={contactEmail} onChange={(e) => setContactEmail(e.target.value)} placeholder="contact@societe.fr" className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30" />
                       </div>
+                      {clientType === "entreprise" && (
+                        <div>
+                          <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">Confirmez l'email <span className="text-accent">*</span></label>
+                          <input type="email" required value={contactEmailConfirm} onChange={(e) => setContactEmailConfirm(e.target.value)} onPaste={(e) => e.preventDefault()} autoComplete="off" placeholder="Retapez votre email (vos factures y seront envoyées)" className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30" />
+                        </div>
+                      )}
                     </div>
 
                     {/* Champs B2B si entreprise */}
