@@ -32,6 +32,37 @@ export async function GET(req: Request) {
 
   for (const inv of invoices ?? []) {
     try {
+      // Garde-fou anti double paiement : une course déjà réglée via Stripe (mode de paiement
+      // enregistré, ou commande publique de particulier payée par carte à la commande) est
+      // retirée de la facture mensuelle avant émission.
+      const { data: rawItems } = await supabase
+        .from('invoice_items')
+        .select('id, order_id, total_price')
+        .eq('invoice_id', inv.id);
+      const orderIds = (rawItems ?? []).map((i) => i.order_id).filter(Boolean);
+      const { data: linkedOrders } = orderIds.length
+        ? await supabase.from('orders').select('id, payment_mode, source, client_type').in('id', orderIds)
+        : { data: [] as { id: string; payment_mode: string | null; source: string | null; client_type: string | null }[] };
+      const alreadyPaid = new Set(
+        (linkedOrders ?? [])
+          .filter((o) => o.payment_mode || (o.source === 'page_publique' && o.client_type === 'particulier'))
+          .map((o) => o.id)
+      );
+      const paidItems = (rawItems ?? []).filter((i) => alreadyPaid.has(i.order_id));
+      if (paidItems.length) {
+        await supabase.from('invoice_items').delete().in('id', paidItems.map((i) => i.id));
+        const sub = Math.round(
+          (rawItems ?? []).filter((i) => !alreadyPaid.has(i.order_id)).reduce((s, i) => s + Number(i.total_price), 0) * 100
+        ) / 100;
+        const tax = Math.round(sub * 20) / 100;
+        await supabase.from('invoices').update({ subtotal: sub, tax_amount: tax, total_amount: sub + tax }).eq('id', inv.id);
+        inv.total_amount = sub + tax;
+        if (sub <= 0) {
+          results.push({ invoice: inv.invoice_number, ok: true, detail: 'courses déjà payées via Stripe, rien à facturer' });
+          continue;
+        }
+      }
+
       const { data: client } = await supabase
         .from('clients')
         .select('id, company_name, contact_name, contact_email, stripe_customer_id')
