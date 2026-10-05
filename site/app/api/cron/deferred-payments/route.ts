@@ -28,6 +28,37 @@ export async function GET(req: Request) {
   const taxRate = (orders ?? []).length ? await vatRateId(stripe) : null;
   const results: { order: string; ok: boolean; detail?: string }[] = [];
 
+  // Virements : la facture est partie à la commande, échéance J+30. On annule la facture si la
+  // course a été annulée, et on signale 'en_retard' si rien n'est arrivé à l'échéance.
+  const { data: transfers, error: transferError } = await supabase
+    .from('orders')
+    .select('id, tracking_code, status, payment_due_date, stripe_invoice_id')
+    .eq('billing_status', 'virement_attendu');
+  if (transferError) return Response.json({ error: transferError.message }, { status: 500 });
+
+  for (const order of transfers ?? []) {
+    const ref = order.tracking_code || order.id;
+    const cancelled = CANCELLED.includes(order.status);
+    if (!cancelled && order.payment_due_date > today) continue;
+    try {
+      const invoice = await stripe.invoices.retrieve(order.stripe_invoice_id);
+      if (invoice.status === 'paid') {
+        await supabase.from('orders').update({ billing_status: 'paye', paid_at: new Date().toISOString() }).eq('id', order.id);
+        results.push({ order: ref, ok: true, detail: 'virement reçu' });
+      } else if (cancelled) {
+        if (invoice.status === 'open') await stripe.invoices.voidInvoice(invoice.id!);
+        await supabase.from('orders').update({ billing_status: 'annule' }).eq('id', order.id);
+        results.push({ order: ref, ok: true, detail: 'annulée, facture annulée' });
+      } else {
+        await supabase.from('orders').update({ billing_status: 'en_retard' }).eq('id', order.id);
+        results.push({ order: ref, ok: false, detail: 'virement non reçu à J+30' });
+      }
+    } catch (err: any) {
+      console.error('Transfer check error', ref, err);
+      results.push({ order: ref, ok: false, detail: err.message });
+    }
+  }
+
   for (const order of orders ?? []) {
     const ref = order.tracking_code || order.id;
     try {

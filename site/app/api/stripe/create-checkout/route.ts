@@ -1,11 +1,106 @@
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
+import { createClient } from '@supabase/supabase-js';
 import { calculatePrice, ServiceLevel } from '@/lib/pricing';
 import { vatRateId } from '@/lib/stripe-vat';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder', {
   apiVersion: '2025-02-24.acacia',
 });
+
+// Pro qui paie par virement : facture Stripe envoyée tout de suite par email, avec un IBAN
+// dédié au client et une échéance à J+30. Stripe rapproche le virement tout seul ;
+// le webhook invoice.paid passe la commande en 'paye', le cron deferred-payments gère retard/annulation.
+async function sendTransferInvoice(p: {
+  orderId: string; email: string; companyName?: string; siret?: string;
+  price: number; pickupAddress: string; dropoffAddress: string;
+}) {
+  const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+
+  // La commande doit exister, être récente et pas encore facturée (sinon n'importe qui
+  // pourrait déclencher une facture sur la commande d'un autre).
+  const { data: order } = await supabase
+    .from('orders')
+    .select('id, client_type, billing_status, created_at')
+    .eq('tracking_code', p.orderId)
+    .maybeSingle();
+  if (!order || order.client_type !== 'entreprise' || order.billing_status
+      || Date.now() - new Date(order.created_at).getTime() > 60 * 60 * 1000) {
+    return NextResponse.json({ error: 'Commande introuvable ou déjà facturée.' }, { status: 400 });
+  }
+
+  const customer = await stripe.customers.create({
+    email: p.email,
+    name: p.companyName || undefined,
+    metadata: { orderId: p.orderId, siret: p.siret || '' },
+  });
+
+  let invoice: Stripe.Invoice;
+  try {
+    invoice = await stripe.invoices.create(
+      {
+        customer: customer.id,
+        collection_method: 'send_invoice',
+        days_until_due: 30,
+        auto_advance: true,
+        pending_invoice_items_behavior: 'exclude',
+        currency: 'eur',
+        default_tax_rates: [await vatRateId(stripe)],
+        description: `Course ${p.orderId}`,
+        custom_fields: [{ name: 'Réf.', value: p.orderId }],
+        payment_settings: {
+          payment_method_types: ['customer_balance'],
+          payment_method_options: {
+            customer_balance: {
+              funding_type: 'bank_transfer',
+              bank_transfer: { type: 'eu_bank_transfer', eu_bank_transfer: { country: 'FR' } },
+            },
+          },
+        },
+        metadata: { order_id: order.id, tracking_code: p.orderId },
+      },
+      { idempotencyKey: `transfer-invoice-${order.id}` }
+    );
+  } catch (err: any) {
+    // Les virements bancaires doivent être activés dans le dashboard Stripe (Paramètres > Moyens de paiement).
+    if (String(err?.message).includes('customer_balance')) {
+      await stripe.customers.del(customer.id).catch(() => {});
+      return NextResponse.json(
+        { error: "Le paiement par virement n'est pas encore disponible. Choisissez la carte ou le RIB." },
+        { status: 400 }
+      );
+    }
+    throw err;
+  }
+
+  await stripe.invoiceItems.create(
+    {
+      customer: customer.id,
+      invoice: invoice.id,
+      currency: 'eur',
+      amount: Math.round(p.price * 100),
+      description: `Course ${p.orderId} — ${p.pickupAddress} → ${p.dropoffAddress}`,
+    },
+    { idempotencyKey: `transfer-item-${order.id}` }
+  );
+  await stripe.invoices.finalizeInvoice(invoice.id!);
+  await stripe.invoices.sendInvoice(invoice.id!);
+
+  await supabase
+    .from('orders')
+    .update({
+      status: 'valide',
+      payment_mode: 'fin_de_mois',
+      billing_status: 'virement_attendu',
+      amount_due: p.price,
+      payment_due_date: new Date(Date.now() + 30 * 86400000).toISOString().slice(0, 10),
+      stripe_customer_id: customer.id,
+      stripe_invoice_id: invoice.id,
+    })
+    .eq('id', order.id);
+
+  return NextResponse.json({ invoiceSent: true });
+}
 
 export async function POST(req: Request) {
   try {
@@ -46,6 +141,10 @@ export async function POST(req: Request) {
 
     const origin = req.headers.get('origin') || process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
     const baseUrl = origin;
+
+    if (clientType === 'entreprise' && paymentMode === 'fin_de_mois' && debitMethod === 'virement') {
+      return sendTransferInvoice({ orderId, email, companyName, siret, price, pickupAddress, dropoffAddress });
+    }
 
     if (clientType === 'entreprise' && paymentMode === 'fin_de_mois') {
       // Pro en paiement différé : on enregistre seulement la carte ou le RIB (mandat SEPA) en mode

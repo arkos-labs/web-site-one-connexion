@@ -41,7 +41,7 @@ export async function POST(req: Request) {
           : { status: 'echec' })
         .eq('stripe_invoice_id', stripeInvoice.id);
 
-      // Débit à 30 jours d'une commande pro (facture créée par le cron deferred-payments)
+      // Commande pro fin de mois : débit carte/RIB (cron deferred-payments) ou virement reçu
       if (stripeInvoice.metadata?.order_id) {
         await supabase
           .from('orders')

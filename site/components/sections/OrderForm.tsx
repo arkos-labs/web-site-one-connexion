@@ -41,7 +41,7 @@ export default function OrderForm() {
   const [notes, setNotes] = useState("");
   const [estimatedPrice, setEstimatedPrice] = useState<number | null>(null);
   const [paymentMode, setPaymentMode] = useState<'carte' | 'fin_de_mois'>('carte');
-  const [debitMethod, setDebitMethod] = useState<'card' | 'sepa'>('card');
+  const [debitMethod, setDebitMethod] = useState<'card' | 'sepa' | 'virement'>('card');
 
   const supabase = createClient();
 
@@ -158,7 +158,12 @@ export default function OrderForm() {
 
       const data = await res.json();
       
-      if (data.url) {
+      if (data.invoiceSent) {
+        // Virement : pas de passage par Stripe, la facture avec l'IBAN est partie par email.
+        setTrackingCode(trackingCode);
+        setSubmitted(true);
+        setSubmitting(false);
+      } else if (data.url) {
         window.location.href = data.url;
       } else {
         throw new Error(data.error || "Erreur inconnue");
@@ -202,6 +207,11 @@ export default function OrderForm() {
               <p className="text-gray-500 text-lg mb-6 max-w-md mx-auto">
                 Un dispatcheur va vous contacter dans les 2 prochaines minutes pour confirmer l'enlèvement.
               </p>
+              {clientType === 'entreprise' && paymentMode === 'fin_de_mois' && debitMethod === 'virement' && (
+                <p className="text-gray-500 mb-6 max-w-md mx-auto">
+                  La facture avec les coordonnées bancaires a été envoyée à <strong>{contactEmail}</strong>. Virement à effectuer sous 30 jours.
+                </p>
+              )}
               {trackingCode && (
                 <div className="mb-8 inline-block rounded-xl border border-gray-200 bg-gray-50 px-6 py-3">
                   <p className="text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-1">Code de suivi</p>
@@ -270,7 +280,7 @@ export default function OrderForm() {
                     {clientType === 'entreprise' && (
                       <div className="mb-8 p-4 bg-blue-50 border border-blue-100 rounded-xl flex gap-3 text-sm text-blue-800">
                         <CreditCard className="w-5 h-5 text-blue-500 shrink-0" />
-                        <p>En tant que professionnel, <strong>payez tout de suite par carte, ou en fin de mois (30 jours) par carte ou RIB</strong>. Vous choisirez à la dernière étape.</p>
+                        <p>En tant que professionnel, <strong>payez tout de suite par carte, ou en fin de mois (30 jours) par carte, RIB ou virement</strong>. Vous choisirez à la dernière étape.</p>
                       </div>
                     )}
 
@@ -494,11 +504,12 @@ export default function OrderForm() {
 
                           {paymentMode === 'fin_de_mois' && (
                             <div className="mt-4">
-                              <p className="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-wide">Prélevé par</p>
+                              <p className="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-wide">Payé par</p>
                               <div className="flex bg-gray-100 p-1 rounded-xl">
                                 {([
                                   { id: 'card', label: 'Carte bancaire' },
                                   { id: 'sepa', label: 'RIB (prélèvement)' },
+                                  { id: 'virement', label: 'Virement' },
                                 ] as const).map(({ id, label }) => (
                                   <button
                                     key={id}
@@ -549,7 +560,7 @@ export default function OrderForm() {
                           <div>
                             <div className="text-[11px] font-bold uppercase tracking-wider text-orange-600/80 mb-0.5">Tarif estimé (HT)</div>
                             <div className="text-[10px] text-gray-400 mb-1 uppercase tracking-wider font-semibold">Paiement sécurisé</div>
-                            <div className="text-xs text-gray-600 font-medium">{clientType === 'entreprise' && paymentMode === 'fin_de_mois' ? (debitMethod === 'sepa' ? 'Prélevé sur RIB à 30 jours' : 'Prélevé sur carte à 30 jours') : 'Payé par carte maintenant'}</div>
+                            <div className="text-xs text-gray-600 font-medium">{clientType === 'entreprise' && paymentMode === 'fin_de_mois' ? (debitMethod === 'virement' ? 'Virement sous 30 jours' : debitMethod === 'sepa' ? 'Prélevé sur RIB à 30 jours' : 'Prélevé sur carte à 30 jours') : 'Payé par carte maintenant'}</div>
                           </div>
                           <div className="text-2xl font-extrabold text-[#ed5518]">
                             {estimatedPrice !== null ? `${estimatedPrice.toFixed(2)} €` : '-- €'}
