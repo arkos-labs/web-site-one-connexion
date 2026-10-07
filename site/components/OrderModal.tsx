@@ -417,6 +417,35 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                       Vos informations
                     </div>
                     <div className="flex flex-col gap-4">
+                      {clientType === "entreprise" && (
+                        <div>
+                          <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">SIRET <span className="text-accent">*</span></label>
+                          <div className="flex gap-2">
+                            <input
+                              type="text"
+                              value={siret}
+                              onChange={(e) => { setSiret(e.target.value.replace(/\D/g, "").slice(0, 14)); setTva(""); }}
+                              maxLength={14}
+                              placeholder="14 chiffres"
+                              className="flex-1 rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
+                            />
+                            <button
+                              type="button"
+                              onClick={validateSiretHandler}
+                              disabled={validatingSiret || !siret}
+                              className="rounded-xl bg-accent px-4 py-3 text-sm font-bold text-white hover:bg-accent-dark disabled:opacity-60 whitespace-nowrap"
+                            >
+                              {validatingSiret ? "..." : "Vérifier"}
+                            </button>
+                          </div>
+                          {tva && (
+                            <div className="mt-2 flex flex-col gap-1 rounded-lg bg-green-100 p-3 text-green-900 text-sm">
+                              <span className="font-bold">✓ {raisonSociale || "Société vérifiée"}</span>
+                              <span>TVA : {tva}</span>
+                            </div>
+                          )}
+                        </div>
+                      )}
                       <div>
                         <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">
                           {clientType === "entreprise" ? "Nom de la société" : "Nom & Prénom"} <span className="text-accent">*</span>
@@ -425,33 +454,6 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                       </div>
                       {clientType === "entreprise" && (
                         <>
-                          <div>
-                            <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">SIRET <span className="text-accent">*</span></label>
-                            <div className="flex gap-2">
-                              <input
-                                type="text"
-                                value={siret}
-                                onChange={(e) => { setSiret(e.target.value.replace(/\D/g, "").slice(0, 14)); setTva(""); }}
-                                maxLength={14}
-                                placeholder="14 chiffres"
-                                className="flex-1 rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
-                              />
-                              <button
-                                type="button"
-                                onClick={validateSiretHandler}
-                                disabled={validatingSiret || !siret}
-                                className="rounded-xl bg-accent px-4 py-3 text-sm font-bold text-white hover:bg-accent-dark disabled:opacity-60 whitespace-nowrap"
-                              >
-                                {validatingSiret ? "..." : "Vérifier"}
-                              </button>
-                            </div>
-                            {tva && (
-                              <div className="mt-2 flex flex-col gap-1 rounded-lg bg-green-100 p-3 text-green-900 text-sm">
-                                <span className="font-bold">✓ {raisonSociale || "Société vérifiée"}</span>
-                                <span>TVA : {tva}</span>
-                              </div>
-                            )}
-                          </div>
                           <div>
                             <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">Adresse de facturation <span className="text-accent">*</span></label>
                             <input
