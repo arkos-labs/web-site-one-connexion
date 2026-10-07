@@ -483,8 +483,9 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                         />
 
                         {tva && (
-                          <div className="flex items-center gap-2 rounded-lg bg-green-100 p-3 text-green-900 text-sm font-bold">
-                            ✓ {raisonSociale ? `${raisonSociale} · ` : ""}TVA : {tva}
+                          <div className="flex flex-col gap-1 rounded-lg bg-green-100 p-3 text-green-900 text-sm">
+                            <span className="font-bold">✓ {raisonSociale || "Société vérifiée"}</span>
+                            <span>TVA : {tva}</span>
                           </div>
                         )}
                       </div>
