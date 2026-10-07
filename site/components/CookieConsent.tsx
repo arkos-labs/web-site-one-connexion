@@ -33,9 +33,11 @@ export default function CookieConsent() {
     <div className="fixed inset-x-3 bottom-3 z-[9999] sm:left-auto sm:right-4 sm:bottom-4 sm:max-w-sm" role="region" aria-label="Choix des cookies">
       <div className="flex flex-col gap-3 rounded-xl border border-line bg-white p-4 shadow-xl">
         <p className="text-[13px] leading-snug text-label">
-          Nous utilisons des cookies pour mesurer l&apos;audience.{" "}
-          <a href="/politique-de-confidentialite" className="text-accent underline">En savoir plus</a>
+          Nous utilisons des cookies pour mesurer l&apos;audience.
         </p>
+        <a href="/politique-de-confidentialite" className="-mt-1 inline-block w-fit py-2 text-[13px] font-semibold text-accent underline">
+          En savoir plus
+        </a>
         <div className="flex gap-2">
           <button
             onClick={handleRefuse}
