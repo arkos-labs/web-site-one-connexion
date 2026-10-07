@@ -26,6 +26,7 @@ import { AddressAutocomplete } from "@/components/AddressAutocomplete";
 import { createClient } from "@/lib/supabase/client";
 import { calculatePrice, ServiceLevel } from "@/lib/pricing";
 import { notifyNewOrder } from "@/lib/notify-new-order";
+import { isProAccount } from "@/lib/dashboard-nav";
 
 /* ── Données métier ───────────────────────────────────────────────────── */
 
@@ -227,7 +228,15 @@ export default function CommanderPage() {
   const [favoriteAddresses, setFavoriteAddresses] = useState<Favorite[]>([]);
   const [estimatedPrice, setEstimatedPrice] = useState<number | null>(null);
 
+  // Particulier : paiement par carte immédiat, sans lui aucune course n'est lancée
+  const [isPro, setIsPro] = useState(true);
+
   const supabase = createClient();
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user } }: any) => setIsPro(isProAccount(user)));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (pickupAddress && dropoffAddress) {
@@ -279,7 +288,7 @@ export default function CommanderPage() {
         contact_name: contactName,
         contact_phone: contactPhone,
         status: "en_attente",
-        client_type: "entreprise",
+        client_type: isPro ? "entreprise" : "particulier",
         source: "dashboard",
       })
       .select("tracking_code")
@@ -289,12 +298,42 @@ export default function CommanderPage() {
       console.error("Erreur de création de commande:", error);
       setSubmitError(`Erreur: ${error.message || "Une erreur est survenue. Veuillez réessayer."}`);
       setSubmitting(false);
-    } else {
-      setTrackingCode(data.tracking_code);
-      notifyNewOrder();
-      setStep(5);
-      setSubmitting(false);
+      return;
     }
+
+    if (!isPro) {
+      // Particulier : la course n'est prise en charge qu'après le paiement par carte (webhook Stripe)
+      try {
+        const res = await fetch("/api/stripe/create-checkout", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            clientType: "particulier",
+            service: delai,
+            format,
+            pickupAddress,
+            dropoffAddress,
+            orderId: data.tracking_code,
+            email: user.email,
+            paymentMode: "carte",
+          }),
+        });
+        const payment = await res.json();
+        if (!payment.url) throw new Error(payment.error || "Paiement indisponible");
+        notifyNewOrder();
+        window.location.href = payment.url;
+      } catch (err: any) {
+        console.error("Erreur de paiement:", err);
+        setSubmitError(`Paiement impossible : ${err.message}. La course n'est pas lancée tant qu'elle n'est pas payée.`);
+        setSubmitting(false);
+      }
+      return;
+    }
+
+    setTrackingCode(data.tracking_code);
+    notifyNewOrder();
+    setStep(5);
+    setSubmitting(false);
   };
 
   const resetAll = () => {
@@ -726,7 +765,7 @@ export default function CommanderPage() {
                       </>
                     ) : (
                       <>
-                        Confirmer<span className="hidden sm:inline"> la commande</span>
+                        {isPro ? <>Confirmer<span className="hidden sm:inline"> la commande</span></> : <>Payer<span className="hidden sm:inline"> par carte</span></>}
                         <CheckCircle2 size={16} strokeWidth={2.5} />
                       </>
                     )}
@@ -780,8 +819,17 @@ export default function CommanderPage() {
                 <span className="text-sm font-semibold text-white/60">HT</span>
               </div>
               <div className="mt-3 rounded-lg bg-white/5 border border-white/10 p-3 text-xs text-white/80">
-                <p className="font-bold text-white mb-1 flex items-center gap-1.5"><CalendarClock size={14} className="text-accent" /> Facturation mensuelle</p>
-                <p>En tant que client pro, vos courses sont cumulées et prélevées automatiquement tous les 30 jours via votre moyen de paiement enregistré.</p>
+                {isPro ? (
+                  <>
+                    <p className="font-bold text-white mb-1 flex items-center gap-1.5"><CalendarClock size={14} className="text-accent" /> Facturation mensuelle</p>
+                    <p>En tant que client pro, vos courses sont cumulées et prélevées automatiquement tous les 30 jours via votre moyen de paiement enregistré.</p>
+                  </>
+                ) : (
+                  <>
+                    <p className="font-bold text-white mb-1 flex items-center gap-1.5"><ShieldCheck size={14} className="text-accent" /> Paiement par carte</p>
+                    <p>Le paiement par carte bancaire est demandé immédiatement. La course est prise en charge une fois le paiement validé.</p>
+                  </>
+                )}
               </div>
 
               <ul className="mt-4 flex flex-col gap-1.5 text-xs font-medium text-white/60">

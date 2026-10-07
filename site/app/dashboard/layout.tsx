@@ -20,7 +20,6 @@ export default function DashboardLayout({
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<{ full_name: string | null; company: string | null; role: string | null } | null>(null);
   const [ordersThisMonth, setOrdersThisMonth] = useState<number | null>(null);
-  const [navettesThisMonth, setNavettesThisMonth] = useState<number | null>(null);
 
   const loadProfile = async () => {
     const { data: { user: authUser } } = await supabase.auth.getUser();
@@ -31,21 +30,12 @@ export default function DashboardLayout({
     startOfMonth.setDate(1);
     startOfMonth.setHours(0, 0, 0, 0);
 
-    Promise.all([
-      supabase
-        .from("orders")
-        .select("id", { count: "exact", head: true })
-        .eq("user_id", authUser.id)
-        .gte("created_at", startOfMonth.toISOString()),
-      supabase
-        .from("navettes")
-        .select("id", { count: "exact", head: true })
-        .eq("user_id", authUser.id)
-        .eq("status", "active"),
-    ]).then(([ordersRes, navettesRes]) => {
-      setOrdersThisMonth(ordersRes.count ?? 0);
-      setNavettesThisMonth(navettesRes.count ?? 0);
-    });
+    supabase
+      .from("orders")
+      .select("id", { count: "exact", head: true })
+      .eq("user_id", authUser.id)
+      .gte("created_at", startOfMonth.toISOString())
+      .then(({ count }: { count: number | null }) => setOrdersThisMonth(count ?? 0));
 
     // full_name/role viennent de profiles, la raison sociale de clients
     Promise.all([
@@ -129,17 +119,11 @@ export default function DashboardLayout({
               </div>
 
               {/* Statistiques (Courses ce mois / Facturation) */}
-              <div className="grid grid-cols-3 divide-x divide-line border-b border-line bg-paper/30 p-4">
+              <div className="grid grid-cols-2 divide-x divide-line border-b border-line bg-paper/30 p-4">
                 <div className="flex flex-col items-center justify-center">
                   <span className="text-[11px] font-medium text-label">Courses</span>
                   <span className="mt-0.5 text-sm font-bold text-ink">
                     {ordersThisMonth === null ? "…" : ordersThisMonth}
-                  </span>
-                </div>
-                <div className="flex flex-col items-center justify-center">
-                  <span className="text-[11px] font-medium text-label">Navettes</span>
-                  <span className="mt-0.5 text-sm font-bold text-ink">
-                    {navettesThisMonth === null ? "…" : navettesThisMonth}
                   </span>
                 </div>
                 <div className="flex flex-col items-center justify-center">
