@@ -97,10 +97,10 @@ function calculateTvaKey(siren: string): string {
  */
 export async function validateB2BInfo(data: {
   siret: string;
-  raison_sociale: string;
+  raison_sociale?: string;
   email: string;
   nom_contact: string;
-  adresse_facturation: string;
+  adresse_facturation?: string;
 }): Promise<{
   valid: boolean;
   errors: string[];
@@ -112,19 +112,13 @@ export async function validateB2BInfo(data: {
   if (!data.siret || !/^\d{14}$/.test(data.siret.replace(/\s/g, ""))) {
     errors.push("SIRET invalide (14 chiffres).");
   }
-  if (!data.raison_sociale || data.raison_sociale.trim().length < 2) {
-    errors.push("Raison sociale manquante.");
-  }
   if (!data.email || !/^\S+@\S+\.\S+$/.test(data.email)) {
     errors.push("Email invalide.");
   }
   if (!data.nom_contact || data.nom_contact.trim().length < 2) {
     errors.push("Nom de contact manquant.");
   }
-  if (!data.adresse_facturation || data.adresse_facturation.trim().length < 5) {
-    errors.push("Adresse de facturation manquante.");
-  }
-
+  // Raison sociale et adresse sont fournies par Sirene si absentes
   if (errors.length > 0) {
     return { valid: false, errors };
   }
@@ -132,7 +126,7 @@ export async function validateB2BInfo(data: {
   // Validation Sirene
   const sireneData = await validateSiretViaINSEE(
     data.siret,
-    data.raison_sociale
+    data.raison_sociale || undefined
   );
 
   if (!sireneData.valid) {

@@ -78,10 +78,8 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           siret,
-          raison_sociale: raisonSociale,
           email: contactEmail,
           nom_contact: contactName,
-          adresse_facturation: adresseFacturation,
         }),
       });
 
@@ -89,6 +87,9 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
 
       if (result.valid && result.sireneData) {
         setTva(result.sireneData.tva_number || "");
+        // Tout est déduit du SIRET : raison sociale et adresse (modifiable)
+        setRaisonSociale(result.sireneData.raison_sociale || "");
+        if (result.sireneData.adresse) setAdresseFacturation(result.sireneData.adresse);
         setFormError("");
       } else {
         setFormError(result.errors?.join(" ") || "SIRET invalide.");
@@ -157,16 +158,12 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
           setFormError("SIRET obligatoire pour une commande professionnelle.");
           return;
         }
-        if (!raisonSociale.trim()) {
-          setFormError("Raison sociale obligatoire.");
+        if (!tva) {
+          setFormError("SIRET non validé. Cliquez sur 'Vérifier' d'abord.");
           return;
         }
         if (!adresseFacturation.trim()) {
           setFormError("Adresse de facturation obligatoire.");
-          return;
-        }
-        if (!tva) {
-          setFormError("SIRET non validé. Cliquez sur 'Vérifier SIRET' d'abord.");
           return;
         }
       }
@@ -479,14 +476,6 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
 
                         <input
                           type="text"
-                          value={raisonSociale}
-                          onChange={(e) => setRaisonSociale(e.target.value)}
-                          placeholder="Raison Sociale"
-                          className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
-                        />
-
-                        <input
-                          type="text"
                           value={adresseFacturation}
                           onChange={(e) => setAdresseFacturation(e.target.value)}
                           placeholder="Adresse de facturation"
@@ -495,7 +484,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
 
                         {tva && (
                           <div className="flex items-center gap-2 rounded-lg bg-green-100 p-3 text-green-900 text-sm font-bold">
-                            ✓ TVA : {tva}
+                            ✓ {raisonSociale ? `${raisonSociale} · ` : ""}TVA : {tva}
                           </div>
                         )}
                       </div>
