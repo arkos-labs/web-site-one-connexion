@@ -80,6 +80,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','GTM-PD8DT425');`
           }}
         />
+        {/* Balise Google (Analytics) */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQ1D0YWQ4X" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-LQ1D0YWQ4X');`
+          }}
+        />
       </head>
       <body className="bg-paper text-ink antialiased">
         <noscript>
