@@ -11,9 +11,9 @@ import { SITE_URL, PHONE_DISPLAY, PHONE_TEL } from "@/lib/site-content";
 import { CheckCircle2, Clock, MapPin, Shield } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Tarif coursier Paris pas cher — Devis gratuit 2 h",
+  title: "Prix et tarif coursier Paris — dès 15 € HT, devis 2 h",
   description:
-    "Tarif coursier Paris : logique tarifaire transparente pour vos courses urgentes. À la course ou compte entreprise mensuel. Devis gratuit en moins de 2 heures.",
+    "Prix coursier Paris : à partir de 15 € HT en course planifiée dans Paris, 22 € en course immédiate. À la course ou compte entreprise mensuel. Devis gratuit en moins de 2 heures.",
   alternates: { canonical: "/tarifs" },
   openGraph: {
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION — Coursier B2B Paris & Île-de-France" }],
@@ -33,6 +33,35 @@ const breadcrumbSchema = {
     { "@type": "ListItem", position: 1, name: "Accueil", item: SITE_URL },
     { "@type": "ListItem", position: 2, name: "Tarifs", item: `${SITE_URL}/tarifs` },
   ],
+};
+
+const FAQ = [
+  {
+    q: "Quel est le prix d'un coursier à Paris ?",
+    a: "À Paris intramuros, une course planifiée démarre à partir de 15 € HT et une course immédiate à partir de 22 € HT. Le tarif exact dépend de la distance, du délai demandé, de la nature du transport et du volume mensuel.",
+  },
+  {
+    q: "Quel est le tarif d'un coursier en petite couronne ?",
+    a: "En petite couronne (92, 93, 94), une course planifiée démarre à partir de 22 € HT et une course immédiate à partir de 30 € HT. La grande couronne et les aéroports sont sur devis.",
+  },
+  {
+    q: "Les tarifs sont-ils HT ou TTC ?",
+    a: "Les tarifs indiqués sont hors taxes, hors options (prise en charge après 21 h, week-end). La TVA de 20 % s'applique.",
+  },
+  {
+    q: "En combien de temps puis-je obtenir un devis ?",
+    a: "Le devis est donné en moins de 2 heures. Les clients avec un compte entreprise bénéficient d'une grille dégressive selon le volume mensuel.",
+  },
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: FAQ.map(({ q, a }) => ({
+    "@type": "Question",
+    name: q,
+    acceptedAnswer: { "@type": "Answer", text: a },
+  })),
 };
 
 const FACTORS = [
@@ -100,6 +129,7 @@ export default function TarifsPage() {
   return (
     <>
       <JsonLd data={breadcrumbSchema} />
+      <JsonLd data={faqSchema} />
 
       {/* ── Hero ── */}
       <section className="bg-ink text-white">
@@ -114,7 +144,7 @@ export default function TarifsPage() {
             Tarification
           </div>
           <h1 className="mb-6 max-w-[22ch] text-balance text-[clamp(36px,5vw,64px)] font-bold leading-[1.05] tracking-[-0.035em]">
-            Des tarifs clairs, adaptés à vos volumes.
+            Prix d'un coursier à Paris : tarifs clairs, adaptés à vos volumes.
           </h1>
           <p className="max-w-[58ch] text-pretty text-[17px] leading-[1.6] text-white/66">
             Pas de grille tarifaire figée : chaque mission a ses paramètres.
@@ -255,6 +285,24 @@ export default function TarifsPage() {
         <p className="mt-4 text-[12px] text-muted/70">
           * Tarifs HT, hors options (prise en charge après 21h, week-end). TVA 20 % applicable.
         </p>
+      </section>
+
+      {/* ── FAQ ── */}
+      <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-[72px]">
+        <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
+          Questions fréquentes
+        </div>
+        <h2 className="mb-10 max-w-[24ch] text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
+          Prix et tarif coursier : vos questions.
+        </h2>
+        <div className="grid max-w-[780px] gap-8">
+          {FAQ.map(({ q, a }) => (
+            <div key={q}>
+              <h3 className="mb-2 font-bold tracking-[-0.01em]">{q}</h3>
+              <p className="text-[15px] leading-[1.65] text-muted">{a}</p>
+            </div>
+          ))}
+        </div>
       </section>
 
       {/* ── CTA devis ── */}

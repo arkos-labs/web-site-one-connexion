@@ -19,10 +19,13 @@ export const transportMedical: Service = {
   },
 
   seo: {
-    title: "Coursier médical Paris — prélèvements et labos",
+    title: "Coursier médical Paris — transport laboratoire 7j/7",
     description:
-      "Transport urgent de prélèvements et échantillons pour laboratoires, cliniques et cabinets d’Île-de-France. Course dédiée, contenants isothermes, traçabilité.",
+      "Coursier médical à Paris : transport de laboratoire, prélèvements et échantillons pour cliniques et cabinets d’Île-de-France. Course dédiée, contenants isothermes, 7j/7.",
     keywords: [
+      "coursier médical",
+      "transport laboratoire",
+      "transport de prélèvements sanguins",
       "coursier médical Paris",
       "transport prélèvements laboratoire",
       "transport échantillons biologiques Île-de-France",
@@ -31,7 +34,7 @@ export const transportMedical: Service = {
     ],
   },
 
-  h1: "Transport médical urgent à Paris : prélèvements et matériel de laboratoire",
+  h1: "Coursier médical à Paris : transport de laboratoire, prélèvements et matériel",
 
   intro:
     "One Connexion achemine les prélèvements, échantillons et pièces techniques des laboratoires d’analyses, cliniques et cabinets d’Île-de-France. Course dédiée, contenant adapté, et une contrainte qui commande tout le reste : le délai de stabilité de ce qui est transporté.",
@@ -103,6 +106,16 @@ export const transportMedical: Service = {
     "Paris intra-muros et petite couronne (92, 93, 94) au tarif standard. Roissy, Orly et la grande couronne sur devis. Laboratoires, cliniques et plateaux techniques d’Île-de-France desservis aux mêmes conditions.",
 
   faq: [
+    {
+      question: "Qu’est-ce qu’un coursier médical ?",
+      answer:
+        "Un coursier médical transporte en urgence des prélèvements, échantillons, pièces techniques ou matériel entre laboratoires, cliniques et cabinets. La course est dédiée, le contenant adapté et le délai de stabilité de ce qui est transporté commande l’organisation de la course.",
+    },
+    {
+      question: "Assurez-vous le transport entre laboratoires et vers un plateau technique ?",
+      answer:
+        "Oui. Nous assurons le transport laboratoire entre sites de prélèvement, laboratoires d’analyses et plateaux techniques d’Île-de-France, à la demande ou en tournées régulières sur créneaux fixes.",
+    },
     {
       question: "Comment le maintien en température est-il assuré ?",
       answer:

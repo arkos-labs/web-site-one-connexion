@@ -16,10 +16,12 @@ export const plisConfidentiels: Service = {
   },
 
   seo: {
-    title: "Coursier juridique Paris — plis confidentiels",
+    title: "Envoi de pli confidentiel à Paris — coursier juridique",
     description:
-      "Transport de plis confidentiels pour avocats, notaires et huissiers à Paris et en petite couronne. Course dédiée, remise contre signature, preuve horodatée.",
+      "Envoyer un pli confidentiel à Paris : course dédiée pour avocats, notaires et huissiers, remise en main propre contre signature, preuve horodatée.",
     keywords: [
+      "pli confidentiel",
+      "envoi pli confidentiel Paris",
       "coursier juridique Paris",
       "transport plis confidentiels",
       "coursier huissier Paris",
@@ -28,7 +30,7 @@ export const plisConfidentiels: Service = {
     ],
   },
 
-  h1: "Coursier juridique à Paris : plis confidentiels remis contre signature",
+  h1: "Envoi de pli confidentiel à Paris : coursier juridique, remise contre signature",
 
   intro:
     "One Connexion transporte les actes, conclusions et pièces de procédure des cabinets d’avocats, études notariales et offices d’huissiers d’Île-de-France. Chaque pli part en course dédiée, sans regroupement, et arrive avec une preuve de remise nominative.",
@@ -100,6 +102,16 @@ export const plisConfidentiels: Service = {
     "Paris intra-muros et petite couronne (92, 93, 94) au tarif standard. Roissy, Orly et la grande couronne sur devis. Les palais de justice, greffes et études d’Île-de-France sont desservis aux mêmes conditions.",
 
   faq: [
+    {
+      question: "Qu’est-ce qu’un pli confidentiel ?",
+      answer:
+        "Un pli confidentiel est un document ou un courrier qui ne doit être remis qu’à son destinataire désigné : acte, conclusions, pièces de procédure, contrat ou courrier sensible. Il voyage fermé, sans regroupement avec d’autres envois, et n’est remis que contre signature.",
+    },
+    {
+      question: "Comment envoyer un pli confidentiel à Paris ?",
+      answer:
+        "Commandez une course en ligne, par téléphone ou par courriel en indiquant l’adresse d’enlèvement, la destination et l’heure limite. Un coursier prend le pli en charge, le transporte en course directe et le remet en main propre au destinataire, qui signe numériquement.",
+    },
     {
       question: "La remise contre signature a-t-elle une valeur probante ?",
       answer:
