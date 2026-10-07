@@ -78,8 +78,8 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           siret,
-          email: contactEmail,
-          nom_contact: contactName,
+          email: contactEmail || "verif@siret.fr",
+          nom_contact: contactName || "Société",
         }),
       });
 
@@ -89,6 +89,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
         setTva(result.sireneData.tva_number || "");
         // Tout est déduit du SIRET : raison sociale et adresse (modifiable)
         setRaisonSociale(result.sireneData.raison_sociale || "");
+        if (result.sireneData.raison_sociale && !contactName.trim()) setContactName(result.sireneData.raison_sociale);
         if (result.sireneData.adresse) setAdresseFacturation(result.sireneData.adresse);
         setFormError("");
       } else {
@@ -198,7 +199,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
         source: "page_publique",
         // Données B2B
         siret: clientType === "entreprise" ? siret : null,
-        raison_sociale: clientType === "entreprise" ? raisonSociale : null,
+        raison_sociale: clientType === "entreprise" ? (contactName.trim() || raisonSociale) : null,
         adresse_facturation: clientType === "entreprise" ? adresseFacturation : null,
         tva_number: clientType === "entreprise" ? tva : null,
       });
@@ -225,7 +226,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
           email: contactEmail,
           paymentMode: clientType === "entreprise" ? paymentMode : "carte",
           debitMethod,
-          companyName: clientType === "entreprise" ? raisonSociale.trim() : "",
+          companyName: clientType === "entreprise" ? (contactName.trim() || raisonSociale.trim()) : "",
           siret: clientType === "entreprise" ? siret : "",
         })
       });
@@ -422,8 +423,49 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                         </label>
                         <input type="text" required value={contactName} onChange={(e) => setContactName(e.target.value)} placeholder={clientType === "entreprise" ? "Acme Corp" : "Jean Dupont"} className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30" />
                       </div>
+                      {clientType === "entreprise" && (
+                        <>
+                          <div>
+                            <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">SIRET <span className="text-accent">*</span></label>
+                            <div className="flex gap-2">
+                              <input
+                                type="text"
+                                value={siret}
+                                onChange={(e) => { setSiret(e.target.value.replace(/\D/g, "").slice(0, 14)); setTva(""); }}
+                                maxLength={14}
+                                placeholder="14 chiffres"
+                                className="flex-1 rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
+                              />
+                              <button
+                                type="button"
+                                onClick={validateSiretHandler}
+                                disabled={validatingSiret || !siret}
+                                className="rounded-xl bg-accent px-4 py-3 text-sm font-bold text-white hover:bg-accent-dark disabled:opacity-60 whitespace-nowrap"
+                              >
+                                {validatingSiret ? "..." : "Vérifier"}
+                              </button>
+                            </div>
+                            {tva && (
+                              <div className="mt-2 flex flex-col gap-1 rounded-lg bg-green-100 p-3 text-green-900 text-sm">
+                                <span className="font-bold">✓ {raisonSociale || "Société vérifiée"}</span>
+                                <span>TVA : {tva}</span>
+                              </div>
+                            )}
+                          </div>
+                          <div>
+                            <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">Adresse de facturation <span className="text-accent">*</span></label>
+                            <input
+                              type="text"
+                              value={adresseFacturation}
+                              onChange={(e) => setAdresseFacturation(e.target.value)}
+                              placeholder="Adresse de facturation"
+                              className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
+                            />
+                          </div>
+                        </>
+                      )}
                       <div>
-                        <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">Téléphone <span className="text-accent">*</span></label>
+                        <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">Téléphone<span className="text-accent">*</span></label>
                         <input
                           type="tel"
                           required
@@ -447,49 +489,6 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                       )}
                     </div>
 
-                    {/* Champs B2B si entreprise */}
-                    {clientType === "entreprise" && (
-                      <div className="flex flex-col gap-4 rounded-xl border border-blue-200 bg-blue-50 p-4 mt-4">
-                        <div>
-                          <label className="text-xs font-bold uppercase tracking-wider text-blue-900">Infos B2B - Validation requise</label>
-                          <p className="mt-1 text-xs text-blue-700">Vos informations seront vérifiées auprès de l'INSEE.</p>
-                        </div>
-
-                        <div className="flex gap-2">
-                          <input
-                            type="text"
-                            value={siret}
-                            onChange={(e) => setSiret(e.target.value.replace(/\D/g, "").slice(0, 14))}
-                            maxLength={14}
-                            placeholder="SIRET (14 chiffres)"
-                            className="flex-1 rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
-                          />
-                          <button
-                            type="button"
-                            onClick={validateSiretHandler}
-                            disabled={validatingSiret || !siret}
-                            className="rounded-xl bg-accent px-4 py-3 text-sm font-bold text-white hover:bg-accent-dark disabled:opacity-60 whitespace-nowrap"
-                          >
-                            {validatingSiret ? "..." : "Vérifier"}
-                          </button>
-                        </div>
-
-                        <input
-                          type="text"
-                          value={adresseFacturation}
-                          onChange={(e) => setAdresseFacturation(e.target.value)}
-                          placeholder="Adresse de facturation"
-                          className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
-                        />
-
-                        {tva && (
-                          <div className="flex flex-col gap-1 rounded-lg bg-green-100 p-3 text-green-900 text-sm">
-                            <span className="font-bold">✓ {raisonSociale || "Société vérifiée"}</span>
-                            <span>TVA : {tva}</span>
-                          </div>
-                        )}
-                      </div>
-                    )}
                   </div>
                 )}
 
