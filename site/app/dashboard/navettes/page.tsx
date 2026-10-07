@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Plus, RefreshCw, ChevronRight, ChevronLeft, Clock } from "lucide-react";
 import { NavetteRequestForm } from "@/components/dashboard/NavetteRequestForm";
 import { createClient } from "@/lib/supabase/client";
+import { isProAccount } from "@/lib/dashboard-nav";
 import { PageShell, KpiStrip, StatusPill, EmptyState, LoadingState, BTN_ACCENT, BTN_GHOST_DARK } from "@/components/dashboard/ui";
 
 export default function NavettesPage() {
@@ -13,6 +14,7 @@ export default function NavettesPage() {
   const [isCreating, setIsCreating] = useState(false);
   const [navettes, setNavettes] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isPro, setIsPro] = useState<boolean | null>(null);
 
   // Load navettes from Supabase
   useEffect(() => {
@@ -20,6 +22,13 @@ export default function NavettesPage() {
       try {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) {
+          setLoading(false);
+          return;
+        }
+        // Les navettes sont réservées aux comptes professionnels
+        const pro = isProAccount(user);
+        setIsPro(pro);
+        if (!pro) {
           setLoading(false);
           return;
         }
@@ -75,6 +84,18 @@ export default function NavettesPage() {
           .filter(Boolean)
           .join(" · ")
       : null;
+
+  if (isPro === false) {
+    return (
+      <PageShell eyebrow="Services récurrents" title="Navettes réservées aux professionnels" subtitle="Les navettes récurrentes sont disponibles uniquement pour les comptes entreprise.">
+        <EmptyState
+          icon={RefreshCw}
+          title="Compte particulier"
+          text="Pour programmer des navettes, créez un compte professionnel avec votre SIRET."
+        />
+      </PageShell>
+    );
+  }
 
   return (
     <PageShell

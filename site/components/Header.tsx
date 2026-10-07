@@ -13,7 +13,7 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { Phone, Menu, X, LogOut } from "lucide-react";
 import { PHONE_DISPLAY, PHONE_TEL } from "@/lib/site-content";
-import { DASHBOARD_NAV_ITEMS } from "@/lib/dashboard-nav";
+import { DASHBOARD_NAV_ITEMS, isProAccount } from "@/lib/dashboard-nav";
 import { ADMIN_NAV_ITEMS } from "@/lib/admin-nav";
 import { createClient } from "@/lib/supabase/client";
 import type { User } from "@supabase/supabase-js";
@@ -271,7 +271,7 @@ export default function Header() {
 
               {/* Navigation */}
               <nav className="flex flex-col gap-1">
-                {(isAdmin ? ADMIN_NAV_ITEMS : DASHBOARD_NAV_ITEMS).map((item) => {
+                {(isAdmin ? ADMIN_NAV_ITEMS : DASHBOARD_NAV_ITEMS.filter((i) => !i.proOnly || isProAccount(user))).map((item) => {
                   const isActive = pathname.startsWith(item.href);
                   const Icon = item.icon;
                   return (

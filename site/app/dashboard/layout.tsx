@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { LogOut, Phone } from "lucide-react";
 import { PHONE_TEL } from "@/lib/site-content";
-import { DASHBOARD_NAV_ITEMS } from "@/lib/dashboard-nav";
+import { DASHBOARD_NAV_ITEMS, isProAccount } from "@/lib/dashboard-nav";
 import { createClient } from "@/lib/supabase/client";
 import type { User } from "@supabase/supabase-js";
 
@@ -150,7 +150,7 @@ export default function DashboardLayout({
 
               {/* Navigation Menu */}
               <nav className="flex flex-col p-3">
-                {DASHBOARD_NAV_ITEMS.map((item) => {
+                {DASHBOARD_NAV_ITEMS.filter((item) => !item.proOnly || isProAccount(user)).map((item) => {
                   const isActive = pathname.startsWith(item.href);
                   const Icon = item.icon;
                   return (
