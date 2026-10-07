@@ -9,6 +9,8 @@ import ClientShell from "@/components/ClientShell";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import OrderModalProvider from "@/components/OrderModalProvider";
+import CookieConsent from "@/components/CookieConsent";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
 import { SITE_URL } from "@/lib/site-content";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -80,16 +82,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','GTM-PD8DT425');`
           }}
         />
-        {/* Balise Google (Analytics) */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQ1D0YWQ4X" />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', 'G-LQ1D0YWQ4X');`
-          }}
-        />
       </head>
       <body className="bg-paper text-ink antialiased">
         <noscript>
@@ -104,6 +96,8 @@ gtag('config', 'G-LQ1D0YWQ4X');`
         <OrderModalProvider />
         <ClientShell>{children}</ClientShell>
         <Footer />
+        <GoogleAnalytics />
+        <CookieConsent />
         <Analytics />
         <SpeedInsights />
       </body>
