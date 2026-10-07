@@ -44,7 +44,47 @@ export default function OrderForm() {
   const [paymentMode, setPaymentMode] = useState<'carte' | 'fin_de_mois'>('carte');
   const [debitMethod, setDebitMethod] = useState<'card' | 'sepa' | 'virement'>('card');
 
+  // Champs B2B
+  const [siret, setSiret] = useState("");
+  const [raisonSociale, setRaisonSociale] = useState("");
+  const [adresseFacturation, setAdresseFacturation] = useState("");
+  const [tva, setTva] = useState("");
+  const [validatingSiret, setValidatingSiret] = useState(false);
+
   const supabase = createClient();
+
+  // Tout est déduit du SIRET : raison sociale, adresse et TVA
+  const validateSiretHandler = async () => {
+    if (!siret.trim()) return;
+    setValidatingSiret(true);
+    setFormError("");
+    try {
+      const response = await fetch("/api/validate-siret", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          siret,
+          email: contactEmail || "verif@siret.fr",
+          nom_contact: contactName || "Société",
+        }),
+      });
+      const result = await response.json();
+      if (result.valid && result.sireneData) {
+        setTva(result.sireneData.tva_number || "");
+        setRaisonSociale(result.sireneData.raison_sociale || "");
+        if (result.sireneData.raison_sociale && !contactName.trim()) setContactName(result.sireneData.raison_sociale);
+        if (result.sireneData.adresse) setAdresseFacturation(result.sireneData.adresse);
+      } else {
+        setFormError(result.errors?.join(" ") || "SIRET invalide.");
+        setTva("");
+      }
+    } catch {
+      setFormError("Erreur lors de la validation du SIRET.");
+      setTva("");
+    } finally {
+      setValidatingSiret(false);
+    }
+  };
 
   useEffect(() => {
     if (pickupAddress && dropoffAddress) {
@@ -87,6 +127,20 @@ export default function OrderForm() {
       return;
     }
     if (step === 2) {
+      if (clientType === 'entreprise') {
+        if (!siret.trim()) {
+          setFormError("SIRET obligatoire pour une commande professionnelle.");
+          return;
+        }
+        if (!tva) {
+          setFormError("SIRET non validé. Cliquez sur 'Vérifier' d'abord.");
+          return;
+        }
+        if (!adresseFacturation.trim()) {
+          setFormError("Adresse de facturation obligatoire.");
+          return;
+        }
+      }
       if (!contactName.trim()) {
         setFormError("Renseignez votre nom (des caractères, pas seulement des espaces).");
         return;
@@ -137,6 +191,10 @@ export default function OrderForm() {
         price_estimate: estimatedPrice,
         client_type: clientType,
         source: "page_publique",
+        siret: clientType === 'entreprise' ? siret : null,
+        raison_sociale: clientType === 'entreprise' ? (contactName.trim() || raisonSociale) : null,
+        adresse_facturation: clientType === 'entreprise' ? adresseFacturation : null,
+        tva_number: clientType === 'entreprise' ? tva : null,
       });
 
     if (error) {
@@ -163,6 +221,7 @@ export default function OrderForm() {
           paymentMode: clientType === 'entreprise' ? paymentMode : 'carte',
           debitMethod,
           companyName: clientType === 'entreprise' ? contactName.trim() : '',
+          siret: clientType === 'entreprise' ? siret : '',
         })
       });
 
@@ -361,6 +420,38 @@ export default function OrderForm() {
                     </div>
 
                     <div className="space-y-6">
+                      {clientType === 'entreprise' && (
+                        <div>
+                          <label className="block text-sm font-bold text-gray-800 mb-2">
+                            SIRET <span className="text-[#ed5518]">*</span>
+                          </label>
+                          <div className="flex gap-2">
+                            <input
+                              type="text"
+                              value={siret}
+                              onChange={(e) => { setSiret(e.target.value.replace(/\D/g, "").slice(0, 14)); setTva(""); }}
+                              maxLength={14}
+                              placeholder="14 chiffres"
+                              className="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-5 py-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-400 transition-colors"
+                            />
+                            <button
+                              type="button"
+                              onClick={validateSiretHandler}
+                              disabled={validatingSiret || !siret}
+                              className="rounded-xl bg-[#ed5518] px-6 py-4 text-sm font-bold text-white hover:opacity-90 disabled:opacity-60 whitespace-nowrap"
+                            >
+                              {validatingSiret ? "..." : "Vérifier"}
+                            </button>
+                          </div>
+                          {tva && (
+                            <div className="mt-2 flex flex-col gap-1 rounded-lg bg-green-100 p-3 text-green-900 text-sm">
+                              <span className="font-bold">✓ {raisonSociale || "Société vérifiée"}</span>
+                              <span>TVA : {tva}</span>
+                            </div>
+                          )}
+                        </div>
+                      )}
+
                       <div>
                         <label className="block text-sm font-bold text-gray-800 mb-2">
                           {clientType === 'entreprise' ? 'Nom de la société' : 'Nom et Prénom'} <span className="text-[#ed5518]">*</span>
@@ -383,6 +474,21 @@ export default function OrderForm() {
                           />
                         </div>
                       </div>
+
+                      {clientType === 'entreprise' && (
+                        <div>
+                          <label className="block text-sm font-bold text-gray-800 mb-2">
+                            Adresse de facturation <span className="text-[#ed5518]">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            value={adresseFacturation}
+                            onChange={(e) => setAdresseFacturation(e.target.value)}
+                            placeholder="Adresse de facturation"
+                            className="w-full bg-gray-50 border border-gray-200 rounded-xl px-5 py-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-400 transition-colors"
+                          />
+                        </div>
+                      )}
 
                       <div>
                         <label className="block text-sm font-bold text-gray-800 mb-2">
