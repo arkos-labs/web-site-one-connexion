@@ -472,7 +472,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                           type="tel"
                           required
                           value={contactPhone}
-                          onChange={(e) => setContactPhone(e.target.value)}
+                          inputMode="tel" maxLength={12} onChange={(e) => setContactPhone((e.target.value.trim().startsWith("+") ? "+" : "") + e.target.value.replace(/\D/g, "").slice(0, e.target.value.trim().startsWith("+") ? 11 : 10))}
                           placeholder="06 12 34 56 78 ou +33 6 12 34 56 78"
                           pattern="^(0[1-9]|(\+33)[1-9])[0-9 ]{8,9}$"
                           title="Numéro français valide : 06 12 34 56 78 ou +33 6 12 34 56 78"

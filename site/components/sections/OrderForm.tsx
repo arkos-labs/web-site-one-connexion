@@ -499,7 +499,7 @@ export default function OrderForm() {
                             <span className="text-lg">🇫🇷</span>
                             <span className="text-sm font-medium text-gray-600">+33</span>
                           </div>
-                          <input type="tel" required value={contactPhone} onChange={(e) => setContactPhone(e.target.value)} placeholder="01 23 45 67 89" className="w-full bg-gray-50 border border-gray-200 rounded-r-xl px-5 py-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-400 transition-colors" />
+                          <input type="tel" required value={contactPhone} inputMode="tel" maxLength={12} onChange={(e) => setContactPhone((e.target.value.trim().startsWith("+") ? "+" : "") + e.target.value.replace(/\D/g, "").slice(0, e.target.value.trim().startsWith("+") ? 11 : 10))} placeholder="01 23 45 67 89" className="w-full bg-gray-50 border border-gray-200 rounded-r-xl px-5 py-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-400 transition-colors" />
                         </div>
                       </div>
                       
