@@ -44,6 +44,9 @@ export default function OrderForm() {
   const [paymentMode, setPaymentMode] = useState<'carte' | 'fin_de_mois'>('carte');
   const [debitMethod, setDebitMethod] = useState<'card' | 'sepa' | 'virement'>('card');
 
+  // La navette (course programmée) est réservée aux clients avec un compte
+  const [hasAccount, setHasAccount] = useState(false);
+
   // Champs B2B
   const [siret, setSiret] = useState("");
   const [raisonSociale, setRaisonSociale] = useState("");
@@ -85,6 +88,17 @@ export default function OrderForm() {
       setValidatingSiret(false);
     }
   };
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user } }: any) => setHasAccount(!!user));
+    const { data: sub } = supabase.auth.onAuthStateChange((_e: any, session: any) => setHasAccount(!!session?.user));
+    return () => sub.subscription.unsubscribe();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (!hasAccount && delai === 'navette') setDelai('standard');
+  }, [hasAccount, delai]);
 
   useEffect(() => {
     if (pickupAddress && dropoffAddress) {
@@ -585,7 +599,7 @@ export default function OrderForm() {
                               <span className="text-xs opacity-80">+100% du tarif</span>
                             </div>
                           </button>
-                          {clientType === 'entreprise' && (
+                          {clientType === 'entreprise' && hasAccount && (
                             <button type="button" onClick={() => setDelai('navette')} className={`flex items-center gap-2 px-5 py-3 rounded-xl transition-all ${delai === 'navette' ? 'bg-[#ed5518] text-white shadow-md shadow-accent/20' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
                               <Calendar className="w-5 h-5" />
                               <span className="font-semibold">Navette (Programmé)</span>
