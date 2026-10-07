@@ -261,7 +261,7 @@ export default function Header() {
                     </div>
                     <div className="flex flex-1 flex-col items-center justify-center">
                       <span className="text-[10px] font-medium text-white/50">Facturation</span>
-                      <span className="mt-0.5 text-sm font-bold text-accent">Compte pro</span>
+                      <span className="mt-0.5 text-sm font-bold text-accent">{isProAccount(user) ? "Compte pro" : "Immédiate"}</span>
                     </div>
                   </div>
                 </>

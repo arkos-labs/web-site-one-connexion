@@ -128,7 +128,7 @@ export default function DashboardLayout({
                 </div>
                 <div className="flex flex-col items-center justify-center">
                   <span className="text-[11px] font-medium text-label">Facturation</span>
-                  <span className="mt-0.5 text-sm font-bold text-accent">Compte pro</span>
+                  <span className="mt-0.5 text-sm font-bold text-accent">{isProAccount(user) ? "Compte pro" : "Immédiate"}</span>
                 </div>
               </div>
 
