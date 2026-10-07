@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { createClient } from "@/lib/supabase/client";
 import { AddressAutocomplete } from "@/components/AddressAutocomplete";
+import { checkIdfAddress } from "@/lib/address-idf";
 import { calculatePrice, ServiceLevel } from "@/lib/pricing";
 import { notifyNewOrder } from "@/lib/notify-new-order";
 
@@ -28,6 +29,7 @@ export default function OrderForm() {
   const [submitting, setSubmitting] = useState(false);
   const [trackingCode, setTrackingCode] = useState<string | null>(null);
   const [formError, setFormError] = useState("");
+  const [checkingAddress, setCheckingAddress] = useState(false);
 
   // Form state
   const [clientType, setClientType] = useState<'entreprise' | 'particulier'>('entreprise');
@@ -81,7 +83,8 @@ export default function OrderForm() {
       if (result.valid && result.sireneData) {
         setTva(result.sireneData.tva_number || "");
         setRaisonSociale(result.sireneData.raison_sociale || "");
-        if (result.sireneData.raison_sociale && !contactName.trim()) setContactName(result.sireneData.raison_sociale);
+        // Le nom officiel fait foi : il remplace un nom saisi avant ou issu d'un SIRET précédent
+        if (result.sireneData.raison_sociale) setContactName(result.sireneData.raison_sociale);
         if (result.sireneData.adresse) setAdresseFacturation(result.sireneData.adresse);
       } else {
         setFormError(result.errors?.join(" ") || "SIRET invalide.");
@@ -154,6 +157,18 @@ export default function OrderForm() {
     if (step === 1 && (!pickupAddress.trim() || !dropoffAddress.trim())) {
       setFormError("Renseignez une adresse d'enlèvement et une adresse de livraison (des caractères, pas seulement des espaces).");
       return;
+    }
+    if (step === 1) {
+      setCheckingAddress(true);
+      const [p, d] = await Promise.all([
+        checkIdfAddress(pickupAddress, "d'enlèvement"),
+        checkIdfAddress(dropoffAddress, "de livraison"),
+      ]);
+      setCheckingAddress(false);
+      if (!p.ok) { setFormError(p.error); return; }
+      if (!d.ok) { setFormError(d.error); return; }
+      setPickupAddress(p.label);
+      setDropoffAddress(d.label);
     }
     if (step === 2) {
       if (clientType === 'entreprise') {
@@ -764,7 +779,7 @@ export default function OrderForm() {
                   <button
                     id="submit-btn"
                     type="submit"
-                    disabled={submitting}
+                    disabled={submitting || checkingAddress}
                     className="flex items-center gap-2 bg-black text-white px-8 py-3.5 rounded-xl font-bold hover:bg-gray-800 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 ml-auto disabled:opacity-60"
                   >
                     {submitting

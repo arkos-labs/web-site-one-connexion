@@ -8,6 +8,7 @@ import { useState, useEffect, useCallback } from "react";
 import { X, Package, Mail, Truck, Zap, Clock, Calendar, User, Building2, ChevronRight, ChevronLeft, CheckCircle2, CreditCard } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { AddressAutocomplete } from "@/components/AddressAutocomplete";
+import { checkIdfAddress } from "@/lib/address-idf";
 import { calculatePrice, ServiceLevel } from "@/lib/pricing";
 import { notifyNewOrder } from "@/lib/notify-new-order";
 
@@ -24,6 +25,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
   const [submitting, setSubmitting] = useState(false);
   const [trackingCode, setTrackingCode] = useState<string | null>(null);
   const [formError, setFormError] = useState("");
+  const [checkingAddress, setCheckingAddress] = useState(false);
   const [clientType, setClientType] = useState<"entreprise" | "particulier">("entreprise");
   const [format, setFormat] = useState("doc");
   const [delai, setDelai] = useState("standard");
@@ -129,6 +131,18 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
     if (step === 1 && (!pickupAddress.trim() || !dropoffAddress.trim())) {
       setFormError("Renseignez une adresse d'enlèvement et une adresse de livraison (des caractères, pas seulement des espaces).");
       return;
+    }
+    if (step === 1) {
+      setCheckingAddress(true);
+      const [p, d] = await Promise.all([
+        checkIdfAddress(pickupAddress, "d'enlèvement"),
+        checkIdfAddress(dropoffAddress, "de livraison"),
+      ]);
+      setCheckingAddress(false);
+      if (!p.ok) { setFormError(p.error); return; }
+      if (!d.ok) { setFormError(d.error); return; }
+      setPickupAddress(p.label);
+      setDropoffAddress(d.label);
     }
     if (step === 2) {
       if (!contactName.trim()) {
@@ -655,7 +669,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                     <button
                       type="button"
                       onClick={handleSubmit}
-                      disabled={submitting}
+                      disabled={submitting || checkingAddress}
                       className="ml-auto flex items-center gap-2 rounded-lg bg-accent px-6 py-2.5 text-sm font-bold text-white hover:bg-accent-dark transition-colors disabled:opacity-60"
                     >
                       {submitting ? "Redirection…" : step < 3 ? "Étape suivante" : "Commander"}

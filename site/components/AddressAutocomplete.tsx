@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { MapPin } from "lucide-react";
+import { joinNumberSuffix } from "@/lib/address-idf";
 
 interface AddressAutocompleteProps {
   value: string;
@@ -47,16 +48,19 @@ export function AddressAutocomplete({
 
   useEffect(() => {
     const fetchAddresses = async () => {
-      // On ne cherche pas si moins de 3 caractères, si on vient de sélectionner, ou si on a cliqué sur un favori (pas de frappe)
-      if (query.length < 3 || isSelectingRef.current || !isTypingRef.current) {
+      // On ne cherche pas si le champ est vide, si on vient de sélectionner, ou si on a cliqué sur un favori (pas de frappe)
+      if (query.trim().length < 1 || isSelectingRef.current || !isTypingRef.current) {
         setSuggestions([]);
         return;
       }
 
       setIsLoading(true);
       try {
+        // L'API refuse moins de 3 caractères : on complète avec "Paris" pour suggérer dès le 1er caractère
+        const typed = joinNumberSuffix(query.trim());
+        const apiQuery = typed.length < 3 ? `${typed} paris` : typed;
         // On augmente la limite à 50 pour avoir plus de chances d'avoir des résultats en Île-de-France
-        const res = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(query)}&lat=48.8566&lon=2.3522&limit=50`);
+        const res = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(apiQuery)}&lat=48.8566&lon=2.3522&limit=50`);
         const data = await res.json();
         
         if (!isSelectingRef.current && isTypingRef.current) {
@@ -71,8 +75,26 @@ export function AddressAutocomplete({
             return idfDepartments.includes(dept);
           });
           
-          // Ne garder que les 5 meilleurs résultats
-          setSuggestions(filteredFeatures.slice(0, 5));
+          // Indices de répétition : « 12 rue X » propose aussi 12bis, 12ter si ces numéros existent
+          const first = filteredFeatures[0];
+          const typedNumber = typed.match(/^(\d+)\s+\D/)?.[1];
+          if (first?.properties?.type === "housenumber" && typedNumber && first.properties.housenumber === typedNumber) {
+            const variants = await Promise.all(["bis", "ter"].map(async (suffix) => {
+              try {
+                const vq = `${typedNumber}${suffix} ${first.properties.street} ${first.properties.postcode} ${first.properties.city}`;
+                const vr = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(vq)}&limit=1`);
+                const vf = (await vr.json()).features?.[0];
+                const ok = vf?.properties?.type === "housenumber"
+                  && String(vf.properties.housenumber).toLowerCase() === `${typedNumber}${suffix}`
+                  && vf.properties.postcode === first.properties.postcode;
+                return ok ? vf : null;
+              } catch { return null; }
+            }));
+            filteredFeatures.splice(1, 0, ...variants.filter(Boolean));
+          }
+
+          // Ne garder que les 8 meilleurs résultats
+          setSuggestions(filteredFeatures.slice(0, 8));
           setIsOpen(true);
         }
       } catch (error) {
