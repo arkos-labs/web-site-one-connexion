@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
+import { notifyPaidOrder } from '@/lib/telegram-dashboard';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder', {
   apiVersion: '2025-02-24.acacia',
@@ -99,6 +100,13 @@ export async function POST(req: Request) {
           };
         }
 
+        // Avant la mise à jour : pour ne prévenir Telegram qu'une fois (Stripe peut renvoyer l'événement)
+        const { data: before } = await supabase
+          .from('orders')
+          .select('client_type, status')
+          .eq('tracking_code', orderId)
+          .maybeSingle();
+
         const { error } = await supabase
           .from('orders')
           .update(updateData)
@@ -112,6 +120,11 @@ export async function POST(req: Request) {
             .from('orders')
             .update({ status: updateData.status })
             .eq('tracking_code', orderId);
+        }
+
+        // Particulier : l'alerte Telegram part seulement quand la course est payée
+        if (session.mode === 'payment' && before?.client_type === 'particulier' && before.status !== 'paye') {
+          await notifyPaidOrder(orderId).catch((e) => console.error('Telegram paid-order notify failed:', e));
         }
       }
     }

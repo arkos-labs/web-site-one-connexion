@@ -320,7 +320,7 @@ export default function CommanderPage() {
         });
         const payment = await res.json();
         if (!payment.url) throw new Error(payment.error || "Paiement indisponible");
-        notifyNewOrder();
+        // l'alerte Telegram part après le paiement (webhook Stripe)
         window.location.href = payment.url;
       } catch (err: any) {
         console.error("Erreur de paiement:", err);

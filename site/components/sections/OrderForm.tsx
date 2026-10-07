@@ -218,7 +218,7 @@ export default function OrderForm() {
       return;
     }
 
-    notifyNewOrder();
+    if (clientType === 'entreprise') notifyNewOrder(); // particulier : alerte après paiement (webhook Stripe)
 
     try {
       const res = await fetch('/api/stripe/create-checkout', {

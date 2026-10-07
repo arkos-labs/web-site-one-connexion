@@ -201,6 +201,30 @@ export function renderAlerteCourse(k: Kpis) {
   return `🚗 <b>Nouvelle course</b> · ${escapeHtml(c.pickup ?? "?")} → ${escapeHtml(c.dropoff ?? "?")}`;
 }
 
+/**
+ * Alerte Telegram d'une course payée (particuliers : on ne sonne qu'une fois le paiement validé).
+ * Appelée depuis le webhook Stripe.
+ */
+export async function notifyPaidOrder(trackingCode: string) {
+  const config = telegramConfig();
+  if (!config) return;
+
+  const { data: order } = await adminClient()
+    .from("orders")
+    .select("pickup_address, dropoff_address, price_estimate")
+    .eq("tracking_code", trackingCode)
+    .maybeSingle();
+
+  const trajet = order ? `${escapeHtml(order.pickup_address ?? "?")} → ${escapeHtml(order.dropoff_address ?? "?")}` : escapeHtml(trackingCode);
+  const prix = order?.price_estimate ? ` · ${euros(order.price_estimate)}` : "";
+  await tg("sendMessage", {
+    chat_id: config.chatId,
+    text: `🚗 <b>Nouvelle course payée</b> · ${trajet}${prix}`,
+    parse_mode: "HTML",
+  });
+  await refreshPinnedDashboard({ forceNew: true });
+}
+
 /** Liste des courses du jour, pour la commande /courses_jour. */
 export async function renderCoursesDuJour() {
   const { data } = await adminClient()
