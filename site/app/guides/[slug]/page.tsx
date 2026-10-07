@@ -138,10 +138,10 @@ export default async function GuidePage({ params }: { params: Promise<Params> })
                 {guide.service.label}
               </Link>
               <Link
-                href="/contact"
+                href="/#commander"
                 className="flex items-center justify-center gap-2 rounded-[6px] bg-accent px-6 py-3 text-[14px] font-bold text-white hover:bg-accent-dark"
               >
-                Nous contacter <ArrowRight size={15} />
+                Commander une course <ArrowRight size={15} />
               </Link>
             </div>
           </div>

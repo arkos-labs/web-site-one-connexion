@@ -73,7 +73,7 @@ const FORMULES = [
       "Paiement à la course",
     ],
     cta: "Commander une course",
-    href: "/#contact",
+    href: "/#commander",
     highlight: false,
   },
   {
@@ -277,7 +277,7 @@ export default function TarifsPage() {
                 {PHONE_DISPLAY}
               </a>
               <Link
-                href="/#contact"
+                href="/#commander"
                 className="rounded-[4px] border border-white/20 px-6 py-3.5 text-center text-[14px] font-semibold text-white transition-colors hover:bg-white/10"
               >
                 Formulaire de contact

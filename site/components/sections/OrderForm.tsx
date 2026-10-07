@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   MapPin,
   Settings,
@@ -40,6 +40,10 @@ export default function OrderForm() {
   const [contactEmail, setContactEmail] = useState("");
   const [contactEmailConfirm, setContactEmailConfirm] = useState("");
   const [notes, setNotes] = useState("");
+  const [pickupDetails, setPickupDetails] = useState("");
+  const [recipientName, setRecipientName] = useState("");
+  const [scheduledDate, setScheduledDate] = useState("");
+  const [scheduledTime, setScheduledTime] = useState("");
   const [estimatedPrice, setEstimatedPrice] = useState<number | null>(null);
   const [paymentMode, setPaymentMode] = useState<'carte' | 'fin_de_mois'>('carte');
   const [debitMethod, setDebitMethod] = useState<'card' | 'sepa' | 'virement'>('card');
@@ -54,11 +58,12 @@ export default function OrderForm() {
   const [tva, setTva] = useState("");
   const [validatingSiret, setValidatingSiret] = useState(false);
 
+  const siretRef = useRef("");
   const supabase = createClient();
 
   // Tout est déduit du SIRET : raison sociale, adresse et TVA
-  const validateSiretHandler = async () => {
-    if (!siret.trim()) return;
+  const validateSiretHandler = async (siretToCheck: string) => {
+    if (!siretToCheck.trim()) return;
     setValidatingSiret(true);
     setFormError("");
     try {
@@ -66,12 +71,13 @@ export default function OrderForm() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          siret,
+          siret: siretToCheck,
           email: contactEmail || "verif@siret.fr",
           nom_contact: contactName || "Société",
         }),
       });
       const result = await response.json();
+      if (siretRef.current !== siretToCheck) return; // le SIRET a changé pendant la vérification
       if (result.valid && result.sireneData) {
         setTva(result.sireneData.tva_number || "");
         setRaisonSociale(result.sireneData.raison_sociale || "");
@@ -82,12 +88,21 @@ export default function OrderForm() {
         setTva("");
       }
     } catch {
+      if (siretRef.current !== siretToCheck) return;
       setFormError("Erreur lors de la validation du SIRET.");
       setTva("");
     } finally {
-      setValidatingSiret(false);
+      if (siretRef.current === siretToCheck) setValidatingSiret(false);
     }
   };
+
+  // Vérification automatique dès que les 14 chiffres sont saisis
+  useEffect(() => {
+    siretRef.current = siret;
+    if (siret.length === 14) validateSiretHandler(siret);
+    else setValidatingSiret(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [siret]);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }: any) => setHasAccount(!!user));
@@ -147,7 +162,7 @@ export default function OrderForm() {
           return;
         }
         if (!tva) {
-          setFormError("SIRET non validé. Cliquez sur 'Vérifier' d'abord.");
+          setFormError(validatingSiret ? "Vérification du SIRET en cours, un instant." : "SIRET non reconnu. Vérifiez les 14 chiffres.");
           return;
         }
         if (!adresseFacturation.trim()) {
@@ -187,6 +202,14 @@ export default function OrderForm() {
     // de relire la commande après l'avoir créée.
     const trackingCode = `OC-${crypto.randomUUID().slice(0, 8).toUpperCase()}`;
 
+    // Pas de colonnes dédiées : ces infos partent dans les consignes lues par le dispatch.
+    const orderNotes = [
+      delai === 'navette' && scheduledDate ? `Navette programmée le ${scheduledDate}${scheduledTime ? ` à ${scheduledTime}` : ''}` : '',
+      pickupDetails.trim() && `Enlèvement (étage/digicode/bureau) : ${pickupDetails.trim()}`,
+      recipientName.trim() && `Destinataire sur place : ${recipientName.trim()}`,
+      notes.trim(),
+    ].filter(Boolean).join('\n');
+
     const { data: orderData, error } = await supabase
       .from("orders")
       .insert({
@@ -197,7 +220,7 @@ export default function OrderForm() {
         stops: [],
         format,
         delai,
-        notes,
+        notes: orderNotes,
         contact_name: contactName.trim(),
         contact_email: contactEmail.trim(),
         contact_phone: contactPhone.trim(),
@@ -397,7 +420,7 @@ export default function OrderForm() {
                         </div>
                         <div className="flex items-center gap-3 bg-white border border-gray-200 rounded-xl px-4 py-1 focus-within:border-gray-400 focus-within:ring-2 focus-within:ring-gray-100 transition-colors">
                           <Building2 className="w-4 h-4 text-gray-400 shrink-0" />
-                          <input type="text" placeholder="Étage, Digicode ou Bureau..." className="w-full bg-transparent py-3 text-sm focus:outline-none" />
+                          <input type="text" value={pickupDetails} onChange={(e) => setPickupDetails(e.target.value)} placeholder="Étage, Digicode ou Bureau..." className="w-full bg-transparent py-3 text-sm focus:outline-none" />
                         </div>
                       </div>
 
@@ -418,10 +441,20 @@ export default function OrderForm() {
                         </div>
                         <div className="flex items-center gap-3 bg-white border border-gray-200 rounded-xl px-4 py-1 focus-within:border-gray-400 focus-within:ring-2 focus-within:ring-gray-100 transition-colors">
                           <User className="w-4 h-4 text-gray-400 shrink-0" />
-                          <input type="text" placeholder="Destinataire sur place (Nom, Accueil)..." className="w-full bg-transparent py-3 text-sm focus:outline-none" />
+                          <input type="text" value={recipientName} onChange={(e) => setRecipientName(e.target.value)} placeholder="Destinataire sur place (Nom, Accueil)..." className="w-full bg-transparent py-3 text-sm focus:outline-none" />
                         </div>
                       </div>
                     </div>
+
+                    {estimatedPrice !== null && (
+                      <div className="mt-8 flex items-center justify-between rounded-2xl border border-orange-100 bg-orange-50/60 px-5 py-4">
+                        <div>
+                          <div className="text-[11px] font-bold uppercase tracking-wider text-orange-600/80">Tarif estimé{clientType === 'entreprise' ? ' (HT)' : ''}</div>
+                          <div className="text-xs text-gray-500">Course normale, sans engagement</div>
+                        </div>
+                        <div className="text-2xl font-extrabold text-[#ed5518]">{estimatedPrice.toFixed(2)} €</div>
+                      </div>
+                    )}
                   </div>
                 )}
 
@@ -439,23 +472,19 @@ export default function OrderForm() {
                           <label className="block text-sm font-bold text-gray-800 mb-2">
                             SIRET <span className="text-[#ed5518]">*</span>
                           </label>
-                          <div className="flex gap-2">
+                          <div className="relative">
                             <input
                               type="text"
+                              inputMode="numeric"
                               value={siret}
-                              onChange={(e) => { setSiret(e.target.value.replace(/\D/g, "").slice(0, 14)); setTva(""); }}
+                              onChange={(e) => { setSiret(e.target.value.replace(/\D/g, "").slice(0, 14)); setTva(""); setFormError(""); }}
                               maxLength={14}
-                              placeholder="14 chiffres"
-                              className="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-5 py-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-400 transition-colors"
+                              placeholder="14 chiffres, vérifié automatiquement"
+                              className="w-full bg-gray-50 border border-gray-200 rounded-xl px-5 py-4 pr-28 text-[15px] focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-400 transition-colors"
                             />
-                            <button
-                              type="button"
-                              onClick={validateSiretHandler}
-                              disabled={validatingSiret || !siret}
-                              className="rounded-xl bg-[#ed5518] px-6 py-4 text-sm font-bold text-white hover:opacity-90 disabled:opacity-60 whitespace-nowrap"
-                            >
-                              {validatingSiret ? "..." : "Vérifier"}
-                            </button>
+                            {validatingSiret && (
+                              <span className="absolute inset-y-0 right-4 flex items-center text-xs font-semibold text-gray-400">Vérification…</span>
+                            )}
                           </div>
                           {tva && (
                             <div className="mt-2 flex flex-col gap-1 rounded-lg bg-green-100 p-3 text-green-900 text-sm">
@@ -612,11 +641,11 @@ export default function OrderForm() {
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2 duration-300">
                           <div>
                             <label className="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-wide">Date d'enlèvement</label>
-                            <input type="date" className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-[14px] font-medium focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-[#ed5518] transition-colors" required />
+                            <input type="date" value={scheduledDate} onChange={(e) => setScheduledDate(e.target.value)} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-[14px] font-medium focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-[#ed5518] transition-colors" required />
                           </div>
                           <div>
                             <label className="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-wide">Heure</label>
-                            <input type="time" className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-[14px] font-medium focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-[#ed5518] transition-colors" required />
+                            <input type="time" value={scheduledTime} onChange={(e) => setScheduledTime(e.target.value)} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-[14px] font-medium focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-[#ed5518] transition-colors" required />
                           </div>
                         </div>
                       )}
@@ -701,7 +730,7 @@ export default function OrderForm() {
                         </div>
                         <div className="border-t border-orange-200/60 pt-4 flex items-end justify-between">
                           <div>
-                            <div className="text-[11px] font-bold uppercase tracking-wider text-orange-600/80 mb-0.5">Tarif estimé (HT)</div>
+                            <div className="text-[11px] font-bold uppercase tracking-wider text-orange-600/80 mb-0.5">Tarif estimé{clientType === 'entreprise' ? ' (HT)' : ''}</div>
                             <div className="text-[10px] text-gray-400 mb-1 uppercase tracking-wider font-semibold">Paiement sécurisé</div>
                             <div className="text-xs text-gray-600 font-medium">{clientType === 'entreprise' && paymentMode === 'fin_de_mois' ? (debitMethod === 'virement' ? 'Virement sous 30 jours' : debitMethod === 'sepa' ? 'Prélevé sur RIB à 30 jours' : 'Prélevé sur carte à 30 jours') : 'Payé par carte maintenant'}</div>
                           </div>

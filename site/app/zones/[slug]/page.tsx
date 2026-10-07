@@ -230,7 +230,7 @@ export default async function ZonePage({ params }: Props) {
                   {PHONE_DISPLAY}
                 </a>
                 <Link
-                  href="/#contact"
+                  href="/#commander"
                   className="mt-3 flex w-full items-center justify-center gap-2 rounded-[4px] py-3 text-[13px] font-bold transition-opacity hover:opacity-90"
                   style={{ background: "#ed5518", color: "#fff" }}
                 >
@@ -433,7 +433,7 @@ export default async function ZonePage({ params }: Props) {
                 {PHONE_DISPLAY}
               </a>
               <Link
-                href="/#contact"
+                href="/#commander"
                 className="rounded-[4px] px-8 py-4 text-center text-[15px] font-bold text-white hover:opacity-90 transition-opacity shadow-lg"
                 style={{ background: "#ed5518" }}
               >

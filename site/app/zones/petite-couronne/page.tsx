@@ -85,7 +85,7 @@ export default function ZonePetiteCouronne() {
             aux mêmes conditions tarifaires et avec la même exigence opérationnelle.
           </p>
           <div className="mt-10 flex flex-wrap gap-3">
-            <a href={`tel:${PHONE_TEL}`} className="rounded-[2px] bg-accent px-[26px] py-[15px] text-[15px] font-semibold text-white hover:bg-accent-dark">
+            <a href="/#commander" className="rounded-[2px] bg-accent px-[26px] py-[15px] text-[15px] font-semibold text-white hover:bg-accent-dark">
               Commander une course
             </a>
             <Link href="/tarifs" className="rounded-[2px] border border-white/22 px-[26px] py-[15px] text-[15px] font-semibold text-white hover:border-white">

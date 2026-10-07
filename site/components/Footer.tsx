@@ -185,7 +185,7 @@ export default function Footer() {
               {EMAIL}
             </a>
             <Link
-              href="/#contact"
+              href="/#commander"
               className="inline-block font-mono text-[10px] tracking-[0.14em] uppercase transition-opacity hover:opacity-80"
               style={{ color: "#0E0F10", background: ACCENT, padding: "9px 16px", borderRadius: "1px", textDecoration: "none", fontWeight: 500 }}
             >
