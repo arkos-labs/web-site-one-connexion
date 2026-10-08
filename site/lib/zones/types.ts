@@ -33,6 +33,18 @@ export interface LocalZoneContent {
   faq: ZoneFaqItem[];
 }
 
+export interface ZoneCase {
+  title: string;
+  body: string;
+}
+
+/** Contenu d'approfondissement d'une commune : situations concrètes, conseils, questions en plus. */
+export interface ExtraZoneContent {
+  cases: ZoneCase[];
+  tips: string[];
+  faq: ZoneFaqItem[];
+}
+
 export interface Zone {
   slug: string;
   dept: string;
@@ -62,6 +74,10 @@ export interface Zone {
   localGuide?: ZoneGuide;
   /** false = pas de grille des 6 secteurs (texte formaté, identique d'une commune à l'autre). */
   showSectors?: boolean;
+  /** Situations concrètes de livraison propres à la zone. */
+  cases?: ZoneCase[];
+  /** Conseils pratiques avant de commander dans cette zone. */
+  tips?: string[];
   seo: {
     title: string;
     description: string;

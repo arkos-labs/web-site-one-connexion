@@ -4,7 +4,11 @@
  * Paris 75 : données inline (20 arrondissements).
  * Banlieue  : importée depuis les fichiers par département.
  */
-import type { LocalZoneContent, Zone } from "./types";
+import type { ExtraZoneContent, LocalZoneContent, Zone } from "./types";
+import { EXTRA_75 } from "./extra-75";
+import { EXTRA_92 } from "./extra-92";
+import { EXTRA_93 } from "./extra-93";
+import { EXTRA_94 } from "./extra-94";
 import { LOCAL_92 } from "./local-92";
 import { LOCAL_93 } from "./local-93";
 import { LOCAL_94 } from "./local-94";
@@ -480,6 +484,12 @@ const COMMUNES_LOCAL: Record<string, LocalZoneContent> = {
   ...LOCAL_78,
 };
 
+const EXTRA_LOCAL: Record<string, ExtraZoneContent> = {
+  ...EXTRA_92,
+  ...EXTRA_93,
+  ...EXTRA_94,
+};
+
 /** Une commune dotée de contenu local rédigé le remplace et masque la grille formatée des secteurs. */
 function withLocalContent(z: Zone): Zone {
   const local = COMMUNES_LOCAL[z.slug];
@@ -493,9 +503,14 @@ function withLocalContent(z: Zone): Zone {
   const baseTitle = `Coursier ${z.name} ${z.dept}`;
   const title = `${baseTitle} — ${lead}`.length <= 68 ? `${baseTitle} — ${lead}` : baseTitle;
 
+  const extra = EXTRA_LOCAL[z.slug];
+
   return {
     ...z,
     ...local,
+    faq: extra ? [...local.faq, ...extra.faq] : local.faq,
+    cases: extra?.cases,
+    tips: extra?.tips,
     showSectors: false,
     seo: {
       ...z.seo,
@@ -506,7 +521,17 @@ function withLocalContent(z: Zone): Zone {
 }
 
 export const ZONES: Zone[] = [
-  ...ZONES_75.map((z) => ({ ...z, ...PARIS_LOCAL[z.slug] })),
+  ...ZONES_75.map((z) => {
+    const local = PARIS_LOCAL[z.slug];
+    const extra = EXTRA_75[z.slug];
+    return {
+      ...z,
+      ...local,
+      faq: local ? [...local.faq, ...(extra?.faq ?? [])] : undefined,
+      cases: extra?.cases,
+      tips: extra?.tips,
+    };
+  }),
   ...[...ZONES_92, ...ZONES_93, ...ZONES_94, ...ZONES_91, ...ZONES_95, ...ZONES_77, ...ZONES_78].map(withLocalContent),
 ];
 

@@ -320,6 +320,44 @@ export default async function ZonePage({ params }: Props) {
         </section>
       )}
 
+      {/* ── Situations concrètes + conseils (propres à la zone) ─────────────── */}
+      {zone.cases && zone.cases.length > 0 && (
+        <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pt-[56px]">
+          <div className="mb-8">
+            <div className="mb-3 flex items-center gap-3 font-mono text-[10px] tracking-[0.16em] text-accent uppercase">
+              <span className="h-px w-6 bg-accent" />
+              Cas concrets
+            </div>
+            <h2 className="text-[clamp(22px,2.5vw,30px)] font-bold tracking-tight text-ink">
+              Trois courses typiques à {zone.name}
+            </h2>
+          </div>
+          <div className="grid gap-6 md:grid-cols-3">
+            {zone.cases.map((c) => (
+              <div key={c.title} className="rounded-2xl border border-gray-100 bg-white p-6">
+                <h3 className="mb-3 text-[16px] font-bold leading-tight text-ink">{c.title}</h3>
+                <p className="text-[14.5px] leading-[1.7] text-muted">{c.body}</p>
+              </div>
+            ))}
+          </div>
+          {zone.tips && zone.tips.length > 0 && (
+            <div className="mt-12">
+              <h2 className="mb-5 text-[clamp(20px,2.3vw,26px)] font-bold tracking-tight text-ink">
+                Avant de commander à {zone.name}
+              </h2>
+              <ul className="grid max-w-[78ch] gap-3">
+                {zone.tips.map((t) => (
+                  <li key={t} className="flex items-start gap-3 text-[15px] leading-[1.65] text-muted">
+                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+                    {t}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </section>
+      )}
+
       {/* ── Prestations (communes à contenu local : liens seuls, sans texte formaté) ── */}
       {zone.showSectors === false && (
         <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[56px]">
