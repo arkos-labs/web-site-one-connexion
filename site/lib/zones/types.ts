@@ -20,6 +20,19 @@ export interface ZoneGuide {
   paragraphs: string[];
 }
 
+/**
+ * Contenu rédigé à la main pour une commune : il remplace les champs
+ * correspondants de la fiche de base (intro, contexte, repères, acteurs).
+ */
+export interface LocalZoneContent {
+  landmarks: string[];
+  intro: string;
+  logisticsContext: string;
+  keyClients: string[];
+  localGuide: ZoneGuide;
+  faq: ZoneFaqItem[];
+}
+
 export interface Zone {
   slug: string;
   dept: string;
@@ -47,6 +60,8 @@ export interface Zone {
    */
   faq?: ZoneFaqItem[];
   localGuide?: ZoneGuide;
+  /** false = pas de grille des 6 secteurs (texte formaté, identique d'une commune à l'autre). */
+  showSectors?: boolean;
   seo: {
     title: string;
     description: string;

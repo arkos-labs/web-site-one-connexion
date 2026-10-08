@@ -4,7 +4,14 @@
  * Paris 75 : données inline (20 arrondissements).
  * Banlieue  : importée depuis les fichiers par département.
  */
-import type { Zone } from "./types";
+import type { LocalZoneContent, Zone } from "./types";
+import { LOCAL_92 } from "./local-92";
+import { LOCAL_93 } from "./local-93";
+import { LOCAL_94 } from "./local-94";
+import { LOCAL_91 } from "./local-91";
+import { LOCAL_95 } from "./local-95";
+import { LOCAL_77 } from "./local-77";
+import { LOCAL_78 } from "./local-78";
 import { ZONES_92 } from "./data-92";
 import { ZONES_93 } from "./data-93";
 import { ZONES_94 } from "./data-94";
@@ -463,15 +470,44 @@ const ZONES_75: Zone[] = [
 // ─────────────────────────────────────────────────────────────────────────────
 // EXPORT CENTRAL
 // ─────────────────────────────────────────────────────────────────────────────
+const COMMUNES_LOCAL: Record<string, LocalZoneContent> = {
+  ...LOCAL_92,
+  ...LOCAL_93,
+  ...LOCAL_94,
+  ...LOCAL_91,
+  ...LOCAL_95,
+  ...LOCAL_77,
+  ...LOCAL_78,
+};
+
+/** Une commune dotée de contenu local rédigé le remplace et masque la grille formatée des secteurs. */
+function withLocalContent(z: Zone): Zone {
+  const local = COMMUNES_LOCAL[z.slug];
+  if (!local) return z;
+
+  // Titre et description bâtis sur les lieux réels de la commune : plus de nom
+  // d'entreprise cité comme cliente, plus de formule répétée d'une page à l'autre.
+  const places = local.landmarks.filter((l) => !/limite|proche/i.test(l));
+  const lead = places[0] ?? local.landmarks[0];
+  const second = places[1] ?? local.landmarks[1];
+  const baseTitle = `Coursier ${z.name} ${z.dept}`;
+  const title = `${baseTitle} — ${lead}`.length <= 68 ? `${baseTitle} — ${lead}` : baseTitle;
+
+  return {
+    ...z,
+    ...local,
+    showSectors: false,
+    seo: {
+      ...z.seo,
+      title,
+      description: `Coursier express à ${z.name} (${z.dept}) : ${lead}, ${second}. Plis, colis et prélèvements en deux-roues, enlèvement en moins de 45 min, devis gratuit en 2 h.`,
+    },
+  };
+}
+
 export const ZONES: Zone[] = [
   ...ZONES_75.map((z) => ({ ...z, ...PARIS_LOCAL[z.slug] })),
-  ...ZONES_92,
-  ...ZONES_93,
-  ...ZONES_94,
-  ...ZONES_91,
-  ...ZONES_95,
-  ...ZONES_77,
-  ...ZONES_78,
+  ...[...ZONES_92, ...ZONES_93, ...ZONES_94, ...ZONES_91, ...ZONES_95, ...ZONES_77, ...ZONES_78].map(withLocalContent),
 ];
 
 export const ZONE_SLUGS = ZONES.map((z) => z.slug);
@@ -482,17 +518,18 @@ export const ZONE_SLUGS = ZONES.map((z) => z.slug);
  * restent accessibles mais en noindex, hors sitemap, tant qu'elles n'ont pas
  * de contenu local propre. Pour en activer une : ajouter son slug ici.
  */
-const INDEXED_BANLIEUE_SLUGS = new Set([
-  // Communes à contenu local rédigé (FAQ et guide propres).
-  // Nanterre, Courbevoie, Puteaux, Saint-Maurice, Charenton-le-Pont,
-  // Nogent-sur-Marne et Maisons-Alfort sont repassées en noindex : leur texte
-  // est trop proche d'une commune à l'autre. À réindexer une fois réécrites
-  // avec un faq et un localGuide propres.
-  "vincennes", "saint-mande", "montreuil",
-]);
+/** Départements de la petite couronne : tarif standard, cœur de marché. */
+const PETITE_COURONNE = new Set(["92", "93", "94"]);
 
+/**
+ * Indexation par vagues. Une zone n'est indexable que si elle a son contenu
+ * propre (guide local + FAQ). Vague 1 : Paris et la petite couronne. La grande
+ * couronne (77, 78, 91, 95), tarif sur devis, a son contenu mais reste en
+ * noindex : ajouter "77", "78", "91", "95" à PETITE_COURONNE pour l'ouvrir.
+ */
 export function isZoneIndexed(zone: Zone): boolean {
-  return zone.category === "paris" || INDEXED_BANLIEUE_SLUGS.has(zone.slug);
+  if (zone.category === "paris") return true;
+  return Boolean(zone.localGuide) && PETITE_COURONNE.has(zone.dept.slice(0, 2));
 }
 
 export const INDEXED_ZONE_SLUGS = ZONES.filter(isZoneIndexed).map((z) => z.slug);

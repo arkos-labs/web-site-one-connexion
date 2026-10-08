@@ -160,9 +160,13 @@ export default async function ZonePage({ params }: Props) {
     : null;
 
   /* Zones voisines à suggérer */
-  const related = ZONES.filter(
-    (z) => z.slug !== slug && (z.category === zone.category || z.dept.startsWith(zone.dept.slice(0, 2)))
-  ).slice(0, 4);
+  // Voisines tirées dans le même département, à partir de la position de la zone
+  // courante : chaque page affiche ses propres voisines (pas toujours les 4 mêmes).
+  const sameDept = ZONES.filter(
+    (z) => z.category === zone.category || z.dept.startsWith(zone.dept.slice(0, 2))
+  );
+  const at = sameDept.findIndex((z) => z.slug === slug);
+  const related = Array.from({ length: Math.min(4, sameDept.length - 1) }, (_, i) => sameDept[(at + 1 + i) % sameDept.length]);
 
   return (
     <>
@@ -279,6 +283,7 @@ export default async function ZonePage({ params }: Props) {
                 {zone.logisticsContext}
               </p>
             </div>
+            {!zone.localGuide && (
             <div className="grid grid-cols-2 gap-3">
               {[
                 { icon: Clock, label: "Réactivité", value: "< 45 min" },
@@ -296,6 +301,7 @@ export default async function ZonePage({ params }: Props) {
                 );
               })}
             </div>
+            )}
           </div>
         </div>
       </section>
@@ -314,7 +320,36 @@ export default async function ZonePage({ params }: Props) {
         </section>
       )}
 
+      {/* ── Prestations (communes à contenu local : liens seuls, sans texte formaté) ── */}
+      {zone.showSectors === false && (
+        <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[56px]">
+          <h2 className="mb-6 text-[clamp(22px,2.5vw,30px)] font-bold tracking-tight text-ink">
+            Prestations disponibles à {zone.name}
+          </h2>
+          <div className="flex flex-wrap gap-3">
+            {[
+              { href: "/services/plis-confidentiels", label: "Plis confidentiels" },
+              { href: "/services/transport-medical", label: "Transport médical" },
+              { href: "/services/livraison-e-commerce", label: "Livraison e-commerce" },
+              { href: "/services/tournees-regulieres", label: "Tournées régulières" },
+              { href: "/services/coursier-express-paris", label: "Coursier express" },
+              { href: "/tarifs", label: "Tarifs" },
+            ].map((s) => (
+              <Link
+                key={s.href}
+                href={s.href}
+                className="flex items-center gap-1.5 rounded-[4px] border border-ink/20 bg-white px-4 py-2 text-[13px] font-bold text-ink transition-all hover:bg-ink hover:text-white"
+              >
+                {s.label}
+                <ArrowRight size={11} />
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* ── Secteurs ────────────────────────────────────────────────────────── */}
+      {zone.showSectors !== false && (
       <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
         <div className="mb-10">
           <div className="mb-3 flex items-center gap-3 font-mono text-[10px] tracking-[0.16em] text-accent uppercase">
@@ -360,6 +395,7 @@ export default async function ZonePage({ params }: Props) {
           })}
         </div>
       </section>
+      )}
 
       {/* ── Clients types ────────────────────────────────────────────────── */}
       {zone.keyClients.length > 0 && (
@@ -500,7 +536,9 @@ export default async function ZonePage({ params }: Props) {
                   <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-muted">{z.dept}</span>
                 </div>
                 <div className="font-bold text-ink text-[14px] group-hover:text-accent transition-colors">{z.fullName}</div>
-                <div className="text-[12px] text-muted line-clamp-2">{z.seo.description.split(".")[0]}.</div>
+                {!zone.localGuide && (
+                  <div className="text-[12px] text-muted line-clamp-2">{z.seo.description.split(".")[0]}.</div>
+                )}
                 <div className="flex items-center gap-1 text-[11px] font-semibold text-accent mt-auto">
                   Voir la zone <ArrowRight size={10} />
                 </div>
