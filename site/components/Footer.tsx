@@ -17,6 +17,8 @@ const NAV_LINKS = [
   { label: "Notre méthode", href: "/methode" },
   { label: "Flotte & couverture", href: "/flotte" },
   { label: "Tarifs", href: "/tarifs" },
+  { label: "Coursier express Paris", href: "/services/coursier-express-paris" },
+  { label: "Coursier moto Paris", href: "/services/coursier-moto-paris" },
   { label: "Mentions légales", href: "/mentions-legales" },
   { label: "CGV", href: "/cgv" },
   { label: "Confidentialité", href: "/politique-de-confidentialite" },

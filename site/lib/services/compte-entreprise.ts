@@ -100,24 +100,9 @@ export const compteEntreprise: Service = {
 
   faq: [
     {
-      question: "Y a-t-il un volume minimum pour ouvrir un compte ?",
-      answer:
-        "PLACEHOLDER — conditions d’ouverture et volume minimum éventuel à confirmer avant mise en ligne.",
-    },
-    {
       question: "Comment sont imputées les courses par dossier ou par service ?",
       answer:
         "La référence de dossier ou de service est indiquée au moment de la commande ; elle est reprise sur le détail de la facture mensuelle, ce qui permet la refacturation ou l’imputation analytique.",
-    },
-    {
-      question: "Combien de temps les justificatifs sont-ils conservés ?",
-      answer:
-        "PLACEHOLDER — durée de conservation des justificatifs à confirmer avant mise en ligne.",
-    },
-    {
-      question: "Quels sont les délais de règlement ?",
-      answer:
-        "PLACEHOLDER — conditions et délais de règlement à confirmer avant mise en ligne.",
     },
     {
       question: "Plusieurs collaborateurs peuvent-ils commander ?",

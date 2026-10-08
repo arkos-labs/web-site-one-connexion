@@ -11,6 +11,8 @@ import { compteEntreprise } from "./compte-entreprise";
 
 import { tourneesRegulieres } from "./tournees-regulieres";
 import { transportEvenementiel } from "./transport-evenementiel";
+import { coursierExpressParis } from "./coursier-express-paris";
+import { coursierMotoParis } from "./coursier-moto-paris";
 
 export type {
   Service,
@@ -29,8 +31,16 @@ export const SERVICES: Service[] = [
   compteEntreprise,
 ];
 
-export const SERVICE_SLUGS: string[] = SERVICES.map((service) => service.slug);
+/**
+ * Pages de référencement : routées et dans le sitemap, mais absentes des cartes
+ * (homepage, footer, index /services) pour ne pas doublonner les prestations.
+ */
+const SEO_SERVICES: Service[] = [coursierExpressParis, coursierMotoParis];
+
+const ROUTED_SERVICES: Service[] = [...SERVICES, ...SEO_SERVICES];
+
+export const SERVICE_SLUGS: string[] = ROUTED_SERVICES.map((service) => service.slug);
 
 export function getService(slug: string): Service | undefined {
-  return SERVICES.find((service) => service.slug === slug);
+  return ROUTED_SERVICES.find((service) => service.slug === slug);
 }

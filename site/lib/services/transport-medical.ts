@@ -31,6 +31,9 @@ export const transportMedical: Service = {
       "transport échantillons biologiques Île-de-France",
       "coursier laboratoire analyses Paris",
       "transport urgent matériel médical",
+      "coursier transport de sang réfrigéré",
+      "transport échantillons réfrigérés Paris",
+      "prix coursier médical Paris",
     ],
   },
 
@@ -112,6 +115,16 @@ export const transportMedical: Service = {
         "Un coursier médical transporte en urgence des prélèvements, échantillons, pièces techniques ou matériel entre laboratoires, cliniques et cabinets. La course est dédiée, le contenant adapté et le délai de stabilité de ce qui est transporté commande l’organisation de la course.",
     },
     {
+      question: "Pouvez-vous transporter des prélèvements sanguins et des échantillons réfrigérés ?",
+      answer:
+        "Nous transportons des prélèvements sanguins, échantillons et pièces en contenant isotherme adapté, en course dédiée et directe, 7j/7. Pour un transport réfrigéré, précisez à la commande la plage de température et le délai de stabilité fixés par le laboratoire : nous confirmons la faisabilité avant d’engager la course.",
+    },
+    {
+      question: "Quel est le prix d’un coursier médical à Paris ?",
+      answer:
+        "Le transport médical est facturé au tarif standard de la zone : à partir de 15 € HT en course planifiée dans Paris et 22 € HT en course immédiate, 22 € et 30 € HT en petite couronne. Devis gratuit en moins de 2 heures, détail sur la page tarifs.",
+    },
+    {
       question: "Assurez-vous le transport entre laboratoires et vers un plateau technique ?",
       answer:
         "Oui. Nous assurons le transport laboratoire entre sites de prélèvement, laboratoires d’analyses et plateaux techniques d’Île-de-France, à la demande ou en tournées régulières sur créneaux fixes.",
@@ -130,11 +143,6 @@ export const transportMedical: Service = {
       question: "Que se passe-t-il si le délai de stabilité ne peut pas être tenu ?",
       answer:
         "Nous vous le disons avant d’engager la course, pas après. La faisabilité est confirmée au moment de la commande en fonction du délai que vous fixez, de l’heure et de la distance.",
-    },
-    {
-      question: "Disposez-vous des habilitations réglementaires pour le transport d’échantillons biologiques ?",
-      answer:
-        "PLACEHOLDER — habilitations, formations ADR et conformité au conditionnement UN3373 à documenter et faire valider avant mise en ligne. Ne pas publier cette page sans avoir tranché ce point.",
     },
     {
       question: "Assurez-vous des tournées récurrentes ?",

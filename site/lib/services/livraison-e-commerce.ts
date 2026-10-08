@@ -101,11 +101,6 @@ export const livraisonEcommerce: Service = {
 
   faq: [
     {
-      question: "Quelle est l’heure limite de collecte pour une livraison le jour même ?",
-      answer:
-        "PLACEHOLDER — heure limite (cut-off) à confirmer avant mise en ligne. Elle dépend de la zone de collecte et de la zone de livraison.",
-    },
-    {
       question: "Que se passe-t-il si le destinataire est absent ?",
       answer:
         "La consigne est définie à l’ouverture du compte : représentation, retour à l’expéditeur, ou remise à une personne désignée. Le créneau choisi par le destinataire réduit fortement ce cas de figure.",
@@ -116,19 +111,9 @@ export const livraisonEcommerce: Service = {
         "18 kg par course, dans un top-case de 60 × 40 cm. Au-delà, la commande est répartie sur plusieurs courses : nous le signalons au moment du devis.",
     },
     {
-      question: "Peut-on brancher la commande sur notre boutique en ligne ?",
-      answer:
-        "PLACEHOLDER — intégration technique (API, connecteurs de plateformes e-commerce) à confirmer. Les commandes se passent aujourd’hui par téléphone et par courriel.",
-    },
-    {
       question: "Gérez-vous les retours ?",
       answer:
         "Oui, sur le même principe qu’une livraison : enlèvement chez le client et retour vers votre boutique ou votre entrepôt, avec preuve d’enlèvement.",
-    },
-    {
-      question: "Proposez-vous des tarifs dégressifs au volume ?",
-      answer:
-        "PLACEHOLDER — grille tarifaire et conditions de dégressivité à confirmer avant mise en ligne.",
     },
   ],
 };

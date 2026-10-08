@@ -11,9 +11,9 @@ import { SITE_URL, PHONE_DISPLAY, PHONE_TEL } from "@/lib/site-content";
 import { CheckCircle2, Clock, MapPin, Shield } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Prix et tarif coursier Paris — dès 15 € HT, devis 2 h",
+  title: "Tarif coursier Paris : prix d'une course dès 15 € HT",
   description:
-    "Prix coursier Paris : à partir de 15 € HT en course planifiée dans Paris, 22 € en course immédiate. À la course ou compte entreprise mensuel. Devis gratuit en moins de 2 heures.",
+    "Tarif coursier Paris et Île-de-France : course moto dès 15 € HT en planifié, 22 € en immédiat. Grille par zone, prix à la course ou compte entreprise. Devis gratuit en 2 h.",
   alternates: { canonical: "/tarifs" },
   openGraph: {
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION — Coursier B2B Paris & Île-de-France" }],
@@ -43,6 +43,18 @@ const FAQ = [
   {
     q: "Quel est le tarif d'un coursier en petite couronne ?",
     a: "En petite couronne (92, 93, 94), une course planifiée démarre à partir de 22 € HT et une course immédiate à partir de 30 € HT. La grande couronne et les aéroports sont sur devis.",
+  },
+  {
+    q: "Combien coûte un coursier moto à Paris ?",
+    a: "Une course en moto dans Paris intramuros démarre à partir de 15 € HT en course planifiée et 22 € HT en course immédiate (enlèvement dans l'heure). Le prix final dépend de la distance, du délai et de la nature du transport.",
+  },
+  {
+    q: "Quel est le prix d'un coursier express à Paris ?",
+    a: "Une course express, avec enlèvement en moins de 45 minutes, se facture à partir de 22 € HT dans Paris et 30 € HT en petite couronne. Le devis est confirmé avant l'envoi du coursier.",
+  },
+  {
+    q: "Le prix d'un coursier pour un pli confidentiel ou un transport médical est-il différent ?",
+    a: "Les plis confidentiels et le transport médical sont facturés au tarif standard de la zone, selon le délai demandé. Retrouvez le détail sur nos pages plis confidentiels et transport médical.",
   },
   {
     q: "Les tarifs sont-ils HT ou TTC ?",
@@ -144,12 +156,12 @@ export default function TarifsPage() {
             Tarification
           </div>
           <h1 className="mb-6 max-w-[22ch] text-balance text-[clamp(36px,5vw,64px)] font-bold leading-[1.05] tracking-[-0.035em]">
-            Prix d'un coursier à Paris : tarifs clairs, adaptés à vos volumes.
+            Tarif coursier Paris : prix d'une course dès 15 € HT.
           </h1>
           <p className="max-w-[58ch] text-pretty text-[17px] leading-[1.6] text-white/66">
-            Pas de grille tarifaire figée : chaque mission a ses paramètres.
-            Voici ce qui détermine le coût d'une course, et comment obtenir
-            votre devis en moins de 2 heures.
+            Course moto planifiée dès 15 € HT dans Paris, 22 € HT en course
+            immédiate. Voici la grille par zone, ce qui fait varier le prix
+            d'un coursier et comment obtenir votre devis en moins de 2 heures.
           </p>
         </div>
       </section>
@@ -285,6 +297,21 @@ export default function TarifsPage() {
         <p className="mt-4 text-[12px] text-muted/70">
           * Tarifs HT, hors options (prise en charge après 21h, week-end). TVA 20 % applicable.
         </p>
+      </section>
+
+      {/* ── Maillage interne ── */}
+      <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-[72px]">
+        <h2 className="mb-6 text-[clamp(22px,2.5vw,30px)] font-bold leading-[1.15] tracking-[-0.02em]">
+          Le tarif selon votre besoin.
+        </h2>
+        <ul className="grid max-w-[780px] gap-3 text-[15px] leading-[1.6] text-muted sm:grid-cols-2">
+          <li><Link href="/services/plis-confidentiels" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">Pli confidentiel</Link> : remise en main propre contre signature</li>
+          <li><Link href="/services/transport-medical" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">Coursier médical</Link> : laboratoires et prélèvements</li>
+          <li><Link href="/services/livraison-e-commerce" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">Livraison e-commerce</Link> : le jour même en Île-de-France</li>
+          <li><Link href="/services/coursier-express-paris" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">Coursier express Paris</Link> : enlèvement en moins de 45 min</li>
+          <li><Link href="/services/coursier-moto-paris" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">Coursier moto et scooter</Link> : livraison en deux-roues</li>
+          <li><Link href="/zones/paris" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">Coursier Paris</Link> et <Link href="/zones/petite-couronne" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">petite couronne</Link> : zones desservies</li>
+        </ul>
       </section>
 
       {/* ── FAQ ── */}
