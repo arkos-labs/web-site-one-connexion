@@ -482,11 +482,11 @@ export const ZONE_SLUGS = ZONES.map((z) => z.slug);
  * de contenu local propre. Pour en activer une : ajouter son slug ici.
  */
 const INDEXED_BANLIEUE_SLUGS = new Set([
-  // Pôle La Défense
-  "nanterre", "courbevoie", "puteaux",
-  // Proches du siège (Saint-Mandé)
-  "saint-maurice", "charenton-le-pont", "nogent-sur-marne", "maisons-alfort",
-  // Communes à contenu local rédigé (FAQ et guide propres)
+  // Communes à contenu local rédigé (FAQ et guide propres).
+  // Nanterre, Courbevoie, Puteaux, Saint-Maurice, Charenton-le-Pont,
+  // Nogent-sur-Marne et Maisons-Alfort sont repassées en noindex : leur texte
+  // est trop proche d'une commune à l'autre. À réindexer une fois réécrites
+  // avec un faq et un localGuide propres.
   "vincennes", "saint-mande", "montreuil",
 ]);
 
