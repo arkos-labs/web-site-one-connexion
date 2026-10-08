@@ -99,7 +99,7 @@ export const coursierExpressParis: Service = {
   ],
 
   coverage:
-    "Paris intra-muros et petite couronne (92, 93, 94) au tarif standard : course immédiate dès 22 € HT dans Paris et dès 30 € HT en petite couronne. Roissy, Orly et la grande couronne sur devis.",
+    "Une course immédiate coûte à partir de 22 € HT dans Paris et de 30 € HT dans les Hauts-de-Seine, la Seine-Saint-Denis et le Val-de-Marne. Roissy, Orly et la grande couronne font l’objet d’un devis.",
 
   faq: [
     {

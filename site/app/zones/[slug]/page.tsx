@@ -389,7 +389,8 @@ export default async function ZonePage({ params }: Props) {
         </section>
       )}
 
-      {/* ── Comment ça marche ──────────────────────────────────────────── */}
+      {/* ── Comment ça marche (générique : masqué si la zone a son guide local) ── */}
+      {!zone.localGuide && (
       <section className="bg-paper border-t border-gray-100">
         <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-20">
           <div className="mb-12 text-center">
@@ -419,6 +420,7 @@ export default async function ZonePage({ params }: Props) {
           </div>
         </div>
       </section>
+      )}
 
       {/* ── FAQ ──────────────────────────────────────────────────────────── */}
       <section className="mx-auto max-w-[800px] px-[clamp(20px,4vw,28px)] py-20">

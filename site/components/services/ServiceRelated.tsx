@@ -21,12 +21,9 @@ export default function ServiceRelated({ currentSlug }: { currentSlug: string })
           <div className="mb-2.5 font-mono text-[10px] tracking-[0.16em] text-label uppercase">
             {service.card.tag}
           </div>
-          <h3 className="mb-2 text-[17px] font-bold tracking-[-0.02em]">
+          <h3 className="mb-4 text-[17px] font-bold tracking-[-0.02em]">
             {service.card.title}
           </h3>
-          <p className="mb-4 text-[14.5px] leading-[1.6] text-muted">
-            {service.card.body}
-          </p>
           <span className="font-mono text-[10.5px] tracking-[0.1em] text-accent-dark uppercase">
             Voir la prestation →
           </span>

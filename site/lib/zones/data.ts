@@ -12,6 +12,7 @@ import { ZONES_91 } from "./data-91";
 import { ZONES_95 } from "./data-95";
 import { ZONES_77 } from "./data-77";
 import { ZONES_78 } from "./data-78";
+import { PARIS_LOCAL } from "./paris-local";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // PARIS INTRAMUROS — 20 arrondissements
@@ -463,7 +464,7 @@ const ZONES_75: Zone[] = [
 // EXPORT CENTRAL
 // ─────────────────────────────────────────────────────────────────────────────
 export const ZONES: Zone[] = [
-  ...ZONES_75,
+  ...ZONES_75.map((z) => ({ ...z, ...PARIS_LOCAL[z.slug] })),
   ...ZONES_92,
   ...ZONES_93,
   ...ZONES_94,

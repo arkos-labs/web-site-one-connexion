@@ -45,7 +45,7 @@ export const coursierMotoParis: Service = {
     title: "Pourquoi un coursier moto plutôt qu’un utilitaire",
     paragraphs: [
       "Dans Paris, la circulation décide du délai. Un scooter ou une moto traverse la ville sans dépendre des embouteillages, et reste disponible pour une course dédiée plutôt qu’une tournée avec plusieurs arrêts.",
-      "Nos scooters électriques et 125cc circulent dans les rues les plus denses de Paris sans être limités par les restrictions ZFE. Nos motos routières de 300 à 600cc maintiennent une bonne vitesse sur les rocades et les axes rapides, pour les trajets vers la banlieue, La Défense, Roissy ou Orly.",
+      "Nos scooters électriques et 125cc circulent dans les rues les plus denses de Paris sans être limités par les restrictions ZFE. Nos motos routières de 300 à 600cc gardent une bonne vitesse sur les rocades et les axes rapides.",
       "Chaque véhicule est équipé d’un top-case verrouillé et étanche, jusqu’à 18 kg. Les colis volumineux ou lourds ne conviennent pas à ce mode de transport : dites-nous ce que vous envoyez, nous confirmons la faisabilité avant d’engager la course.",
     ],
   },
@@ -53,7 +53,7 @@ export const coursierMotoParis: Service = {
   steps: [
     {
       title: "Commande",
-      body: "En ligne, par téléphone ou par courriel, avec l’adresse d’enlèvement, la destination, le contenu et l’heure limite.",
+      body: "Vous décrivez le colis (contenu, poids approximatif), les deux adresses et l’heure à laquelle il doit arriver.",
     },
     {
       title: "Choix du véhicule",
@@ -61,24 +61,24 @@ export const coursierMotoParis: Service = {
     },
     {
       title: "Enlèvement",
-      body: "Le coursier se présente avec son top-case verrouillé et prend le colis en charge.",
+      body: "Le pilote arrive avec son top-case verrouillé, vérifie le colis avec vous et le range avant de partir.",
     },
     {
-      title: "Trajet direct",
-      body: "Course dédiée, sans regroupement. L’avancement est visible en ligne à chaque étape.",
+      title: "Un colis, un trajet",
+      body: "La moto ne fait aucun autre arrêt. Vous voyez sa progression en ligne jusqu’à l’arrivée.",
     },
     {
-      title: "Remise horodatée",
-      body: "Remise en main propre avec le nom du destinataire et l’heure exacte consignés.",
+      title: "Signature à l’arrivée",
+      body: "Le destinataire signe ; son nom et l’heure de remise sont enregistrés dans votre espace.",
     },
   ],
 
   included: [
     "Scooters et motos équipés pour un usage professionnel",
     "Top-case verrouillé et étanche, jusqu’à 18 kg",
-    "Course dédiée, sans regroupement",
-    "Suivi de la course en ligne",
-    "Preuve de livraison horodatée et nominative",
+    "Un colis par trajet, jamais de tournée partagée",
+    "Progression de la moto visible en ligne",
+    "Signature du destinataire enregistrée avec l’heure",
     "Coursiers vérifiés",
   ],
 
@@ -93,12 +93,12 @@ export const coursierMotoParis: Service = {
     },
     {
       title: "Trajets vers la banlieue et les aéroports",
-      body: "Une moto routière pour rejoindre La Défense, Roissy ou Orly sans perdre de temps sur les axes rapides.",
+      body: "Une moto routière pour relier La Défense, Roissy ou Orly par les axes rapides.",
     },
   ],
 
   coverage:
-    "Paris intra-muros et petite couronne (92, 93, 94) au tarif standard : course planifiée dès 15 € HT dans Paris et dès 22 € HT en petite couronne. Roissy, Orly et la grande couronne sur devis.",
+    "Les 20 arrondissements de Paris, de 15 € HT en course planifiée, puis les Hauts-de-Seine, la Seine-Saint-Denis et le Val-de-Marne à partir de 22 € HT. Les aéroports et les autres départements d’Île-de-France se chiffrent sur devis.",
 
   faq: [
     {
@@ -124,12 +124,12 @@ export const coursierMotoParis: Service = {
     {
       question: "En combien de temps le coursier vient-il chercher mon colis ?",
       answer:
-        "L’enlèvement se fait en moins de 45 minutes dans Paris, sous réserve de disponibilité au moment de la commande.",
+        "Dans Paris, la moto est généralement chez vous en moins de 45 minutes ; le délai exact vous est annoncé à la confirmation.",
     },
     {
       question: "Intervenez-vous le week-end ?",
       answer:
-        "Nous opérons 7j/7, de 7h à 23h, sous réserve de disponibilité au moment de la commande.",
+        "Tous les jours de 7h à 23h. Les courses du soir et du dimanche sont possibles, selon la disponibilité des pilotes au moment de la commande.",
     },
   ],
 };
