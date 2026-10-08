@@ -486,6 +486,8 @@ const INDEXED_BANLIEUE_SLUGS = new Set([
   "nanterre", "courbevoie", "puteaux",
   // Proches du siège (Saint-Mandé)
   "saint-maurice", "charenton-le-pont", "nogent-sur-marne", "maisons-alfort",
+  // Communes à contenu local rédigé (FAQ et guide propres)
+  "vincennes", "saint-mande", "montreuil",
 ]);
 
 export function isZoneIndexed(zone: Zone): boolean {

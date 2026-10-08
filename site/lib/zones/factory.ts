@@ -30,6 +30,8 @@ export interface ZoneSpec {
   seoTitle: string;
   seoDesc: string;
   seoKeywords: string[];
+  faq?: Zone["faq"];
+  localGuide?: Zone["localGuide"];
 }
 
 export function makeZone(spec: ZoneSpec): Zone {
@@ -85,6 +87,8 @@ export function makeZone(spec: ZoneSpec): Zone {
     keyClients: spec.keyClients,
     distanceParis: spec.distanceParis,
     pricingZone: spec.pricingZone,
+    faq: spec.faq,
+    localGuide: spec.localGuide,
     seo: {
       title: spec.seoTitle,
       description: spec.seoDesc,

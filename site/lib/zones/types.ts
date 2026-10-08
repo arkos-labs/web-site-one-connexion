@@ -10,6 +10,16 @@ export interface ZoneSector {
   serviceLabel: string;
 }
 
+export interface ZoneFaqItem {
+  q: string;
+  a: string;
+}
+
+export interface ZoneGuide {
+  title: string;
+  paragraphs: string[];
+}
+
 export interface Zone {
   slug: string;
   dept: string;
@@ -31,6 +41,12 @@ export interface Zone {
   distanceParis?: string;
   /** Tarif applicable */
   pricingZone: "standard" | "devis";
+  /**
+   * Contenu 100 % propre à la zone (optionnel). Une zone qui en dispose remplace
+   * la FAQ générique, ce qui évite le texte dupliqué d'une page à l'autre.
+   */
+  faq?: ZoneFaqItem[];
+  localGuide?: ZoneGuide;
   seo: {
     title: string;
     description: string;

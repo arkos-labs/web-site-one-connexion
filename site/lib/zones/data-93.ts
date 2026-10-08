@@ -3,6 +3,59 @@ import type { Zone } from "./types";
 
 export const ZONES_93: Zone[] = [
   makeZone({
+    slug: "montreuil",
+    dept: "93100",
+    name: "Montreuil",
+    category: "seine-saint-denis",
+    landmarks: ["Croix-de-Chavaux", "Mairie de Montreuil", "Porte de Montreuil", "Murs à pêches", "Hôpital André-Grégoire", "Métro ligne 9"],
+    intro: "Montreuil prolonge le 20e arrondissement à l'est de Paris. Ancien territoire d'ateliers et de petites industries, la ville est devenue un pôle d'agences créatives, de studios, de maisons de production, de start-ups et d'artisans d'art, que complètent un centre hospitalier et un tissu dense de commerces autour de la Croix-de-Chavaux.",
+    logisticsContext: "Montreuil se déploie sur un relief : le bas Montreuil, proche de la Porte de Montreuil et du périphérique, et le haut Montreuil, vers la mairie, avec des rues en pente et un stationnement difficile. La ligne 9 dessert la Croix-de-Chavaux et la mairie, l'A3 passe à Bagnolet. Sur ce parcours étalé, le deux-roues garde son avantage sur une camionnette qui cherche à se garer.",
+    sectorExamples: {
+      juridique: "Dépôt d'actes et transmission de pièces entre les cabinets de Montreuil, les études parisiennes et le Tribunal judiciaire de Bobigny, avec remise contre signature.",
+      medical: "Acheminement de prélèvements et de pièces depuis les cabinets, centres de santé et le voisinage de l'hôpital André-Grégoire vers les laboratoires d'analyses.",
+      ecommerce: "Expéditions le jour même des créateurs, ateliers et boutiques en ligne installés à Montreuil, vers des clients parisiens et franciliens, avec preuve de remise.",
+      corporate: "Courses dédiées entre les agences et start-ups de Montreuil et leurs clients de Paris, pour des maquettes, contrats et épreuves à remettre en main propre.",
+      evenementiel: "Décors, accessoires et matériel pour les studios, tournages et lieux culturels de Montreuil, avec des créneaux de livraison alignés sur le plateau.",
+      grandsComptes: "Compte entreprise pour les agences, productions et PME de Montreuil, avec facturation mensuelle et imputation par projet.",
+    },
+    keyClients: ["Agences créatives et studios", "Ateliers et créateurs", "Start-ups", "Hôpital André-Grégoire"],
+    distanceParis: "Aux portes de Paris 20e",
+    pricingZone: "standard",
+    seoTitle: "Coursier Montreuil — livraison express 93100, dès 22 € HT",
+    seoDesc: "Coursier express à Montreuil (93100) : plis, maquettes, prélèvements et colis en deux-roues, aux portes de Paris 20e. Enlèvement en moins de 45 min, devis en 2 h.",
+    seoKeywords: ["coursier Montreuil", "livraison Montreuil", "livraison express 93100", "coursier 93 Montreuil"],
+    localGuide: {
+      title: "Livrer à Montreuil : une ville en deux étages",
+      paragraphs: [
+        "Montreuil ne se livre pas comme une commune plate. Entre la Porte de Montreuil et la mairie, le dénivelé et les rues étroites du haut Montreuil rallongent les trajets de ceux qui cherchent un stationnement. Un coursier en moto ou en scooter se gare au pied de l'adresse, ce qui compte quand l'enlèvement doit rester court.",
+        "Une grande partie de l'activité locale est créative : maquettes, épreuves, échantillons, accessoires et supports de tournage. Ce sont des envois souvent fragiles et à remettre à une heure précise. Indiquez le contenu et le créneau à la commande : nous confirmons que le top-case du deux-roues convient avant d'engager la course.",
+        "Les trajets partent surtout vers Paris 20e, 11e et 12e, mais aussi vers le Tribunal judiciaire de Bobigny pour les dépôts d'actes. Selon la destination, le tarif suit la grille petite couronne ou Paris.",
+      ],
+    },
+    faq: [
+      {
+        q: "Livrez-vous à Montreuil le jour même ?",
+        a: "Oui. Une course immédiate part dans l'heure, avec un enlèvement en moins de 45 minutes, et une course planifiée se réserve sur un créneau précis. Dans les deux cas, le coursier va directement à destination, sans regroupement.",
+      },
+      {
+        q: "Quel est le prix d'une livraison à Montreuil ?",
+        a: "Montreuil relève du tarif petite couronne : à partir de 22 € HT en course planifiée et 30 € HT en course immédiate. Le prix final dépend de la destination, du délai et de la nature du colis. Devis gratuit en moins de 2 heures.",
+      },
+      {
+        q: "Pouvez-vous transporter des maquettes ou du matériel de tournage ?",
+        a: "Pour des pièces légères et fragiles, oui, dans la limite d'un top-case verrouillé de 18 kg. Pour un décor ou un volume plus important, contactez-nous avant de commander : nous vous disons si le deux-roues convient.",
+      },
+      {
+        q: "Desservez-vous le haut et le bas Montreuil ?",
+        a: "Oui, de la Porte de Montreuil à la mairie et à la Croix-de-Chavaux. Pour un enlèvement dans une impasse ou une cour d'atelier, indiquez le code d'accès et un contact : cela évite l'attente à l'entrée.",
+      },
+      {
+        q: "Pouvez-vous porter un acte de Montreuil au tribunal de Bobigny ?",
+        a: "Oui. L'acte part en course dédiée, avec remise contre signature et justificatif horodaté. Précisez l'heure limite de dépôt au greffe à la commande.",
+      },
+    ],
+  }),
+  makeZone({
     slug: "aubervilliers",
     dept: "93300",
     name: "Aubervilliers",

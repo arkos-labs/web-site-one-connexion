@@ -3,6 +3,104 @@ import type { Zone } from "./types";
 
 export const ZONES_94: Zone[] = [
   makeZone({
+    slug: "vincennes",
+    dept: "94300",
+    name: "Vincennes",
+    category: "val-de-marne",
+    landmarks: ["Château de Vincennes", "Cours Marigny", "Rue du Midi", "Avenue de Paris", "Bois de Vincennes", "Métro ligne 1 et RER A"],
+    intro: "Vincennes s'organise autour de son château médiéval, qui abrite le Service historique de la Défense, et de la rue du Midi, grande artère commerçante du centre-ville. Cabinets d'avocats, études notariales, professions de santé, agences et commerces y côtoient les services administratifs de la ville et les équipements du bois.",
+    logisticsContext: "Vincennes est voisine de notre siège de Saint-Mandé : l'avenue de Paris relie directement les deux communes. À l'est, la ville touche le 12e et le 20e arrondissement par la Porte de Vincennes et le cours de Vincennes. Le centre est dense, la ligne 1 et le RER A y concentrent les flux : le deux-roues évite la saturation des axes autour du château et de l'avenue de Paris aux heures de pointe.",
+    sectorExamples: {
+      juridique: "Dépôt d'actes et transmission de pièces entre les cabinets et études du centre de Vincennes, le Tribunal judiciaire de Créteil et les juridictions parisiennes, avec remise contre signature.",
+      medical: "Acheminement de prélèvements depuis les cabinets médicaux, centres d'imagerie et professions paramédicales du centre-ville vers les laboratoires d'analyses, contenant isotherme sur demande.",
+      ecommerce: "Livraison le jour même pour les commerçants de la rue du Midi et les vendeurs en ligne installés à Vincennes, vers Paris et la petite couronne.",
+      corporate: "Navettes entre les agences et sociétés de services de Vincennes et leurs clients du 12e, de Bastille ou de La Défense, avec preuve de remise horodatée.",
+      evenementiel: "Matériel, documents et accréditations pour les événements professionnels organisés au château et autour du bois de Vincennes.",
+      grandsComptes: "Compte entreprise pour les cabinets et sociétés de Vincennes : facturation mensuelle unique et imputation par dossier.",
+    },
+    keyClients: ["Cabinets d'avocats et études notariales", "Agences et sociétés de services", "Professions de santé", "Commerces de la rue du Midi"],
+    distanceParis: "Voisine de Paris 12e et 20e",
+    pricingZone: "standard",
+    seoTitle: "Coursier Vincennes — livraison express 94300, dès 22 € HT",
+    seoDesc: "Coursier express à Vincennes (94300) : plis, documents, prélèvements et colis en deux-roues. Voisin de notre siège, enlèvement en moins de 45 min, devis en 2 h.",
+    seoKeywords: ["coursier Vincennes", "livraison express 94300", "coursier 94 Vincennes", "coursier château de Vincennes"],
+    localGuide: {
+      title: "Livrer à Vincennes : ce que change la géographie de la ville",
+      paragraphs: [
+        "Vincennes se traverse mal en voiture : le centre est resserré entre le château, le bois et la limite parisienne, et l'avenue de Paris comme le cours de Vincennes saturent dès que le trafic se concentre. Pour une course dédiée, le choix du deux-roues se justifie ici par le temps gagné entre deux adresses voisines, pas seulement vers Paris.",
+        "Beaucoup de courses au départ de Vincennes ont une destination précise : le Tribunal judiciaire de Créteil pour le Val-de-Marne, ou Paris 12e et Bastille pour les clients. Indiquez l'heure limite de remise à la commande, nous confirmons la faisabilité avant d'engager le coursier.",
+        "Pour un enlèvement au château ou dans le bois, précisez l'accès exact : l'entrée, le bâtiment et un contact sur place évitent les minutes perdues autour des enceintes.",
+      ],
+    },
+    faq: [
+      {
+        q: "En combien de temps un coursier vient-il chercher un colis à Vincennes ?",
+        a: "L'enlèvement se fait en moins de 45 minutes. Vincennes étant voisine de notre siège de Saint-Mandé, c'est l'une des communes où la prise en charge est la plus rapide. Nous confirmons le délai avant d'engager la course.",
+      },
+      {
+        q: "Quel est le prix d'un coursier à Vincennes ?",
+        a: "Vincennes relève du tarif petite couronne : à partir de 22 € HT en course planifiée et 30 € HT en course immédiate. Le devis définitif tient compte de la destination et du délai, il est donné gratuitement en moins de 2 heures.",
+      },
+      {
+        q: "Pouvez-vous porter des actes de Vincennes au tribunal de Créteil ?",
+        a: "Oui. Les actes et pièces de procédure partent en course dédiée, sans regroupement, avec remise contre signature et justificatif horodaté. Précisez l'heure limite de dépôt au greffe à la commande.",
+      },
+      {
+        q: "Livrez-vous au château de Vincennes ou dans le bois ?",
+        a: "Oui, à condition de nous indiquer l'entrée ou le point de remise exact et un contact sur place. Les enceintes et les accès contrôlés du château et du bois imposent de préciser ces détails avant l'enlèvement.",
+      },
+    ],
+  }),
+  makeZone({
+    slug: "saint-mande",
+    dept: "94160",
+    name: "Saint-Mandé",
+    category: "val-de-marne",
+    landmarks: ["Avenue de Paris", "Avenue du Général de Gaulle", "Hôpital d'instruction des armées Bégin", "IGN", "Bois de Vincennes", "Métro Saint-Mandé et Bérault"],
+    intro: "Saint-Mandé est la ville de notre siège, au 5 Square Nungesser. Commune très dense, collée au 12e arrondissement et au bois de Vincennes, elle réunit des professions libérales, des cabinets, de petites sociétés de services et plusieurs institutions, dont l'hôpital d'instruction des armées Bégin et l'Institut national de l'information géographique et forestière.",
+    logisticsContext: "Pour une adresse à Saint-Mandé, le trajet d'approche est réduit au minimum : c'est la ville de notre siège. Le métro Saint-Mandé et Bérault (ligne 1) et l'avenue de Paris structurent la ville, qui s'étire sur quelques centaines de mètres entre la limite parisienne et Vincennes. Les distances sont courtes : une course Saint-Mandé – Paris 12e se compte en minutes.",
+    sectorExamples: {
+      juridique: "Transmission de pièces entre les cabinets de Saint-Mandé, les études du 12e et les juridictions parisiennes ou le Tribunal judiciaire de Créteil, en remise contre signature.",
+      medical: "Prélèvements et pièces des cabinets et centres de santé de Saint-Mandé, dans le voisinage de l'hôpital Bégin, vers les laboratoires d'analyses d'Île-de-France.",
+      ecommerce: "Expéditions le jour même pour les vendeurs en ligne et boutiques de Saint-Mandé, avec un enlèvement en moins de 45 minutes et une preuve de remise horodatée.",
+      corporate: "Courses régulières entre les petites structures de Saint-Mandé et leurs clients parisiens, à la demande ou en tournées sur créneaux fixes.",
+      evenementiel: "Dépannage de dernière minute (badges, documents, matériel léger) pour les événements du 12e et de Bercy, à quelques minutes de notre siège.",
+      grandsComptes: "Compte entreprise pour les institutions et sociétés de Saint-Mandé, avec facturation mensuelle et imputation par service.",
+    },
+    keyClients: ["Hôpital d'instruction des armées Bégin", "IGN", "Professions libérales", "Cabinets et PME de services"],
+    distanceParis: "Limitrophe de Paris 12e",
+    pricingZone: "standard",
+    seoTitle: "Coursier Saint-Mandé 94160 — notre siège, enlèvement rapide",
+    seoDesc: "Coursier express à Saint-Mandé (94160), ville de notre siège. Pas de trajet d'approche : plis, documents et colis en deux-roues, enlèvement en moins de 45 min.",
+    seoKeywords: ["coursier Saint-Mandé", "coursier express 94160", "coursier 94 Saint-Mandé", "courier services Saint-Mandé"],
+    localGuide: {
+      title: "Saint-Mandé, la ville de notre siège : l'avantage de la proximité",
+      paragraphs: [
+        "Dans la livraison express, le premier poste de retard est le trajet d'approche : le temps que le coursier arrive jusqu'à vous. À Saint-Mandé, notre siège est dans la ville, ce qui réduit ce premier maillon. C'est utile pour les courses de dernière minute, quand l'heure de remise est déjà serrée.",
+        "La ville est petite mais très dense, entourée par le 12e, Vincennes et le bois. Les adresses se trouvent le long de l'avenue de Paris, de l'avenue du Général de Gaulle et des rues perpendiculaires : indiquez le numéro, l'interphone et un contact pour éviter l'attente au pied de l'immeuble.",
+        "Nous intervenons aussi pour des clients de Saint-Mandé qui expédient vers d'autres villes d'Île-de-France : le tarif suit alors la zone de livraison, détaillée sur la page tarifs.",
+      ],
+    },
+    faq: [
+      {
+        q: "Où se situe One Connexion à Saint-Mandé ?",
+        a: "Notre siège est au 5 Square Nungesser, 94160 Saint-Mandé. Les courses se commandent en ligne, par téléphone ou par courriel.",
+      },
+      {
+        q: "Quel délai d'enlèvement à Saint-Mandé ?",
+        a: "Moins de 45 minutes sur toute la zone, et en pratique plus court à Saint-Mandé puisque la commune est celle de notre siège. Le délai exact est confirmé à la commande.",
+      },
+      {
+        q: "Combien coûte une course au départ de Saint-Mandé ?",
+        a: "Saint-Mandé relève du tarif petite couronne : à partir de 22 € HT en course planifiée et 30 € HT en course immédiate. Pour un trajet vers Paris, la grille de la page tarifs donne les fourchettes par zone, avec devis gratuit sous 2 heures.",
+      },
+      {
+        q: "Peut-on ouvrir un compte entreprise depuis Saint-Mandé ?",
+        a: "Oui. Le compte regroupe les courses de tous vos collaborateurs, avec facturation mensuelle et imputation par dossier ou par service.",
+      },
+    ],
+  }),
+  makeZone({
     slug: "vitry-sur-seine",
     dept: "94400",
     name: "Vitry-sur-Seine",

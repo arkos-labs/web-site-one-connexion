@@ -140,6 +140,25 @@ export default async function ZonePage({ params }: Props) {
     areaServed: { "@type": "Place", name: zone.fullName },
   };
 
+  /* FAQ : propre à la zone si elle existe, sinon FAQ générique */
+  const faqItems = zone.faq ?? [
+    { q: `Quels sont les délais d'enlèvement à ${zone.name} ?`, a: `Pour toute urgence, un coursier intervient à ${zone.name} en moins de 45 minutes après validation de la commande, quel que soit le quartier.` },
+    { q: `Effectuez-vous des livraisons volumineuses depuis ${zone.name} ?`, a: "Notre flotte est composée de deux-roues (scooters et motos) : elle convient aux plis, colis et matériel léger. Pour un volume ou un gabarit important, contactez-nous avant de commander, nous vous dirons si nous pouvons le prendre en charge." },
+    { q: `Puis-je regrouper mes expéditions depuis ${zone.name} ?`, a: "Absolument. Nous proposons des tournées régulières et la création de comptes entreprise pour optimiser vos coûts logistiques au quotidien." },
+  ];
+
+  const faqSchema = zone.faq
+    ? {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: zone.faq.map(({ q, a }) => ({
+          "@type": "Question",
+          name: q,
+          acceptedAnswer: { "@type": "Answer", text: a },
+        })),
+      }
+    : null;
+
   /* Zones voisines à suggérer */
   const related = ZONES.filter(
     (z) => z.slug !== slug && (z.category === zone.category || z.dept.startsWith(zone.dept.slice(0, 2)))
@@ -149,6 +168,7 @@ export default async function ZonePage({ params }: Props) {
     <>
       <JsonLd data={breadcrumbSchema} />
       <JsonLd data={serviceSchema} />
+      {faqSchema && <JsonLd data={faqSchema} />}
 
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
       <section className="bg-ink text-white">
@@ -280,6 +300,20 @@ export default async function ZonePage({ params }: Props) {
         </div>
       </section>
 
+      {/* ── Guide local (contenu propre à la zone) ───────────────────────── */}
+      {zone.localGuide && (
+        <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pt-[72px]">
+          <h2 className="mb-6 max-w-[28ch] text-[clamp(24px,3vw,36px)] font-bold leading-[1.1] tracking-tight text-ink">
+            {zone.localGuide.title}
+          </h2>
+          <div className="grid max-w-[68ch] gap-5">
+            {zone.localGuide.paragraphs.map((p) => (
+              <p key={p} className="text-[16px] leading-[1.7] text-muted">{p}</p>
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* ── Secteurs ────────────────────────────────────────────────────────── */}
       <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
         <div className="mb-10">
@@ -399,11 +433,7 @@ export default async function ZonePage({ params }: Props) {
           </h2>
         </div>
         <div className="flex flex-col gap-4">
-          {[
-            { q: `Quels sont les délais d'enlèvement à ${zone.name} ?`, a: `Pour toute urgence, un coursier intervient à ${zone.name} en moins de 45 minutes après validation de la commande, quel que soit le quartier.` },
-            { q: `Effectuez-vous des livraisons volumineuses depuis ${zone.name} ?`, a: "Notre flotte est composée de deux-roues (scooters et motos) : elle convient aux plis, colis et matériel léger. Pour un volume ou un gabarit important, contactez-nous avant de commander, nous vous dirons si nous pouvons le prendre en charge." },
-            { q: `Puis-je regrouper mes expéditions depuis ${zone.name} ?`, a: "Absolument. Nous proposons des tournées régulières et la création de comptes entreprise pour optimiser vos coûts logistiques au quotidien." }
-          ].map((faq, i) => (
+          {faqItems.map((faq, i) => (
             <div key={i} className="rounded-xl border border-gray-200 bg-white p-5 hover:border-accent/30 transition-colors">
               <h3 className="mb-2 text-[15.5px] font-bold text-ink">{faq.q}</h3>
               <p className="text-[14.5px] leading-[1.65] text-muted">{faq.a}</p>
