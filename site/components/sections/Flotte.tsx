@@ -11,7 +11,7 @@ const STATS = [
   { value: "7j/7", label: "7h – 23h, jours fériés inclus" },
 ];
 
-const COVERAGE = ["Paris 1–20", "92", "93", "94", "Roissy · Orly sur devis"];
+const COVERAGE = ["Paris 1–20", "92", "93", "94", "77 · 78 · 91 · 95"];
 
 export default function Flotte({ hideHeader = false }: { hideHeader?: boolean } = {}) {
   return (

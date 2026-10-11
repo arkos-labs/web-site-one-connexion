@@ -22,7 +22,7 @@ export const ZONES_94: Zone[] = [
     distanceParis: "Voisine de Paris 12e et 20e",
     pricingZone: "standard",
     seoTitle: "Coursier Vincennes — livraison express 94300, dès 35 € HT",
-    seoDesc: "Coursier express à Vincennes (94300) : plis, documents, prélèvements et colis en deux-roues. Voisin de notre siège, enlèvement en moins de 45 min, devis en 2 h.",
+    seoDesc: "Coursier express à Vincennes (94300) : plis, documents, prélèvements et colis en deux-roues. Voisin de notre siège, enlèvement en moins de 45 min, prix immédiat.",
     seoKeywords: ["coursier Vincennes", "livraison express 94300", "coursier 94 Vincennes", "coursier château de Vincennes"],
     localGuide: {
       title: "Livrer à Vincennes : ce que change la géographie de la ville",
@@ -39,7 +39,7 @@ export const ZONES_94: Zone[] = [
       },
       {
         q: "Quel est le prix d'un coursier à Vincennes ?",
-        a: "Vincennes relève du tarif petite couronne : à partir de 35 € HT en normal (3 h) et 70 € HT en super urgent (1 h). Le devis définitif tient compte de la destination et du délai, il est donné gratuitement en moins de 2 heures.",
+        a: "Vincennes relève du tarif petite couronne : à partir de 35 € HT en normal (3 h) et 70 € HT en super urgent (1 h). Le prix exact dépend de la destination et du délai, et s’affiche avant de commander.",
       },
       {
         q: "Pouvez-vous porter des actes de Vincennes au tribunal de Créteil ?",
@@ -92,7 +92,7 @@ export const ZONES_94: Zone[] = [
       },
       {
         q: "Combien coûte une course au départ de Saint-Mandé ?",
-        a: "Saint-Mandé relève du tarif petite couronne : à partir de 35 € HT en normal (3 h) et 70 € HT en super urgent (1 h). Pour un trajet vers Paris, la grille de la page tarifs donne les fourchettes par zone, avec devis gratuit sous 2 heures.",
+        a: "Saint-Mandé relève du tarif petite couronne : à partir de 35 € HT en normal (3 h) et 70 € HT en super urgent (1 h). Pour un trajet vers Paris, la grille de la page tarifs donne les fourchettes par zone.",
       },
       {
         q: "Peut-on ouvrir un compte entreprise depuis Saint-Mandé ?",
@@ -120,7 +120,7 @@ export const ZONES_94: Zone[] = [
     distanceParis: "~10 min de Paris 13e",
     pricingZone: "standard",
     seoTitle: "Coursier Vitry-sur-Seine — MAC VAL, Zone industrielle 94400",
-    seoDesc: "Coursier express à Vitry-sur-Seine (94). Zone industrielle, MAC VAL, PME. Enlèvement < 45 min. Coursier B2B deux-roues, traçabilité complète, devis en 2 h.",
+    seoDesc: "Coursier express à Vitry-sur-Seine (94). Zone industrielle, MAC VAL, PME. Enlèvement < 45 min. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
     seoKeywords: ["coursier Vitry-sur-Seine", "livraison express 94400", "coursier 94 Vitry"],
   }),
   makeZone({
@@ -143,7 +143,7 @@ export const ZONES_94: Zone[] = [
     distanceParis: "~15 min de Paris 12e",
     pricingZone: "standard",
     seoTitle: "Coursier Alfortville — Livraison express 94140",
-    seoDesc: "Coursier express à Alfortville (94). PME, commerces, professions libérales. Enlèvement < 45 min. Traçabilité complète, devis en 2 h.",
+    seoDesc: "Coursier express à Alfortville (94). PME, commerces, professions libérales. Enlèvement < 45 min. Traçabilité complète, prix immédiat.",
     seoKeywords: ["coursier Alfortville", "livraison express 94140", "coursier 94 Alfortville"],
   }),
   makeZone({
@@ -166,7 +166,7 @@ export const ZONES_94: Zone[] = [
     distanceParis: "~20 min de Paris 12e",
     pricingZone: "standard",
     seoTitle: "Coursier Maisons-Alfort — ENVA, 94700",
-    seoDesc: "Coursier express à Maisons-Alfort (94). ENVA, médical, PME. Enlèvement < 45 min. Coursier B2B deux-roues, traçabilité complète, devis en 2 h.",
+    seoDesc: "Coursier express à Maisons-Alfort (94). ENVA, médical, PME. Enlèvement < 45 min. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
     seoKeywords: ["coursier Maisons-Alfort", "livraison express 94700", "coursier ENVA Maisons-Alfort"],
   }),
   makeZone({
@@ -189,7 +189,7 @@ export const ZONES_94: Zone[] = [
     distanceParis: "~5 min de Paris 12e",
     pricingZone: "standard",
     seoTitle: "Coursier Charenton-le-Pont — Livraison express 94220",
-    seoDesc: "Coursier express à Charenton-le-Pont (94). Limitrophe Paris 12e, PME, services. Enlèvement < 45 min. Traçabilité complète, devis en 2 h.",
+    seoDesc: "Coursier express à Charenton-le-Pont (94). Limitrophe Paris 12e, PME, services. Enlèvement < 45 min. Traçabilité complète, prix immédiat.",
     seoKeywords: ["coursier Charenton-le-Pont", "livraison express 94220", "coursier 94 Charenton"],
   }),
   makeZone({
@@ -235,7 +235,7 @@ export const ZONES_94: Zone[] = [
     distanceParis: "~20 min de Paris 12e",
     pricingZone: "standard",
     seoTitle: "Coursier Joinville-le-Pont — Marne, 94340",
-    seoDesc: "Coursier express à Joinville-le-Pont (94). Bords de Marne, professions libérales. Enlèvement < 45 min. Traçabilité complète, devis en 2 h.",
+    seoDesc: "Coursier express à Joinville-le-Pont (94). Bords de Marne, professions libérales. Enlèvement < 45 min. Traçabilité complète, prix immédiat.",
     seoKeywords: ["coursier Joinville-le-Pont", "livraison express 94340", "coursier 94 Joinville"],
   }),
   makeZone({
@@ -258,7 +258,7 @@ export const ZONES_94: Zone[] = [
     distanceParis: "~20 min de Paris 12e",
     pricingZone: "standard",
     seoTitle: "Coursier Nogent-sur-Marne — Livraison express 94130",
-    seoDesc: "Coursier express à Nogent-sur-Marne (94). Professions libérales, médical. Enlèvement < 45 min. Coursier B2B deux-roues, traçabilité complète, devis en 2 h.",
+    seoDesc: "Coursier express à Nogent-sur-Marne (94). Professions libérales, médical. Enlèvement < 45 min. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
     seoKeywords: ["coursier Nogent-sur-Marne", "livraison express 94130", "coursier 94 Nogent"],
   }),
   makeZone({
@@ -281,7 +281,7 @@ export const ZONES_94: Zone[] = [
     distanceParis: "~25 min de Paris 12e",
     pricingZone: "standard",
     seoTitle: "Coursier Le Perreux-sur-Marne — 94170",
-    seoDesc: "Coursier express au Perreux-sur-Marne (94). PME, professions libérales. Enlèvement < 45 min. Coursier B2B deux-roues, traçabilité complète, devis en 2 h.",
+    seoDesc: "Coursier express au Perreux-sur-Marne (94). PME, professions libérales. Enlèvement < 45 min. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
     seoKeywords: ["coursier Le Perreux-sur-Marne", "livraison express 94170", "coursier 94 Perreux"],
   }),
   makeZone({
@@ -304,7 +304,7 @@ export const ZONES_94: Zone[] = [
     distanceParis: "~15 min de Paris 12e",
     pricingZone: "standard",
     seoTitle: "Coursier Fontenay-sous-Bois — Livraison express 94120",
-    seoDesc: "Coursier express à Fontenay-sous-Bois (94). PME, médical, agences. Enlèvement < 45 min. Coursier B2B deux-roues, traçabilité complète, devis en 2 h.",
+    seoDesc: "Coursier express à Fontenay-sous-Bois (94). PME, médical, agences. Enlèvement < 45 min. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
     seoKeywords: ["coursier Fontenay-sous-Bois", "livraison express 94120", "coursier 94 Fontenay"],
   }),
   makeZone({
@@ -327,7 +327,7 @@ export const ZONES_94: Zone[] = [
     distanceParis: "~25 min de Paris 12e",
     pricingZone: "standard",
     seoTitle: "Coursier Saint-Maur-des-Fossés — Marne, 94100",
-    seoDesc: "Coursier express à Saint-Maur-des-Fossés (94). Professions libérales, médical, PME. Enlèvement < 45 min. Traçabilité complète, devis en 2 h.",
+    seoDesc: "Coursier express à Saint-Maur-des-Fossés (94). Professions libérales, médical, PME. Enlèvement < 45 min. Traçabilité complète, prix immédiat.",
     seoKeywords: ["coursier Saint-Maur-des-Fossés", "livraison express 94100", "coursier 94 Saint-Maur"],
   }),
   makeZone({
@@ -350,7 +350,7 @@ export const ZONES_94: Zone[] = [
     distanceParis: "~25 min de Paris 12e",
     pricingZone: "standard",
     seoTitle: "Coursier Champigny-sur-Marne — Livraison express 94500",
-    seoDesc: "Coursier express à Champigny-sur-Marne (94). Industries, PME, commerces. Enlèvement < 45 min. Coursier B2B deux-roues, traçabilité complète, devis en 2 h.",
+    seoDesc: "Coursier express à Champigny-sur-Marne (94). Industries, PME, commerces. Enlèvement < 45 min. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
     seoKeywords: ["coursier Champigny-sur-Marne", "livraison express 94500", "coursier 94 Champigny"],
   }),
   makeZone({
@@ -396,7 +396,7 @@ export const ZONES_94: Zone[] = [
     distanceParis: "~5 min de Paris 13e",
     pricingZone: "standard",
     seoTitle: "Coursier Gentilly — Livraison express 94250",
-    seoDesc: "Coursier express à Gentilly (94). Limitrophe Paris 13e, PME. Enlèvement < 45 min. Coursier B2B deux-roues, traçabilité complète, devis en 2 h.",
+    seoDesc: "Coursier express à Gentilly (94). Limitrophe Paris 13e, PME. Enlèvement < 45 min. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
     seoKeywords: ["coursier Gentilly", "livraison express 94250", "coursier 94 Gentilly"],
   }),
   makeZone({
@@ -419,7 +419,7 @@ export const ZONES_94: Zone[] = [
     distanceParis: "~5 min de Paris 14e",
     pricingZone: "standard",
     seoTitle: "Coursier Arcueil — Tech & R&D, 94110",
-    seoDesc: "Coursier express à Arcueil (94). Tech, R&D, PME. Limitrophe Paris 14e. Enlèvement < 45 min. Coursier B2B deux-roues, traçabilité complète, devis en 2 h.",
+    seoDesc: "Coursier express à Arcueil (94). Tech, R&D, PME. Limitrophe Paris 14e. Enlèvement < 45 min. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
     seoKeywords: ["coursier Arcueil", "livraison express 94110", "coursier 94 Arcueil"],
   }),
   makeZone({
@@ -442,7 +442,7 @@ export const ZONES_94: Zone[] = [
     distanceParis: "~15 min de Paris 14e",
     pricingZone: "standard",
     seoTitle: "Coursier Cachan — Livraison express 94230",
-    seoDesc: "Coursier express à Cachan (94). Tech, PME, formation. Enlèvement < 45 min. Coursier B2B deux-roues, traçabilité complète, devis en 2 h.",
+    seoDesc: "Coursier express à Cachan (94). Tech, PME, formation. Enlèvement < 45 min. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
     seoKeywords: ["coursier Cachan", "livraison express 94230", "coursier 94 Cachan"],
   }),
   makeZone({
@@ -465,7 +465,7 @@ export const ZONES_94: Zone[] = [
     distanceParis: "~20 min de Paris 13e",
     pricingZone: "standard",
     seoTitle: "Coursier Rungis — MIN, Marché International 94150",
-    seoDesc: "Coursier express à Rungis (94). MIN, marché international, grossistes. Enlèvement < 45 min. Coursier B2B deux-roues, traçabilité complète, devis en 2 h.",
+    seoDesc: "Coursier express à Rungis (94). MIN, marché international, grossistes. Enlèvement < 45 min. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
     seoKeywords: ["coursier Rungis", "livraison express 94150", "coursier MIN Rungis", "coursier marché Rungis"],
   }),
   makeZone({
@@ -488,7 +488,7 @@ export const ZONES_94: Zone[] = [
     distanceParis: "~25 min de Paris 13e",
     pricingZone: "standard",
     seoTitle: "Coursier Orly — Aéroport Paris-Orly, 94310",
-    seoDesc: "Coursier express à Orly (94). Aéroport Paris-Orly, fret, zone aéroportuaire. Enlèvement < 45 min. Traçabilité complète, devis en 2 h.",
+    seoDesc: "Coursier express à Orly (94). Aéroport Paris-Orly, fret, zone aéroportuaire. Enlèvement < 45 min. Traçabilité complète, prix immédiat.",
     seoKeywords: ["coursier Orly", "livraison express 94310", "coursier aéroport Orly", "coursier 94 Orly"],
   }),
   makeZone({
@@ -511,7 +511,7 @@ export const ZONES_94: Zone[] = [
     distanceParis: "~20 min de Paris 13e",
     pricingZone: "standard",
     seoTitle: "Coursier Chevilly-Larue — Zone logistique Rungis 94550",
-    seoDesc: "Coursier express à Chevilly-Larue (94). Zone Rungis, logistique, distribution. Enlèvement < 45 min. Traçabilité complète, devis en 2 h.",
+    seoDesc: "Coursier express à Chevilly-Larue (94). Zone Rungis, logistique, distribution. Enlèvement < 45 min. Traçabilité complète, prix immédiat.",
     seoKeywords: ["coursier Chevilly-Larue", "livraison express 94550", "coursier 94 Chevilly"],
   }),
   makeZone({
@@ -534,7 +534,7 @@ export const ZONES_94: Zone[] = [
     distanceParis: "~20 min de Paris 13e",
     pricingZone: "standard",
     seoTitle: "Coursier L'Haÿ-les-Roses — Livraison express 94240",
-    seoDesc: "Coursier express à L'Haÿ-les-Roses (94). PME, professions libérales. Enlèvement < 45 min. Coursier B2B deux-roues, traçabilité complète, devis en 2 h.",
+    seoDesc: "Coursier express à L'Haÿ-les-Roses (94). PME, professions libérales. Enlèvement < 45 min. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
     seoKeywords: ["coursier L'Haÿ-les-Roses", "livraison express 94240", "coursier 94 Haÿ-les-Roses"],
   }),
   makeZone({
@@ -557,7 +557,7 @@ export const ZONES_94: Zone[] = [
     distanceParis: "~25 min de Paris 14e",
     pricingZone: "standard",
     seoTitle: "Coursier Fresnes — CHSF, 94260",
-    seoDesc: "Coursier express à Fresnes (94). CHSF, médical, PME. Enlèvement < 45 min. Coursier B2B deux-roues, traçabilité complète, devis en 2 h.",
+    seoDesc: "Coursier express à Fresnes (94). CHSF, médical, PME. Enlèvement < 45 min. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
     seoKeywords: ["coursier Fresnes", "livraison express 94260", "coursier 94 Fresnes"],
   }),
   makeZone({
@@ -580,7 +580,7 @@ export const ZONES_94: Zone[] = [
     distanceParis: "~25 min de Paris 13e",
     pricingZone: "standard",
     seoTitle: "Coursier Thiais — Belle Épine, Rungis 94320",
-    seoDesc: "Coursier express à Thiais (94). Belle Épine, Rungis, retail, logistique. Enlèvement < 45 min. Coursier B2B deux-roues, traçabilité complète, devis en 2 h.",
+    seoDesc: "Coursier express à Thiais (94). Belle Épine, Rungis, retail, logistique. Enlèvement < 45 min. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
     seoKeywords: ["coursier Thiais", "livraison express 94320", "coursier Belle Épine Thiais"],
   }),
 ];

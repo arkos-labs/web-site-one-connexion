@@ -106,7 +106,7 @@ export const transportMedical: Service = {
   ],
 
   coverage:
-    "Paris intra-muros et petite couronne (92, 93, 94) au tarif standard. Roissy, Orly et la grande couronne sur devis. Laboratoires, cliniques et plateaux techniques d’Île-de-France desservis aux mêmes conditions.",
+    "Paris intra-muros et petite couronne (92, 93, 94) au tarif standard. Roissy, Orly et la grande couronne au tarif de leur zone. Laboratoires, cliniques et plateaux techniques d’Île-de-France desservis aux mêmes conditions.",
 
   faq: [
     {

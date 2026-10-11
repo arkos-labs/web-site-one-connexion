@@ -35,7 +35,7 @@ export const transportEvenementiel: Service = {
   included: [
     "Véhicules sécurisés et discrets",
     "Confirmation de livraison",
-    "Attente sur site possible (sur devis)",
+    "Attente sur site possible",
     "Traitement minutieux des objets fragiles (prototypes, maquettes)",
   ],
   useCases: [

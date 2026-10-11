@@ -35,7 +35,7 @@ export const compteEntreprise: Service = {
   stats: [
     { value: "1", label: "Interlocuteur dédié" },
     { value: "Mensuelle", label: "Facturation" },
-    { value: "Sous 2 h", label: "Réponse aux devis" },
+    { value: "Sous 24 h", label: "Ouverture du compte" },
   ],
 
   context: {
@@ -96,7 +96,7 @@ export const compteEntreprise: Service = {
   ],
 
   coverage:
-    "Le compte entreprise couvre l’ensemble de nos prestations sur Paris et la petite couronne (92, 93, 94), Roissy, Orly et la grande couronne sur devis. Il s’applique indifféremment aux plis confidentiels, au transport médical et à la livraison e-commerce.",
+    "Le compte entreprise couvre l’ensemble de nos prestations sur Paris et la petite couronne (92, 93, 94), Roissy, Orly et la grande couronne au tarif de leur zone. Il s’applique indifféremment aux plis confidentiels, au transport médical et à la livraison e-commerce.",
 
   faq: [
     {

@@ -35,7 +35,7 @@ export const livraisonEcommerce: Service = {
 
   stats: [
     { value: "Jour même", label: "Délai de livraison" },
-    { value: "< 2 h", label: "Devis entreprise" },
+    { value: "< 45 min", label: "Enlèvement" },
     { value: "18 kg", label: "Charge par course" },
   ],
 
@@ -97,7 +97,7 @@ export const livraisonEcommerce: Service = {
   ],
 
   coverage:
-    "Paris intra-muros et petite couronne (92, 93, 94) au tarif standard. Roissy, Orly et la grande couronne sur devis. Les collectes récurrentes s’organisent sur créneaux fixes convenus à l’avance.",
+    "Paris intra-muros et petite couronne (92, 93, 94) au tarif standard. Roissy, Orly et la grande couronne au tarif de leur zone. Les collectes récurrentes s’organisent sur créneaux fixes convenus à l’avance.",
 
   faq: [
     {
@@ -108,7 +108,7 @@ export const livraisonEcommerce: Service = {
     {
       question: "Quel est le poids maximal par course ?",
       answer:
-        "18 kg par course, dans un top-case de 60 × 40 cm. Au-delà, la commande est répartie sur plusieurs courses : nous le signalons au moment du devis.",
+        "18 kg par course, dans un top-case de 60 × 40 cm. Au-delà, la commande est répartie sur plusieurs courses : nous le signalons au moment de la commande.",
     },
     {
       question: "Gérez-vous les retours ?",

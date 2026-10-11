@@ -12,7 +12,7 @@ import { MapPin } from "lucide-react";
 export const metadata: Metadata = {
   title: "Coursier La Défense & Hauts-de-Seine",
   description:
-    "Coursier moto dédié à La Défense, Nanterre, Neuilly, Boulogne-Billancourt et tout le 92. Enlèvement < 45 min, suivi en ligne. Devis sous 2 h.",
+    "Coursier moto dédié à La Défense, Nanterre, Neuilly, Boulogne-Billancourt et tout le 92. Enlèvement < 45 min, suivi en ligne. Prix affiché avant de commander.",
   alternates: { canonical: "/zones/la-defense" },
   openGraph: {
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION — Coursier B2B Paris & Île-de-France" }],
@@ -43,7 +43,7 @@ const VILLES = [
 
 const STATS = [
   { value: "< 45 min", label: "Prise en charge" },
-  { value: "< 2 h", label: "Devis entreprise" },
+  { value: "< 45 min", label: "Enlèvement" },
   { value: "7j/7", label: "7h–23h" },
   { value: "92", label: "Dépt. couvert" },
 ];
@@ -153,7 +153,7 @@ export default function ZonelaDefense() {
           </h2>
           <div className="grid gap-8 md:grid-cols-3">
             {[
-              { num: "01", title: "Demande immédiate", desc: "Contactez-nous par téléphone ou formulaire. Un devis vous est communiqué instantanément pour les courses express dans le 92." },
+              { num: "01", title: "Demande immédiate", desc: "Contactez-nous par téléphone ou formulaire. Le prix s’affiche instantanément pour les courses express dans le 92." },
               { num: "02", title: "Prise en charge rapide", desc: "Un coursier dédié se présente à l'adresse indiquée (La Défense, Nanterre, etc.) en moins de 45 minutes." },
               { num: "03", title: "Suivi & Confirmation", desc: "Suivez l'avancement de votre course en ligne et retrouvez la preuve de remise une fois le pli remis en main propre." }
             ].map((step) => (

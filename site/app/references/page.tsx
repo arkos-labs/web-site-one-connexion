@@ -59,7 +59,7 @@ const SECTEURS = [
 const CHIFFRES = [
   { value: "7j/7", label: "Amplitude 7h–23h, jours fériés inclus" },
   { value: "< 45 min", label: "Prise en charge dès validation" },
-  { value: "< 2 h", label: "Devis entreprise" },
+  { value: "< 45 min", label: "Enlèvement" },
   { value: "Depuis 2026", label: "Expertise B2B Île-de-France" },
 ];
 
@@ -167,14 +167,14 @@ export default function ReferencesPage() {
               Dans un environnement où chaque minute compte, One Connexion met au service des entreprises d'Île-de-France un modèle simple : une course dédiée par pli, des dispatcheurs joignables et un suivi en ligne de chaque course.
             </p>
             <p className="text-[15.5px] leading-[1.7] text-muted">
-              Nos engagements : un enlèvement en moins de 45 minutes, un devis entreprise en moins de 2 heures et un interlocuteur unique.
+              Nos engagements : un enlèvement en moins de 45 minutes, un prix affiché avant de commander et un interlocuteur unique.
             </p>
           </div>
           <div className="grid grid-cols-2 gap-4">
             {[
               { val: "7j/7", label: "amplitude 7h–23h, jours fériés inclus" },
               { val: "< 45 min", label: "prise en charge dès validation" },
-              { val: "< 2 h", label: "devis entreprise" },
+              { val: "< 45 min", label: "enlèvement" },
               { val: "1", label: "interlocuteur unique" },
             ].map((item) => (
               <div key={item.label} className="flex flex-col gap-2 rounded-2xl border border-line bg-white p-6 shadow-sm">

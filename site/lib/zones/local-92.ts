@@ -23,7 +23,7 @@ export const LOCAL_92: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Pouvez-vous déposer un acte au tribunal judiciaire de Nanterre ?", a: "Oui. L'acte part en course dédiée, avec remise contre signature et justificatif horodaté. Précisez le service et l'heure limite de dépôt." },
       { q: "Livrez-vous à l'université Paris Nanterre ?", a: "Oui. Le campus est vaste : indiquez le bâtiment, le service et un contact sur place pour que le coursier trouve l'accueil sans détour." },
-      { q: "Quel tarif pour Nanterre ?", a: "Nanterre relève de la petite couronne : à partir de 35 € HT en normal (3 h) et 70 € HT en super urgent (1 h), avec devis gratuit en moins de 2 heures." },
+      { q: "Quel tarif pour Nanterre ?", a: "Nanterre relève de la petite couronne : à partir de 35 € HT en normal (3 h) et 70 € HT en super urgent (1 h)." },
     ],
   },
 
@@ -42,7 +42,7 @@ export const LOCAL_92: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Comment se passe une remise dans une tour de La Défense ?", a: "Le coursier se présente à l'accueil avec le nom du destinataire. Donnez-nous l'étage, l'entreprise et un contact direct pour qu'il soit annoncé et que la remise soit signée." },
       { q: "Livrez-vous les colis volumineux dans les tours ?", a: "Notre flotte est en deux-roues, avec un top-case de 18 kg maximum. Pour un volume plus important, appelez-nous avant de commander." },
-      { q: "Quel est le tarif à Courbevoie ?", a: "Courbevoie fait partie de la petite couronne : dès 35 € HT en normal (3 h) et 70 € HT en super urgent (1 h), devis gratuit sous 2 heures." },
+      { q: "Quel est le tarif à Courbevoie ?", a: "Courbevoie fait partie de la petite couronne : dès 35 € HT en normal (3 h) et 70 € HT en super urgent (1 h)." },
     ],
   },
 
@@ -80,7 +80,7 @@ export const LOCAL_92: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Transportez-vous des prélèvements depuis ou vers l'hôpital Foch ?", a: "Oui, en course dédiée avec contenant isotherme sur demande. Le délai de stabilité fixé par le laboratoire détermine la faisabilité." },
       { q: "Desservez-vous le haut de Suresnes ?", a: "Oui, jusqu'au Mont-Valérien. Indiquez le numéro et un contact joignable : les rues en pente sont étroites." },
-      { q: "Combien coûte une course au départ de Suresnes ?", a: "Dès 35 € HT en normal (3 h) et 70 € HT en super urgent (1 h), devis gratuit en moins de 2 heures." },
+      { q: "Combien coûte une course au départ de Suresnes ?", a: "Dès 35 € HT en normal (3 h) et 70 € HT en super urgent (1 h)." },
     ],
   },
 
@@ -99,7 +99,7 @@ export const LOCAL_92: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Livrez-vous dans les parcs d'activités de Rueil-Malmaison ?", a: "Oui. Donnez le nom du bâtiment, l'accueil et le contact du destinataire : l'accès aux sites d'entreprise est contrôlé." },
       { q: "Pouvez-vous relier Rueil-Malmaison à Paris le jour même ?", a: "Oui, en course immédiate ou planifiée, par l'A86 et la RN13. Nous confirmons le délai avant le départ." },
-      { q: "Quelle est la tarification ?", a: "Rueil-Malmaison est en petite couronne : dès 35 € HT en normal (3 h) et 70 € HT en super urgent (1 h), devis gratuit en 2 heures." },
+      { q: "Quelle est la tarification ?", a: "Rueil-Malmaison est en petite couronne : dès 35 € HT en normal (3 h) et 70 € HT en super urgent (1 h)." },
     ],
   },
 
@@ -175,7 +175,7 @@ export const LOCAL_92: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Livrez-vous à l'intérieur du port de Gennevilliers ?", a: "Oui, avec le numéro de quai ou d'entrée et un contact sur place. Les accès au port sont contrôlés." },
       { q: "Pouvez-vous acheminer des documents douaniers ?", a: "Oui, en course dédiée, avec remise contre signature et heure consignée." },
-      { q: "Quel tarif à Gennevilliers ?", a: "Dès 35 € HT en normal (3 h) et 70 € HT en super urgent (1 h), devis gratuit en 2 heures." },
+      { q: "Quel tarif à Gennevilliers ?", a: "Dès 35 € HT en normal (3 h) et 70 € HT en super urgent (1 h)." },
     ],
   },
 
@@ -301,12 +301,12 @@ export const LOCAL_92: Record<string, LocalZoneContent> = {
     localGuide: {
       title: "Antony : à mi-chemin entre Paris, Orly et Saclay",
       paragraphs: [
-        "Antony se trouve entre Paris et le sud de l'Essonne. Pour les entreprises de la commune, les courses vont dans trois directions : Paris, Orly et Rungis, et le plateau de Saclay. La destination fixe le tarif : la petite couronne suit la grille standard, l'Essonne se chiffre sur devis.",
+        "Antony se trouve entre Paris et le sud de l'Essonne. Pour les entreprises de la commune, les courses vont dans trois directions : Paris, Orly et Rungis, et le plateau de Saclay. La destination fixe le tarif : la petite couronne suit la grille standard, l’Essonne démarre à 49 € HT.",
         "L'hôpital privé d'Antony et les cabinets de la commune échangent des prélèvements et des dossiers avec des laboratoires voisins. Précisez le service, l'heure limite et la température de conservation lorsqu'elle s'applique.",
       ],
     },
     faq: [
-      { q: "Livrez-vous vers Orly et Rungis depuis Antony ?", a: "Oui. Ces trajets sont proches ; selon la destination, ils relèvent de la grille standard ou d'un devis." },
+      { q: "Livrez-vous vers Orly et Rungis depuis Antony ?", a: "Oui. Ces trajets sont proches ; selon la destination, ils relèvent de la grille petite couronne ou grande couronne." },
       { q: "Transportez-vous des prélèvements depuis l'hôpital privé d'Antony ?", a: "Oui, en course dédiée, avec contenant isotherme à la demande." },
       { q: "Quel tarif à Antony ?", a: "Antony est en petite couronne : dès 35 € HT en normal (3 h) et 70 € HT en super urgent (1 h)." },
     ],

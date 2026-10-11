@@ -10,7 +10,7 @@ import { SITE_URL } from "@/lib/site-content";
 const FAQ = [
   {
     q: "Quelles zones couvre ONE CONNEXION ?",
-    a: "Paris intramuros (1er au 20e arrondissement), La Défense, la petite couronne (92, 93, 94) et l'ensemble de l'Île-de-France. Roissy-CDG et Orly sont accessibles sur devis spécifique.",
+    a: "Paris intramuros (1er au 20e arrondissement), La Défense, la petite couronne (92, 93, 94) et l'ensemble de l'Île-de-France. Roissy-CDG (95) et Orly (94) sont desservis au tarif de leur zone.",
   },
   {
     q: "En combien de temps un coursier vient-il enlever mon pli ?",
@@ -18,11 +18,11 @@ const FAQ = [
   },
   {
     q: "Quels sont vos horaires (nuit, weekend, jours fériés) ?",
-    a: "Le service est ouvert 7j/7, de 7h à 23h, jours fériés inclus. Ouvert le samedi, le dimanche et les jours fériés avec un régulateur dédié joignable en permanence. Les courses de nuit (après 23h) sont accessibles sur devis spécifique.",
+    a: "Le service est ouvert 7j/7, de 7h à 23h, jours fériés inclus. Ouvert le samedi, le dimanche et les jours fériés avec un régulateur dédié joignable en permanence. Pour une course de nuit (après 23h), contactez-nous.",
   },
   {
-    q: "Comment obtenir un devis, et sous quel délai ?",
-    a: "Par téléphone, par e-mail ou via le formulaire du site. Les entreprises reçoivent un devis en moins de 2 heures. La zone et la distance déterminent la base tarifaire.",
+    q: "Comment connaître le prix d’une course ?",
+    a: "Le prix s’affiche automatiquement dès que vous saisissez les adresses et le délai, avant de valider la commande. La zone et le délai déterminent le tarif.",
   },
   {
     q: "Quels types de courses prenez-vous en charge ?",

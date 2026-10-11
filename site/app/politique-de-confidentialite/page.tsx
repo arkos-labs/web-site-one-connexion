@@ -29,7 +29,7 @@ export default function PolitiqueConfidentialite() {
           <h2 className="mb-2 text-lg font-bold text-ink">2. Données collectées et finalités</h2>
           <ul className="list-disc space-y-2 pl-5">
             <li>
-              <strong>Demandes de devis et de contact</strong> (nom, société, e-mail, téléphone, contenu du
+              <strong>Demandes de contact</strong> (nom, société, e-mail, téléphone, contenu du
               message, adresses de course) : répondre à votre demande. Base légale : mesures
               précontractuelles et intérêt légitime.
             </li>

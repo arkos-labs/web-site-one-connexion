@@ -23,7 +23,7 @@ export const ZONES_78: Zone[] = [
     distanceParis: "~30 min de Paris 15e",
     pricingZone: "devis",
     seoTitle: "Coursier Versailles — Cour d'appel, Château, 78000",
-    seoDesc: "Coursier express à Versailles (78). Cour d'appel, Tribunal, château. Sur devis Yvelines. Coursier B2B deux-roues, traçabilité complète, devis en 2 h.",
+    seoDesc: "Coursier express à Versailles (78). Cour d'appel, Tribunal, château. Dès 49 € HT. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
     seoKeywords: ["coursier Versailles", "livraison express 78000", "coursier Cour d'appel Versailles", "coursier 78 Versailles"],
   }),
   makeZone({
@@ -47,7 +47,7 @@ export const ZONES_78: Zone[] = [
     distanceParis: "~35 min de La Défense",
     pricingZone: "devis",
     seoTitle: "Coursier Saint-Germain-en-Laye — Château, Prestige 78100",
-    seoDesc: "Coursier express à Saint-Germain-en-Laye (78). Château, cliniques prestige, professions libérales. Sur devis. Traçabilité complète, devis en 2 h.",
+    seoDesc: "Coursier express à Saint-Germain-en-Laye (78). Château, cliniques prestige, professions libérales. Dès 49 € HT. Traçabilité complète, prix immédiat.",
     seoKeywords: ["coursier Saint-Germain-en-Laye", "livraison express 78100", "coursier 78 Saint-Germain"],
   }),
   makeZone({
@@ -71,7 +71,7 @@ export const ZONES_78: Zone[] = [
     distanceParis: "~60 min de Paris",
     pricingZone: "devis",
     seoTitle: "Coursier Mantes-la-Jolie — CH, Zone industrielle 78200",
-    seoDesc: "Coursier express à Mantes-la-Jolie (78). Hôpital, industriels, PME. Sur devis Yvelines. Coursier B2B deux-roues, traçabilité complète, devis en 2 h.",
+    seoDesc: "Coursier express à Mantes-la-Jolie (78). Hôpital, industriels, PME. Dès 49 € HT. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
     seoKeywords: ["coursier Mantes-la-Jolie", "livraison express 78200", "coursier 78 Mantes"],
   }),
   makeZone({
@@ -95,7 +95,7 @@ export const ZONES_78: Zone[] = [
     distanceParis: "~35 min de Paris 17e",
     pricingZone: "devis",
     seoTitle: "Coursier Poissy — Stellantis, Automobile 78300",
-    seoDesc: "Coursier express à Poissy (78). Stellantis, industrie automobile. Sur devis Yvelines. Coursier B2B deux-roues, traçabilité complète, devis en 2 h.",
+    seoDesc: "Coursier express à Poissy (78). Stellantis, industrie automobile. Dès 49 € HT. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
     seoKeywords: ["coursier Poissy", "livraison express 78300", "coursier Stellantis Poissy", "coursier 78 Poissy"],
   }),
   makeZone({
@@ -119,7 +119,7 @@ export const ZONES_78: Zone[] = [
     distanceParis: "~25 min de Paris 17e",
     pricingZone: "devis",
     seoTitle: "Coursier Sartrouville — Livraison express 78500",
-    seoDesc: "Coursier express à Sartrouville (78). Industries, PME. Sur devis Yvelines. Coursier B2B deux-roues, traçabilité complète, devis en 2 h.",
+    seoDesc: "Coursier express à Sartrouville (78). Industries, PME. Dès 49 € HT. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
     seoKeywords: ["coursier Sartrouville", "livraison express 78500", "coursier 78 Sartrouville"],
   }),
   makeZone({
@@ -143,7 +143,7 @@ export const ZONES_78: Zone[] = [
     distanceParis: "~30 min de Paris 15e",
     pricingZone: "devis",
     seoTitle: "Coursier Guyancourt — Renault Technocentre, SQY 78280",
-    seoDesc: "Coursier express à Guyancourt (78). Renault Technocentre, Saint-Quentin-en-Yvelines. Sur devis. Coursier B2B deux-roues, traçabilité complète, devis en 2 h.",
+    seoDesc: "Coursier express à Guyancourt (78). Renault Technocentre, Saint-Quentin-en-Yvelines. Dès 49 € HT. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
     seoKeywords: ["coursier Guyancourt", "livraison express 78280", "coursier Renault Technocentre Guyancourt", "coursier SQY"],
   }),
   makeZone({
@@ -167,7 +167,7 @@ export const ZONES_78: Zone[] = [
     distanceParis: "~25 min de Paris 15e",
     pricingZone: "devis",
     seoTitle: "Coursier Vélizy-Villacoublay — Dassault, Thales 78140",
-    seoDesc: "Coursier express à Vélizy-Villacoublay (78). Dassault, Thales, Boeing, aéronautique. Sur devis. Coursier B2B deux-roues, traçabilité complète, devis en 2 h.",
+    seoDesc: "Coursier express à Vélizy-Villacoublay (78). Dassault, Thales, Boeing, aéronautique. Dès 49 € HT. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
     seoKeywords: ["coursier Vélizy-Villacoublay", "livraison express 78140", "coursier Dassault Vélizy", "coursier aéronautique Vélizy"],
   }),
   makeZone({
@@ -191,7 +191,7 @@ export const ZONES_78: Zone[] = [
     distanceParis: "~25 min de La Défense",
     pricingZone: "devis",
     seoTitle: "Coursier Chatou — Île de Chatou, 78400",
-    seoDesc: "Coursier express à Chatou (78). PME, professions libérales, événementiel. Sur devis. Coursier B2B deux-roues, traçabilité complète, devis en 2 h.",
+    seoDesc: "Coursier express à Chatou (78). PME, professions libérales, événementiel. Dès 49 € HT. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
     seoKeywords: ["coursier Chatou", "livraison express 78400", "coursier 78 Chatou"],
   }),
   makeZone({
@@ -215,7 +215,7 @@ export const ZONES_78: Zone[] = [
     distanceParis: "~20 min de Paris 17e",
     pricingZone: "devis",
     seoTitle: "Coursier Houilles — Livraison express 78800",
-    seoDesc: "Coursier express à Houilles (78). PME, professions libérales. Sur devis Yvelines. Coursier B2B deux-roues, traçabilité complète, devis en 2 h.",
+    seoDesc: "Coursier express à Houilles (78). PME, professions libérales. Dès 49 € HT. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
     seoKeywords: ["coursier Houilles", "livraison express 78800", "coursier 78 Houilles"],
   }),
 ];

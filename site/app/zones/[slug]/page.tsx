@@ -239,7 +239,7 @@ export default async function ZonePage({ params }: Props) {
                   <CheckCircle size={14} className="mt-0.5 shrink-0 text-accent" />
                   <div>
                     <div className="text-[13px] font-semibold text-white">
-                      Tarif {zone.pricingZone === "standard" ? "standard" : "sur devis"}
+                      Tarif {zone.pricingZone === "standard" ? "standard" : "grande couronne"}
                     </div>
                     <div className="text-[11px] text-white/40">Facturation à la course ou mensuelle</div>
                   </div>
@@ -479,7 +479,7 @@ export default async function ZonePage({ params }: Props) {
           </div>
           <div className="grid gap-8 md:grid-cols-3">
             {[
-              { num: "01", title: "Demande immédiate", desc: "Contactez-nous par téléphone ou via notre formulaire. Devis gratuit sous 2 h." },
+              { num: "01", title: "Demande immédiate", desc: "Commandez en ligne ou par téléphone : le prix s’affiche avant de valider. Prix affiché avant de commander." },
               { num: "02", title: "Enlèvement < 45 min", desc: `Un coursier spécialisé se présente à vos bureaux à ${zone.name} en moins de 45 minutes.` },
               { num: "03", title: "Livraison & Suivi", desc: "Suivez l'avancement de votre course en ligne jusqu'à la remise, horodatée à la réception." }
             ].map((step) => (

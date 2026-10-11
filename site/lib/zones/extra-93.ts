@@ -100,13 +100,13 @@ export const EXTRA_93: Record<string, ExtraZoneContent> = {
   "aulnay-sous-bois": {
     cases: [
       { title: "Un prélèvement depuis Robert-Ballanger", body: "Un service de l'hôpital envoie un échantillon vers un laboratoire parisien. Le contenant est isotherme et l'heure de départ calée sur le délai de stabilité." },
-      { title: "Des documents pour un transitaire de Roissy", body: "Un transitaire installé à Aulnay doit faire parvenir un dossier de douane à un bureau de l'aéroport. La course est dédiée, sur devis." },
+      { title: "Des documents pour un transitaire de Roissy", body: "Un transitaire installé à Aulnay doit faire parvenir un dossier de douane à un bureau de l'aéroport. La course est dédiée, dès 49 € HT." },
       { title: "Une pièce pour une machine à l'arrêt", body: "Une entreprise de la zone industrielle attend un composant d'un fournisseur de Bondy. Le colis arrive en une heure, signé à l'atelier." },
     ],
     tips: [
       "La commune est étendue : donnez le quartier et l'adresse complète.",
       "Pour l'hôpital, précisez le service et la température de conservation.",
-      "Pour Roissy, la zone et l'heure limite sont déterminantes : demandez un devis.",
+      "Pour Roissy, la zone et l'heure limite sont déterminantes : le prix s'affiche avant de commander.",
       "Le RER B coupe la ville : indiquez le côté de la voie.",
     ],
     faq: [
@@ -155,7 +155,7 @@ export const EXTRA_93: Record<string, ExtraZoneContent> = {
     cases: [
       { title: "Un accessoire pour un plateau", body: "Une production a besoin d'un accessoire fabriqué à Paris pour une scène tournée le lendemain matin. Une course immédiate le livre à la régie." },
       { title: "Un disque dur pour le montage", body: "Une équipe de postproduction reçoit un disque dur contenant des rushes. La remise est signée par le chef de poste." },
-      { title: "Des documents pour un partenaire de Saint-Denis", body: "Une PME d'Épinay envoie un devis à un client de Saint-Denis. La course est très courte." },
+      { title: "Des documents pour un partenaire de Saint-Denis", body: "Une PME d'Épinay envoie un contrat à un client de Saint-Denis. La course est très courte." },
     ],
     tips: [
       "Donnez le plateau, la production et le contact régie.",
@@ -191,13 +191,13 @@ export const EXTRA_93: Record<string, ExtraZoneContent> = {
     cases: [
       { title: "Du matériel pour un stand en plein salon", body: "Un exposant d'un salon à Paris Nord Villepinte a oublié des prospectus. Une course immédiate les livre au hall et au stand indiqués." },
       { title: "Des échantillons pour un acheteur étranger", body: "Un exposant remet des échantillons à un acheteur depuis un siège parisien. La remise a lieu à l'accueil exposants, contre signature." },
-      { title: "Un dossier de douane pour Roissy", body: "Une entreprise de Paris Nord 2 transmet un dossier à un bureau de l'aéroport. La course est dédiée, sur devis." },
+      { title: "Un dossier de douane pour Roissy", body: "Une entreprise de Paris Nord 2 transmet un dossier à un bureau de l'aéroport. La course est dédiée, dès 49 € HT." },
     ],
     tips: [
       "Sur un salon, donnez le hall, le stand et le contact exposant.",
       "Les jours de montage et démontage, les accès sont saturés : planifiez avec une marge.",
       "Le RER B Parc des Expositions est un repère pour les visiteurs, pas pour la livraison.",
-      "Le tarif est établi sur devis pour cette zone.",
+      "Le tarif est de 49 € HT en normal (3 h), 73,50 € HT en urgent et 98 € HT en super urgent.",
     ],
     faq: [
       { q: "Pouvez-vous livrer un stand le matin du premier jour ?", a: "Oui, en planifiant le créneau à l'avance. Nous confirmons la faisabilité." },
@@ -215,7 +215,7 @@ export const EXTRA_93: Record<string, ExtraZoneContent> = {
       "Donnez le terminal ou la zone de fret, le bureau et un contact sur place.",
       "Les contrôles d'accès de l'aéroport allongent le temps de remise.",
       "Un vol qui part ne se rattrape pas : indiquez l'heure limite exacte.",
-      "Le tarif est établi sur devis.",
+      "Le tarif est de 49 € HT en normal (3 h), 73,50 € HT en urgent et 98 € HT en super urgent.",
     ],
     faq: [
       { q: "Pouvez-vous livrer dans un terminal de Roissy ?", a: "Oui, avec le terminal, la porte et un contact. L'accès est contrôlé." },

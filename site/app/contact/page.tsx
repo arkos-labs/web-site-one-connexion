@@ -195,8 +195,8 @@ export default function ContactPage() {
                     <Send size={18} strokeWidth={2.5} />
                   </div>
                   <div>
-                    <div className="font-mono text-[11px] uppercase tracking-wider text-white/50">Délai de devis</div>
-                    <div className="mt-1 text-[15px] font-medium">Devis gratuit sous 2 h</div>
+                    <div className="font-mono text-[11px] uppercase tracking-wider text-white/50">Prix</div>
+                    <div className="mt-1 text-[15px] font-medium">Prix affiché avant de commander</div>
                     <div className="mt-1 text-[13px] text-white/60">Pour une course urgente, appelez le dispatching.</div>
                   </div>
                 </div>

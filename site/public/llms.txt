@@ -9,7 +9,7 @@
 - Site : https://www.oneconnexion.com
 - Horaires : 7j/7, 7h–23h, jours fériés inclus
 - Enlèvement : en moins de 45 minutes à Paris et en petite couronne
-- Devis entreprise : en moins de 2 heures
+- Prix affiché automatiquement avant de commander
 - Modèle : course dédiée (sans regroupement), preuve de remise horodatée
 - Tarification : à la course ou compte entreprise avec facturation mensuelle
 
@@ -22,7 +22,7 @@
 - [Compte entreprise](https://www.oneconnexion.com/services/compte-entreprise): commandes en ligne, suivi et facturation mensuelle pour les clients professionnels
 
 ## Guides pratiques
-- [Prix d'un coursier express à Paris](https://www.oneconnexion.com/guides/prix-coursier-express-paris): distance, délai, nature du transport et volume, les critères qui font varier le tarif et comment demander un devis
+- [Prix d'un coursier express à Paris](https://www.oneconnexion.com/guides/prix-coursier-express-paris): distance, délai, nature du transport et volume, les critères qui font varier le tarif et comment connaître le prix avant de commander
 - [Envoyer un pli confidentiel à Paris](https://www.oneconnexion.com/guides/envoyer-un-pli-confidentiel-paris): conditionnement, remise en main propre, preuve de remise et course dédiée
 - [Transport de prélèvements médicaux](https://www.oneconnexion.com/guides/transport-de-prelevements-medicaux): conditionnement, délai de stabilité, température, remise et traçabilité
 - [Tous les guides](https://www.oneconnexion.com/guides): index des guides One Connexion
@@ -37,10 +37,10 @@
 - [Toutes les prestations](https://www.oneconnexion.com/services): vue d'ensemble des services de coursier B2B
 - [Notre méthode](https://www.oneconnexion.com/methode): fonctionnement d'une course, de la commande à la preuve de remise
 - [Flotte et couverture](https://www.oneconnexion.com/flotte): scooters et motos équipés pour un usage professionnel, coursiers vérifiés
-- [Tarifs](https://www.oneconnexion.com/tarifs): logique tarifaire, paiement à la course ou compte entreprise mensuel, devis en moins de 2 heures
+- [Tarifs](https://www.oneconnexion.com/tarifs): logique tarifaire, paiement à la course ou compte entreprise mensuel, prix affiché avant de commander
 - [Secteurs](https://www.oneconnexion.com/secteurs): solutions par secteur (juridique, médical, e-commerce, corporate)
 - [Références clients](https://www.oneconnexion.com/references): cabinets juridiques, laboratoires, agences et e-commerçants servis
-- [Contact](https://www.oneconnexion.com/contact): demande de devis et coordonnées
+- [Contact](https://www.oneconnexion.com/contact): coordonnées et formulaire de contact
 
 ## Informations légales
 - [Mentions légales](https://www.oneconnexion.com/mentions-legales)

@@ -135,7 +135,7 @@ export const GUIDES: Guide[] = [
       {
         question: "Pouvez-vous respecter une température dirigée ?",
         answer:
-          "Précisez le besoin à la demande de devis. Nous vous répondons sur ce que nous pouvons assurer avant de valider la course.",
+          "Précisez le besoin à la commande. Nous vous répondons sur ce que nous pouvons assurer avant de valider la course.",
       },
       {
         question: "Que faire pour une urgence ?",
@@ -151,9 +151,9 @@ export const GUIDES: Guide[] = [
     title: "Prix d'un coursier express à Paris : ce qui fait varier le tarif",
     seoTitle: "Prix d'un coursier express à Paris : guide",
     description:
-      "Distance, délai, nature du transport, volume : les critères qui déterminent le prix d'un coursier express à Paris et en Île-de-France, et comment demander un devis.",
+      "Distance, délai, nature du transport, volume : les critères qui déterminent le prix d'un coursier express à Paris et en Île-de-France, et comment connaître le prix avant de commander.",
     intro:
-      "Il n'existe pas de prix unique pour un coursier : la même course peut varier selon quelques critères précis. Les connaître permet de comparer des devis sur des bases identiques.",
+      "Il n'existe pas de prix unique pour un coursier : la même course peut varier selon quelques critères précis. Les connaître permet de comparer des offres sur des bases identiques.",
     sections: [
       {
         heading: "Les tarifs par zone et par délai",
@@ -195,7 +195,7 @@ export const GUIDES: Guide[] = [
         ],
       },
       {
-        heading: "Comment obtenir un devis comparable",
+        heading: "Comment comparer deux coursiers",
         paragraphs: [
           "Pour comparer deux coursiers, donnez à chacun les mêmes informations : adresses exactes, heure limite, nature du colis, poids et volume approximatifs, et fréquence prévue.",
         ],
@@ -203,8 +203,8 @@ export const GUIDES: Guide[] = [
     ],
     faq: [
       {
-        question: "Le devis est-il gratuit ?",
-        answer: "Oui, le devis est gratuit et vous est envoyé sous 2 h.",
+        question: "Comment connaître le prix avant de commander ?",
+        answer: "Le prix s’affiche automatiquement dès que vous saisissez les adresses d’enlèvement et de livraison et le délai choisi.",
       },
       {
         question: "Une course urgente est-elle plus chère ?",

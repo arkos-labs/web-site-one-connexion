@@ -162,7 +162,7 @@ export default async function GuidePage({ params }: { params: Promise<Params> })
           </section>
 
           <div className="flex flex-col gap-3 rounded-2xl bg-ink p-8 text-white sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-[16px] font-semibold">Un envoi à organiser ? Devis gratuit sous 2 h.</p>
+            <p className="text-[16px] font-semibold">Un envoi à organiser ? Prix affiché avant de commander.</p>
             <div className="flex flex-col gap-3 sm:flex-row">
               <Link
                 href={guide.service.href}

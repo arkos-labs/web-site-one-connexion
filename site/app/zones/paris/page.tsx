@@ -13,7 +13,7 @@ import { Clock, MapPin, Zap, Shield } from "lucide-react";
 export const metadata: Metadata = {
   title: { absolute: "Coursier Paris intramuros — Livraison express 75" },
   description:
-    "Coursier moto dédié dans tout Paris (1er–20e). Enlèvement en moins de 45 min, suivi en ligne, preuve de remise horodatée. Devis gratuit sous 2 h.",
+    "Coursier moto dédié dans tout Paris (1er–20e). Enlèvement en moins de 45 min, suivi en ligne, preuve de remise horodatée. Prix affiché avant de commander.",
   alternates: { canonical: "/zones/paris" },
   openGraph: {
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION — Coursier B2B Paris & Île-de-France" }],
@@ -56,7 +56,7 @@ const ARRONDISSEMENTS = [
 
 const STATS = [
   { value: "< 30 min", label: "Délai moyen intramuros" },
-  { value: "< 2 h", label: "Devis entreprise" },
+  { value: "< 45 min", label: "Enlèvement" },
   { value: "7j/7", label: "7h–23h" },
   { value: "20/20", label: "Arrondissements couverts" },
 ];
@@ -176,7 +176,7 @@ export default function ZoneParis() {
           </h2>
           <div className="grid gap-8 md:grid-cols-3">
             {[
-              { num: "01", title: "Demande immédiate", desc: "Contactez-nous pour une course urgente. Un devis transparent vous est fourni sur-le-champ pour n'importe quel arrondissement." },
+              { num: "01", title: "Demande immédiate", desc: "Le prix s’affiche sur-le-champ pour n’importe quel arrondissement." },
               { num: "02", title: "Enlèvement express", desc: "Un coursier expérimenté se faufile dans le trafic parisien pour récupérer votre pli en moins de 45 minutes." },
               { num: "03", title: "Preuve de livraison", desc: "Suivez le trajet en direct. Une fois le pli remis en main propre, recevez une notification instantanée avec signature." }
             ].map((step) => (

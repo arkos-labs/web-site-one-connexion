@@ -27,7 +27,7 @@ const NAV_LINKS = [
 // Taglines par page pour éviter la répétition identique
 const TAGLINES: Record<string, string> = {
   "/": "Livraisons urgentes pour cabinets juridiques, laboratoires et entreprises d'Île-de-France.",
-  "/tarifs": "Des tarifs clairs et adaptés à vos volumes. Devis en moins de 2 heures.",
+  "/tarifs": "Des tarifs clairs et adaptés à vos volumes. Prix affiché avant de commander.",
   "/zones": "Couverture intégrale de Paris et Île-de-France. Enlèvement express en moins de 45 min.",
   "/zones/paris": "Paris intramuros livré en moins de 45 minutes. Disponible 7j/7, 7h–23h.",
   "/zones/petite-couronne": "Petite couronne couverte 24/7. Clients réguliers : compte mensuel sans surprise.",
@@ -39,7 +39,7 @@ const TAGLINES: Record<string, string> = {
   "/flotte": "Flotte deux-roues dédiée. Traçabilité GPS en temps réel, photos de remise.",
   "/references": "Nos clients nous font confiance : cabinets juridiques, laboratoires, e-commerçants.",
   "/secteurs": "Solutions sur mesure pour chaque secteur d'activité francilien.",
-  "/contact": "Contactez-nous pour un devis ou une question : réponse en moins de 2 heures.",
+  "/contact": "Contactez-nous pour une question ou une course : réponse en moins de 2 heures.",
 };
 
 function getTagline(pathname: string): string {

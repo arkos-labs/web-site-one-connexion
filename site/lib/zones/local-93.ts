@@ -110,12 +110,12 @@ export const LOCAL_93: Record<string, LocalZoneContent> = {
       title: "Aulnay-sous-Bois : hôpital, zones d'activité et Roissy",
       paragraphs: [
         "L'hôpital Robert-Ballanger est le principal établissement de la commune : prélèvements, dossiers et pièces circulent entre ses services et les laboratoires voisins. Donnez le service, l'heure limite, et pour un échantillon la température et le délai de stabilité.",
-        "Le nord de la ville est tourné vers Roissy : entreprises de logistique, transitaires, prestataires aéroportuaires. Une course d'Aulnay vers l'aéroport relève des tarifs hors petite couronne. Demandez un devis en précisant l'heure et le terminal.",
+        "Le nord de la ville est tourné vers Roissy : entreprises de logistique, transitaires, prestataires aéroportuaires. Une course d'Aulnay vers l'aéroport relève des tarifs hors petite couronne. Le prix s’affiche avant de commander.",
       ],
     },
     faq: [
       { q: "Transportez-vous des prélèvements vers l'hôpital Robert-Ballanger ?", a: "Oui, en course dédiée, avec contenant isotherme à la demande." },
-      { q: "Livrez-vous vers l'aéroport de Roissy depuis Aulnay ?", a: "Oui, sur devis. Précisez l'heure et le terminal ou la zone de fret." },
+      { q: "Livrez-vous vers l'aéroport de Roissy depuis Aulnay ?", a: "Oui, dès 49 € HT. Précisez l'heure et le terminal ou la zone de fret." },
       { q: "Quel tarif à Aulnay-sous-Bois ?", a: "Aulnay est en petite couronne : dès 35 € HT en normal (3 h) et 70 € HT en super urgent (1 h)." },
     ],
   },
@@ -211,7 +211,7 @@ export const LOCAL_93: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Pouvez-vous livrer un stand en plein salon ?", a: "Oui, avec le hall, le stand et un contact. Les accès exposants sont contrôlés." },
       { q: "Livrez-vous les jours de montage et de démontage ?", a: "Oui, en planifiant le créneau et la porte d'entrée à l'avance." },
-      { q: "Quel est le tarif pour Villepinte ?", a: "Villepinte relève d'un devis, la zone étant hors petite couronne. Il est donné en moins de 2 heures." },
+      { q: "Quel est le tarif pour Villepinte ?", a: "Villepinte est hors petite couronne : le tarif est de 49 € HT en normal (3 h), 73,50 € HT en urgent et 98 € HT en super urgent." },
     ],
   },
 
@@ -230,7 +230,7 @@ export const LOCAL_93: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Livrez-vous dans la zone de fret de Roissy ?", a: "Oui, avec le nom de la zone, le quai et un contact. Les accès sont contrôlés." },
       { q: "Pouvez-vous respecter l'heure d'un vol ?", a: "Nous confirmons la faisabilité avant le départ. Indiquez l'heure limite exacte et le point de remise." },
-      { q: "Quel tarif pour Tremblay-en-France ?", a: "Sur devis, la commune étant hors petite couronne et liée à l'aéroport. Réponse en moins de 2 heures." },
+      { q: "Quel tarif pour Tremblay-en-France ?", a: "Dès 49 € HT, la commune étant hors petite couronne et liée à l’aéroport. Réponse en moins de 2 heures." },
     ],
   },
 

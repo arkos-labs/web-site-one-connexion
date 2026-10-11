@@ -6,7 +6,7 @@
 import { EMAIL, PHONE_DISPLAY, PHONE_TEL } from "@/lib/site-content";
 
 export default function ServiceCta({ serviceTitle }: { serviceTitle: string }) {
-  const subject = encodeURIComponent(`Demande de devis — ${serviceTitle}`);
+  const subject = encodeURIComponent(`Demande de course — ${serviceTitle}`);
 
   return (
     <section className="bg-accent text-white">
@@ -16,7 +16,7 @@ export default function ServiceCta({ serviceTitle }: { serviceTitle: string }) {
             Une course à engager aujourd’hui ?
           </h2>
           <p className="max-w-[46ch] text-[17px] leading-[1.6] text-white/88">
-            Appelez-nous pour un départ immédiat, ou demandez un devis : nous
+            Appelez-nous pour un départ immédiat, ou commandez en ligne : nous
             confirmons la faisabilité avant d’engager la course.
           </p>
         </div>

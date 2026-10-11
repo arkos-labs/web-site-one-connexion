@@ -125,7 +125,7 @@ export const coursierExpressParis: Service = {
     {
       question: "Livrez-vous en dehors de Paris ?",
       answer:
-        "Oui, en petite couronne (92, 93, 94) au tarif standard. La grande couronne, Roissy et Orly sont desservis sur devis.",
+        "Oui, en petite couronne (92, 93, 94) au tarif standard. La grande couronne, Roissy et Orly sont desservis, au tarif de leur zone.",
     },
     {
       question: "Puis-je suivre la course ?",

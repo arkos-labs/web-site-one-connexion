@@ -124,7 +124,7 @@ export default function ZonePetiteCouronne() {
                 </div>
                 <div>
                   <div className="font-bold text-ink">{d.name}</div>
-                  <div className="text-[12px] text-muted">Tarif standard · devis immédiat</div>
+                  <div className="text-[12px] text-muted">Tarif standard · prix immédiat</div>
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-1.5">
@@ -180,7 +180,7 @@ export default function ZonePetiteCouronne() {
           </h2>
           <div className="grid gap-8 md:grid-cols-3">
             {[
-              { num: "01", title: "Demande immédiate", desc: "Un simple appel ou un formulaire en ligne suffit pour obtenir un devis immédiat pour n'importe quelle ville du 92, 93 ou 94." },
+              { num: "01", title: "Demande immédiate", desc: "Un simple appel ou un formulaire en ligne suffit : le prix s’affiche immédiatement pour n’importe quelle ville du 92, 93 ou 94." },
               { num: "02", title: "Prise en charge < 45 min", desc: "Peu importe votre emplacement en petite couronne, notre maillage garantit l'arrivée d'un coursier en moins de 45 minutes." },
               { num: "03", title: "Livraison & Suivi", desc: "L'avancement de chaque course est visible en ligne. Une preuve de remise horodatée est disponible dès la livraison." }
             ].map((step) => (

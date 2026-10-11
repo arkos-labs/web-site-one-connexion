@@ -2,7 +2,7 @@
  * app/tarifs/page.tsx
  * Page tarifaire ONE CONNEXION — répond aux requêtes "prix coursier express Paris",
  * "tarif coursier moto Paris". Pas de grille rigide : explication de la logique
- * de prix + invitation à demander un devis.
+ * de prix + prix affiché avant de commander.
  */
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION — Coursier B2B Paris & Île-de-France" }],
     title: "Tarifs coursier express Paris — ONE CONNEXION",
     description:
-      "Tarif à la course ou compte entreprise mensuel pour vos livraisons urgentes en Île-de-France. Devis gratuit sous 2 h.",
+      "Tarif à la course ou compte entreprise mensuel pour vos livraisons urgentes en Île-de-France. Prix affiché avant de commander.",
     url: "/tarifs",
     type: "website",
     locale: "fr_FR",
@@ -69,8 +69,8 @@ const FAQ = [
     a: "Les tarifs indiqués sont hors taxes. La TVA de 20 % s'applique.",
   },
   {
-    q: "En combien de temps puis-je obtenir un devis ?",
-    a: "Le devis est donné en moins de 2 heures. Les clients avec un compte entreprise bénéficient d'une grille dégressive selon le volume mensuel.",
+    q: "Comment connaître le prix avant de commander ?",
+    a: "Le prix s’affiche automatiquement dès que vous saisissez les adresses et le délai, avant de valider la commande. Les clients avec un compte entreprise bénéficient d'une grille dégressive selon le volume mensuel.",
   },
 ];
 
@@ -112,8 +112,8 @@ const FORMULES = [
     name: "Course à la demande",
     tag: "Ponctuel",
     tagColor: "bg-accent/10 text-accent",
-    price: "Sur devis",
-    priceNote: "réponse sous 2 h",
+    price: "Prix instantané",
+    priceNote: "affiché avant de commander",
     items: [
       "Enlèvement en moins de 45 min",
       "Suivi en ligne de chaque course",
@@ -341,16 +341,16 @@ export default function TarifsPage() {
         </div>
       </section>
 
-      {/* ── CTA devis ── */}
+      {/* ── CTA prix ── */}
       <section className="bg-ink text-white">
         <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-20">
           <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
             <div>
               <h2 className="mb-3 text-[clamp(24px,3vw,36px)] font-bold leading-[1.2] tracking-[-0.02em]">
-                Obtenez votre devis en moins de 2 h.
+                Connaissez le prix en quelques secondes.
               </h2>
               <p className="text-[15px] text-white/60">
-                Décrivez votre besoin par téléphone ou par email — nous revenons vers vous rapidement.
+                Saisissez vos adresses et votre délai : le prix s’affiche avant de valider.
               </p>
             </div>
             <div className="flex flex-col gap-3 sm:flex-row">

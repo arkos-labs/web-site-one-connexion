@@ -8,7 +8,7 @@ import { SHOW_TESTIMONIALS } from "@/lib/site-content";
 const STATS = [
   { value: "7j/7", label: "Amplitude 7h–23h, jours fériés inclus" },
   { value: "< 45 min", label: "Prise en charge dès validation" },
-  { value: "< 2 h", label: "Devis entreprise" },
+  { value: "< 45 min", label: "Enlèvement" },
 ];
 
 // PLACEHOLDER : témoignages réels à intégrer avant mise en ligne.

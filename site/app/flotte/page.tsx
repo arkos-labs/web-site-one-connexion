@@ -64,10 +64,10 @@ const ZONES = [
   { dept: "92", name: "Hauts-de-Seine", detail: "Boulogne, Nanterre, Neuilly, Levallois…" },
   { dept: "93", name: "Seine-Saint-Denis", detail: "Saint-Denis, Montreuil, Pantin…" },
   { dept: "94", name: "Val-de-Marne", detail: "Vincennes, Créteil, Ivry…" },
-  { dept: "77", name: "Seine-et-Marne", detail: "Melun, Marne-la-Vallée — sur devis" },
-  { dept: "78", name: "Yvelines", detail: "Versailles, Saint-Quentin — sur devis" },
-  { dept: "91", name: "Essonne", detail: "Évry, Massy — sur devis" },
-  { dept: "95", name: "Val-d'Oise", detail: "Cergy, Pontoise — sur devis" },
+  { dept: "77", name: "Seine-et-Marne", detail: "Melun, Marne-la-Vallée — dès 49 € HT" },
+  { dept: "78", name: "Yvelines", detail: "Versailles, Saint-Quentin — dès 49 € HT" },
+  { dept: "91", name: "Essonne", detail: "Évry, Massy — dès 49 € HT" },
+  { dept: "95", name: "Val-d'Oise", detail: "Cergy, Pontoise — dès 49 € HT" },
 ];
 
 export default function FlottePage() {
@@ -178,7 +178,7 @@ export default function FlottePage() {
           ))}
         </div>
         <p className="mt-8 text-[13.5px] text-muted">
-          * Les départements 77, 78, 91 et 95 sont disponibles sur devis. Contactez notre dispatch pour un tarif adapté.
+          * Départements 77, 78, 91 et 95 (grande couronne) : à partir de 49 € HT par course.
         </p>
       </section>
 

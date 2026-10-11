@@ -38,7 +38,7 @@ export const plisConfidentiels: Service = {
   stats: [
     { value: "< 45 min", label: "Prise en charge" },
     { value: "Sans regroupement", label: "Course dédiée" },
-    { value: "< 2 h", label: "Devis entreprise" },
+    { value: "< 45 min", label: "Enlèvement" },
   ],
 
   context: {
@@ -99,7 +99,7 @@ export const plisConfidentiels: Service = {
   ],
 
   coverage:
-    "Paris intra-muros et petite couronne (92, 93, 94) au tarif standard. Roissy, Orly et la grande couronne sur devis. Les palais de justice, greffes et études d’Île-de-France sont desservis aux mêmes conditions.",
+    "Paris intra-muros et petite couronne (92, 93, 94) au tarif standard. Roissy, Orly et la grande couronne au tarif de leur zone. Les palais de justice, greffes et études d’Île-de-France sont desservis aux mêmes conditions.",
 
   faq: [
     {
