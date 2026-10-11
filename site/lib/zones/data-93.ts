@@ -21,7 +21,7 @@ export const ZONES_93: Zone[] = [
     keyClients: ["Agences créatives et studios", "Ateliers et créateurs", "Start-ups", "Hôpital André-Grégoire"],
     distanceParis: "Aux portes de Paris 20e",
     pricingZone: "standard",
-    seoTitle: "Coursier Montreuil — livraison express 93100, dès 22 € HT",
+    seoTitle: "Coursier Montreuil — livraison express 93100, dès 35 € HT",
     seoDesc: "Coursier express à Montreuil (93100) : plis, maquettes, prélèvements et colis en deux-roues, aux portes de Paris 20e. Enlèvement en moins de 45 min, devis en 2 h.",
     seoKeywords: ["coursier Montreuil", "livraison Montreuil", "livraison express 93100", "coursier 93 Montreuil"],
     localGuide: {
@@ -39,7 +39,7 @@ export const ZONES_93: Zone[] = [
       },
       {
         q: "Quel est le prix d'une livraison à Montreuil ?",
-        a: "Montreuil relève du tarif petite couronne : à partir de 22 € HT en course planifiée et 30 € HT en course immédiate. Le prix final dépend de la destination, du délai et de la nature du colis. Devis gratuit en moins de 2 heures.",
+        a: "Montreuil relève du tarif petite couronne : à partir de 35 € HT en normal (3 h) et 70 € HT en super urgent (1 h). Le prix final dépend de la destination, du délai et de la nature du colis. Devis gratuit en moins de 2 heures.",
       },
       {
         q: "Pouvez-vous transporter des maquettes ou du matériel de tournage ?",

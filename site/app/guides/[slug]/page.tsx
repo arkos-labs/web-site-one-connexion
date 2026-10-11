@@ -104,6 +104,39 @@ export default async function GuidePage({ params }: { params: Promise<Params> })
                   {p}
                 </p>
               ))}
+              {section.table && (
+                <div className="my-6">
+                  <div className="overflow-x-auto">
+                    <table className="w-full min-w-[520px] border-collapse text-[15px]">
+                      <thead>
+                        <tr className="border-b-2 border-ink text-left">
+                          {section.table.head.map((h, i) => (
+                            <th key={h} scope="col" className={`py-3 font-mono text-[11px] font-normal tracking-[0.12em] text-label uppercase ${i > 0 ? "pl-4 text-right" : ""}`}>
+                              {h}
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {section.table.rows.map((row) => (
+                          <tr key={row[0]} className="border-b border-line">
+                            {row.map((cell, i) =>
+                              i === 0 ? (
+                                <th key={cell} scope="row" className="py-4 text-left font-semibold text-ink">{cell}</th>
+                              ) : (
+                                <td key={i} className="py-4 pl-4 text-right text-[18px] font-bold tabular-nums text-ink">{cell}</td>
+                              ),
+                            )}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  {section.table.note && (
+                    <p className="mt-3 text-[13px] leading-[1.6] text-label">{section.table.note}</p>
+                  )}
+                </div>
+              )}
               {section.list && (
                 <ul className="ml-5 list-disc space-y-2 text-[16.5px] leading-[1.7] text-muted">
                   {section.list.map((item) => (

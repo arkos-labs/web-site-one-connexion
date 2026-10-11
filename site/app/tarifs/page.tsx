@@ -11,9 +11,9 @@ import { SITE_URL, PHONE_DISPLAY, PHONE_TEL } from "@/lib/site-content";
 import { CheckCircle2, Clock, MapPin, Shield } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Tarif coursier Paris : prix d'une course dès 15 € HT",
+  title: "Prix coursier Paris : tarif dès 17,50 € HT par course",
   description:
-    "Tarif coursier Paris et Île-de-France : course moto dès 15 € HT en planifié, 22 € en immédiat. Grille par zone, prix à la course ou compte entreprise. Devis gratuit en 2 h.",
+    "Tarif coursier Paris et Île-de-France : dès 17,50 € HT en 3 h, 26,25 € en urgent, 35 € en super urgent 1 h. Prix par zone : Paris, petite couronne, banlieue. Compte entreprise.",
   alternates: { canonical: "/tarifs" },
   openGraph: {
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION — Coursier B2B Paris & Île-de-France" }],
@@ -38,19 +38,27 @@ const breadcrumbSchema = {
 const FAQ = [
   {
     q: "Quel est le prix d'un coursier à Paris ?",
-    a: "À Paris intramuros, une course planifiée démarre à partir de 15 € HT et une course immédiate à partir de 22 € HT. Le tarif exact dépend de la distance, du délai demandé, de la nature du transport et du volume mensuel.",
+    a: "À Paris intramuros, une course normale sous 3 h démarre à 17,50 € HT, une course urgente sous 1 h 30 à 26,25 € HT et une course super urgente sous 1 h à 35 € HT.",
   },
   {
     q: "Quel est le tarif d'un coursier en petite couronne ?",
-    a: "En petite couronne (92, 93, 94), une course planifiée démarre à partir de 22 € HT et une course immédiate à partir de 30 € HT. La grande couronne et les aéroports sont sur devis.",
+    a: "En petite couronne (92, 93, 94), le tarif est de 35 € HT en normal, 52,50 € HT en urgent et 70 € HT en super urgent. En grande couronne (77, 78, 91, 95) : 49, 73,50 et 98 € HT.",
   },
   {
     q: "Combien coûte un coursier moto à Paris ?",
-    a: "Une course en moto dans Paris intramuros démarre à partir de 15 € HT en course planifiée et 22 € HT en course immédiate (enlèvement dans l'heure). Le prix final dépend de la distance, du délai et de la nature du transport.",
+    a: "Une course en moto dans Paris intramuros démarre à 17,50 € HT en normal 3 h et 35 € HT en super urgent (enlèvement et livraison sous 1 h).",
   },
   {
     q: "Quel est le prix d'un coursier express à Paris ?",
-    a: "Une course express, avec enlèvement en moins de 45 minutes, se facture à partir de 22 € HT dans Paris et 30 € HT en petite couronne. Le devis est confirmé avant l'envoi du coursier.",
+    a: "Une course express dans Paris se facture 26,25 € HT en urgent (1 h 30) ou 35 € HT en super urgent (1 h). En petite couronne : 52,50 € HT ou 70 € HT.",
+  },
+  {
+    q: "Quel est le tarif d'un coursier en banlieue de Paris ?",
+    a: "En banlieue proche (92, 93, 94), comptez 35 € HT en normal, 52,50 € HT en urgent et 70 € HT en super urgent. Plus loin en Île-de-France (77, 78, 91, 95) : 49, 73,50 et 98 € HT.",
+  },
+  {
+    q: "Combien coûte un coursier en Île-de-France ?",
+    a: "Le tarif d'un coursier en Île-de-France va de 17,50 € HT (Paris, délai 3 h) à 98 € HT (grande couronne, super urgent 1 h). Le prix dépend de la zone la plus éloignée du trajet et du délai choisi.",
   },
   {
     q: "Le prix d'un coursier pour un pli confidentiel ou un transport médical est-il différent ?",
@@ -58,7 +66,7 @@ const FAQ = [
   },
   {
     q: "Les tarifs sont-ils HT ou TTC ?",
-    a: "Les tarifs indiqués sont hors taxes, hors options (prise en charge après 21 h, week-end). La TVA de 20 % s'applique.",
+    a: "Les tarifs indiqués sont hors taxes. La TVA de 20 % s'applique.",
   },
   {
     q: "En combien de temps puis-je obtenir un devis ?",
@@ -80,7 +88,7 @@ const FACTORS = [
   {
     icon: MapPin,
     title: "Distance & zone",
-    desc: "Paris intramuros, petite couronne (92/93/94) ou grande couronne. La zone détermine la base tarifaire. Roissy et Orly sont accessibles sur devis spécifique.",
+    desc: "Paris intramuros, petite couronne (92/93/94) ou grande couronne (77/78/91/95). La zone la plus éloignée entre l'enlèvement et la livraison détermine le tarif.",
   },
   {
     icon: Clock,
@@ -156,12 +164,12 @@ export default function TarifsPage() {
             Tarification
           </div>
           <h1 className="mb-6 max-w-[22ch] text-balance text-[clamp(36px,5vw,64px)] font-bold leading-[1.05] tracking-[-0.035em]">
-            Tarif coursier Paris : prix d'une course dès 15 € HT.
+            Prix coursier Paris : tarif dès 17,50 € HT la course.
           </h1>
           <p className="max-w-[58ch] text-pretty text-[17px] leading-[1.6] text-white/66">
-            Course moto planifiée dès 15 € HT dans Paris, 22 € HT en course
-            immédiate. Voici la grille par zone, ce qui fait varier le prix
-            d'un coursier et comment obtenir votre devis en moins de 2 heures.
+            Course moto dès 17,50 € HT dans Paris en
+            normal 3 h, 35 € HT en super urgent 1 h. Voici la grille par zone
+            et par délai, et ce qui fait varier le prix d'un coursier.
           </p>
         </div>
       </section>
@@ -260,42 +268,43 @@ export default function TarifsPage() {
           Grille par zone
         </div>
         <h2 className="mb-8 text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-          Indicatif selon la zone de livraison.
+          Tarif d&apos;une course selon la zone et le délai.
         </h2>
         <p className="mb-10 max-w-[60ch] text-[15.5px] leading-[1.7] text-muted">
-          Ces fourchettes sont indicatives et données à titre d'orientation.
-          Le devis définitif tient compte du délai, de la nature du transport
-          et du volume mensuel. Contactez-nous pour un tarif personnalisé.
+          Quand le trajet traverse deux zones, on applique la plus éloignée :
+          Paris vers Nanterre est facturé au tarif petite couronne. Le prix
+          exact s&apos;affiche avant de valider votre commande.
         </p>
         <div className="overflow-x-auto">
-          <table className="w-full border-collapse text-[14.5px]">
+          <table className="w-full min-w-[560px] border-collapse text-[14.5px]">
             <thead>
               <tr className="border-b-2 border-ink">
                 <th className="py-3 pr-6 text-left font-mono text-[10px] tracking-[0.14em] text-label uppercase">Zone</th>
                 <th className="py-3 pr-6 text-left font-mono text-[10px] tracking-[0.14em] text-label uppercase">Dépt.</th>
-                <th className="py-3 pr-6 text-left font-mono text-[10px] tracking-[0.14em] text-label uppercase">Course planifiée</th>
-                <th className="py-3 text-left font-mono text-[10px] tracking-[0.14em] text-label uppercase">Course immédiate</th>
+                <th className="py-3 pr-6 text-left font-mono text-[10px] tracking-[0.14em] text-label uppercase">Normal 3 h</th>
+                <th className="py-3 pr-6 text-left font-mono text-[10px] tracking-[0.14em] text-label uppercase">Urgent 1 h 30</th>
+                <th className="py-3 text-left font-mono text-[10px] tracking-[0.14em] text-label uppercase">Super urgent 1 h</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-line">
               {[
-                { zone: "Paris intramuros", dept: "75", planifie: "À partir de 15 €", immediat: "À partir de 22 €" },
-                { zone: "Petite couronne", dept: "92, 93, 94", planifie: "À partir de 22 €", immediat: "À partir de 30 €" },
-                { zone: "Grande couronne", dept: "77, 78, 91, 95", planifie: "Sur devis", immediat: "Sur devis" },
-                { zone: "Aéroports (CDG / Orly)", dept: "—", planifie: "Sur devis", immediat: "Sur devis" },
+                { zone: "Paris", dept: "75", prix: ["17,50 €", "26,25 €", "35 €"] },
+                { zone: "Petite couronne", dept: "92, 93, 94", prix: ["35 €", "52,50 €", "70 €"] },
+                { zone: "Grande couronne", dept: "77, 78, 91, 95", prix: ["49 €", "73,50 €", "98 €"] },
               ].map((row) => (
                 <tr key={row.zone}>
                   <td className="py-4 pr-6 font-medium text-ink">{row.zone}</td>
                   <td className="py-4 pr-6 font-mono text-[13px] text-muted">{row.dept}</td>
-                  <td className="py-4 pr-6 text-muted">{row.planifie}</td>
-                  <td className="py-4 text-muted">{row.immediat}</td>
+                  {row.prix.map((p, i) => (
+                    <td key={i} className={`py-4 font-semibold text-ink ${i < 2 ? "pr-6" : ""}`}>{p}</td>
+                  ))}
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
         <p className="mt-4 text-[12px] text-muted/70">
-          * Tarifs HT, hors options (prise en charge après 21h, week-end). TVA 20 % applicable.
+          * Tarifs HT par course, TVA 20 % en sus. Compte entreprise : tarif dégressif selon le volume mensuel.
         </p>
       </section>
 

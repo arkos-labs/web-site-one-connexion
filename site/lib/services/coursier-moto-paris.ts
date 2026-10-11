@@ -13,13 +13,13 @@ export const coursierMotoParis: Service = {
     tag: "Deux-roues",
     title: "Coursier moto Paris",
     body: "Scooters et motos routières équipés pour un usage professionnel, top-case verrouillé et étanche, coursiers vérifiés.",
-    note: "Course planifiée dès 15 € HT",
+    note: "Course dès 17,50 € HT",
   },
 
   seo: {
-    title: "Coursier moto et scooter Paris — dès 15 € HT",
+    title: "Coursier moto et scooter Paris — dès 17,50 € HT",
     description:
-      "Coursier moto et scooter à Paris : livraison express en deux-roues, top-case verrouillé, suivi en ligne, 7j/7. Course dès 15 € HT en planifié, devis gratuit en 2 h.",
+      "Coursier moto et scooter à Paris : livraison express en deux-roues, top-case verrouillé, suivi en ligne, 7j/7. Prix coursier moto Paris : dès 17,50 € HT en normal (3 h), 35 € HT en super urgent (1 h).",
     keywords: [
       "coursier moto Paris",
       "coursier scooter Paris",
@@ -36,7 +36,7 @@ export const coursierMotoParis: Service = {
     "One Connexion livre à Paris et en Île-de-France avec une flotte de scooters et de motos routières équipées pour un usage professionnel. Le deux-roues passe dans la circulation là où un utilitaire reste bloqué : c’est ce qui permet de tenir des délais courts.",
 
   stats: [
-    { value: "Dès 15 € HT", label: "Course planifiée Paris" },
+    { value: "Dès 17,50 € HT", label: "Course normale Paris (3 h)" },
     { value: "< 45 min", label: "Prise en charge" },
     { value: "7j/7", label: "7h – 23h" },
   ],
@@ -98,13 +98,13 @@ export const coursierMotoParis: Service = {
   ],
 
   coverage:
-    "Les 20 arrondissements de Paris, de 15 € HT en course planifiée, puis les Hauts-de-Seine, la Seine-Saint-Denis et le Val-de-Marne à partir de 22 € HT. Les aéroports et les autres départements d’Île-de-France se chiffrent sur devis.",
+    "Les 20 arrondissements de Paris dès 17,50 € HT, puis les Hauts-de-Seine, la Seine-Saint-Denis et le Val-de-Marne dès 35 € HT, et la grande couronne (77, 78, 91, 95) dès 49 € HT.",
 
   faq: [
     {
       question: "Combien coûte un coursier moto à Paris ?",
       answer:
-        "Une course en moto ou scooter démarre à partir de 15 € HT en course planifiée dans Paris et 22 € HT en course immédiate. En petite couronne, comptez à partir de 22 € HT en planifié et 30 € HT en immédiat. Devis gratuit en moins de 2 heures.",
+        "Une course en moto ou scooter démarre à 17,50 € HT en normal (3 h), 26,25 € HT en urgent (1 h 30) et 35 € HT en super urgent (1 h) dans Paris. En petite couronne : 35 €, 52,50 € et 70 € HT. Le prix est affiché avant de commander.",
     },
     {
       question: "Quels types de colis un coursier moto peut-il transporter ?",

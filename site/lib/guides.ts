@@ -1,13 +1,15 @@
 /**
  * lib/guides.ts
- * Guides pratiques (requêtes d'information). Contenu volontairement sans chiffres
- * ni promesses non vérifiables : aucun tarif, aucune certification, aucune assurance
- * n'y est affirmé. Les renvois vers les prestations portent les engagements.
+ * Guides pratiques (requêtes d'information). Pas de promesses non vérifiables :
+ * aucune certification ni assurance n'y est affirmée. Seul le guide des prix reprend
+ * la grille tarifaire de lib/pricing.ts. Les renvois vers les prestations portent les engagements.
  */
 export interface GuideSection {
   heading: string;
   paragraphs: string[];
   list?: string[];
+  /** Tableau optionnel, affiché sous les paragraphes. */
+  table?: { head: string[]; rows: string[][]; note?: string };
 }
 
 export interface Guide {
@@ -154,15 +156,30 @@ export const GUIDES: Guide[] = [
       "Il n'existe pas de prix unique pour un coursier : la même course peut varier selon quelques critères précis. Les connaître permet de comparer des devis sur des bases identiques.",
     sections: [
       {
+        heading: "Les tarifs par zone et par délai",
+        paragraphs: [
+          "Voici la grille de ONE CONNEXION pour une course en Île-de-France. Quand le trajet traverse deux zones, la zone la plus éloignée s'applique : de Paris vers Nanterre, c'est le tarif petite couronne.",
+        ],
+        table: {
+          head: ["Zone", "Normal 3 h", "Urgent 1 h 30", "Super urgent 1 h"],
+          rows: [
+            ["Paris (75)", "17,50 €", "26,25 €", "35 €"],
+            ["Petite couronne (92, 93, 94)", "35 €", "52,50 €", "70 €"],
+            ["Grande couronne (77, 78, 91, 95)", "49 €", "73,50 €", "98 €"],
+          ],
+          note: "Tarifs HT par course, TVA 20 % en sus. Le prix exact s'affiche avant de valider la commande.",
+        },
+      },
+      {
         heading: "La distance et la zone",
         paragraphs: [
-          "Le point de départ et le point d'arrivée fixent la zone : Paris intramuros, petite couronne ou grande couronne. Plus la distance est longue, plus le tarif de base augmente. Les destinations spéciales, comme les aéroports, sont généralement chiffrées à part.",
+          "Le point de départ et le point d'arrivée fixent la zone : Paris intramuros, petite couronne ou grande couronne. Plus la zone est éloignée de Paris, plus le tarif de base augmente.",
         ],
       },
       {
         heading: "Le délai demandé",
         paragraphs: [
-          "Une course immédiate coûte plus cher qu'une course planifiée sur un créneau. Une navette régulière, avec un passage programmé, est en général la formule la plus économique pour des besoins répétés.",
+          "Plus le délai est court, plus la course coûte cher : à Paris, la même course passe de 17,50 € HT en 3 h à 35 € HT en 1 h. Une navette régulière, avec un passage programmé, est en général la formule la plus économique pour des besoins répétés.",
         ],
       },
       {
@@ -192,7 +209,7 @@ export const GUIDES: Guide[] = [
       {
         question: "Une course urgente est-elle plus chère ?",
         answer:
-          "En général oui : l'immédiateté mobilise un coursier sans planification. Un créneau plus large réduit le tarif.",
+          "Oui : un délai de 1 h coûte le double d'un délai de 3 h (35 € HT contre 17,50 € HT dans Paris). Un créneau plus large réduit le tarif.",
       },
     ],
     service: { href: "/tarifs", label: "Nos tarifs" },
