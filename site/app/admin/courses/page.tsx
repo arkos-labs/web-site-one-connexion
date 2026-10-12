@@ -544,6 +544,9 @@ function AdminCoursesPageInner() {
                           {c.status === "en_attente" || c.status === "pending" ? (c.type === "navette" ? "À dispatcher" : "À accepter") : STATUS_DISPLAY[c.status] ?? c.status}
                         </span>
                       )}
+                      {c.type === "commande" && !c.billingStatus && c.status === "en_attente" && c.source !== "admin" && (
+                        <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-bold uppercase text-amber-800">Paiement en attente</span>
+                      )}
                       {c.type === "commande" && c.billingStatus === "echec" && (
                         <span className="rounded-full bg-red-600 px-2 py-0.5 text-[11px] font-bold uppercase text-white">Paiement non réussi</span>
                       )}
@@ -736,6 +739,7 @@ function AdminCoursesPageInner() {
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
+                          if (c.billingStatus !== "paye" && c.source !== "admin" && !window.confirm("Cette course n'a pas été payée. L'accepter quand même ?")) return;
                           c.updateStatus?.("confirmee");
                         }}
                         className="flex items-center gap-1.5 rounded-xl bg-ink px-4 py-2 text-[12.5px] font-bold text-white transition-colors hover:bg-ink/85"

@@ -475,6 +475,9 @@ function AdminCoursesPageInner() {
                   <div>
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="font-bold text-ink">{c.clientName}</span>
+                      {c.type === "commande" && !c.billingStatus && c.status === "en_attente" && c.source !== "admin" && (
+                        <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-bold uppercase text-amber-800">Paiement en attente</span>
+                      )}
                       {c.type === "commande" && c.billingStatus === "echec" && (
                         <span className="rounded-full bg-red-600 px-2 py-0.5 text-[11px] font-bold uppercase text-white">Paiement non réussi</span>
                       )}

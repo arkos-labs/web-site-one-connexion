@@ -48,6 +48,7 @@ type Order = {
   stops: { address: string; contact_name?: string; contact_phone?: string }[] | null;
   point_progress: Record<string, { pickedUpAt?: string; deliveredAt?: string }> | null;
   billing_status?: string | null;
+  source?: string | null;
 };
 
 export default function CoursesListPage() {
@@ -72,7 +73,7 @@ function CoursesListInner() {
   const load = useCallback(async () => {
     const { data: ordersData } = await supabase
       .from("orders")
-      .select("id, tracking_code, pickup_address, dropoff_address, status, price_estimate, created_at, user_id, driver_id, format, delai, contact_name, contact_phone, stops, point_progress, billing_status")
+      .select("id, tracking_code, pickup_address, dropoff_address, status, price_estimate, created_at, user_id, driver_id, format, delai, contact_name, contact_phone, stops, point_progress, billing_status, source")
       .order("created_at", { ascending: false });
 
     const rows = (ordersData ?? []) as Order[];
@@ -212,6 +213,7 @@ function CoursesListInner() {
                     <span className={`rounded-full px-1.5 py-px text-[11px] font-bold ${TERMINAL_STATUSES.includes(o.status) ? "bg-green-50 text-green-700" : "bg-amber-50 text-amber-700"}`}>
                       {STATUS_DISPLAY[o.status] ?? o.status}
                     </span>
+                    {!o.billing_status && o.status === "en_attente" && o.source !== "admin" && <span className="rounded-full bg-amber-100 px-1.5 py-px text-[11px] font-bold text-amber-800">Paiement en attente</span>}
                     {o.billing_status === "echec" && <span className="rounded-full bg-red-600 px-1.5 py-px text-[11px] font-bold text-white">Paiement non réussi</span>}
                     {o.delai === "flash" && <span className="rounded-full bg-red-50 px-1.5 py-px text-[11px] font-bold text-red-600">Flash</span>}
                   </div>
@@ -252,7 +254,7 @@ function CoursesListInner() {
                   {o.price_estimate !== null && <span className="text-[15px] font-bold text-ink">{o.price_estimate.toFixed(2)} €</span>}
                   {o.status === "en_attente" && (
                     <div className="flex items-center gap-1.5">
-                      <button onClick={() => acceptOrder(o.id)} className="flex items-center gap-1 rounded-md bg-green-600 px-2 py-1 text-[11px] font-bold text-white hover:bg-green-700">
+                      <button onClick={() => { if (o.billing_status !== "paye" && o.source !== "admin" && !window.confirm("Cette course n'a pas été payée. L'accepter quand même ?")) return; acceptOrder(o.id); }} className="flex items-center gap-1 rounded-md bg-green-600 px-2 py-1 text-[11px] font-bold text-white hover:bg-green-700">
                         <Check size={12} /> Accepter
                       </button>
                       <button onClick={() => updateStatus(o.id, "annulee")} className="flex items-center gap-1 rounded-md border border-red-200 px-2 py-1 text-[11px] font-bold text-red-600 hover:bg-red-50">
