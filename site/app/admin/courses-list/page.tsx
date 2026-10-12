@@ -47,6 +47,7 @@ type Order = {
   contact_phone: string | null;
   stops: { address: string; contact_name?: string; contact_phone?: string }[] | null;
   point_progress: Record<string, { pickedUpAt?: string; deliveredAt?: string }> | null;
+  billing_status?: string | null;
 };
 
 export default function CoursesListPage() {
@@ -71,7 +72,7 @@ function CoursesListInner() {
   const load = useCallback(async () => {
     const { data: ordersData } = await supabase
       .from("orders")
-      .select("id, tracking_code, pickup_address, dropoff_address, status, price_estimate, created_at, user_id, driver_id, format, delai, contact_name, contact_phone, stops, point_progress")
+      .select("id, tracking_code, pickup_address, dropoff_address, status, price_estimate, created_at, user_id, driver_id, format, delai, contact_name, contact_phone, stops, point_progress, billing_status")
       .order("created_at", { ascending: false });
 
     const rows = (ordersData ?? []) as Order[];
@@ -211,6 +212,7 @@ function CoursesListInner() {
                     <span className={`rounded-full px-1.5 py-px text-[11px] font-bold ${TERMINAL_STATUSES.includes(o.status) ? "bg-green-50 text-green-700" : "bg-amber-50 text-amber-700"}`}>
                       {STATUS_DISPLAY[o.status] ?? o.status}
                     </span>
+                    {o.billing_status === "echec" && <span className="rounded-full bg-red-600 px-1.5 py-px text-[11px] font-bold text-white">Paiement non réussi</span>}
                     {o.delai === "flash" && <span className="rounded-full bg-red-50 px-1.5 py-px text-[11px] font-bold text-red-600">Flash</span>}
                   </div>
                   <div className="flex flex-wrap items-center gap-x-2 text-[11px] text-muted">

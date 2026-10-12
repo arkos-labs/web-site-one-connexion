@@ -11,13 +11,13 @@ import { SERVICES } from "@/lib/services";
 import { Clock, MapPin, Zap, Shield } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: { absolute: "Coursier Paris intramuros — Livraison express 75" },
+  title: { absolute: "Coursier Paris : livraison express dès 17,50 € HT" },
   description:
-    "Coursier moto dédié dans tout Paris (1er–20e). Enlèvement en moins de 45 min, suivi en ligne, preuve de remise horodatée. Prix affiché avant de commander.",
+    "Coursier Paris en moto et scooter, 20 arrondissements : dès 17,50 € HT en 3 h, 26,25 € en urgent, 35 € en 1 h. Enlèvement en moins de 45 min, suivi en ligne.",
   alternates: { canonical: "/zones/paris" },
   openGraph: {
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION — Coursier B2B Paris & Île-de-France" }],
-    title: "Coursier Paris intramuros — ONE CONNEXION",
+    title: "Coursier Paris : livraison express — ONE CONNEXION",
     description: "Livraison express dans tout Paris (75). Course dédiée, sans regroupement, remise contre signature.",
     url: "/zones/paris",
     type: "website",
@@ -46,6 +46,39 @@ const serviceSchema = {
   areaServed: { "@type": "City", name: "Paris" },
 };
 
+const FAQ_PARIS = [
+  {
+    q: "Quel est le prix d'un coursier à Paris ?",
+    a: "Une course dans Paris intramuros coûte 17,50 € HT en normal (livraison sous 3 h), 26,25 € HT en urgent (sous 1 h 30) et 35 € HT en super urgent (sous 1 h). Le prix s'affiche avant de valider la commande.",
+  },
+  {
+    q: "Quel est le tarif d'un coursier moto ou scooter à Paris ?",
+    a: "Les courses sont effectuées en moto ou scooter. Le tarif est le même dans les 20 arrondissements : de 17,50 € HT à 35 € HT selon le délai choisi.",
+  },
+  {
+    q: "Comment gérez-vous la circulation parisienne (ZFE, embouteillages) ?",
+    a: "Notre flotte est majoritairement composée de deux-roues et de véhicules récents répondant aux normes Crit'Air. Nos coursiers expérimentés connaissent les meilleurs itinéraires pour éviter les axes engorgés.",
+  },
+  {
+    q: "Quels sont les horaires d'enlèvement à Paris intramuros ?",
+    a: "Nous opérons 7j/7, de 7h à 23h. En journée, nous garantissons un enlèvement en moins de 45 minutes quel que soit l'arrondissement.",
+  },
+  {
+    q: "Livrez-vous aussi bien les particuliers que les entreprises ?",
+    a: "Notre service est principalement orienté B2B (plis confidentiels, médical, événementiel) mais nous assurons également la livraison du dernier kilomètre pour les commandes e-commerce premium destinées aux particuliers.",
+  },
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: FAQ_PARIS.map(({ q, a }) => ({
+    "@type": "Question",
+    name: q,
+    acceptedAnswer: { "@type": "Answer", text: a },
+  })),
+};
+
 const ARRONDISSEMENTS = [
   "1er — Louvre, Châtelet", "2e — Bourse", "3e — Le Marais", "4e — Île de la Cité",
   "5e — Quartier Latin", "6e — Saint-Germain", "7e — Tour Eiffel", "8e — Champs-Élysées",
@@ -66,6 +99,7 @@ export default function ZoneParis() {
     <>
       <JsonLd data={breadcrumbSchema} />
       <JsonLd data={serviceSchema} />
+      <JsonLd data={faqSchema} />
 
       {/* ── Hero ── */}
       <section className="bg-ink text-white">
@@ -82,11 +116,11 @@ export default function ZoneParis() {
             Zone couverte · Paris 75
           </div>
           <h1 className="mb-6 max-w-[20ch] text-balance text-[clamp(36px,5vw,64px)] font-bold leading-[1.05] tracking-[-0.035em]">
-            Coursier express dans tout Paris intramuros.
+            Coursier Paris : livraison express dans les 20 arrondissements.
           </h1>
           <p className="max-w-[58ch] text-pretty text-[17px] leading-[1.6] text-white/66">
-            One Connexion couvre les 20 arrondissements de Paris avec sa flotte de
-            scooters et motos. Enlèvement en moins de 45 minutes, suivi de
+            Coursier à Paris en moto et scooter, dès 17,50 € HT la course. One
+            Connexion couvre les 20 arrondissements avec sa flotte de deux-roues. Enlèvement en moins de 45 minutes, suivi de
             chaque course en ligne, preuve de remise horodatée à chaque livraison.
           </p>
           <div className="mt-10 flex flex-wrap gap-3">
@@ -100,7 +134,7 @@ export default function ZoneParis() {
               href="/tarifs"
               className="rounded-[2px] border border-white/22 px-[26px] py-[15px] text-[15px] font-semibold text-white hover:border-white"
             >
-              Voir les tarifs
+              Prix coursier Paris
             </Link>
           </div>
         </div>
@@ -137,6 +171,51 @@ export default function ZoneParis() {
             );
           })}
         </div>
+      </section>
+
+      {/* ── Tarif ── */}
+      <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
+        <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
+          Tarif coursier Paris
+        </div>
+        <h2 className="mb-4 max-w-[28ch] text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
+          Prix d&apos;une course dans Paris : dès 17,50 € HT.
+        </h2>
+        <p className="mb-10 max-w-[60ch] text-[15.5px] leading-[1.7] text-muted">
+          Le tarif est le même dans les 20 arrondissements. Seul le délai change
+          le prix, et il s&apos;affiche avant de valider votre commande.
+        </p>
+        <div className="grid max-w-[780px] gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-3">
+          {[
+            { name: "Normal", delay: "livré sous 3 h", price: "17,50 €" },
+            { name: "Urgent", delay: "livré sous 1 h 30", price: "26,25 €" },
+            { name: "Super urgent", delay: "livré sous 1 h", price: "35 €" },
+          ].map((t) => (
+            <div key={t.name} className="bg-white p-6">
+              <div className="text-[15px] font-bold">{t.name}</div>
+              <div className="mb-4 font-mono text-[10.5px] tracking-[0.1em] text-label uppercase">{t.delay}</div>
+              <div className="text-[34px] font-bold tracking-[-0.04em]">
+                {t.price}
+                <span className="ml-1 font-mono text-[11px] font-normal tracking-[0.1em] text-label">HT</span>
+              </div>
+            </div>
+          ))}
+        </div>
+        <p className="mt-5 max-w-[70ch] text-[14.5px] leading-[1.7] text-muted">
+          Banlieue, grande couronne ou besoin précis : consultez le{" "}
+          <Link href="/tarifs" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">
+            tarif coursier par zone
+          </Link>
+          {" "}ou notre guide sur le{" "}
+          <Link href="/guides/prix-coursier-express-paris" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">
+            prix d&apos;un coursier express à Paris
+          </Link>
+          . Pour la proche banlieue, voir{" "}
+          <Link href="/zones/petite-couronne" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">
+            coursier en petite couronne
+          </Link>
+          .
+        </p>
       </section>
 
       {/* ── Avantages intramuros ── */}
@@ -224,11 +303,7 @@ export default function ZoneParis() {
             </h2>
           </div>
           <div className="flex flex-col gap-4">
-            {[
-              { q: "Comment gérez-vous la circulation parisienne (ZFE, embouteillages) ?", a: "Notre flotte est majoritairement composée de deux-roues et de véhicules récents répondant aux normes Crit'Air. Nos coursiers expérimentés connaissent les meilleurs itinéraires pour éviter les axes engorgés." },
-              { q: "Quels sont les horaires d'enlèvement à Paris intramuros ?", a: "Nous opérons 7j/7, de 7h à 23h. En journée, nous garantissons un enlèvement en moins de 45 minutes quel que soit l'arrondissement." },
-              { q: "Livrez-vous aussi bien les particuliers que les entreprises ?", a: "Notre service est principalement orienté B2B (plis confidentiels, médical, événementiel) mais nous assurons également la livraison du dernier kilomètre pour les commandes e-commerce premium destinées aux particuliers." }
-            ].map((faq, i) => (
+            {FAQ_PARIS.map((faq, i) => (
               <div key={i} className="rounded-xl border border-line bg-white p-5 hover:border-accent/30 transition-colors">
                 <h3 className="mb-2 text-[15.5px] font-bold text-ink">{faq.q}</h3>
                 <p className="text-[14.5px] leading-[1.65] text-muted">{faq.a}</p>

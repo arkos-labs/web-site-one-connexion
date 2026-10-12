@@ -37,6 +37,7 @@ type Course = {
   point_progress?: Record<string, any> | null;
   clientType?: string | null;
   source?: string | null;
+  billingStatus?: string | null;
   updateDriver: (driverId: string | null) => Promise<void>;
   updateStatus?: (status: string) => Promise<void>;
   updateTime?: (field: string, timeStr: string) => Promise<void>;
@@ -152,7 +153,7 @@ function AdminCoursesPageInner() {
       supabase.from("drivers").select("id, name, phone, vehicle, status, auth_id").order("name"),
       supabase
         .from("orders")
-        .select("id, pickup_address, dropoff_address, status, driver_id, tracking_code, price_estimate, created_at, user_id, stops, point_progress, delai, format, contact_name, contact_phone, driver_accepted_at, picked_up_at, delivered_at, delivery_recipient, delivery_department, delivery_comment, delivery_photo_url, client_type, source")
+        .select("id, pickup_address, dropoff_address, status, driver_id, tracking_code, price_estimate, created_at, user_id, stops, point_progress, delai, format, contact_name, contact_phone, driver_accepted_at, picked_up_at, delivered_at, delivery_recipient, delivery_department, delivery_comment, delivery_photo_url, client_type, source, billing_status")
         .neq("status", "annulee")
         .order("created_at", { ascending: false }),
       supabase
@@ -214,6 +215,7 @@ function AdminCoursesPageInner() {
       point_progress: o.point_progress,
       clientType: o.client_type,
       source: o.source,
+      billingStatus: o.billing_status,
       updateDriver: async (driverId: string | null) => {
         const driver = driverId ? driverById.get(driverId) : null;
         const authId = driver?.auth_id ?? driverId;
@@ -541,6 +543,9 @@ function AdminCoursesPageInner() {
                         <span className={`rounded-full px-2 py-0.5 text-[11px] font-bold uppercase ${c.status === "en_attente" || c.status === "pending" ? "bg-amber-50 text-amber-700" : (c.status === "assigned" || c.status === "en_cours" || c.status === "picked_up") ? "bg-blue-50 text-blue-700" : "bg-green-50 text-green-700"}`}>
                           {c.status === "en_attente" || c.status === "pending" ? (c.type === "navette" ? "À dispatcher" : "À accepter") : STATUS_DISPLAY[c.status] ?? c.status}
                         </span>
+                      )}
+                      {c.type === "commande" && c.billingStatus === "echec" && (
+                        <span className="rounded-full bg-red-600 px-2 py-0.5 text-[11px] font-bold uppercase text-white">Paiement non réussi</span>
                       )}
                       {openAnomalies(c.id).length > 0 && (
                         <span className="flex items-center gap-1 rounded-full bg-red-600 px-2 py-0.5 text-[11px] font-bold uppercase text-white">

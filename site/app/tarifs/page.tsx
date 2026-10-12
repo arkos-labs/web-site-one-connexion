@@ -319,6 +319,7 @@ export default function TarifsPage() {
           <li><Link href="/services/livraison-e-commerce" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">Livraison e-commerce</Link> : le jour même en Île-de-France</li>
           <li><Link href="/services/coursier-express-paris" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">Coursier express Paris</Link> : enlèvement en moins de 45 min</li>
           <li><Link href="/services/coursier-moto-paris" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">Coursier moto et scooter</Link> : livraison en deux-roues</li>
+          <li><Link href="/guides/prix-coursier-express-paris" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">Prix d'un coursier express à Paris</Link> : le guide complet</li>
           <li><Link href="/zones/paris" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">Coursier Paris</Link> et <Link href="/zones/petite-couronne" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">petite couronne</Link> : zones desservies</li>
         </ul>
       </section>

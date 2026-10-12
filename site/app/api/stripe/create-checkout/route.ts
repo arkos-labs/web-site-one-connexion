@@ -207,6 +207,11 @@ export async function POST(req: Request) {
             ...(clientType === 'entreprise' ? { tax_rates: [await vatRateId(stripe)] } : {}),
           },
         ],
+        // Session abandonnée : elle expire au bout de 30 min (minimum Stripe), le webhook
+        // checkout.session.expired marque alors la commande « paiement non réussi ».
+        expires_at: Math.floor(Date.now() / 1000) + 30 * 60,
+        // Le refus de carte (payment_intent.payment_failed) retrouve la commande par ce code.
+        payment_intent_data: { metadata: { orderId } },
         success_url: `${baseUrl}/commande/succes?session_id={CHECKOUT_SESSION_ID}&order_id=${orderId}`,
         cancel_url: `${baseUrl}/#commander-form`,
         metadata: {

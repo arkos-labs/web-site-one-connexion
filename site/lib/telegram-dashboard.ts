@@ -225,6 +225,27 @@ export async function notifyPaidOrder(trackingCode: string) {
   await refreshPinnedDashboard({ forceNew: true });
 }
 
+/** Alerte quand le paiement d'une commande a échoué ou a été abandonné. */
+export async function notifyFailedPayment(trackingCode: string, reason: string) {
+  const config = telegramConfig();
+  if (!config) return;
+
+  const { data: order } = await adminClient()
+    .from("orders")
+    .select("pickup_address, dropoff_address, price_estimate, contact_name, contact_phone")
+    .eq("tracking_code", trackingCode)
+    .maybeSingle();
+
+  const trajet = order ? `${escapeHtml(order.pickup_address ?? "?")} → ${escapeHtml(order.dropoff_address ?? "?")}` : escapeHtml(trackingCode);
+  const prix = order?.price_estimate ? ` · ${euros(order.price_estimate)}` : "";
+  const client = order?.contact_name ? `\nClient : ${escapeHtml(order.contact_name)}${order.contact_phone ? ` · ${escapeHtml(order.contact_phone)}` : ""}` : "";
+  await tg("sendMessage", {
+    chat_id: config.chatId,
+    text: `⚠️ <b>Paiement non réussi</b> · <code>${escapeHtml(trackingCode)}</code> · ${trajet}${prix}${client}\nMotif : ${escapeHtml(reason)}`,
+    parse_mode: "HTML",
+  });
+}
+
 /** Liste des courses du jour, pour la commande /courses_jour. */
 export async function renderCoursesDuJour() {
   const { data } = await adminClient()

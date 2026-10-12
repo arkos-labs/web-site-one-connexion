@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
-import { notifyPaidOrder } from '@/lib/telegram-dashboard';
+import { notifyPaidOrder, notifyFailedPayment } from '@/lib/telegram-dashboard';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder', {
   apiVersion: '2025-02-24.acacia',
@@ -58,6 +58,37 @@ export async function POST(req: Request) {
             ? { billing_status: 'paye', paid_at: new Date().toISOString() }
             : { billing_status: 'echec' })
           .eq('stripe_invoice_id', stripeInvoice.id);
+      }
+    }
+
+    // Paiement par carte refusé, ou page de paiement abandonnée : la commande reste dans le
+    // dashboard avec le badge « Paiement non réussi » (billing_status = 'echec'), sans jamais
+    // écraser une commande déjà payée.
+    if (
+      event.type === 'payment_intent.payment_failed' ||
+      event.type === 'checkout.session.expired' ||
+      event.type === 'checkout.session.async_payment_failed'
+    ) {
+      const obj = event.data.object as Stripe.PaymentIntent | Stripe.Checkout.Session;
+      const orderId = obj.metadata?.orderId;
+      const isPaymentSession = event.type === 'payment_intent.payment_failed' || (obj as Stripe.Checkout.Session).mode === 'payment';
+
+      if (orderId && isPaymentSession) {
+        const reason = event.type === 'checkout.session.expired'
+          ? 'abandon'
+          : (event.data.object as Stripe.PaymentIntent).last_payment_error?.message || 'paiement refusé';
+
+        const { data: failed } = await supabase
+          .from('orders')
+          .update({ billing_status: 'echec' })
+          .eq('tracking_code', orderId)
+          .neq('status', 'paye')
+          .or('billing_status.is.null,billing_status.neq.paye')
+          .select('id');
+
+        if (failed?.length) {
+          await notifyFailedPayment(orderId, reason).catch((e) => console.error('Telegram failed-payment notify failed:', e));
+        }
       }
     }
 

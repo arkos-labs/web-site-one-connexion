@@ -212,7 +212,7 @@ export const GUIDES: Guide[] = [
           "Oui : un délai de 1 h coûte le double d'un délai de 3 h (35 € HT contre 17,50 € HT dans Paris). Un créneau plus large réduit le tarif.",
       },
     ],
-    service: { href: "/tarifs", label: "Nos tarifs" },
+    service: { href: "/tarifs", label: "Tarif coursier Paris" },
     published: "2026-09-21",
   },
 ];
