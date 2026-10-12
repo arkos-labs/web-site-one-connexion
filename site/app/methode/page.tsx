@@ -1,8 +1,6 @@
 import Methode from "@/components/sections/Methode";
 import Contact from "@/components/sections/Contact";
-import JsonLd from "@/components/JsonLd";
 import { ShieldCheck, Zap, PhoneCall, Smartphone } from "lucide-react";
-import { SITE_URL } from "@/lib/site-content";
 
 export const metadata = {
   title: { absolute: "Notre méthode de livraison express par coursier" },
@@ -42,19 +40,9 @@ const ENGAGEMENTS = [
   }
 ];
 
-const breadcrumbSchema = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Accueil", item: SITE_URL },
-    { "@type": "ListItem", position: 2, name: "Notre méthode", item: `${SITE_URL}/methode` },
-  ],
-};
-
 export default function MethodePage() {
   return (
     <>
-      <JsonLd data={breadcrumbSchema} />
     <main>
       <section className="relative bg-ink text-white" style={{ backgroundImage: "url('/images/methode-bg-opt.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <div className="absolute inset-0 bg-ink/85"></div>
