@@ -130,11 +130,17 @@ export default function ZonePetiteCouronne() {
               <div className="grid grid-cols-2 gap-1.5">
                 {d.villes.map((v) => {
                   const slug = v.replace(" (limite)", "").toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '-').replace(/[^\w\-]+/g, '').replace(/\-\-+/g, '-').replace(/^-+/, '').replace(/-+$/, '');
-                  return (
+                  // Seule La Défense a une page dédiée ; les autres villes restent en texte.
+                  return slug === "la-defense" ? (
                     <Link key={v} href={`/zones/${slug}`} className="flex items-center gap-1.5 text-[12.5px] text-muted transition-colors hover:text-ink">
                       <MapPin size={10} className="shrink-0 text-accent" />
                       {v}
                     </Link>
+                  ) : (
+                    <span key={v} className="flex items-center gap-1.5 text-[12.5px] text-muted">
+                      <MapPin size={10} className="shrink-0 text-accent" />
+                      {v}
+                    </span>
                   );
                 })}
               </div>

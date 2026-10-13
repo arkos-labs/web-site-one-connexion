@@ -110,11 +110,18 @@ export default function ZonelaDefense() {
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
           {VILLES.map((v) => {
             const slug = v.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '-').replace(/[^\w\-]+/g, '').replace(/\-\-+/g, '-').replace(/^-+/, '').replace(/-+$/, '');
-            return (
-              <Link key={v} href={`/zones/${slug}`} className="flex items-center gap-2 rounded-lg border border-line bg-paper-card px-3 py-2.5 transition-colors hover:border-accent">
+            const inner = (
+              <>
                 <MapPin size={12} className="shrink-0 text-accent" />
                 <span className="text-[13px] text-muted hover:text-ink">{v}</span>
-              </Link>
+              </>
+            );
+            const box = "flex items-center gap-2 rounded-lg border border-line bg-paper-card px-3 py-2.5";
+            // Seule La Défense a une page dédiée ; les autres villes restent en texte.
+            return slug === "la-defense" ? (
+              <Link key={v} href={`/zones/${slug}`} className={`${box} transition-colors hover:border-accent`}>{inner}</Link>
+            ) : (
+              <div key={v} className={box}>{inner}</div>
             );
           })}
         </div>
