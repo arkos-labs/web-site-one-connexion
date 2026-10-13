@@ -73,6 +73,38 @@ const ZONE_LINKS = [
   { label: "Île-de-France complète", href: "/flotte" },
 ];
 
+const EXPRESS = "/services/coursier-express-paris";
+const MOTO = "/services/coursier-moto-paris";
+const MEDICAL = "/services/transport-medical";
+
+const TRANSPORT_TAGS = [
+  { label: "Transport express", href: EXPRESS },
+  { label: "Coursiers", href: EXPRESS },
+  { label: "Transport de colis", href: EXPRESS },
+  { label: "Transport de marchandises", href: EXPRESS },
+  { label: "Coursier express", href: EXPRESS },
+  { label: "Transitaire en douane", href: "/services" },
+  { label: "Affrètement", href: "/services" },
+  { label: "Coursier moto", href: MOTO },
+  { label: "Coursier scooter", href: MOTO },
+  { label: "Livraison de colis", href: EXPRESS },
+  { label: "Affrètement routier", href: "/services" },
+  { label: "Colis express", href: EXPRESS },
+  { label: "Courrier express", href: EXPRESS },
+  { label: "Course régionale", href: "/zones" },
+  { label: "Coursier médical", href: MEDICAL },
+  { label: "Enlèvement de colis", href: EXPRESS },
+  { label: "Expédition", href: EXPRESS },
+  { label: "Livraison de pharmacie", href: MEDICAL },
+  { label: "Livraison sous 24h", href: EXPRESS },
+  { label: "Transport colis lourd", href: "/services" },
+  { label: "Transport colis léger", href: EXPRESS },
+  { label: "Transport colis volumineux", href: "/services" },
+  { label: "Transport d'objet fragile", href: "/services" },
+  { label: "Transport d'oeuvre d'art", href: "/services" },
+  { label: "Transport à la demande", href: EXPRESS },
+];
+
 function ColLabel({ children }: { children: React.ReactNode }) {
   return (
     <div
@@ -195,6 +227,22 @@ export default function Footer() {
             </Link>
           </div>
 
+        </div>
+      </div>
+
+      {/* Nos prestations de transport (mots-clés visibles) */}
+      <div style={{ borderTop: "1px solid rgba(244,242,238,0.06)" }}>
+        <div className="mx-auto px-[clamp(20px,4vw,32px)] py-6" style={{ maxWidth: "1240px" }}>
+          <ColLabel>Nos prestations de transport</ColLabel>
+          <ul className="flex flex-wrap gap-x-4 gap-y-2">
+            {TRANSPORT_TAGS.map((t) => (
+              <li key={t.label}>
+                <Link href={t.href} className="text-[12px] transition-colors" style={{ color: "rgba(244,242,238,0.4)" }}>
+                  {t.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
 
