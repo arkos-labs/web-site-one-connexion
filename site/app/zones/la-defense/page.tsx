@@ -7,6 +7,7 @@ import Link from "next/link";
 import JsonLd from "@/components/JsonLd";
 import { SITE_URL, PHONE_TEL, PHONE_DISPLAY } from "@/lib/site-content";
 import { SERVICES } from "@/lib/services";
+import { getZone } from "@/lib/zones/data";
 import { MapPin } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -117,8 +118,8 @@ export default function ZonelaDefense() {
               </>
             );
             const box = "flex items-center gap-2 rounded-lg border border-line bg-paper-card px-3 py-2.5";
-            // Seule La Défense a une page dédiée ; les autres villes restent en texte.
-            return slug === "la-defense" ? (
+            // Lien uniquement si la ville a une page dédiée (sinon 404).
+            return slug === "la-defense" || getZone(slug) ? (
               <Link key={v} href={`/zones/${slug}`} className={`${box} transition-colors hover:border-accent`}>{inner}</Link>
             ) : (
               <div key={v} className={box}>{inner}</div>

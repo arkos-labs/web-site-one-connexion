@@ -7,6 +7,7 @@ import Link from "next/link";
 import JsonLd from "@/components/JsonLd";
 import { SITE_URL, PHONE_TEL, PHONE_DISPLAY } from "@/lib/site-content";
 import { SERVICES } from "@/lib/services";
+import { getZone } from "@/lib/zones/data";
 import { MapPin } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -130,8 +131,8 @@ export default function ZonePetiteCouronne() {
               <div className="grid grid-cols-2 gap-1.5">
                 {d.villes.map((v) => {
                   const slug = v.replace(" (limite)", "").toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '-').replace(/[^\w\-]+/g, '').replace(/\-\-+/g, '-').replace(/^-+/, '').replace(/-+$/, '');
-                  // Seule La Défense a une page dédiée ; les autres villes restent en texte.
-                  return slug === "la-defense" ? (
+                  // Lien uniquement si la ville a une page dédiée (sinon 404).
+                  return slug === "la-defense" || getZone(slug) ? (
                     <Link key={v} href={`/zones/${slug}`} className="flex items-center gap-1.5 text-[12.5px] text-muted transition-colors hover:text-ink">
                       <MapPin size={10} className="shrink-0 text-accent" />
                       {v}
