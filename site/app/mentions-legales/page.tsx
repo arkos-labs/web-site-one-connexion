@@ -3,6 +3,8 @@ import { LEGAL, EMAIL, SITE_URL } from "@/lib/site-content";
 
 export const metadata: Metadata = {
   title: "Mentions légales",
+  description:
+    "Mentions légales du site ONE CONNEXION : éditeur, hébergeur, coordonnées et informations légales de la société de coursiers B2B à Paris.",
   alternates: { canonical: "/mentions-legales" },
   robots: { index: true, follow: true },
 };
