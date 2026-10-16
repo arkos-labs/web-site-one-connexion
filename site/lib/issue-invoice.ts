@@ -1,6 +1,7 @@
 import Stripe from 'stripe';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { vatRateId } from '@/lib/stripe-vat';
+import { INVOICE_FOOTER, invoiceCustomFields, upsertStripeCustomer } from '@/lib/invoice-info';
 
 const parisDate = (d: Date) =>
   new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Paris', year: 'numeric', month: '2-digit', day: '2-digit' }).format(d);
@@ -61,7 +62,7 @@ export async function issueInternalInvoice(
 
     const { data: client } = await supabase
       .from('clients')
-      .select('id, company_name, contact_name, contact_email, stripe_customer_id')
+      .select('id, company_name, contact_name, contact_email, stripe_customer_id, siret, tax_id, billing_address, billing_postal_code, billing_city')
       .eq('id', claimed.client_id)
       .single();
     if (!client) throw new Error('Client introuvable');
@@ -73,15 +74,28 @@ export async function issueInternalInvoice(
     }
     if (!email) throw new Error('Aucun email pour ce client');
 
-    let customerId = client.stripe_customer_id as string | null;
-    if (!customerId) {
-      const customer = await stripe.customers.create(
-        { email, name: client.company_name || client.contact_name || undefined, metadata: { client_id: client.id } },
-        { idempotencyKey: `customer-${client.id}` }
-      );
-      customerId = customer.id;
+    // Coordonnées du client sur la facture : société, adresse, n° de TVA (SIRET en champ personnalisé).
+    const party = {
+      name: client.company_name || client.contact_name || '',
+      email,
+      address: client.billing_address,
+      postalCode: client.billing_postal_code,
+      city: client.billing_city,
+      vat: client.tax_id,
+      siret: client.siret,
+    };
+    const customerId = await upsertStripeCustomer(stripe, party, client.stripe_customer_id as string | null, `customer-${client.id}`);
+    if (customerId !== client.stripe_customer_id) {
       await supabase.from('clients').update({ stripe_customer_id: customerId }).eq('id', client.id);
     }
+
+    // Date de livraison de chaque course sur la ligne de facture.
+    const { data: deliveries } = await supabase.from('orders').select('id, delivered_at').in('id', items.map((i) => i.order_id).filter(Boolean));
+    const deliveredOn = new Map((deliveries ?? []).map((d) => [d.id as string, d.delivered_at as string | null]));
+    const describe = (i: { order_id: string | null; description: string }) => {
+      const at = i.order_id ? deliveredOn.get(i.order_id) : null;
+      return at ? `${i.description} — livrée le ${new Date(at).toLocaleDateString('fr-FR', { timeZone: 'Europe/Paris' })}` : i.description;
+    };
 
     const taxRate = await vatRateId(stripe);
     const base: Stripe.InvoiceCreateParams = {
@@ -93,7 +107,8 @@ export async function issueInternalInvoice(
       currency: 'eur',
       default_tax_rates: taxRate ? [taxRate] : undefined,
       description: items.map((i) => i.description).join(' · ').slice(0, 300),
-      custom_fields: [{ name: 'Réf.', value: claimed.invoice_number }],
+      custom_fields: invoiceCustomFields(claimed.invoice_number, party),
+      footer: INVOICE_FOOTER,
       metadata: { invoice_id: claimed.id, invoice_number: claimed.invoice_number, invoice_ids: claimed.id },
     };
 
@@ -128,7 +143,7 @@ export async function issueInternalInvoice(
           invoice: draft.id,
           currency: 'eur',
           amount: Math.round(Number(item.total_price) * 100),
-          description: item.description,
+          description: describe(item),
         },
         { idempotencyKey: `item-${item.id}` }
       );

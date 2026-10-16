@@ -3,6 +3,7 @@ import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 import { calculatePrice, ServiceLevel } from '@/lib/pricing';
 import { vatRateId } from '@/lib/stripe-vat';
+import { INVOICE_FOOTER, invoiceCustomFields, upsertStripeCustomer, type InvoiceParty } from '@/lib/invoice-info';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder', {
   apiVersion: '2025-02-24.acacia',
@@ -21,7 +22,7 @@ async function sendTransferInvoice(p: {
   // pourrait déclencher une facture sur la commande d'un autre).
   const { data: order } = await supabase
     .from('orders')
-    .select('id, client_type, billing_status, created_at')
+    .select('id, client_type, billing_status, created_at, contact_name, raison_sociale, adresse_facturation, siret, tva_number')
     .eq('tracking_code', p.orderId)
     .maybeSingle();
   if (!order || order.client_type !== 'entreprise' || order.billing_status
@@ -29,11 +30,15 @@ async function sendTransferInvoice(p: {
     return NextResponse.json({ error: 'Commande introuvable ou déjà facturée.' }, { status: 400 });
   }
 
-  const customer = await stripe.customers.create({
+  // Coordonnées complètes du client (société, adresse, TVA, SIRET) pour que la facture soit conforme.
+  const party: InvoiceParty = {
+    name: p.companyName || order.raison_sociale || order.contact_name || '',
     email: p.email,
-    name: p.companyName || undefined,
-    metadata: { orderId: p.orderId, siret: p.siret || '' },
-  });
+    address: order.adresse_facturation,
+    vat: order.tva_number,
+    siret: order.siret || p.siret,
+  };
+  const customer = { id: await upsertStripeCustomer(stripe, party) };
 
   let invoice: Stripe.Invoice;
   try {
@@ -47,7 +52,8 @@ async function sendTransferInvoice(p: {
         currency: 'eur',
         default_tax_rates: [await vatRateId(stripe)],
         description: `Course ${p.orderId}`,
-        custom_fields: [{ name: 'Réf.', value: p.orderId }],
+        custom_fields: invoiceCustomFields(p.orderId, party),
+        footer: INVOICE_FOOTER,
         payment_settings: {
           payment_method_types: ['customer_balance'],
           payment_method_options: {
@@ -123,6 +129,22 @@ export async function POST(req: Request) {
     // Stripe takes amounts in cents
     const unitAmount = Math.round(price * 100);
 
+    // Coordonnées du client (saisies à la commande) : elles figureront sur la facture envoyée à la livraison.
+    const pro = clientType === 'entreprise';
+    const admin = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+    const { data: ord } = await admin
+      .from('orders')
+      .select('id, contact_name, contact_email, raison_sociale, adresse_facturation, siret, tva_number')
+      .eq('tracking_code', orderId)
+      .maybeSingle();
+    const party: InvoiceParty = {
+      name: (pro ? ord?.raison_sociale || ord?.contact_name || companyName : ord?.contact_name) || '',
+      email: email || ord?.contact_email || '',
+      address: ord?.adresse_facturation,
+      vat: ord?.tva_number,
+      siret: ord?.siret || siret,
+    };
+
     // Format service labels
     const formatLabels: Record<string, string> = {
       'doc': 'Pli/Doc',
@@ -151,11 +173,7 @@ export async function POST(req: Request) {
       // 'setup', aucun montant n'est prélevé aujourd'hui. Le cron deferred-payments prélève à 30 jours.
       // Le client Stripe est créé d'abord pour que le moyen de paiement lui soit rattaché et réutilisable.
       const isSepa = debitMethod === 'sepa';
-      const customer = await stripe.customers.create({
-        email,
-        name: companyName || undefined,
-        metadata: { orderId, siret: siret || '' },
-      });
+      const customer = { id: await upsertStripeCustomer(stripe, party) };
 
       let session: Stripe.Checkout.Session;
       try {
@@ -187,11 +205,25 @@ export async function POST(req: Request) {
 
       return NextResponse.json({ url: session.url });
     } else {
-      // Particuliers, et pros qui paient tout de suite : paiement immédiat par carte
-      const session = await stripe.checkout.sessions.create({
+      // Particuliers, et pros qui paient tout de suite : paiement immédiat par carte.
+      // Stripe crée la facture au paiement ; elle n'est envoyée au client qu'à la livraison de la course
+      // (lib/deliver-order-invoice). Pro : prix HT + TVA 20 %. Particulier : prix TTC, TVA « dont ».
+      let taxRate: string | undefined;
+      try {
+        taxRate = await vatRateId(stripe, !pro);
+      } catch (err) {
+        console.error('Taux de TVA indisponible, paiement sans ligne de TVA :', err);
+      }
+      let customerId: string | undefined;
+      try {
+        customerId = await upsertStripeCustomer(stripe, party, undefined, `cust-checkout-${ord?.id ?? orderId}`);
+      } catch (err) {
+        console.error('Client Stripe non créé, paiement sans client :', err);
+      }
+      const sessionParams: Stripe.Checkout.SessionCreateParams = {
         payment_method_types: ['card'],
         mode: 'payment',
-        customer_email: email,
+        ...(customerId ? { customer: customerId } : { customer_email: email }),
         line_items: [
           {
             price_data: {
@@ -203,8 +235,7 @@ export async function POST(req: Request) {
               unit_amount: unitAmount,
             },
             quantity: 1,
-            // Tarif pro affiché HT : TVA 20 % ajoutée, comme sur le débit à 30 jours
-            ...(clientType === 'entreprise' ? { tax_rates: [await vatRateId(stripe)] } : {}),
+            ...(taxRate ? { tax_rates: [taxRate] } : {}),
           },
         ],
         // Session abandonnée : elle expire au bout de 30 min (minimum Stripe), le webhook
@@ -220,7 +251,28 @@ export async function POST(req: Request) {
           paymentMode: 'carte',
           price: price.toString(),
         },
-      });
+      };
+
+      let session: Stripe.Checkout.Session;
+      try {
+        session = await stripe.checkout.sessions.create({
+          ...sessionParams,
+          invoice_creation: {
+            enabled: true,
+            invoice_data: {
+              description: `Course ${orderId}`,
+              footer: INVOICE_FOOTER,
+              custom_fields: invoiceCustomFields(orderId, party),
+              metadata: { order_id: ord?.id ?? '', tracking_code: orderId },
+            },
+          },
+        });
+      } catch (err) {
+        // Ne jamais perdre une commande : sans facture automatique, le paiement fonctionne comme avant et
+        // la facture est alors créée à la livraison.
+        console.error('Checkout avec facture refusé, nouvel essai sans :', err);
+        session = await stripe.checkout.sessions.create(sessionParams);
+      }
 
       return NextResponse.json({ url: session.url });
     }

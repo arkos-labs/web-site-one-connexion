@@ -108,6 +108,9 @@ export async function POST(req: Request) {
             billing_status: 'paye',
             amount_due: amountDue,
             paid_at: new Date().toISOString(),
+            // Facture créée par Stripe au paiement (envoyée au client à la livraison de la course).
+            ...(typeof session.invoice === 'string' ? { stripe_invoice_id: session.invoice } : {}),
+            ...(typeof session.customer === 'string' ? { stripe_customer_id: session.customer } : {}),
           };
         } else if (session.mode === 'setup') {
           // Pro en paiement fin de mois : carte enregistrée, débitée par le cron deferred-payments à J+30.

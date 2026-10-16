@@ -1,6 +1,7 @@
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 import { issueInternalInvoice } from '@/lib/issue-invoice';
+import { deliverOrderInvoice } from '@/lib/deliver-order-invoice';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder');
 
@@ -25,9 +26,23 @@ export async function GET(req: Request) {
 
   if (error) return Response.json({ error: error.message }, { status: 500 });
 
-  const results = [];
+  const results: unknown[] = [];
   for (const inv of invoices ?? []) {
     results.push(await issueInternalInvoice(supabase, stripe, inv.id));
+  }
+
+  // Courses livrées (paiement par carte ou « fin de mois ») dont la facture n'est pas encore partie.
+  const since = new Date(Date.now() - 45 * 86400000).toISOString();
+  const { data: pending } = await supabase
+    .from('orders')
+    .select('id')
+    .in('status', ['delivered', 'livree'])
+    .in('payment_mode', ['carte', 'fin_de_mois'])
+    .is('invoice_sent_at', null)
+    .gte('delivered_at', since)
+    .limit(50);
+  for (const o of pending ?? []) {
+    results.push(await deliverOrderInvoice(supabase, stripe, o.id));
   }
 
   return Response.json({ processed: results.length, results });
