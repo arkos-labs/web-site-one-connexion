@@ -34,7 +34,7 @@ export async function notifyNewContact(msg: ContactMessage): Promise<void> {
         reply_to: msg.email,
         attachments: [EMAIL_LOGO_ATTACHMENT],
         subject: `Nouveau message de contact — ${who}`,
-        html: `<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td style="background:#0E0F10;padding:18px 24px;border-bottom:4px solid #ed5518">
+        html: `<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td style="background:#ffffff;padding:18px 24px;border-bottom:4px solid #ed5518">
 <img src="cid:logo" width="150" height="43" alt="ONE CONNEXION" style="display:block;border:0;height:auto"></td></tr></table>
 <p><strong>${escapeHtml(who)}</strong> &lt;${escapeHtml(msg.email)}&gt;</p>
 <p style="white-space:pre-wrap">${escapeHtml(msg.message)}</p>
