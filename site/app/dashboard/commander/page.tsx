@@ -823,8 +823,8 @@ export default function CommanderPage() {
               <div className="mt-3 rounded-lg bg-white/5 border border-white/10 p-3 text-xs text-white/80">
                 {isPro ? (
                   <>
-                    <p className="font-bold text-white mb-1 flex items-center gap-1.5"><CalendarClock size={14} className="text-accent" /> Facturation mensuelle</p>
-                    <p>En tant que client pro, vos courses sont cumulées et prélevées automatiquement tous les 30 jours via votre moyen de paiement enregistré.</p>
+                    <p className="font-bold text-white mb-1 flex items-center gap-1.5"><CalendarClock size={14} className="text-accent" /> Facture à 30 jours</p>
+                    <p>En tant que client pro, vous recevez la facture par e-mail dès la livraison et la réglez sous 30 jours, par carte ou par virement.</p>
                   </>
                 ) : (
                   <>

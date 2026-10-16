@@ -210,7 +210,7 @@ export default function AdminClientDetailPage() {
   const activeOrders = orders.filter((o) => ![...DELIVERED, ...CANCELLED].includes(o.status));
   // À régler : factures déjà émises. À facturer : factures du mois encore ouvertes (émises le 1er du mois suivant).
   const unpaidTotal = invoices.filter((i) => i.status === "emise" || i.status === "echec").reduce((sum, i) => sum + i.amount, 0);
-  const toBillTotal = invoices.filter((i) => i.status === "en_cours").reduce((sum, i) => sum + i.amount, 0);
+  const toBillTotal = invoices.filter((i) => i.status === "en_cours" || i.status === "emission").reduce((sum, i) => sum + i.amount, 0);
   const pendingTotal = unpaidTotal + toBillTotal;
   // Courses livrées sans prix : elles n'entrent dans aucune facture.
   const unpricedDelivered = orders.filter((o) => DELIVERED.includes(o.status) && o.price_estimate == null);
@@ -276,11 +276,11 @@ export default function AdminClientDetailPage() {
           value={`${pendingTotal.toFixed(2)} € TTC`}
           sub={
             unpaidTotal > 0 && toBillTotal > 0
-              ? `${unpaidTotal.toFixed(2)} € à régler · ${toBillTotal.toFixed(2)} € à facturer le 1er`
+              ? `${unpaidTotal.toFixed(2)} € à régler · ${toBillTotal.toFixed(2)} € en cours d'émission`
               : unpaidTotal > 0
                 ? "Factures émises à régler"
                 : toBillTotal > 0
-                  ? "À facturer le 1er du mois prochain"
+                  ? "Facture en cours d'émission"
                   : unpricedDelivered.length > 0
                     ? `${unpricedDelivered.length} course${unpricedDelivered.length > 1 ? "s" : ""} livrée${unpricedDelivered.length > 1 ? "s" : ""} sans prix`
                     : "À jour"
@@ -297,7 +297,7 @@ export default function AdminClientDetailPage() {
             <div className="border-b border-line p-5">
               <h2 className="text-[15px] font-bold text-ink">Facturation</h2>
               <p className="mt-0.5 text-[12.5px] font-medium text-muted">
-                Une facture par mois, alimentée à chaque course livrée, envoyée par Stripe au début du mois suivant.
+                Une facture par course livrée, envoyée par Stripe dès la livraison, payable sous 30 jours (carte ou virement).
               </p>
             </div>
             {unpricedDelivered.length > 0 && (
@@ -333,7 +333,7 @@ export default function AdminClientDetailPage() {
                       <span className="flex items-center gap-1.5 rounded-full bg-red-50 px-2.5 py-1 text-[11px] font-bold text-red-700">
                         <Clock size={12} /> Paiement échoué
                       </span>
-                    ) : inv.status === "en_cours" ? (
+                    ) : inv.status === "en_cours" || inv.status === "emission" ? (
                       <span className="flex items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-1 text-[11px] font-bold text-blue-700">
                         <RefreshCw size={12} /> En cours
                       </span>

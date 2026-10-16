@@ -138,7 +138,7 @@ export default function FactureDetailsPage() {
   return (
     <PageShell
       back={back}
-      eyebrow="Facture mensuelle"
+      eyebrow="Facture"
       title={<span className="capitalize">{invoice.monthLabel}</span>}
       subtitle={`${orders.length} course${orders.length > 1 ? "s" : ""} livrée${orders.length > 1 ? "s" : ""} · ${invoice.number}`}
       actions={

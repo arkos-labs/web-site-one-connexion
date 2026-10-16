@@ -43,8 +43,7 @@ export default function FacturesPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Une facture par mois : elle s'ouvre à la première course livrée, grossit à chaque
-  // livraison, puis est émise (et envoyée par email) au début du mois suivant.
+  // Une facture par course livrée : émise et envoyée par email dès la livraison, payable sous 30 jours.
   const invoices = useMemo(
     () =>
       rows.map((r) => ({
@@ -66,7 +65,7 @@ export default function FacturesPage() {
   }, [invoices, search]);
 
   const pendingTotal = invoices.filter((i) => i.status === "emise" || i.status === "echec").reduce((sum, i) => sum + i.amount, 0);
-  const currentMonth = invoices.find((i) => i.status === "en_cours");
+  const latest = invoices[0];
 
   const volume = (i: { courses: number; navettes: number }) =>
     [
@@ -81,8 +80,8 @@ export default function FacturesPage() {
       <StatusPill tone="green">Réglée</StatusPill>
     ) : status === "echec" ? (
       <StatusPill tone="red">Paiement échoué</StatusPill>
-    ) : status === "en_cours" ? (
-      <StatusPill tone="blue">En cours</StatusPill>
+    ) : status === "en_cours" || status === "emission" ? (
+      <StatusPill tone="blue">En cours d&apos;émission</StatusPill>
     ) : (
       <StatusPill tone="orange">À régler</StatusPill>
     );
@@ -91,13 +90,13 @@ export default function FacturesPage() {
     <PageShell
       eyebrow="Facturation & relevés"
       title="Vos factures"
-      subtitle="L'historique de votre facturation mensuelle."
+      subtitle="Une facture par course livrée, envoyée dès la livraison et payable sous 30 jours."
       actions={<SearchInput label="Rechercher une facture" value={search} onChange={setSearch} placeholder="N° de facture, mois…" />}
     >
       <KpiStrip
         items={[
           { label: "Total à régler (TTC)", value: eur(pendingTotal), accent: pendingTotal > 0 },
-          { label: "Mois en cours", value: currentMonth ? eur(currentMonth.amount) : "—", hint: currentMonth?.date },
+          { label: "Dernière facture", value: latest ? eur(latest.amount) : "—", hint: latest?.number },
           {
             label: "Moyen de paiement",
             value: <span className="text-sm font-bold text-white/60 sm:text-base">Aucun enregistré</span>,
@@ -111,7 +110,7 @@ export default function FacturesPage() {
         <EmptyState
           icon={FileText}
           title={invoices.length === 0 ? "Aucune facture pour le moment" : "Aucun résultat"}
-          text={invoices.length === 0 ? "Votre facture du mois s'ouvrira dès votre première course livrée." : "Essayez une autre recherche."}
+          text={invoices.length === 0 ? "Votre première facture vous sera envoyée dès votre première course livrée." : "Essayez une autre recherche."}
           action={
             invoices.length === 0 ? (
               <Link href="/dashboard/commander" className={`${BTN_PRIMARY} text-white hover:text-white`}>
