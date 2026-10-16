@@ -559,6 +559,12 @@ export function isZoneIndexed(zone: Zone): boolean {
 
 export const INDEXED_ZONE_SLUGS = ZONES.filter(isZoneIndexed).map((z) => z.slug);
 
+/** Communes indexables d'un département (préfixe du code postal : "92", "93", "94"), triées par nom. */
+export function getIndexedZonesByDept(dept: string): Zone[] {
+  return ZONES.filter((z) => z.category !== "paris" && z.dept.startsWith(dept) && isZoneIndexed(z))
+    .sort((a, b) => a.name.localeCompare(b.name, "fr"));
+}
+
 export function getZone(slug: string): Zone | undefined {
   return ZONES.find((z) => z.slug === slug);
 }

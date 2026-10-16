@@ -6,6 +6,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import JsonLd from "@/components/JsonLd";
 import { SITE_URL } from "@/lib/site-content";
+import { getIndexedZonesByDept } from "@/lib/zones/data";
+
+// Départements dont chaque commune a sa page : liens directs pour que Google les découvre depuis le hub.
+const CITY_GROUPS = [
+  { dept: "92", label: "Hauts-de-Seine (92)" },
+  { dept: "93", label: "Seine-Saint-Denis (93)" },
+  { dept: "94", label: "Val-de-Marne (94)" },
+] as const;
 
 export const metadata: Metadata = {
   title: { absolute: "Zones de livraison express Paris & Île-de-France" },
@@ -135,6 +143,33 @@ export default function ZonesPage() {
               <p className="text-[13px] leading-[1.55] text-muted">{z.desc}</p>
               <div className="mt-auto font-mono text-[10px] tracking-[0.1em] text-accent-dark uppercase">Voir la zone →</div>
             </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* Toutes les communes desservies, avec lien vers leur page dédiée */}
+      <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-[88px]">
+        <div className="mb-3 flex items-center gap-3 font-mono text-[10px] tracking-[0.16em] text-accent uppercase">
+          <span className="h-px w-6 bg-accent" />
+          Villes desservies
+        </div>
+        <h2 className="mb-10 max-w-[24ch] text-balance text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
+          Un coursier dédié dans chaque commune de la petite couronne.
+        </h2>
+        <div className="grid gap-10 lg:grid-cols-3">
+          {CITY_GROUPS.map((g) => (
+            <div key={g.dept}>
+              <h3 className="mb-4 border-b border-line pb-3 font-mono text-[11px] font-semibold tracking-[0.14em] text-ink uppercase">{g.label}</h3>
+              <ul className="flex flex-wrap gap-x-4 gap-y-2.5">
+                {getIndexedZonesByDept(g.dept).map((z) => (
+                  <li key={z.slug}>
+                    <Link href={`/zones/${z.slug}`} className="text-[14px] text-muted underline-offset-4 transition-colors hover:text-ink hover:underline">
+                      {z.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
           ))}
         </div>
       </section>

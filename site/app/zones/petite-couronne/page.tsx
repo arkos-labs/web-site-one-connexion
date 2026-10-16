@@ -7,7 +7,10 @@ import Link from "next/link";
 import JsonLd from "@/components/JsonLd";
 import { SITE_URL, PHONE_TEL, PHONE_DISPLAY } from "@/lib/site-content";
 import { SERVICES } from "@/lib/services";
-import { getZone } from "@/lib/zones/data";
+import { getZone, getIndexedZonesByDept } from "@/lib/zones/data";
+
+const slugOf = (v: string) =>
+  v.replace(" (limite)", "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/\s+/g, "-").replace(/[^\w\-]+/g, "").replace(/\-\-+/g, "-").replace(/^-+/, "").replace(/-+$/, "");
 import { MapPin } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -144,6 +147,15 @@ export default function ZonePetiteCouronne() {
                     </span>
                   );
                 })}
+                {/* Autres communes du département qui ont leur page dédiée */}
+                {getIndexedZonesByDept(d.dept)
+                  .filter((z) => !d.villes.some((v) => slugOf(v) === z.slug))
+                  .map((z) => (
+                    <Link key={z.slug} href={`/zones/${z.slug}`} className="flex items-center gap-1.5 text-[12.5px] text-muted transition-colors hover:text-ink">
+                      <MapPin size={10} className="shrink-0 text-accent" />
+                      {z.name}
+                    </Link>
+                  ))}
               </div>
             </div>
           ))}
