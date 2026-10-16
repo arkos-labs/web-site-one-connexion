@@ -36,7 +36,8 @@ begin
 
   -- Course plus livrée (statut modifié par l'admin) ou déjà payée via Stripe :
   -- on la retire tant que la facture est ouverte, et on supprime la facture si elle devient vide.
-  if o.status not in ('delivered', 'livree') or o.payment_mode is not null then
+  -- (un particulier paie par carte avant la prise en charge : jamais de facture à émettre pour lui)
+  if o.status not in ('delivered', 'livree') or o.payment_mode is not null or o.client_type = 'particulier' then
     if found then
       delete from public.invoice_items ii using public.invoices i
       where ii.order_id = o.id and i.id = ii.invoice_id and i.status = 'en_cours';

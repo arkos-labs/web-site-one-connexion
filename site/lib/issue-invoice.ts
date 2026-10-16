@@ -28,13 +28,35 @@ export async function issueInternalInvoice(
   const release = () => supabase.from('invoices').update({ status: 'en_cours' }).eq('id', invoiceId);
 
   try {
-    const { data: items } = await supabase
+    const { data: rawItems } = await supabase
       .from('invoice_items')
       .select('id, order_id, description, total_price')
       .eq('invoice_id', invoiceId);
-    if (!items?.length) {
-      await release();
-      return { invoice: claimed.invoice_number, ok: true, skipped: true, detail: 'aucune ligne' };
+
+    // Garde-fou anti double paiement : une course déjà réglée via Stripe (mode de paiement
+    // enregistré) ou celle d'un particulier (qui paie par carte avant la prise en charge) ne
+    // doit jamais être facturée ici. Ces lignes sont retirées avant émission.
+    const orderIds = (rawItems ?? []).map((i) => i.order_id).filter(Boolean);
+    const { data: linked } = orderIds.length
+      ? await supabase.from('orders').select('id, payment_mode, client_type').in('id', orderIds)
+      : { data: [] as { id: string; payment_mode: string | null; client_type: string | null }[] };
+    const excluded = new Set(
+      (linked ?? []).filter((o) => o.payment_mode || o.client_type === 'particulier').map((o) => o.id)
+    );
+    const dropped = (rawItems ?? []).filter((i) => excluded.has(i.order_id));
+    const items = (rawItems ?? []).filter((i) => !excluded.has(i.order_id));
+
+    if (dropped.length) {
+      await supabase.from('invoice_items').delete().in('id', dropped.map((i) => i.id));
+      const sub = Math.round(items.reduce((s, i) => s + Number(i.total_price), 0) * 100) / 100;
+      const tax = Math.round(sub * 20) / 100;
+      await supabase.from('invoices').update({ subtotal: sub, tax_amount: tax, total_amount: sub + tax }).eq('id', invoiceId);
+      claimed.total_amount = sub + tax;
+    }
+    if (!items.length) {
+      // Plus rien à facturer : on supprime la facture vide.
+      await supabase.from('invoices').delete().eq('id', invoiceId);
+      return { invoice: claimed.invoice_number, ok: true, skipped: true, detail: 'courses déjà payées ou particulier, rien à facturer' };
     }
 
     const { data: client } = await supabase
