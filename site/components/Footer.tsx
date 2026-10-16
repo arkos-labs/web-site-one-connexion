@@ -232,12 +232,12 @@ export default function Footer() {
 
       {/* Nos prestations de transport (mots-clés visibles) */}
       <div style={{ borderTop: "1px solid rgba(244,242,238,0.06)" }}>
-        <div className="mx-auto px-[clamp(20px,4vw,32px)] py-6" style={{ maxWidth: "1240px" }}>
-          <ColLabel>Nos prestations de transport</ColLabel>
-          <ul className="flex flex-wrap gap-x-4 gap-y-2">
+        <div className="mx-auto px-[clamp(20px,4vw,32px)] py-4" style={{ maxWidth: "1240px" }}>
+          <h2 className="sr-only">Nos prestations de transport</h2>
+          <ul className="flex flex-wrap gap-x-3 gap-y-1">
             {TRANSPORT_TAGS.map((t) => (
               <li key={t.label}>
-                <Link href={t.href} className="text-[12px] transition-colors" style={{ color: "rgba(244,242,238,0.4)" }}>
+                <Link href={t.href} className="text-[10px] transition-colors hover:!text-[rgba(244,242,238,0.5)]" style={{ color: "rgba(244,242,238,0.2)" }}>
                   {t.label}
                 </Link>
               </li>
