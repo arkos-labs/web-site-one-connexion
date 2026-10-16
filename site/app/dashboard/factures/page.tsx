@@ -80,7 +80,7 @@ export default function FacturesPage() {
       <StatusPill tone="green">Réglée</StatusPill>
     ) : status === "echec" ? (
       <StatusPill tone="red">Paiement échoué</StatusPill>
-    ) : status === "en_cours" || status === "emission" ? (
+    ) : status === "en_cours" || status === "emission" || status === "retenue" ? (
       <StatusPill tone="blue">En cours d&apos;émission</StatusPill>
     ) : (
       <StatusPill tone="orange">À régler</StatusPill>

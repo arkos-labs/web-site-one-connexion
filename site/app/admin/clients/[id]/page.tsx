@@ -210,7 +210,7 @@ export default function AdminClientDetailPage() {
   const activeOrders = orders.filter((o) => ![...DELIVERED, ...CANCELLED].includes(o.status));
   // À régler : factures déjà émises. À facturer : factures du mois encore ouvertes (émises le 1er du mois suivant).
   const unpaidTotal = invoices.filter((i) => i.status === "emise" || i.status === "echec").reduce((sum, i) => sum + i.amount, 0);
-  const toBillTotal = invoices.filter((i) => i.status === "en_cours" || i.status === "emission").reduce((sum, i) => sum + i.amount, 0);
+  const toBillTotal = invoices.filter((i) => i.status === "en_cours" || i.status === "emission" || i.status === "retenue").reduce((sum, i) => sum + i.amount, 0);
   const pendingTotal = unpaidTotal + toBillTotal;
   // Courses livrées sans prix : elles n'entrent dans aucune facture.
   const unpricedDelivered = orders.filter((o) => DELIVERED.includes(o.status) && o.price_estimate == null);
@@ -332,6 +332,10 @@ export default function AdminClientDetailPage() {
                     ) : inv.status === "echec" ? (
                       <span className="flex items-center gap-1.5 rounded-full bg-red-50 px-2.5 py-1 text-[11px] font-bold text-red-700">
                         <Clock size={12} /> Paiement échoué
+                      </span>
+                    ) : inv.status === "retenue" ? (
+                      <span className="flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-bold text-slate-600">
+                        <Clock size={12} /> Retenue
                       </span>
                     ) : inv.status === "en_cours" || inv.status === "emission" ? (
                       <span className="flex items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-1 text-[11px] font-bold text-blue-700">
