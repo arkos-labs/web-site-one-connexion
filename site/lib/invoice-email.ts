@@ -44,7 +44,7 @@ export async function sendInvoiceEmail(i: InvoiceEmailInput): Promise<boolean> {
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F4F2EE;padding:28px 12px"><tr><td align="center">
 <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background:#fff;border-radius:10px;overflow:hidden">
 <tr><td style="background:#0E0F10;padding:22px 28px;border-bottom:4px solid #ed5518">
-<span style="font-size:20px;font-weight:800;letter-spacing:.04em;color:#fff">ONE <span style="color:#ed5518">CONNEXION</span></span></td></tr>
+<img src="${SITE_URL}/email-logo.png" width="150" height="43" alt="ONE CONNEXION" style="display:block;border:0;height:auto"></td></tr>
 <tr><td style="padding:30px 28px 8px">
 <p style="margin:0 0 6px;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#ed5518;font-weight:700">Course livrée</p>
 <h1 style="margin:0 0 14px;font-size:24px;line-height:1.2">Votre facture est disponible</h1>
