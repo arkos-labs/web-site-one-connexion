@@ -3,7 +3,7 @@ import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 import { calculatePrice, ServiceLevel } from '@/lib/pricing';
 import { vatRateId } from '@/lib/stripe-vat';
-import { INVOICE_FOOTER, invoiceCustomFields, upsertStripeCustomer, type InvoiceParty } from '@/lib/invoice-info';
+import { INVOICE_FOOTER, invoiceFooter, invoiceCustomFields, upsertStripeCustomer, type InvoiceParty } from '@/lib/invoice-info';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder', {
   apiVersion: '2025-02-24.acacia',
@@ -261,7 +261,7 @@ export async function POST(req: Request) {
             enabled: true,
             invoice_data: {
               description: `Course ${orderId}`,
-              footer: INVOICE_FOOTER,
+              footer: invoiceFooter(true), // payée à la commande : pas de mention de retard de paiement
               custom_fields: invoiceCustomFields(orderId, party),
               metadata: { order_id: ord?.id ?? '', tracking_code: orderId },
             },

@@ -11,7 +11,7 @@
 import Stripe from 'stripe';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { vatRateId } from '@/lib/stripe-vat';
-import { INVOICE_FOOTER, invoiceCustomFields, upsertStripeCustomer, type InvoiceParty } from '@/lib/invoice-info';
+import { invoiceFooter, invoiceCustomFields, upsertStripeCustomer, type InvoiceParty } from '@/lib/invoice-info';
 import { sendInvoiceEmail } from '@/lib/invoice-email';
 
 const DELIVERED = ['delivered', 'livree'];
@@ -111,15 +111,16 @@ export async function deliverOrderInvoice(supabase: SupabaseClient, stripe: Stri
       const draft = await stripe.invoices.create(
         {
           customer: customerId,
-          collection_method: deferred ? 'charge_automatically' : 'send_invoice',
-          ...(deferred ? { default_payment_method: o.stripe_payment_method_id ?? undefined } : { days_until_due: 1 }),
+          // Facture déjà payée : prélèvement automatique « hors Stripe », donc aucune date d'échéance.
+          collection_method: 'charge_automatically',
+          ...(deferred ? { default_payment_method: o.stripe_payment_method_id ?? undefined } : {}),
           auto_advance: false,
           pending_invoice_items_behavior: 'exclude',
           currency: 'eur',
           default_tax_rates: [taxRate],
           description: `Course ${ref} du ${delivered}`,
           custom_fields: invoiceCustomFields(ref, party),
-          footer: INVOICE_FOOTER,
+          footer: invoiceFooter(!deferred),
           metadata: { order_id: o.id, tracking_code: ref },
         },
         { idempotencyKey: `deliver-invoice-${o.id}` }

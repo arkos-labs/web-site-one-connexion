@@ -8,11 +8,16 @@ import type Stripe from 'stripe';
 import { LEGAL } from '@/lib/site-content';
 
 /** Mentions légales affichées en pied de chaque facture (à faire valider par l'expert-comptable). */
-export const INVOICE_FOOTER =
+const IDENTITY =
   `${LEGAL.denomination} — ${LEGAL.forme} au capital de ${LEGAL.capital} — ${LEGAL.adresse} — ` +
-  `SIREN ${LEGAL.siren} — SIRET ${LEGAL.siret} — TVA intracommunautaire ${LEGAL.tva} — NAF ${LEGAL.naf}. ` +
-  `En cas de retard de paiement : pénalités égales à 3 fois le taux d'intérêt légal et indemnité forfaitaire ` +
+  `SIREN ${LEGAL.siren} — SIRET ${LEGAL.siret} — TVA intracommunautaire ${LEGAL.tva} — NAF ${LEGAL.naf}.`;
+const LATE_PAYMENT =
+  ` En cas de retard de paiement : pénalités égales à 3 fois le taux d'intérêt légal et indemnité forfaitaire ` +
   `de recouvrement de 40 € (art. L441-10 du Code de commerce). Pas d'escompte pour paiement anticipé.`;
+
+/** Facture déjà payée : identité du vendeur seulement. Facture à régler : + pénalités de retard. */
+export const invoiceFooter = (paid: boolean) => (paid ? IDENTITY : IDENTITY + LATE_PAYMENT);
+export const INVOICE_FOOTER = invoiceFooter(false);
 
 export type InvoiceParty = {
   name: string;
