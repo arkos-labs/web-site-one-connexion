@@ -301,7 +301,7 @@ export const LOCAL_92: Record<string, LocalZoneContent> = {
     localGuide: {
       title: "Antony : à mi-chemin entre Paris, Orly et Saclay",
       paragraphs: [
-        "Antony se trouve entre Paris et le sud de l'Essonne. Pour les entreprises de la commune, les courses vont dans trois directions : Paris, Orly et Rungis, et le plateau de Saclay. La destination fixe le tarif : la petite couronne suit la grille standard, l’Essonne démarre à 49 € HT.",
+        "Antony se trouve entre Paris et le sud de l'Essonne. Pour les entreprises de la commune, les courses vont dans trois directions : Paris, Orly et Rungis, et le plateau de Saclay. La destination fixe le tarif : la petite couronne suit la grille standard, l’Essonne démarre à 65 € HT.",
         "L'hôpital privé d'Antony et les cabinets de la commune échangent des prélèvements et des dossiers avec des laboratoires voisins. Précisez le service, l'heure limite et la température de conservation lorsqu'elle s'applique.",
       ],
     },

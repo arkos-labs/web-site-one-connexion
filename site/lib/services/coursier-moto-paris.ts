@@ -98,7 +98,7 @@ export const coursierMotoParis: Service = {
   ],
 
   coverage:
-    "Les 20 arrondissements de Paris dès 17,50 € HT, puis les Hauts-de-Seine, la Seine-Saint-Denis et le Val-de-Marne dès 35 € HT, et la grande couronne (77, 78, 91, 95) dès 49 € HT.",
+    "Les 20 arrondissements de Paris dès 17,50 € HT, puis les Hauts-de-Seine, la Seine-Saint-Denis et le Val-de-Marne dès 35 € HT, et la grande couronne (77, 78, 91, 95) dès 65 € HT.",
 
   faq: [
     {

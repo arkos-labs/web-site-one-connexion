@@ -42,7 +42,7 @@ const FAQ = [
   },
   {
     q: "Quel est le tarif d'un coursier en petite couronne ?",
-    a: "En petite couronne (92, 93, 94), le tarif est de 35 € HT en normal, 52,50 € HT en urgent et 70 € HT en super urgent. En grande couronne (77, 78, 91, 95) : 49, 73,50 et 98 € HT.",
+    a: "En petite couronne (92, 93, 94), le tarif est de 35 € HT en normal, 52,50 € HT en urgent et 70 € HT en super urgent. En grande couronne (77, 78, 91, 95) : 65, 97,50 et 130 € HT.",
   },
   {
     q: "Combien coûte un coursier moto à Paris ?",
@@ -54,11 +54,11 @@ const FAQ = [
   },
   {
     q: "Quel est le tarif d'un coursier en banlieue de Paris ?",
-    a: "En banlieue proche (92, 93, 94), comptez 35 € HT en normal, 52,50 € HT en urgent et 70 € HT en super urgent. Plus loin en Île-de-France (77, 78, 91, 95) : 49, 73,50 et 98 € HT.",
+    a: "En banlieue proche (92, 93, 94), comptez 35 € HT en normal, 52,50 € HT en urgent et 70 € HT en super urgent. Plus loin en Île-de-France (77, 78, 91, 95) : 65, 97,50 et 130 € HT.",
   },
   {
     q: "Combien coûte un coursier en Île-de-France ?",
-    a: "Le tarif d'un coursier en Île-de-France va de 17,50 € HT (Paris, délai 3 h) à 98 € HT (grande couronne, super urgent 1 h). Le prix dépend de la zone la plus éloignée du trajet et du délai choisi.",
+    a: "Le tarif d'un coursier en Île-de-France va de 17,50 € HT (Paris, délai 3 h) à 130 € HT (grande couronne, super urgent 1 h). Le prix dépend de la zone la plus éloignée du trajet et du délai choisi.",
   },
   {
     q: "Le prix d'un coursier pour un pli confidentiel ou un transport médical est-il différent ?",
@@ -290,7 +290,7 @@ export default function TarifsPage() {
               {[
                 { zone: "Paris", dept: "75", prix: ["17,50 €", "26,25 €", "35 €"] },
                 { zone: "Petite couronne", dept: "92, 93, 94", prix: ["35 €", "52,50 €", "70 €"] },
-                { zone: "Grande couronne", dept: "77, 78, 91, 95", prix: ["49 €", "73,50 €", "98 €"] },
+                { zone: "Grande couronne", dept: "77, 78, 91, 95", prix: ["65 €", "97,50 €", "130 €"] },
               ].map((row) => (
                 <tr key={row.zone}>
                   <td className="py-4 pr-6 font-medium text-ink">{row.zone}</td>

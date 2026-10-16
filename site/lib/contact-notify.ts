@@ -3,6 +3,7 @@
  * Notification email (API Resend) à chaque nouveau message du formulaire /contact.
  * Ne lève jamais d'erreur : le message est déjà enregistré en base.
  */
+import { EMAIL_LOGO_ATTACHMENT } from '@/lib/email-logo';
 import { EMAIL } from "@/lib/site-content";
 
 type ContactMessage = { name: string; email: string; company: string; message: string };
@@ -31,8 +32,11 @@ export async function notifyNewContact(msg: ContactMessage): Promise<void> {
         from,
         to: [to],
         reply_to: msg.email,
+        attachments: [EMAIL_LOGO_ATTACHMENT],
         subject: `Nouveau message de contact — ${who}`,
-        html: `<p><strong>${escapeHtml(who)}</strong> &lt;${escapeHtml(msg.email)}&gt;</p>
+        html: `<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td style="background:#0E0F10;padding:18px 24px;border-bottom:4px solid #ed5518">
+<img src="cid:logo" width="150" height="43" alt="ONE CONNEXION" style="display:block;border:0;height:auto"></td></tr></table>
+<p><strong>${escapeHtml(who)}</strong> &lt;${escapeHtml(msg.email)}&gt;</p>
 <p style="white-space:pre-wrap">${escapeHtml(msg.message)}</p>
 <hr><p style="color:#888;font-size:12px">Message enregistré dans Supabase (table contact_messages). Répondez directement à cet email.</p>`,
       }),

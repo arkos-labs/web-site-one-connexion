@@ -99,7 +99,7 @@ export const coursierExpressParis: Service = {
   ],
 
   coverage:
-    "Une course express coûte 26,25 € HT en urgent (1 h 30) et 35 € HT en super urgent (1 h) dans Paris, puis 52,50 € et 70 € HT dans les Hauts-de-Seine, la Seine-Saint-Denis et le Val-de-Marne. La grande couronne (77, 78, 91, 95) est à 73,50 € et 98 € HT.",
+    "Une course express coûte 26,25 € HT en urgent (1 h 30) et 35 € HT en super urgent (1 h) dans Paris, puis 52,50 € et 70 € HT dans les Hauts-de-Seine, la Seine-Saint-Denis et le Val-de-Marne. La grande couronne (77, 78, 91, 95) est à 97,50 € et 130 € HT.",
 
   faq: [
     {

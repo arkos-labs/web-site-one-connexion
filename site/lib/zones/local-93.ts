@@ -115,7 +115,7 @@ export const LOCAL_93: Record<string, LocalZoneContent> = {
     },
     faq: [
       { q: "Transportez-vous des prélèvements vers l'hôpital Robert-Ballanger ?", a: "Oui, en course dédiée, avec contenant isotherme à la demande." },
-      { q: "Livrez-vous vers l'aéroport de Roissy depuis Aulnay ?", a: "Oui, dès 49 € HT. Précisez l'heure et le terminal ou la zone de fret." },
+      { q: "Livrez-vous vers l'aéroport de Roissy depuis Aulnay ?", a: "Oui, dès 65 € HT. Précisez l'heure et le terminal ou la zone de fret." },
       { q: "Quel tarif à Aulnay-sous-Bois ?", a: "Aulnay est en petite couronne : dès 35 € HT en normal (3 h) et 70 € HT en super urgent (1 h)." },
     ],
   },
@@ -211,7 +211,7 @@ export const LOCAL_93: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Pouvez-vous livrer un stand en plein salon ?", a: "Oui, avec le hall, le stand et un contact. Les accès exposants sont contrôlés." },
       { q: "Livrez-vous les jours de montage et de démontage ?", a: "Oui, en planifiant le créneau et la porte d'entrée à l'avance." },
-      { q: "Quel est le tarif pour Villepinte ?", a: "Villepinte est hors petite couronne : le tarif est de 49 € HT en normal (3 h), 73,50 € HT en urgent et 98 € HT en super urgent." },
+      { q: "Quel est le tarif pour Villepinte ?", a: "Villepinte est hors petite couronne : le tarif est de 65 € HT en normal (3 h), 97,50 € HT en urgent et 130 € HT en super urgent." },
     ],
   },
 
@@ -230,7 +230,7 @@ export const LOCAL_93: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Livrez-vous dans la zone de fret de Roissy ?", a: "Oui, avec le nom de la zone, le quai et un contact. Les accès sont contrôlés." },
       { q: "Pouvez-vous respecter l'heure d'un vol ?", a: "Nous confirmons la faisabilité avant le départ. Indiquez l'heure limite exacte et le point de remise." },
-      { q: "Quel tarif pour Tremblay-en-France ?", a: "Dès 49 € HT, la commune étant hors petite couronne et liée à l’aéroport. Réponse en moins de 2 heures." },
+      { q: "Quel tarif pour Tremblay-en-France ?", a: "Dès 65 € HT, la commune étant hors petite couronne et liée à l’aéroport. Réponse en moins de 2 heures." },
     ],
   },
 

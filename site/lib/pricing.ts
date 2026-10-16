@@ -3,9 +3,9 @@ export type ServiceLevel = 'navette' | 'standard' | 'urgent' | 'flash';
 
 const PRICING_GRID = {
   navette: [15.00, 25.00, 35.00, 45.00, 65.00],
-  standard: [17.50, 35.00, 49.00, 63.00, 91.00],
-  urgent: [26.25, 52.50, 73.50, 94.50, 136.50],
-  flash: [35.00, 70.00, 98.00, 126.00, 182.00]
+  standard: [17.50, 35.00, 65.00, 80.00, 91.00],
+  urgent: [26.25, 52.50, 97.50, 120.00, 136.50],
+  flash: [35.00, 70.00, 130.00, 160.00, 182.00]
 };
 
 export function getDepartmentFromAddress(address: string): string | null {

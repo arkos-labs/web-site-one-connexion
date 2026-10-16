@@ -3,6 +3,7 @@
  * E-mail « Comment s'est passée votre course ? » envoyé après la livraison (API Resend),
  * avec un bouton qui ouvre directement la fenêtre d'avis de la fiche Google.
  */
+import { EMAIL_LOGO_ATTACHMENT } from '@/lib/email-logo';
 import { EMAIL, PHONE_DISPLAY, SITE_URL } from '@/lib/site-content';
 
 /** Lien direct « Laisser un avis » de la fiche Google Business (Place ID de la fiche). */
@@ -23,7 +24,7 @@ export async function sendReviewEmail(i: { to: string; name: string; trackingCod
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F4F2EE;padding:28px 12px"><tr><td align="center">
 <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background:#fff;border-radius:10px;overflow:hidden">
 <tr><td style="background:#0E0F10;padding:22px 28px;border-bottom:4px solid #ed5518">
-<img src="${SITE_URL}/email-logo.png" width="150" height="43" alt="ONE CONNEXION" style="display:block;border:0;height:auto"></td></tr>
+<img src="cid:logo" width="150" height="43" alt="ONE CONNEXION" style="display:block;border:0;height:auto"></td></tr>
 <tr><td style="padding:30px 28px 8px">
 <p style="margin:0 0 6px;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#ed5518;font-weight:700">Votre avis compte</p>
 <h1 style="margin:0 0 14px;font-size:24px;line-height:1.2">Comment s’est passée votre course ?</h1>
@@ -47,6 +48,7 @@ Un souci avec votre course ? Répondez à cet e-mail ou appelez-nous au ${esc(PH
         reply_to: EMAIL,
         subject: 'Comment s’est passée votre course ONE CONNEXION ?',
         html,
+        attachments: [EMAIL_LOGO_ATTACHMENT],
       }),
       signal: AbortSignal.timeout(10000),
     });

@@ -1,6 +1,6 @@
 /**
  * lib/zones/local-91.ts
- * Contenu propre aux communes de l'Essonne (grande couronne : dès 49 € HT).
+ * Contenu propre aux communes de l'Essonne (grande couronne : dès 65 € HT).
  * Faits publics uniquement ; aucune entreprise citée comme cliente.
  */
 import type { LocalZoneContent } from "./types";
@@ -15,13 +15,13 @@ export const LOCAL_91: Record<string, LocalZoneContent> = {
       title: "Évry-Courcouronnes : administration, justice et biotechnologies",
       paragraphs: [
         "Pour les cabinets d'avocats de l'Essonne, Évry est l'adresse du tribunal judiciaire. Dépôts de pièces, remises d'actes, transmissions entre confrères : l'heure limite fixée par le greffe commande le départ. Précisez-la à la commande, avec le service destinataire.",
-        "Genopole regroupe laboratoires, entreprises de biotechnologies et centres de recherche. Les échanges d'échantillons y sont fréquents. Pour un prélèvement ou un réactif, indiquez la température de conservation et le délai de stabilité. Évry étant en grande couronne, le tarif est de 49 € HT en normal (3 h), 73,50 € HT en urgent et 98 € HT en super urgent.",
+        "Genopole regroupe laboratoires, entreprises de biotechnologies et centres de recherche. Les échanges d'échantillons y sont fréquents. Pour un prélèvement ou un réactif, indiquez la température de conservation et le délai de stabilité. Évry étant en grande couronne, le tarif est de 65 € HT en normal (3 h), 97,50 € HT en urgent et 130 € HT en super urgent.",
       ],
     },
     faq: [
       { q: "Pouvez-vous déposer un acte au tribunal judiciaire d'Évry ?", a: "Oui, en course dédiée, avec remise contre signature et justificatif horodaté. Indiquez le service et l'heure limite." },
       { q: "Livrez-vous à Genopole ?", a: "Oui, avec le nom du laboratoire, le bâtiment et un contact. Pour un échantillon, précisez la température de conservation." },
-      { q: "Quel est le tarif pour Évry ?", a: "Évry est en grande couronne : le prix est de 49 € HT en normal (3 h), 73,50 € HT en urgent et 98 € HT en super urgent." },
+      { q: "Quel est le tarif pour Évry ?", a: "Évry est en grande couronne : le prix est de 65 € HT en normal (3 h), 97,50 € HT en urgent et 130 € HT en super urgent." },
     ],
   },
 
@@ -34,13 +34,13 @@ export const LOCAL_91: Record<string, LocalZoneContent> = {
       title: "Massy : la gare TGV comme point d'ancrage",
       paragraphs: [
         "La gare TGV de Massy-Palaiseau est la porte d'entrée du sud de l'Île-de-France. Un document à remettre à un voyageur, un colis à récupérer en gare : précisez le train, le quai ou le point de rendez-vous et l'heure, car le temps d'accès aux voies est court.",
-        "Autour de la gare, des immeubles de bureaux accueillent des entreprises tertiaires. Chaque bâtiment a son accueil et ses horaires. Donnez le nom de l'entreprise, l'étage et un contact. Massy étant en grande couronne, le tarif est de 49 € HT en normal (3 h), 73,50 € HT en urgent et 98 € HT en super urgent.",
+        "Autour de la gare, des immeubles de bureaux accueillent des entreprises tertiaires. Chaque bâtiment a son accueil et ses horaires. Donnez le nom de l'entreprise, l'étage et un contact. Massy étant en grande couronne, le tarif est de 65 € HT en normal (3 h), 97,50 € HT en urgent et 130 € HT en super urgent.",
       ],
     },
     faq: [
       { q: "Pouvez-vous remettre un colis à un voyageur à la gare de Massy-Palaiseau ?", a: "Oui, si le point de rendez-vous et l'heure sont précis. Nous confirmons la faisabilité avant d'envoyer le coursier." },
       { q: "Livrez-vous dans les bureaux autour de la gare ?", a: "Oui, avec l'entreprise, l'étage et un contact à l'accueil." },
-      { q: "Quel est le tarif pour Massy ?", a: "Massy est en grande couronne : le prix est de 49 € HT en normal (3 h), 73,50 € HT en urgent et 98 € HT en super urgent." },
+      { q: "Quel est le tarif pour Massy ?", a: "Massy est en grande couronne : le prix est de 65 € HT en normal (3 h), 97,50 € HT en urgent et 130 € HT en super urgent." },
     ],
   },
 
@@ -53,13 +53,13 @@ export const LOCAL_91: Record<string, LocalZoneContent> = {
       title: "Palaiseau : les campus du plateau de Saclay",
       paragraphs: [
         "Les campus de Palaiseau ne sont pas des adresses de rue : ce sont des ensembles de bâtiments, avec des guérites, des badges et des laboratoires numérotés. Un colis adressé « à l'École » sans laboratoire ni bâtiment peut errer. Donnez le laboratoire, le bâtiment et un contact.",
-        "Les laboratoires reçoivent du matériel scientifique, des composants, des échantillons. Pour des pièces fragiles ou sensibles, précisez les dimensions, le poids et la fragilité : nous vérifions que le top-case de 18 kg convient. La commune étant en grande couronne, le tarif est de 49 € HT en normal (3 h), 73,50 € HT en urgent et 98 € HT en super urgent.",
+        "Les laboratoires reçoivent du matériel scientifique, des composants, des échantillons. Pour des pièces fragiles ou sensibles, précisez les dimensions, le poids et la fragilité : nous vérifions que le top-case de 18 kg convient. La commune étant en grande couronne, le tarif est de 65 € HT en normal (3 h), 97,50 € HT en urgent et 130 € HT en super urgent.",
       ],
     },
     faq: [
       { q: "Livrez-vous sur les campus de Palaiseau ?", a: "Oui, avec le laboratoire, le bâtiment et un contact. Les accès sont contrôlés." },
       { q: "Transportez-vous du matériel scientifique ?", a: "Oui pour des pièces légères et protégées, jusqu'à 18 kg. Au-delà, appelez-nous." },
-      { q: "Quel tarif pour Palaiseau ?", a: "Dès 49 € HT, la commune étant en grande couronne. Réponse en moins de 2 heures." },
+      { q: "Quel tarif pour Palaiseau ?", a: "Dès 65 € HT, la commune étant en grande couronne. Réponse en moins de 2 heures." },
     ],
   },
 
@@ -72,13 +72,13 @@ export const LOCAL_91: Record<string, LocalZoneContent> = {
       title: "Les Ulis : l'immense zone de Courtabœuf",
       paragraphs: [
         "Courtabœuf est une zone d'activité où les entreprises se ressemblent : mêmes bâtiments, mêmes ronds-points. Indiquez le nom de la voie, le numéro du bâtiment et un contact. Sans ces informations, une course peut perdre vingt minutes à chercher l'entrée.",
-        "Les entreprises du parc envoient des pièces, des échantillons, des documents de livraison. Pour un envoi sensible, précisez la fragilité et le poids. La commune étant en grande couronne, le tarif est de 49 € HT en normal (3 h), 73,50 € HT en urgent et 98 € HT en super urgent.",
+        "Les entreprises du parc envoient des pièces, des échantillons, des documents de livraison. Pour un envoi sensible, précisez la fragilité et le poids. La commune étant en grande couronne, le tarif est de 65 € HT en normal (3 h), 97,50 € HT en urgent et 130 € HT en super urgent.",
       ],
     },
     faq: [
       { q: "Livrez-vous à Courtabœuf ?", a: "Oui. Donnez la voie, le numéro du bâtiment et un contact : le parc est vaste." },
       { q: "Quel est le délai pour rejoindre Paris depuis Les Ulis ?", a: "Nous confirmons le délai précis à la commande, selon l'heure et la destination." },
-      { q: "Quel tarif pour Les Ulis ?", a: "Dès 49 € HT, la commune étant en grande couronne." },
+      { q: "Quel tarif pour Les Ulis ?", a: "Dès 65 € HT, la commune étant en grande couronne." },
     ],
   },
 
@@ -91,13 +91,13 @@ export const LOCAL_91: Record<string, LocalZoneContent> = {
       title: "Longjumeau : centre hospitalier et petites entreprises",
       paragraphs: [
         "Le centre hospitalier de Longjumeau échange avec les laboratoires du sud de l'Île-de-France. Pour un prélèvement, donnez le service destinataire, l'heure limite, la température de conservation et le délai de stabilité. Nous confirmons la faisabilité avant d'engager le coursier.",
-        "Le centre-ville regroupe cabinets, commerces et PME. Les envois y sont des plis, des documents et des colis légers. La remise en main propre contre signature est la règle. Longjumeau étant en grande couronne, le tarif est de 49 € HT en normal (3 h), 73,50 € HT en urgent et 98 € HT en super urgent.",
+        "Le centre-ville regroupe cabinets, commerces et PME. Les envois y sont des plis, des documents et des colis légers. La remise en main propre contre signature est la règle. Longjumeau étant en grande couronne, le tarif est de 65 € HT en normal (3 h), 97,50 € HT en urgent et 130 € HT en super urgent.",
       ],
     },
     faq: [
       { q: "Transportez-vous des prélèvements depuis le centre hospitalier de Longjumeau ?", a: "Oui, en course dédiée, avec contenant isotherme à la demande." },
-      { q: "Livrez-vous à Chilly-Mazarin depuis Longjumeau ?", a: "Oui, les deux communes sont voisines. Le tarif est de 49 € HT en normal (3 h), 73,50 € HT en urgent et 98 € HT en super urgent." },
-      { q: "Quel tarif pour Longjumeau ?", a: "Dès 49 € HT, la commune étant en grande couronne. Réponse en moins de 2 heures." },
+      { q: "Livrez-vous à Chilly-Mazarin depuis Longjumeau ?", a: "Oui, les deux communes sont voisines. Le tarif est de 65 € HT en normal (3 h), 97,50 € HT en urgent et 130 € HT en super urgent." },
+      { q: "Quel tarif pour Longjumeau ?", a: "Dès 65 € HT, la commune étant en grande couronne. Réponse en moins de 2 heures." },
     ],
   },
 
@@ -110,13 +110,13 @@ export const LOCAL_91: Record<string, LocalZoneContent> = {
       title: "Corbeil-Essonnes : un grand hôpital et une ville de confluent",
       paragraphs: [
         "Le Sud Francilien est un hôpital de grande taille, avec de nombreux services et laboratoires. Un colis adressé à l'hôpital sans service ni bâtiment attend longtemps. Donnez le service, l'étage et un contact. Pour un prélèvement, précisez la température et le délai de stabilité.",
-        "Le centre-ville, autour de la cathédrale et de la Seine, est un tissu de cabinets, commerces et PME. Les envois y sont des plis et des documents. La commune étant en grande couronne, le tarif est de 49 € HT en normal (3 h), 73,50 € HT en urgent et 98 € HT en super urgent.",
+        "Le centre-ville, autour de la cathédrale et de la Seine, est un tissu de cabinets, commerces et PME. Les envois y sont des plis et des documents. La commune étant en grande couronne, le tarif est de 65 € HT en normal (3 h), 97,50 € HT en urgent et 130 € HT en super urgent.",
       ],
     },
     faq: [
       { q: "Livrez-vous au centre hospitalier Sud Francilien ?", a: "Oui. Précisez le service, le bâtiment et un contact." },
       { q: "Transportez-vous des prélèvements vers Paris depuis Corbeil ?", a: "Oui, en course dédiée, avec contenant isotherme à la demande." },
-      { q: "Quel tarif pour Corbeil-Essonnes ?", a: "Dès 49 € HT en normal (3 h), 73,50 € HT en urgent et 98 € HT en super urgent." },
+      { q: "Quel tarif pour Corbeil-Essonnes ?", a: "Dès 65 € HT en normal (3 h), 97,50 € HT en urgent et 130 € HT en super urgent." },
     ],
   },
 
@@ -129,13 +129,13 @@ export const LOCAL_91: Record<string, LocalZoneContent> = {
       title: "Sainte-Geneviève-des-Bois : entre ville résidentielle et zone d'activité",
       paragraphs: [
         "Les entreprises de la commune sont installées dans une zone d'activité séparée des quartiers d'habitation. Les horaires de réception y sont stricts : précisez l'heure limite, le nom du bâtiment et un contact au quai.",
-        "Les professions libérales du centre envoient des plis et des documents. Les prélèvements des médecins partent vers les laboratoires voisins : température de conservation et délai de stabilité sont à préciser. Le tarif de la grande couronne est de 49 € HT en normal (3 h), 73,50 € HT en urgent et 98 € HT en super urgent.",
+        "Les professions libérales du centre envoient des plis et des documents. Les prélèvements des médecins partent vers les laboratoires voisins : température de conservation et délai de stabilité sont à préciser. Le tarif de la grande couronne est de 65 € HT en normal (3 h), 97,50 € HT en urgent et 130 € HT en super urgent.",
       ],
     },
     faq: [
       { q: "Livrez-vous dans la zone d'activité de Sainte-Geneviève-des-Bois ?", a: "Oui, avec le nom du bâtiment, le quai et un contact." },
       { q: "Quel est le délai pour rejoindre Paris ?", a: "Nous confirmons le délai précis à la commande, selon l'heure et la destination." },
-      { q: "Quel tarif pour Sainte-Geneviève-des-Bois ?", a: "Dès 49 € HT, la commune étant en grande couronne." },
+      { q: "Quel tarif pour Sainte-Geneviève-des-Bois ?", a: "Dès 65 € HT, la commune étant en grande couronne." },
     ],
   },
 
@@ -148,13 +148,13 @@ export const LOCAL_91: Record<string, LocalZoneContent> = {
       title: "Viry-Châtillon : entre la Seine et l'A6",
       paragraphs: [
         "À Viry-Châtillon, les trajets vers Paris passent presque toujours par l'A6 : un accident ou un ralentissement modifie le délai de façon sensible. Nous annonçons un délai réaliste à la confirmation, et nous adaptons l'itinéraire si le trafic l'exige.",
-        "La clientèle locale est composée de PME, de cabinets et de commerces. Les envois sont des plis, des documents et des colis légers. Pour des échanges réguliers, une tournée à créneaux fixes est plus économique. La commune étant en grande couronne, le tarif est de 49 € HT en normal (3 h), 73,50 € HT en urgent et 98 € HT en super urgent.",
+        "La clientèle locale est composée de PME, de cabinets et de commerces. Les envois sont des plis, des documents et des colis légers. Pour des échanges réguliers, une tournée à créneaux fixes est plus économique. La commune étant en grande couronne, le tarif est de 65 € HT en normal (3 h), 97,50 € HT en urgent et 130 € HT en super urgent.",
       ],
     },
     faq: [
       { q: "Les embouteillages de l'A6 retardent-ils la livraison ?", a: "Le deux-roues est moins sensible à la congestion. Nous annonçons un délai réaliste à la confirmation." },
       { q: "Peut-on prévoir une tournée régulière ?", a: "Oui, avec un compte entreprise, sur créneaux fixes." },
-      { q: "Quel tarif pour Viry-Châtillon ?", a: "Dès 49 € HT en normal (3 h), 73,50 € HT en urgent et 98 € HT en super urgent." },
+      { q: "Quel tarif pour Viry-Châtillon ?", a: "Dès 65 € HT en normal (3 h), 97,50 € HT en urgent et 130 € HT en super urgent." },
     ],
   },
 
@@ -167,13 +167,13 @@ export const LOCAL_91: Record<string, LocalZoneContent> = {
       title: "Juvisy-sur-Orge : la gare au centre de tout",
       paragraphs: [
         "À Juvisy, le côté de la voie ferrée change le trajet. Pour une adresse proche de la gare, indiquez si elle est côté Seine ou côté Orge. Cela évite au coursier un détour par un passage souterrain ou un pont.",
-        "Les envois locaux sont des plis, des documents et des colis légers, entre cabinets, commerces et PME. Pour les échanges avec Orly, précisez le terminal. Le tarif de la grande couronne est de 49 € HT en normal (3 h), 73,50 € HT en urgent et 98 € HT en super urgent.",
+        "Les envois locaux sont des plis, des documents et des colis légers, entre cabinets, commerces et PME. Pour les échanges avec Orly, précisez le terminal. Le tarif de la grande couronne est de 65 € HT en normal (3 h), 97,50 € HT en urgent et 130 € HT en super urgent.",
       ],
     },
     faq: [
       { q: "Livrez-vous de chaque côté de la gare de Juvisy ?", a: "Oui. Précisez le côté de la voie et la rue pour fixer le bon trajet." },
-      { q: "Pouvez-vous livrer à Orly depuis Juvisy ?", a: "Oui. Précisez le terminal et l'heure. Le tarif est de 49 € HT en normal (3 h), 73,50 € HT en urgent et 98 € HT en super urgent." },
-      { q: "Quel tarif pour Juvisy-sur-Orge ?", a: "Dès 49 € HT, la commune étant en grande couronne." },
+      { q: "Pouvez-vous livrer à Orly depuis Juvisy ?", a: "Oui. Précisez le terminal et l'heure. Le tarif est de 65 € HT en normal (3 h), 97,50 € HT en urgent et 130 € HT en super urgent." },
+      { q: "Quel tarif pour Juvisy-sur-Orge ?", a: "Dès 65 € HT, la commune étant en grande couronne." },
     ],
   },
 
@@ -186,13 +186,13 @@ export const LOCAL_91: Record<string, LocalZoneContent> = {
       title: "Athis-Mons : la commune qui borde Orly",
       paragraphs: [
         "Athis-Mons est une base arrière de l'aéroport d'Orly : hôtels, prestataires, transitaires. Les envois urgents y sont des documents de transport, des pièces aéronautiques, des échantillons. Indiquez le nom du prestataire, le bâtiment et l'heure limite de remise.",
-        "Dans les quartiers résidentiels, les professions libérales et les commerces échangent des plis et des colis légers. La remise en main propre contre signature est la règle. La commune étant en grande couronne, le tarif est de 49 € HT en normal (3 h), 73,50 € HT en urgent et 98 € HT en super urgent.",
+        "Dans les quartiers résidentiels, les professions libérales et les commerces échangent des plis et des colis légers. La remise en main propre contre signature est la règle. La commune étant en grande couronne, le tarif est de 65 € HT en normal (3 h), 97,50 € HT en urgent et 130 € HT en super urgent.",
       ],
     },
     faq: [
       { q: "Livrez-vous aux entreprises proches d'Orly ?", a: "Oui. Donnez le bâtiment, l'accueil et un contact : certains sites sont en zone réglementée." },
       { q: "Pouvez-vous rejoindre le terminal d'Orly depuis Athis-Mons ?", a: "Oui. Précisez le terminal, la porte et l'heure limite." },
-      { q: "Quel tarif pour Athis-Mons ?", a: "Dès 49 € HT en normal (3 h), 73,50 € HT en urgent et 98 € HT en super urgent." },
+      { q: "Quel tarif pour Athis-Mons ?", a: "Dès 65 € HT en normal (3 h), 97,50 € HT en urgent et 130 € HT en super urgent." },
     ],
   },
 };

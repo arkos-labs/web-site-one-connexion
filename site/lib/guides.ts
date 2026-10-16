@@ -165,7 +165,7 @@ export const GUIDES: Guide[] = [
           rows: [
             ["Paris (75)", "17,50 €", "26,25 €", "35 €"],
             ["Petite couronne (92, 93, 94)", "35 €", "52,50 €", "70 €"],
-            ["Grande couronne (77, 78, 91, 95)", "49 €", "73,50 €", "98 €"],
+            ["Grande couronne (77, 78, 91, 95)", "65 €", "97,50 €", "130 €"],
           ],
           note: "Tarifs HT par course, TVA 20 % en sus. Le prix exact s'affiche avant de valider la commande.",
         },
