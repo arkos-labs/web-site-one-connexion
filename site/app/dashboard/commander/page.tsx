@@ -289,6 +289,8 @@ export default function CommanderPage() {
         contact_phone: contactPhone,
         status: "en_attente",
         client_type: isPro ? "entreprise" : "particulier",
+        // Sans prix enregistré, la course livrée n'est jamais ajoutée à la facture du pro.
+        price_estimate: estimatedPrice,
         source: "dashboard",
       })
       .select("tracking_code")

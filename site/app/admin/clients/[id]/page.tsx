@@ -40,6 +40,7 @@ type OrderRow = {
   price_estimate: number | null;
   created_at: string;
   driver_id: string | null;
+  client_type?: string | null;
 };
 
 type NavetteRow = {
@@ -77,11 +78,21 @@ function initialsOf(name: string) {
 
 const ORDER_STATUS_LABEL: Record<string, string> = {
   en_attente: "En attente",
+  pending: "En attente",
   confirmee: "Confirmée",
+  assigned: "Assignée",
+  driver_accepted: "Acceptée",
   en_cours: "En cours",
+  in_progress: "En cours",
+  picked_up: "Colis enlevé",
   livree: "Livrée",
+  delivered: "Livrée",
   annulee: "Annulée",
+  cancelled: "Annulée",
 };
+
+const DELIVERED = ["livree", "delivered"];
+const CANCELLED = ["annulee", "cancelled"];
 
 export default function AdminClientDetailPage() {
   const supabase = createClient();
@@ -138,7 +149,7 @@ export default function AdminClientDetailPage() {
       supabase.from("clients").select("company_name, siret, tax_id, billing_address, billing_postal_code, billing_city, contact_email").eq("id", clientId).maybeSingle(),
       supabase
         .from("orders")
-        .select("id, tracking_code, pickup_address, dropoff_address, status, price_estimate, created_at, driver_id")
+        .select("id, tracking_code, pickup_address, dropoff_address, status, price_estimate, created_at, driver_id, client_type")
         .eq("user_id", clientId)
         .order("created_at", { ascending: false }),
       supabase
@@ -195,9 +206,16 @@ export default function AdminClientDetailPage() {
   }, [load]);
 
 
-  const revenue = orders.filter((o) => o.status !== "annulee").reduce((sum, o) => sum + (o.price_estimate ?? 0), 0);
-  const activeOrders = orders.filter((o) => !["livree", "annulee"].includes(o.status));
+  const revenue = orders.filter((o) => !CANCELLED.includes(o.status)).reduce((sum, o) => sum + (o.price_estimate ?? 0), 0);
+  const activeOrders = orders.filter((o) => ![...DELIVERED, ...CANCELLED].includes(o.status));
+  // À régler : factures déjà émises. À facturer : factures du mois encore ouvertes (émises le 1er du mois suivant).
   const unpaidTotal = invoices.filter((i) => i.status === "emise" || i.status === "echec").reduce((sum, i) => sum + i.amount, 0);
+  const toBillTotal = invoices.filter((i) => i.status === "en_cours").reduce((sum, i) => sum + i.amount, 0);
+  const pendingTotal = unpaidTotal + toBillTotal;
+  // Courses livrées sans prix : elles n'entrent dans aucune facture.
+  const unpricedDelivered = orders.filter((o) => DELIVERED.includes(o.status) && o.price_estimate == null);
+  // Un client est pro s'il a une société OU a commandé en tant qu'entreprise (la fiche société peut être vide).
+  const isPro = !!profile?.company || orders.some((o) => o.client_type === "entreprise");
 
   const back = { href: "/admin/clients", label: "Retour aux clients" };
 
@@ -220,7 +238,7 @@ export default function AdminClientDetailPage() {
       title={
         <>
           <span>{profile.full_name || "Client sans nom"}</span>
-          {profile.company ? (
+          {isPro ? (
             <span className="flex items-center gap-1 rounded-full bg-accent/15 px-2.5 py-1 text-xs font-bold text-accent">
               <Briefcase size={11} /> Entreprise
             </span>
@@ -252,7 +270,23 @@ export default function AdminClientDetailPage() {
       <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         <StatCard icon={ShoppingBag} label="Commandes" value={String(orders.length)} sub={activeOrders.length > 0 ? `${activeOrders.length} en cours` : "Aucune en cours"} />
         <StatCard icon={Euro} label="CA généré" value={`${revenue.toFixed(2)} €`} sub="Hors courses annulées" />
-        <StatCard icon={FileText} label="Facturation en attente" value={`${unpaidTotal.toFixed(2)} €`} sub={unpaidTotal > 0 ? "Mois précédents à régler" : "À jour"} accent={unpaidTotal > 0} />
+        <StatCard
+          icon={FileText}
+          label="Facturation en attente"
+          value={`${pendingTotal.toFixed(2)} € TTC`}
+          sub={
+            unpaidTotal > 0 && toBillTotal > 0
+              ? `${unpaidTotal.toFixed(2)} € à régler · ${toBillTotal.toFixed(2)} € à facturer le 1er`
+              : unpaidTotal > 0
+                ? "Factures émises à régler"
+                : toBillTotal > 0
+                  ? "À facturer le 1er du mois prochain"
+                  : unpricedDelivered.length > 0
+                    ? `${unpricedDelivered.length} course${unpricedDelivered.length > 1 ? "s" : ""} livrée${unpricedDelivered.length > 1 ? "s" : ""} sans prix`
+                    : "À jour"
+          }
+          accent={pendingTotal > 0 || unpricedDelivered.length > 0}
+        />
         <StatCard icon={Building2} label="Navettes récurrentes" value={String(navettes.length)} sub={navettes.filter((n) => n.status === "active").length > 0 ? `${navettes.filter((n) => n.status === "active").length} active(s)` : undefined} />
       </div>
 
@@ -266,6 +300,12 @@ export default function AdminClientDetailPage() {
                 Une facture par mois, alimentée à chaque course livrée, envoyée par Stripe au début du mois suivant.
               </p>
             </div>
+            {unpricedDelivered.length > 0 && (
+              <div className="border-b border-line bg-amber-50 px-5 py-3 text-[12.5px] font-semibold text-amber-800">
+                {unpricedDelivered.length} course{unpricedDelivered.length > 1 ? "s" : ""} livrée{unpricedDelivered.length > 1 ? "s" : ""} sans prix enregistré
+                ({unpricedDelivered.map((o) => o.tracking_code ?? o.id.slice(0, 8)).join(", ")}) : elle{unpricedDelivered.length > 1 ? "s" : ""} n&apos;apparaî{unpricedDelivered.length > 1 ? "ssent" : "t"} dans aucune facture tant que le prix n&apos;est pas renseigné.
+              </div>
+            )}
             <div className="flex flex-col divide-y divide-line">
               {invoices.length === 0 && (
                 <div className="p-6 text-center text-[13px] font-medium text-muted">
@@ -374,11 +414,11 @@ export default function AdminClientDetailPage() {
         {/* Colonne latérale */}
         <div className="flex flex-col gap-4">
           <div className="rounded-2xl border border-line bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
-            <h3 className="text-[13px] font-bold text-ink">{profile.company ? "Informations société" : "Coordonnées"}</h3>
+            <h3 className="text-[13px] font-bold text-ink">{isPro ? "Informations société" : "Coordonnées"}</h3>
             <div className="mt-3 flex flex-col gap-2.5 text-[12.5px]">
               <InfoRow label="Email" value={profile.email} />
               <InfoRow label="Téléphone" value={profile.phone} />
-              {profile.company && !profile.guest && (
+              {isPro && !profile.guest && (
                 <>
                   <InfoRow label="SIRET" value={profile.siret} />
                   <InfoRow label="N° TVA" value={profile.vat_number} />

@@ -62,7 +62,9 @@ function AdminClientsPageInner() {
       const own = (orders ?? []).filter((o) => o.user_id === p.id);
       const revenue = own.filter((o) => o.status !== "annulee").reduce((sum, o) => sum + (o.price_estimate ?? 0), 0);
       const activeNavettes = (navettes ?? []).filter((n) => n.user_id === p.id).length;
-      return { id: p.id, full_name: p.full_name, company: p.company, phone: p.phone, createdAt: p.created_at, ordersCount: own.length, revenue, activeNavettes };
+      // La fiche société peut être vide : un client qui commande en tant qu'entreprise reste un pro.
+      const company = p.company || (own.some((o: { client_type: string | null }) => o.client_type === "entreprise") ? "Entreprise" : null);
+      return { id: p.id, full_name: p.full_name, company, phone: p.phone, createdAt: p.created_at, ordersCount: own.length, revenue, activeNavettes };
     });
 
     // Clients de la page publique : pas de compte, seulement les coordonnées saisies sur la commande.
