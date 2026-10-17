@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Assistance, mentions légales, politique de confidentialité, conditions d'utilisation et suppression de compte de l'application One Connexion Chauffeur.">
+<title>One Connexion Chauffeur – Assistance et confidentialité</title>
+<style>
+  :root {
+    --bg: #f7f8fa;
+    --surface: #ffffff;
+    --text: #1b1f24;
+    --muted: #5b6470;
+    --border: #e2e5ea;
+    --accent: #0b5cd5;
+    --accent-soft: #e8f0fd;
+    --todo-bg: #fff176;
+    --todo-text: #3a3200;
+    --ok: #137a3a;
+    --warn-bg: #fff4e5;
+    --warn-border: #f0b35b;
+    --radius: 12px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f1216;
+      --surface: #171b21;
+      --text: #e7eaee;
+      --muted: #9aa4b1;
+      --border: #2a313a;
+      --accent: #6aa5ff;
+      --accent-soft: #1a2638;
+      --todo-bg: #ffe94d;
+      --todo-text: #2a2400;
+      --ok: #5fd08a;
+      --warn-bg: #2b2112;
+      --warn-border: #a8742c;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  a { color: var(--accent); }
+  a:focus-visible, summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+  header.top {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 28px 16px 22px;
+  }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 0 16px; }
+  header.top .wrap { padding: 0; }
+  h1 { font-size: 1.75rem; line-height: 1.25; margin: 0 0 6px; }
+  .updated { color: var(--muted); margin: 0; font-size: .95rem; }
+  nav.toc {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin: 24px 0;
+  }
+  nav.toc h2 { font-size: 1rem; margin: 0 0 8px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+  nav.toc ol { margin: 0; padding-left: 1.3em; }
+  nav.toc li { margin: 4px 0; }
+  nav.toc ol ol { margin-top: 4px; font-size: .95rem; }
+  section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 8px 20px 20px;
+    margin: 0 0 24px;
+    scroll-margin-top: 16px;
+  }
+  h2 { font-size: 1.4rem; margin: 20px 0 10px; line-height: 1.3; }
+  h3 { font-size: 1.1rem; margin: 22px 0 6px; scroll-margin-top: 16px; }
+  h4 { font-size: 1rem; margin: 16px 0 4px; }
+  p, ul, ol { margin: 8px 0; }
+  li { margin: 3px 0; }
+  .todo {
+    background: var(--todo-bg);
+    color: var(--todo-text);
+    font-weight: 600;
+    padding: 1px 6px;
+    border-radius: 4px;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+  .note {
+    background: var(--accent-soft);
+    border-left: 4px solid var(--accent);
+    padding: 10px 14px;
+    border-radius: 6px;
+    margin: 12px 0;
+  }
+  .warn {
+    background: var(--warn-bg);
+    border-left: 4px solid var(--warn-border);
+    padding: 10px 14px;
+    border-radius: 6px;
+    margin: 12px 0;
+  }
+  .contact-card {
+    display: grid;
+    gap: 6px;
+    background: var(--accent-soft);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    margin: 12px 0;
+  }
+  .contact-card strong { display: inline-block; min-width: 9.5em; }
+  dl.data { margin: 8px 0; }
+  .data-item {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 4px 16px 12px;
+    margin: 14px 0;
+  }
+  .data-item dl { display: grid; grid-template-columns: 11em 1fr; gap: 4px 14px; margin: 8px 0 0; }
+  .data-item dt { font-weight: 600; color: var(--muted); }
+  .data-item dd { margin: 0; }
+  details {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0 14px;
+    margin: 8px 0;
+  }
+  summary {
+    cursor: pointer;
+    font-weight: 600;
+    padding: 12px 0;
+    list-style-position: outside;
+  }
+  details[open] summary { border-bottom: 1px solid var(--border); margin-bottom: 8px; }
+  details > *:last-child { margin-bottom: 12px; }
+  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 12px 0; border: 1px solid var(--border); border-radius: 10px; }
+  table { border-collapse: collapse; width: 100%; min-width: 720px; font-size: .92rem; }
+  th, td { text-align: left; vertical-align: top; padding: 9px 12px; border-bottom: 1px solid var(--border); }
+  th { background: var(--accent-soft); font-weight: 700; }
+  tr:last-child td { border-bottom: none; }
+  .back { display: inline-block; margin-top: 14px; font-size: .9rem; }
+  footer { color: var(--muted); font-size: .9rem; text-align: center; padding: 8px 16px 40px; }
+  @media (max-width: 600px) {
+    h1 { font-size: 1.45rem; }
+    section { padding: 4px 16px 16px; }
+    .data-item dl { grid-template-columns: 1fr; gap: 0; }
+    .data-item dd { margin-bottom: 8px; }
+    .contact-card strong { min-width: 0; display: block; }
+  }
+  @media print {
+    nav.toc, .back { display: none; }
+    section { break-inside: auto; border: none; }
+    .todo { outline: 1px solid #000; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <h1>One Connexion Chauffeur</h1>
+    <p class="updated">Assistance, mentions légales, confidentialité et conditions d'utilisation · Dernière mise à jour : 18 octobre 2026</p>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <nav class="toc" aria-label="Sommaire">
+    <h2>Sommaire</h2>
+    <ol>
+      <li><a href="#assistance">Assistance et questions fréquentes</a></li>
+      <li><a href="#mentions">Mentions légales</a></li>
+      <li><a href="#confidentialite">Politique de confidentialité</a>
+        <ol>
+          <li><a href="#conf-responsable">Responsable du traitement</a></li>
+          <li><a href="#conf-donnees">Données collectées, finalités, bases légales, durées</a></li>
+          <li><a href="#conf-appareil">Données stockées uniquement sur votre appareil</a></li>
+          <li><a href="#conf-localisation">Localisation : ce que l'app ne fait pas</a></li>
+          <li><a href="#conf-autorisations">Autorisations iOS</a></li>
+          <li><a href="#conf-destinataires">Destinataires et sous-traitants</a></li>
+          <li><a href="#conf-transferts">Transferts hors Union européenne</a></li>
+          <li><a href="#conf-clients">Ce que voient les clients</a></li>
+          <li><a href="#conf-pub">Publicité et suivi</a></li>
+          <li><a href="#conf-securite">Sécurité</a></li>
+          <li><a href="#conf-age">Âge minimum</a></li>
+          <li><a href="#conf-droits">Vos droits</a></li>
+          <li><a href="#conf-recap">Tableau récapitulatif</a></li>
+        </ol>
+      </li>
+      <li><a href="#cgu">Conditions d'utilisation</a></li>
+      <li><a href="#suppression">Supprimer votre compte</a></li>
+    </ol>
+  </nav>
+
+  <!-- ============================================================ -->
+  <section id="assistance">
+    <h2>1. Assistance</h2>
+    <p>Une question, un problème sur une mission ou avec l'application ? Contactez l'équipe One Connexion.</p>
+
+    <div class="contact-card">
+      <div><strong>E-mail</strong> <a href="mailto:support@oneconnexion.com">support@oneconnexion.com</a></div>
+      <div><strong>Téléphone</strong> <a href="tel:+33666026707">06 66 02 67 07</a></div>
+      <div><strong>Horaires</strong> du lundi au vendredi, de 9 h à 18 h</div>
+      <div><strong>Délai de réponse</strong> sous 48 heures ouvrées</div>
+    </div>
+    <p>Pour un problème urgent pendant une mission, utilisez en priorité la messagerie avec le dispatch dans l'application.</p>
+
+    <h3>Questions fréquentes</h3>
+
+    <details>
+      <summary>Je n'arrive pas à me connecter</summary>
+      <ul>
+        <li>Vérifiez que vous êtes connecté à Internet (Wi-Fi ou données mobiles).</li>
+        <li>Vérifiez l'adresse e-mail saisie (pas d'espace avant ou après).</li>
+        <li>Si vous avez créé votre compte avec « Se connecter avec Apple », utilisez le même bouton : la connexion par mot de passe ne fonctionnera pas.</li>
+        <li>Votre compte doit avoir été validé par One Connexion. S'il est en attente ou suspendu, contactez l'assistance.</li>
+        <li>Mettez l'application à jour depuis l'App Store, puis réessayez.</li>
+      </ul>
+    </details>
+
+    <details>
+      <summary>J'ai oublié mon mot de passe</summary>
+      <p>Sur l'écran de connexion, touchez « Mot de passe oublié », saisissez l'adresse e-mail de votre compte et suivez le lien reçu par e-mail. Pensez à vérifier vos courriers indésirables. Si vous ne recevez rien après quelques minutes, écrivez à <a href="mailto:support@oneconnexion.com">support@oneconnexion.com</a>.</p>
+    </details>
+
+    <details>
+      <summary>Je ne reçois pas de missions</summary>
+      <ul>
+        <li><strong>Statut :</strong> vérifiez que vous êtes bien <strong>En ligne</strong> dans l'application. Hors ligne, aucune mission ne vous est proposée.</li>
+        <li><strong>Notifications :</strong> vérifiez qu'elles sont autorisées dans <em>Réglages &gt; One Connexion &gt; Notifications</em>, et que le mode Concentration (Ne pas déranger) ne les bloque pas.</li>
+        <li><strong>Réseau :</strong> vérifiez votre connexion Internet.</li>
+        <li>Fermez complètement l'application puis rouvrez-la.</li>
+        <li>Si le problème continue, contactez l'assistance.</li>
+      </ul>
+    </details>
+
+    <details>
+      <summary>Signaler un problème sur une mission</summary>
+      <p>Ouvrez la mission concernée et utilisez la fonction de signalement prévue, ou écrivez au dispatch via la messagerie de l'application. Décrivez le problème (adresse introuvable, destinataire absent, colis endommagé, retard…) et indiquez la référence de la mission. Vous pouvez aussi écrire à <a href="mailto:support@oneconnexion.com">support@oneconnexion.com</a> en précisant la référence.</p>
+    </details>
+
+    <details>
+      <summary>Modifier mon profil, mon véhicule ou mon IBAN</summary>
+      <p>Allez dans l'onglet <strong>Profil</strong> de l'application pour mettre à jour votre nom, téléphone, photo, véhicule (modèle, plaque, type) et coordonnées bancaires (IBAN, BIC). Gardez ces informations exactes : elles servent à vous identifier auprès des clients et à vous payer. Si un champ n'est pas modifiable, contactez l'assistance.</p>
+    </details>
+
+    <details>
+      <summary>Supprimer mon compte</summary>
+      <p>Dans l'application : <strong>Profil &gt; Supprimer mon compte</strong>, puis confirmez deux fois. Tous les détails sont dans la section <a href="#suppression">Supprimer votre compte</a>.</p>
+    </details>
+
+    <details>
+      <summary>La photo de preuve de livraison ne s'envoie pas</summary>
+      <ul>
+        <li>Vérifiez votre connexion Internet : l'envoi échoue sans réseau. Rapprochez-vous d'une zone mieux couverte et réessayez.</li>
+        <li>Vérifiez que l'accès à l'appareil photo est autorisé : <em>Réglages &gt; One Connexion &gt; Appareil photo</em>.</li>
+        <li>Si vous choisissez une photo existante, vérifiez l'accès à la photothèque : <em>Réglages &gt; One Connexion &gt; Photos</em>.</li>
+        <li>Ne fermez pas l'application pendant l'envoi.</li>
+        <li>Si l'échec continue, prévenez le dispatch par la messagerie avant de quitter le lieu de livraison.</li>
+      </ul>
+    </details>
+
+    <a class="back" href="#">↑ Retour au sommaire</a>
+  </section>
+
+  <!-- ============================================================ -->
+  <section id="mentions">
+    <h2>2. Mentions légales</h2>
+
+    <h3>Éditeur de l'application</h3>
+    <ul>
+      <li>Nom commercial : One Connexion</li>
+      <li>Raison sociale : ONE CONNEXION</li>
+      <li>Forme juridique : SAS, société par actions simplifiée</li>
+      <li>Capital social : 3 000,00 €</li>
+      <li>Siège social : 5 Square Nungesser, 94160 Saint-Mandé, France</li>
+      <li>SIREN : 101 517 100 — SIRET : 101 517 100 00018</li>
+      <li>RCS : Créteil 101 517 100</li>
+      <li>Code NAF : 49.41B — Transports routiers de fret de proximité</li>
+      <li>N° de TVA intracommunautaire : FR24 101 517 100</li>
+      <li>Directeur de la publication : Keisha Khoto Thinu, président</li>
+      <li>E-mail : <a href="mailto:contact@oneconnexion.com">contact@oneconnexion.com</a> (assistance : <a href="mailto:support@oneconnexion.com">support@oneconnexion.com</a>)</li>
+      <li>Téléphone : <a href="tel:+33666026707">06 66 02 67 07</a></li>
+      <li>Site web : <a href="https://www.oneconnexion.com" rel="noopener">www.oneconnexion.com</a></li>
+    </ul>
+
+    <h3>Hébergeurs</h3>
+    <ul>
+      <li><strong>Vercel Inc.</strong>, 440 N Barranca Ave #4133, Covina, CA 91723, États-Unis — hébergement web (dont cette page).</li>
+      <li><strong>Supabase Pte. Ltd.</strong>, 65 Chulia Street #38-02/03, OCBC Centre, Singapour 049513 — authentification, base de données, stockage de fichiers et fonctions serveur. Région d'hébergement des données : Union européenne (Paris, France).</li>
+    </ul>
+
+    <h3>Propriété intellectuelle</h3>
+    <p>La marque One Connexion, les logos, l'application, son code, son interface, ses textes et ses visuels sont protégés par le droit de la propriété intellectuelle. Toute reproduction, représentation, modification ou réutilisation, totale ou partielle, sans autorisation écrite préalable de l'éditeur est interdite. Les marques de tiers citées (Apple, Waze, Google Maps, Plans…) appartiennent à leurs propriétaires respectifs.</p>
+
+    <a class="back" href="#">↑ Retour au sommaire</a>
+  </section>
+
+  <!-- ============================================================ -->
+  <section id="confidentialite">
+    <h2>3. Politique de confidentialité</h2>
+    <p>Cette politique explique quelles données personnelles l'application <strong>One Connexion Chauffeur</strong> (iOS) traite, pourquoi, pendant combien de temps, avec qui elles sont partagées et comment exercer vos droits, conformément au Règlement général sur la protection des données (RGPD) et à la loi Informatique et Libertés.</p>
+    <p>L'application est réservée aux chauffeurs et coursiers partenaires de One Connexion (moto, voiture, utilitaire). Elle permet de recevoir des missions de livraison, de les accepter, de les réaliser et de prouver la livraison.</p>
+
+    <h3 id="conf-responsable">3.1 Responsable du traitement</h3>
+    <p>Le responsable du traitement est ONE CONNEXION, SAS au capital de 3 000 €, dont le siège est situé 5 Square Nungesser, 94160 Saint-Mandé (SIREN 101 517 100).</p>
+    <p>ONE CONNEXION n'a pas désigné de délégué à la protection des données (DPO). Pour toute question sur vos données : <a href="mailto:contact@oneconnexion.com">contact@oneconnexion.com</a>.</p>
+
+    <h3 id="conf-donnees">3.2 Données collectées, finalités, bases légales et durées</h3>
+    <p>Nous ne collectons que les données nécessaires au fonctionnement du service. Les bases légales citées sont celles de l'article 6 du RGPD.</p>
+
+    <div class="data-item">
+      <h4>1. Identité et contact</h4>
+      <dl>
+        <dt>Données</dt><dd>Nom complet, adresse e-mail, numéro de téléphone, photo de profil (prise avec l'appareil photo ou choisie dans la photothèque).</dd>
+        <dt>Finalités</dt><dd>Créer et gérer votre compte, vous identifier, vous joindre pendant une mission, permettre au dispatch et, dans la limite indiquée en <a href="#conf-clients">3.8</a>, au client de vous reconnaître.</dd>
+        <dt>Base légale</dt><dd>Exécution du contrat de partenariat et des conditions d'utilisation.</dd>
+        <dt>Destinataires</dt><dd>Administrateurs et dispatch de One Connexion ; sous-traitants techniques (Supabase, Vercel) ; clients dans la limite décrite en 3.8.</dd>
+        <dt>Durée</dt><dd>Tant que le compte existe. Effacement à la suppression du compte (voir <a href="#suppression">section 5</a>).</dd>
+      </dl>
+    </div>
+
+    <div class="data-item">
+      <h4>2. Connexion avec Apple</h4>
+      <dl>
+        <dt>Données</dt><dd>Le nom et l'adresse e-mail que vous choisissez de partager avec nous lors de « Se connecter avec Apple ». Si vous choisissez « Masquer mon adresse e-mail », nous recevons une adresse relais fournie par Apple, qui transfère les messages vers votre adresse réelle sans nous la révéler. Un identifiant technique Apple lié à votre compte est également reçu.</dd>
+        <dt>Finalités</dt><dd>Vous permettre de vous connecter sans mot de passe dédié.</dd>
+        <dt>Base légale</dt><dd>Exécution du contrat.</dd>
+        <dt>Destinataires</dt><dd>Apple (fournisseur d'identité), Supabase (authentification).</dd>
+        <dt>Durée</dt><dd>Tant que le compte existe.</dd>
+      </dl>
+    </div>
+
+    <div class="data-item">
+      <h4>3. Véhicule</h4>
+      <dl>
+        <dt>Données</dt><dd>Modèle, plaque d'immatriculation, type de véhicule (moto, voiture, utilitaire).</dd>
+        <dt>Finalités</dt><dd>Vous proposer des missions adaptées à votre véhicule ; permettre au dispatch de vous identifier.</dd>
+        <dt>Base légale</dt><dd>Exécution du contrat.</dd>
+        <dt>Destinataires</dt><dd>Administrateurs et dispatch de One Connexion ; sous-traitants techniques. Non communiquées aux clients.</dd>
+        <dt>Durée</dt><dd>Tant que le compte existe.</dd>
+      </dl>
+    </div>
+
+    <div class="data-item">
+      <h4>4. Données bancaires</h4>
+      <dl>
+        <dt>Données</dt><dd>IBAN et BIC. Ces informations sont obligatoires pour être payé.</dd>
+        <dt>Finalités</dt><dd>Uniquement le paiement de vos missions. Elles ne servent à rien d'autre.</dd>
+        <dt>Base légale</dt><dd>Exécution du contrat ; obligation légale pour la conservation des pièces comptables liées aux paiements.</dd>
+        <dt>Destinataires</dt><dd>Vous-même et les administrateurs de One Connexion uniquement, ainsi que nos sous-traitants techniques d'hébergement et notre établissement bancaire pour exécuter les virements. <strong>Jamais partagées avec les clients.</strong></dd>
+        <dt>Affichage</dt><dd>L'IBAN et le BIC sont affichés masqués dans l'application.</dd>
+        <dt>Durée</dt><dd>IBAN et BIC : tant que le compte existe, effacés à sa suppression. Les pièces comptables relatives aux paiements déjà effectués sont conservées 10 ans (article L123-22 du Code de commerce).</dd>
+      </dl>
+    </div>
+
+    <div class="data-item">
+      <h4>5. Missions</h4>
+      <dl>
+        <dt>Données</dt><dd>Adresses d'enlèvement et de livraison, noms et téléphones des contacts sur place, horaires, statut, historique de vos courses, référence de mission.</dd>
+        <dt>Finalités</dt><dd>Vous attribuer et vous permettre de réaliser les missions, suivre leur avancement, calculer votre rémunération, gérer la facturation, les réclamations et les litiges.</dd>
+        <dt>Base légale</dt><dd>Exécution du contrat ; intérêt légitime de One Connexion à pouvoir traiter les litiges ; obligation légale pour la partie comptable.</dd>
+        <dt>Destinataires</dt><dd>Administrateurs et dispatch ; le client concerné pour le suivi de sa propre commande ; sous-traitants techniques.</dd>
+        <dt>Durée</dt><dd>3 ans après la fin de la mission. Après suppression de votre compte, les missions terminées sont conservées sans lien avec votre nom (voir <a href="#suppression">section 5</a>). Les éléments comptables sont conservés 10 ans.</dd>
+      </dl>
+      <p class="note">Les contacts sur place (expéditeurs, destinataires) sont des personnes tierces : leurs coordonnées vous sont communiquées uniquement pour réaliser la mission. Vous ne devez pas les conserver ni les utiliser à d'autres fins.</p>
+    </div>
+
+    <div class="data-item">
+      <h4>6. Preuve de livraison</h4>
+      <dl>
+        <dt>Données</dt><dd>Photo du colis prise avec l'appareil photo à l'enlèvement et à la remise ; nom et fonction de la personne qui réceptionne.</dd>
+        <dt>Finalités</dt><dd>Prouver l'enlèvement et la remise du colis, informer le client, traiter les réclamations et litiges.</dd>
+        <dt>Base légale</dt><dd>Exécution du contrat ; intérêt légitime à disposer d'une preuve de livraison.</dd>
+        <dt>Destinataires</dt><dd>Administrateurs et dispatch ; le client concerné ; sous-traitants techniques (stockage de fichiers Supabase).</dd>
+        <dt>Durée</dt><dd>3 ans après la livraison.</dd>
+      </dl>
+      <p class="note">Photographiez le colis, pas les personnes. Évitez de faire apparaître des visages, des documents ou d'autres informations sans rapport avec la livraison.</p>
+    </div>
+
+    <div class="data-item">
+      <h4>7. Messagerie avec le dispatch</h4>
+      <dl>
+        <dt>Données</dt><dd>Contenu des messages échangés, heures d'envoi et de lecture.</dd>
+        <dt>Finalités</dt><dd>Coordonner les missions, résoudre les problèmes en temps réel, garder une trace des échanges en cas de litige.</dd>
+        <dt>Base légale</dt><dd>Exécution du contrat ; intérêt légitime pour la conservation des échanges.</dd>
+        <dt>Destinataires</dt><dd>Administrateurs et dispatch ; sous-traitants techniques.</dd>
+        <dt>Durée</dt><dd>6 mois après leur envoi.</dd>
+      </dl>
+    </div>
+
+    <div class="data-item">
+      <h4>8. Statut en ligne / hors ligne</h4>
+      <dl>
+        <dt>Données</dt><dd>Votre statut de disponibilité (En ligne / Hors ligne).</dd>
+        <dt>Finalités</dt><dd>Ne vous proposer des missions que lorsque vous êtes disponible.</dd>
+        <dt>Base légale</dt><dd>Exécution du contrat.</dd>
+        <dt>Destinataires</dt><dd>Administrateurs et dispatch ; sous-traitants techniques.</dd>
+        <dt>Durée</dt><dd>Seul le statut actuel est utilisé ; il est supprimé avec le compte. Aucun historique des changements de statut n'est conservé.</dd>
+      </dl>
+    </div>
+
+    <div class="data-item">
+      <h4>9. Notifications push</h4>
+      <dl>
+        <dt>Données</dt><dd>Jeton de notification de votre appareil (identifiant technique fourni par Apple).</dd>
+        <dt>Finalités</dt><dd>Vous alerter d'une nouvelle mission ou d'un nouveau message.</dd>
+        <dt>Base légale</dt><dd>Votre consentement, donné via l'autorisation iOS « Notifications » et retirable à tout moment ; exécution du contrat.</dd>
+        <dt>Destinataires</dt><dd>Apple (service de notifications APNs) ; Supabase (fonctions serveur qui envoient les notifications).</dd>
+        <dt>Durée</dt><dd>Tant que le compte existe et que le jeton est valide ; supprimé avec le compte.</dd>
+      </dl>
+    </div>
+
+    <div class="data-item">
+      <h4>10. Données techniques</h4>
+      <dl>
+        <dt>Données</dt><dd>Type d'appareil, version de l'application, journaux d'erreurs.</dd>
+        <dt>Finalités</dt><dd>Assurer le bon fonctionnement, la sécurité et la correction des bugs.</dd>
+        <dt>Base légale</dt><dd>Intérêt légitime à fournir un service fiable et sécurisé.</dd>
+        <dt>Destinataires</dt><dd>Équipe technique de One Connexion ; sous-traitants techniques (Supabase, Vercel).</dd>
+        <dt>Durée</dt><dd>12 mois.</dd>
+      </dl>
+    </div>
+
+    <p class="note">Aucune donnée professionnelle (société, SIRET, adresse de facturation) n'est demandée aux chauffeurs à ce jour.</p>
+
+    <h3 id="conf-appareil">3.3 Données stockées uniquement sur votre appareil</h3>
+    <p>Certaines préférences restent sur votre iPhone et ne sont pas envoyées à nos serveurs :</p>
+    <ul>
+      <li>le thème d'affichage (clair, sombre ou automatique) ;</li>
+      <li>l'application de navigation choisie (Waze, Google Maps ou Plans) ;</li>
+      <li>l'option « Rester connecté ».</li>
+    </ul>
+    <p>Pour vous garder connecté, l'application conserve aussi sur l'appareil un jeton de session technique. Ces données disparaissent si vous vous déconnectez ou désinstallez l'application.</p>
+
+    <h3 id="conf-localisation">3.4 Localisation : ce que l'application ne fait pas</h3>
+    <p><strong>L'application n'accède pas à la position GPS de votre appareil</strong> et ne demande pas l'autorisation de localisation.</p>
+    <p>Quand vous lancez un itinéraire, l'application transmet seulement l'adresse de la mission à l'application de navigation que vous avez choisie (Waze, Google Maps ou Plans). Cette application applique alors sa propre politique de confidentialité, sur laquelle One Connexion n'a pas de contrôle.</p>
+
+    <h3 id="conf-autorisations">3.5 Autorisations iOS</h3>
+    <p>L'application vous demande les autorisations suivantes. Vous pouvez les retirer à tout moment dans <strong>Réglages &gt; One Connexion</strong>.</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Autorisation</th><th>À quoi elle sert</th><th>Si vous la retirez</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Appareil photo</td>
+            <td>Prendre la photo de preuve à l'enlèvement et à la livraison ; prendre votre photo de profil.</td>
+            <td>Vous ne pourrez plus prendre de photo depuis l'application. Sans photo de preuve, vous ne pourrez pas valider l'enlèvement ou la livraison, sauf en choisissant une photo existante si l'accès à la photothèque est autorisé.</td>
+          </tr>
+          <tr>
+            <td>Photothèque (lecture)</td>
+            <td>Choisir une photo existante comme preuve de livraison ou comme photo de profil.</td>
+            <td>Vous ne pourrez plus choisir de photo dans votre photothèque ; la prise de photo avec l'appareil photo reste possible.</td>
+          </tr>
+          <tr>
+            <td>Photothèque (ajout uniquement)</td>
+            <td>Enregistrer une copie de la photo de preuve dans votre photothèque.</td>
+            <td>La photo de preuve ne sera plus enregistrée sur votre iPhone ; elle reste envoyée normalement à One Connexion.</td>
+          </tr>
+          <tr>
+            <td>Notifications</td>
+            <td>Vous alerter d'une nouvelle mission ou d'un nouveau message du dispatch.</td>
+            <td>Vous ne serez plus alerté quand l'application est fermée ou en arrière-plan : vous risquez de manquer des missions et des messages. Il faudra ouvrir l'application pour les voir.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 id="conf-destinataires">3.6 Destinataires et sous-traitants</h3>
+    <p>Vos données sont accessibles aux seules personnes habilitées de One Connexion (administrateurs, dispatch), dans la limite de leurs missions. Nous faisons appel aux sous-traitants suivants, qui agissent sur nos instructions :</p>
+    <ul>
+      <li><strong>Supabase Pte. Ltd.</strong> : authentification, base de données, stockage des fichiers (photos), fonctions serveur.</li>
+      <li><strong>Vercel Inc.</strong> : hébergement web.</li>
+      <li><strong>Apple</strong> : « Se connecter avec Apple » et service de notifications push (APNs).</li>
+      <li>Notre établissement bancaire : exécution des virements de paiement (IBAN, BIC, nom du bénéficiaire).</li>
+    </ul>
+    <p>Vos données peuvent aussi être communiquées aux autorités lorsque la loi l'exige. <strong>Nous ne vendons ni ne louons vos données.</strong></p>
+
+    <h3 id="conf-transferts">3.7 Transferts hors Union européenne</h3>
+    <p>Certains sous-traitants sont établis hors de l'Union européenne : Vercel et Apple aux États-Unis, Supabase à Singapour. Des données peuvent donc être transférées ou rendues accessibles hors de l'Union européenne. Ces transferts sont encadrés par des garanties prévues par le RGPD : les clauses contractuelles types adoptées par la Commission européenne et, le cas échéant, pour les prestataires américains, leur adhésion au cadre de protection des données UE–États-Unis (Data Privacy Framework).</p>
+    <p>La base de données et les fichiers (photos) sont hébergés dans l'Union européenne, à Paris (France). Vous pouvez obtenir une copie des garanties applicables en écrivant à <a href="mailto:support@oneconnexion.com">support@oneconnexion.com</a>.</p>
+
+    <h3 id="conf-clients">3.8 Ce que voient les clients</h3>
+    <p>Les clients ne voient que les informations nécessaires au suivi de leur propre course :</p>
+    <ul>
+      <li>votre prénom ;</li>
+      <li>les photos de preuve d'enlèvement et de livraison de leur colis ;</li>
+      <li>le nom et la fonction de la personne qui a réceptionné le colis.</li>
+    </ul>
+    <p>Les clients ne voient pas votre nom de famille, votre photo de profil, votre véhicule ni votre plaque, et ne voient jamais votre IBAN, votre BIC, votre adresse e-mail ni l'historique de vos autres missions.</p>
+
+    <h3 id="conf-pub">3.9 Publicité et suivi</h3>
+    <ul>
+      <li>Aucune publicité dans l'application.</li>
+      <li>Aucun suivi publicitaire, aucun traceur publicitaire, aucun partage avec des courtiers en données.</li>
+      <li>Aucune vente de données.</li>
+      <li>L'application ne vous suit pas à travers les applications et sites d'autres sociétés : elle ne demande donc pas l'autorisation de suivi d'Apple (App Tracking Transparency).</li>
+      <li>Cette page n'utilise ni cookie ni traceur.</li>
+    </ul>
+
+    <h3 id="conf-securite">3.10 Sécurité</h3>
+    <ul>
+      <li>Toutes les communications entre l'application et nos serveurs sont chiffrées (HTTPS).</li>
+      <li>L'accès aux données est limité aux personnes habilitées.</li>
+      <li>Des règles d'accès par utilisateur sont appliquées directement dans la base de données : chaque chauffeur n'accède qu'à ses propres données et aux missions qui le concernent.</li>
+      <li>Les données bancaires sont affichées masquées dans l'application.</li>
+    </ul>
+    <p>Aucun système n'étant infaillible, gardez votre mot de passe secret et prévenez-nous immédiatement en cas de doute sur la sécurité de votre compte. En cas de violation de données présentant un risque pour vous, nous informerons la CNIL et, si nécessaire, les personnes concernées, comme le prévoit le RGPD.</p>
+
+    <h3 id="conf-age">3.11 Âge minimum</h3>
+    <p>L'application est réservée aux personnes majeures (18 ans ou plus). Nous ne collectons pas sciemment de données concernant des mineurs.</p>
+
+    <h3 id="conf-droits">3.12 Vos droits</h3>
+    <p>Vous disposez des droits suivants sur vos données :</p>
+    <ul>
+      <li><strong>Accès</strong> : savoir quelles données nous détenons et en obtenir une copie.</li>
+      <li><strong>Rectification</strong> : corriger des données inexactes (la plupart sont modifiables directement dans le Profil).</li>
+      <li><strong>Effacement</strong> : demander la suppression de vos données, notamment en supprimant votre compte (voir <a href="#suppression">section 5</a>), sous réserve des obligations légales de conservation.</li>
+      <li><strong>Limitation</strong> : demander le gel temporaire de l'utilisation de certaines données.</li>
+      <li><strong>Opposition</strong> : vous opposer à un traitement fondé sur notre intérêt légitime, pour des raisons tenant à votre situation particulière.</li>
+      <li><strong>Portabilité</strong> : recevoir les données que vous nous avez fournies dans un format structuré et lisible par machine.</li>
+      <li><strong>Retrait du consentement</strong> : à tout moment, pour les traitements fondés sur votre consentement (par exemple les notifications, via Réglages &gt; One Connexion &gt; Notifications), sans remettre en cause les traitements déjà réalisés.</li>
+      <li><strong>Directives post-mortem</strong> : définir ce que deviendront vos données après votre décès (article 85 de la loi Informatique et Libertés).</li>
+    </ul>
+    <p>Pour exercer vos droits, écrivez à <a href="mailto:contact@oneconnexion.com">contact@oneconnexion.com</a> ou à <a href="mailto:support@oneconnexion.com">support@oneconnexion.com</a>, de préférence depuis l'adresse e-mail de votre compte. Nous répondons dans un délai d'un mois, prolongeable de deux mois pour les demandes complexes (nous vous en informerons). En cas de doute raisonnable sur votre identité, nous pourrons vous demander une information complémentaire.</p>
+    <p>Si vous estimez que vos droits ne sont pas respectés, vous pouvez introduire une réclamation auprès de la <strong>CNIL</strong> (Commission nationale de l'informatique et des libertés) : <a href="https://www.cnil.fr" rel="noopener">cnil.fr</a>.</p>
+
+    <h3 id="conf-recap">3.13 Tableau récapitulatif</h3>
+    <p>Ce tableau résume les traitements. La dernière colonne propose la catégorie correspondante dans la rubrique « Confidentialité de l'app » d'App Store Connect (toutes ces données sont liées à l'identité de l'utilisateur et aucune n'est utilisée pour le suivi).</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Données</th><th>Finalité</th><th>Base légale</th><th>Durée</th><th>Destinataires</th><th>App Store Connect (suggestion)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Nom, e-mail, téléphone</td><td>Compte, identification, contact pendant les missions</td><td>Contrat</td><td>Durée du compte</td><td>One Connexion, Supabase, Vercel ; clients : prénom uniquement</td><td>Coordonnées : Nom, Adresse e-mail, Numéro de téléphone — Fonctionnalité de l'app</td></tr>
+          <tr><td>Photo de profil</td><td>Identification du chauffeur</td><td>Contrat</td><td>Durée du compte</td><td>One Connexion, Supabase</td><td>Contenu utilisateur : Photos ou vidéos — Fonctionnalité de l'app</td></tr>
+          <tr><td>Données « Se connecter avec Apple »</td><td>Authentification</td><td>Contrat</td><td>Durée du compte</td><td>Apple, Supabase</td><td>Coordonnées : Nom, Adresse e-mail ; Identifiants : Identifiant utilisateur</td></tr>
+          <tr><td>Véhicule (modèle, plaque, type)</td><td>Attribution des missions, identification par le dispatch</td><td>Contrat</td><td>Durée du compte</td><td>One Connexion, Supabase</td><td>Autres données — Fonctionnalité de l'app</td></tr>
+          <tr><td>IBAN, BIC</td><td>Paiement du chauffeur uniquement</td><td>Contrat ; obligation légale (comptabilité)</td><td>Durée du compte ; pièces comptables 10 ans</td><td>Chauffeur, administrateurs One Connexion, Supabase, notre banque</td><td>Informations financières : Autres informations financières — Fonctionnalité de l'app</td></tr>
+          <tr><td>Missions (adresses, contacts, horaires, statut, historique, référence)</td><td>Réalisation et suivi des missions, rémunération, litiges</td><td>Contrat ; intérêt légitime ; obligation légale</td><td>3 ans ; comptabilité 10 ans</td><td>One Connexion, client concerné, Supabase</td><td>Autre contenu de l'utilisateur ; Historique d'achats (à vérifier) — Fonctionnalité de l'app</td></tr>
+          <tr><td>Photos de preuve, nom et fonction du réceptionnaire</td><td>Preuve d'enlèvement et de livraison, litiges</td><td>Contrat ; intérêt légitime</td><td>3 ans</td><td>One Connexion, client concerné, Supabase</td><td>Contenu utilisateur : Photos ou vidéos ; Autre contenu de l'utilisateur — Fonctionnalité de l'app</td></tr>
+          <tr><td>Messages avec le dispatch</td><td>Coordination des missions, litiges</td><td>Contrat ; intérêt légitime</td><td>6 mois</td><td>One Connexion, Supabase</td><td>Contenu utilisateur : E-mails ou messages texte — Fonctionnalité de l'app</td></tr>
+          <tr><td>Statut en ligne / hors ligne</td><td>Proposer les missions aux chauffeurs disponibles</td><td>Contrat</td><td>Durée du compte</td><td>One Connexion, Supabase</td><td>Autres données — Fonctionnalité de l'app</td></tr>
+          <tr><td>Jeton de notification</td><td>Alertes de missions et de messages</td><td>Consentement ; contrat</td><td>Durée du compte</td><td>Apple (APNs), Supabase</td><td>Identifiants : Identifiant de l'appareil (à vérifier) — Fonctionnalité de l'app</td></tr>
+          <tr><td>Type d'appareil, version, journaux d'erreurs</td><td>Fonctionnement, sécurité, correction des bugs</td><td>Intérêt légitime</td><td>12 mois</td><td>One Connexion, Supabase, Vercel</td><td>Diagnostics : Données de plantage, Autres données de diagnostic — Fonctionnalité de l'app</td></tr>
+          <tr><td>Thème, app de navigation, « Rester connecté »</td><td>Préférences d'affichage et de confort</td><td>Intérêt légitime / nécessaire au service</td><td>Jusqu'à déconnexion ou désinstallation</td><td>Aucun (reste sur l'appareil)</td><td>Non collecté (ne quitte pas l'appareil)</td></tr>
+          <tr><td>Position GPS</td><td colspan="4">Non collectée. Seule l'adresse de la mission est transmise à l'app de navigation choisie.</td><td>Non collecté</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4>Modifications de cette politique</h4>
+    <p>Nous pouvons mettre à jour cette politique, par exemple si l'application évolue. La date de mise à jour figure en haut de la page. En cas de changement important, vous serez informé dans l'application ou par e-mail.</p>
+
+    <a class="back" href="#">↑ Retour au sommaire</a>
+  </section>
+
+  <!-- ============================================================ -->
+  <section id="cgu">
+    <h2>4. Conditions d'utilisation</h2>
+
+    <h3>4.1 Objet</h3>
+    <p>Les présentes conditions encadrent l'utilisation de l'application One Connexion Chauffeur, qui permet aux chauffeurs et coursiers partenaires de recevoir, accepter, réaliser et justifier des missions de livraison confiées par One Connexion. En utilisant l'application, vous acceptez ces conditions.</p>
+
+    <h3>4.2 Accès réservé aux partenaires validés</h3>
+    <p>L'application est réservée aux personnes majeures dont la candidature a été validée par One Connexion. One Connexion peut refuser une inscription ou demander des justificatifs avant validation.</p>
+
+    <h3>4.3 Sécurité du compte</h3>
+    <p>Votre compte est personnel. Vous ne devez ni le prêter, ni partager votre mot de passe, ni laisser une autre personne réaliser des missions à votre place. Vous êtes responsable de l'utilisation faite de votre compte. Prévenez immédiatement l'assistance en cas de perte de votre téléphone ou de soupçon d'utilisation frauduleuse.</p>
+
+    <h3>4.4 Réalisation des missions</h3>
+    <ul>
+      <li>N'acceptez une mission que si vous êtes en mesure de la réaliser dans les délais indiqués.</li>
+      <li>Mettez à jour le statut de la mission à chaque étape (enlèvement, livraison).</li>
+      <li>Prenez soin des colis qui vous sont confiés.</li>
+      <li>Signalez sans délai au dispatch, via l'application, tout incident : retard, adresse introuvable, destinataire absent, colis endommagé, refus de réception, accident.</li>
+    </ul>
+
+    <h3>4.5 Preuve de livraison</h3>
+    <p>À l'enlèvement et à la remise, vous devez prendre la photo du colis demandée par l'application et indiquer le nom et la fonction de la personne qui réceptionne. Ces informations doivent être exactes et correspondre à la réalité. Une preuve manquante ou inexacte peut empêcher la validation de la mission.</p>
+
+    <h3>4.6 Exactitude des informations</h3>
+    <p>Vous vous engagez à fournir et maintenir à jour des informations exactes, notamment votre plaque d'immatriculation, votre IBAN et votre numéro de téléphone. Un IBAN erroné peut retarder ou empêcher votre paiement ; One Connexion ne peut être tenue responsable d'un virement effectué sur un IBAN inexact que vous avez saisi.</p>
+
+    <h3>4.7 Interdictions</h3>
+    <p>Il est notamment interdit :</p>
+    <ul>
+      <li>de fournir de fausses informations (identité, véhicule, plaque, coordonnées bancaires, preuves de livraison) ;</li>
+      <li>de détourner l'application de son objet ou d'en faire un usage frauduleux ;</li>
+      <li>d'accéder ou de tenter d'accéder aux données d'autres utilisateurs, ou d'utiliser les coordonnées des clients et destinataires à d'autres fins que la mission ;</li>
+      <li>de tenter de contourner les mesures de sécurité, de copier, décompiler ou perturber l'application ;</li>
+      <li><strong>de manipuler l'application en conduisant</strong> : arrêtez-vous dans un endroit sûr et autorisé avant de l'utiliser ;</li>
+      <li>de ne pas respecter le Code de la route ou toute autre réglementation applicable pendant les missions.</li>
+    </ul>
+
+    <h3>4.8 Disponibilité du service</h3>
+    <p>One Connexion s'efforce de rendre l'application accessible en permanence, sans pouvoir le garantir. Le service peut être interrompu pour maintenance, mise à jour, ou en raison de pannes indépendantes de sa volonté (réseau, opérateurs, prestataires techniques). Le fonctionnement nécessite une connexion Internet.</p>
+
+    <h3>4.9 Responsabilité</h3>
+    <p>One Connexion met à disposition un outil de gestion des missions. Elle n'est pas responsable des dommages résultant d'une mauvaise utilisation de l'application, d'informations inexactes fournies par l'utilisateur, d'une indisponibilité du réseau ou de l'appareil, ni du fonctionnement des applications de navigation tierces (Waze, Google Maps, Plans). Vous restez seul responsable de votre conduite et du respect de la réglementation. Rien dans les présentes ne limite une responsabilité qui ne peut être exclue par la loi.</p>
+
+    <h3>4.10 Suspension et fermeture de compte</h3>
+    <p>En cas de manquement aux présentes conditions (fausses informations, fraude, comportement dangereux, atteinte aux données d'autrui…), One Connexion peut suspendre ou fermer votre compte, après vous en avoir informé, sauf urgence ou manquement grave. Vous pouvez à tout moment supprimer votre compte (voir <a href="#suppression">section 5</a>).</p>
+
+    <h3>4.11 Propriété intellectuelle</h3>
+    <p>L'application et ses contenus restent la propriété de l'éditeur (voir <a href="#mentions">mentions légales</a>). Vous bénéficiez d'un droit d'utilisation personnel, non exclusif et non transférable, limité à l'usage prévu et à la durée de votre partenariat.</p>
+
+    <h3>4.12 Modification des conditions</h3>
+    <p>One Connexion peut modifier ces conditions. La version en vigueur est celle publiée sur cette page, avec sa date de mise à jour. En cas de modification importante, vous en serez informé avant son entrée en vigueur ; la poursuite de l'utilisation vaut acceptation.</p>
+
+    <h3>4.13 Droit applicable et litiges</h3>
+    <p>Les présentes conditions sont soumises au droit français. En cas de litige, les parties rechercheront d'abord une solution amiable (contactez <a href="mailto:support@oneconnexion.com">support@oneconnexion.com</a>). À défaut, le litige sera porté devant le tribunal compétent du ressort du siège social de l'éditeur.</p>
+
+    <h3>4.14 Conditions d'Apple</h3>
+    <p>L'application étant distribuée sur l'App Store, son utilisation est aussi soumise aux conditions de l'App Store. Apple n'est pas partie aux présentes conditions et n'est pas responsable de l'application ni de son assistance.</p>
+
+    <a class="back" href="#">↑ Retour au sommaire</a>
+  </section>
+
+  <!-- ============================================================ -->
+  <section id="suppression">
+    <h2>5. Supprimer votre compte</h2>
+    <p>Vous pouvez supprimer votre compte à tout moment, directement dans l'application, sans avoir à nous contacter.</p>
+
+    <h3>Dans l'application</h3>
+    <ol>
+      <li>Ouvrez l'application One Connexion Chauffeur et connectez-vous.</li>
+      <li>Allez dans l'onglet <strong>Profil</strong>.</li>
+      <li>Touchez <strong>Supprimer mon compte</strong>.</li>
+      <li>Confirmez une première fois, puis une seconde fois pour valider définitivement.</li>
+    </ol>
+    <p class="warn"><strong>Mission en cours :</strong> la suppression est impossible tant qu'une mission est en cours. Terminez-la, ou contactez le dispatch pour qu'elle soit réattribuée, puis recommencez.</p>
+
+    <h3>Ce qui se passe après la suppression</h3>
+    <ul>
+      <li>Votre nom, votre téléphone, votre IBAN et votre BIC sont effacés.</li>
+      <li>Votre compte est supprimé : vous ne pourrez plus vous connecter. Cette action est définitive.</li>
+      <li>Les missions terminées sont conservées <strong>sans lien avec votre nom</strong>, pour les obligations comptables et le traitement d'éventuels litiges, pendant les durées indiquées en <a href="#conf-recap">3.13</a>.</li>
+    </ul>
+    <p>Si vous vous êtes connecté avec Apple, vous pouvez aussi retirer l'accès de One Connexion à votre identifiant Apple dans les réglages de votre identifiant Apple, rubrique « Se connecter avec Apple ».</p>
+
+    <h3>Par e-mail</h3>
+    <p>Si vous ne pouvez pas utiliser l'application, écrivez à <a href="mailto:support@oneconnexion.com?subject=Suppression%20de%20mon%20compte%20One%20Connexion%20Chauffeur">support@oneconnexion.com</a> <strong>depuis l'adresse e-mail associée à votre compte</strong>, avec pour objet « Suppression de mon compte ». Votre demande sera traitée sous 30 jours. Si vous utilisez une adresse relais Apple (« Masquer mon adresse e-mail »), écrivez depuis l'adresse vers laquelle ce relais transfère vos e-mails et précisez-le.</p>
+
+    <a class="back" href="#">↑ Retour au sommaire</a>
+  </section>
+
+</main>
+
+<footer>
+  © 2026 ONE CONNEXION SAS · <a href="mailto:support@oneconnexion.com">support@oneconnexion.com</a> · Dernière mise à jour : 18 octobre 2026
+</footer>
+
+</body>
+</html>
