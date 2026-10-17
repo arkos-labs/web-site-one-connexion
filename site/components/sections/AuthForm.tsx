@@ -45,7 +45,14 @@ export default function AuthForm() {
         .select("role")
         .eq("id", authData.user.id)
         .single();
-        
+
+      if (profile?.role === "driver" || profile?.role === "courier") {
+        await supabase.auth.signOut();
+        setError("Ce compte est réservé à l'application chauffeur.");
+        setLoading(false);
+        return;
+      }
+
       if (profile?.role === "admin" || authData.user.email === "cherkinicolas@gmail.com") {
         router.push("/admin");
       } else {
