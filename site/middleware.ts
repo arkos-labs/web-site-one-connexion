@@ -42,7 +42,7 @@ export async function middleware(request: NextRequest) {
       .eq("id", user.id)
       .single();
 
-    if (profile?.role !== "admin" && user.email !== "cherkinicolas@gmail.com") {
+    if (profile?.role !== "admin") {
       const url = request.nextUrl.clone();
       url.pathname = "/dashboard";
       return NextResponse.redirect(url);
@@ -58,7 +58,7 @@ export async function middleware(request: NextRequest) {
       .single();
       
     const url = request.nextUrl.clone();
-    url.pathname = (profile?.role === "admin" || user.email === "cherkinicolas@gmail.com") ? "/admin" : "/dashboard";
+    url.pathname = profile?.role === "admin" ? "/admin" : "/dashboard";
     return NextResponse.redirect(url);
   }
 

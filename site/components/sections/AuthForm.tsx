@@ -53,7 +53,7 @@ export default function AuthForm() {
         return;
       }
 
-      if (profile?.role === "admin" || authData.user.email === "cherkinicolas@gmail.com") {
+      if (profile?.role === "admin") {
         router.push("/admin");
       } else {
         router.push("/dashboard");
