@@ -49,10 +49,11 @@ export async function issueInternalInvoice(
 
     if (dropped.length) {
       await supabase.from('invoice_items').delete().in('id', dropped.map((i) => i.id));
-      const sub = Math.round(items.reduce((s, i) => s + Number(i.total_price), 0) * 100) / 100;
-      const tax = Math.round(sub * 20) / 100;
-      await supabase.from('invoices').update({ subtotal: sub, tax_amount: tax, total_amount: sub + tax }).eq('id', invoiceId);
-      claimed.total_amount = sub + tax;
+      // Prix des courses TTC (TVA 20 % comprise) : HT = TTC / 1,20.
+      const ttc = Math.round(items.reduce((s, i) => s + Number(i.total_price), 0) * 100) / 100;
+      const sub = Math.round((ttc / 1.2) * 100) / 100;
+      await supabase.from('invoices').update({ subtotal: sub, tax_amount: Math.round((ttc - sub) * 100) / 100, total_amount: ttc }).eq('id', invoiceId);
+      claimed.total_amount = ttc;
     }
     if (!items.length) {
       // Plus rien à facturer : on supprime la facture vide.

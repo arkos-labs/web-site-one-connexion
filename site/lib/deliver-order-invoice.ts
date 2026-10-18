@@ -85,7 +85,6 @@ export async function deliverOrderInvoice(supabase: SupabaseClient, stripe: Stri
   try {
     const party = await partyForOrder(supabase, o);
     if (!party.email) throw new Error('Aucune adresse e-mail pour ce client');
-    const pro = o.client_type === 'entreprise';
 
     // 1) Facture déjà créée (par Checkout au paiement, ou par le cron) ?
     let invoice: Stripe.Invoice | null = null;
@@ -104,8 +103,8 @@ export async function deliverOrderInvoice(supabase: SupabaseClient, stripe: Stri
       const deferred = o.payment_mode === 'fin_de_mois';
       const amount = Number(deferred ? o.amount_due : o.amount_due ?? o.price_estimate);
       if (!amount) throw new Error('Montant de la course manquant');
-      // Pro : prix HT + TVA 20 %. Particulier : le prix payé est TTC, la TVA est « dont ».
-      const taxRate = await vatRateId(stripe, !pro);
+      // Prix TTC pour tous (pros et particuliers) : la TVA 20 % est « dont ».
+      const taxRate = await vatRateId(stripe);
       const delivered = o.delivered_at ? fr(new Date(o.delivered_at)) : fr(new Date());
 
       const draft = await stripe.invoices.create(

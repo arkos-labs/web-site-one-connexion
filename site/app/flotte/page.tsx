@@ -64,10 +64,10 @@ const ZONES = [
   { dept: "92", name: "Hauts-de-Seine", detail: "Boulogne, Nanterre, Neuilly, Levallois…" },
   { dept: "93", name: "Seine-Saint-Denis", detail: "Saint-Denis, Montreuil, Pantin…" },
   { dept: "94", name: "Val-de-Marne", detail: "Vincennes, Créteil, Ivry…" },
-  { dept: "77", name: "Seine-et-Marne", detail: "Melun, Marne-la-Vallée — dès 65 € HT" },
-  { dept: "78", name: "Yvelines", detail: "Versailles, Saint-Quentin — dès 65 € HT" },
-  { dept: "91", name: "Essonne", detail: "Évry, Massy — dès 65 € HT" },
-  { dept: "95", name: "Val-d'Oise", detail: "Cergy, Pontoise — dès 65 € HT" },
+  { dept: "77", name: "Seine-et-Marne", detail: "Melun, Marne-la-Vallée — dès 78 € TTC" },
+  { dept: "78", name: "Yvelines", detail: "Versailles, Saint-Quentin — dès 78 € TTC" },
+  { dept: "91", name: "Essonne", detail: "Évry, Massy — dès 78 € TTC" },
+  { dept: "95", name: "Val-d'Oise", detail: "Cergy, Pontoise — dès 78 € TTC" },
 ];
 
 export default function FlottePage() {
@@ -178,7 +178,7 @@ export default function FlottePage() {
           ))}
         </div>
         <p className="mt-8 text-[13.5px] text-muted">
-          * Départements 77, 78, 91 et 95 (grande couronne) : à partir de 65 € HT par course.
+          * Départements 77, 78, 91 et 95 (grande couronne) : à partir de 78 € TTC par course.
         </p>
       </section>
 

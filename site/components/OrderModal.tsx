@@ -9,7 +9,7 @@ import { X, Package, Mail, Truck, Zap, Clock, Calendar, User, Building2, Chevron
 import { createClient } from "@/lib/supabase/client";
 import { AddressAutocomplete } from "@/components/AddressAutocomplete";
 import { checkIdfAddress } from "@/lib/address-idf";
-import { calculatePrice, ServiceLevel } from "@/lib/pricing";
+import { calculatePrice, splitTTC, ServiceLevel } from "@/lib/pricing";
 import { notifyNewOrder } from "@/lib/notify-new-order";
 
 interface OrderModalProps {
@@ -18,6 +18,9 @@ interface OrderModalProps {
   initialPickup?: string;
   initialDropoff?: string;
 }
+
+// Tarifs TTC (TVA 20 % comprise) pour tous les clients.
+const eur = (n: number) => `${n.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`;
 
 export default function OrderModal({ open, onClose, initialPickup = "", initialDropoff = "" }: OrderModalProps) {
   const [step, setStep] = useState(1);
@@ -272,6 +275,8 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
       setSubmitting(false);
     }
   };
+
+  const prices = estimatedPrice === null ? null : splitTTC(estimatedPrice);
 
   return (
     <div data-lenis-prevent className="relative z-[100]" aria-labelledby="modal-title" role="dialog" aria-modal="true">
@@ -644,11 +649,18 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                       </div>
                       <div className="border-t border-orange-200/60 pt-4 flex items-end justify-between">
                         <div>
-                          <div className="text-[11px] font-bold uppercase tracking-wider text-orange-600/80 mb-0.5">Tarif estimé (HT)</div>
+                          <div className="text-[11px] font-bold uppercase tracking-wider text-orange-600/80 mb-0.5">Tarif estimé</div>
                           <div className="text-xs text-gray-500">{clientType === "entreprise" && paymentMode === "fin_de_mois" ? (debitMethod === "virement" ? "Virement sous 30 jours" : "Prélèvement sous 30 jours") : "Règlement sécurisé par carte"}</div>
                         </div>
-                        <div className="text-2xl font-extrabold text-[#ed5518]">
-                          {estimatedPrice !== null ? `${estimatedPrice.toFixed(2)} €` : '-- €'}
+                        <div className="text-right">
+                          <div className="text-2xl font-extrabold text-[#ed5518]">
+                            {prices ? `${eur(prices.ttc)} TTC` : "-- €"}
+                          </div>
+                          {prices && (
+                            <div className="text-xs font-semibold text-gray-500">
+                              dont TVA {eur(prices.tva)} ({eur(prices.ht)} HT)
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -717,13 +729,20 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                 </div>
                 
                 <div className="mt-8 pt-6 border-t border-gray-200">
-                  <div className="flex items-end justify-between">
+                  <div className="flex flex-col gap-2">
                     <div>
-                      <div className="text-[11px] font-bold uppercase tracking-wider text-orange-600 mb-1">Tarif estimé (HT)</div>
+                      <div className="text-[11px] font-bold uppercase tracking-wider text-orange-600 mb-1">Tarif estimé</div>
                       <div className="text-[10px] text-gray-500">{clientType === "entreprise" && paymentMode === "fin_de_mois" ? (debitMethod === "virement" ? "Virement sous 30 jours" : "Prélèvement sous 30 jours") : "Règlement sécurisé par carte"}</div>
                     </div>
-                    <div className="text-3xl font-extrabold text-[#ed5518]">
-                      {estimatedPrice !== null ? `${estimatedPrice.toFixed(2)} €` : '-- €'}
+                    <div>
+                      <div className="whitespace-nowrap text-3xl font-extrabold text-[#ed5518]">
+                        {prices ? `${eur(prices.ttc)} TTC` : "-- €"}
+                      </div>
+                      {prices && (
+                        <div className="text-xs font-semibold text-gray-500">
+                          dont TVA {eur(prices.tva)} ({eur(prices.ht)} HT)
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

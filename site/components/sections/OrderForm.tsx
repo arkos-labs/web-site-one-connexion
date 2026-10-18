@@ -20,8 +20,11 @@ import {
 import { createClient } from "@/lib/supabase/client";
 import { AddressAutocomplete } from "@/components/AddressAutocomplete";
 import { checkIdfAddress } from "@/lib/address-idf";
-import { calculatePrice, ServiceLevel } from "@/lib/pricing";
+import { calculatePrice, splitTTC, ServiceLevel } from "@/lib/pricing";
 import { notifyNewOrder } from "@/lib/notify-new-order";
+
+// Tarifs TTC (TVA 20 % comprise) pour tous les clients.
+const eur = (n: number) => `${n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`;
 
 export default function OrderForm() {
   const [step, setStep] = useState(1);
@@ -300,6 +303,8 @@ export default function OrderForm() {
     if (step > 1) setStep(step - 1);
   };
 
+  const prices = estimatedPrice === null ? null : splitTTC(estimatedPrice);
+
   return (
     <section id="commander" className="border-y border-line bg-[#F8F9FA]">
       <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-10">
@@ -464,10 +469,13 @@ export default function OrderForm() {
                     {estimatedPrice !== null && (
                       <div className="mt-8 flex items-center justify-between rounded-2xl border border-orange-100 bg-orange-50/60 px-5 py-4">
                         <div>
-                          <div className="text-[11px] font-bold uppercase tracking-wider text-orange-600/80">Tarif estimé{clientType === 'entreprise' ? ' (HT)' : ''}</div>
+                          <div className="text-[11px] font-bold uppercase tracking-wider text-orange-600/80">Tarif estimé</div>
                           <div className="text-xs text-gray-500">Course normale, sans engagement</div>
                         </div>
-                        <div className="text-2xl font-extrabold text-[#ed5518]">{estimatedPrice.toFixed(2)} €</div>
+                        <div className="text-right">
+                          <div className="text-2xl font-extrabold text-[#ed5518]">{prices && `${eur(prices.ttc)} TTC`}</div>
+                          <div className="text-xs font-semibold text-gray-500">{prices && `dont TVA ${eur(prices.tva)} (${eur(prices.ht)} HT)`}</div>
+                        </div>
                       </div>
                     )}
                   </div>
@@ -744,12 +752,19 @@ export default function OrderForm() {
                         </div>
                         <div className="border-t border-orange-200/60 pt-4 flex items-end justify-between">
                           <div>
-                            <div className="text-[11px] font-bold uppercase tracking-wider text-orange-600/80 mb-0.5">Tarif estimé{clientType === 'entreprise' ? ' (HT)' : ''}</div>
+                            <div className="text-[11px] font-bold uppercase tracking-wider text-orange-600/80 mb-0.5">Tarif estimé</div>
                             <div className="text-[10px] text-gray-400 mb-1 uppercase tracking-wider font-semibold">Paiement sécurisé</div>
                             <div className="text-xs text-gray-600 font-medium">{clientType === 'entreprise' && paymentMode === 'fin_de_mois' ? (debitMethod === 'virement' ? 'Virement sous 30 jours' : 'Prélèvement sous 30 jours') : 'Réglé par carte'}</div>
                           </div>
-                          <div className="text-2xl font-extrabold text-[#ed5518]">
-                            {estimatedPrice !== null ? `${estimatedPrice.toFixed(2)} €` : '-- €'}
+                          <div className="text-right">
+                            <div className="text-2xl font-extrabold text-[#ed5518]">
+                              {prices ? `${eur(prices.ttc)} TTC` : '-- €'}
+                            </div>
+                            {prices && (
+                              <div className="text-xs font-semibold text-gray-500">
+                                dont TVA {eur(prices.tva)} ({eur(prices.ht)} HT)
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>

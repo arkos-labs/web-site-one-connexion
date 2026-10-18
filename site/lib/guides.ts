@@ -163,11 +163,11 @@ export const GUIDES: Guide[] = [
         table: {
           head: ["Zone", "Normal 3 h", "Urgent 1 h 30", "Super urgent 1 h"],
           rows: [
-            ["Paris (75)", "17,50 €", "26,25 €", "35 €"],
-            ["Petite couronne (92, 93, 94)", "35 €", "52,50 €", "70 €"],
-            ["Grande couronne (77, 78, 91, 95)", "65 €", "97,50 €", "130 €"],
+            ["Paris (75)", "21 €", "31,50 €", "42 €"],
+            ["Petite couronne (92, 93, 94)", "42 €", "63 €", "84 €"],
+            ["Grande couronne (77, 78, 91, 95)", "78 €", "117 €", "156 €"],
           ],
-          note: "Tarifs HT par course, TVA 20 % en sus. Le prix exact s'affiche avant de valider la commande.",
+          note: "Tarifs TTC par course, TVA 20 % comprise. Le prix exact s'affiche avant de valider la commande.",
         },
       },
       {
@@ -179,7 +179,7 @@ export const GUIDES: Guide[] = [
       {
         heading: "Le délai demandé",
         paragraphs: [
-          "Plus le délai est court, plus la course coûte cher : à Paris, la même course passe de 17,50 € HT en 3 h à 35 € HT en 1 h. Une navette régulière, avec un passage programmé, est en général la formule la plus économique pour des besoins répétés.",
+          "Plus le délai est court, plus la course coûte cher : à Paris, la même course passe de 21 € TTC en 3 h à 42 € TTC en 1 h. Une navette régulière, avec un passage programmé, est en général la formule la plus économique pour des besoins répétés.",
         ],
       },
       {
@@ -209,7 +209,7 @@ export const GUIDES: Guide[] = [
       {
         question: "Une course urgente est-elle plus chère ?",
         answer:
-          "Oui : un délai de 1 h coûte le double d'un délai de 3 h (35 € HT contre 17,50 € HT dans Paris). Un créneau plus large réduit le tarif.",
+          "Oui : un délai de 1 h coûte le double d'un délai de 3 h (42 € TTC contre 21 € TTC dans Paris). Un créneau plus large réduit le tarif.",
       },
     ],
     service: { href: "/tarifs", label: "Tarif coursier Paris" },

@@ -287,11 +287,11 @@ export const EXTRA_92: Record<string, ExtraZoneContent> = {
       "Précisez le quartier : centre, Antony Parc, Noyer-Doré. La commune est grande.",
       "Pour Orly, indiquez le terminal, le comptoir et l'heure limite.",
       "Le RER B est un repère mais la RD920 se charge : planifiez avec une marge.",
-      "Pour Saclay, la grande couronne démarre à 65 € HT.",
+      "Pour Saclay, la grande couronne démarre à 78 € TTC.",
     ],
     faq: [
       { q: "Livrez-vous à Orly depuis Antony ?", a: "Oui. Les deux sont proches : précisez le terminal et l'heure limite." },
-      { q: "Quel tarif pour Saclay depuis Antony ?", a: "Le plateau de Saclay est en grande couronne : le tarif est de 65 € HT en normal (3 h), 97,50 € HT en urgent et 130 € HT en super urgent." },
+      { q: "Quel tarif pour Saclay depuis Antony ?", a: "Le plateau de Saclay est en grande couronne : le tarif est de 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en super urgent." },
     ],
   },
 

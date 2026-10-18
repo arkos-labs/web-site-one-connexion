@@ -219,7 +219,7 @@ export default function NavettesPage() {
                         {n.estimated_price != null && (
                           <div className="text-right">
                             <div className="text-lg font-extrabold leading-none tabular-nums text-ink">{n.estimated_price} €</div>
-                            <div className="mt-0.5 text-[11px] font-medium text-muted">HT / passage</div>
+                            <div className="mt-0.5 text-[11px] font-medium text-muted">TTC / passage</div>
                           </div>
                         )}
                         <Link

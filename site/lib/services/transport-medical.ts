@@ -122,7 +122,7 @@ export const transportMedical: Service = {
     {
       question: "Quel est le prix d’un coursier médical à Paris ?",
       answer:
-        "Le transport médical est facturé au tarif standard de la zone : à partir de 17,50 € HT dans Paris (3 h), 26,25 € HT en urgent et 35 € HT en super urgent (1 h), puis 35 € à 70 € HT en petite couronne. Le prix est affiché avant de commander, détail sur la page tarifs.",
+        "Le transport médical est facturé au tarif standard de la zone : à partir de 21 € TTC dans Paris (3 h), 31,50 € TTC en urgent et 42 € TTC en super urgent (1 h), puis 42 € à 84 € TTC en petite couronne. Le prix est affiché avant de commander, détail sur la page tarifs.",
     },
     {
       question: "Assurez-vous le transport entre laboratoires et vers un plateau technique ?",

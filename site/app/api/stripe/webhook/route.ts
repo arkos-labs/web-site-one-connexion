@@ -82,7 +82,6 @@ export async function POST(req: Request) {
           .from('orders')
           .update({ billing_status: 'echec' })
           .eq('tracking_code', orderId)
-          .neq('status', 'paye')
           .or('billing_status.is.null,billing_status.neq.paye')
           .select('id');
 
@@ -102,8 +101,8 @@ export async function POST(req: Request) {
 
         if (session.mode === 'payment') {
           // Particulier, ou pro qui a payé tout de suite par carte
+          // Le statut de la course (en_attente → dispatch) ne change pas : seul le paiement est enregistré.
           updateData = {
-            status: 'paye',
             payment_mode: 'carte',
             billing_status: 'paye',
             amount_due: amountDue,
@@ -124,7 +123,6 @@ export async function POST(req: Request) {
 
           const dueDate = new Date(Date.now() + 30 * 86400000).toISOString().slice(0, 10);
           updateData = {
-            status: 'valide',
             payment_mode: 'fin_de_mois',
             billing_status: 'a_debiter',
             amount_due: amountDue,
@@ -137,7 +135,7 @@ export async function POST(req: Request) {
         // Avant la mise à jour : pour ne prévenir Telegram qu'une fois (Stripe peut renvoyer l'événement)
         const { data: before } = await supabase
           .from('orders')
-          .select('client_type, status')
+          .select('client_type, billing_status')
           .eq('tracking_code', orderId)
           .maybeSingle();
 
@@ -146,18 +144,10 @@ export async function POST(req: Request) {
           .update(updateData)
           .eq('tracking_code', orderId); // orderId = code de suivi (OC-XXXXXXXX)
 
-        if (error) {
-          // Colonnes de paiement absentes (migration 20261004_deferred_payment non appliquée) :
-          // on enregistre au moins le statut, comme avant.
-          console.error('Webhook order update error:', error.message);
-          await supabase
-            .from('orders')
-            .update({ status: updateData.status })
-            .eq('tracking_code', orderId);
-        }
+        if (error) console.error('Webhook order update error:', error.message);
 
         // Particulier : l'alerte Telegram part seulement quand la course est payée
-        if (session.mode === 'payment' && before?.client_type === 'particulier' && before.status !== 'paye') {
+        if (session.mode === 'payment' && before?.client_type === 'particulier' && before.billing_status !== 'paye') {
           await notifyPaidOrder(orderId).catch((e) => console.error('Telegram paid-order notify failed:', e));
         }
       }

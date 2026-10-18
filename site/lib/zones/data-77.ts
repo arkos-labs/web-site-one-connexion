@@ -23,7 +23,7 @@ export const ZONES_77: Zone[] = [
     distanceParis: "~45 min de Paris",
     pricingZone: "devis",
     seoTitle: "Coursier Melun — Tribunal, Préfecture 77",
-    seoDesc: "Coursier express à Melun (77). Tribunal, Préfecture, médical. Dès 65 € HT. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
+    seoDesc: "Coursier express à Melun (77). Tribunal, Préfecture, médical. Dès 78 € TTC. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
     seoKeywords: ["coursier Melun", "livraison express 77000", "coursier tribunal Melun", "coursier 77 Melun"],
   }),
   makeZone({
@@ -47,7 +47,7 @@ export const ZONES_77: Zone[] = [
     distanceParis: "~45 min de Paris 20e",
     pricingZone: "devis",
     seoTitle: "Coursier Meaux — Centre hospitalier, 77100",
-    seoDesc: "Coursier express à Meaux (77). CH, PME, agroalimentaire. Dès 65 € HT. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
+    seoDesc: "Coursier express à Meaux (77). CH, PME, agroalimentaire. Dès 78 € TTC. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
     seoKeywords: ["coursier Meaux", "livraison express 77100", "coursier 77 Meaux"],
   }),
   makeZone({
@@ -71,7 +71,7 @@ export const ZONES_77: Zone[] = [
     distanceParis: "~30 min de Paris 20e",
     pricingZone: "devis",
     seoTitle: "Coursier Chelles — Livraison express 77500",
-    seoDesc: "Coursier express à Chelles (77). PME, commerces, professions libérales. Dès 65 € HT. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
+    seoDesc: "Coursier express à Chelles (77). PME, commerces, professions libérales. Dès 78 € TTC. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
     seoKeywords: ["coursier Chelles", "livraison express 77500", "coursier 77 Chelles"],
   }),
   makeZone({
@@ -95,7 +95,7 @@ export const ZONES_77: Zone[] = [
     distanceParis: "~35 min de Paris 12e",
     pricingZone: "devis",
     seoTitle: "Coursier Torcy — Marne-la-Vallée, 77200",
-    seoDesc: "Coursier express à Torcy (77). Marne-la-Vallée, PME, zones d'activités. Dès 65 € HT. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
+    seoDesc: "Coursier express à Torcy (77). Marne-la-Vallée, PME, zones d'activités. Dès 78 € TTC. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
     seoKeywords: ["coursier Torcy", "livraison express 77200", "coursier Marne-la-Vallée Torcy", "coursier 77 Torcy"],
   }),
   makeZone({
@@ -119,7 +119,7 @@ export const ZONES_77: Zone[] = [
     distanceParis: "~35 min de Paris 20e",
     pricingZone: "devis",
     seoTitle: "Coursier Lagny-sur-Marne — Livraison express 77400",
-    seoDesc: "Coursier express à Lagny-sur-Marne (77). PME, artisans. Dès 65 € HT. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
+    seoDesc: "Coursier express à Lagny-sur-Marne (77). PME, artisans. Dès 78 € TTC. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
     seoKeywords: ["coursier Lagny-sur-Marne", "livraison express 77400", "coursier 77 Lagny"],
   }),
   makeZone({
@@ -143,7 +143,7 @@ export const ZONES_77: Zone[] = [
     distanceParis: "~35 min de Paris 12e",
     pricingZone: "devis",
     seoTitle: "Coursier Pontault-Combault — Zone industrielle 77340",
-    seoDesc: "Coursier express à Pontault-Combault (77). Industries, PME. Dès 65 € HT. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
+    seoDesc: "Coursier express à Pontault-Combault (77). Industries, PME. Dès 78 € TTC. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
     seoKeywords: ["coursier Pontault-Combault", "livraison express 77340", "coursier 77 Pontault"],
   }),
   makeZone({
@@ -167,7 +167,7 @@ export const ZONES_77: Zone[] = [
     distanceParis: "~60 min de Paris",
     pricingZone: "devis",
     seoTitle: "Coursier Fontainebleau — INSEAD, Château, 77300",
-    seoDesc: "Coursier express à Fontainebleau (77). INSEAD, Château, hôtels luxe. Dès 65 € HT. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
+    seoDesc: "Coursier express à Fontainebleau (77). INSEAD, Château, hôtels luxe. Dès 78 € TTC. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
     seoKeywords: ["coursier Fontainebleau", "livraison express 77300", "coursier INSEAD Fontainebleau", "coursier 77 Fontainebleau"],
   }),
 ];

@@ -549,7 +549,7 @@ const PETITE_COURONNE = new Set(["92", "93", "94"]);
 /**
  * Indexation par vagues. Une zone n'est indexable que si elle a son contenu
  * propre (guide local + FAQ). Vague 1 : Paris et la petite couronne. La grande
- * couronne (77, 78, 91, 95), à partir de 65 € HT, a son contenu mais reste en
+ * couronne (77, 78, 91, 95), à partir de 78 € TTC, a son contenu mais reste en
  * noindex : ajouter "77", "78", "91", "95" à PETITE_COURONNE pour l'ouvrir.
  */
 export function isZoneIndexed(zone: Zone): boolean {

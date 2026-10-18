@@ -738,7 +738,7 @@ export default function CommanderPage() {
                 )}
                 <div className="whitespace-nowrap lg:hidden">
                   <span className="label-mono block text-[11px] font-medium text-muted">Tarif estimé</span>
-                  <span className="text-base font-extrabold text-ink">{estimatedPrice !== null ? `${eur(estimatedPrice)} €` : '-- €'} <span className="text-xs font-semibold text-muted">HT</span></span>
+                  <span className="text-base font-extrabold text-ink">{estimatedPrice !== null ? `${eur(estimatedPrice)} €` : '-- €'} <span className="text-xs font-semibold text-muted">TTC</span></span>
                 </div>
               </div>
 
@@ -818,7 +818,7 @@ export default function CommanderPage() {
               <span className="label-mono text-xs font-medium text-white/60">Tarif estimé</span>
               <div className="mt-1 flex items-baseline gap-2">
                 <span className="text-[34px] font-extrabold leading-none tracking-tight">{estimatedPrice !== null ? eur(estimatedPrice) : '--'} €</span>
-                <span className="text-sm font-semibold text-white/60">HT</span>
+                <span className="text-sm font-semibold text-white/60">TTC</span>
               </div>
               <div className="mt-3 rounded-lg bg-white/5 border border-white/10 p-3 text-xs text-white/80">
                 {isPro ? (

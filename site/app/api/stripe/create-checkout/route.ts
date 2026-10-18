@@ -95,7 +95,6 @@ async function sendTransferInvoice(p: {
   await supabase
     .from('orders')
     .update({
-      status: 'valide',
       payment_mode: 'fin_de_mois',
       billing_status: 'virement_attendu',
       amount_due: p.price,
@@ -207,10 +206,10 @@ export async function POST(req: Request) {
     } else {
       // Particuliers, et pros qui paient tout de suite : paiement immédiat par carte.
       // Stripe crée la facture au paiement ; elle n'est envoyée au client qu'à la livraison de la course
-      // (lib/deliver-order-invoice). Pro : prix HT + TVA 20 %. Particulier : prix TTC, TVA « dont ».
+      // (lib/deliver-order-invoice). Prix TTC pour tous, TVA 20 % « dont ».
       let taxRate: string | undefined;
       try {
-        taxRate = await vatRateId(stripe, !pro);
+        taxRate = await vatRateId(stripe);
       } catch (err) {
         console.error('Taux de TVA indisponible, paiement sans ligne de TVA :', err);
       }

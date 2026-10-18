@@ -23,7 +23,7 @@ export const ZONES_95: Zone[] = [
     distanceParis: "~40 min de Paris",
     pricingZone: "devis",
     seoTitle: "Coursier Cergy — Préfecture 95, Tribunal Pontoise",
-    seoDesc: "Coursier express à Cergy (95). Préfecture, tribunal, entreprises. Dès 65 € HT. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
+    seoDesc: "Coursier express à Cergy (95). Préfecture, tribunal, entreprises. Dès 78 € TTC. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
     seoKeywords: ["coursier Cergy", "livraison express 95000", "coursier 95 Cergy", "coursier Val-d'Oise"],
   }),
   makeZone({
@@ -47,7 +47,7 @@ export const ZONES_95: Zone[] = [
     distanceParis: "~20 min de Paris 17e",
     pricingZone: "devis",
     seoTitle: "Coursier Argenteuil — Livraison express 95100",
-    seoDesc: "Coursier express à Argenteuil (95). Industries, PME, Seine. Dès 65 € HT. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
+    seoDesc: "Coursier express à Argenteuil (95). Industries, PME, Seine. Dès 78 € TTC. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
     seoKeywords: ["coursier Argenteuil", "livraison express 95100", "coursier 95 Argenteuil"],
   }),
   makeZone({
@@ -71,7 +71,7 @@ export const ZONES_95: Zone[] = [
     distanceParis: "~25 min de Paris 18e",
     pricingZone: "devis",
     seoTitle: "Coursier Sarcelles — Livraison express 95200",
-    seoDesc: "Coursier express à Sarcelles (95). PME, commerces. Dès 65 € HT. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
+    seoDesc: "Coursier express à Sarcelles (95). PME, commerces. Dès 78 € TTC. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
     seoKeywords: ["coursier Sarcelles", "livraison express 95200", "coursier 95 Sarcelles"],
   }),
   makeZone({
@@ -95,7 +95,7 @@ export const ZONES_95: Zone[] = [
     distanceParis: "~30 min de Paris 18e",
     pricingZone: "devis",
     seoTitle: "Coursier Gonesse — Roissy CDG, Zone aéroportuaire 95500",
-    seoDesc: "Coursier express à Gonesse (95). Roissy CDG, zone aéroportuaire. Dès 65 € HT. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
+    seoDesc: "Coursier express à Gonesse (95). Roissy CDG, zone aéroportuaire. Dès 78 € TTC. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
     seoKeywords: ["coursier Gonesse", "livraison express 95500", "coursier Roissy Gonesse", "coursier 95 Gonesse"],
   }),
   makeZone({
@@ -119,7 +119,7 @@ export const ZONES_95: Zone[] = [
     distanceParis: "~20 min de Paris 18e",
     pricingZone: "devis",
     seoTitle: "Coursier Enghien-les-Bains — Casino, Lac, Luxe 95880",
-    seoDesc: "Coursier express à Enghien-les-Bains (95). Casino, hôtels luxe, cliniques thermales. Dès 65 € HT. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
+    seoDesc: "Coursier express à Enghien-les-Bains (95). Casino, hôtels luxe, cliniques thermales. Dès 78 € TTC. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
     seoKeywords: ["coursier Enghien-les-Bains", "livraison express 95880", "coursier casino Enghien", "coursier 95 Enghien"],
   }),
   makeZone({
@@ -143,7 +143,7 @@ export const ZONES_95: Zone[] = [
     distanceParis: "~25 min de Paris 17e",
     pricingZone: "devis",
     seoTitle: "Coursier Franconville — Livraison express 95130",
-    seoDesc: "Coursier express à Franconville (95). PME, professions libérales. Dès 65 € HT. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
+    seoDesc: "Coursier express à Franconville (95). PME, professions libérales. Dès 78 € TTC. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
     seoKeywords: ["coursier Franconville", "livraison express 95130", "coursier 95 Franconville"],
   }),
   makeZone({
@@ -167,7 +167,7 @@ export const ZONES_95: Zone[] = [
     distanceParis: "~30 min de Paris 18e",
     pricingZone: "devis",
     seoTitle: "Coursier Ermont — Livraison express 95120",
-    seoDesc: "Coursier express à Ermont (95). PME, professions libérales. Dès 65 € HT. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
+    seoDesc: "Coursier express à Ermont (95). PME, professions libérales. Dès 78 € TTC. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
     seoKeywords: ["coursier Ermont", "livraison express 95120", "coursier 95 Ermont"],
   }),
   makeZone({
@@ -191,7 +191,7 @@ export const ZONES_95: Zone[] = [
     distanceParis: "~30 min de Paris 17e",
     pricingZone: "devis",
     seoTitle: "Coursier Herblay-sur-Seine — Livraison express 95220",
-    seoDesc: "Coursier express à Herblay-sur-Seine (95). PME, bords de Seine. Dès 65 € HT. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
+    seoDesc: "Coursier express à Herblay-sur-Seine (95). PME, bords de Seine. Dès 78 € TTC. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
     seoKeywords: ["coursier Herblay-sur-Seine", "livraison express 95220", "coursier 95 Herblay"],
   }),
   makeZone({
@@ -215,7 +215,7 @@ export const ZONES_95: Zone[] = [
     distanceParis: "~30 min de La Défense",
     pricingZone: "devis",
     seoTitle: "Coursier Maisons-Laffitte — Hippodrome, Château 78600",
-    seoDesc: "Coursier express à Maisons-Laffitte (78). Hippodrome, prestige, professions libérales. Dès 65 € HT. Traçabilité complète, prix immédiat.",
+    seoDesc: "Coursier express à Maisons-Laffitte (78). Hippodrome, prestige, professions libérales. Dès 78 € TTC. Traçabilité complète, prix immédiat.",
     seoKeywords: ["coursier Maisons-Laffitte", "livraison express 78600", "coursier hippodrome Maisons-Laffitte"],
   }),
   makeZone({
@@ -239,7 +239,7 @@ export const ZONES_95: Zone[] = [
     distanceParis: "~35 min de Paris 17e",
     pricingZone: "devis",
     seoTitle: "Coursier Conflans-Sainte-Honorine — Port fluvial 78700",
-    seoDesc: "Coursier express à Conflans-Sainte-Honorine (78). Port fluvial, PME. Dès 65 € HT. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
+    seoDesc: "Coursier express à Conflans-Sainte-Honorine (78). Port fluvial, PME. Dès 78 € TTC. Coursier B2B deux-roues, traçabilité complète, prix immédiat.",
     seoKeywords: ["coursier Conflans-Sainte-Honorine", "livraison express 78700", "coursier 78 Conflans"],
   }),
 ];

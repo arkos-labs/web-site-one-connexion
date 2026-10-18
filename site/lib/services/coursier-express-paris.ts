@@ -13,13 +13,13 @@ export const coursierExpressParis: Service = {
     tag: "Express",
     title: "Coursier express Paris",
     body: "Enlèvement en moins de 45 minutes, course dédiée en deux-roues, suivi en ligne et preuve de livraison horodatée.",
-    note: "Super urgent 1 h dès 35 € HT",
+    note: "Super urgent 1 h dès 42 € TTC",
   },
 
   seo: {
-    title: "Coursier express Paris — prix dès 26,25 € HT, livraison en 1 h 30",
+    title: "Coursier express Paris — prix dès 31,50 € TTC, livraison en 1 h 30",
     description:
-      "Coursier express à Paris : enlèvement en moins de 45 minutes, course dédiée en moto ou scooter, suivi en ligne, 7j/7. Prix coursier express Paris : dès 26,25 € HT en urgent (1 h 30), 35 € HT en super urgent (1 h).",
+      "Coursier express à Paris : enlèvement en moins de 45 minutes, course dédiée en moto ou scooter, suivi en ligne, 7j/7. Prix coursier express Paris : dès 31,50 € TTC en urgent (1 h 30), 42 € TTC en super urgent (1 h).",
     keywords: [
       "coursier express Paris",
       "coursier paris express",
@@ -38,7 +38,7 @@ export const coursierExpressParis: Service = {
 
   stats: [
     { value: "< 45 min", label: "Prise en charge" },
-    { value: "Dès 26,25 € HT", label: "Course urgente Paris (1 h 30)" },
+    { value: "Dès 31,50 € TTC", label: "Course urgente Paris (1 h 30)" },
     { value: "7j/7", label: "7h – 23h" },
   ],
 
@@ -99,7 +99,7 @@ export const coursierExpressParis: Service = {
   ],
 
   coverage:
-    "Une course express coûte 26,25 € HT en urgent (1 h 30) et 35 € HT en super urgent (1 h) dans Paris, puis 52,50 € et 70 € HT dans les Hauts-de-Seine, la Seine-Saint-Denis et le Val-de-Marne. La grande couronne (77, 78, 91, 95) est à 97,50 € et 130 € HT.",
+    "Une course express coûte 31,50 € TTC en urgent (1 h 30) et 42 € TTC en super urgent (1 h) dans Paris, puis 63 € et 84 € TTC dans les Hauts-de-Seine, la Seine-Saint-Denis et le Val-de-Marne. La grande couronne (77, 78, 91, 95) est à 117 € et 156 € TTC.",
 
   faq: [
     {
@@ -115,12 +115,12 @@ export const coursierExpressParis: Service = {
     {
       question: "Quel est le prix d’un coursier express à Paris ?",
       answer:
-        "Une course express démarre à 26,25 € HT en urgent (1 h 30) et 35 € HT en super urgent (1 h) dans Paris, 52,50 € et 70 € HT en petite couronne. Le prix est affiché avant de commander, détail sur la page tarifs.",
+        "Une course express démarre à 31,50 € TTC en urgent (1 h 30) et 42 € TTC en super urgent (1 h) dans Paris, 63 € et 84 € TTC en petite couronne. Le prix est affiché avant de commander, détail sur la page tarifs.",
     },
     {
       question: "Quelle différence entre course immédiate et course planifiée ?",
       answer:
-        "La course super urgente part dans l’heure. La course normale, livrée sous 3 h, démarre à 17,50 € HT dans Paris.",
+        "La course super urgente part dans l’heure. La course normale, livrée sous 3 h, démarre à 21 € TTC dans Paris.",
     },
     {
       question: "Livrez-vous en dehors de Paris ?",

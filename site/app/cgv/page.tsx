@@ -40,7 +40,7 @@ export default function CGV() {
           <p>
             Les tarifs sont calculés selon la grille tarifaire en vigueur, basée sur la zone géographique
             de livraison, le type de prestation (course standard ou navette récurrente) et le délai choisi.
-            Les prix sont indiqués en euros hors taxes (HT). La TVA applicable est ajoutée au taux en vigueur.
+            Les prix sont indiqués en euros toutes taxes comprises (TTC), TVA de 20 % incluse.
             Le Prestataire se réserve le droit de modifier ses tarifs à tout moment, les prestations étant
             facturées au tarif en vigueur au moment de la commande.
           </p>

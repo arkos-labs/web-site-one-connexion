@@ -335,10 +335,10 @@ export default function NavetteDetailsPage() {
               <div className="px-5 py-4">
                 <div className="flex items-baseline gap-2">
                   <span className="text-3xl font-extrabold leading-none tracking-tight tabular-nums">{navette.estimated_price ?? "—"}</span>
-                  {navette.estimated_price != null && <span className="text-sm font-semibold text-white/60">€ HT / passage</span>}
+                  {navette.estimated_price != null && <span className="text-sm font-semibold text-white/60">€ TTC / passage</span>}
                 </div>
                 {navette.estimated_price != null && (
-                  <p className="mt-2 text-xs text-white/60">{(Number(navette.estimated_price) * 1.2).toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} € TTC</p>
+                  <p className="mt-2 text-xs text-white/60">dont TVA 20 % : {(Number(navette.estimated_price) - Math.round((Number(navette.estimated_price) / 1.2) * 100) / 100).toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</p>
                 )}
               </div>
             </section>

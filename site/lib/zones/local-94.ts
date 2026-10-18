@@ -21,7 +21,7 @@ export const LOCAL_94: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Livrez-vous dans la zone industrielle des Ardoines ?", a: "Oui. Donnez le nom de la société, l'entrée et un contact au quai." },
       { q: "Pouvez-vous transporter des pièces d'exposition légères pour le MAC VAL ?", a: "Pour des pièces qui tiennent dans un top-case de 18 kg, oui. Au-delà, appelez-nous avant." },
-      { q: "Quel tarif à Vitry-sur-Seine ?", a: "Dès 35 € HT en normal (3 h) et 70 € HT en super urgent (1 h)." },
+      { q: "Quel tarif à Vitry-sur-Seine ?", a: "Dès 42 € TTC en normal (3 h) et 84 € TTC en super urgent (1 h)." },
     ],
   },
 
@@ -40,7 +40,7 @@ export const LOCAL_94: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Les ponts d'Alfortville ralentissent-ils les courses ?", a: "Ils concentrent le trafic aux heures de pointe. Nous planifions le départ en conséquence et annonçons un délai réaliste." },
       { q: "Faites-vous des tournées régulières depuis Alfortville ?", a: "Oui, avec un compte entreprise, sur créneaux fixes." },
-      { q: "Quel tarif à Alfortville ?", a: "Dès 35 € HT en normal (3 h) et 70 € HT en super urgent (1 h)." },
+      { q: "Quel tarif à Alfortville ?", a: "Dès 42 € TTC en normal (3 h) et 84 € TTC en super urgent (1 h)." },
     ],
   },
 
@@ -59,7 +59,7 @@ export const LOCAL_94: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Transportez-vous des prélèvements vétérinaires ?", a: "Oui, en course dédiée, avec contenant isotherme à la demande. Le délai de stabilité fixé par le laboratoire commande la faisabilité." },
       { q: "Livrez-vous à l'école vétérinaire d'Alfort ?", a: "Oui, avec le bâtiment, le service et un contact." },
-      { q: "Quel tarif à Maisons-Alfort ?", a: "Dès 35 € HT en normal (3 h) et 70 € HT en super urgent (1 h)." },
+      { q: "Quel tarif à Maisons-Alfort ?", a: "Dès 42 € TTC en normal (3 h) et 84 € TTC en super urgent (1 h)." },
     ],
   },
 
@@ -78,7 +78,7 @@ export const LOCAL_94: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Combien de temps pour relier Charenton à Bercy ?", a: "Les deux sont limitrophes : la course est très courte. Nous annonçons le délai exact à la confirmation." },
       { q: "Livrez-vous dans le centre commercial de Charenton ?", a: "Oui, avec l'enseigne, le lot et un contact. L'entrée de service est distincte de l'entrée publique." },
-      { q: "Quel tarif à Charenton-le-Pont ?", a: "Dès 35 € HT en normal (3 h) et 70 € HT en super urgent (1 h)." },
+      { q: "Quel tarif à Charenton-le-Pont ?", a: "Dès 42 € TTC en normal (3 h) et 84 € TTC en super urgent (1 h)." },
     ],
   },
 
@@ -97,7 +97,7 @@ export const LOCAL_94: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Livrez-vous aux hôpitaux de Saint-Maurice ?", a: "Oui. Précisez le pavillon, le service et un contact." },
       { q: "Les courses depuis Saint-Maurice sont-elles plus rapides ?", a: "La ville est voisine de notre siège de Saint-Mandé : l'approche est courte et l'enlèvement souvent plus rapide que le maximum de 45 minutes." },
-      { q: "Quel tarif à Saint-Maurice ?", a: "Dès 35 € HT en normal (3 h) et 70 € HT en super urgent (1 h)." },
+      { q: "Quel tarif à Saint-Maurice ?", a: "Dès 42 € TTC en normal (3 h) et 84 € TTC en super urgent (1 h)." },
     ],
   },
 
@@ -116,7 +116,7 @@ export const LOCAL_94: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Livrez-vous sur les îles de Joinville ?", a: "Oui. Donnez l'adresse précise, le code et un contact." },
       { q: "Pouvez-vous remettre un pli en main propre à un cabinet de Joinville ?", a: "Oui, contre signature avec nom et heure consignés." },
-      { q: "Quel tarif à Joinville-le-Pont ?", a: "Dès 35 € HT en normal (3 h) et 70 € HT en super urgent (1 h)." },
+      { q: "Quel tarif à Joinville-le-Pont ?", a: "Dès 42 € TTC en normal (3 h) et 84 € TTC en super urgent (1 h)." },
     ],
   },
 
@@ -135,7 +135,7 @@ export const LOCAL_94: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Livrez-vous au pavillon Baltard lors d'un événement ?", a: "Oui, avec le nom de l'organisateur, l'entrée de service et l'heure de remise." },
       { q: "Pouvez-vous remettre un acte à une étude notariale de Nogent ?", a: "Oui, en course dédiée, contre signature nominative avec justificatif horodaté." },
-      { q: "Quel tarif à Nogent-sur-Marne ?", a: "Dès 35 € HT en normal (3 h) et 70 € HT en super urgent (1 h)." },
+      { q: "Quel tarif à Nogent-sur-Marne ?", a: "Dès 42 € TTC en normal (3 h) et 84 € TTC en super urgent (1 h)." },
     ],
   },
 
@@ -154,7 +154,7 @@ export const LOCAL_94: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Livrez-vous dans les villas des bords de Marne ?", a: "Oui. Donnez le code du portail et un contact joignable." },
       { q: "Transportez-vous des prélèvements depuis un cabinet du Perreux ?", a: "Oui, en course dédiée, avec contenant isotherme à la demande." },
-      { q: "Quel tarif au Perreux-sur-Marne ?", a: "Dès 35 € HT en normal (3 h) et 70 € HT en super urgent (1 h)." },
+      { q: "Quel tarif au Perreux-sur-Marne ?", a: "Dès 42 € TTC en normal (3 h) et 84 € TTC en super urgent (1 h)." },
     ],
   },
 
@@ -173,7 +173,7 @@ export const LOCAL_94: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Livrez-vous dans les tours du Val de Fontenay ?", a: "Oui. Donnez l'entreprise, le bâtiment, l'étage et un numéro direct." },
       { q: "Peut-on prévoir une tournée régulière depuis Fontenay ?", a: "Oui, avec un compte entreprise, sur créneaux fixes." },
-      { q: "Quel tarif à Fontenay-sous-Bois ?", a: "Dès 35 € HT en normal (3 h) et 70 € HT en super urgent (1 h)." },
+      { q: "Quel tarif à Fontenay-sous-Bois ?", a: "Dès 42 € TTC en normal (3 h) et 84 € TTC en super urgent (1 h)." },
     ],
   },
 
@@ -192,7 +192,7 @@ export const LOCAL_94: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Desservez-vous tous les quartiers de Saint-Maur ?", a: "Oui, dont La Varenne. Donnez le quartier et la rue pour un délai fiable." },
       { q: "Pouvez-vous remettre un acte à une étude de Saint-Maur ?", a: "Oui, contre signature nominative avec justificatif horodaté." },
-      { q: "Quel tarif à Saint-Maur-des-Fossés ?", a: "Dès 35 € HT en normal (3 h) et 70 € HT en super urgent (1 h)." },
+      { q: "Quel tarif à Saint-Maur-des-Fossés ?", a: "Dès 42 € TTC en normal (3 h) et 84 € TTC en super urgent (1 h)." },
     ],
   },
 
@@ -211,7 +211,7 @@ export const LOCAL_94: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Livrez-vous dans les zones d'activité de Champigny ?", a: "Oui, avec le nom de la société, l'entrée et un contact au quai." },
       { q: "Pouvez-vous livrer au musée de la Résistance nationale ?", a: "Oui, avec le service destinataire et un contact." },
-      { q: "Quel tarif à Champigny-sur-Marne ?", a: "Dès 35 € HT en normal (3 h) et 70 € HT en super urgent (1 h)." },
+      { q: "Quel tarif à Champigny-sur-Marne ?", a: "Dès 42 € TTC en normal (3 h) et 84 € TTC en super urgent (1 h)." },
     ],
   },
 
@@ -230,7 +230,7 @@ export const LOCAL_94: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Transportez-vous des échantillons vers Gustave Roussy ?", a: "Oui, en course dédiée avec contenant isotherme à la demande. Le délai de stabilité fixé par le laboratoire commande la faisabilité." },
       { q: "Livrez-vous à l'hôpital Paul-Brousse ?", a: "Oui. Précisez le service, le bâtiment et un contact." },
-      { q: "Quel tarif à Villejuif ?", a: "Dès 35 € HT en normal (3 h) et 70 € HT en super urgent (1 h)." },
+      { q: "Quel tarif à Villejuif ?", a: "Dès 42 € TTC en normal (3 h) et 84 € TTC en super urgent (1 h)." },
     ],
   },
 
@@ -249,7 +249,7 @@ export const LOCAL_94: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Combien de temps pour relier Gentilly à Paris 13e ?", a: "Les deux sont limitrophes : la course est courte. Nous annonçons le délai exact à la confirmation." },
       { q: "Peut-on organiser une tournée régulière depuis Gentilly ?", a: "Oui, avec un compte entreprise, sur créneaux fixes." },
-      { q: "Quel tarif à Gentilly ?", a: "Dès 35 € HT en normal (3 h) et 70 € HT en super urgent (1 h)." },
+      { q: "Quel tarif à Gentilly ?", a: "Dès 42 € TTC en normal (3 h) et 84 € TTC en super urgent (1 h)." },
     ],
   },
 
@@ -268,7 +268,7 @@ export const LOCAL_94: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Livrez-vous dans les quartiers en hauteur d'Arcueil ?", a: "Oui. Donnez l'adresse précise, le code et un contact." },
       { q: "Pouvez-vous transporter des pièces techniques ?", a: "Pour des pièces légères et protégées, dans la limite de 18 kg. Au-delà, appelez-nous." },
-      { q: "Quel tarif à Arcueil ?", a: "Dès 35 € HT en normal (3 h) et 70 € HT en super urgent (1 h)." },
+      { q: "Quel tarif à Arcueil ?", a: "Dès 42 € TTC en normal (3 h) et 84 € TTC en super urgent (1 h)." },
     ],
   },
 
@@ -287,7 +287,7 @@ export const LOCAL_94: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Livrez-vous à l'ENS Paris-Saclay ?", a: "Oui, avec le département, le bâtiment et un contact." },
       { q: "Transportez-vous des échantillons de laboratoire ?", a: "Oui, en course dédiée, avec contenant isotherme à la demande." },
-      { q: "Quel tarif à Cachan ?", a: "Dès 35 € HT en normal (3 h) et 70 € HT en super urgent (1 h)." },
+      { q: "Quel tarif à Cachan ?", a: "Dès 42 € TTC en normal (3 h) et 84 € TTC en super urgent (1 h)." },
     ],
   },
 
@@ -306,7 +306,7 @@ export const LOCAL_94: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Livrez-vous au marché de Rungis ?", a: "Oui, de 7h à 23h. Donnez le pavillon, le stand ou l'entreprise, et un contact : les accès sont contrôlés." },
       { q: "Pouvez-vous faire une course avant 7h pour un grossiste ?", a: "Contactez-nous : nous vous disons si la course peut être planifiée." },
-      { q: "Quel tarif à Rungis ?", a: "Rungis est en petite couronne : dès 35 € HT en normal (3 h) et 70 € HT en super urgent (1 h)." },
+      { q: "Quel tarif à Rungis ?", a: "Rungis est en petite couronne : dès 42 € TTC en normal (3 h) et 84 € TTC en super urgent (1 h)." },
     ],
   },
 
@@ -325,7 +325,7 @@ export const LOCAL_94: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Livrez-vous dans les terminaux d'Orly ?", a: "Oui, avec le terminal, la porte et un contact. L'accès est contrôlé." },
       { q: "Pouvez-vous respecter l'heure d'un vol ?", a: "Nous confirmons la faisabilité avant le départ. Indiquez l'heure limite exacte." },
-      { q: "Quel tarif à Orly ?", a: "Dès 35 € HT en normal (3 h) et 70 € HT en super urgent (1 h)." },
+      { q: "Quel tarif à Orly ?", a: "Dès 42 € TTC en normal (3 h) et 84 € TTC en super urgent (1 h)." },
     ],
   },
 
@@ -344,7 +344,7 @@ export const LOCAL_94: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Livrez-vous dans les entrepôts de Chevilly-Larue ?", a: "Oui. Donnez la société, le bâtiment, le quai et un contact au portail." },
       { q: "Faites-vous des tournées entre Chevilly et Orly ?", a: "Oui, par tournées sur créneaux fixes avec un compte entreprise." },
-      { q: "Quel tarif à Chevilly-Larue ?", a: "Dès 35 € HT en normal (3 h) et 70 € HT en super urgent (1 h)." },
+      { q: "Quel tarif à Chevilly-Larue ?", a: "Dès 42 € TTC en normal (3 h) et 84 € TTC en super urgent (1 h)." },
     ],
   },
 
@@ -363,7 +363,7 @@ export const LOCAL_94: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Livrez-vous à la roseraie lors d'un événement ?", a: "Oui, avec l'organisateur, l'entrée de service et l'heure de remise." },
       { q: "Transportez-vous des prélèvements depuis un cabinet de L'Haÿ ?", a: "Oui, en course dédiée, avec contenant isotherme à la demande." },
-      { q: "Quel tarif à L'Haÿ-les-Roses ?", a: "Dès 35 € HT en normal (3 h) et 70 € HT en super urgent (1 h)." },
+      { q: "Quel tarif à L'Haÿ-les-Roses ?", a: "Dès 42 € TTC en normal (3 h) et 84 € TTC en super urgent (1 h)." },
     ],
   },
 
@@ -382,7 +382,7 @@ export const LOCAL_94: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Livrez-vous à l'établissement de santé de Fresnes ?", a: "Oui, à l'accueil désigné. Donnez le destinataire, le service et un contact." },
       { q: "Quelles règles pour un site à accès contrôlé ?", a: "Prévenez le destinataire, car l'accès dépend des règles du site. La remise est signée à l'accueil." },
-      { q: "Quel tarif à Fresnes ?", a: "Dès 35 € HT en normal (3 h) et 70 € HT en super urgent (1 h)." },
+      { q: "Quel tarif à Fresnes ?", a: "Dès 42 € TTC en normal (3 h) et 84 € TTC en super urgent (1 h)." },
     ],
   },
 
@@ -401,7 +401,7 @@ export const LOCAL_94: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Livrez-vous dans un magasin de Belle Épine ?", a: "Oui. Indiquez l'enseigne, le lot et un contact : l'entrée de service est distincte de l'entrée publique." },
       { q: "Pouvez-vous livrer vers Rungis ou Orly depuis Thiais ?", a: "Oui. Les trajets sont courts ; la grille standard s'applique." },
-      { q: "Quel tarif à Thiais ?", a: "Dès 35 € HT en normal (3 h) et 70 € HT en super urgent (1 h)." },
+      { q: "Quel tarif à Thiais ?", a: "Dès 42 € TTC en normal (3 h) et 84 € TTC en super urgent (1 h)." },
     ],
   },
 };

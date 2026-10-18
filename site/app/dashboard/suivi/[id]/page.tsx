@@ -196,9 +196,10 @@ export default function DeliveryDetailsPage() {
 
   const statusLabel = STATUS_LABELS[order.status] || order.status;
   const formatLabel = FORMAT_LABELS[order.format] || order.format;
-  const priceHT = order.price_estimate ? Number(order.price_estimate) : null;
-  const tva = priceHT !== null ? priceHT * 0.2 : null;
-  const totalTTC = priceHT !== null ? priceHT + (tva || 0) : null;
+  // Tarif TTC, TVA 20 % comprise : HT = TTC / 1,20.
+  const totalTTC = order.price_estimate ? Number(order.price_estimate) : null;
+  const priceHT = totalTTC !== null ? Math.round((totalTTC / 1.2) * 100) / 100 : null;
+  const tva = totalTTC !== null && priceHT !== null ? totalTTC - priceHT : null;
   const canCancel = CANCELLABLE_STATUSES.includes(order.status) && !order.driver_id;
   const isDelivered = order.status === "livree" || order.status === "delivered";
   const isCancelled = order.status === "annulee" || order.status === "cancelled";

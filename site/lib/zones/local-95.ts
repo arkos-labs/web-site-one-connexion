@@ -1,6 +1,6 @@
 /**
  * lib/zones/local-95.ts
- * Contenu propre aux communes du Val-d'Oise (grande couronne : dès 65 € HT).
+ * Contenu propre aux communes du Val-d'Oise (grande couronne : dès 78 € TTC).
  * Faits publics uniquement ; aucune entreprise citée comme cliente.
  */
 import type { LocalZoneContent } from "./types";
@@ -15,13 +15,13 @@ export const LOCAL_95: Record<string, LocalZoneContent> = {
       title: "Cergy : préfecture, campus et ville nouvelle",
       paragraphs: [
         "Pour les cabinets d'avocats du département, Cergy et Pontoise forment un seul ensemble : la préfecture est à Cergy, le tribunal à Pontoise. Précisez le service et l'heure limite de dépôt. La remise est horodatée, nominative, avec un justificatif à annexer au dossier.",
-        "Les campus et les grandes écoles de la ville reçoivent du matériel, des documents et des commandes de laboratoires. Donnez le bâtiment, le service et un contact. Cergy étant en grande couronne, le tarif est de 65 € HT en normal (3 h), 97,50 € HT en urgent et 130 € HT en super urgent.",
+        "Les campus et les grandes écoles de la ville reçoivent du matériel, des documents et des commandes de laboratoires. Donnez le bâtiment, le service et un contact. Cergy étant en grande couronne, le tarif est de 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en super urgent.",
       ],
     },
     faq: [
       { q: "Livrez-vous à la préfecture du Val-d'Oise ?", a: "Oui, à l'accueil désigné, contre signature. Donnez le service et un contact." },
       { q: "Pouvez-vous déposer un acte au tribunal de Pontoise ?", a: "Oui, depuis Cergy. Indiquez le service et l'heure limite de dépôt." },
-      { q: "Quel tarif pour Cergy ?", a: "Cergy est en grande couronne : le prix est de 65 € HT en normal (3 h), 97,50 € HT en urgent et 130 € HT en super urgent." },
+      { q: "Quel tarif pour Cergy ?", a: "Cergy est en grande couronne : le prix est de 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en super urgent." },
     ],
   },
 
@@ -34,13 +34,13 @@ export const LOCAL_95: Record<string, LocalZoneContent> = {
       title: "Argenteuil : une grande ville qui dépend de ses ponts",
       paragraphs: [
         "Argenteuil est séparée de La Défense et de Colombes par la Seine. Les ponts sont les seuls passages, et un ralentissement sur l'un d'eux modifie le délai. Indiquez l'heure à laquelle le colis doit arriver : nous planifions le départ pour tenir compte du trafic.",
-        "L'hôpital Victor-Dupouy reçoit et envoie des prélèvements et des dossiers. Précisez le service, la température de conservation et le délai de stabilité. La commune étant en grande couronne, le tarif est de 65 € HT en normal (3 h), 97,50 € HT en urgent et 130 € HT en super urgent.",
+        "L'hôpital Victor-Dupouy reçoit et envoie des prélèvements et des dossiers. Précisez le service, la température de conservation et le délai de stabilité. La commune étant en grande couronne, le tarif est de 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en super urgent.",
       ],
     },
     faq: [
       { q: "Les ponts d'Argenteuil ralentissent-ils les courses ?", a: "Ils concentrent le trafic aux heures de pointe. Nous planifions le départ en conséquence et annonçons un délai réaliste." },
       { q: "Transportez-vous des prélèvements depuis l'hôpital d'Argenteuil ?", a: "Oui, en course dédiée, avec contenant isotherme à la demande." },
-      { q: "Quel tarif pour Argenteuil ?", a: "Dès 65 € HT en normal (3 h), 97,50 € HT en urgent et 130 € HT en super urgent." },
+      { q: "Quel tarif pour Argenteuil ?", a: "Dès 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en super urgent." },
     ],
   },
 
@@ -53,13 +53,13 @@ export const LOCAL_95: Record<string, LocalZoneContent> = {
       title: "Sarcelles : les grands ensembles, bâtiment par bâtiment",
       paragraphs: [
         "À Sarcelles, une adresse seule ne suffit pas toujours : plusieurs bâtiments portent le même numéro de voie, et les cages d'escalier sont numérotées. Donnez le numéro du bâtiment, de la cage, l'étage et un contact joignable pour que le coursier trouve l'entrée sans détour.",
-        "Les commerces et petites entreprises du centre échangent des plis, des commandes et des documents. Pour des flux réguliers, une tournée sur créneaux fixes est possible avec un compte entreprise. La commune étant en grande couronne, le tarif est de 65 € HT en normal (3 h), 97,50 € HT en urgent et 130 € HT en super urgent.",
+        "Les commerces et petites entreprises du centre échangent des plis, des commandes et des documents. Pour des flux réguliers, une tournée sur créneaux fixes est possible avec un compte entreprise. La commune étant en grande couronne, le tarif est de 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en super urgent.",
       ],
     },
     faq: [
       { q: "Livrez-vous dans les grands ensembles de Sarcelles ?", a: "Oui. Donnez le bâtiment, la cage, l'étage et un contact." },
       { q: "Pouvez-vous organiser des tournées régulières ?", a: "Oui, avec un compte entreprise, sur créneaux fixes." },
-      { q: "Quel tarif pour Sarcelles ?", a: "Dès 65 € HT en normal (3 h), 97,50 € HT en urgent et 130 € HT en super urgent." },
+      { q: "Quel tarif pour Sarcelles ?", a: "Dès 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en super urgent." },
     ],
   },
 
@@ -72,13 +72,13 @@ export const LOCAL_95: Record<string, LocalZoneContent> = {
       title: "Gonesse : un hôpital et la porte de Roissy",
       paragraphs: [
         "Le centre hospitalier de Gonesse échange avec les laboratoires du nord de l'Île-de-France. Pour un prélèvement, précisez le service, l'heure limite, la température de conservation et le délai de stabilité. Nous confirmons la faisabilité avant d'engager la course.",
-        "Les zones d'activité de la commune travaillent pour Roissy : transitaires, entrepôts, prestataires. Les envois urgents sont des documents de transport et des pièces. Gonesse étant en grande couronne, le tarif est de 65 € HT en normal (3 h), 97,50 € HT en urgent et 130 € HT en super urgent.",
+        "Les zones d'activité de la commune travaillent pour Roissy : transitaires, entrepôts, prestataires. Les envois urgents sont des documents de transport et des pièces. Gonesse étant en grande couronne, le tarif est de 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en super urgent.",
       ],
     },
     faq: [
       { q: "Transportez-vous des prélèvements vers l'hôpital de Gonesse ?", a: "Oui, en course dédiée, avec contenant isotherme à la demande." },
       { q: "Livrez-vous vers Roissy depuis Gonesse ?", a: "Oui. Précisez le terminal ou la zone de fret et l'heure limite." },
-      { q: "Quel tarif pour Gonesse ?", a: "Dès 65 € HT en normal (3 h), 97,50 € HT en urgent et 130 € HT en super urgent." },
+      { q: "Quel tarif pour Gonesse ?", a: "Dès 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en super urgent." },
     ],
   },
 
@@ -91,13 +91,13 @@ export const LOCAL_95: Record<string, LocalZoneContent> = {
       title: "Enghien-les-Bains : hôtellerie, thermes et lac",
       paragraphs: [
         "Les établissements du lac, casino, hôtels, restaurants, thermes, ont des entrées de service distinctes de l'entrée du public. Précisez-la à la commande, avec le nom du responsable. Une livraison à l'entrée principale est refusée ou retardée.",
-        "La ville compte aussi de nombreux cabinets de médecins et de praticiens qui échangent des prélèvements et des dossiers avec Paris. Indiquez la température de conservation et le délai de stabilité. Enghien étant en grande couronne, le tarif est de 65 € HT en normal (3 h), 97,50 € HT en urgent et 130 € HT en super urgent.",
+        "La ville compte aussi de nombreux cabinets de médecins et de praticiens qui échangent des prélèvements et des dossiers avec Paris. Indiquez la température de conservation et le délai de stabilité. Enghien étant en grande couronne, le tarif est de 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en super urgent.",
       ],
     },
     faq: [
       { q: "Livrez-vous au casino ou aux hôtels du lac ?", a: "Oui, par l'entrée de service. Donnez le nom du responsable et un contact." },
       { q: "Pouvez-vous transporter des prélèvements depuis un cabinet d'Enghien ?", a: "Oui, en course dédiée, avec contenant isotherme à la demande." },
-      { q: "Quel tarif pour Enghien-les-Bains ?", a: "Dès 65 € HT en normal (3 h), 97,50 € HT en urgent et 130 € HT en super urgent." },
+      { q: "Quel tarif pour Enghien-les-Bains ?", a: "Dès 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en super urgent." },
     ],
   },
 
@@ -110,13 +110,13 @@ export const LOCAL_95: Record<string, LocalZoneContent> = {
       title: "Franconville : une ville entre gare et forêt",
       paragraphs: [
         "Franconville est desservie par une seule ligne de train, la ligne H : la gare sert de point de repère. Pour une adresse éloignée du centre, indiquez la distance à pied depuis la gare, cela aide le coursier à se placer.",
-        "Les professions libérales et les petites entreprises de la commune envoient des plis, des documents et des colis légers vers Paris et le Val-d'Oise. La remise est signée, avec nom et heure consignés. Franconville étant en grande couronne, le tarif est de 65 € HT en normal (3 h), 97,50 € HT en urgent et 130 € HT en super urgent.",
+        "Les professions libérales et les petites entreprises de la commune envoient des plis, des documents et des colis légers vers Paris et le Val-d'Oise. La remise est signée, avec nom et heure consignés. Franconville étant en grande couronne, le tarif est de 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en super urgent.",
       ],
     },
     faq: [
       { q: "Livrez-vous dans les quartiers proches de la forêt ?", a: "Oui. Donnez le numéro, le code éventuel et un contact." },
       { q: "Quel est le délai vers Paris ?", a: "Nous confirmons le délai précis à la commande, selon l'heure et la destination." },
-      { q: "Quel tarif pour Franconville ?", a: "Dès 65 € HT en normal (3 h), 97,50 € HT en urgent et 130 € HT en super urgent." },
+      { q: "Quel tarif pour Franconville ?", a: "Dès 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en super urgent." },
     ],
   },
 
@@ -129,13 +129,13 @@ export const LOCAL_95: Record<string, LocalZoneContent> = {
       title: "Ermont : une gare qui commande tout",
       paragraphs: [
         "À Ermont, le côté de la voie ferrée est une information essentielle : peu de ponts permettent de traverser. Pour une adresse proche de la gare, précisez de quel côté se trouve le bâtiment, nord ou sud, pour que le coursier choisisse le bon passage.",
-        "Les envois locaux sont des plis, des documents et des colis légers entre cabinets, commerces et PME. La remise est signée, avec nom et heure consignés. Ermont étant en grande couronne, le tarif est de 65 € HT en normal (3 h), 97,50 € HT en urgent et 130 € HT en super urgent.",
+        "Les envois locaux sont des plis, des documents et des colis légers entre cabinets, commerces et PME. La remise est signée, avec nom et heure consignés. Ermont étant en grande couronne, le tarif est de 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en super urgent.",
       ],
     },
     faq: [
       { q: "Livrez-vous des deux côtés de la gare d'Ermont ?", a: "Oui. Précisez le côté de la voie et la rue." },
-      { q: "Pouvez-vous livrer à Enghien-les-Bains depuis Ermont ?", a: "Oui, les deux communes sont voisines. Le tarif est de 65 € HT en normal (3 h), 97,50 € HT en urgent et 130 € HT en super urgent." },
-      { q: "Quel tarif pour Ermont ?", a: "Dès 65 € HT en normal (3 h), 97,50 € HT en urgent et 130 € HT en super urgent." },
+      { q: "Pouvez-vous livrer à Enghien-les-Bains depuis Ermont ?", a: "Oui, les deux communes sont voisines. Le tarif est de 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en super urgent." },
+      { q: "Quel tarif pour Ermont ?", a: "Dès 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en super urgent." },
     ],
   },
 
@@ -148,13 +148,13 @@ export const LOCAL_95: Record<string, LocalZoneContent> = {
       title: "Herblay-sur-Seine : une ville de bord de fleuve",
       paragraphs: [
         "Herblay est une commune de maisons et de petites entreprises. Les adresses de bord de Seine sont parfois en impasse, sans accès direct pour une voiture. Le deux-roues passe là où une camionnette doit faire demi-tour. Donnez le numéro, le code éventuel et un contact.",
-        "Les professions libérales et les PME envoient surtout des plis, des documents et des colis légers vers Paris et les communes voisines. Pour des échanges réguliers, un compte entreprise permet des passages à créneaux fixes. Le tarif de la grande couronne est de 65 € HT en normal (3 h), 97,50 € HT en urgent et 130 € HT en super urgent.",
+        "Les professions libérales et les PME envoient surtout des plis, des documents et des colis légers vers Paris et les communes voisines. Pour des échanges réguliers, un compte entreprise permet des passages à créneaux fixes. Le tarif de la grande couronne est de 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en super urgent.",
       ],
     },
     faq: [
       { q: "Livrez-vous dans les impasses des bords de Seine ?", a: "Oui. Donnez le numéro, le code et un contact joignable." },
-      { q: "Pouvez-vous livrer à Conflans-Sainte-Honorine depuis Herblay ?", a: "Oui, les deux communes sont voisines. Le tarif est de 65 € HT en normal (3 h), 97,50 € HT en urgent et 130 € HT en super urgent." },
-      { q: "Quel tarif pour Herblay-sur-Seine ?", a: "Dès 65 € HT en normal (3 h), 97,50 € HT en urgent et 130 € HT en super urgent." },
+      { q: "Pouvez-vous livrer à Conflans-Sainte-Honorine depuis Herblay ?", a: "Oui, les deux communes sont voisines. Le tarif est de 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en super urgent." },
+      { q: "Quel tarif pour Herblay-sur-Seine ?", a: "Dès 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en super urgent." },
     ],
   },
 
@@ -167,13 +167,13 @@ export const LOCAL_95: Record<string, LocalZoneContent> = {
       title: "Maisons-Laffitte : château, parc et écuries",
       paragraphs: [
         "Les propriétés du parc de Maisons-Laffitte sont souvent signalées par un nom plutôt qu'un numéro. Donnez le nom de la propriété, l'avenue, le code du portail et un contact. Cela évite de longues recherches dans un lotissement aux avenues semblables.",
-        "Les écuries et les professions liées aux chevaux ont des besoins propres : documents sanitaires, pièces de sellerie, petits colis. Précisez le poids et la fragilité. Maisons-Laffitte étant en grande couronne, le tarif est de 65 € HT en normal (3 h), 97,50 € HT en urgent et 130 € HT en super urgent.",
+        "Les écuries et les professions liées aux chevaux ont des besoins propres : documents sanitaires, pièces de sellerie, petits colis. Précisez le poids et la fragilité. Maisons-Laffitte étant en grande couronne, le tarif est de 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en super urgent.",
       ],
     },
     faq: [
       { q: "Livrez-vous dans les propriétés du parc de Maisons-Laffitte ?", a: "Oui. Donnez le nom de la propriété, le code du portail et un contact." },
       { q: "Pouvez-vous livrer à une écurie ou à l'hippodrome ?", a: "Oui, avec le nom du responsable et l'entrée de service." },
-      { q: "Quel tarif pour Maisons-Laffitte ?", a: "Dès 65 € HT en normal (3 h), 97,50 € HT en urgent et 130 € HT en super urgent." },
+      { q: "Quel tarif pour Maisons-Laffitte ?", a: "Dès 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en super urgent." },
     ],
   },
 
@@ -186,13 +186,13 @@ export const LOCAL_95: Record<string, LocalZoneContent> = {
       title: "Conflans-Sainte-Honorine : capitale de la batellerie",
       paragraphs: [
         "Livrer sur un bateau ne ressemble pas à une livraison classique : l'adresse est un quai, un emplacement, un nom de péniche. Donnez le nom du bateau, le quai et un contact à bord. Les horaires de manœuvre et d'amarrage peuvent décaler la remise.",
-        "Dans la ville haute, les cabinets et commerces échangent des plis et des documents. Les rues sont en pente et étroites : un numéro précis évite un détour. Conflans étant en grande couronne, le tarif est de 65 € HT en normal (3 h), 97,50 € HT en urgent et 130 € HT en super urgent.",
+        "Dans la ville haute, les cabinets et commerces échangent des plis et des documents. Les rues sont en pente et étroites : un numéro précis évite un détour. Conflans étant en grande couronne, le tarif est de 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en super urgent.",
       ],
     },
     faq: [
       { q: "Livrez-vous sur une péniche ?", a: "Oui, au quai, avec le nom du bateau, l'emplacement et un contact à bord." },
       { q: "Desservez-vous le vieux Conflans sur la colline ?", a: "Oui. Donnez le numéro et un contact : les rues sont en pente et étroites." },
-      { q: "Quel tarif pour Conflans-Sainte-Honorine ?", a: "Dès 65 € HT en normal (3 h), 97,50 € HT en urgent et 130 € HT en super urgent." },
+      { q: "Quel tarif pour Conflans-Sainte-Honorine ?", a: "Dès 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en super urgent." },
     ],
   },
 };

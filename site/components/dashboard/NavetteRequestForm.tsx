@@ -146,7 +146,8 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
   const capacityExceeded = totalVolumePoints > SCOOTER_MAX_POINTS;
 
   const estimatedPrice = useMemo(() => {
-    return Math.round(25 + (watchSteps.length * 15) + (totalVolumePoints * 0.8));
+    // Prix TTC (TVA 20 % comprise) par passage.
+    return Math.round((25 + (watchSteps.length * 15) + (totalVolumePoints * 0.8)) * 1.2);
   }, [watchSteps.length, totalVolumePoints]);
 
   const onSubmit = async (data: NavetteFormValues) => {
@@ -218,8 +219,8 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
         </h2>
         <p className="mb-7 max-w-md text-sm leading-relaxed text-muted">
           {isEdit
-            ? `Les modifications ont été prises en compte. Le nouveau tarif est de ${estimatedPrice} € HT par passage.`
-            : `Un conseiller One Connexion vous rappellera très prochainement pour obtenir plus d'informations et confirmer votre navette. Tarif estimé : ${estimatedPrice} € HT par passage.`}
+            ? `Les modifications ont été prises en compte. Le nouveau tarif est de ${estimatedPrice} € TTC par passage.`
+            : `Un conseiller One Connexion vous rappellera très prochainement pour obtenir plus d'informations et confirmer votre navette. Tarif estimé : ${estimatedPrice} € TTC par passage.`}
         </p>
         <button
           type="button"
@@ -431,9 +432,9 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
           <div className="px-5 py-4">
             <div className="flex items-baseline gap-2">
               <span className="text-3xl font-extrabold leading-none tracking-tight tabular-nums">{estimatedPrice} €</span>
-              <span className="text-sm font-semibold text-white/60">HT / passage</span>
+              <span className="text-sm font-semibold text-white/60">TTC / passage</span>
             </div>
-            <p className="mt-2 text-xs text-white/60">{(estimatedPrice * 1.2).toFixed(2).replace(".", ",")} € TTC</p>
+            <p className="mt-2 text-xs text-white/60">dont TVA 20 % : {(estimatedPrice - Math.round((estimatedPrice / 1.2) * 100) / 100).toFixed(2).replace(".", ",")} €</p>
             <button
               type="submit"
               disabled={isSubmitting}

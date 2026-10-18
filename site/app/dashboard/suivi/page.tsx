@@ -153,7 +153,7 @@ export default function SuiviPage() {
     return parts.length ? parts.join(" · ") : null;
   };
 
-  /** Prix HT de la course (estimation) ; null si inconnu. */
+  /** Prix TTC de la course (estimation, TVA 20 % comprise) ; null si inconnu. */
   const priceOf = (d: any): number | null => {
     const v = d.type === "navette" ? d.estimated_price : d.price_estimate;
     return v != null && v !== "" ? Number(v) : null;
@@ -215,12 +215,12 @@ export default function SuiviPage() {
   };
 
   const Price = ({ d }: { d: any }) => {
-    const ht = priceOf(d);
-    if (ht === null) return <span className="text-xs text-label">—</span>;
+    const ttc = priceOf(d);
+    if (ttc === null) return <span className="text-xs text-label">—</span>;
     return (
       <div className="whitespace-nowrap text-right">
-        <div className="text-sm font-extrabold tabular-nums text-ink">{eur(ht)}</div>
-        <div className="text-[11px] font-medium text-muted">HT · {eur(ht * 1.2)} TTC{d.type === "navette" ? " / passage" : ""}</div>
+        <div className="text-sm font-extrabold tabular-nums text-ink">{eur(ttc)}</div>
+        <div className="text-[11px] font-medium text-muted">TTC{d.type === "navette" ? " / passage" : ""}</div>
       </div>
     );
   };

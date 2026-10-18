@@ -186,7 +186,7 @@ export default function FactureDetailsPage() {
             <th scope="col" className={TH}>Course</th>
             <th scope="col" className={TH}>Itinéraire</th>
             <th scope="col" className={TH}>Livraison</th>
-            <th scope="col" className={`${TH} text-right`}>Montant HT</th>
+            <th scope="col" className={`${TH} text-right`}>Montant TTC</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-line">

@@ -192,7 +192,7 @@ export async function generateInvoicePDF(data: InvoiceData) {
   autoTable(doc, {
     startY: tableStartY,
     margin: { left: m, right: m },
-    head: [["N°", "Type", "Date", "Enlèvement", "Livraison", "Réception", "Montant HT"]],
+    head: [["N°", "Type", "Date", "Enlèvement", "Livraison", "Réception", "Montant TTC"]],
     body: tableBody,
     styles: {
       fontSize: 7,
@@ -231,12 +231,13 @@ export async function generateInvoicePDF(data: InvoiceData) {
   });
 
   // ── Totals box ──
-  const totalHT = data.orders.reduce(
+  // Montants des courses TTC (TVA 20 % comprise) : HT = TTC / 1,20.
+  const totalTTC = data.orders.reduce(
     (sum, o) => sum + (o.price_estimate ? Number(o.price_estimate) : 0),
     0
   );
-  const totalTVA = totalHT * 0.2;
-  const totalTTC = totalHT + totalTVA;
+  const totalHT = Math.round((totalTTC / 1.2) * 100) / 100;
+  const totalTVA = totalTTC - totalHT;
 
   const finalY = (doc as any).lastAutoTable?.finalY || tableStartY + 40;
 

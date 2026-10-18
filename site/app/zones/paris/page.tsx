@@ -11,9 +11,9 @@ import { SERVICES } from "@/lib/services";
 import { Clock, MapPin, Zap, Shield } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: { absolute: "Coursier Paris : livraison express dès 17,50 € HT" },
+  title: { absolute: "Coursier Paris : livraison express dès 21 € TTC" },
   description:
-    "Coursier Paris en moto et scooter, 20 arrondissements : dès 17,50 € HT en 3 h, 26,25 € en urgent, 35 € en 1 h. Enlèvement en moins de 45 min, suivi en ligne.",
+    "Coursier Paris en moto et scooter, 20 arrondissements : dès 21 € TTC en 3 h, 31,50 € en urgent, 42 € en 1 h. Enlèvement en moins de 45 min, suivi en ligne.",
   alternates: { canonical: "/zones/paris" },
   openGraph: {
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION — Coursier B2B Paris & Île-de-France" }],
@@ -49,11 +49,11 @@ const serviceSchema = {
 const FAQ_PARIS = [
   {
     q: "Quel est le prix d'un coursier à Paris ?",
-    a: "Une course dans Paris intramuros coûte 17,50 € HT en normal (livraison sous 3 h), 26,25 € HT en urgent (sous 1 h 30) et 35 € HT en super urgent (sous 1 h). Le prix s'affiche avant de valider la commande.",
+    a: "Une course dans Paris intramuros coûte 21 € TTC en normal (livraison sous 3 h), 31,50 € TTC en urgent (sous 1 h 30) et 42 € TTC en super urgent (sous 1 h). Le prix s'affiche avant de valider la commande.",
   },
   {
     q: "Quel est le tarif d'un coursier moto ou scooter à Paris ?",
-    a: "Les courses sont effectuées en moto ou scooter. Le tarif est le même dans les 20 arrondissements : de 17,50 € HT à 35 € HT selon le délai choisi.",
+    a: "Les courses sont effectuées en moto ou scooter. Le tarif est le même dans les 20 arrondissements : de 21 € TTC à 42 € TTC selon le délai choisi.",
   },
   {
     q: "Comment gérez-vous la circulation parisienne (ZFE, embouteillages) ?",
@@ -119,7 +119,7 @@ export default function ZoneParis() {
             Coursier Paris : livraison express dans les 20 arrondissements.
           </h1>
           <p className="max-w-[58ch] text-pretty text-[17px] leading-[1.6] text-white/66">
-            Coursier à Paris en moto et scooter, dès 17,50 € HT la course. One
+            Coursier à Paris en moto et scooter, dès 21 € TTC la course. One
             Connexion couvre les 20 arrondissements avec sa flotte de deux-roues. Enlèvement en moins de 45 minutes, suivi de
             chaque course en ligne, preuve de remise horodatée à chaque livraison.
           </p>
@@ -179,7 +179,7 @@ export default function ZoneParis() {
           Tarif coursier Paris
         </div>
         <h2 className="mb-4 max-w-[28ch] text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-          Prix d&apos;une course dans Paris : dès 17,50 € HT.
+          Prix d&apos;une course dans Paris : dès 21 € TTC.
         </h2>
         <p className="mb-10 max-w-[60ch] text-[15.5px] leading-[1.7] text-muted">
           Le tarif est le même dans les 20 arrondissements. Seul le délai change
@@ -187,16 +187,16 @@ export default function ZoneParis() {
         </p>
         <div className="grid max-w-[780px] gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-3">
           {[
-            { name: "Normal", delay: "livré sous 3 h", price: "17,50 €" },
-            { name: "Urgent", delay: "livré sous 1 h 30", price: "26,25 €" },
-            { name: "Super urgent", delay: "livré sous 1 h", price: "35 €" },
+            { name: "Normal", delay: "livré sous 3 h", price: "21 €" },
+            { name: "Urgent", delay: "livré sous 1 h 30", price: "31,50 €" },
+            { name: "Super urgent", delay: "livré sous 1 h", price: "42 €" },
           ].map((t) => (
             <div key={t.name} className="bg-white p-6">
               <div className="text-[15px] font-bold">{t.name}</div>
               <div className="mb-4 font-mono text-[10.5px] tracking-[0.1em] text-label uppercase">{t.delay}</div>
               <div className="text-[34px] font-bold tracking-[-0.04em]">
                 {t.price}
-                <span className="ml-1 font-mono text-[11px] font-normal tracking-[0.1em] text-label">HT</span>
+                <span className="ml-1 font-mono text-[11px] font-normal tracking-[0.1em] text-label">TTC</span>
               </div>
             </div>
           ))}
