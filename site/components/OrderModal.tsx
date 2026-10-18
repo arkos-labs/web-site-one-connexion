@@ -45,7 +45,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
   const [tva, setTva] = useState("");
   const [validatingSiret, setValidatingSiret] = useState(false);
   const [paymentMode, setPaymentMode] = useState<"carte" | "fin_de_mois">("carte");
-  const [debitMethod, setDebitMethod] = useState<"card" | "sepa" | "virement">("card");
+  const [debitMethod, setDebitMethod] = useState<"sepa" | "virement">("sepa");
 
   const supabase = createClient();
 
@@ -594,9 +594,9 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                             <p className="mb-2 text-xs font-bold uppercase tracking-wider text-gray-600">Réglé par</p>
                             <div className="flex rounded-xl bg-gray-100 p-1">
                               {([
-                                { id: "card", label: "Carte bancaire" },
                                 { id: "sepa", label: "Prélèvement" },
-                                { id: "virement", label: "Virement" },                              ] as const).map(({ id, label }) => (
+                                { id: "virement", label: "Virement" },
+                              ] as const).map(({ id, label }) => (
                                 <button
                                   key={id}
                                   type="button"
@@ -645,7 +645,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                       <div className="border-t border-orange-200/60 pt-4 flex items-end justify-between">
                         <div>
                           <div className="text-[11px] font-bold uppercase tracking-wider text-orange-600/80 mb-0.5">Tarif estimé (HT)</div>
-                          <div className="text-xs text-gray-500">{clientType === "entreprise" && paymentMode === "fin_de_mois" ? (debitMethod === "card" ? "Carte bancaire sous 30 jours" : debitMethod === "sepa" ? "Prélèvement sous 30 jours" : "Virement sous 30 jours") : "Règlement sécurisé par carte"}</div>
+                          <div className="text-xs text-gray-500">{clientType === "entreprise" && paymentMode === "fin_de_mois" ? (debitMethod === "virement" ? "Virement sous 30 jours" : "Prélèvement sous 30 jours") : "Règlement sécurisé par carte"}</div>
                         </div>
                         <div className="text-2xl font-extrabold text-[#ed5518]">
                           {estimatedPrice !== null ? `${estimatedPrice.toFixed(2)} €` : '-- €'}
@@ -720,7 +720,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                   <div className="flex items-end justify-between">
                     <div>
                       <div className="text-[11px] font-bold uppercase tracking-wider text-orange-600 mb-1">Tarif estimé (HT)</div>
-                      <div className="text-[10px] text-gray-500">{clientType === "entreprise" && paymentMode === "fin_de_mois" ? (debitMethod === "card" ? "Carte bancaire sous 30 jours" : debitMethod === "sepa" ? "Prélèvement sous 30 jours" : "Virement sous 30 jours") : "Règlement sécurisé par carte"}</div>
+                      <div className="text-[10px] text-gray-500">{clientType === "entreprise" && paymentMode === "fin_de_mois" ? (debitMethod === "virement" ? "Virement sous 30 jours" : "Prélèvement sous 30 jours") : "Règlement sécurisé par carte"}</div>
                     </div>
                     <div className="text-3xl font-extrabold text-[#ed5518]">
                       {estimatedPrice !== null ? `${estimatedPrice.toFixed(2)} €` : '-- €'}

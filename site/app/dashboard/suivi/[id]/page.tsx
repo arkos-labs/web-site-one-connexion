@@ -36,8 +36,8 @@ const STEPS = [
   { key: "livree", label: "Livrée", icon: PackageCheck, matches: ["delivered", "livree"], at: "delivered_at" },
 ];
 
-// Le client peut annuler tant que le colis n'est pas enlevé
-const CANCELLABLE_STATUSES = ["en_attente", "pending", "confirmee", "assigned", "driver_accepted"];
+// Le client peut annuler tant qu'aucun chauffeur n'est attribué (contrôlé aussi par /api/orders/cancel)
+const CANCELLABLE_STATUSES = ["en_attente", "pending", "confirmee"];
 
 const hhmm = (iso: string) => new Date(iso).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
 const eur = (n: number) => `${n.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`;
@@ -66,6 +66,7 @@ export default function DeliveryDetailsPage() {
   const [error, setError] = useState<string | null>(null);
   const [cancelling, setCancelling] = useState(false);
   const [cancelError, setCancelError] = useState<string | null>(null);
+  const [cancelInfo, setCancelInfo] = useState<string | null>(null);
   const [driver, setDriver] = useState<{ name: string | null; phone: string | null; vehicle: string | null } | null>(null);
   const anomalies = useMissionAnomalies(supabase, `client-anomalies-${id}`);
 
@@ -155,17 +156,22 @@ export default function DeliveryDetailsPage() {
     setCancelling(true);
     setCancelError(null);
     try {
-      const { error } = await supabase
-        .from("orders")
-        .update({ status: "annulee" })
-        .eq("id", order.id);
+      const res = await fetch("/api/orders/cancel", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderId: order.id }),
+      });
+      const data = await res.json().catch(() => ({}));
 
-      if (error) {
-        setCancelError(error.message.includes("enleve")
-          ? "Annulation impossible : le colis a déjà été enlevé. Contactez One Connexion."
-          : "Erreur lors de l'annulation. Veuillez réessayer.");
+      if (!res.ok || !data.cancelled) {
+        setCancelError(data.error || "Erreur lors de l'annulation. Veuillez réessayer.");
       } else {
         setOrder({ ...order, status: "annulee" });
+        setCancelInfo(data.refunded
+          ? "Votre course a été remboursée. Le remboursement apparaîtra sur votre relevé bancaire sous 5 à 10 jours."
+          : data.refundError
+            ? "Votre course est annulée. Notre équipe va traiter votre remboursement et reviendra vers vous."
+            : null);
       }
     } catch (err) {
       setCancelError("Une erreur inattendue est survenue.");
@@ -193,7 +199,7 @@ export default function DeliveryDetailsPage() {
   const priceHT = order.price_estimate ? Number(order.price_estimate) : null;
   const tva = priceHT !== null ? priceHT * 0.2 : null;
   const totalTTC = priceHT !== null ? priceHT + (tva || 0) : null;
-  const canCancel = CANCELLABLE_STATUSES.includes(order.status);
+  const canCancel = CANCELLABLE_STATUSES.includes(order.status) && !order.driver_id;
   const isDelivered = order.status === "livree" || order.status === "delivered";
   const isCancelled = order.status === "annulee" || order.status === "cancelled";
   const isMoving = ["en_cours", "in_progress", "picked_up", "driver_accepted"].includes(order.status);
@@ -236,6 +242,11 @@ export default function DeliveryDetailsPage() {
             {cancelError && (
               <div role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
                 {cancelError}
+              </div>
+            )}
+            {cancelInfo && (
+              <div role="status" className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800">
+                {cancelInfo}
               </div>
             )}
 

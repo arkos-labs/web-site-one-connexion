@@ -48,7 +48,7 @@ export default function OrderForm() {
   const [scheduledTime, setScheduledTime] = useState("");
   const [estimatedPrice, setEstimatedPrice] = useState<number | null>(null);
   const [paymentMode, setPaymentMode] = useState<'carte' | 'fin_de_mois'>('carte');
-  const [debitMethod, setDebitMethod] = useState<'card' | 'sepa' | 'virement'>('card');
+  const [debitMethod, setDebitMethod] = useState<'sepa' | 'virement'>('sepa');
 
   // La navette (course programmée) est réservée aux clients avec un compte
   const [hasAccount, setHasAccount] = useState(false);
@@ -694,9 +694,9 @@ export default function OrderForm() {
                               <p className="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-wide">Réglé par</p>
                               <div className="flex bg-gray-100 p-1 rounded-xl">
                                 {([
-                                  { id: 'card', label: 'Carte bancaire' },
                                   { id: 'sepa', label: 'Prélèvement' },
-                                  { id: 'virement', label: 'Virement' },                                ] as const).map(({ id, label }) => (
+                                  { id: 'virement', label: 'Virement' },
+                                ] as const).map(({ id, label }) => (
                                   <button
                                     key={id}
                                     type="button"
@@ -746,7 +746,7 @@ export default function OrderForm() {
                           <div>
                             <div className="text-[11px] font-bold uppercase tracking-wider text-orange-600/80 mb-0.5">Tarif estimé{clientType === 'entreprise' ? ' (HT)' : ''}</div>
                             <div className="text-[10px] text-gray-400 mb-1 uppercase tracking-wider font-semibold">Paiement sécurisé</div>
-                            <div className="text-xs text-gray-600 font-medium">{clientType === 'entreprise' && paymentMode === 'fin_de_mois' ? (debitMethod === 'card' ? 'Carte bancaire sous 30 jours' : debitMethod === 'sepa' ? 'Prélèvement sous 30 jours' : 'Virement sous 30 jours') : 'Réglé par carte'}</div>
+                            <div className="text-xs text-gray-600 font-medium">{clientType === 'entreprise' && paymentMode === 'fin_de_mois' ? (debitMethod === 'virement' ? 'Virement sous 30 jours' : 'Prélèvement sous 30 jours') : 'Réglé par carte'}</div>
                           </div>
                           <div className="text-2xl font-extrabold text-[#ed5518]">
                             {estimatedPrice !== null ? `${estimatedPrice.toFixed(2)} €` : '-- €'}
