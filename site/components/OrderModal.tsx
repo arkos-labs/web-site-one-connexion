@@ -62,10 +62,19 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
     if (open) {
       setStep(1);
       setSubmitted(false);
+      setSubmitting(false);
       setPickupAddress(initialPickup);
       setDropoffAddress(initialDropoff);
     }
   }, [open, initialPickup, initialDropoff]);
+
+  // Retour arrière depuis Stripe : le navigateur restaure la page telle quelle
+  // (bfcache), bouton bloqué sur « Redirection… ». On le débloque.
+  useEffect(() => {
+    const onPageShow = (e: PageTransitionEvent) => { if (e.persisted) setSubmitting(false); };
+    window.addEventListener("pageshow", onPageShow);
+    return () => window.removeEventListener("pageshow", onPageShow);
+  }, []);
 
   // Valider SIRET via API
   const validateSiretHandler = async () => {
@@ -265,7 +274,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
   };
 
   return (
-    <div className="relative z-[100]" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div data-lenis-prevent className="relative z-[100]" aria-labelledby="modal-title" role="dialog" aria-modal="true">
       {/* Overlay */}
       <div className="fixed inset-0 bg-black/70 backdrop-blur-sm transition-opacity" onClick={onClose} />
 
@@ -383,8 +392,8 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                       <div className="flex gap-3 rounded-xl border border-blue-100 bg-blue-50 p-4 text-sm text-blue-800">
                         <CreditCard size={18} className="mt-0.5 shrink-0 text-blue-600" />
                         <div>
-                          <p className="font-bold text-blue-900 mb-1">Carte maintenant ou fin de mois</p>
-                          <p>Payez la course tout de suite par carte, ou soyez <strong>prélevé en fin de mois (30 jours)</strong> sur votre carte, votre RIB ou par virement. Vous choisirez à la dernière étape. Paiement sécurisé par Stripe.</p>
+                          <p className="font-bold text-blue-900 mb-1">Règlements</p>
+                          <p>Carte bancaire, prélèvement ou virement : le mode de règlement se choisit à la dernière étape. Paiement sécurisé par Stripe.</p>
                         </div>
                       </div>
                     )}
@@ -558,11 +567,11 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
 
                     {clientType === "entreprise" && (
                       <div>
-                        <label className="mb-3 block text-sm font-bold text-ink">Mode de paiement</label>
+                        <label className="mb-3 block text-sm font-bold text-ink">Mode de règlement</label>
                         <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                           {([
-                            { id: "carte", label: "Carte maintenant", sub: "Payé tout de suite", Icon: CreditCard },
-                            { id: "fin_de_mois", label: "Fin de mois", sub: "Prélevé à 30 jours", Icon: Calendar },
+                            { id: "carte", label: "Carte bancaire", sub: "", Icon: CreditCard },
+                            { id: "fin_de_mois", label: "Dans les 30 jours", sub: "Règlement sur facture", Icon: Calendar },
                           ] as const).map(({ id, label, sub, Icon }) => (
                             <button
                               key={id}
@@ -574,7 +583,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                               <Icon size={20} className={`shrink-0 ${paymentMode === id ? "text-accent" : "text-gray-400"}`} />
                               <div className="flex flex-col">
                                 <span className={`text-sm font-bold ${paymentMode === id ? "text-accent" : "text-gray-700"}`}>{label}</span>
-                                <span className={`text-[11px] ${paymentMode === id ? "text-accent/70" : "text-gray-400"}`}>{sub}</span>
+                                {sub && <span className={`text-[11px] ${paymentMode === id ? "text-accent/70" : "text-gray-400"}`}>{sub}</span>}
                               </div>
                             </button>
                           ))}
@@ -582,13 +591,12 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
 
                         {paymentMode === "fin_de_mois" && (
                           <div className="mt-3">
-                            <p className="mb-2 text-xs font-bold uppercase tracking-wider text-gray-600">Payé par</p>
+                            <p className="mb-2 text-xs font-bold uppercase tracking-wider text-gray-600">Réglé par</p>
                             <div className="flex rounded-xl bg-gray-100 p-1">
                               {([
                                 { id: "card", label: "Carte bancaire" },
-                                { id: "sepa", label: "RIB (prélèvement)" },
-                                { id: "virement", label: "Virement" },
-                              ] as const).map(({ id, label }) => (
+                                { id: "sepa", label: "Prélèvement" },
+                                { id: "virement", label: "Virement" },                              ] as const).map(({ id, label }) => (
                                 <button
                                   key={id}
                                   type="button"
@@ -637,7 +645,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                       <div className="border-t border-orange-200/60 pt-4 flex items-end justify-between">
                         <div>
                           <div className="text-[11px] font-bold uppercase tracking-wider text-orange-600/80 mb-0.5">Tarif estimé (HT)</div>
-                          <div className="text-xs text-gray-500">{clientType === "entreprise" && paymentMode === "fin_de_mois" ? (debitMethod === "virement" ? "Virement sous 30 jours" : debitMethod === "sepa" ? "Prélevé sur RIB à 30 jours" : "Prélevé sur carte à 30 jours") : "Paiement sécurisé par carte"}</div>
+                          <div className="text-xs text-gray-500">{clientType === "entreprise" && paymentMode === "fin_de_mois" ? (debitMethod === "card" ? "Carte bancaire sous 30 jours" : debitMethod === "sepa" ? "Prélèvement sous 30 jours" : "Virement sous 30 jours") : "Règlement sécurisé par carte"}</div>
                         </div>
                         <div className="text-2xl font-extrabold text-[#ed5518]">
                           {estimatedPrice !== null ? `${estimatedPrice.toFixed(2)} €` : '-- €'}
@@ -712,7 +720,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                   <div className="flex items-end justify-between">
                     <div>
                       <div className="text-[11px] font-bold uppercase tracking-wider text-orange-600 mb-1">Tarif estimé (HT)</div>
-                      <div className="text-[10px] text-gray-500">{clientType === "entreprise" && paymentMode === "fin_de_mois" ? (debitMethod === "virement" ? "Virement sous 30 jours" : debitMethod === "sepa" ? "Prélevé sur RIB à 30 jours" : "Prélevé sur carte à 30 jours") : "Paiement sécurisé par carte"}</div>
+                      <div className="text-[10px] text-gray-500">{clientType === "entreprise" && paymentMode === "fin_de_mois" ? (debitMethod === "card" ? "Carte bancaire sous 30 jours" : debitMethod === "sepa" ? "Prélèvement sous 30 jours" : "Virement sous 30 jours") : "Règlement sécurisé par carte"}</div>
                     </div>
                     <div className="text-3xl font-extrabold text-[#ed5518]">
                       {estimatedPrice !== null ? `${estimatedPrice.toFixed(2)} €` : '-- €'}

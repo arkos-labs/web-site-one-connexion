@@ -667,11 +667,11 @@ export default function OrderForm() {
 
                       {clientType === 'entreprise' && (
                         <div>
-                          <label className="block text-sm font-bold text-gray-800 mb-3">Mode de paiement</label>
+                          <label className="block text-sm font-bold text-gray-800 mb-3">Mode de règlement</label>
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             {([
-                              { id: 'carte', label: 'Carte maintenant', sub: 'Payé tout de suite', Icon: CreditCard },
-                              { id: 'fin_de_mois', label: 'Fin de mois', sub: 'Prélevé à 30 jours', Icon: Calendar },
+                              { id: 'carte', label: 'Carte bancaire', sub: '', Icon: CreditCard },
+                              { id: 'fin_de_mois', label: 'Dans les 30 jours', sub: 'Règlement sur facture', Icon: Calendar },
                             ] as const).map(({ id, label, sub, Icon }) => (
                               <button
                                 key={id}
@@ -683,7 +683,7 @@ export default function OrderForm() {
                                 <Icon className={`w-5 h-5 shrink-0 ${paymentMode === id ? 'text-[#ed5518]' : 'text-gray-400'}`} />
                                 <div className="flex flex-col">
                                   <span className={`font-semibold leading-tight ${paymentMode === id ? 'text-[#ed5518]' : 'text-gray-700'}`}>{label}</span>
-                                  <span className="text-xs text-gray-500">{sub}</span>
+                                  {sub && <span className="text-xs text-gray-500">{sub}</span>}
                                 </div>
                               </button>
                             ))}
@@ -691,13 +691,12 @@ export default function OrderForm() {
 
                           {paymentMode === 'fin_de_mois' && (
                             <div className="mt-4">
-                              <p className="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-wide">Payé par</p>
+                              <p className="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-wide">Réglé par</p>
                               <div className="flex bg-gray-100 p-1 rounded-xl">
                                 {([
                                   { id: 'card', label: 'Carte bancaire' },
-                                  { id: 'sepa', label: 'RIB (prélèvement)' },
-                                  { id: 'virement', label: 'Virement' },
-                                ] as const).map(({ id, label }) => (
+                                  { id: 'sepa', label: 'Prélèvement' },
+                                  { id: 'virement', label: 'Virement' },                                ] as const).map(({ id, label }) => (
                                   <button
                                     key={id}
                                     type="button"
@@ -747,7 +746,7 @@ export default function OrderForm() {
                           <div>
                             <div className="text-[11px] font-bold uppercase tracking-wider text-orange-600/80 mb-0.5">Tarif estimé{clientType === 'entreprise' ? ' (HT)' : ''}</div>
                             <div className="text-[10px] text-gray-400 mb-1 uppercase tracking-wider font-semibold">Paiement sécurisé</div>
-                            <div className="text-xs text-gray-600 font-medium">{clientType === 'entreprise' && paymentMode === 'fin_de_mois' ? (debitMethod === 'virement' ? 'Virement sous 30 jours' : debitMethod === 'sepa' ? 'Prélevé sur RIB à 30 jours' : 'Prélevé sur carte à 30 jours') : 'Payé par carte maintenant'}</div>
+                            <div className="text-xs text-gray-600 font-medium">{clientType === 'entreprise' && paymentMode === 'fin_de_mois' ? (debitMethod === 'card' ? 'Carte bancaire sous 30 jours' : debitMethod === 'sepa' ? 'Prélèvement sous 30 jours' : 'Virement sous 30 jours') : 'Réglé par carte'}</div>
                           </div>
                           <div className="text-2xl font-extrabold text-[#ed5518]">
                             {estimatedPrice !== null ? `${estimatedPrice.toFixed(2)} €` : '-- €'}
