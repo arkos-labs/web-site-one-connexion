@@ -228,7 +228,14 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
     if (nature === "autre" && !natureDetail.trim()) { setFormError("Précisez ce que vous envoyez."); return; }
 
     setSubmitting(true);
-    const { data: { user } } = await supabase.auth.getUser();
+    let { data: { user } } = await supabase.auth.getUser();
+    // Connecté à un compte, mais la commande est passée avec un autre e-mail (autre client, autre
+    // entreprise) : elle ne doit pas atterrir dans ce compte. On déconnecte, la commande part comme
+    // celle d'un nouveau client et son propre compte est créé à la confirmation.
+    if (user && user.email?.toLowerCase() !== contactEmail.trim().toLowerCase()) {
+      await supabase.auth.signOut();
+      user = null;
+    }
 
     // Code de suivi généré ici : un visiteur non connecté n'a pas le droit
     // de relire la commande après l'avoir créée.
