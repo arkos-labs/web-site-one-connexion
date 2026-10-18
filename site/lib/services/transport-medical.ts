@@ -37,10 +37,10 @@ export const transportMedical: Service = {
     ],
   },
 
-  h1: "Coursier médical à Paris : transport de laboratoire, prélèvements et matériel",
+  h1: "Coursier médical à Paris : prélèvements, échantillons et matériel de laboratoire",
 
   intro:
-    "One Connexion achemine les prélèvements, échantillons et pièces techniques des laboratoires d’analyses, cliniques et cabinets d’Île-de-France. Course dédiée, contenant adapté, et une contrainte qui commande tout le reste : le délai de stabilité de ce qui est transporté.",
+    "Un prélèvement doit arriver au laboratoire avant de s’abîmer. Un coursier vient le chercher en moins de 45 minutes et l’apporte directement, sans détour, dans un contenant isotherme. Pour les laboratoires d’analyses, cliniques et cabinets médicaux d’Île-de-France.",
 
   stats: [
     { value: "< 45 min", label: "Prise en charge" },
