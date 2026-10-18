@@ -58,9 +58,9 @@ const SECTEURS = [
 
 const CHIFFRES = [
   { value: "6j/7", label: "Du lundi au samedi, 9h–19h" },
-  { value: "< 45 min", label: "Prise en charge dès validation" },
-  { value: "< 45 min", label: "Enlèvement" },
-  { value: "Depuis 2026", label: "Expertise B2B Île-de-France" },
+  { value: "< 45 min", label: "Enlèvement après confirmation" },
+  { value: "Dès 21 €", label: "TTC, une course dans Paris" },
+  { value: "10 ans+", label: "D’expérience du coursier B2B en Île-de-France" },
 ];
 
 export default function ReferencesPage() {
@@ -173,8 +173,8 @@ export default function ReferencesPage() {
           <div className="grid grid-cols-2 gap-4">
             {[
               { val: "6j/7", label: "du lundi au samedi, 9h–19h" },
-              { val: "< 45 min", label: "prise en charge dès validation" },
-              { val: "< 45 min", label: "enlèvement" },
+              { val: "< 45 min", label: "enlèvement après confirmation" },
+              { val: "10 ans+", label: "d’expérience du coursier B2B" },
               { val: "1", label: "interlocuteur unique" },
             ].map((item) => (
               <div key={item.label} className="flex flex-col gap-2 rounded-2xl border border-line bg-white p-6 shadow-sm">

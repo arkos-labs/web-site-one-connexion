@@ -19,7 +19,7 @@ export const metadata = {
 };
 
 const STATS = [
-  { value: "120+", label: "Coursiers actifs" },
+  { value: "Dédiée", label: "Une course, un coursier" },
   { value: "18 kg", label: "Charge par course" },
   { value: "< 45 min", label: "Prise en charge moyenne" },
   { value: "6j/7", label: "Lun–sam, 9h–19h" },

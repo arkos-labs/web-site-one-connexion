@@ -599,7 +599,7 @@ export default function CommanderPage() {
 
                   <div className="mt-2">
                     <h3 className="text-sm font-extrabold text-ink">Format</h3>
-                    <p className="mt-0.5 text-[13px] text-muted">Le format détermine le véhicule envoyé. Flotte 100 % décarbonée.</p>
+                    <p className="mt-0.5 text-[13px] text-muted">Le format détermine le véhicule envoyé : scooter ou moto.</p>
                   </div>
 
                   <div role="radiogroup" aria-label="Format du colis" className="grid grid-cols-1 gap-3 md:grid-cols-3">

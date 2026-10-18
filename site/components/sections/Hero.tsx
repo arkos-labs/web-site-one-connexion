@@ -10,10 +10,10 @@ import { MapPin, Flag } from "lucide-react";
 import { AddressAutocomplete } from "@/components/AddressAutocomplete";
 
 const COMMITMENTS = [
-  { label: "Enlèvement du colis", value: "< 45 min", sub: "après confirmation de la course", fill: 70 },
-  { label: "Course", value: "Dédiée", sub: "un coursier, sans regroupement", fill: null },
-  { label: "Amplitude", value: "6j/7", sub: "du lundi au samedi, 9h – 19h", fill: null },
-  { label: "Livraison", value: "1 h", sub: "formule Super, porte à porte", fill: 85 },
+  { tag: "Enlèvement express", value: "< 45", unit: "min", title: "Enlèvement du colis", desc: "Après confirmation de la course, un coursier part immédiatement." },
+  { tag: "Service exclusif", value: "Dédiée", unit: "", title: "Course sans regroupement", desc: "Un coursier pour votre course, sans regroupement ni détour." },
+  { tag: "Disponibilité", value: "6j/7", unit: "", title: "Du lundi au samedi, 9h–19h", desc: "Du lundi au samedi, de 9h à 19h." },
+  { tag: "Livraison rapide", value: "1", unit: "h", title: "Livraison en formule Super", desc: "Livraison porte à porte en 1 h dans Paris." },
 ];
 
 // PLACEHOLDER : logos clients à déposer avant mise en ligne.
@@ -38,7 +38,7 @@ export default function Hero() {
       </video>
       <div className="absolute inset-0 bg-ink/40 z-10 pointer-events-none"></div>
       <div className="relative z-20 mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)]">
-        <div className="grid items-end gap-8 pt-8 sm:grid-cols-[1.15fr_0.85fr]">
+        <div className="pt-8">
           <div className="min-w-0">
             <div className="mb-4 inline-block rounded-full bg-black/40 backdrop-blur-sm px-3 py-1 font-mono text-[11px] tracking-[0.16em] text-accent uppercase border border-white/10 shadow-lg">
               Coursier B2B · Paris &amp; Île-de-France
@@ -65,48 +65,6 @@ export default function Hero() {
               >
                 Voir les prestations
               </a>
-            </div>
-          </div>
-
-          <div className="min-w-0 pb-8">
-            {/* Header */}
-            <div className="mb-3 flex items-center gap-3">
-              <span className="h-px w-5 bg-accent flex-shrink-0" />
-              <span className="font-mono text-[10px] tracking-[0.18em] text-white/40 uppercase">
-                Engagements de service
-              </span>
-            </div>
-            {/* Stats grid 2×2 */}
-            <div className="grid grid-cols-2 gap-[1px] bg-white/8 border border-white/10 overflow-hidden">
-              {COMMITMENTS.map((item) => (
-                <div
-                  key={item.label}
-                  className="relative flex flex-col justify-between bg-white/[0.035] px-[18px] py-[16px] gap-3 group hover:bg-white/[0.06] transition-colors"
-                >
-                  {/* Valeur principale */}
-                  <div className="font-mono text-[26px] font-bold leading-none tracking-[-0.03em] tabular-nums text-white">
-                    {item.value}
-                  </div>
-                  {/* Label + sous-texte */}
-                  <div>
-                    <div className="text-[11px] font-semibold text-white/70 leading-tight mb-[3px]">
-                      {item.label}
-                    </div>
-                    <div className="text-[10px] text-white/32 leading-tight">
-                      {item.sub}
-                    </div>
-                  </div>
-                  {/* Barre de fill pour les métriques quantifiables */}
-                  {item.fill !== null && (
-                    <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-white/8">
-                      <div
-                        className="h-full bg-accent/60"
-                        style={{ width: `${item.fill}%` }}
-                      />
-                    </div>
-                  )}
-                </div>
-              ))}
             </div>
           </div>
         </div>
@@ -148,6 +106,28 @@ export default function Hero() {
       </div>
 
 
+      {/* Engagements de service : bandeau blanc défilant, comme sur la page Références */}
+      <div className="relative z-20 overflow-hidden border-b border-gray-100 bg-white py-8 text-ink">
+        <style>{`
+          @keyframes hero-marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+          .hero-marquee { display: flex; width: max-content; animation: hero-marquee 24s linear infinite; }
+          @media (max-width: 768px) { .hero-marquee { animation-duration: 16s; } }
+          @media (prefers-reduced-motion: reduce) { .hero-marquee { animation: none; } }
+        `}</style>
+        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-white to-transparent md:w-32" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-white to-transparent md:w-32" />
+        <div className="hero-marquee hover:[animation-play-state:paused]">
+          {[...COMMITMENTS, ...COMMITMENTS, ...COMMITMENTS, ...COMMITMENTS].map((c, i) => (
+            <div key={i} aria-hidden={i >= COMMITMENTS.length} className="flex shrink-0 flex-col items-center justify-center px-10 text-center md:px-20">
+              <span className="text-[clamp(24px,3vw,36px)] font-bold text-ink">
+                {c.value}
+                {c.unit && <span className="ml-1 text-[0.55em] font-bold text-muted">{c.unit}</span>}
+              </span>
+              <span className="mt-1 text-[11px] font-bold uppercase tracking-wider text-muted md:text-[12px]">{c.title}</span>
+            </div>
+          ))}
+        </div>
+      </div>
     </section>
   );
 }

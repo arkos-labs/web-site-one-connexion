@@ -3,7 +3,6 @@
  * "Flotte & couverture" — chiffres opérationnels, photo flotte
  * (placeholder en attente d'un vrai visuel) et zones couvertes.
  */
-import { FOUNDED_YEAR } from "@/lib/site-content";
 
 const STATS = [
   { value: "18 kg", label: "Charge par course" },
@@ -35,9 +34,9 @@ export default function Flotte({ hideHeader = false }: { hideHeader?: boolean } 
           </p>
           <div className="grid grid-cols-[repeat(auto-fit,minmax(140px,1fr))] gap-px border border-white/10 bg-white/10">
             <div className="bg-ink px-[18px] py-[22px]">
-              <div className="text-[26px] font-bold tracking-[-0.02em]">{FOUNDED_YEAR}</div>
+              <div className="text-[26px] font-bold tracking-[-0.02em]">10 ans+</div>
               <div className="mt-2 font-mono text-[10px] tracking-[0.12em] text-white/44 uppercase">
-                Année de création
+                D’expérience du coursier B2B
               </div>
             </div>
             {STATS.map((stat) => (

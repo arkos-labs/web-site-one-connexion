@@ -88,7 +88,7 @@ const ARRONDISSEMENTS = [
 ];
 
 const STATS = [
-  { value: "< 30 min", label: "Délai moyen intramuros" },
+  { value: "Dès 21 €", label: "TTC, course Normale (3 h)" },
   { value: "< 45 min", label: "Enlèvement" },
   { value: "6j/7", label: "Lun–sam, 9h – 19h" },
   { value: "20/20", label: "Arrondissements couverts" },
