@@ -14,11 +14,11 @@ export const PARIS_LOCAL: Record<string, { localGuide: ZoneGuide; faq: ZoneFaqIt
       title: "Livrer autour du Palais-Royal : un arrondissement d'institutions",
       paragraphs: [
         "Le 1er arrondissement concentre des institutions que l'on ne dessert pas comme un immeuble de bureaux : le Conseil d'État et le Conseil constitutionnel autour du Palais-Royal, le ministère de la Justice place Vendôme, le ministère de la Culture rue de Valois, le Louvre. Chacun a son accueil, ses horaires et ses règles d'entrée.",
-        "Pour une remise réussie, donnez-nous le nom du destinataire, le service et un numéro joignable : le coursier se présente à l'accueil avec ces éléments et obtient une signature nominative. Les rues piétonnes des Halles et la rue de Rivoli, très encombrées en journée, se traversent plus vite en deux-roues qu'en camionnette.",
+        "Pour une remise réussie, donnez-nous le nom du destinataire, le service et un numéro joignable : le coursier se présente à l'accueil avec ces éléments et remet le pli à la bonne personne. Les rues piétonnes des Halles et la rue de Rivoli, très encombrées en journée, se traversent plus vite en deux-roues qu'en camionnette.",
       ],
     },
     faq: [
-      { q: "Pouvez-vous livrer au Palais-Royal ou place Vendôme ?", a: "Oui. Ces adresses ont des accueils contrôlés : indiquez le nom du destinataire, le service et un contact, le coursier remet le pli à l'accueil contre signature nominative." },
+      { q: "Pouvez-vous livrer au Palais-Royal ou place Vendôme ?", a: "Oui. Ces adresses ont des accueils contrôlés : indiquez le nom du destinataire, le service et un contact, le coursier remet le pli à l'accueil." },
       { q: "Quel coursier choisir pour déposer un pli dans le 1er avant la fermeture d'un service ?", a: "Une course immédiate, avec l'heure limite précisée à la commande. Nous confirmons la faisabilité avant d'engager le coursier, plutôt que d'accepter puis d'échouer." },
       { q: "Les rues piétonnes des Halles posent-elles un problème ?", a: "Pas pour un deux-roues, qui s'arrête à la limite de la zone piétonne. Pour une adresse au cœur du quartier, précisez le point de remise et un contact qui descend récupérer le colis." },
     ],
@@ -74,12 +74,12 @@ export const PARIS_LOCAL: Record<string, { localGuide: ZoneGuide; faq: ZoneFaqIt
       title: "Quartier Latin : de la Sorbonne aux laboratoires de recherche",
       paragraphs: [
         "Le 5e abrite la Sorbonne, le Collège de France, l'École normale supérieure de la rue d'Ulm, l'Institut Curie, le Muséum national d'histoire naturelle et de nombreuses maisons d'édition. Les échanges y sont académiques et scientifiques : manuscrits, épreuves, prélèvements, pièces de laboratoire.",
-        "La montagne Sainte-Geneviève est une côte, et le Quartier Latin un lacis de rues à sens unique. Pour les échantillons, indiquez le délai de stabilité et la température de conservation : nous confirmons la faisabilité avant d'engager la course. Pour les épreuves d'imprimerie, la remise se fait en main propre, avec signature.",
+        "La montagne Sainte-Geneviève est une côte, et le Quartier Latin un lacis de rues à sens unique. Pour les échantillons, indiquez le délai de stabilité et la température de conservation : nous confirmons la faisabilité avant d'engager la course. Pour les épreuves d'imprimerie, la remise se fait en main propre.",
       ],
     },
     faq: [
       { q: "Transportez-vous des échantillons entre laboratoires du Quartier Latin ?", a: "Oui, en course dédiée avec un contenant isotherme choisi à la commande. Précisez le délai de stabilité fixé par le laboratoire : nous vous disons avant le départ si la course est tenable." },
-      { q: "Livrez-vous des manuscrits et des épreuves à des éditeurs ?", a: "Oui. La remise est contre signature, avec le nom du réceptionnaire et l'heure consignés, ce qui évite les contestations de livraison." },
+      { q: "Livrez-vous des manuscrits et des épreuves à des éditeurs ?", a: "Oui. La remise se fait en main propre, avec le nom du réceptionnaire et l'heure consignés, ce qui évite les contestations de livraison." },
       { q: "Peut-on prévoir des passages réguliers entre deux sites universitaires ?", a: "Oui, par tournées sur créneaux fixes, avec un compte entreprise et une facturation mensuelle imputable par laboratoire ou département." },
     ],
   },
@@ -89,12 +89,12 @@ export const PARIS_LOCAL: Record<string, { localGuide: ZoneGuide; faq: ZoneFaqIt
       title: "Saint-Germain-des-Prés : éditeurs, galeries et Sénat",
       paragraphs: [
         "Le 6e arrondissement s'organise autour du Sénat et du jardin du Luxembourg, de Saint-Germain-des-Prés et de la rue de Seine. On y trouve des maisons d'édition, des galeries d'art, des antiquaires, l'Académie nationale de médecine et l'École des Beaux-Arts, ainsi que des cabinets d'avocats.",
-        "L'essentiel des envois y est précieux ou confidentiel : épreuves, tableaux de petit format, bijoux, contrats. La remise se fait en main propre, avec signature. Nous ne regroupons pas les courses : un coursier, un envoi, un trajet. Précisez le conditionnement et la valeur à la commande pour que nous confirmions que le deux-roues convient.",
+        "L'essentiel des envois y est précieux ou confidentiel : épreuves, tableaux de petit format, bijoux, contrats. La remise se fait en main propre. Nous ne regroupons pas les courses : un coursier, un envoi, un trajet. Précisez le conditionnement et la valeur à la commande pour que nous confirmions que le deux-roues convient.",
       ],
     },
     faq: [
       { q: "Pouvez-vous transporter une œuvre ou un objet de valeur depuis une galerie du 6e ?", a: "Pour un objet qui tient dans un top-case verrouillé de 18 kg, oui. Pour une pièce plus grande ou à forte valeur, contactez-nous avant de commander : nous vous disons si le deux-roues est adapté." },
-      { q: "La remise se fait-elle en main propre ?", a: "Oui, contre signature, avec le nom du réceptionnaire et l'heure consignés. Le colis n'est jamais laissé à un tiers non identifié." },
+      { q: "La remise se fait-elle en main propre ?", a: "Oui, avec le nom du réceptionnaire et l'heure consignés. Le colis n'est jamais laissé à un tiers non identifié." },
       { q: "Livrez-vous autour du Sénat et de l'Institut ?", a: "Oui. Ces sites ont des contrôles d'accès : donnez le nom du destinataire, le service et un contact, pour que le coursier soit attendu." },
     ],
   },
@@ -104,12 +104,12 @@ export const PARIS_LOCAL: Record<string, { localGuide: ZoneGuide; faq: ZoneFaqIt
       title: "Le 7e institutionnel : ministères, Assemblée et ambassades",
       paragraphs: [
         "Le 7e arrondissement est celui de l'Assemblée nationale, de l'hôtel de Matignon, des ministères de la rue de Varenne et du Quai d'Orsay, des Invalides et d'un grand nombre d'ambassades. Les entrées y sont contrôlées, souvent avec contrôle d'identité et liste d'accès.",
-        "Pour livrer ici sans retard, fournissez le nom du destinataire, son service, un numéro direct et, si nécessaire, le nom de la personne qui annoncera le coursier. Nous ne promettons pas l'entrée dans un bâtiment : nous organisons la remise à l'accueil, contre signature, avec l'heure consignée. Tour Eiffel et Champ-de-Mars sont, eux, de simples contraintes de circulation les jours d'événement.",
+        "Pour livrer ici sans retard, fournissez le nom du destinataire, son service, un numéro direct et, si nécessaire, le nom de la personne qui annoncera le coursier. Nous ne promettons pas l'entrée dans un bâtiment : nous organisons la remise à l'accueil, avec l'heure consignée. Tour Eiffel et Champ-de-Mars sont, eux, de simples contraintes de circulation les jours d'événement.",
       ],
     },
     faq: [
       { q: "Livrez-vous aux ministères et à l'Assemblée nationale ?", a: "Oui, à l'accueil désigné. Prévenez le destinataire de l'arrivée du coursier et donnez-nous un contact : l'accès aux bâtiments dépend des règles de chaque site." },
-      { q: "Et pour une ambassade ?", a: "Même principe : nom du destinataire, service et contact. La remise se fait au point d'accueil indiqué, contre signature nominative." },
+      { q: "Et pour une ambassade ?", a: "Même principe : nom du destinataire, service et contact. La remise se fait au point d'accueil indiqué,." },
       { q: "Les jours d'événements autour des Invalides ou de la tour Eiffel, comment procédez-vous ?", a: "Prévenez-nous de l'événement lors de la commande. Nous adaptons l'itinéraire et vous confirmons le délai avant d'engager la course." },
     ],
   },
@@ -119,11 +119,11 @@ export const PARIS_LOCAL: Record<string, { localGuide: ZoneGuide; faq: ZoneFaqIt
       title: "Champs-Élysées et Triangle d'Or : cabinets, banques et palaces",
       paragraphs: [
         "Le 8e arrondissement rassemble le Palais de l'Élysée, la Madeleine, la gare Saint-Lazare, le parc Monceau et les avenues du Triangle d'Or. Les immeubles haussmanniens y logent des cabinets d'avocats d'affaires, des banques, des sociétés de gestion et des hôtels de luxe.",
-        "La plupart des remises s'y font à une loge ou à un accueil : contrats à signer, pièces de closing, courrier de direction. Donnez-nous le nom du destinataire, l'étage et l'heure limite. Pour un client d'hôtel, précisez le nom de séjour et le numéro de chambre ou demandez une remise à la conciergerie, en indiquant votre consigne.",
+        "La plupart des remises s'y font à une loge ou à un accueil : contrats, pièces de closing, courrier de direction. Donnez-nous le nom du destinataire, l'étage et l'heure limite. Pour un client d'hôtel, précisez le nom de séjour et le numéro de chambre ou demandez une remise à la conciergerie, en indiquant votre consigne.",
       ],
     },
     faq: [
-      { q: "Pouvez-vous livrer des documents de closing à un cabinet du 8e ?", a: "Oui, en course dédiée avec remise contre signature. Indiquez l'heure à laquelle le document doit être signé : elle fixe l'heure de départ." },
+      { q: "Pouvez-vous livrer des documents de closing à un cabinet du 8e ?", a: "Oui, en course dédiée avec remise en main propre. Indiquez l'heure à laquelle le document doit être remis : elle fixe l'heure de départ." },
       { q: "Livrez-vous dans les hôtels de luxe ?", a: "Oui. Précisez le nom du client et le mode de remise voulu (en chambre ou à la conciergerie) : le coursier suit votre consigne." },
       { q: "Les Champs-Élysées ralentissent-ils la livraison ?", a: "Le trafic autour de l'Étoile et de la Concorde est dense, ce qui avantage le deux-roues. Les jours de manifestation, nous vous prévenons si l'itinéraire est modifié." },
     ],
@@ -244,7 +244,7 @@ export const PARIS_LOCAL: Record<string, { localGuide: ZoneGuide; faq: ZoneFaqIt
     },
     faq: [
       { q: "Livrez-vous les jours de Roland-Garros ou de match au Parc des Princes ?", a: "Oui, en prévenant de l'événement : les accès sont limités. Nous adaptons l'itinéraire et vous confirmons le délai avant le départ." },
-      { q: "Pouvez-vous remettre un pli à une ambassade du 16e ?", a: "Oui, à l'accueil désigné, contre signature nominative. Prévenez le destinataire de l'arrivée du coursier." },
+      { q: "Pouvez-vous remettre un pli à une ambassade du 16e ?", a: "Oui, à l'accueil désigné,. Prévenez le destinataire de l'arrivée du coursier." },
       { q: "Desservez-vous le bois de Boulogne et la Fondation Louis Vuitton ?", a: "Oui. Indiquez le point de remise exact et un contact sur place, car le bois est vaste et les entrées sont multiples." },
     ],
   },

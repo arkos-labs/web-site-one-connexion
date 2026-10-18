@@ -63,7 +63,7 @@ const ZONES_75: Zone[] = [
     sectors: [
       { name: "Corporate & Agences", example: "Transfert sécurisé de documents financiers et d'audits pour les acteurs de la Bourse et les fintechs.", serviceHref: "/services/plis-confidentiels", serviceLabel: "Course dédiée" },
       { name: "E-commerce & Luxe", example: "Réassort express et envois de prototypes textiles pour les showrooms du Sentier.", serviceHref: "/services/livraison-e-commerce", serviceLabel: "Livraison mode" },
-      { name: "Juridique & Notarial", example: "Signatures de contrats d'affaires et statuts de start-ups.", serviceHref: "/services/plis-confidentiels", serviceLabel: "Plis confidentiels" },
+      { name: "Juridique & Notarial", example: "Contrats d'affaires et statuts de start-ups.", serviceHref: "/services/plis-confidentiels", serviceLabel: "Plis confidentiels" },
       { name: "Médical & Laboratoires", example: "Livraisons d'ordonnances et d'analyses pour les centres médicaux du quartier Bourse.", serviceHref: "/services/transport-medical", serviceLabel: "Transport médical" },
       { name: "Événementiel", example: "Acheminement de décors et invitations pour les soirées de lancements tech.", serviceHref: "/services/transport-evenementiel", serviceLabel: "Transport événementiel" },
       { name: "Grands comptes", example: "Tournées inter-boutiques pour les enseignes de prêt-à-porter.", serviceHref: "/services/compte-entreprise", serviceLabel: "Compte entreprise" },
@@ -261,7 +261,7 @@ const ZONES_75: Zone[] = [
     sectors: [
       { name: "Corporate & Agences", example: "Liaisons B2B entre les start-ups d'Oberkampf et les pépinières d'entreprises.", serviceHref: "/services/plis-confidentiels", serviceLabel: "Course dédiée" },
       { name: "E-commerce & Luxe", example: "Distribution same-day de commandes pour les créateurs de mode et artisans locaux.", serviceHref: "/services/livraison-e-commerce", serviceLabel: "Livraison express" },
-      { name: "Juridique & Notarial", example: "Signature de baux commerciaux et contrats de travail pour les nouvelles enseignes.", serviceHref: "/services/plis-confidentiels", serviceLabel: "Plis confidentiels" },
+      { name: "Juridique & Notarial", example: "Baux commerciaux et contrats de travail pour les nouvelles enseignes.", serviceHref: "/services/plis-confidentiels", serviceLabel: "Plis confidentiels" },
       { name: "Médical & Laboratoires", example: "Transferts vers les grands hôpitaux de l'Est (Saint-Antoine, Tenon).", serviceHref: "/services/transport-medical", serviceLabel: "Transport médical" },
       { name: "Événementiel", example: "Livraison de catering et matériel pour les salles de concert (Bataclan) et ateliers.", serviceHref: "/services/transport-evenementiel", serviceLabel: "Transport événementiel" },
       { name: "Grands comptes", example: "Groupage de plis pour les grands espaces de coworking.", serviceHref: "/services/compte-entreprise", serviceLabel: "Compte entreprise" },
@@ -305,7 +305,7 @@ const ZONES_75: Zone[] = [
     sectors: [
       { name: "Médical & Laboratoires", example: "Transport d'organes, sang et essais cliniques (ADR) pour la Pitié-Salpêtrière.", serviceHref: "/services/transport-medical", serviceLabel: "Transport médical" },
       { name: "Corporate & Agences", example: "Livraison urgente d'ordinateurs et prototypes technologiques pour les licornes de Station F.", serviceHref: "/services/plis-confidentiels", serviceLabel: "Course dédiée" },
-      { name: "Juridique & Notarial", example: "Signatures de levées de fonds et pactes d'actionnaires pour les start-ups.", serviceHref: "/services/plis-confidentiels", serviceLabel: "Plis confidentiels" },
+      { name: "Juridique & Notarial", example: "Dossiers de levée de fonds et pactes d'actionnaires pour les start-ups.", serviceHref: "/services/plis-confidentiels", serviceLabel: "Plis confidentiels" },
       { name: "Événementiel", example: "Approvisionnement pour les grandes expositions de la BnF et du quartier Paris Rive Gauche.", serviceHref: "/services/transport-evenementiel", serviceLabel: "Transport événementiel" },
       { name: "E-commerce & Luxe", example: "Livraison B2B pour le tissu commercial florissant de la Place d'Italie.", serviceHref: "/services/livraison-e-commerce", serviceLabel: "Livraison e-commerce" },
       { name: "Grands comptes", example: "Externalisation logistique complète pour les campus incubateurs.", serviceHref: "/services/compte-entreprise", serviceLabel: "Compte entreprise" },

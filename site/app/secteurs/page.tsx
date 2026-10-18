@@ -42,7 +42,7 @@ const SECTEURS = [
     tag: "01 — Cabinets & études",
     color: "border-blue-200 bg-blue-50",
     iconBg: "bg-blue-100 text-blue-700",
-    desc: "Cabinets d'avocats, études notariales, offices d'huissiers. Transport de plis confidentiels avec remise contre signature et preuve horodatée.",
+    desc: "Cabinets d'avocats, études notariales, offices d'huissiers. Transport de plis confidentiels avec remise en main propre et preuve horodatée.",
     detail: [
       "Dépôt au greffe avant clôture",
       "Transmission d'actes entre études",

@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   openGraph: {
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION — Coursier B2B Paris & Île-de-France" }],
     title: "Coursier Paris : livraison express — ONE CONNEXION",
-    description: "Livraison express dans tout Paris (75). Course dédiée, sans regroupement, remise contre signature.",
+    description: "Livraison express dans tout Paris (75). Course dédiée, sans regroupement, remise en main propre.",
     url: "/zones/paris",
     type: "website",
     locale: "fr_FR",
@@ -49,7 +49,7 @@ const serviceSchema = {
 const FAQ_PARIS = [
   {
     q: "Quel est le prix d'un coursier à Paris ?",
-    a: "Une course dans Paris intramuros coûte 21 € TTC en normal (livraison sous 3 h), 31,50 € TTC en urgent (sous 1 h 30) et 42 € TTC en super urgent (sous 1 h). Le prix s'affiche avant de valider la commande.",
+    a: "Une course dans Paris intramuros coûte 21 € TTC en normal (livraison sous 3 h), 31,50 € TTC en urgent (sous 1 h 30) et 42 € TTC en formule Super (sous 1 h). Le prix s'affiche avant de valider la commande.",
   },
   {
     q: "Quel est le tarif d'un coursier moto ou scooter à Paris ?",
@@ -189,7 +189,7 @@ export default function ZoneParis() {
           {[
             { name: "Normal", delay: "livré sous 3 h", price: "21 €" },
             { name: "Urgent", delay: "livré sous 1 h 30", price: "31,50 €" },
-            { name: "Super urgent", delay: "livré sous 1 h", price: "42 €" },
+            { name: "Super", delay: "livré sous 1 h", price: "42 €" },
           ].map((t) => (
             <div key={t.name} className="bg-white p-6">
               <div className="text-[15px] font-bold">{t.name}</div>
@@ -257,7 +257,7 @@ export default function ZoneParis() {
             {[
               { num: "01", title: "Demande immédiate", desc: "Le prix s’affiche sur-le-champ pour n’importe quel arrondissement." },
               { num: "02", title: "Enlèvement express", desc: "Un coursier expérimenté se faufile dans le trafic parisien pour récupérer votre pli en moins de 45 minutes." },
-              { num: "03", title: "Preuve de livraison", desc: "Suivez le trajet en direct. Une fois le pli remis en main propre, recevez une notification instantanée avec signature." }
+              { num: "03", title: "Preuve de livraison", desc: "Suivez le trajet en direct. Une fois le pli remis en main propre, recevez une notification instantanée à la livraison." }
             ].map((step) => (
               <div key={step.num} className="flex flex-col items-center text-center p-6 bg-white rounded-2xl border border-line shadow-sm">
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-accent text-[16px] font-bold text-white shadow-md">

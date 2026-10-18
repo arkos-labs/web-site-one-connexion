@@ -11,7 +11,7 @@ export const ZONES_93: Zone[] = [
     intro: "Montreuil prolonge le 20e arrondissement à l'est de Paris. Ancien territoire d'ateliers et de petites industries, la ville est devenue un pôle d'agences créatives, de studios, de maisons de production, de start-ups et d'artisans d'art, que complètent un centre hospitalier et un tissu dense de commerces autour de la Croix-de-Chavaux.",
     logisticsContext: "Montreuil se déploie sur un relief : le bas Montreuil, proche de la Porte de Montreuil et du périphérique, et le haut Montreuil, vers la mairie, avec des rues en pente et un stationnement difficile. La ligne 9 dessert la Croix-de-Chavaux et la mairie, l'A3 passe à Bagnolet. Sur ce parcours étalé, le deux-roues garde son avantage sur une camionnette qui cherche à se garer.",
     sectorExamples: {
-      juridique: "Dépôt d'actes et transmission de pièces entre les cabinets de Montreuil, les études parisiennes et le Tribunal judiciaire de Bobigny, avec remise contre signature.",
+      juridique: "Dépôt d'actes et transmission de pièces entre les cabinets de Montreuil, les études parisiennes et le Tribunal judiciaire de Bobigny, avec remise en main propre.",
       medical: "Acheminement de prélèvements et de pièces depuis les cabinets, centres de santé et le voisinage de l'hôpital André-Grégoire vers les laboratoires d'analyses.",
       ecommerce: "Expéditions le jour même des créateurs, ateliers et boutiques en ligne installés à Montreuil, vers des clients parisiens et franciliens, avec preuve de remise.",
       corporate: "Courses dédiées entre les agences et start-ups de Montreuil et leurs clients de Paris, pour des maquettes, contrats et épreuves à remettre en main propre.",
@@ -39,7 +39,7 @@ export const ZONES_93: Zone[] = [
       },
       {
         q: "Quel est le prix d'une livraison à Montreuil ?",
-        a: "Montreuil relève du tarif petite couronne : à partir de 42 € TTC en normal (3 h) et 84 € TTC en super urgent (1 h). Le prix dépend seulement de la destination et du délai, quel que soit le colis. Prix affiché avant de commander.",
+        a: "Montreuil relève du tarif petite couronne : à partir de 42 € TTC en normal (3 h) et 84 € TTC en formule Super (1 h). Le prix dépend seulement de la destination et du délai, quel que soit le colis. Prix affiché avant de commander.",
       },
       {
         q: "Pouvez-vous transporter des maquettes ou du matériel de tournage ?",
@@ -51,7 +51,7 @@ export const ZONES_93: Zone[] = [
       },
       {
         q: "Pouvez-vous porter un acte de Montreuil au tribunal de Bobigny ?",
-        a: "Oui. L'acte part en course dédiée, avec remise contre signature et justificatif horodaté. Précisez l'heure limite de dépôt au greffe à la commande.",
+        a: "Oui. L'acte part en course dédiée, avec remise en main propre et justificatif horodaté. Précisez l'heure limite de dépôt au greffe à la commande.",
       },
     ],
   }),

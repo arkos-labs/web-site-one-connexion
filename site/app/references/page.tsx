@@ -49,7 +49,7 @@ const SECTEURS = [
     Icon: ShoppingBag,
     title: "E-commerce & retail luxe",
     subtitle: "Dernier kilomètre premium",
-    desc: "Logistique du dernier kilomètre pour les boutiques de luxe et l'e-commerce exigeant. Remise en main propre avec signature, pour une expérience client irréprochable.",
+    desc: "Logistique du dernier kilomètre pour les boutiques de luxe et l'e-commerce exigeant. Remise en main propre, pour une expérience client irréprochable.",
     clients: ["Maisons de luxe", "Boutiques en ligne", "Showrooms", "Places de marché"],
     color: "bg-amber-50 text-amber-700",
     border: "border-amber-100",

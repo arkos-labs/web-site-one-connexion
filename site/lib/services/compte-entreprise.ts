@@ -54,7 +54,7 @@ export const compteEntreprise: Service = {
     },
     {
       title: "Commandes multi-collaborateurs",
-      body: "Chaque collaborateur autorisé commande par téléphone ou par courriel. Les courses sont rattachées automatiquement au compte, sans avance de frais.",
+      body: "Chaque collaborateur autorisé commande sur le site, depuis son espace, par téléphone ou par courriel. Les courses sont rattachées automatiquement au compte, sans avance de frais.",
     },
     {
       title: "Suivi en ligne de chaque course",

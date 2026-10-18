@@ -10,7 +10,7 @@ export const EXTRA_75: Record<string, ExtraZoneContent> = {
   "paris-1er": {
     cases: [
       { title: "Un mémoire à remettre au Conseil d'État", body: "Un cabinet du 8e doit déposer un mémoire au Palais-Royal avant la fin du délai. Le coursier se présente à l'accueil avec le nom du service et rapporte un récépissé." },
-      { title: "Un bijou à livrer place Vendôme", body: "Un atelier de joaillerie envoie une pièce à un client dans un hôtel de la place. La remise se fait en main propre, contre signature, avec la valeur déclarée." },
+      { title: "Un bijou à livrer place Vendôme", body: "Un atelier de joaillerie envoie une pièce à un client dans un hôtel de la place. La remise se fait en main propre, avec la valeur déclarée." },
       { title: "Des pièces pour le ministère de la Justice", body: "Une étude transmet un dossier à un service de la chancellerie. Le destinataire est prévenu, le pli remis à l'accueil, l'heure consignée." },
     ],
     tips: [
@@ -21,14 +21,14 @@ export const EXTRA_75: Record<string, ExtraZoneContent> = {
     ],
     faq: [
       { q: "Quel délai pour le 1er arrondissement ?", a: "Moins de 45 minutes pour l'enlèvement ; le délai de livraison est confirmé à la commande." },
-      { q: "Quelle preuve de livraison est fournie ?", a: "Nom du signataire, date, heure et lieu de remise." },
+      { q: "Quelle preuve de livraison est fournie ?", a: "Nom du destinataire, date, heure et lieu de remise." },
     ],
   },
 
   "paris-2e": {
     cases: [
       { title: "Des échantillons pour un showroom du Sentier", body: "Un atelier de confection envoie des échantillons de tissu à un showroom avant l'ouverture. Le coursier les remet à l'étage, après le code de la cour." },
-      { title: "Un pli pour une société près de la Bourse", body: "Une société de gestion attend un contrat à signer d'un cabinet. La remise est faite à l'accueil, contre signature." },
+      { title: "Un pli pour une société près de la Bourse", body: "Une société de gestion attend un contrat d'un cabinet. La remise est faite à l'accueil." },
       { title: "Un document pour la bibliothèque Richelieu", body: "Un chercheur envoie un document à un service de la bibliothèque. Le colis est remis à l'accueil indiqué." },
     ],
     tips: [
@@ -46,7 +46,7 @@ export const EXTRA_75: Record<string, ExtraZoneContent> = {
   "paris-3e": {
     cases: [
       { title: "Un tirage pour une galerie du Haut Marais", body: "Un photographe envoie un tirage encadré à une galerie avant un vernissage. Le coursier le remet à l'entrée de service." },
-      { title: "Des maquettes pour une agence de design", body: "Une agence reçoit des maquettes d'un atelier du 11e. La remise est signée à l'accueil." },
+      { title: "Des maquettes pour une agence de design", body: "Une agence reçoit des maquettes d'un atelier du 11e. La remise se fait en main propre à l'accueil." },
       { title: "Un document pour les Archives nationales", body: "Un chercheur envoie un justificatif à un service des archives. Le colis est remis à l'accueil." },
     ],
     tips: [
@@ -64,7 +64,7 @@ export const EXTRA_75: Record<string, ExtraZoneContent> = {
   "paris-4e": {
     cases: [
       { title: "Un acte à déposer au tribunal de commerce", body: "Une société dépose un acte au greffe de l'Île de la Cité avant la fermeture. Le coursier rapporte le justificatif horodaté." },
-      { title: "Un document pour la préfecture de police", body: "Un cabinet transmet un dossier de demande. La remise est faite à l'accueil désigné, contre signature." },
+      { title: "Un document pour la préfecture de police", body: "Un cabinet transmet un dossier de demande. La remise est faite à l'accueil désigné." },
       { title: "Un colis pour un restaurateur de l'île Saint-Louis", body: "Un fournisseur envoie une pièce de matériel. La remise est faite à l'entrée, avec contact." },
     ],
     tips: [
@@ -75,7 +75,7 @@ export const EXTRA_75: Record<string, ExtraZoneContent> = {
     ],
     faq: [
       { q: "Livrez-vous à l'Hôtel de Ville ?", a: "Oui, au service destinataire, avec un contact." },
-      { q: "Quelle preuve de livraison recevons-nous ?", a: "Nom du signataire, date, heure et lieu." },
+      { q: "Quelle preuve de livraison recevons-nous ?", a: "Nom du destinataire, date, heure et lieu." },
     ],
   },
 
@@ -83,7 +83,7 @@ export const EXTRA_75: Record<string, ExtraZoneContent> = {
     cases: [
       { title: "Un réactif pour un laboratoire de l'Institut Curie", body: "Un fournisseur du 13e envoie un consommable. Le coursier le remet au laboratoire, avec contenant isotherme si besoin." },
       { title: "Des épreuves pour un éditeur", body: "Un éditeur du 6e transmet des épreuves à un auteur de la Sorbonne. La remise est faite en main propre." },
-      { title: "Un dossier d'étudiant à la Sorbonne", body: "Un service de scolarité reçoit des attestations. La remise est signée au secrétariat." },
+      { title: "Un dossier d'étudiant à la Sorbonne", body: "Un service de scolarité reçoit des attestations. La remise se fait en main propre au secrétariat." },
     ],
     tips: [
       "Pour un laboratoire, donnez le bâtiment, l'étage et le responsable.",
@@ -99,9 +99,9 @@ export const EXTRA_75: Record<string, ExtraZoneContent> = {
 
   "paris-6e": {
     cases: [
-      { title: "Un manuscrit pour un éditeur de Saint-Germain", body: "Un auteur envoie un manuscrit à une maison d'édition. La remise est signée à l'accueil." },
+      { title: "Un manuscrit pour un éditeur de Saint-Germain", body: "Un auteur envoie un manuscrit à une maison d'édition. La remise se fait en main propre à l'accueil." },
       { title: "Un petit tableau pour une galerie de la rue de Seine", body: "Un collectionneur confie une œuvre de petit format. Le coursier la remet en main propre, avec la valeur déclarée." },
-      { title: "Un pli pour un cabinet près du Luxembourg", body: "Un cabinet attend un acte d'un confrère. La remise est faite contre signature." },
+      { title: "Un pli pour un cabinet près du Luxembourg", body: "Un cabinet attend un acte d'un confrère. La remise est faite." },
     ],
     tips: [
       "Pour une galerie, donnez l'entrée de service.",
@@ -118,7 +118,7 @@ export const EXTRA_75: Record<string, ExtraZoneContent> = {
   "paris-7e": {
     cases: [
       { title: "Un pli pour un ministère", body: "Un cabinet de conseil remet un rapport à un service ministériel. Le destinataire est prévenu, le pli remis à l'accueil désigné." },
-      { title: "Un document pour une ambassade", body: "Un cabinet juridique transmet un contrat à une ambassade. La remise est signée." },
+      { title: "Un document pour une ambassade", body: "Un cabinet juridique transmet un contrat à une ambassade. La remise se fait en main propre." },
       { title: "Du matériel pour un événement aux Invalides", body: "Un organisateur a besoin d'accréditations avant l'ouverture. Une course immédiate les livre à l'entrée de service." },
     ],
     tips: [
@@ -128,34 +128,34 @@ export const EXTRA_75: Record<string, ExtraZoneContent> = {
       "Pour une ambassade, précisez l'entrée du service consulaire ou administratif.",
     ],
     faq: [
-      { q: "Livrez-vous au Palais Bourbon ?", a: "À l'accueil désigné, contre signature. L'accès dépend des règles du site." },
-      { q: "Quelle preuve de livraison est fournie ?", a: "Nom du signataire, date, heure et lieu." },
+      { q: "Livrez-vous au Palais Bourbon ?", a: "À l'accueil désigné. L'accès dépend des règles du site." },
+      { q: "Quelle preuve de livraison est fournie ?", a: "Nom du destinataire, date, heure et lieu." },
     ],
   },
 
   "paris-8e": {
     cases: [
-      { title: "Des pièces de closing pour un cabinet", body: "Un cabinet d'affaires attend les signatures d'une partie dans le 17e. Le coursier fait l'aller-retour et rapporte l'original." },
+      { title: "Des pièces de closing pour un cabinet", body: "Un cabinet d'affaires envoie des pièces de closing à une partie dans le 17e. Le coursier les remet en main propre, sans détour." },
       { title: "Un pli pour un client d'hôtel", body: "Un notaire fait remettre un document à un client d'un hôtel de luxe, à la conciergerie ou en chambre selon la consigne." },
-      { title: "Des échantillons pour un siège de marque", body: "Une maison de mode envoie des échantillons à son siège. La remise est signée à l'accueil." },
+      { title: "Des échantillons pour un siège de marque", body: "Une maison de mode envoie des échantillons à son siège. La remise se fait en main propre à l'accueil." },
     ],
     tips: [
       "Dans un immeuble haussmannien, donnez l'étage, la porte et le nom exact du destinataire.",
       "Pour un hôtel, précisez le nom du séjour et le mode de remise.",
       "Autour des Champs-Élysées, les jours de manifestation modifient l'itinéraire.",
-      "Pour les cabinets, indiquez l'heure de signature.",
+      "Pour les cabinets, indiquez l'heure à laquelle le pli doit être remis.",
     ],
     faq: [
       { q: "Livrez-vous à la gare Saint-Lazare ?", a: "Oui, au point de rendez-vous indiqué." },
-      { q: "Quelle preuve de livraison recevons-nous ?", a: "Nom du signataire, date, heure et lieu." },
+      { q: "Quelle preuve de livraison recevons-nous ?", a: "Nom du destinataire, date, heure et lieu." },
     ],
   },
 
   "paris-9e": {
     cases: [
-      { title: "Un lot pour une vente à Drouot", body: "Un antiquaire fait livrer un objet à l'hôtel des ventes avant l'heure du dépôt. La remise est signée." },
+      { title: "Un lot pour une vente à Drouot", body: "Un antiquaire fait livrer un objet à l'hôtel des ventes avant l'heure du dépôt. La remise se fait en main propre." },
       { title: "Un retour de marchandise pour un grand magasin", body: "Une boutique renvoie un article à un grand magasin du boulevard Haussmann. La remise est faite à l'entrée de service." },
-      { title: "Un pli pour un cabinet du quartier Saint-Georges", body: "Un cabinet reçoit un contrat. La remise est signée à l'accueil." },
+      { title: "Un pli pour un cabinet du quartier Saint-Georges", body: "Un cabinet reçoit un contrat. La remise se fait en main propre à l'accueil." },
     ],
     tips: [
       "Pour une vente, donnez l'heure limite de dépôt.",
@@ -173,7 +173,7 @@ export const EXTRA_75: Record<string, ExtraZoneContent> = {
     cases: [
       { title: "Un colis à remettre avant un train", body: "Un voyageur d'un train de la gare de l'Est attend un document. Le coursier le remet au point de rendez-vous avant le départ." },
       { title: "Un prélèvement pour Saint-Louis", body: "Un cabinet envoie un échantillon à un service de l'hôpital. Le contenant est isotherme." },
-      { title: "Des maquettes pour une agence du Canal", body: "Une agence attend des maquettes d'un imprimeur. La remise est signée." },
+      { title: "Des maquettes pour une agence du Canal", body: "Une agence attend des maquettes d'un imprimeur. La remise se fait en main propre." },
     ],
     tips: [
       "Pour une gare, donnez le point de rendez-vous et l'heure du train.",
@@ -183,13 +183,13 @@ export const EXTRA_75: Record<string, ExtraZoneContent> = {
     ],
     faq: [
       { q: "Livrez-vous à Lariboisière et Fernand-Widal ?", a: "Oui, avec le service et un contact." },
-      { q: "Quelle preuve de livraison est fournie ?", a: "Nom du signataire, date, heure et lieu." },
+      { q: "Quelle preuve de livraison est fournie ?", a: "Nom du destinataire, date, heure et lieu." },
     ],
   },
 
   "paris-11e": {
     cases: [
-      { title: "Un prototype pour un atelier du faubourg", body: "Un designer envoie un prototype à un atelier d'ébénisterie. La remise est signée à l'atelier." },
+      { title: "Un prototype pour un atelier du faubourg", body: "Un designer envoie un prototype à un atelier d'ébénisterie. La remise se fait en main propre à l'atelier." },
       { title: "Des épreuves pour une imprimerie", body: "Un éditeur transmet des fichiers imprimés. La remise est faite avant la fermeture." },
       { title: "Un document pour une start-up d'Oberkampf", body: "Une start-up attend un contrat. Le coursier remet à l'accueil de l'espace de coworking." },
     ],
@@ -219,7 +219,7 @@ export const EXTRA_75: Record<string, ExtraZoneContent> = {
     ],
     faq: [
       { q: "Livrez-vous aux Quinze-Vingts ?", a: "Oui, avec le service et un contact." },
-      { q: "Quelle preuve de livraison est fournie ?", a: "Nom du signataire, date, heure et lieu." },
+      { q: "Quelle preuve de livraison est fournie ?", a: "Nom du destinataire, date, heure et lieu." },
     ],
   },
 
@@ -227,7 +227,7 @@ export const EXTRA_75: Record<string, ExtraZoneContent> = {
     cases: [
       { title: "Du matériel informatique pour une start-up de Station F", body: "Une équipe reçoit des ordinateurs. Le coursier remet à l'accueil, avec le nom de l'équipe." },
       { title: "Un prélèvement pour la Pitié-Salpêtrière", body: "Un cabinet envoie un échantillon à un service. Le contenant est isotherme." },
-      { title: "Un document pour la BnF", body: "Un chercheur remet un justificatif à un service de la bibliothèque. La remise est signée." },
+      { title: "Un document pour la BnF", body: "Un chercheur remet un justificatif à un service de la bibliothèque. La remise se fait en main propre." },
     ],
     tips: [
       "Pour Station F, donnez le nom de l'équipe et un contact.",
@@ -255,7 +255,7 @@ export const EXTRA_75: Record<string, ExtraZoneContent> = {
     ],
     faq: [
       { q: "Livrez-vous à la Fondation Cartier ?", a: "Oui, à l'entrée de service." },
-      { q: "Quelle preuve de livraison est fournie ?", a: "Nom du signataire, date, heure et lieu." },
+      { q: "Quelle preuve de livraison est fournie ?", a: "Nom du destinataire, date, heure et lieu." },
     ],
   },
 
@@ -280,7 +280,7 @@ export const EXTRA_75: Record<string, ExtraZoneContent> = {
   "paris-16e": {
     cases: [
       { title: "Des accréditations pour Roland-Garros", body: "Un organisateur a besoin d'accréditations imprimées. Le coursier les livre à l'entrée désignée." },
-      { title: "Un pli pour une ambassade", body: "Un cabinet transmet un document. La remise est signée à l'accueil." },
+      { title: "Un pli pour une ambassade", body: "Un cabinet transmet un document. La remise se fait en main propre à l'accueil." },
       { title: "Un document pour Radio France", body: "Un producteur remet un contrat. La remise est faite à l'accueil de la Maison de la Radio." },
     ],
     tips: [
@@ -291,14 +291,14 @@ export const EXTRA_75: Record<string, ExtraZoneContent> = {
     ],
     faq: [
       { q: "Livrez-vous au Palais de Tokyo ?", a: "Oui, à l'entrée de service." },
-      { q: "Quelle preuve de livraison est fournie ?", a: "Nom du signataire, date, heure et lieu." },
+      { q: "Quelle preuve de livraison est fournie ?", a: "Nom du destinataire, date, heure et lieu." },
     ],
   },
 
   "paris-17e": {
     cases: [
       { title: "Des conclusions avant la clôture du greffe", body: "Un cabinet dépose des conclusions avant l'heure limite. Le coursier rapporte un justificatif horodaté." },
-      { title: "Un dossier pour un cabinet de Wagram", body: "Un confrère transmet des pièces. La remise est signée." },
+      { title: "Un dossier pour un cabinet de Wagram", body: "Un confrère transmet des pièces. La remise se fait en main propre." },
       { title: "Du matériel pour un salon au Palais des Congrès", body: "Un exposant attend des supports. Le coursier livre au hall." },
     ],
     tips: [
@@ -317,7 +317,7 @@ export const EXTRA_75: Record<string, ExtraZoneContent> = {
     cases: [
       { title: "Un document pour un commerce de Montmartre", body: "Un commerçant attend un contrat. Le coursier le remet à la boutique." },
       { title: "Un prélèvement pour Bichat", body: "Un cabinet envoie un échantillon à un service. Le contenant est isotherme." },
-      { title: "Une pièce pour un atelier de Pigalle", body: "Un atelier attend une pièce d'un fournisseur. La remise est signée." },
+      { title: "Une pièce pour un atelier de Pigalle", body: "Un atelier attend une pièce d'un fournisseur. La remise se fait en main propre." },
     ],
     tips: [
       "Sur la butte, donnez la rue accessible la plus proche.",
@@ -335,7 +335,7 @@ export const EXTRA_75: Record<string, ExtraZoneContent> = {
     cases: [
       { title: "Un accessoire pour la Philharmonie", body: "Une production a besoin d'un accessoire. Le coursier le livre à la régie." },
       { title: "Un prélèvement pour Robert-Debré", body: "Un cabinet envoie un échantillon. Le contenant est isotherme." },
-      { title: "Une pièce pour un restaurateur de la Villette", body: "Un restaurateur attend un matériel. La remise est signée." },
+      { title: "Une pièce pour un restaurateur de la Villette", body: "Un restaurateur attend un matériel. La remise se fait en main propre." },
     ],
     tips: [
       "Pour une salle, donnez le nom de la régie et l'heure du spectacle.",
@@ -345,15 +345,15 @@ export const EXTRA_75: Record<string, ExtraZoneContent> = {
     ],
     faq: [
       { q: "Livrez-vous à la Cité des sciences ?", a: "Oui, à l'entrée de service." },
-      { q: "Quelle preuve de livraison est fournie ?", a: "Nom du signataire, date, heure et lieu." },
+      { q: "Quelle preuve de livraison est fournie ?", a: "Nom du destinataire, date, heure et lieu." },
     ],
   },
 
   "paris-20e": {
     cases: [
       { title: "Un document pour un atelier de Belleville", body: "Un atelier attend un contrat. Le coursier le remet après le code de la cour." },
-      { title: "Un dossier pour Tenon", body: "Un cabinet transmet un dossier à un service. La remise est signée." },
-      { title: "Des plans pour une association", body: "Une association attend des plans imprimés. La remise est signée." },
+      { title: "Un dossier pour Tenon", body: "Un cabinet transmet un dossier à un service. La remise se fait en main propre." },
+      { title: "Des plans pour une association", body: "Une association attend des plans imprimés. La remise se fait en main propre." },
     ],
     tips: [
       "À Belleville, donnez le code et l'étage.",

@@ -20,9 +20,9 @@ export default function Services() {
           </h2>
         </div>
         <p className="min-w-0 max-w-[52ch] text-pretty text-[16.5px] leading-[1.65] text-muted">
-          Chaque secteur a ses contraintes : signature manuscrite, chaîne du froid,
-          créneau de réception. Nos procédures sont écrites par type de flux, pas
-          improvisées à la course.
+          Juridique, santé, e-commerce : chaque secteur a ses contraintes
+          (confidentialité, température, créneau de réception). Le coursier
+          les connaît avant de partir.
         </p>
       </div>
 

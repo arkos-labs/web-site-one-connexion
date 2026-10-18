@@ -11,7 +11,7 @@ export const ZONES_94: Zone[] = [
     intro: "Vincennes s'organise autour de son château médiéval, qui abrite le Service historique de la Défense, et de la rue du Midi, grande artère commerçante du centre-ville. Cabinets d'avocats, études notariales, professions de santé, agences et commerces y côtoient les services administratifs de la ville et les équipements du bois.",
     logisticsContext: "Vincennes est voisine de notre siège de Saint-Mandé : l'avenue de Paris relie directement les deux communes. À l'est, la ville touche le 12e et le 20e arrondissement par la Porte de Vincennes et le cours de Vincennes. Le centre est dense, la ligne 1 et le RER A y concentrent les flux : le deux-roues évite la saturation des axes autour du château et de l'avenue de Paris aux heures de pointe.",
     sectorExamples: {
-      juridique: "Dépôt d'actes et transmission de pièces entre les cabinets et études du centre de Vincennes, le Tribunal judiciaire de Créteil et les juridictions parisiennes, avec remise contre signature.",
+      juridique: "Dépôt d'actes et transmission de pièces entre les cabinets et études du centre de Vincennes, le Tribunal judiciaire de Créteil et les juridictions parisiennes, avec remise en main propre.",
       medical: "Acheminement de prélèvements depuis les cabinets médicaux, centres d'imagerie et professions paramédicales du centre-ville vers les laboratoires d'analyses, contenant isotherme sur demande.",
       ecommerce: "Livraison le jour même pour les commerçants de la rue du Midi et les vendeurs en ligne installés à Vincennes, vers Paris et la petite couronne.",
       corporate: "Navettes entre les agences et sociétés de services de Vincennes et leurs clients du 12e, de Bastille ou de La Défense, avec preuve de remise horodatée.",
@@ -39,11 +39,11 @@ export const ZONES_94: Zone[] = [
       },
       {
         q: "Quel est le prix d'un coursier à Vincennes ?",
-        a: "Vincennes relève du tarif petite couronne : à partir de 42 € TTC en normal (3 h) et 84 € TTC en super urgent (1 h). Le prix exact dépend de la destination et du délai, et s’affiche avant de commander.",
+        a: "Vincennes relève du tarif petite couronne : à partir de 42 € TTC en normal (3 h) et 84 € TTC en formule Super (1 h). Le prix exact dépend de la destination et du délai, et s’affiche avant de commander.",
       },
       {
         q: "Pouvez-vous porter des actes de Vincennes au tribunal de Créteil ?",
-        a: "Oui. Les actes et pièces de procédure partent en course dédiée, sans regroupement, avec remise contre signature et justificatif horodaté. Précisez l'heure limite de dépôt au greffe à la commande.",
+        a: "Oui. Les actes et pièces de procédure partent en course dédiée, sans regroupement, avec remise en main propre et justificatif horodaté. Précisez l'heure limite de dépôt au greffe à la commande.",
       },
       {
         q: "Livrez-vous au château de Vincennes ou dans le bois ?",
@@ -60,7 +60,7 @@ export const ZONES_94: Zone[] = [
     intro: "Saint-Mandé est la ville de notre siège, au 5 Square Nungesser. Commune très dense, collée au 12e arrondissement et au bois de Vincennes, elle réunit des professions libérales, des cabinets, de petites sociétés de services et plusieurs institutions, dont l'hôpital d'instruction des armées Bégin et l'Institut national de l'information géographique et forestière.",
     logisticsContext: "Pour une adresse à Saint-Mandé, le trajet d'approche est réduit au minimum : c'est la ville de notre siège. Le métro Saint-Mandé et Bérault (ligne 1) et l'avenue de Paris structurent la ville, qui s'étire sur quelques centaines de mètres entre la limite parisienne et Vincennes. Les distances sont courtes : une course Saint-Mandé – Paris 12e se compte en minutes.",
     sectorExamples: {
-      juridique: "Transmission de pièces entre les cabinets de Saint-Mandé, les études du 12e et les juridictions parisiennes ou le Tribunal judiciaire de Créteil, en remise contre signature.",
+      juridique: "Transmission de pièces entre les cabinets de Saint-Mandé, les études du 12e et les juridictions parisiennes ou le Tribunal judiciaire de Créteil, en remise en main propre.",
       medical: "Prélèvements et pièces des cabinets et centres de santé de Saint-Mandé, dans le voisinage de l'hôpital Bégin, vers les laboratoires d'analyses d'Île-de-France.",
       ecommerce: "Expéditions le jour même pour les vendeurs en ligne et boutiques de Saint-Mandé, avec un enlèvement en moins de 45 minutes et une preuve de remise horodatée.",
       corporate: "Courses régulières entre les petites structures de Saint-Mandé et leurs clients parisiens, à la demande ou en tournées sur créneaux fixes.",
@@ -92,7 +92,7 @@ export const ZONES_94: Zone[] = [
       },
       {
         q: "Combien coûte une course au départ de Saint-Mandé ?",
-        a: "Saint-Mandé relève du tarif petite couronne : à partir de 42 € TTC en normal (3 h) et 84 € TTC en super urgent (1 h). Pour un trajet vers Paris, la grille de la page tarifs donne les fourchettes par zone.",
+        a: "Saint-Mandé relève du tarif petite couronne : à partir de 42 € TTC en normal (3 h) et 84 € TTC en formule Super (1 h). Pour un trajet vers Paris, la grille de la page tarifs donne les fourchettes par zone.",
       },
       {
         q: "Peut-on ouvrir un compte entreprise depuis Saint-Mandé ?",

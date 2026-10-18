@@ -1,7 +1,7 @@
 /**
  * lib/services/plis-confidentiels.ts
  * Prestation juridique & notariale. Requêtes visées : coursier juridique Paris,
- * transport de plis confidentiels, coursier huissier, remise contre signature.
+ * transport de plis confidentiels, coursier huissier, remise en main propre.
  */
 import type { Service } from "./types";
 
@@ -11,14 +11,14 @@ export const plisConfidentiels: Service = {
   card: {
     tag: "01 — Juridique & notarial",
     title: "Plis confidentiels",
-    body: "Remise contre signature, chaîne de responsabilité documentée, coursiers dédiés aux cabinets et études.",
+    body: "Remise en main propre, chaîne de responsabilité documentée, coursiers dédiés aux cabinets et études.",
     note: "Preuve de dépôt horodatée",
   },
 
   seo: {
     title: "Envoi de pli confidentiel à Paris — coursier juridique",
     description:
-      "Envoyer un pli confidentiel à Paris : course dédiée pour avocats, notaires et huissiers, remise en main propre contre signature, preuve horodatée.",
+      "Envoyer un pli confidentiel à Paris : course dédiée pour avocats, notaires et huissiers, remise en main propre, preuve horodatée.",
     keywords: [
       "pli confidentiel",
       "envoi pli confidentiel Paris",
@@ -26,19 +26,19 @@ export const plisConfidentiels: Service = {
       "transport plis confidentiels",
       "coursier huissier Paris",
       "coursier notaire Paris",
-      "remise contre signature",
+      "remise en main propre",
     ],
   },
 
-  h1: "Envoi de pli confidentiel à Paris : coursier juridique, remise contre signature",
+  h1: "Envoi de pli confidentiel à Paris : coursier juridique, remise en main propre",
 
   intro:
     "One Connexion transporte les actes, conclusions et pièces de procédure des cabinets d’avocats, études notariales et offices d’huissiers d’Île-de-France. Chaque pli part en course dédiée, sans regroupement, et arrive avec une preuve de remise nominative.",
 
   stats: [
     { value: "< 45 min", label: "Prise en charge" },
-    { value: "Sans regroupement", label: "Course dédiée" },
-    { value: "< 45 min", label: "Enlèvement" },
+    { value: "Dédiée", label: "Course sans regroupement" },
+    { value: "En main propre", label: "Remise au destinataire" },
   ],
 
   context: {
@@ -46,26 +46,26 @@ export const plisConfidentiels: Service = {
     paragraphs: [
       "Un acte déposé après la clôture du greffe, c’est un délai forclos. Une pièce remise à une personne non identifiée, c’est une remise contestable. Dans le juridique, le transport ne relève pas de la commodité logistique : il s’inscrit dans la procédure et s’expose aux mêmes contestations qu’elle.",
       "La confidentialité impose une contrainte parallèle. Un pli qui voyage avec quinze autres colis, manipulé par trois personnes successives, ne permet plus d’établir qui a eu accès à quoi. C’est la raison pour laquelle nous n’appliquons aucun regroupement sur ces courses : un coursier, un pli, un trajet.",
-      "Reste la preuve. Un justificatif de livraison n’a de valeur que s’il nomme la personne qui a signé, l’heure exacte et le lieu. Ces éléments sont enregistrés au moment de la remise, archivés, et restitués sur demande pour être versés au dossier.",
+      "Reste la preuve. Un justificatif de livraison n’a de valeur que s’il nomme la personne qui a reçu le pli, l’heure exacte et le lieu. Ces éléments sont enregistrés au moment de la remise, archivés, et restitués sur demande pour être versés au dossier.",
     ],
   },
 
   steps: [
     {
       title: "Commande",
-      body: "Par téléphone ou par courriel, avec l’adresse d’enlèvement, la destination et l’heure limite de remise. Nous confirmons la faisabilité avant d’engager la course.",
+      body: "Sur le site, par téléphone ou par courriel, avec l’adresse d’enlèvement, la destination et l’heure limite de remise. Nous confirmons la faisabilité avant d’engager la course.",
     },
     {
       title: "Enlèvement",
-      body: "Le coursier se présente au cabinet et prend le pli en charge nominativement. Le pli ne quitte pas sa sacoche jusqu’à la remise.",
+      body: "Le coursier vient chercher le pli au cabinet et le garde avec lui jusqu’à la remise : il ne passe par aucun dépôt ni aucune autre main.",
     },
     {
       title: "Transport dédié",
       body: "Course directe, sans regroupement ni passage par un centre de tri. L'avancement de la course est visible en ligne à chaque étape.",
     },
     {
-      title: "Remise contre signature",
-      body: "Le destinataire signe numériquement. Le nom du signataire, l’horodatage et le lieu sont consignés au moment précis de la remise.",
+      title: "Remise en main propre",
+      body: "Le pli est remis au destinataire en personne. Son nom, l’horodatage et le lieu sont consignés au moment précis de la remise.",
     },
     {
       title: "Preuve archivée",
@@ -75,8 +75,8 @@ export const plisConfidentiels: Service = {
 
   included: [
     "Course dédiée, sans regroupement avec d’autres plis",
-    "Remise en main propre contre signature numérique",
-    "Nom du signataire, horodatage et lieu consignés",
+    "Remise en main propre numérique",
+    "Nom du destinataire, horodatage et lieu consignés",
     "Suivi de chaque course en ligne pendant le transport",
     "Justificatif de livraison archivé et restituable",
     "Coursier identifiable et joignable pendant la course",
@@ -105,17 +105,17 @@ export const plisConfidentiels: Service = {
     {
       question: "Qu’est-ce qu’un pli confidentiel ?",
       answer:
-        "Un pli confidentiel est un document ou un courrier qui ne doit être remis qu’à son destinataire désigné : acte, conclusions, pièces de procédure, contrat ou courrier sensible. Il voyage fermé, sans regroupement avec d’autres envois, et n’est remis que contre signature.",
+        "Un pli confidentiel est un document ou un courrier qui ne doit être remis qu’à son destinataire désigné : acte, conclusions, pièces de procédure, contrat ou courrier sensible. Il voyage fermé, sans regroupement avec d’autres envois, et n’est remis que.",
     },
     {
       question: "Comment envoyer un pli confidentiel à Paris ?",
       answer:
-        "Commandez une course en ligne, par téléphone ou par courriel en indiquant l’adresse d’enlèvement, la destination et l’heure limite. Un coursier prend le pli en charge, le transporte en course directe et le remet en main propre au destinataire, qui signe numériquement.",
+        "Commandez une course en ligne, par téléphone ou par courriel en indiquant l’adresse d’enlèvement, la destination et l’heure limite. Un coursier prend le pli en charge, le transporte en course directe et le remet en main propre au destinataire, dont le nom et l’heure de remise sont enregistrés.",
     },
     {
-      question: "La remise contre signature a-t-elle une valeur probante ?",
+      question: "La remise en main propre a-t-elle une valeur probante ?",
       answer:
-        "Le justificatif enregistre le nom du signataire, l’horodatage et le lieu de remise : il établit la réalité et la date de la remise. Il ne se substitue pas à une signification par huissier, qui constitue un acte de procédure distinct.",
+        "Le justificatif enregistre le nom du destinataire, l’horodatage et le lieu de remise : il établit la réalité et la date de la remise. Il ne se substitue pas à une signification par huissier, qui constitue un acte de procédure distinct.",
     },
     {
       question: "Que se passe-t-il si le destinataire est absent ?",
@@ -130,7 +130,7 @@ export const plisConfidentiels: Service = {
     {
       question: "Combien de temps conservez-vous les justificatifs ?",
       answer:
-        "Les justificatifs de remise (nom du signataire, horodatage, lieu) sont archivés et restituables sur simple demande. Contactez-nous pour connaître les conditions d'archivage applicables à votre type de mission.",
+        "Les justificatifs de remise (nom du destinataire, horodatage, lieu) sont archivés et restituables sur simple demande. Contactez-nous pour connaître les conditions d'archivage applicables à votre type de mission.",
     },
     {
       question: "Intervenez-vous en dehors des heures de bureau ?",

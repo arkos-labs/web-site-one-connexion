@@ -19,7 +19,7 @@ export const coursierMotoParis: Service = {
   seo: {
     title: "Coursier moto et scooter Paris — dès 21 € TTC",
     description:
-      "Coursier moto et scooter à Paris : livraison express en deux-roues, top-case verrouillé, suivi en ligne, 7j/7. Prix coursier moto Paris : dès 21 € TTC en normal (3 h), 42 € TTC en super urgent (1 h).",
+      "Coursier moto et scooter à Paris : livraison express en deux-roues, top-case verrouillé, suivi en ligne, 7j/7. Prix coursier moto Paris : dès 21 € TTC en normal (3 h), 42 € TTC en formule Super (1 h).",
     keywords: [
       "coursier moto Paris",
       "coursier scooter Paris",
@@ -68,8 +68,8 @@ export const coursierMotoParis: Service = {
       body: "La moto ne fait aucun autre arrêt. Vous voyez sa progression en ligne jusqu’à l’arrivée.",
     },
     {
-      title: "Signature à l’arrivée",
-      body: "Le destinataire signe ; son nom et l’heure de remise sont enregistrés dans votre espace.",
+      title: "Remise à l’arrivée",
+      body: "Le colis est remis en main propre ; le nom du destinataire et l’heure de remise sont enregistrés dans votre espace.",
     },
   ],
 
@@ -78,14 +78,14 @@ export const coursierMotoParis: Service = {
     "Top-case verrouillé et étanche, jusqu’à 18 kg",
     "Un colis par trajet, jamais de tournée partagée",
     "Progression de la moto visible en ligne",
-    "Signature du destinataire enregistrée avec l’heure",
+    "Nom du destinataire et heure de remise enregistrés",
     "Coursiers vérifiés",
   ],
 
   useCases: [
     {
       title: "Documents et plis",
-      body: "Contrats, actes et pièces administratives à transporter rapidement entre deux adresses, avec remise contre signature.",
+      body: "Contrats, actes et pièces administratives à transporter rapidement entre deux adresses, avec remise en main propre.",
     },
     {
       title: "Petits colis et pièces",
@@ -104,7 +104,7 @@ export const coursierMotoParis: Service = {
     {
       question: "Combien coûte un coursier moto à Paris ?",
       answer:
-        "Une course en moto ou scooter démarre à 21 € TTC en normal (3 h), 31,50 € TTC en urgent (1 h 30) et 42 € TTC en super urgent (1 h) dans Paris. En petite couronne : 42 €, 63 € et 84 € TTC. Le prix est affiché avant de commander.",
+        "Une course en moto ou scooter démarre à 21 € TTC en normal (3 h), 31,50 € TTC en urgent (1 h 30) et 42 € TTC en formule Super (1 h) dans Paris. En petite couronne : 42 €, 63 € et 84 € TTC. Le prix est affiché avant de commander.",
     },
     {
       question: "Quels types de colis un coursier moto peut-il transporter ?",

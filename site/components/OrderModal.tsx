@@ -11,6 +11,7 @@ import { AddressAutocomplete } from "@/components/AddressAutocomplete";
 import { checkIdfAddress } from "@/lib/address-idf";
 import { calculatePrice, splitTTC, ServiceLevel } from "@/lib/pricing";
 import { notifyNewOrder } from "@/lib/notify-new-order";
+import GuestAccountBox from "@/components/GuestAccountBox";
 import { ORDER_NATURES, NATURE_DETAIL_MAX, natureLabel } from "@/lib/order-nature";
 
 interface OrderModalProps {
@@ -325,7 +326,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
               </div>
               <h3 className="mb-2 text-2xl font-bold text-ink">Demande envoyée !</h3>
               <p className="mb-4 text-muted">
-                Un dispatcheur vous contacte dans les 2 prochaines minutes.
+                Un dispatcheur vous contacte dans les 10 prochaines minutes.
               </p>
               {clientType === "entreprise" && paymentMode === "fin_de_mois" && debitMethod === "virement" && (
                 <p className="mb-4 text-sm text-muted">
@@ -338,6 +339,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                   <p className="text-xl font-extrabold tracking-widest text-ink">{trackingCode}</p>
                 </div>
               )}
+              {trackingCode && <GuestAccountBox trackingCode={trackingCode} />}
               <div className="flex flex-col gap-3">
                 <button
                   onClick={() => { setSubmitted(false); setStep(1); }}
@@ -688,7 +690,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                         </div>
                         <div className="flex justify-between">
                           <span>Délai :</span>
-                          <span className="font-medium text-gray-900">{delai === 'standard' ? 'Normal' : delai === 'urgent' ? 'Urgent' : 'Super Urgent'}</span>
+                          <span className="font-medium text-gray-900">{delai === 'standard' ? 'Normal' : delai === 'urgent' ? 'Urgent' : 'Super'}</span>
                         </div>
                       </div>
                       <div className="border-t border-orange-200/60 pt-4 flex items-end justify-between">
@@ -774,7 +776,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                   
                   <div className="flex flex-col gap-1 pb-3">
                     <span className="text-xs font-semibold uppercase text-gray-400">Délai</span>
-                    <span className="font-medium text-gray-900">{delai === 'standard' ? 'Normal (3h)' : delai === 'urgent' ? 'Urgent (1h30)' : 'Super Urgent (1h)'}</span>
+                    <span className="font-medium text-gray-900">{delai === 'standard' ? 'Normal (3h)' : delai === 'urgent' ? 'Urgent (1h30)' : 'Super (1h)'}</span>
                   </div>
                 </div>
                 

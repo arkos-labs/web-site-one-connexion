@@ -23,6 +23,7 @@ import { checkIdfAddress } from "@/lib/address-idf";
 import { calculatePrice, splitTTC, ServiceLevel } from "@/lib/pricing";
 import { ORDER_NATURES, NATURE_DETAIL_MAX, natureLabel } from "@/lib/order-nature";
 import { notifyNewOrder } from "@/lib/notify-new-order";
+import GuestAccountBox from "@/components/GuestAccountBox";
 
 // Tarifs TTC (TVA 20 % comprise) pour tous les clients.
 const eur = (n: number) => `${n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`;
@@ -341,7 +342,7 @@ export default function OrderForm() {
                 Demande envoyée !
               </h3>
               <p className="text-gray-500 text-lg mb-6 max-w-md mx-auto">
-                Un dispatcheur va vous contacter dans les 2 prochaines minutes pour confirmer l'enlèvement.
+                Un dispatcheur va vous contacter dans les 10 prochaines minutes pour confirmer l'enlèvement.
               </p>
               {clientType === 'entreprise' && paymentMode === 'fin_de_mois' && debitMethod === 'virement' && (
                 <p className="text-gray-500 mb-6 max-w-md mx-auto">
@@ -354,6 +355,7 @@ export default function OrderForm() {
                   <p className="text-xl font-extrabold tracking-widest text-gray-900">{trackingCode}</p>
                 </div>
               )}
+              {trackingCode && <div className="mx-auto max-w-md"><GuestAccountBox trackingCode={trackingCode} /></div>}
               <div className="flex gap-4 justify-center">
                 <button
                   onClick={() => { setSubmitted(false); setStep(1); setPickupAddress(""); setDropoffAddress(""); setTrackingCode(null); }}
@@ -794,7 +796,7 @@ export default function OrderForm() {
                           </div>
                           <div className="flex justify-between">
                             <span>Délai :</span>
-                            <span className="font-medium text-gray-900">{delai === 'standard' ? 'Normal' : delai === 'urgent' ? 'Urgent' : delai === 'flash' ? 'Super Urgent' : 'Navette'}</span>
+                            <span className="font-medium text-gray-900">{delai === 'standard' ? 'Normal' : delai === 'urgent' ? 'Urgent' : delai === 'flash' ? 'Super' : 'Navette'}</span>
                           </div>
                         </div>
                         <div className="border-t border-orange-200/60 pt-4 flex items-end justify-between">

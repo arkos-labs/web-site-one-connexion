@@ -18,7 +18,7 @@ const euro = (n: number) =>
 export const metadata: Metadata = {
   title: "Prix coursier Paris : tarif dès 21 € TTC par course",
   description:
-    "Tarif coursier Paris et Île-de-France : dès 21 € TTC en 3 h, 31,50 € en urgent, 42 € en super urgent 1 h. Prix par zone : Paris, petite couronne, banlieue. Compte entreprise.",
+    "Tarif coursier Paris et Île-de-France : dès 21 € TTC en 3 h, 31,50 € en urgent, 42 € en formule Super 1 h. Prix par zone : Paris, petite couronne, banlieue. Compte entreprise.",
   alternates: { canonical: "/tarifs" },
   openGraph: {
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION — Coursier B2B Paris & Île-de-France" }],
@@ -43,27 +43,27 @@ const breadcrumbSchema = {
 const FAQ = [
   {
     q: "Quel est le prix d'un coursier à Paris ?",
-    a: "À Paris intramuros, une course normale sous 3 h démarre à 21 € TTC, une course urgente sous 1 h 30 à 31,50 € TTC et une course super urgente sous 1 h à 42 € TTC.",
+    a: "À Paris intramuros, une course normale sous 3 h démarre à 21 € TTC, une course urgente sous 1 h 30 à 31,50 € TTC et une course Super sous 1 h à 42 € TTC.",
   },
   {
     q: "Quel est le tarif d'un coursier en petite couronne ?",
-    a: "En petite couronne (92, 93, 94), le tarif est de 42 € TTC en normal, 63 € TTC en urgent et 84 € TTC en super urgent. En grande couronne (77, 78, 91, 95) : 78, 117 et 156 € TTC.",
+    a: "En petite couronne (92, 93, 94), le tarif est de 42 € TTC en normal, 63 € TTC en urgent et 84 € TTC en formule Super. En grande couronne (77, 78, 91, 95) : 78, 117 et 156 € TTC.",
   },
   {
     q: "Combien coûte un coursier moto à Paris ?",
-    a: "Une course en moto dans Paris intramuros démarre à 21 € TTC en normal 3 h et 42 € TTC en super urgent (enlèvement et livraison sous 1 h).",
+    a: "Une course en moto dans Paris intramuros démarre à 21 € TTC en normal 3 h et 42 € TTC en formule Super (enlèvement et livraison sous 1 h).",
   },
   {
     q: "Quel est le prix d'un coursier express à Paris ?",
-    a: "Une course express dans Paris se facture 31,50 € TTC en urgent (1 h 30) ou 42 € TTC en super urgent (1 h). En petite couronne : 63 € TTC ou 84 € TTC.",
+    a: "Une course express dans Paris se facture 31,50 € TTC en urgent (1 h 30) ou 42 € TTC en formule Super (1 h). En petite couronne : 63 € TTC ou 84 € TTC.",
   },
   {
     q: "Quel est le tarif d'un coursier en banlieue de Paris ?",
-    a: "En banlieue proche (92, 93, 94), comptez 42 € TTC en normal, 63 € TTC en urgent et 84 € TTC en super urgent. Plus loin en Île-de-France (77, 78, 91, 95) : 78, 117 et 156 € TTC.",
+    a: "En banlieue proche (92, 93, 94), comptez 42 € TTC en normal, 63 € TTC en urgent et 84 € TTC en formule Super. Plus loin en Île-de-France (77, 78, 91, 95) : 78, 117 et 156 € TTC.",
   },
   {
     q: "Combien coûte un coursier en Île-de-France ?",
-    a: "Le tarif d'un coursier en Île-de-France va de 21 € TTC (Paris, délai 3 h) à 156 € TTC (grande couronne, super urgent 1 h). Le prix dépend de la zone la plus éloignée du trajet et du délai choisi.",
+    a: "Le tarif d'un coursier en Île-de-France va de 21 € TTC (Paris, délai 3 h) à 156 € TTC (grande couronne, Super 1 h). Le prix dépend de la zone la plus éloignée du trajet et du délai choisi.",
   },
   {
     q: "Le prix d'un coursier pour un pli confidentiel ou un transport médical est-il différent ?",
@@ -173,7 +173,7 @@ export default function TarifsPage() {
           </h1>
           <p className="max-w-[58ch] text-pretty text-[17px] leading-[1.6] text-white/66">
             Course moto dès 21 € TTC dans Paris en
-            normal 3 h, 42 € TTC en super urgent 1 h. Voici la grille par zone
+            normal 3 h, 42 € TTC en formule Super 1 h. Voici la grille par zone
             et par délai, et ce qui fait varier le prix d'un coursier.
           </p>
         </div>
@@ -288,7 +288,7 @@ export default function TarifsPage() {
                 <th className="py-3 pr-6 text-left font-mono text-[10px] tracking-[0.14em] text-label uppercase">Dépt.</th>
                 <th className="py-3 pr-6 text-left font-mono text-[10px] tracking-[0.14em] text-label uppercase">Normal 3 h</th>
                 <th className="py-3 pr-6 text-left font-mono text-[10px] tracking-[0.14em] text-label uppercase">Urgent 1 h 30</th>
-                <th className="py-3 text-left font-mono text-[10px] tracking-[0.14em] text-label uppercase">Super urgent 1 h</th>
+                <th className="py-3 text-left font-mono text-[10px] tracking-[0.14em] text-label uppercase">Super 1 h</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-line">
@@ -322,7 +322,7 @@ export default function TarifsPage() {
           Le tarif selon votre besoin.
         </h2>
         <ul className="grid max-w-[780px] gap-3 text-[15px] leading-[1.6] text-muted sm:grid-cols-2">
-          <li><Link href="/services/plis-confidentiels" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">Pli confidentiel</Link> : remise en main propre contre signature</li>
+          <li><Link href="/services/plis-confidentiels" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">Pli confidentiel</Link> : remise en main propre</li>
           <li><Link href="/services/transport-medical" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">Coursier médical</Link> : laboratoires et prélèvements</li>
           <li><Link href="/services/livraison-e-commerce" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">Livraison e-commerce</Link> : le jour même en Île-de-France</li>
           <li><Link href="/services/coursier-express-paris" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">Coursier express Paris</Link> : enlèvement en moins de 45 min</li>

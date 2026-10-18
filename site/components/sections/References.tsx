@@ -13,7 +13,7 @@ const STATS = [
 
 // PLACEHOLDER : témoignages réels à intégrer avant mise en ligne.
 const TESTIMONIALS = [
-  "« [Témoignage à remplacer — remise contre signature, traçabilité, réactivité : le retour d'un client réel viendra ici.] »",
+  "« [Témoignage à remplacer — remise en main propre, traçabilité, réactivité : le retour d'un client réel viendra ici.] »",
   "« [Deuxième témoignage à remplacer — idéalement un cabinet ou un laboratoire, avec un cas précis et un délai chiffré.] »",
 ];
 

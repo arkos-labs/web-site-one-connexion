@@ -10,7 +10,7 @@ export const EXTRA_94: Record<string, ExtraZoneContent> = {
   "vitry-sur-seine": {
     cases: [
       { title: "Une pièce pour une chaîne de production", body: "Une entreprise des Ardoines attend en urgence un composant d'un fournisseur de Paris 13e pour relancer une ligne. La course dédiée traverse la Seine et le livre au quai en une heure." },
-      { title: "Une pièce d'exposition pour le MAC VAL", body: "Un artiste envoie une œuvre légère au musée pour un accrochage de dernière minute. Le colis protégé est remis au régisseur, contre signature." },
+      { title: "Une pièce d'exposition pour le MAC VAL", body: "Un artiste envoie une œuvre légère au musée pour un accrochage de dernière minute. Le colis protégé est remis au régisseur." },
       { title: "Un dossier d'un cabinet du centre", body: "Un cabinet de Vitry transmet un dossier de succession à une étude de Paris. La remise est faite en main propre." },
     ],
     tips: [
@@ -21,14 +21,14 @@ export const EXTRA_94: Record<string, ExtraZoneContent> = {
     ],
     faq: [
       { q: "Livrez-vous à Ivry-sur-Seine depuis Vitry ?", a: "Oui, les deux communes se touchent." },
-      { q: "Quelle preuve de livraison est fournie ?", a: "Nom du signataire, date, heure et lieu de remise." },
+      { q: "Quelle preuve de livraison est fournie ?", a: "Nom du destinataire, date, heure et lieu de remise." },
     ],
   },
 
   alfortville: {
     cases: [
       { title: "Un colis vers Créteil avant 17h", body: "Un commerçant d'Alfortville expédie une commande à un client de Créteil avant la fermeture d'un comptoir. Le coursier choisit le pont le moins chargé." },
-      { title: "Un pli de cabinet à Paris 13e", body: "Un cabinet de la commune transmet un document à une étude de Paris. La remise est signée." },
+      { title: "Un pli de cabinet à Paris 13e", body: "Un cabinet de la commune transmet un document à une étude de Paris. La remise se fait en main propre." },
       { title: "Des documents pour une entreprise du bord de Seine", body: "Une PME installée au confluent reçoit des bons de commande d'un client parisien. La course est dédiée." },
     ],
     tips: [
@@ -46,7 +46,7 @@ export const EXTRA_94: Record<string, ExtraZoneContent> = {
   "maisons-alfort": {
     cases: [
       { title: "Un prélèvement vétérinaire", body: "Une clinique envoie un échantillon à un laboratoire spécialisé de Paris. Le contenant est isotherme et le délai de stabilité fixe le départ." },
-      { title: "Un document pour l'école vétérinaire", body: "Un service de l'école reçoit des attestations d'un organisme parisien. La remise est signée à la scolarité." },
+      { title: "Un document pour l'école vétérinaire", body: "Un service de l'école reçoit des attestations d'un organisme parisien. La remise se fait en main propre à la scolarité." },
       { title: "Un dossier pour l'ANSES", body: "Un laboratoire envoie un rapport à un service de l'agence. L'accès étant contrôlé, le destinataire est prévenu." },
     ],
     tips: [
@@ -63,9 +63,9 @@ export const EXTRA_94: Record<string, ExtraZoneContent> = {
 
   "charenton-le-pont": {
     cases: [
-      { title: "Un contrat à faire signer à Bercy", body: "Une société de Charenton doit faire signer un contrat à un client de Bercy avant 17h. La frontière entre les deux est une avenue : la course dure quelques minutes." },
+      { title: "Un contrat à livrer à Bercy", body: "Une société de Charenton doit remettre un contrat à un client de Bercy avant 17h. La frontière entre les deux est une avenue : la course dure quelques minutes." },
       { title: "Un réassort pour une boutique du centre commercial", body: "Une enseigne du centre commercial attend un réassort d'un entrepôt parisien. Le coursier passe par l'entrée de service." },
-      { title: "Un pli de cabinet pour une étude du 12e", body: "Un cabinet de Charenton remet un acte à un notaire du 12e. La remise est signée." },
+      { title: "Un pli de cabinet pour une étude du 12e", body: "Un cabinet de Charenton remet un acte à un notaire du 12e. La remise se fait en main propre." },
     ],
     tips: [
       "Donnez la station de métro la plus proche : Liberté ou Charenton–Écoles.",
@@ -83,7 +83,7 @@ export const EXTRA_94: Record<string, ExtraZoneContent> = {
     cases: [
       { title: "Un prélèvement depuis un hôpital", body: "Un service de l'hôpital national envoie un échantillon vers un laboratoire parisien. Le contenant est isotherme, le départ calé sur le délai de stabilité." },
       { title: "Un dossier de patient pour Esquirol", body: "Un cabinet transmet un dossier à un service de l'hôpital Esquirol. Le coursier se présente au pavillon indiqué." },
-      { title: "Un document pour une résidence", body: "Un syndic remet un document à une résidence de la commune. La remise est signée au gardien." },
+      { title: "Un document pour une résidence", body: "Un syndic remet un document à une résidence de la commune. La remise se fait en main propre au gardien." },
     ],
     tips: [
       "Sur un domaine hospitalier, donnez le pavillon, le service et un contact.",
@@ -111,14 +111,14 @@ export const EXTRA_94: Record<string, ExtraZoneContent> = {
     ],
     faq: [
       { q: "Livrez-vous à Champigny depuis Joinville ?", a: "Oui, de l'autre côté de la Marne." },
-      { q: "Quelle preuve de livraison recevons-nous ?", a: "Nom du signataire, date, heure et lieu." },
+      { q: "Quelle preuve de livraison recevons-nous ?", a: "Nom du destinataire, date, heure et lieu." },
     ],
   },
 
   "nogent-sur-marne": {
     cases: [
       { title: "Du matériel pour un événement au pavillon Baltard", body: "Un organisateur de salon a oublié des supports de communication. Une course immédiate les livre à l'entrée de service avant l'ouverture au public." },
-      { title: "Un acte pour une étude de la Grande Rue", body: "Un confrère parisien envoie un acte à une étude de Nogent. La remise est signée en main propre." },
+      { title: "Un acte pour une étude de la Grande Rue", body: "Un confrère parisien envoie un acte à une étude de Nogent. La remise se fait en main propre." },
       { title: "Un prélèvement vers Paris 12e", body: "Un cabinet médical envoie un échantillon à un laboratoire. Le coursier traverse le bois de Vincennes en quelques minutes." },
     ],
     tips: [
@@ -135,7 +135,7 @@ export const EXTRA_94: Record<string, ExtraZoneContent> = {
 
   "le-perreux-sur-marne": {
     cases: [
-      { title: "Un pli pour une villa", body: "Un notaire du Perreux remet un acte à un client dans une villa des bords de Marne. Le coursier utilise le code du portail et obtient la signature." },
+      { title: "Un pli pour une villa", body: "Un notaire du Perreux remet un acte à un client dans une villa des bords de Marne. Le coursier utilise le code du portail et remet l'acte en main propre." },
       { title: "Un prélèvement de cabinet", body: "Un médecin envoie un échantillon à un laboratoire de Nogent. Le contenant est isotherme." },
       { title: "Un document pour une PME", body: "Une PME de services livre des documents à un client de Fontenay-sous-Bois. La course est brève." },
     ],
@@ -153,7 +153,7 @@ export const EXTRA_94: Record<string, ExtraZoneContent> = {
 
   "fontenay-sous-bois": {
     cases: [
-      { title: "Un contrat à signer au Val de Fontenay", body: "Une entreprise d'une tour du Val de Fontenay attend un contrat signé d'un cabinet parisien. Le coursier se présente à l'accueil avec le nom du destinataire." },
+      { title: "Un contrat à livrer au Val de Fontenay", body: "Une entreprise d'une tour du Val de Fontenay attend un contrat d'un cabinet parisien. Le coursier se présente à l'accueil avec le nom du destinataire." },
       { title: "Des documents pour un cabinet de la commune", body: "Un cabinet de Fontenay reçoit des pièces d'un confrère de Vincennes. La course est très courte." },
       { title: "Un colis de commerçant", body: "Un commerçant du centre expédie une commande à un client de Nogent. Le trajet passe par le bois de Vincennes." },
     ],
@@ -165,7 +165,7 @@ export const EXTRA_94: Record<string, ExtraZoneContent> = {
     ],
     faq: [
       { q: "Livrez-vous à Rosny-sous-Bois depuis Fontenay ?", a: "Oui, le Val de Fontenay est à la limite des deux communes." },
-      { q: "Quelle preuve de livraison est fournie ?", a: "Nom du signataire, date, heure et lieu." },
+      { q: "Quelle preuve de livraison est fournie ?", a: "Nom du destinataire, date, heure et lieu." },
     ],
   },
 
@@ -173,7 +173,7 @@ export const EXTRA_94: Record<string, ExtraZoneContent> = {
     cases: [
       { title: "Un acte pour une étude de La Varenne", body: "Un confrère de Paris envoie un acte à une étude de La Varenne-Saint-Hilaire. Le coursier prend la route de la boucle et remet en main propre." },
       { title: "Un prélèvement de clinique", body: "Une clinique de la boucle envoie un échantillon à un laboratoire de Créteil. Le contenant est isotherme." },
-      { title: "Un colis à une résidence en bord de Marne", body: "Un syndic remet un document à une résidence. Le gardien signe la remise." },
+      { title: "Un colis à une résidence en bord de Marne", body: "Un syndic remet un document à une résidence. Le pli est remis en main propre au gardien." },
     ],
     tips: [
       "Précisez toujours le quartier : La Varenne, Le Parc, Adamville ou Saint-Maur-Créteil.",
@@ -190,7 +190,7 @@ export const EXTRA_94: Record<string, ExtraZoneContent> = {
   "champigny-sur-marne": {
     cases: [
       { title: "Une pièce pour une usine", body: "Une entreprise de la zone industrielle attend une pièce d'un fournisseur de Paris. La course dédiée la livre au quai en une heure." },
-      { title: "Un document pour le musée de la Résistance", body: "Un service du musée reçoit un dossier d'archives. La remise est signée à l'accueil." },
+      { title: "Un document pour le musée de la Résistance", body: "Un service du musée reçoit un dossier d'archives. La remise se fait en main propre à l'accueil." },
       { title: "Un pli pour une entreprise de l'A4", body: "Une société du pôle d'affaires de l'A4 attend un contrat. La course traverse la Marne." },
     ],
     tips: [
@@ -208,7 +208,7 @@ export const EXTRA_94: Record<string, ExtraZoneContent> = {
   villejuif: {
     cases: [
       { title: "Un échantillon vers Gustave Roussy", body: "Un laboratoire de Paris envoie un échantillon à un service de l'institut. Le contenant est isotherme et le délai de stabilité respecté." },
-      { title: "Un dossier pour Paul-Brousse", body: "Un cabinet transmet un dossier à un service de l'hôpital. Le coursier le remet au secrétariat, contre signature." },
+      { title: "Un dossier pour Paul-Brousse", body: "Un cabinet transmet un dossier à un service de l'hôpital. Le coursier le remet au secrétariat." },
       { title: "Un consommable pour le Cancer Campus", body: "Une équipe de recherche reçoit un consommable d'un fournisseur du 13e. La course est dédiée." },
     ],
     tips: [
@@ -219,13 +219,13 @@ export const EXTRA_94: Record<string, ExtraZoneContent> = {
     ],
     faq: [
       { q: "Livrez-vous à Paris 13e depuis Villejuif ?", a: "Oui, les deux sont voisins." },
-      { q: "Quelle preuve de livraison recevons-nous ?", a: "Nom du signataire, date, heure et lieu." },
+      { q: "Quelle preuve de livraison recevons-nous ?", a: "Nom du destinataire, date, heure et lieu." },
     ],
   },
 
   gentilly: {
     cases: [
-      { title: "Un contrat pour Station F", body: "Une société de Gentilly doit faire signer un contrat à une start-up du 13e. La course est très courte." },
+      { title: "Un contrat pour Station F", body: "Une société de Gentilly doit remettre un contrat à une start-up du 13e. La course est très courte." },
       { title: "Un plan pour un chantier", body: "Un architecte de Gentilly envoie un plan mis à jour à un conducteur de travaux du 14e. La remise a lieu sur le chantier." },
       { title: "Un colis de commerçant", body: "Un commerçant du centre expédie une commande à un client d'Arcueil. Le trajet dure quelques minutes." },
     ],
@@ -244,7 +244,7 @@ export const EXTRA_94: Record<string, ExtraZoneContent> = {
   arcueil: {
     cases: [
       { title: "Un composant pour un bureau d'études", body: "Un bureau d'études technique attend un composant d'un fournisseur du 13e. La course dédiée le livre au laboratoire." },
-      { title: "Un document pour une association", body: "Une association d'Arcueil reçoit des pièces d'un cabinet de Paris. La remise est signée." },
+      { title: "Un document pour une association", body: "Une association d'Arcueil reçoit des pièces d'un cabinet de Paris. La remise se fait en main propre." },
       { title: "Un prélèvement", body: "Un médecin envoie un échantillon à un laboratoire du 14e. Le contenant est isotherme." },
     ],
     tips: [
@@ -261,9 +261,9 @@ export const EXTRA_94: Record<string, ExtraZoneContent> = {
 
   cachan: {
     cases: [
-      { title: "Un consommable pour un laboratoire de l'ENS", body: "Un laboratoire attend un consommable d'un fournisseur de Paris. Le destinataire est prévenu et le colis remis contre signature." },
+      { title: "Un consommable pour un laboratoire de l'ENS", body: "Un laboratoire attend un consommable d'un fournisseur de Paris. Le destinataire est prévenu et le colis remis." },
       { title: "Des documents pour un centre de formation", body: "Un organisme de formation reçoit des attestations. La remise est faite au secrétariat." },
-      { title: "Un pli pour un cabinet", body: "Un cabinet de Cachan remet un acte à une étude de Paris 14e. La remise est signée." },
+      { title: "Un pli pour un cabinet", body: "Un cabinet de Cachan remet un acte à une étude de Paris 14e. La remise se fait en main propre." },
     ],
     tips: [
       "Sur le campus de l'ENS, donnez le département, le bâtiment et un contact.",
@@ -273,7 +273,7 @@ export const EXTRA_94: Record<string, ExtraZoneContent> = {
     ],
     faq: [
       { q: "Livrez-vous à Villejuif depuis Cachan ?", a: "Oui, les communes sont voisines." },
-      { q: "Quelle preuve de livraison est fournie ?", a: "Nom du signataire, date, heure et lieu." },
+      { q: "Quelle preuve de livraison est fournie ?", a: "Nom du destinataire, date, heure et lieu." },
     ],
   },
 
@@ -298,7 +298,7 @@ export const EXTRA_94: Record<string, ExtraZoneContent> = {
   orly: {
     cases: [
       { title: "Un document pour une compagnie aérienne", body: "Un prestataire envoie un document de maintenance à un bureau d'une compagnie à l'aéroport. Le coursier se présente au terminal indiqué." },
-      { title: "Un colis pour un hôtel", body: "Un hôtel proche d'Orly reçoit un document de direction d'un cabinet parisien. La remise est signée à l'accueil." },
+      { title: "Un colis pour un hôtel", body: "Un hôtel proche d'Orly reçoit un document de direction d'un cabinet parisien. La remise se fait en main propre à l'accueil." },
       { title: "Une pièce aéronautique légère", body: "Un atelier attend une petite pièce d'un fournisseur de Rungis. La course dédiée la livre en moins d'une heure." },
     ],
     tips: [
@@ -317,7 +317,7 @@ export const EXTRA_94: Record<string, ExtraZoneContent> = {
     cases: [
       { title: "Un bon de livraison pour un entrepôt", body: "Un entrepôt alimentaire de Chevilly-Larue envoie un bon de livraison signé à un client de Paris. La remise est horodatée." },
       { title: "Une pièce pour un engin", body: "Un loueur d'engins attend une pièce d'un fournisseur de Rungis. La course est très courte." },
-      { title: "Un document pour un marché", body: "Une société de la zone remet un contrat à un grossiste du marché. La remise est signée." },
+      { title: "Un document pour un marché", body: "Une société de la zone remet un contrat à un grossiste du marché. La remise se fait en main propre." },
     ],
     tips: [
       "Pour un entrepôt, donnez le portail, le bâtiment et l'heure de réception.",
@@ -335,7 +335,7 @@ export const EXTRA_94: Record<string, ExtraZoneContent> = {
     cases: [
       { title: "Du matériel pour un événement à la roseraie", body: "Un organisateur a oublié des documents pour une réception. Une course immédiate les livre à l'entrée de service avant l'arrivée des invités." },
       { title: "Un prélèvement de cabinet", body: "Un médecin du centre-ville envoie un échantillon à un laboratoire. Le contenant est isotherme." },
-      { title: "Un pli pour un notaire", body: "Un confrère parisien remet un acte à une étude de L'Haÿ. La remise est signée." },
+      { title: "Un pli pour un notaire", body: "Un confrère parisien remet un acte à une étude de L'Haÿ. La remise se fait en main propre." },
     ],
     tips: [
       "Pour la roseraie, donnez l'entrée de service et le nom de l'organisateur.",
@@ -345,7 +345,7 @@ export const EXTRA_94: Record<string, ExtraZoneContent> = {
     ],
     faq: [
       { q: "Livrez-vous à Chevilly-Larue depuis L'Haÿ ?", a: "Oui, les communes sont voisines." },
-      { q: "Quelle preuve de livraison est fournie ?", a: "Nom du signataire, date, heure et lieu." },
+      { q: "Quelle preuve de livraison est fournie ?", a: "Nom du destinataire, date, heure et lieu." },
     ],
   },
 

@@ -15,13 +15,13 @@ export const LOCAL_78: Record<string, LocalZoneContent> = {
       title: "Versailles : cour d'appel, préfecture et avenues royales",
       paragraphs: [
         "Pour les avocats du département, la cour d'appel de Versailles est l'adresse décisive : les dépôts et remises de pièces se jouent à l'heure du greffe. Précisez le service et l'heure limite. La remise est horodatée, nominative, avec un justificatif à joindre au dossier.",
-        "La ville a trois gares distinctes. Pour une adresse en centre-ville, indiquez la plus proche : Rive-Droite, Rive-Gauche ou Chantiers. Cela situe immédiatement le coursier. Versailles étant en grande couronne, le tarif est de 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en super urgent.",
+        "La ville a trois gares distinctes. Pour une adresse en centre-ville, indiquez la plus proche : Rive-Droite, Rive-Gauche ou Chantiers. Cela situe immédiatement le coursier. Versailles étant en grande couronne, le tarif est de 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en formule Super.",
       ],
     },
     faq: [
-      { q: "Pouvez-vous déposer des conclusions à la cour d'appel de Versailles ?", a: "Oui. Course dédiée, remise contre signature, justificatif horodaté. Indiquez le service et l'heure limite." },
+      { q: "Pouvez-vous déposer des conclusions à la cour d'appel de Versailles ?", a: "Oui. Course dédiée, remise en main propre, justificatif horodaté. Indiquez le service et l'heure limite." },
       { q: "Livrez-vous au château de Versailles ?", a: "Oui, à l'entrée de service, avec le nom du destinataire et un contact." },
-      { q: "Quel tarif pour Versailles ?", a: "Dès 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en super urgent." },
+      { q: "Quel tarif pour Versailles ?", a: "Dès 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en formule Super." },
     ],
   },
 
@@ -33,14 +33,14 @@ export const LOCAL_78: Record<string, LocalZoneContent> = {
     localGuide: {
       title: "Saint-Germain-en-Laye : château, forêt et clientèle de prestige",
       paragraphs: [
-        "Saint-Germain-en-Laye concentre cabinets, études et professionnels de santé qui échangent des documents confidentiels avec Paris. La remise en main propre contre signature est la règle, avec nom du signataire et heure consignés.",
-        "Le musée d'archéologie nationale reçoit des pièces et des documents : donnez le service, les dimensions et un contact. Pour un prélèvement vers un laboratoire parisien, précisez la température de conservation et le délai de stabilité. Le tarif de la grande couronne est de 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en super urgent.",
+        "Saint-Germain-en-Laye concentre cabinets, études et professionnels de santé qui échangent des documents confidentiels avec Paris. La remise en main propre est la règle, avec nom du destinataire et heure consignés.",
+        "Le musée d'archéologie nationale reçoit des pièces et des documents : donnez le service, les dimensions et un contact. Pour un prélèvement vers un laboratoire parisien, précisez la température de conservation et le délai de stabilité. Le tarif de la grande couronne est de 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en formule Super.",
       ],
     },
     faq: [
-      { q: "Pouvez-vous remettre un pli confidentiel à un cabinet de Saint-Germain-en-Laye ?", a: "Oui, en course dédiée, contre signature nominative avec justificatif horodaté." },
+      { q: "Pouvez-vous remettre un pli confidentiel à un cabinet de Saint-Germain-en-Laye ?", a: "Oui, en course dédiée, remis en main propre avec justificatif horodaté." },
       { q: "Livrez-vous au musée d'archéologie nationale ?", a: "Oui, par l'entrée de service, avec le destinataire et un contact." },
-      { q: "Quel tarif pour Saint-Germain-en-Laye ?", a: "Dès 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en super urgent." },
+      { q: "Quel tarif pour Saint-Germain-en-Laye ?", a: "Dès 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en formule Super." },
     ],
   },
 
@@ -53,13 +53,13 @@ export const LOCAL_78: Record<string, LocalZoneContent> = {
       title: "Mantes-la-Jolie : à cinquante kilomètres de Paris par l'A13",
       paragraphs: [
         "La A13 relie Paris à Mantes en moins d'une heure hors trafic, mais les embouteillages du retour peuvent doubler ce temps. Pour une livraison à heure limite, indiquez-la dès la commande : nous partons plus tôt si le trafic l'exige.",
-        "L'hôpital François-Quesnay échange avec les laboratoires parisiens. Pour un prélèvement, précisez le service, la température de conservation et le délai de stabilité. Mantes étant en grande couronne, le tarif est de 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en super urgent.",
+        "L'hôpital François-Quesnay échange avec les laboratoires parisiens. Pour un prélèvement, précisez le service, la température de conservation et le délai de stabilité. Mantes étant en grande couronne, le tarif est de 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en formule Super.",
       ],
     },
     faq: [
       { q: "Pouvez-vous livrer à heure précise à Mantes-la-Jolie ?", a: "Oui. Nous confirmons la faisabilité avant d'engager la course et partons plus tôt si le trafic l'exige." },
       { q: "Transportez-vous des prélèvements vers l'hôpital de Mantes ?", a: "Oui, en course dédiée, avec contenant isotherme à la demande." },
-      { q: "Quel tarif pour Mantes-la-Jolie ?", a: "Dès 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en super urgent." },
+      { q: "Quel tarif pour Mantes-la-Jolie ?", a: "Dès 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en formule Super." },
     ],
   },
 
@@ -72,13 +72,13 @@ export const LOCAL_78: Record<string, LocalZoneContent> = {
       title: "Poissy : architecture moderne et industrie",
       paragraphs: [
         "La villa Savoye est un monument historique ouvert aux visiteurs. Pour un envoi destiné au site, donnez le service, l'entrée de service et un contact. Les accès sont différents pour le public et pour les livraisons.",
-        "L'industrie automobile a laissé à Poissy un réseau de sous-traitants et de prestataires. Les envois urgents y sont des pièces, des échantillons et des documents de livraison. Précisez le poids et l'heure limite. Poissy étant en grande couronne, le tarif est de 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en super urgent.",
+        "L'industrie automobile a laissé à Poissy un réseau de sous-traitants et de prestataires. Les envois urgents y sont des pièces, des échantillons et des documents de livraison. Précisez le poids et l'heure limite. Poissy étant en grande couronne, le tarif est de 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en formule Super.",
       ],
     },
     faq: [
       { q: "Livrez-vous à la villa Savoye ?", a: "Oui, par l'entrée de service, avec le nom du destinataire et un contact." },
       { q: "Pouvez-vous transporter des pièces industrielles légères ?", a: "Oui, jusqu'à 18 kg dans le top-case. Au-delà, appelez-nous avant." },
-      { q: "Quel tarif pour Poissy ?", a: "Dès 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en super urgent." },
+      { q: "Quel tarif pour Poissy ?", a: "Dès 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en formule Super." },
     ],
   },
 
@@ -91,13 +91,13 @@ export const LOCAL_78: Record<string, LocalZoneContent> = {
       title: "Sartrouville : une ville traversée par la voie ferrée",
       paragraphs: [
         "À Sartrouville, la voie ferrée sépare le centre des quartiers du bord de Seine, avec peu de franchissements. Indiquez le côté de la voie pour une adresse proche de la gare, cela évite un détour par un pont ou un passage souterrain.",
-        "Les PME et les commerces envoient des plis, des colis et des documents vers Paris, Argenteuil et les Yvelines. La remise est signée, avec nom et heure consignés. Sartrouville étant en grande couronne, le tarif est de 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en super urgent.",
+        "Les PME et les commerces envoient des plis, des colis et des documents vers Paris, Argenteuil et les Yvelines. La remise se fait en main propre, avec nom et heure consignés. Sartrouville étant en grande couronne, le tarif est de 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en formule Super.",
       ],
     },
     faq: [
       { q: "Livrez-vous de part et d'autre de la voie ferrée ?", a: "Oui. Précisez le côté de la voie et la rue." },
       { q: "Pouvez-vous livrer à Argenteuil depuis Sartrouville ?", a: "Oui, la Seine sépare les deux communes mais elles sont proches. Dès 78 € TTC." },
-      { q: "Quel tarif pour Sartrouville ?", a: "Dès 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en super urgent." },
+      { q: "Quel tarif pour Sartrouville ?", a: "Dès 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en formule Super." },
     ],
   },
 
@@ -110,13 +110,13 @@ export const LOCAL_78: Record<string, LocalZoneContent> = {
       title: "Guyancourt : ingénierie et ville nouvelle",
       paragraphs: [
         "Dans une ville nouvelle comme Saint-Quentin-en-Yvelines, les adresses se ressemblent. Les sites d'ingénierie sont de vastes campus avec plusieurs bâtiments : donnez le bâtiment, le plateau et un contact direct. Sans cela, le coursier est arrêté à l'accueil.",
-        "Les équipes d'ingénieurs et de sous-traitants échangent des pièces, des prototypes, des disques durs. Précisez le poids, la fragilité et le niveau de confidentialité. Guyancourt étant en grande couronne, le tarif est de 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en super urgent.",
+        "Les équipes d'ingénieurs et de sous-traitants échangent des pièces, des prototypes, des disques durs. Précisez le poids, la fragilité et le niveau de confidentialité. Guyancourt étant en grande couronne, le tarif est de 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en formule Super.",
       ],
     },
     faq: [
       { q: "Livrez-vous sur un site d'ingénierie à accès contrôlé ?", a: "Oui. Donnez le bâtiment, le service et un contact pour que le coursier soit annoncé." },
       { q: "Pouvez-vous transporter des prototypes légers ?", a: "Oui, jusqu'à 18 kg. Précisez la fragilité à la commande." },
-      { q: "Quel tarif pour Guyancourt ?", a: "Dès 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en super urgent." },
+      { q: "Quel tarif pour Guyancourt ?", a: "Dès 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en formule Super." },
     ],
   },
 
@@ -129,13 +129,13 @@ export const LOCAL_78: Record<string, LocalZoneContent> = {
       title: "Vélizy-Villacoublay : zones d'activité et centre commercial",
       paragraphs: [
         "Les zones d'activité de Vélizy accueillent des entreprises technologiques et de services, avec des accueils sécurisés. Donnez le nom de la société, le bâtiment et un contact direct. La base aérienne de Villacoublay est un site militaire à accès strictement réglementé : prévenez le destinataire.",
-        "Dans le centre commercial, la livraison passe par l'entrée de service et un responsable de magasin. Donnez l'enseigne, le numéro de lot et un contact. Vélizy étant en grande couronne, le tarif est de 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en super urgent.",
+        "Dans le centre commercial, la livraison passe par l'entrée de service et un responsable de magasin. Donnez l'enseigne, le numéro de lot et un contact. Vélizy étant en grande couronne, le tarif est de 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en formule Super.",
       ],
     },
     faq: [
       { q: "Livrez-vous dans un magasin de Vélizy 2 ?", a: "Oui. Donnez l'enseigne, le lot et un contact : l'entrée de service est distincte." },
-      { q: "Pouvez-vous livrer sur un site à accès contrôlé ?", a: "Oui, à l'accueil désigné, contre signature. Prévenez le destinataire de la venue du coursier." },
-      { q: "Quel tarif pour Vélizy-Villacoublay ?", a: "Dès 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en super urgent." },
+      { q: "Pouvez-vous livrer sur un site à accès contrôlé ?", a: "Oui, à l'accueil désigné. Prévenez le destinataire de la venue du coursier." },
+      { q: "Quel tarif pour Vélizy-Villacoublay ?", a: "Dès 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en formule Super." },
     ],
   },
 
@@ -148,13 +148,13 @@ export const LOCAL_78: Record<string, LocalZoneContent> = {
       title: "Chatou : l'île des Impressionnistes et les bords de Seine",
       paragraphs: [
         "L'île de Chatou accueille des événements professionnels, des salons d'antiquaires et des réceptions. Pour une livraison liée à un événement, donnez le nom de l'organisateur, le point d'accès et l'heure de remise. L'accès par le pont est limité aux véhicules autorisés.",
-        "Dans le reste de la commune, les professions libérales et les PME envoient des plis et des colis légers. La remise est signée, avec nom et heure consignés. Chatou étant en grande couronne, le tarif est de 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en super urgent.",
+        "Dans le reste de la commune, les professions libérales et les PME envoient des plis et des colis légers. La remise se fait en main propre, avec nom et heure consignés. Chatou étant en grande couronne, le tarif est de 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en formule Super.",
       ],
     },
     faq: [
       { q: "Livrez-vous sur l'île des Impressionnistes ?", a: "Oui, avec le point d'accès, le nom de l'organisateur et un contact sur place." },
-      { q: "Pouvez-vous livrer à Rueil-Malmaison depuis Chatou ?", a: "Oui, les communes se font face de part et d'autre de la Seine. Le tarif est de 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en super urgent." },
-      { q: "Quel tarif pour Chatou ?", a: "Dès 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en super urgent." },
+      { q: "Pouvez-vous livrer à Rueil-Malmaison depuis Chatou ?", a: "Oui, les communes se font face de part et d'autre de la Seine. Le tarif est de 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en formule Super." },
+      { q: "Quel tarif pour Chatou ?", a: "Dès 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en formule Super." },
     ],
   },
 
@@ -167,13 +167,13 @@ export const LOCAL_78: Record<string, LocalZoneContent> = {
       title: "Houilles : dans la boucle de la Seine",
       paragraphs: [
         "Houilles est enserrée dans la boucle de la Seine : pour rejoindre Paris, les trajets passent par des ponts qui se chargent aux heures de pointe. Indiquez l'heure à laquelle le colis doit arriver, nous planifions le départ en conséquence.",
-        "Les cabinets, commerces et PME de la commune envoient des plis, des documents et des prélèvements. Pour un prélèvement, précisez la température de conservation et le délai de stabilité. Houilles étant en grande couronne, le tarif est de 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en super urgent.",
+        "Les cabinets, commerces et PME de la commune envoient des plis, des documents et des prélèvements. Pour un prélèvement, précisez la température de conservation et le délai de stabilité. Houilles étant en grande couronne, le tarif est de 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en formule Super.",
       ],
     },
     faq: [
       { q: "Les ponts de la boucle de la Seine ralentissent-ils les courses ?", a: "Ils concentrent le trafic aux heures de pointe. Nous planifions le départ en conséquence." },
       { q: "Transportez-vous des prélèvements depuis un cabinet de Houilles ?", a: "Oui, en course dédiée, avec contenant isotherme à la demande." },
-      { q: "Quel tarif pour Houilles ?", a: "Dès 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en super urgent." },
+      { q: "Quel tarif pour Houilles ?", a: "Dès 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en formule Super." },
     ],
   },
 };

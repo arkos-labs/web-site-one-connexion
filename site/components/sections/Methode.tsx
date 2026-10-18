@@ -21,7 +21,7 @@ const STEPS = [
   {
     step: "ÉTAPE 04",
     title: "Preuve de livraison",
-    body: "Signature, photo et horodatage transmis dans la minute, puis archivés sur votre compte pendant 12 mois.",
+    body: "Nom du destinataire, photo et horodatage transmis dans la minute, puis archivés sur votre compte pendant 12 mois.",
   },
 ];
 

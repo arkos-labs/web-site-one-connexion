@@ -4,6 +4,7 @@ import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { CheckCircle2 } from "lucide-react";
 import Link from "next/link";
+import GuestAccountBox from "@/components/GuestAccountBox";
 
 function OrderSuccessContent() {
   const searchParams = useSearchParams();
@@ -22,15 +23,17 @@ function OrderSuccessContent() {
         </h1>
         
         <p className="text-gray-500 text-lg mb-6">
-          Votre paiement a bien été traité (ou votre carte enregistrée). Un dispatcheur va vous contacter dans les plus brefs délais pour confirmer l'enlèvement.
+          Votre paiement a bien été traité (ou votre carte enregistrée). Un dispatcheur va vous contacter dans les 10 prochaines minutes pour confirmer l'enlèvement.
         </p>
 
         {orderId && (
           <div className="mb-8 inline-block rounded-xl border border-gray-200 bg-gray-50 px-6 py-3">
-            <p className="text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-1">ID Commande</p>
+            <p className="text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-1">Code de suivi</p>
             <p className="text-lg font-extrabold text-gray-900">{orderId}</p>
           </div>
         )}
+
+        {orderId && <GuestAccountBox trackingCode={orderId} />}
 
         <Link
           href="/"

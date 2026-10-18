@@ -42,7 +42,7 @@ const FORMATS = [
 const DELAIS = [
   { id: "standard", name: "Normal 3h", hint: "Tarif de base", icon: Clock },
   { id: "urgent", name: "Urgent 1h30", hint: "+50% du tarif", icon: Zap },
-  { id: "flash", name: "Super Urgent 1h", hint: "+100% du tarif", icon: Zap },
+  { id: "flash", name: "Super 1h", hint: "+100% du tarif", icon: Zap },
 ] as const;
 
 /* Tarif d'affichage (dynamique) */

@@ -161,7 +161,7 @@ export const GUIDES: Guide[] = [
           "Voici la grille de ONE CONNEXION pour une course en Île-de-France. Quand le trajet traverse deux zones, la zone la plus éloignée s'applique : de Paris vers Nanterre, c'est le tarif petite couronne.",
         ],
         table: {
-          head: ["Zone", "Normal 3 h", "Urgent 1 h 30", "Super urgent 1 h"],
+          head: ["Zone", "Normal 3 h", "Urgent 1 h 30", "Super 1 h"],
           rows: [
             ["Paris (75)", "21 €", "31,50 €", "42 €"],
             ["Petite couronne (92, 93, 94)", "42 €", "63 €", "84 €"],
