@@ -7,6 +7,7 @@ import { NavetteRequestForm } from "@/components/dashboard/NavetteRequestForm";
 import { createClient } from "@/lib/supabase/client";
 import { isProAccount } from "@/lib/dashboard-nav";
 import { PageShell, KpiStrip, StatusPill, EmptyState, LoadingState, BTN_ACCENT, BTN_GHOST_DARK } from "@/components/dashboard/ui";
+import { formatEur, htOf } from "@/lib/price-display";
 
 export default function NavettesPage() {
   const supabase = createClient();
@@ -218,8 +219,8 @@ export default function NavettesPage() {
                       <div className="flex items-center gap-4">
                         {n.estimated_price != null && (
                           <div className="text-right">
-                            <div className="text-lg font-extrabold leading-none tabular-nums text-ink">{n.estimated_price} €</div>
-                            <div className="mt-0.5 text-[11px] font-medium text-muted">TTC / passage</div>
+                            <div className="text-lg font-extrabold leading-none tabular-nums text-ink">{formatEur(Number(n.estimated_price))} € TTC</div>
+                            <div className="mt-0.5 text-[11px] font-medium text-muted tabular-nums">{formatEur(htOf(Number(n.estimated_price)))} € HT / passage</div>
                           </div>
                         )}
                         <Link

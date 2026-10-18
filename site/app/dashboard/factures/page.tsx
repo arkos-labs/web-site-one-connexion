@@ -166,7 +166,7 @@ export default function FacturesPage() {
                 <th scope="col" className={TH}>N° facture</th>
                 <th scope="col" className={TH}>Période</th>
                 <th scope="col" className={TH}>Volume</th>
-                <th scope="col" className={`${TH} text-right`}>Montant TTC</th>
+                <th scope="col" className={`${TH} text-right`}>Montant</th>
                 <th scope="col" className={TH}>Statut</th>
                 <th scope="col" className={`${TH} w-10`}><span className="sr-only">Détails</span></th>
               </tr>
@@ -189,7 +189,10 @@ export default function FacturesPage() {
                   </td>
                   <td className={`${TD} whitespace-nowrap capitalize text-muted`}>{invoice.date}</td>
                   <td className={`${TD} whitespace-nowrap text-muted`}>{volume(invoice)}</td>
-                  <td className={`${TD} whitespace-nowrap text-right font-extrabold tabular-nums`}>{eur(invoice.amount)}</td>
+                  <td className={`${TD} whitespace-nowrap text-right font-extrabold tabular-nums`}>
+                    <div className="text-sm font-extrabold text-ink">{eur(invoice.amount)} TTC</div>
+                    <div className="text-[11px] font-medium text-muted">{eur(htOf(invoice.amount))} HT</div>
+                  </td>
                   <td className={`${TD} whitespace-nowrap`}><Status status={invoice.status} /></td>
                   <td className={`${TD} text-right`}>
                     <ChevronRight size={18} className="text-label transition-transform group-hover:translate-x-0.5 group-hover:text-ink" />
@@ -209,7 +212,10 @@ export default function FacturesPage() {
                   </div>
                   <div className="flex items-baseline justify-between gap-3">
                     <span className="text-xs capitalize text-muted">{invoice.date} · {volume(invoice)}</span>
-                    <span className="text-base font-extrabold tabular-nums">{eur(invoice.amount)}</span>
+                    <div className="text-right">
+                      <div className="text-base font-extrabold tabular-nums">{eur(invoice.amount)} TTC</div>
+                      <div className="text-[11px] font-medium text-muted">{eur(htOf(invoice.amount))} HT</div>
+                    </div>
                   </div>
                 </Link>
               </li>

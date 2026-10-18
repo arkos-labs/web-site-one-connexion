@@ -23,6 +23,8 @@ const statusMeta = (status: string): { tone: Tone; label: string } => {
   return { tone: "gray", label: "En attente" };
 };
 
+import { htOf } from "@/lib/price-display";
+
 const ANOMALY_STEP: Record<Anomaly["step"], string> = { enlevement: "Enlèvement", livraison: "Livraison", general: "Général" };
 const eur = (n: number) => `${n.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`;
 
@@ -219,8 +221,8 @@ export default function SuiviPage() {
     if (ttc === null) return <span className="text-xs text-label">-</span>;
     return (
       <div className="whitespace-nowrap text-right">
-        <div className="text-sm font-extrabold tabular-nums text-ink">{eur(ttc)}</div>
-        <div className="text-[11px] font-medium text-muted">TTC{d.type === "navette" ? " / passage" : ""}</div>
+        <div className="text-sm font-extrabold tabular-nums text-ink">{eur(ttc)} TTC</div>
+        <div className="text-[11px] font-medium text-muted tabular-nums">{eur(htOf(ttc))} HT{d.type === "navette" ? " / pass." : ""}</div>
       </div>
     );
   };

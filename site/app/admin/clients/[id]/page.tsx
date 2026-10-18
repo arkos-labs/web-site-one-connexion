@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { formatEur, htOf } from "@/lib/price-display";
 import { AdminPage, ErrorState, LoadingState } from "@/components/dashboard/ui";
 import {
   Briefcase,
@@ -268,8 +269,7 @@ export default function AdminClientDetailPage() {
       }
     >
       <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-        <StatCard icon={ShoppingBag} label="Commandes" value={String(orders.length)} sub={activeOrders.length > 0 ? `${activeOrders.length} en cours` : "Aucune en cours"} />
-        <StatCard icon={Euro} label="CA généré" value={`${revenue.toFixed(2)} €`} sub="Hors courses annulées" />
+        <StatCard icon={Euro} label="CA généré" value={`${revenue.toFixed(2)} € TTC`} sub={`${htOf(revenue).toFixed(2)} € HT · Hors annulations`} />
         <StatCard
           icon={FileText}
           label="Facturation en attente"
@@ -324,7 +324,10 @@ export default function AdminClientDetailPage() {
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
-                    <span className="text-[15px] font-bold text-ink">{inv.amount.toFixed(2)} € TTC</span>
+                    <div className="text-right">
+                      <div className="text-[15px] font-bold text-ink">{inv.amount.toFixed(2)} € TTC</div>
+                      <div className="text-[11px] font-medium text-muted">{htOf(inv.amount).toFixed(2)} € HT</div>
+                    </div>
                     {inv.status === "payee" ? (
                       <span className="flex items-center gap-1.5 rounded-full bg-green-50 px-2.5 py-1 text-[11px] font-bold text-green-700">
                         <CheckCircle2 size={12} /> Réglée
@@ -377,7 +380,10 @@ export default function AdminClientDetailPage() {
                     <span className="text-[12.5px] font-semibold text-muted">
                       {new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }).format(new Date(o.created_at))}
                     </span>
-                    <span className="text-[14px] font-bold text-ink">{o.price_estimate ? `${o.price_estimate.toFixed(2)} €` : "-"}</span>
+                    <div className="text-right">
+                      <div className="text-[14px] font-bold text-ink">{o.price_estimate ? `${o.price_estimate.toFixed(2)} € TTC` : "-"}</div>
+                      {o.price_estimate && <div className="text-[11px] font-medium text-muted">{htOf(o.price_estimate).toFixed(2)} € HT</div>}
+                    </div>
                   </div>
                 </div>
               ))}
@@ -407,7 +413,10 @@ export default function AdminClientDetailPage() {
                   </div>
                   <div className="flex items-center gap-3 text-right">
                     <span className="text-[12.5px] font-semibold text-muted">{n.days_str || "Jours non définis"}</span>
-                    <span className="text-[14px] font-bold text-ink">{(n.estimated_price ?? 0).toFixed(2)} €</span>
+                    <div className="text-right">
+                      <div className="text-[14px] font-bold text-ink">{(n.estimated_price ?? 0).toFixed(2)} € TTC</div>
+                      {n.estimated_price && <div className="text-[11px] font-medium text-muted">{htOf(n.estimated_price).toFixed(2)} € HT</div>}
+                    </div>
                   </div>
                 </div>
               ))}

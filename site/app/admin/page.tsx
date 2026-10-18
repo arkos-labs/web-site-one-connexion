@@ -3,6 +3,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import { htOf } from "@/lib/price-display";
 import { AdminPage } from "@/components/dashboard/ui";
 import { AlertTriangle, ArrowRight, Clock, Euro, Package, Plus, Truck, Users } from "lucide-react";
 
@@ -249,8 +250,8 @@ export default function AdminOverviewPage() {
         <StatCard
           icon={Euro}
           label="CA du jour"
-          value={stats ? `${stats.caJour.toFixed(2)} €` : "…"}
-          sub={stats ? `${stats.ordersFactureesJour} commande${stats.ordersFactureesJour > 1 ? "s" : ""} facturée${stats.ordersFactureesJour > 1 ? "s" : ""}` : undefined}
+          value={stats ? `${stats.caJour.toFixed(2)} € TTC` : "…"}
+          sub={stats ? `${htOf(stats.caJour).toFixed(2)} € HT · ${stats.ordersFactureesJour} commande${stats.ordersFactureesJour > 1 ? "s" : ""}` : undefined}
         />
         <StatCard
           icon={Truck}

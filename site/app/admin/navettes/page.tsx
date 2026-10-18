@@ -3,6 +3,7 @@
 import React, { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import { htOf } from "@/lib/price-display";
 import { AdminPage } from "@/components/dashboard/ui";
 import { useQueryParam } from "@/lib/use-query-state";
 import { Calendar, ChevronDown, ChevronUp, Clock, Euro, MapPin, Search, ToggleLeft, ToggleRight } from "lucide-react";
@@ -116,7 +117,7 @@ function AdminNavettesPageInner() {
         <StatCard icon={Calendar} label="Total navettes" value={String(total)} sub="Tous statuts confondus" />
         <StatCard icon={ToggleRight} label="Actives" value={String(active.length)} sub={total ? `${Math.round((active.length / total) * 100)}% du parc` : undefined} accent={active.length > 0} />
         <StatCard icon={ToggleLeft} label="Inactives" value={String(inactive.length)} sub="En pause" />
-        <StatCard icon={Euro} label="Estimation mensuelle" value={`${monthlyEstimate.toFixed(2)} €`} sub="Somme des navettes actives" />
+        <StatCard icon={Euro} label="Estimation mensuelle" value={`${monthlyEstimate.toFixed(2)} € TTC`} sub={`${htOf(monthlyEstimate).toFixed(2)} € HT · Navettes actives`} />
       </div>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -198,7 +199,8 @@ function AdminNavettesPageInner() {
                 <div className="flex items-center gap-4 pl-14 sm:pl-0">
                   <div className="text-right">
                     <div className="text-[11px] font-bold uppercase tracking-wide text-label">Estimé</div>
-                    <div className="text-[14px] font-bold text-ink">{(n.estimated_price ?? 0).toFixed(2)} €</div>
+                    <div className="text-[14px] font-bold text-ink">{(n.estimated_price ?? 0).toFixed(2)} € TTC</div>
+                    <div className="text-[11px] font-medium text-muted">{htOf(n.estimated_price ?? 0).toFixed(2)} € HT</div>
                   </div>
                   <button
                     onClick={() => toggleStatus(n.id, n.status)}

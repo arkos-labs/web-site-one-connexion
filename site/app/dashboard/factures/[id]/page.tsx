@@ -6,6 +6,7 @@ import { CreditCard, Download } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { generateInvoicePDF } from "@/lib/generate-invoice-pdf";
 import { PageShell, KpiStrip, StatusPill, ErrorState, LoadingState, TH, TD, BTN_ACCENT } from "@/components/dashboard/ui";
+import { htOf } from "@/lib/price-display";
 
 const eur = (n: number) => `${n.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`;
 const shortDate = (iso: string) => new Date(iso).toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
@@ -186,7 +187,7 @@ export default function FactureDetailsPage() {
             <th scope="col" className={TH}>Course</th>
             <th scope="col" className={TH}>Itinéraire</th>
             <th scope="col" className={TH}>Livraison</th>
-            <th scope="col" className={`${TH} text-right`}>Montant TTC</th>
+            <th scope="col" className={`${TH} text-right`}>Montant</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-line">
@@ -198,8 +199,9 @@ export default function FactureDetailsPage() {
               </td>
               <td className={`${TD} w-full min-w-[280px] align-top`}><Route o={o} /></td>
               <td className={`${TD} min-w-[170px] align-top`}><Delivery o={o} /></td>
-              <td className={`${TD} whitespace-nowrap text-right align-top text-sm font-extrabold tabular-nums`}>
-                {eur(Number(o.price_estimate))}
+              <td className={`${TD} whitespace-nowrap text-right align-top`}>
+                <div className="text-sm font-extrabold text-ink tabular-nums">{eur(Number(o.price_estimate))} TTC</div>
+                <div className="text-[11px] font-medium text-muted tabular-nums">{eur(htOf(Number(o.price_estimate)))} HT</div>
               </td>
             </tr>
           ))}
@@ -212,7 +214,10 @@ export default function FactureDetailsPage() {
           <li key={o.id} className="flex flex-col gap-2.5 px-5 py-4">
             <div className="flex items-center justify-between gap-3">
               <span className="font-mono text-xs font-bold">{o.tracking_code}</span>
-              <span className="text-sm font-extrabold tabular-nums">{eur(Number(o.price_estimate))}</span>
+              <div className="text-right">
+                <div className="text-sm font-extrabold tabular-nums">{eur(Number(o.price_estimate))} TTC</div>
+                <div className="text-[11px] font-medium text-muted tabular-nums">{eur(htOf(Number(o.price_estimate)))} HT</div>
+              </div>
             </div>
             <div className="text-xs text-muted">{shortDate(o.created_at)}</div>
             <Route o={o} />

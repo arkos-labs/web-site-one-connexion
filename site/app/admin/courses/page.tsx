@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { natureLabel } from "@/lib/order-nature";
+import { htOf } from "@/lib/price-display";
 import { AdminPage } from "@/components/dashboard/ui";
 import { useQueryParam } from "@/lib/use-query-state";
 import { AlertTriangle, ArrowRight, ChevronDown, ChevronUp, Clock, MapPin, Search, Send, Truck, Users, X, Zap, Plus } from "lucide-react";
@@ -717,7 +718,7 @@ function AdminCoursesPageInner() {
                       <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] font-medium text-muted">
                         {c.nature && <div><span className="font-bold text-label uppercase">Envoi:</span> {natureLabel(c.nature, c.natureDetail)}</div>}
                         {c.format && <div><span className="font-bold text-label uppercase">Format:</span> {c.format}</div>}
-                        {c.price !== null && <div><span className="font-bold text-label uppercase">Prix:</span> {c.price.toFixed(2)} €</div>}
+                        {c.price !== null && <div><span className="font-bold text-label uppercase">Prix:</span> {c.price.toFixed(2)} € TTC ({htOf(c.price).toFixed(2)} € HT)</div>}
                         {c.contactName && <div><span className="font-bold text-label uppercase">Contact:</span> {c.contactName} {c.contactPhone}</div>}
                       </div>
                     )}

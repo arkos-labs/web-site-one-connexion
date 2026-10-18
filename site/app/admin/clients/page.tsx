@@ -3,6 +3,7 @@
 import React, { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import { htOf } from "@/lib/price-display";
 import { AdminPage } from "@/components/dashboard/ui";
 import { useQueryParam } from "@/lib/use-query-state";
 import { Briefcase, Building2, Calendar, Clock, Euro, Search, ShoppingBag, Users, Plus } from "lucide-react";
@@ -149,7 +150,7 @@ function AdminClientsPageInner() {
       <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         <StatCard icon={Users} label="Total clients" value={String(total)} sub={newThisMonth > 0 ? `+${newThisMonth} ce mois-ci` : "Portefeuille actif"} />
         <StatCard icon={ShoppingBag} label="Commandes ce mois" value={String(ordersThisMonth)} sub="Toutes commandes non annulées" />
-        <StatCard icon={Euro} label="CA clients généré" value={`${totalRevenue.toFixed(2)} €`} sub="Cumul historique" accent />
+        <StatCard icon={Euro} label="CA clients généré" value={`${totalRevenue.toFixed(2)} € TTC`} sub={`${htOf(totalRevenue).toFixed(2)} € HT · Cumul`} accent />
         <StatCard icon={Building2} label="Comptes entreprise" value={String(withCompany.length)} sub={total ? `${Math.round((withCompany.length / total) * 100)}% du portefeuille` : undefined} />
       </div>
 
@@ -228,7 +229,8 @@ function AdminClientsPageInner() {
                   </div>
                   <div className="text-right">
                     <div className="text-[11px] font-bold uppercase tracking-wide text-label">CA généré</div>
-                    <div className="text-[14px] font-bold text-ink">{c.revenue.toFixed(2)} €</div>
+                    <div className="text-[14px] font-bold text-ink">{c.revenue.toFixed(2)} € TTC</div>
+                    <div className="text-[11px] font-medium text-muted">{htOf(c.revenue).toFixed(2)} € HT</div>
                   </div>
                   <Link
                     href={`/admin/clients/${encodeURIComponent(c.id)}`}

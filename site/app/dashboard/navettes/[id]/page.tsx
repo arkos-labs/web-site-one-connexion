@@ -6,6 +6,7 @@ import { useParams, useRouter } from "next/navigation";
 import { RefreshCw, Trash2, Check, Phone, User, Clock, Camera, Pencil, Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { PageShell, DetailBody, Panel, Fact, NoteBox, StatusPill, ErrorState, LoadingState } from "@/components/dashboard/ui";
+import { formatEur, htOf } from "@/lib/price-display";
 
 const DAYS = [
   { id: "mon", fr: "lundi", label: "L", full: "Lun" },
@@ -334,11 +335,24 @@ export default function NavetteDetailsPage() {
               </div>
               <div className="px-5 py-4">
                 <div className="flex items-baseline gap-2">
-                  <span className="text-3xl font-extrabold leading-none tracking-tight tabular-nums">{navette.estimated_price ?? "-"}</span>
+                  <span className="text-3xl font-extrabold leading-none tracking-tight tabular-nums">
+                    {navette.estimated_price != null ? formatEur(Number(navette.estimated_price)) : "-"}
+                  </span>
                   {navette.estimated_price != null && <span className="text-sm font-semibold text-white/60">€ TTC / passage</span>}
                 </div>
                 {navette.estimated_price != null && (
-                  <p className="mt-2 text-xs text-white/60">dont TVA 20 % : {(Number(navette.estimated_price) - Math.round((Number(navette.estimated_price) / 1.2) * 100) / 100).toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</p>
+                  <div className="mt-3 flex flex-col gap-1.5 border-t border-white/10 pt-3 text-[13px]">
+                    <div className="flex justify-between">
+                      <span className="text-white/60">Tarif HT</span>
+                      <span className="font-semibold tabular-nums">{formatEur(htOf(Number(navette.estimated_price)))} €</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-white/60">TVA (20 %)</span>
+                      <span className="font-semibold tabular-nums">
+                        {formatEur(Math.round((Number(navette.estimated_price) - htOf(Number(navette.estimated_price))) * 100) / 100)} €
+                      </span>
+                    </div>
+                  </div>
                 )}
               </div>
             </section>
