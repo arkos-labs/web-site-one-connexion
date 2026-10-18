@@ -8,6 +8,7 @@
  *   window.dispatchEvent(new CustomEvent("open-order-modal"))
  */
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import OrderModal from "./OrderModal";
 
 export default function OrderModalProvider() {
@@ -25,6 +26,12 @@ export default function OrderModalProvider() {
     window.addEventListener("open-order-modal", handler);
     return () => window.removeEventListener("open-order-modal", handler);
   }, []);
+
+  // Le modal vit dans le layout : il se ferme dès qu'on change de page (lien « Connectez-vous », etc.).
+  const pathname = usePathname();
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
 
   return (
     <OrderModal

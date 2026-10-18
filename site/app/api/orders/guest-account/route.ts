@@ -38,7 +38,7 @@ export async function POST(req: Request) {
       const u = data.user;
       const fresh = u && u.email?.toLowerCase() === email && !u.last_sign_in_at
         && new Date(u.created_at).getTime() >= new Date(order.created_at).getTime() - 60_000;
-      if (!fresh) return NextResponse.json({ existing: true });
+      if (!fresh) return NextResponse.json({ existing: true, email });
     } else {
       const pro = order.client_type === 'entreprise';
       const { data: created, error } = await admin.auth.admin.createUser({
@@ -58,7 +58,7 @@ export async function POST(req: Request) {
       if (error || !created.user) {
         // E-mail déjà inscrit : le client se connecte lui-même.
         if (error?.code === 'email_exists' || /already/i.test(error?.message ?? '')) {
-          return NextResponse.json({ existing: true });
+          return NextResponse.json({ existing: true, email });
         }
         throw error ?? new Error('Compte non créé');
       }
@@ -72,7 +72,7 @@ export async function POST(req: Request) {
         .select('id');
       if (!linked?.length) {
         await admin.auth.admin.deleteUser(userId);
-        return NextResponse.json({ existing: true });
+        return NextResponse.json({ existing: true, email });
       }
     }
 

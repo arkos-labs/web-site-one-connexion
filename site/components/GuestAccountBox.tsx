@@ -14,7 +14,7 @@ type State =
   | { kind: "loading" }
   | { kind: "logged-in" }
   | { kind: "created"; email: string; orderId: string; tokenHash: string }
-  | { kind: "existing" }
+  | { kind: "existing"; email: string }
   | { kind: "none" };
 
 export default function GuestAccountBox({ trackingCode }: { trackingCode: string }) {
@@ -37,7 +37,7 @@ export default function GuestAccountBox({ trackingCode }: { trackingCode: string
       const data = res ? await res.json().catch(() => ({})) : {};
       if (cancelled) return;
       if (data.created) setState({ kind: "created", email: data.email, orderId: data.orderId, tokenHash: data.tokenHash });
-      else if (data.existing) setState({ kind: "existing" });
+      else if (data.existing && data.email) setState({ kind: "existing", email: data.email });
       else setState({ kind: "none" });
     })();
     return () => { cancelled = true; };
@@ -55,6 +55,23 @@ export default function GuestAccountBox({ trackingCode }: { trackingCode: string
     const { error: pwError } = await supabase.auth.updateUser({ password });
     if (pwError) { setBusy(false); setError(pwError.message.includes("weak") ? "Mot de passe trop simple." : "Mot de passe non enregistré, réessayez."); return; }
     window.location.href = `/dashboard/suivi/${state.orderId}`;
+  };
+
+  // Compte déjà existant : le client entre seulement son mot de passe, puis la course est rattachée.
+  const login = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (state.kind !== "existing" || !password) return;
+    setBusy(true);
+    setError("");
+    const { error: loginError } = await supabase.auth.signInWithPassword({ email: state.email, password });
+    if (loginError) { setBusy(false); setError("Mot de passe incorrect."); return; }
+    const res = await fetch("/api/orders/claim", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ trackingCode }),
+    }).catch(() => null);
+    const data = res ? await res.json().catch(() => ({})) : {};
+    window.location.href = data.orderId ? `/dashboard/suivi/${data.orderId}` : "/dashboard/suivi";
   };
 
   if (state.kind === "loading") {
@@ -75,10 +92,34 @@ export default function GuestAccountBox({ trackingCode }: { trackingCode: string
 
   if (state.kind === "existing") {
     return (
-      <div className="mb-6 rounded-xl border border-gray-200 bg-gray-50 p-4 text-left text-sm text-gray-600">
-        Vous avez déjà un compte avec cet e-mail.{" "}
-        <Link href="/connexion" className="font-bold text-ink underline">Connectez-vous</Link> pour suivre vos courses.
-      </div>
+      <form onSubmit={login} className="mb-6 rounded-xl border border-orange-100 bg-orange-50/60 p-4 text-left">
+        <p className="text-sm font-bold text-ink">Vous avez déjà un compte</p>
+        <p className="mt-1 text-sm text-gray-600">
+          Entrez le mot de passe de <strong>{state.email}</strong> pour suivre votre course.
+        </p>
+        <input type="email" value={state.email} autoComplete="username" readOnly hidden />
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => { setPassword(e.target.value); setError(""); }}
+          autoComplete="current-password"
+          placeholder="Mot de passe"
+          aria-label="Mot de passe"
+          className="mt-3 w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
+        />
+        {error && <p role="alert" className="mt-2 text-sm font-semibold text-red-600">{error}</p>}
+        <button
+          type="submit"
+          disabled={busy || !password}
+          className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg bg-ink px-6 py-3 text-sm font-bold text-white hover:bg-black disabled:opacity-60"
+        >
+          {busy ? <Loader2 size={16} className="animate-spin" /> : <MapPin size={16} />}
+          Suivre ma course
+        </button>
+        <Link href="/mot-de-passe-oublie" className="mt-2 block text-center text-xs font-semibold text-gray-500 hover:text-ink hover:underline">
+          Mot de passe oublié ?
+        </Link>
+      </form>
     );
   }
 
