@@ -297,8 +297,8 @@ function AdminChauffeursPageInner() {
         {error && <p className="text-[13px] font-medium text-red-500">{error}</p>}
       </div>
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1.7fr_1fr]">
-        <div className="flex flex-col gap-4">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)] [&>*]:min-w-0">
+        <div className="flex min-w-0 flex-col gap-4">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex-1"></div>
             <div className="relative">

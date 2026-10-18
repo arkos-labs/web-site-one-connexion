@@ -154,7 +154,7 @@ function AdminClientsPageInner() {
         <StatCard icon={Building2} label="Comptes entreprise" value={String(withCompany.length)} sub={total ? `${Math.round((withCompany.length / total) * 100)}% du portefeuille` : undefined} />
       </div>
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1.7fr_1fr]">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)] [&>*]:min-w-0">
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex flex-wrap gap-2">
