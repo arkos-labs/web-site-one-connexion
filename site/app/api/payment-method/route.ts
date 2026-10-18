@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 import { sessionUser, customerIdFor, savedMethodOf } from '@/lib/payment-method';
+import { isProAccount } from '@/lib/dashboard-nav';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder', {
   apiVersion: '2025-02-24.acacia',
@@ -41,9 +42,15 @@ export async function POST(req: Request) {
       cancel_url: back,
       metadata: { purpose: 'save_payment_method', user_id: user.id },
     });
+    // Particulier : carte uniquement. Pro (SIRET) : carte, et RIB si le prélèvement SEPA est activé.
+    let pro = isProAccount(user);
+    if (!pro) {
+      const { data: client } = await admin().from('clients').select('siret').eq('id', user.id).maybeSingle();
+      pro = !!client?.siret;
+    }
     let session: Stripe.Checkout.Session;
     try {
-      session = await create(['card', 'sepa_debit']);
+      session = await create(pro ? ['card', 'sepa_debit'] : ['card']);
     } catch (err: any) {
       if (!String(err?.message).includes('sepa_debit')) throw err;
       session = await create(['card']);

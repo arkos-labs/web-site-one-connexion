@@ -134,13 +134,15 @@ export async function POST(req: Request) {
     const unitAmount = Math.round(price * 100);
 
     // Coordonnées du client (saisies à la commande) : elles figureront sur la facture envoyée à la livraison.
-    const pro = clientType === 'entreprise';
+    // Les particuliers paient uniquement par carte : le paiement à 30 jours n'est accepté que si
+    // la commande enregistrée est bien une commande pro avec SIRET (jamais sur la seule foi de la requête).
     const admin = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
     const { data: ord } = await admin
       .from('orders')
-      .select('id, contact_name, contact_email, raison_sociale, adresse_facturation, siret, tva_number')
+      .select('id, client_type, contact_name, contact_email, raison_sociale, adresse_facturation, siret, tva_number')
       .eq('tracking_code', orderId)
       .maybeSingle();
+    const pro = clientType === 'entreprise' && ord?.client_type === 'entreprise' && !!ord?.siret;
     const party: InvoiceParty = {
       name: (pro ? ord?.raison_sociale || ord?.contact_name || companyName : ord?.contact_name) || '',
       email: email || ord?.contact_email || '',
@@ -168,11 +170,11 @@ export async function POST(req: Request) {
     const origin = req.headers.get('origin') || process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
     const baseUrl = origin;
 
-    if (clientType === 'entreprise' && paymentMode === 'fin_de_mois' && debitMethod === 'virement') {
+    if (pro && paymentMode === 'fin_de_mois' && debitMethod === 'virement') {
       return sendTransferInvoice({ orderId, email, companyName, siret, price, pickupAddress, dropoffAddress });
     }
 
-    if (clientType === 'entreprise' && paymentMode === 'fin_de_mois') {
+    if (pro && paymentMode === 'fin_de_mois') {
       // Pro en paiement différé : on enregistre seulement la carte ou le RIB (mandat SEPA) en mode
       // 'setup', aucun montant n'est prélevé aujourd'hui. Le cron deferred-payments prélève à 30 jours.
       // Le client Stripe est créé d'abord pour que le moyen de paiement lui soit rattaché et réutilisable.

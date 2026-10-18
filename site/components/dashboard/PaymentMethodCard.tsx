@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { CreditCard, Landmark, Loader2, Plus, Trash2 } from "lucide-react";
 import { fetchSavedMethod, type SavedMethod } from "@/lib/saved-payment";
 
-export default function PaymentMethodCard() {
+export default function PaymentMethodCard({ cardOnly = false }: { cardOnly?: boolean }) {
   const [method, setMethod] = useState<SavedMethod | null>(null);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
@@ -58,17 +58,19 @@ export default function PaymentMethodCard() {
           </div>
           <p className="mt-2 text-[13px] text-muted">Vos commandes sont réglées en 1 clic avec ce moyen de paiement, sans repasser par la page de paiement.</p>
           <button type="button" onClick={add} disabled={busy} className="mt-3 text-[13px] font-semibold text-accent-dark hover:underline disabled:opacity-50">
-            Remplacer par une autre carte ou un autre RIB
+            {cardOnly ? "Remplacer par une autre carte" : "Remplacer par une autre carte ou un autre RIB"}
           </button>
         </>
       ) : (
         <>
           <p className="mt-1 text-[13px] text-muted">
-            Enregistrez une carte bancaire ou un RIB (prélèvement) : vos prochaines commandes seront réglées en 1 clic.
+            {cardOnly
+              ? "Enregistrez une carte bancaire : vos prochaines commandes seront réglées en 1 clic."
+              : "Enregistrez une carte bancaire ou un RIB (prélèvement) : vos prochaines commandes seront réglées en 1 clic."}
           </p>
           <button type="button" onClick={add} disabled={busy} className="mt-3 flex h-10 items-center gap-2 rounded-xl bg-ink px-4 text-sm font-bold text-white hover:bg-[#25272a] disabled:opacity-60">
             {busy ? <Loader2 size={15} className="animate-spin" /> : <Plus size={15} />}
-            Ajouter une carte ou un RIB
+            {cardOnly ? "Ajouter une carte" : "Ajouter une carte ou un RIB"}
           </button>
         </>
       )}

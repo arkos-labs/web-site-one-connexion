@@ -30,7 +30,7 @@ export async function POST(req: Request) {
     const admin = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
     const { data: order } = await admin
       .from('orders')
-      .select('id, user_id, created_at, status, payment_mode, billing_status, pickup_address, dropoff_address, delai, client_type')
+      .select('id, user_id, created_at, status, payment_mode, billing_status, pickup_address, dropoff_address, delai, client_type, siret')
       .eq('tracking_code', trackingCode)
       .maybeSingle();
     if (!order || order.user_id !== user.id || order.payment_mode || order.billing_status === 'paye'
@@ -45,6 +45,10 @@ export async function POST(req: Request) {
     const customerId = await customerIdFor(admin, stripe, user, false);
     const saved = await savedMethodOf(stripe, customerId);
     if (!saved || !customerId) return NextResponse.json({ fallback: true });
+
+    // Particulier : carte uniquement, réglée tout de suite (ni prélèvement, ni paiement à 30 jours).
+    const pro = order.client_type === 'entreprise' && !!order.siret;
+    if (!pro && (deferred || saved.method.type !== 'card')) return NextResponse.json({ fallback: true });
 
     const price = calculatePrice(order.pickup_address, order.dropoff_address, (order.delai || 'standard') as ServiceLevel);
     const common = { amount_due: price, stripe_customer_id: customerId, stripe_payment_method_id: saved.method.id };

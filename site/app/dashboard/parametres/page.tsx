@@ -308,13 +308,13 @@ export default function ParametresPage() {
 
                 {activeTab === "facturation" && (
                   <div className="max-w-2xl">
-                    <SectionTitle title="Facturation & paiement" text="Vos méthodes de paiement et vos conditions." />
+                    <SectionTitle title={isPro ? "Facturation & paiement" : "Paiement"} text={isPro ? "Vos méthodes de paiement et vos conditions." : "Les particuliers règlent chaque course par carte bancaire."} />
                     {methodSaved && (
                       <p role="status" className="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800">
                         Moyen de paiement enregistré. Vos prochaines commandes seront réglées en 1 clic.
                       </p>
                     )}
-                    <PaymentMethodCard />
+                    <PaymentMethodCard cardOnly={!isPro} />
                     <p className="mt-5 flex items-center gap-2.5 text-[13px] font-medium text-muted">
                       <span className="flex h-6 w-6 items-center justify-center rounded-full bg-green-50 text-green-600">
                         <ShieldCheck size={14} strokeWidth={2.5} />
