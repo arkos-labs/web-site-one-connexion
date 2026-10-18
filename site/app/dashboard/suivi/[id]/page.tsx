@@ -2,8 +2,9 @@
 
 import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import { FileText, CheckCircle2, XCircle, Truck, User, Phone, PackageCheck, Loader2 } from "lucide-react";
+import { FileText, CheckCircle2, XCircle, Truck, User, Phone, PackageCheck, Loader2, Download, ExternalLink } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { natureLabel } from "@/lib/order-nature";
 import { ClientAnomalies, useMissionAnomalies } from "@/components/admin/mission-anomalies";
 import { PageShell, DetailBody, Panel, InfoRow, Fact, NoteBox, StatusPill, ErrorState, LoadingState } from "@/components/dashboard/ui";
 
@@ -23,10 +24,31 @@ const STATUS_LABELS: Record<string, string> = {
 };
 
 const FORMAT_LABELS: Record<string, string> = {
-  pli: "Pli (max 2kg)",
-  colis: "Colis",
-  palette: "Palette",
+  doc: "Pli / document (< 1 kg)",
+  pli: "Pli / document (< 1 kg)",
+  petit: "Petit colis (1 à 5 kg)",
+  volumineux: "Volumineux (5 à 15 kg)",
 };
+
+const DELAI_LABELS: Record<string, string> = {
+  standard: "Normal — livré sous 3 h",
+  urgent: "Urgent — livré sous 1 h 30",
+  flash: "Super — livré sous 1 h",
+  navette: "Navette programmée",
+};
+
+/** Mode de règlement tel que le client l'a choisi (rempli par Stripe au paiement). */
+function paymentLabel(o: any): string | null {
+  if (o.billing_status === "echec" && !o.payment_mode) return "Paiement non réussi";
+  if (o.payment_mode === "carte") return o.billing_status === "rembourse" ? "Carte bancaire — remboursé" : "Carte bancaire — réglé";
+  if (o.payment_mode === "fin_de_mois") {
+    const how = o.billing_status === "virement_attendu" ? "virement" : "prélèvement";
+    return o.billing_status === "paye" ? `Sur facture (${how}) — réglé` : `Sur facture à 30 jours (${how})`;
+  }
+  // Pro avec compte, sans paiement à la commande : la course part sur la facture du mois.
+  if (o.client_type === "entreprise" && o.user_id) return "Facture mensuelle de votre compte";
+  return null;
+}
 
 const STEPS = [
   { key: "en_attente", label: "Commande reçue", icon: FileText, matches: ["en_attente", "pending", "confirmee"], at: "created_at" },
@@ -69,6 +91,9 @@ export default function DeliveryDetailsPage() {
   const [cancelInfo, setCancelInfo] = useState<string | null>(null);
   const [driver, setDriver] = useState<{ name: string | null; phone: string | null; vehicle: string | null } | null>(null);
   const anomalies = useMissionAnomalies(supabase, `client-anomalies-${id}`);
+  // Facture de la course : Stripe (paiement à la commande / à 30 jours) ou facture mensuelle du compte.
+  const [invoice, setInvoice] = useState<{ number: string | null; status: string; url: string | null; pdf: string | null } | null>(null);
+  const [monthlyInvoiceId, setMonthlyInvoiceId] = useState<string | null>(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -149,6 +174,30 @@ export default function DeliveryDetailsPage() {
       .then(({ data }: { data: any }) => setDriver(Array.isArray(data) && data.length ? data[0] : null));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [order?.id, order?.driver_id]);
+
+  const delivered = order?.status === "livree" || order?.status === "delivered";
+  useEffect(() => {
+    if (!order?.id || !delivered) return;
+    let cancelled = false;
+    fetch("/api/orders/invoice", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ orderId: order.id }),
+    })
+      .then((r) => r.json())
+      .then((d) => { if (!cancelled && d?.invoice) setInvoice(d.invoice); })
+      .catch(() => {});
+    supabase
+      .from("invoice_items")
+      .select("invoice_id, invoices(status)")
+      .eq("order_id", order.id)
+      .maybeSingle()
+      .then(({ data }: { data: any }) => {
+        if (!cancelled && data?.invoice_id && data.invoices?.status !== "en_cours") setMonthlyInvoiceId(data.invoice_id);
+      });
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [order?.id, delivered, order?.stripe_invoice_id]);
 
   const handleCancel = async () => {
     if (!order || !confirm("Êtes-vous sûr de vouloir annuler cette commande ?")) return;
@@ -404,10 +453,30 @@ export default function DeliveryDetailsPage() {
                 ) : (
                   <p className="text-[13px] text-white/70">Tarif en cours d&apos;estimation par notre équipe.</p>
                 )}
-                {!isCancelled && (
+                {!isCancelled && paymentLabel(order) && (
                   <p className="mt-4 rounded-lg bg-white/[0.07] px-3 py-2 text-center text-xs font-semibold text-white/80">
-                    Facturé sur votre compte pro (fin de mois)
+                    {paymentLabel(order)}
                   </p>
+                )}
+                {isDelivered && invoice?.url && (
+                  <div className="mt-3 flex flex-col gap-2">
+                    <a href={invoice.url} target="_blank" rel="noreferrer" className="flex h-10 items-center justify-center gap-2 rounded-xl bg-accent text-sm font-bold text-white hover:bg-accent-dark hover:text-white">
+                      <ExternalLink size={15} /> Voir la facture{invoice.number ? ` ${invoice.number}` : ""}
+                    </a>
+                    {invoice.pdf && (
+                      <a href={invoice.pdf} className="flex h-9 items-center justify-center gap-2 rounded-xl border border-white/20 text-xs font-semibold text-white/80 hover:bg-white/10 hover:text-white">
+                        <Download size={14} /> Télécharger le PDF
+                      </a>
+                    )}
+                  </div>
+                )}
+                {isDelivered && !invoice?.url && monthlyInvoiceId && (
+                  <a href={`/dashboard/factures/${monthlyInvoiceId}`} className="mt-3 flex h-10 items-center justify-center gap-2 rounded-xl bg-accent text-sm font-bold text-white hover:bg-accent-dark hover:text-white">
+                    <FileText size={15} /> Voir la facture du mois
+                  </a>
+                )}
+                {isDelivered && !invoice?.url && !monthlyInvoiceId && (
+                  <p className="mt-3 text-center text-xs text-white/60">La facture apparaîtra ici dès son émission.</p>
                 )}
               </div>
             </section>
@@ -415,8 +484,17 @@ export default function DeliveryDetailsPage() {
             <Panel title="Détails">
               <div className="flex flex-col gap-2.5 px-5 py-4">
                 <InfoRow label="Référence" value={<span className="font-mono text-xs">{order.tracking_code}</span>} />
+                <InfoRow label="Commandée le" value={`${created.toLocaleDateString("fr-FR")} à ${hhmm(order.created_at)}`} />
+                {order.nature && <InfoRow label="Envoi" value={natureLabel(order.nature, order.nature_detail)} />}
                 <InfoRow label="Format" value={formatLabel} />
-                <InfoRow label="Délai" value={<span className="capitalize">{order.delai}</span>} />
+                <InfoRow label="Formule" value={DELAI_LABELS[order.delai] ?? order.delai} />
+                {order.scheduled_at && (
+                  <InfoRow label="Créneau prévu" value={`${new Date(order.scheduled_at).toLocaleDateString("fr-FR")} à ${hhmm(order.scheduled_at)}`} />
+                )}
+                {paymentLabel(order) && <InfoRow label="Règlement" value={paymentLabel(order)} />}
+                {order.client_type === "entreprise" && order.raison_sociale && <InfoRow label="Société" value={order.raison_sociale} />}
+                {order.client_type === "entreprise" && order.siret && <InfoRow label="SIRET" value={<span className="font-mono text-xs">{order.siret}</span>} />}
+                {order.client_type === "entreprise" && order.adresse_facturation && <InfoRow label="Facturation" value={order.adresse_facturation} />}
               </div>
             </Panel>
 

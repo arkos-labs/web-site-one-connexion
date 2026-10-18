@@ -12,7 +12,7 @@ import { createClient } from "@/lib/supabase/client";
 
 type State =
   | { kind: "loading" }
-  | { kind: "logged-in" }
+  | { kind: "logged-in"; orderId: string | null }
   | { kind: "created"; email: string; orderId: string; tokenHash: string }
   | { kind: "existing"; email: string }
   | { kind: "none" };
@@ -28,7 +28,17 @@ export default function GuestAccountBox({ trackingCode }: { trackingCode: string
     let cancelled = false;
     (async () => {
       const { data: { user } } = await supabase.auth.getUser();
-      if (user) { if (!cancelled) setState({ kind: "logged-in" }); return; }
+      if (user) {
+        // Déjà connecté : la course est à lui (ou rattachable si même e-mail) → lien vers sa fiche.
+        const res = await fetch("/api/orders/claim", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ trackingCode }),
+        }).catch(() => null);
+        const data = res ? await res.json().catch(() => ({})) : {};
+        if (!cancelled) setState({ kind: "logged-in", orderId: data.orderId ?? null });
+        return;
+      }
       const res = await fetch("/api/orders/guest-account", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -84,7 +94,7 @@ export default function GuestAccountBox({ trackingCode }: { trackingCode: string
 
   if (state.kind === "logged-in") {
     return (
-      <Link href="/dashboard/suivi" className="mb-3 flex w-full items-center justify-center gap-2 rounded-lg bg-ink px-6 py-3 text-sm font-bold text-white hover:bg-black">
+      <Link href={state.orderId ? `/dashboard/suivi/${state.orderId}` : "/dashboard/suivi"} className="mb-3 flex w-full items-center justify-center gap-2 rounded-lg bg-ink px-6 py-3 text-sm font-bold text-white hover:bg-black">
         <MapPin size={16} /> Suivre ma course
       </Link>
     );
