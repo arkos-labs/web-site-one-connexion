@@ -261,7 +261,7 @@ export const EXTRA_94: Record<string, ExtraZoneContent> = {
 
   cachan: {
     cases: [
-      { title: "Un consommable pour un laboratoire de l'ENS", body: "Un laboratoire attend un consommable d'un fournisseur de Paris. Le destinataire est prévenu et le colis remis." },
+      { title: "Un consommable pour un laboratoire de l'ENS", body: "Un laboratoire attend un consommable d'un fournisseur de Paris. Le destinataire est prévenu et le colis lui est remis en main propre." },
       { title: "Des documents pour un centre de formation", body: "Un organisme de formation reçoit des attestations. La remise est faite au secrétariat." },
       { title: "Un pli pour un cabinet", body: "Un cabinet de Cachan remet un acte à une étude de Paris 14e. La remise se fait en main propre." },
     ],

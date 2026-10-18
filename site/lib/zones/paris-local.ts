@@ -109,7 +109,7 @@ export const PARIS_LOCAL: Record<string, { localGuide: ZoneGuide; faq: ZoneFaqIt
     },
     faq: [
       { q: "Livrez-vous aux ministères et à l'Assemblée nationale ?", a: "Oui, à l'accueil désigné. Prévenez le destinataire de l'arrivée du coursier et donnez-nous un contact : l'accès aux bâtiments dépend des règles de chaque site." },
-      { q: "Et pour une ambassade ?", a: "Même principe : nom du destinataire, service et contact. La remise se fait au point d'accueil indiqué,." },
+      { q: "Et pour une ambassade ?", a: "Même principe : nom du destinataire, service et contact. La remise se fait au point d’accueil indiqué." },
       { q: "Les jours d'événements autour des Invalides ou de la tour Eiffel, comment procédez-vous ?", a: "Prévenez-nous de l'événement lors de la commande. Nous adaptons l'itinéraire et vous confirmons le délai avant d'engager la course." },
     ],
   },

@@ -11,7 +11,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { Phone, Menu, X, LogOut } from "lucide-react";
+import { Phone, Menu, X, LogOut, UserCircle2 } from "lucide-react";
 import { PHONE_DISPLAY, PHONE_TEL } from "@/lib/site-content";
 import { DASHBOARD_NAV_ITEMS, isProAccount } from "@/lib/dashboard-nav";
 import { ADMIN_NAV_ITEMS } from "@/lib/admin-nav";
@@ -53,6 +53,25 @@ export default function Header() {
   useEffect(() => {
     setMenuOpen(false);
   }, [pathname]);
+
+  // Pages publiques : savoir si le visiteur est connecté (en-tête « Mon espace » au lieu de « Se connecter »).
+  const [publicUser, setPublicUser] = useState<User | null>(null);
+  const [publicIsAdmin, setPublicIsAdmin] = useState(false);
+  useEffect(() => {
+    if (isDashboard) return;
+    const load = (u: User | null) => {
+      setPublicUser(u);
+      if (!u) { setPublicIsAdmin(false); return; }
+      supabase.from("profiles").select("role").eq("id", u.id).maybeSingle()
+        .then(({ data }: { data: any }) => setPublicIsAdmin(data?.role === "admin"));
+    };
+    supabase.auth.getUser().then(({ data }: { data: { user: User | null } }) => load(data.user));
+    const { data: sub } = supabase.auth.onAuthStateChange((_e: string, session: { user: User } | null) => load(session?.user ?? null));
+    return () => sub.subscription.unsubscribe();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isDashboard]);
+  const publicName = (publicUser?.user_metadata?.full_name as string | undefined)?.split(" ")[0] || publicUser?.email?.split("@")[0] || "";
+  const spaceHref = publicIsAdmin ? "/admin" : "/dashboard";
 
   // Charge l'utilisateur connecté, son profil et ses courses du mois pour le dashboard
   useEffect(() => {
@@ -151,20 +170,30 @@ export default function Header() {
 
             {!isDashboard && (
               <div className="ml-1 flex items-center border-l border-white/20 pl-4">
-                <div className="flex items-center gap-3">
+                {publicUser ? (
                   <Link
-                    href="/connexion"
-                    className="text-[13px] font-medium text-white/60 transition-colors hover:text-white"
+                    href={spaceHref}
+                    className="flex items-center gap-2 rounded-[4px] border border-white/40 px-4 py-[9px] text-[13px] font-semibold tracking-[0.01em] text-white transition-colors hover:bg-white/10"
                   >
-                    Se connecter
+                    <UserCircle2 size={16} className="text-accent" />
+                    {publicIsAdmin ? "Espace admin" : "Mon espace"}{publicName ? ` · ${publicName}` : ""}
                   </Link>
-                  <Link
-                    href="/inscription"
-                    className="rounded-[4px] border border-white/40 px-4 py-[9px] text-[13px] font-semibold tracking-[0.01em] text-white transition-colors hover:bg-white/10"
-                  >
-                    S'inscrire
-                  </Link>
-                </div>
+                ) : (
+                  <div className="flex items-center gap-3">
+                    <Link
+                      href="/connexion"
+                      className="text-[13px] font-medium text-white/60 transition-colors hover:text-white"
+                    >
+                      Se connecter
+                    </Link>
+                    <Link
+                      href="/inscription"
+                      className="rounded-[4px] border border-white/40 px-4 py-[9px] text-[13px] font-semibold tracking-[0.01em] text-white transition-colors hover:bg-white/10"
+                    >
+                      S'inscrire
+                    </Link>
+                  </div>
+                )}
               </div>
             )}
 
@@ -259,10 +288,6 @@ export default function Header() {
                         {coursesThisMonth === null ? "…" : `${coursesThisMonth} course${coursesThisMonth > 1 ? "s" : ""}`}
                       </span>
                     </div>
-                    <div className="flex flex-1 flex-col items-center justify-center">
-                      <span className="text-[10px] font-medium text-white/50">Facturation</span>
-                      <span className="mt-0.5 text-sm font-bold text-accent">{isProAccount(user) ? "Compte pro" : "Immédiate"}</span>
-                    </div>
                   </div>
                 </>
               )}
@@ -353,22 +378,35 @@ export default function Header() {
                 >
                   Commander une course
                 </button>
-                <div className="flex flex-col gap-3 border-t border-white/10 pt-3">
-                  <Link
-                    href="/connexion"
-                    onClick={() => setMenuOpen(false)}
-                    className="rounded-xl px-3 py-3 text-[14px] font-medium text-white/78 transition-colors hover:bg-white/5 hover:text-white"
-                  >
-                    Se connecter
-                  </Link>
-                  <Link
-                    href="/inscription"
-                    onClick={() => setMenuOpen(false)}
-                    className="rounded-[4px] border border-white/20 px-4 py-2 text-center text-[13px] font-semibold tracking-[0.01em] text-white hover:bg-white/10"
-                  >
-                    S'inscrire
-                  </Link>
-                </div>
+                {publicUser ? (
+                  <div className="flex flex-col gap-3 border-t border-white/10 pt-3">
+                    <Link
+                      href={spaceHref}
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center justify-center gap-2 rounded-[4px] border border-white/20 px-4 py-3 text-center text-[13px] font-semibold tracking-[0.01em] text-white hover:bg-white/10"
+                    >
+                      <UserCircle2 size={16} className="text-accent" />
+                      {publicIsAdmin ? "Espace admin" : "Mon espace"}{publicName ? ` · ${publicName}` : ""}
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="flex flex-col gap-3 border-t border-white/10 pt-3">
+                    <Link
+                      href="/connexion"
+                      onClick={() => setMenuOpen(false)}
+                      className="rounded-xl px-3 py-3 text-[14px] font-medium text-white/78 transition-colors hover:bg-white/5 hover:text-white"
+                    >
+                      Se connecter
+                    </Link>
+                    <Link
+                      href="/inscription"
+                      onClick={() => setMenuOpen(false)}
+                      className="rounded-[4px] border border-white/20 px-4 py-2 text-center text-[13px] font-semibold tracking-[0.01em] text-white hover:bg-white/10"
+                    >
+                      S'inscrire
+                    </Link>
+                  </div>
+                )}
               </div>
             </>
           )}

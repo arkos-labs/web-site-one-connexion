@@ -46,7 +46,7 @@ export const EXTRA_93: Record<string, ExtraZoneContent> = {
   "saint-ouen": {
     cases: [
       { title: "Un objet vendu par un antiquaire", body: "Un antiquaire du marché aux puces vend une pièce à un client du 16e. Le coursier récupère le colis emballé, le remet en main propre et rapporte un justificatif." },
-      { title: "Un document pour une entreprise des Docks", body: "Une entreprise des Docks de Saint-Ouen attend un contrat d'un cabinet de Paris. La course est dédiée, la remise en main propre." },
+      { title: "Un document pour une entreprise des Docks", body: "Une entreprise des Docks de Saint-Ouen attend un contrat d'un cabinet de Paris. La course est dédiée, la remise se fait en main propre." },
       { title: "Des plans pour un chantier du Grand Paris", body: "Un chef de chantier reçoit une version imprimée d'un plan modifié. La remise a lieu sur le chantier, avec un contact sur place." },
     ],
     tips: [
@@ -171,7 +171,7 @@ export const EXTRA_93: Record<string, ExtraZoneContent> = {
 
   "noisy-le-sec": {
     cases: [
-      { title: "Des documents de transport d'une entreprise ferroviaire", body: "Un prestataire du rail envoie des bons de livraison à un client de Paris Est. La course est dédiée, la remise en main propre." },
+      { title: "Des documents de transport d'une entreprise ferroviaire", body: "Un prestataire du rail envoie des bons de livraison à un client de Paris Est. La course est dédiée, la remise se fait en main propre." },
       { title: "Une pièce pour un atelier de maintenance", body: "Un atelier attend une pièce d'un fournisseur de Bobigny. Le colis arrive dans l'heure." },
       { title: "Un dossier pour le tribunal", body: "Un cabinet de Noisy dépose un dossier à Bobigny, commune voisine, avant la clôture du greffe." },
     ],
@@ -208,7 +208,7 @@ export const EXTRA_93: Record<string, ExtraZoneContent> = {
   "tremblay-en-france": {
     cases: [
       { title: "Un document de fret avant un départ", body: "Un transitaire de la zone aéroportuaire doit faire parvenir un document à une compagnie avant le chargement d'un vol. La course dédiée arrive au bureau indiqué." },
-      { title: "Une pièce aéronautique", body: "Un prestataire de maintenance attend une petite pièce d'un fournisseur parisien. Le colis, léger, est remis." },
+      { title: "Une pièce aéronautique", body: "Un prestataire de maintenance attend une petite pièce d'un fournisseur parisien. Le colis, léger, est remis en main propre." },
       { title: "Un pli pour un hôtel d'aéroport", body: "Un hôtel reçoit un document de direction d'un cabinet de Paris. La remise se fait en main propre à l'accueil." },
     ],
     tips: [

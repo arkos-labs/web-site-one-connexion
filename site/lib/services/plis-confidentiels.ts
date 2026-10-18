@@ -105,7 +105,7 @@ export const plisConfidentiels: Service = {
     {
       question: "Qu’est-ce qu’un pli confidentiel ?",
       answer:
-        "Un pli confidentiel est un document ou un courrier qui ne doit être remis qu’à son destinataire désigné : acte, conclusions, pièces de procédure, contrat ou courrier sensible. Il voyage fermé, sans regroupement avec d’autres envois, et n’est remis que.",
+        "Un pli confidentiel est un document ou un courrier qui ne doit être remis qu’à son destinataire désigné : acte, conclusions, pièces de procédure, contrat ou courrier sensible. Il voyage fermé, sans regroupement avec d’autres envois, et n’est remis qu’à son destinataire, en main propre.",
     },
     {
       question: "Comment envoyer un pli confidentiel à Paris ?",

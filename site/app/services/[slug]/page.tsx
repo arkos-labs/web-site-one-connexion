@@ -172,7 +172,7 @@ export default async function ServicePage({
             {service.coverage}
           </p>
           <Link
-            href="/#flotte"
+            href="/flotte"
             className="mt-6 inline-block font-mono text-[10.5px] tracking-[0.1em] text-accent-dark uppercase hover:text-ink"
           >
             Voir la flotte et la couverture →

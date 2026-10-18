@@ -63,7 +63,7 @@ export const EXTRA_92: Record<string, ExtraZoneContent> = {
 
   suresnes: {
     cases: [
-      { title: "Un prélèvement vers un laboratoire parisien", body: "Un service de l'hôpital Foch envoie un échantillon qui doit arriver en moins d'une heure à un laboratoire du 16e. Le coursier part avec un contenant isotherme et remet le prélèvement." },
+      { title: "Un prélèvement vers un laboratoire parisien", body: "Un service de l'hôpital Foch envoie un échantillon qui doit arriver en moins d'une heure à un laboratoire du 16e. Le coursier part avec un contenant isotherme et remet le prélèvement en main propre au laboratoire." },
       { title: "Un acte entre une étude et le tribunal", body: "Une étude notariale de la ville haute doit transmettre un acte à un confrère parisien avant la fin de journée. La course part de la colline et rejoint Paris par le pont de Suresnes." },
       { title: "Un colis d'agence pour un client du quai", body: "Une agence installée sur les quais envoie des maquettes à un client de La Défense, de l'autre côté de la Seine. Le trajet passe par le T2 en parallèle : la moto arrive avant le tramway." },
     ],
@@ -244,7 +244,7 @@ export const EXTRA_92: Record<string, ExtraZoneContent> = {
   chatillon: {
     cases: [
       { title: "Un document pour un campus de bureaux", body: "Un cabinet parisien envoie un avenant de contrat à un service d'un campus de bureaux. Le coursier se présente à l'accueil avec le nom du destinataire." },
-      { title: "Du matériel informatique entre deux sites", body: "Une équipe informatique transfère un ordinateur portable de remplacement à un collaborateur. Le colis est remis." },
+      { title: "Du matériel informatique entre deux sites", body: "Une équipe informatique transfère un ordinateur portable de remplacement à un collaborateur. Le colis est remis en main propre." },
       { title: "Un pli pour une administration", body: "Un commerçant de Châtillon dépose un dossier à la préfecture de Nanterre ou à la mairie. La course est planifiée à l'avance." },
     ],
     tips: [
@@ -315,7 +315,7 @@ export const EXTRA_92: Record<string, ExtraZoneContent> = {
 
   sevres: {
     cases: [
-      { title: "Une pièce de céramique pour une exposition", body: "Un conservateur envoie une petite pièce vers un musée parisien. Le colis, protégé, voyage seul et est remis." },
+      { title: "Une pièce de céramique pour une exposition", body: "Un conservateur envoie une petite pièce vers un musée parisien. Le colis, protégé, voyage seul et est remis en main propre." },
       { title: "Un document pour un centre de formation", body: "Un organisme de formation installé à Sèvres a besoin d'attestations pour un examen. La course les remet en main propre au responsable." },
       { title: "Un pli pour une étude de Boulogne", body: "Une étude de Sèvres envoie un acte à un confrère de Boulogne-Billancourt, de l'autre côté de la Seine. La course est très courte." },
     ],
@@ -369,7 +369,7 @@ export const EXTRA_92: Record<string, ExtraZoneContent> = {
 
   sceaux: {
     cases: [
-      { title: "Un acte pour un notaire", body: "Une étude de Sceaux reçoit un acte d'un confrère parisien. Le coursier le remet en main propre,." },
+      { title: "Un acte pour un notaire", body: "Une étude de Sceaux reçoit un acte d'un confrère parisien. Le coursier le remet en main propre." },
       { title: "Du matériel pour un concert au château", body: "Une association culturelle a besoin de partitions pour un concert dans l'orangerie. La course les livre à l'entrée de service." },
       { title: "Un prélèvement d'un cabinet médical", body: "Un médecin envoie un échantillon vers un laboratoire de Paris. Le contenant est isotherme et le délai de stabilité respecté." },
     ],
@@ -424,7 +424,7 @@ export const EXTRA_92: Record<string, ExtraZoneContent> = {
   "le-plessis-robinson": {
     cases: [
       { title: "Un prélèvement depuis Marie-Lannelongue", body: "Un service de l'hôpital envoie un échantillon vers un laboratoire de Paris. Le contenant est isotherme et le départ fixé par le délai de stabilité." },
-      { title: "Un document pour un siège local", body: "Une entreprise du Plessis-Robinson doit remettre un contrat à un client de Clamart. La course est brève, la remise en main propre." },
+      { title: "Un document pour un siège local", body: "Une entreprise du Plessis-Robinson doit remettre un contrat à un client de Clamart. La course est brève, la remise se fait en main propre." },
       { title: "Un colis pour un résident de la cité-jardin", body: "Un particulier professionnel installé dans la cité-jardin attend des échantillons. La remise se fait au numéro indiqué, avec contact." },
     ],
     tips: [

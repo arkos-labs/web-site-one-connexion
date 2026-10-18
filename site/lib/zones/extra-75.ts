@@ -101,7 +101,7 @@ export const EXTRA_75: Record<string, ExtraZoneContent> = {
     cases: [
       { title: "Un manuscrit pour un éditeur de Saint-Germain", body: "Un auteur envoie un manuscrit à une maison d'édition. La remise se fait en main propre à l'accueil." },
       { title: "Un petit tableau pour une galerie de la rue de Seine", body: "Un collectionneur confie une œuvre de petit format. Le coursier la remet en main propre, avec la valeur déclarée." },
-      { title: "Un pli pour un cabinet près du Luxembourg", body: "Un cabinet attend un acte d'un confrère. La remise est faite." },
+      { title: "Un pli pour un cabinet près du Luxembourg", body: "Un cabinet attend un acte d'un confrère. La remise se fait en main propre." },
     ],
     tips: [
       "Pour une galerie, donnez l'entrée de service.",
