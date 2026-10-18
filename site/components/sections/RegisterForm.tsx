@@ -53,8 +53,9 @@ export default function RegisterForm() {
         body: JSON.stringify({
           siret,
           raison_sociale: raisonSociale,
-          email,
-          nom_contact: `${firstName} ${lastName}`,
+          // Vérification du SIRET seule : e-mail et nom ne sont souvent pas encore saisis.
+          email: email.trim() || "verification@oneconnexion.com",
+          nom_contact: `${firstName} ${lastName}`.trim() || "Contact",
           adresse_facturation: adresseFacturation,
         }),
       });
@@ -63,6 +64,9 @@ export default function RegisterForm() {
 
       if (result.valid && result.sireneData) {
         setTva(result.sireneData.tva_number || "");
+        // Raison sociale officielle (Sirene) remplie automatiquement, adresse si le champ est vide.
+        if (result.sireneData.raison_sociale) setRaisonSociale(result.sireneData.raison_sociale);
+        if (result.sireneData.adresse && !adresseFacturation.trim()) setAdresseFacturation(result.sireneData.adresse);
         setError(null);
       } else {
         setError(result.errors?.join(" ") || "SIRET invalide.");

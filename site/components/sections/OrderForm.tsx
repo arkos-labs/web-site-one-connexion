@@ -48,7 +48,9 @@ export default function OrderForm() {
   const [delai, setDelai] = useState('standard');
   const [pickupAddress, setPickupAddress] = useState("");
   const [dropoffAddress, setDropoffAddress] = useState("");
-  const [contactName, setContactName] = useState("");
+  const [contactName, setContactName] = useState(""); // nom de la société (pro)
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [contactPhone, setContactPhone] = useState("");
   const [contactEmail, setContactEmail] = useState("");
   const [contactEmailConfirm, setContactEmailConfirm] = useState("");
@@ -133,7 +135,7 @@ export default function OrderForm() {
         setClientType(v.clientType ?? "entreprise"); setFormat(v.format ?? "doc"); setNature(v.nature ?? "");
         setNatureDetail(v.natureDetail ?? ""); setDelai(v.delai ?? "standard");
         setPickupAddress(v.pickupAddress ?? ""); setDropoffAddress(v.dropoffAddress ?? "");
-        setContactName(v.contactName ?? ""); setContactPhone(v.contactPhone ?? "");
+        setContactName(v.contactName ?? ""); setFirstName(v.firstName ?? ""); setLastName(v.lastName ?? ""); setContactPhone(v.contactPhone ?? "");
         setContactEmail(v.contactEmail ?? ""); setContactEmailConfirm(v.contactEmailConfirm ?? "");
         setNotes(v.notes ?? ""); setPickupDetails(v.pickupDetails ?? ""); setRecipientName(v.recipientName ?? "");
         setScheduledDate(v.scheduledDate ?? ""); setScheduledTime(v.scheduledTime ?? "");
@@ -236,8 +238,12 @@ export default function OrderForm() {
           return;
         }
       }
-      if (!contactName.trim()) {
-        setFormError("Renseignez votre nom (des caractères, pas seulement des espaces).");
+      if (!firstName.trim() || !lastName.trim()) {
+        setFormError("Renseignez votre prénom et votre nom.");
+        return;
+      }
+      if (clientType === "entreprise" && !contactName.trim()) {
+        setFormError("Renseignez le nom de la société.");
         return;
       }
       if (contactPhone.replace(/\D/g, "").length < 9) {
@@ -307,7 +313,7 @@ export default function OrderForm() {
         nature_detail: nature === "autre" ? natureDetail.trim() : null,
         delai,
         notes: orderNotes,
-        contact_name: contactName.trim(),
+        contact_name: `${firstName.trim()} ${lastName.trim()}`.trim(),
         contact_email: contactEmail.trim(),
         contact_phone: contactPhone.trim(),
         status: "en_attente",
@@ -375,7 +381,7 @@ export default function OrderForm() {
           trackingCode,
           checkoutSessionId: checkoutSessionIdFromUrl(data.url),
           values: {
-            clientType, format, nature, natureDetail, delai, pickupAddress, dropoffAddress, contactName, contactPhone,
+            clientType, format, nature, natureDetail, delai, pickupAddress, dropoffAddress, contactName, firstName, lastName, contactPhone,
             contactEmail, contactEmailConfirm, notes, pickupDetails, recipientName, scheduledDate, scheduledTime,
             siret, raisonSociale, adresseFacturation, tva, paymentMode, debitMethod,
           },
@@ -609,9 +615,10 @@ export default function OrderForm() {
                         </div>
                       )}
 
+                      {clientType === 'entreprise' && (
                       <div>
                         <label className="block text-sm font-bold text-gray-800 mb-2">
-                          {clientType === 'entreprise' ? 'Nom de la société' : 'Nom et Prénom'} <span className="text-[#ed5518]">*</span>
+                          Nom de la société <span className="text-[#ed5518]">*</span>
                         </label>
                         <div className="relative">
                           <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -626,9 +633,20 @@ export default function OrderForm() {
                             required
                             value={contactName}
                             onChange={(e) => setContactName(e.target.value)}
-                            placeholder={clientType === 'entreprise' ? "Ex: Acme Corp" : "Ex: Jean Dupont"}
+                            placeholder="Ex: Acme Corp"
                             className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-12 pr-5 py-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-400 transition-colors"
                           />
+                        </div>
+                      </div>
+                      )}
+                      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                        <div>
+                          <label className="block text-sm font-bold text-gray-800 mb-2">Prénom <span className="text-[#ed5518]">*</span></label>
+                          <input type="text" required value={firstName} onChange={(e) => setFirstName(e.target.value)} autoComplete="given-name" placeholder="Jean" className="w-full bg-gray-50 border border-gray-200 rounded-xl px-5 py-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-400 transition-colors" />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-bold text-gray-800 mb-2">Nom <span className="text-[#ed5518]">*</span></label>
+                          <input type="text" required value={lastName} onChange={(e) => setLastName(e.target.value)} autoComplete="family-name" placeholder="Dupont" className="w-full bg-gray-50 border border-gray-200 rounded-xl px-5 py-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-400 transition-colors" />
                         </div>
                       </div>
 

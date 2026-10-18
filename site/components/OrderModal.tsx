@@ -44,7 +44,9 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
   const [delai, setDelai] = useState("standard");
   const [pickupAddress, setPickupAddress] = useState(initialPickup);
   const [dropoffAddress, setDropoffAddress] = useState(initialDropoff);
-  const [contactName, setContactName] = useState("");
+  const [contactName, setContactName] = useState(""); // nom de la société (pro)
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [contactPhone, setContactPhone] = useState("");
   const [contactEmail, setContactEmail] = useState("");
   const [contactEmailConfirm, setContactEmailConfirm] = useState("");
@@ -89,7 +91,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
         setClientType(v.clientType ?? "entreprise"); setFormat(v.format ?? "doc"); setNature(v.nature ?? "");
         setNatureDetail(v.natureDetail ?? ""); setDelai(v.delai ?? "standard");
         setPickupAddress(v.pickupAddress ?? ""); setDropoffAddress(v.dropoffAddress ?? "");
-        setContactName(v.contactName ?? ""); setContactPhone(v.contactPhone ?? "");
+        setContactName(v.contactName ?? ""); setFirstName(v.firstName ?? ""); setLastName(v.lastName ?? ""); setContactPhone(v.contactPhone ?? "");
         setContactEmail(v.contactEmail ?? ""); setContactEmailConfirm(v.contactEmailConfirm ?? "");
         setNotes(v.notes ?? ""); setSiret(v.siret ?? ""); setRaisonSociale(v.raisonSociale ?? "");
         setAdresseFacturation(v.adresseFacturation ?? ""); setTva(v.tva ?? "");
@@ -131,7 +133,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
         setTva(result.sireneData.tva_number || "");
         // Tout est déduit du SIRET : raison sociale et adresse (modifiable)
         setRaisonSociale(result.sireneData.raison_sociale || "");
-        if (result.sireneData.raison_sociale && !contactName.trim()) setContactName(result.sireneData.raison_sociale);
+        if (result.sireneData.raison_sociale) setContactName(result.sireneData.raison_sociale); // nom officiel Sirene
         if (result.sireneData.adresse) setAdresseFacturation(result.sireneData.adresse);
         setFormError("");
       } else {
@@ -186,8 +188,12 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
       setDropoffAddress(d.label);
     }
     if (step === 2) {
-      if (!contactName.trim()) {
-        setFormError("Renseignez votre nom (des caractères, pas seulement des espaces).");
+      if (!firstName.trim() || !lastName.trim()) {
+        setFormError("Renseignez votre prénom et votre nom.");
+        return;
+      }
+      if (clientType === "entreprise" && !contactName.trim()) {
+        setFormError("Renseignez le nom de la société.");
         return;
       }
       // Validation téléphone : 10 chiffres (0X...) ou +33 (11 chiffres)
@@ -262,7 +268,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
         nature_detail: nature === "autre" ? natureDetail.trim() : null,
         delai,
         notes,
-        contact_name: contactName.trim(),
+        contact_name: `${firstName.trim()} ${lastName.trim()}`.trim(),
         contact_email: contactEmail.trim(),
         contact_phone: contactPhone.trim(),
         status: "en_attente",
@@ -330,7 +336,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
           trackingCode,
           checkoutSessionId: checkoutSessionIdFromUrl(data.url),
           values: {
-            clientType, format, nature, natureDetail, delai, pickupAddress, dropoffAddress, contactName, contactPhone,
+            clientType, format, nature, natureDetail, delai, pickupAddress, dropoffAddress, contactName, firstName, lastName, contactPhone,
             contactEmail, contactEmailConfirm, notes, siret, raisonSociale, adresseFacturation, tva, paymentMode, debitMethod,
           },
         });
@@ -545,11 +551,21 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                           )}
                         </div>
                       )}
-                      <div>
-                        <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">
-                          {clientType === "entreprise" ? "Nom de la société" : "Nom & Prénom"} <span className="text-accent">*</span>
-                        </label>
-                        <input type="text" required value={contactName} onChange={(e) => setContactName(e.target.value)} placeholder={clientType === "entreprise" ? "Acme Corp" : "Jean Dupont"} className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30" />
+                      {clientType === "entreprise" && (
+                        <div>
+                          <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">Nom de la société <span className="text-accent">*</span></label>
+                          <input type="text" required value={contactName} onChange={(e) => setContactName(e.target.value)} placeholder="Acme Corp" className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30" />
+                        </div>
+                      )}
+                      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                        <div>
+                          <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">Prénom <span className="text-accent">*</span></label>
+                          <input type="text" required value={firstName} onChange={(e) => setFirstName(e.target.value)} autoComplete="given-name" placeholder="Jean" className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30" />
+                        </div>
+                        <div>
+                          <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">Nom <span className="text-accent">*</span></label>
+                          <input type="text" required value={lastName} onChange={(e) => setLastName(e.target.value)} autoComplete="family-name" placeholder="Dupont" className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30" />
+                        </div>
                       </div>
                       {clientType === "entreprise" && (
                         <>
