@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from "react";
 import { MapPin, Plus, Trash2, X, User, Phone, Star, Loader2 } from "lucide-react";
 import { AddressAutocomplete } from "@/components/AddressAutocomplete";
+import { isServedAddress } from "@/lib/pricing";
+import UnservedAddressAlert, { useUnservedAddresses } from "@/components/UnservedAddressAlert";
 import { createClient } from "@/lib/supabase/client";
 import { PageShell, KpiStrip, EmptyState, LoadingState, INPUT, TEXTAREA, LABEL, BTN_ACCENT, BTN_GHOST } from "@/components/dashboard/ui";
 
@@ -17,6 +19,9 @@ export default function AdressesPage() {
 
   const [label, setLabel] = useState("");
   const [address, setAddress] = useState("");
+  // Favori hors Paris / IDF : refusé, comme à la commande.
+  const outOfZone = address.trim().length > 0 && !isServedAddress(address);
+  const showZoneAlert = useUnservedAddresses([address]);
   const [contactName, setContactName] = useState("");
   const [contactPhone, setContactPhone] = useState("");
   const [notes, setNotes] = useState("");
@@ -80,6 +85,7 @@ export default function AdressesPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (outOfZone) return;
     setSubmitting(true);
     setSubmitError(null);
 
@@ -283,6 +289,7 @@ export default function AdressesPage() {
                 <div className="[&_input]:h-11 [&_input]:rounded-lg [&_input]:bg-white [&_input]:py-0 [&_input]:font-medium [&_input]:focus:ring-2 [&_input]:focus:ring-accent/15">
                   <AddressAutocomplete value={address} onChange={setAddress} required={true} />
                 </div>
+                {showZoneAlert && <UnservedAddressAlert className="mt-3" />}
               </div>
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -337,7 +344,7 @@ export default function AdressesPage() {
                 <button type="button" onClick={() => setIsModalOpen(false)} className={BTN_GHOST}>
                   Annuler
                 </button>
-                <button type="submit" disabled={submitting} className={BTN_ACCENT}>
+                <button type="submit" disabled={submitting || outOfZone} className={BTN_ACCENT}>
                   {submitting ? (
                     <>
                       <Loader2 size={16} className="animate-spin" />
