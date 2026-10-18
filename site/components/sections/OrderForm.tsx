@@ -326,10 +326,6 @@ export default function OrderForm() {
     <section id="commander" className="border-y border-line bg-[#F8F9FA]">
       <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-10">
         <div className="mb-14 text-center">
-          <div className="mb-5 inline-flex bg-emerald-50 text-emerald-600 px-4 py-1.5 rounded-full text-xs font-semibold items-center gap-1.5 border border-emerald-100">
-            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
-            2h chrono
-          </div>
           <h2 className="text-[clamp(28px,3vw,40px)] font-bold leading-[1.1] tracking-[-0.03em] text-gray-900">
             Commander une course.
           </h2>
