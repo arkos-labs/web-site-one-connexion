@@ -6,6 +6,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Truck, MapPin, Clock, Plus, Trash2, ArrowRight, ShieldCheck, AlertTriangle, Loader2, Check } from "lucide-react";
 import { AddressAutocomplete } from "@/components/AddressAutocomplete";
+import { isServedAddress } from "@/lib/pricing";
+import UnservedAddressAlert, { useUnservedAddresses } from "@/components/UnservedAddressAlert";
+
+const OUT_OF_ZONE = "Adresse non reconnue : Paris et Île-de-France uniquement";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { Panel, INPUT, LABEL, BTN_PRIMARY } from "@/components/dashboard/ui";
@@ -30,7 +34,7 @@ const DAYS = [
 const SCOOTER_MAX_POINTS = 100;
 
 const stepSchema = z.object({
-  address: z.string().min(5, "L'adresse est requise"),
+  address: z.string().min(5, "L'adresse est requise").refine(isServedAddress, OUT_OF_ZONE),
   contactName: z.string().min(2, "Nom requis"),
   contactPhone: z.string().min(10, "Téléphone requis"),
   notes: z.string().optional(),
@@ -41,7 +45,7 @@ const stepSchema = z.object({
 
 const navetteSchema = z.object({
   type: z.enum(["distribution", "collecte"]),
-  mainAddress: z.string().min(5, "L'adresse est requise"),
+  mainAddress: z.string().min(5, "L'adresse est requise").refine(isServedAddress, OUT_OF_ZONE),
   mainContactName: z.string().min(2, "Nom requis"),
   mainContactPhone: z.string().min(10, "Téléphone requis"),
   mainNotes: z.string().optional(),
@@ -134,6 +138,11 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
 
   const watchType = watch("type");
   const watchSteps = watch("steps");
+  const watchMain = watch("mainAddress");
+  // Adresses hors Paris / IDF : pas de tarif, demande bloquée (voir aussi la validation zod).
+  const zoneAddresses = [watchMain ?? "", ...(watchSteps ?? []).map((st) => st?.address ?? "")];
+  const outOfZone = zoneAddresses.some((a) => a.trim().length > 0 && !isServedAddress(a));
+  const showZoneAlert = useUnservedAddresses(zoneAddresses);
   const watchDays = watch("selectedDays");
 
   const totalVolumePoints = useMemo(() => {
@@ -431,13 +440,14 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
           </div>
           <div className="px-5 py-4">
             <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-extrabold leading-none tracking-tight tabular-nums">{estimatedPrice} €</span>
+              <span className="text-3xl font-extrabold leading-none tracking-tight tabular-nums">{outOfZone ? "--" : estimatedPrice} €</span>
               <span className="text-sm font-semibold text-white/60">TTC / passage</span>
             </div>
-            <p className="mt-2 text-xs text-white/60">dont TVA 20 % : {(estimatedPrice - Math.round((estimatedPrice / 1.2) * 100) / 100).toFixed(2).replace(".", ",")} €</p>
+            {!outOfZone && <p className="mt-2 text-xs text-white/60">dont TVA 20 % : {(estimatedPrice - Math.round((estimatedPrice / 1.2) * 100) / 100).toFixed(2).replace(".", ",")} €</p>}
+            {showZoneAlert && <UnservedAddressAlert className="mt-4 text-left" />}
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isSubmitting || outOfZone}
               className="mt-4 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-accent text-sm font-bold text-white transition-colors hover:bg-accent-dark disabled:opacity-60"
             >
               {isSubmitting ? (

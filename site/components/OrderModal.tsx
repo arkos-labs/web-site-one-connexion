@@ -9,7 +9,8 @@ import { X, Package, Mail, Truck, Zap, Clock, Calendar, User, Building2, Chevron
 import { createClient } from "@/lib/supabase/client";
 import { AddressAutocomplete } from "@/components/AddressAutocomplete";
 import { checkIdfAddress } from "@/lib/address-idf";
-import { calculatePrice, splitTTC, ServiceLevel } from "@/lib/pricing";
+import { calculatePrice, splitTTC, isServedAddress, ServiceLevel } from "@/lib/pricing";
+import UnservedAddressAlert, { useUnservedAddresses } from "@/components/UnservedAddressAlert";
 import { notifyNewOrder } from "@/lib/notify-new-order";
 import GuestAccountBox from "@/components/GuestAccountBox";
 import { ORDER_NATURES, NATURE_DETAIL_MAX, natureLabel } from "@/lib/order-nature";
@@ -44,6 +45,9 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
   const [contactEmailConfirm, setContactEmailConfirm] = useState("");
   const [notes, setNotes] = useState("");
   const [estimatedPrice, setEstimatedPrice] = useState<number | null>(null);
+  // Adresse hors Paris / IDF : blocage immédiat, alerte après une courte pause de frappe.
+  const outOfZone = [pickupAddress, dropoffAddress].some((a) => a.trim().length > 0 && !isServedAddress(a));
+  const showZoneAlert = useUnservedAddresses([pickupAddress, dropoffAddress]);
 
   // Champs B2B
   const [siret, setSiret] = useState("");
@@ -57,7 +61,8 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
   const supabase = createClient();
 
   useEffect(() => {
-    if (pickupAddress && dropoffAddress) {
+    // Pas de tarif hors Paris / Île-de-France.
+    if (pickupAddress && dropoffAddress && isServedAddress(pickupAddress) && isServedAddress(dropoffAddress)) {
       setEstimatedPrice(calculatePrice(pickupAddress, dropoffAddress, delai as ServiceLevel));
     } else {
       setEstimatedPrice(null);
@@ -144,6 +149,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
 
     // Le bouton n'est pas un submit : `required` n'est jamais appliqué. On vérifie à la main,
     // en refusant aussi les valeurs faites uniquement d'espaces.
+    if (outOfZone) return; // adresse hors zone : alerte affichée, pas de commande
     if (step === 1 && (!pickupAddress.trim() || !dropoffAddress.trim())) {
       setFormError("Renseignez une adresse d'enlèvement et une adresse de livraison (des caractères, pas seulement des espaces).");
       return;
@@ -443,6 +449,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                         required 
                       />
                     </div>
+                    {showZoneAlert && <UnservedAddressAlert />}
                   </div>
                 )}
 
@@ -735,7 +742,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                     <button
                       type="button"
                       onClick={handleSubmit}
-                      disabled={submitting || checkingAddress}
+                      disabled={submitting || checkingAddress || outOfZone}
                       className="ml-auto flex items-center gap-2 rounded-lg bg-accent px-6 py-2.5 text-sm font-bold text-white hover:bg-accent-dark transition-colors disabled:opacity-60"
                     >
                       {submitting ? "Redirection…" : step < 3 ? "Étape suivante" : "Commander"}

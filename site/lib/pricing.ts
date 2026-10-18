@@ -63,6 +63,15 @@ export function getZoneFromDepartment(dept: string | null): Zone {
   return 3;
 }
 
+/** Départements desservis : Paris et Île-de-France. */
+export const SERVED_DEPARTMENTS = ["75", "77", "78", "91", "92", "93", "94", "95"];
+
+/** Adresse reconnue en Paris / Île-de-France (code postal ou nom de commune). */
+export function isServedAddress(address: string): boolean {
+  const dept = getDepartmentFromAddress(address);
+  return !!dept && SERVED_DEPARTMENTS.includes(dept);
+}
+
 export function calculatePrice(pickup: string, dropoff: string, service: ServiceLevel): number {
   const deptPickup = getDepartmentFromAddress(pickup);
   const deptDropoff = getDepartmentFromAddress(dropoff);

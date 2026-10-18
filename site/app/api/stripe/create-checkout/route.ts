@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
-import { calculatePrice, ServiceLevel } from '@/lib/pricing';
+import { calculatePrice, isServedAddress, ServiceLevel } from '@/lib/pricing';
 import { vatRateId } from '@/lib/stripe-vat';
 import { INVOICE_FOOTER, invoiceFooter, invoiceCustomFields, upsertStripeCustomer, type InvoiceParty } from '@/lib/invoice-info';
 
@@ -125,6 +125,10 @@ export async function POST(req: Request) {
       siret
     } = body;
 
+    // Hors Paris / Île-de-France : pas de tarif, pas de paiement.
+    if (!isServedAddress(String(pickupAddress ?? '')) || !isServedAddress(String(dropoffAddress ?? ''))) {
+      return NextResponse.json({ error: 'Adresse non reconnue : nous livrons uniquement à Paris et en Île-de-France.' }, { status: 400 });
+    }
     const price = calculatePrice(pickupAddress, dropoffAddress, service as ServiceLevel);
     // Stripe takes amounts in cents
     const unitAmount = Math.round(price * 100);

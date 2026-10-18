@@ -20,7 +20,8 @@ import {
 import { createClient } from "@/lib/supabase/client";
 import { AddressAutocomplete } from "@/components/AddressAutocomplete";
 import { checkIdfAddress } from "@/lib/address-idf";
-import { calculatePrice, splitTTC, ServiceLevel } from "@/lib/pricing";
+import { calculatePrice, splitTTC, isServedAddress, ServiceLevel } from "@/lib/pricing";
+import UnservedAddressAlert, { useUnservedAddresses } from "@/components/UnservedAddressAlert";
 import { ORDER_NATURES, NATURE_DETAIL_MAX, natureLabel } from "@/lib/order-nature";
 import { notifyNewOrder } from "@/lib/notify-new-order";
 import GuestAccountBox from "@/components/GuestAccountBox";
@@ -54,6 +55,9 @@ export default function OrderForm() {
   const [scheduledDate, setScheduledDate] = useState("");
   const [scheduledTime, setScheduledTime] = useState("");
   const [estimatedPrice, setEstimatedPrice] = useState<number | null>(null);
+  // Adresse hors Paris / IDF : blocage immédiat, alerte après une courte pause de frappe.
+  const outOfZone = [pickupAddress, dropoffAddress].some((a) => a.trim().length > 0 && !isServedAddress(a));
+  const showZoneAlert = useUnservedAddresses([pickupAddress, dropoffAddress]);
   const [paymentMode, setPaymentMode] = useState<'carte' | 'fin_de_mois'>('carte');
   const [debitMethod, setDebitMethod] = useState<'sepa' | 'virement'>('sepa');
 
@@ -126,7 +130,8 @@ export default function OrderForm() {
   }, [hasAccount, delai]);
 
   useEffect(() => {
-    if (pickupAddress && dropoffAddress) {
+    // Pas de tarif hors Paris / Île-de-France.
+    if (pickupAddress && dropoffAddress && isServedAddress(pickupAddress) && isServedAddress(dropoffAddress)) {
       setEstimatedPrice(calculatePrice(pickupAddress, dropoffAddress, delai as ServiceLevel));
     } else {
       setEstimatedPrice(null);
@@ -161,6 +166,7 @@ export default function OrderForm() {
     setFormError("");
 
     // `required` accepte une valeur faite uniquement d'espaces : on vérifie à la main.
+    if (outOfZone) return; // adresse hors zone : alerte affichée, pas de commande
     if (step === 1 && (!pickupAddress.trim() || !dropoffAddress.trim())) {
       setFormError("Renseignez une adresse d'enlèvement et une adresse de livraison (des caractères, pas seulement des espaces).");
       return;
@@ -477,6 +483,8 @@ export default function OrderForm() {
                         </div>
                       </div>
                     </div>
+
+                    {showZoneAlert && <UnservedAddressAlert className="mt-6" />}
 
                     {estimatedPrice !== null && (
                       <div className="mt-8 flex items-center justify-between rounded-2xl border border-orange-100 bg-orange-50/60 px-5 py-4">
@@ -842,7 +850,7 @@ export default function OrderForm() {
                   <button
                     id="submit-btn"
                     type="submit"
-                    disabled={submitting || checkingAddress}
+                    disabled={submitting || checkingAddress || outOfZone}
                     className="flex items-center gap-2 bg-black text-white px-8 py-3.5 rounded-xl font-bold hover:bg-gray-800 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 ml-auto disabled:opacity-60"
                   >
                     {submitting

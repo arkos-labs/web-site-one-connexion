@@ -24,7 +24,8 @@ import {
 } from "lucide-react";
 import { AddressAutocomplete } from "@/components/AddressAutocomplete";
 import { createClient } from "@/lib/supabase/client";
-import { calculatePrice, ServiceLevel } from "@/lib/pricing";
+import { calculatePrice, isServedAddress, ServiceLevel } from "@/lib/pricing";
+import UnservedAddressAlert, { useUnservedAddresses } from "@/components/UnservedAddressAlert";
 import { notifyNewOrder } from "@/lib/notify-new-order";
 import { ORDER_NATURES, NATURE_DETAIL_MAX, natureLabel } from "@/lib/order-nature";
 import { isProAccount } from "@/lib/dashboard-nav";
@@ -231,6 +232,10 @@ export default function CommanderPage() {
   const [trackingCode, setTrackingCode] = useState<string | null>(null);
   const [favoriteAddresses, setFavoriteAddresses] = useState<Favorite[]>([]);
   const [estimatedPrice, setEstimatedPrice] = useState<number | null>(null);
+  // Adresses hors Paris / IDF (enlèvement, étapes, livraison) : pas de tarif ni de commande.
+  const allAddresses = [pickupAddress, ...stops.map((st) => st.address ?? ""), dropoffAddress];
+  const outOfZone = allAddresses.some((a) => a.trim().length > 0 && !isServedAddress(a));
+  const showZoneAlert = useUnservedAddresses(allAddresses);
 
   // Particulier : paiement par carte immédiat, sans lui aucune course n'est lancée
   const [isPro, setIsPro] = useState(true);
@@ -243,12 +248,12 @@ export default function CommanderPage() {
   }, []);
 
   useEffect(() => {
-    if (pickupAddress && dropoffAddress) {
+    if (pickupAddress && dropoffAddress && !outOfZone) {
       setEstimatedPrice(calculatePrice(pickupAddress, dropoffAddress, delai as ServiceLevel));
     } else {
       setEstimatedPrice(null);
     }
-  }, [pickupAddress, dropoffAddress, delai]);
+  }, [pickupAddress, dropoffAddress, delai, outOfZone]);
 
   useEffect(() => {
     supabase.from("addresses").select("id, label, address").then(({ data }: { data: Favorite[] | null }) => {
@@ -264,12 +269,14 @@ export default function CommanderPage() {
 
   const handleNextStep = (e: React.FormEvent) => {
     e.preventDefault();
+    if (outOfZone) return; // adresse hors zone : alerte affichée
     if (step === 2 && (!nature || (nature === "autre" && !natureDetail.trim()))) { setNatureError(true); return; }
     setStep(step + 1);
   };
 
   const handleConfirm = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (outOfZone) return;
     setSubmitting(true);
     setSubmitError(null);
 
@@ -526,6 +533,7 @@ export default function CommanderPage() {
                       favorites={favoriteAddresses}
                     />
                   </div>
+                  {showZoneAlert && <UnservedAddressAlert />}
                 </div>
               )}
 
@@ -798,7 +806,8 @@ export default function CommanderPage() {
                 {step < 4 ? (
                   <button
                     type="submit"
-                    className="group flex h-11 items-center gap-2 rounded-xl bg-ink px-6 text-sm font-bold text-white shadow-sm transition-colors hover:bg-[#25272a]"
+                    disabled={outOfZone}
+                    className="group flex h-11 items-center gap-2 rounded-xl bg-ink px-6 text-sm font-bold text-white shadow-sm transition-colors hover:bg-[#25272a] disabled:opacity-50"
                   >
                     Continuer
                     <ArrowRight size={16} strokeWidth={2.5} className="transition-transform group-hover:translate-x-0.5" />
@@ -806,7 +815,7 @@ export default function CommanderPage() {
                 ) : (
                   <button
                     type="submit"
-                    disabled={submitting}
+                    disabled={submitting || outOfZone}
                     className="flex h-11 items-center gap-2 whitespace-nowrap rounded-xl bg-accent px-5 text-sm sm:px-6 font-bold text-white shadow-sm transition-colors hover:bg-accent-dark disabled:opacity-60"
                   >
                     {submitting ? (
