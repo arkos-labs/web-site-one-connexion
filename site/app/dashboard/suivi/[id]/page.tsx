@@ -93,7 +93,7 @@ export default function DeliveryDetailsPage() {
   const anomalies = useMissionAnomalies(supabase, `client-anomalies-${id}`);
   // Facture de la course : Stripe (paiement à la commande / à 30 jours) ou facture mensuelle du compte.
   const [invoice, setInvoice] = useState<{ number: string | null; status: string; url: string | null; pdf: string | null } | null>(null);
-  const [monthlyInvoiceId, setMonthlyInvoiceId] = useState<string | null>(null);
+  const [monthlyInvoice, setMonthlyInvoice] = useState<{ id: string; status: string } | null>(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -193,7 +193,7 @@ export default function DeliveryDetailsPage() {
       .eq("order_id", order.id)
       .maybeSingle()
       .then(({ data }: { data: any }) => {
-        if (!cancelled && data?.invoice_id && data.invoices?.status !== "en_cours") setMonthlyInvoiceId(data.invoice_id);
+        if (!cancelled && data?.invoice_id && data.invoices?.status !== "en_cours") setMonthlyInvoice({ id: data.invoice_id, status: data.invoices?.status });
       });
     return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -458,6 +458,17 @@ export default function DeliveryDetailsPage() {
                     {paymentLabel(order)}
                   </p>
                 )}
+                {isDelivered && (invoice?.url || monthlyInvoice) && (() => {
+                  // Facture émise à la livraison : réglée, ou en attente de paiement.
+                  const paid = invoice?.url ? invoice.status === "paid" : monthlyInvoice?.status === "payee";
+                  const failed = !invoice?.url && monthlyInvoice?.status === "echec";
+                  return (
+                    <p className={`mt-3 flex items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold ${paid ? "bg-emerald-500/15 text-emerald-300" : failed ? "bg-red-500/15 text-red-300" : "bg-amber-500/15 text-amber-300"}`}>
+                      {paid ? <CheckCircle2 size={14} /> : <Loader2 size={14} />}
+                      {paid ? "Facture réglée" : failed ? "Paiement échoué" : "Paiement en attente"}
+                    </p>
+                  );
+                })()}
                 {isDelivered && invoice?.url && (
                   <div className="mt-3 flex flex-col gap-2">
                     <a href={invoice.url} target="_blank" rel="noreferrer" className="flex h-10 items-center justify-center gap-2 rounded-xl bg-accent text-sm font-bold text-white hover:bg-accent-dark hover:text-white">
@@ -470,12 +481,12 @@ export default function DeliveryDetailsPage() {
                     )}
                   </div>
                 )}
-                {isDelivered && !invoice?.url && monthlyInvoiceId && (
-                  <a href={`/dashboard/factures/${monthlyInvoiceId}`} className="mt-3 flex h-10 items-center justify-center gap-2 rounded-xl bg-accent text-sm font-bold text-white hover:bg-accent-dark hover:text-white">
+                {isDelivered && !invoice?.url && monthlyInvoice && (
+                  <a href={`/dashboard/factures/${monthlyInvoice.id}`} className="mt-3 flex h-10 items-center justify-center gap-2 rounded-xl bg-accent text-sm font-bold text-white hover:bg-accent-dark hover:text-white">
                     <FileText size={15} /> Voir la facture du mois
                   </a>
                 )}
-                {isDelivered && !invoice?.url && !monthlyInvoiceId && (
+                {isDelivered && !invoice?.url && !monthlyInvoice && (
                   <p className="mt-3 text-center text-xs text-white/60">La facture apparaîtra ici dès son émission.</p>
                 )}
               </div>

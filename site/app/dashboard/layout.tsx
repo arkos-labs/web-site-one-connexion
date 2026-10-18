@@ -118,17 +118,13 @@ export default function DashboardLayout({
                 </div>
               </div>
 
-              {/* Statistiques (Courses ce mois / Facturation) */}
-              <div className="grid grid-cols-2 divide-x divide-line border-b border-line bg-paper/30 p-4">
-                <div className="flex flex-col items-center justify-center">
+              {/* Statistiques (courses ce mois) */}
+              <div className="flex border-b border-line bg-paper/30 p-4">
+                <div className="flex flex-1 flex-col items-center justify-center">
                   <span className="text-[11px] font-medium text-label">Courses</span>
                   <span className="mt-0.5 text-sm font-bold text-ink">
                     {ordersThisMonth === null ? "…" : ordersThisMonth}
                   </span>
-                </div>
-                <div className="flex flex-col items-center justify-center">
-                  <span className="text-[11px] font-medium text-label">Facturation</span>
-                  <span className="mt-0.5 text-sm font-bold text-accent">{isProAccount(user) ? "Compte pro" : "Immédiate"}</span>
                 </div>
               </div>
 
