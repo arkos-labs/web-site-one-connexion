@@ -7,8 +7,9 @@ import { FileText, ChevronRight, Plus } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { fetchSavedMethod, type SavedMethod } from "@/lib/saved-payment";
 import { PageShell, SearchInput, KpiStrip, StatusPill, EmptyState, LoadingState, TH, TD, BTN_PRIMARY } from "@/components/dashboard/ui";
+import { formatEur, htOf } from "@/lib/price-display";
 
-const eur = (n: number) => `${n.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`;
+const eur = (n: number) => `${formatEur(n)} €`;
 
 export default function FacturesPage() {
   const supabase = createClient();
