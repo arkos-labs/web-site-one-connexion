@@ -54,8 +54,9 @@ async function sendTransferInvoice(p: {
         description: `Course ${p.orderId}`,
         custom_fields: invoiceCustomFields(p.orderId, party),
         footer: INVOICE_FOOTER,
+        // Le client choisit sur la page de la facture : virement (IBAN dédié) ou carte bancaire.
         payment_settings: {
-          payment_method_types: ['customer_balance'],
+          payment_method_types: ['card', 'customer_balance'],
           payment_method_options: {
             customer_balance: {
               funding_type: 'bank_transfer',
@@ -65,7 +66,7 @@ async function sendTransferInvoice(p: {
         },
         metadata: { order_id: order.id, tracking_code: p.orderId },
       },
-      { idempotencyKey: `transfer-invoice-${order.id}` }
+      { idempotencyKey: `transfer-invoice-v2-${order.id}` }
     );
   } catch (err: any) {
     // Les virements bancaires doivent être activés dans le dashboard Stripe (Paramètres > Moyens de paiement).

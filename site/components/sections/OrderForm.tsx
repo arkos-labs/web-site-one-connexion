@@ -346,7 +346,7 @@ export default function OrderForm() {
               </p>
               {clientType === 'entreprise' && paymentMode === 'fin_de_mois' && debitMethod === 'virement' && (
                 <p className="text-gray-500 mb-6 max-w-md mx-auto">
-                  La facture avec les coordonnées bancaires a été envoyée à <strong>{contactEmail}</strong>. Virement à effectuer sous 30 jours.
+                  La facture avec les coordonnées bancaires a été envoyée à <strong>{contactEmail}</strong>. À régler sous 30 jours, par virement ou par carte depuis la facture.
                 </p>
               )}
               {trackingCode && (

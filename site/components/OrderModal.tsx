@@ -330,7 +330,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
               </p>
               {clientType === "entreprise" && paymentMode === "fin_de_mois" && debitMethod === "virement" && (
                 <p className="mb-4 text-sm text-muted">
-                  La facture avec les coordonnées bancaires a été envoyée à <strong>{contactEmail}</strong>. Virement à effectuer sous 30 jours.
+                  La facture avec les coordonnées bancaires a été envoyée à <strong>{contactEmail}</strong>. À régler sous 30 jours, par virement ou par carte depuis la facture.
                 </p>
               )}
               {trackingCode && (

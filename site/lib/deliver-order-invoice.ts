@@ -112,8 +112,16 @@ export async function deliverOrderInvoice(supabase: SupabaseClient, stripe: Stri
       const taxRate = await vatRateId(stripe);
       const delivered = o.delivered_at ? fr(new Date(o.delivered_at)) : fr(new Date());
 
-      const draft = await stripe.invoices.create(
+      // Facture à régler : le client choisit sur la page de la facture, carte ou virement (IBAN dédié).
+      const payBy: Stripe.InvoiceCreateParams['payment_settings'] = unpaid ? {
+        payment_method_types: ['card', 'customer_balance'],
+        payment_method_options: {
+          customer_balance: { funding_type: 'bank_transfer', bank_transfer: { type: 'eu_bank_transfer', eu_bank_transfer: { country: 'FR' } } },
+        },
+      } : undefined;
+      const createDraft = (paymentSettings: typeof payBy, key: string) => stripe.invoices.create(
         {
+          ...(paymentSettings ? { payment_settings: paymentSettings } : {}),
           customer: customerId,
           // Facture déjà payée : prélèvement automatique « hors Stripe », donc aucune date d'échéance.
           // Non payée : facture envoyée, à régler sous 30 jours (carte ou virement depuis la page Stripe).
@@ -128,8 +136,16 @@ export async function deliverOrderInvoice(supabase: SupabaseClient, stripe: Stri
           footer: invoiceFooter(!deferred && !unpaid),
           metadata: { order_id: o.id, tracking_code: ref },
         },
-        { idempotencyKey: `deliver-invoice-${o.id}` }
+        { idempotencyKey: key }
       );
+      let draft: Stripe.Invoice;
+      try {
+        draft = await createDraft(payBy, payBy ? `deliver-invoice-bt-${o.id}` : `deliver-invoice-${o.id}`);
+      } catch (err: any) {
+        // Virement bancaire non activé dans Stripe : la facture reste payable par carte.
+        if (!payBy || !String(err?.message).includes('customer_balance')) throw err;
+        draft = await createDraft({ payment_method_types: ['card'] }, `deliver-invoice-card-${o.id}`);
+      }
       await stripe.invoiceItems.create(
         {
           customer: customerId, invoice: draft.id, currency: 'eur', amount: Math.round(amount * 100),
