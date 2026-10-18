@@ -31,6 +31,7 @@ import { notifyNewOrder } from "@/lib/notify-new-order";
 import { fetchSavedMethod, payWithSavedMethod, type SavedMethod } from "@/lib/saved-payment";
 import { ORDER_NATURES, NATURE_DETAIL_MAX, natureLabel } from "@/lib/order-nature";
 import { isProAccount } from "@/lib/dashboard-nav";
+import { priceHTTTC, formatEur, htOf } from "@/lib/price-display";
 
 /* ── Données métier ───────────────────────────────────────────────────── */
 
@@ -827,7 +828,14 @@ export default function CommanderPage() {
                 )}
                 <div className="whitespace-nowrap lg:hidden">
                   <span className="label-mono block text-[11px] font-medium text-muted">Tarif estimé</span>
-                  <span className="text-base font-extrabold text-ink">{estimatedPrice !== null ? `${eur(estimatedPrice)} €` : '-- €'} <span className="text-xs font-semibold text-muted">TTC</span></span>
+                  {estimatedPrice !== null ? (
+                    <>
+                      <div className="text-xs font-semibold text-muted">{formatEur(htOf(estimatedPrice))} € HT</div>
+                      <span className="text-base font-extrabold text-ink">{formatEur(estimatedPrice)} € TTC</span>
+                    </>
+                  ) : (
+                    <span className="text-base font-extrabold text-ink">-- €</span>
+                  )}
                 </div>
               </div>
 
@@ -907,9 +915,18 @@ export default function CommanderPage() {
             {/* Tarif */}
             <div className="border-t border-white/10 px-6 py-5">
               <span className="label-mono text-xs font-medium text-white/60">Tarif estimé</span>
-              <div className="mt-1 flex items-baseline gap-2">
-                <span className="text-[34px] font-extrabold leading-none tracking-tight">{estimatedPrice !== null ? eur(estimatedPrice) : '--'} €</span>
-                <span className="text-sm font-semibold text-white/60">TTC</span>
+              <div className="mt-2">
+                {estimatedPrice !== null ? (
+                  <>
+                    <div className="text-xs font-semibold text-white/60 mb-1">{formatEur(htOf(estimatedPrice))} € HT</div>
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-[34px] font-extrabold leading-none tracking-tight">{formatEur(estimatedPrice)} €</span>
+                      <span className="text-sm font-semibold text-white/60">TTC</span>
+                    </div>
+                  </>
+                ) : (
+                  <span className="text-[34px] font-extrabold leading-none tracking-tight">-- €</span>
+                )}
               </div>
               <div className="mt-3 rounded-lg bg-white/5 border border-white/10 p-3 text-xs text-white/80">
                 {isPro ? (
