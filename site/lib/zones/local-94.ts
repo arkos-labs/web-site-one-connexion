@@ -299,12 +299,12 @@ export const LOCAL_94: Record<string, LocalZoneContent> = {
     localGuide: {
       title: "Rungis : une ville qui travaille la nuit",
       paragraphs: [
-        "Le marché de Rungis suit un cycle inversé : les grossistes travaillent de nuit, et les acheteurs arrivent avant le jour. Notre service couvre de 7h à 23h : pour une course avant 7h, appelez-nous pour savoir si elle peut être planifiée. Pour les envois de la journée, tous les créneaux habituels s'appliquent.",
+        "Le marché de Rungis suit un cycle inversé : les grossistes travaillent de nuit, et les acheteurs arrivent avant le jour. Notre service couvre de 9h à 19h, du lundi au samedi : pour une course en dehors de ces horaires, appelez-nous pour savoir si elle peut être planifiée. Pour les envois de la journée, tous les créneaux habituels s'appliquent.",
         "Autour du marché, les entreprises logistiques et les zones d'activité envoient des documents de transport, des échantillons et des pièces. Précisez le bâtiment, le quai et un contact au portail : les accès sont réglementés.",
       ],
     },
     faq: [
-      { q: "Livrez-vous au marché de Rungis ?", a: "Oui, de 7h à 23h. Donnez le pavillon, le stand ou l'entreprise, et un contact : les accès sont contrôlés." },
+      { q: "Livrez-vous au marché de Rungis ?", a: "Oui, du lundi au samedi de 9h à 19h. Donnez le pavillon, le stand ou l'entreprise, et un contact : les accès sont contrôlés." },
       { q: "Pouvez-vous faire une course avant 7h pour un grossiste ?", a: "Contactez-nous : nous vous disons si la course peut être planifiée." },
       { q: "Quel tarif à Rungis ?", a: "Rungis est en petite couronne : dès 42 € TTC en normal (3 h) et 84 € TTC en formule Super (1 h)." },
     ],

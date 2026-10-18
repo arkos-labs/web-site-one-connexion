@@ -61,7 +61,7 @@ const FAQ_PARIS = [
   },
   {
     q: "Quels sont les horaires d'enlèvement à Paris intramuros ?",
-    a: "Nous opérons 7j/7, de 7h à 23h. En journée, nous garantissons un enlèvement en moins de 45 minutes quel que soit l'arrondissement.",
+    a: "Nous opérons du lundi au samedi, de 9h à 19h. En journée, nous garantissons un enlèvement en moins de 45 minutes quel que soit l'arrondissement.",
   },
   {
     q: "Livrez-vous aussi bien les particuliers que les entreprises ?",
@@ -90,7 +90,7 @@ const ARRONDISSEMENTS = [
 const STATS = [
   { value: "< 30 min", label: "Délai moyen intramuros" },
   { value: "< 45 min", label: "Enlèvement" },
-  { value: "7j/7", label: "7h–23h" },
+  { value: "6j/7", label: "Lun–sam, 9h – 19h" },
   { value: "20/20", label: "Arrondissements couverts" },
 ];
 
@@ -321,7 +321,7 @@ export default function ZoneParis() {
               <h2 className="mb-3 text-[clamp(24px,3vw,36px)] font-bold leading-[1.2] tracking-[-0.02em]">
                 Une course à Paris maintenant ?
               </h2>
-              <p className="text-[15px] text-white/60">Dispatch en moins de 2 minutes, 7j/7 de 7h à 23h.</p>
+              <p className="text-[15px] text-white/60">Dispatch en moins de 2 minutes, du lundi au samedi de 9h à 19h.</p>
             </div>
             <a
               href={`tel:${PHONE_TEL}`}

@@ -135,7 +135,7 @@ export const plisConfidentiels: Service = {
     {
       question: "Intervenez-vous en dehors des heures de bureau ?",
       answer:
-        "Nous opérons 7j/7, de 7h à 23h. Les courses du soir et du week-end s’organisent aux mêmes conditions, sous réserve de disponibilité au moment de la commande.",
+        "Nous opérons du lundi au samedi, de 9h à 19h. Nous sommes fermés le dimanche et les jours fériés.",
     },
     {
       question: "Peut-on ouvrir un compte pour l’ensemble du cabinet ?",

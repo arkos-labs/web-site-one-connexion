@@ -4,7 +4,7 @@
  * Règle éditoriale : aucune phrase ne doit se retrouver d'un arrondissement à
  * l'autre. Chaque entrée s'appuie sur les institutions et lieux réels de
  * l'arrondissement ; pas de chiffre ni de promesse hors de ce que le site
- * affirme déjà (enlèvement < 45 min, 7j/7 7h–23h, tarifs de /tarifs).
+ * affirme déjà (enlèvement < 45 min, lun–sam 9h–19h, tarifs de /tarifs).
  */
 import type { ZoneFaqItem, ZoneGuide } from "./types";
 
@@ -50,7 +50,7 @@ export const PARIS_LOCAL: Record<string, { localGuide: ZoneGuide; faq: ZoneFaqIt
     faq: [
       { q: "Pouvez-vous transporter des tirages ou des œuvres légères d'une galerie du Marais ?", a: "Oui, si le colis est protégé et tient dans un top-case de 18 kg maximum. Pour un format plus grand, dites-nous les dimensions à la commande et nous vous répondons avant de vous envoyer un coursier." },
       { q: "Livrez-vous aux Archives nationales ou au CNAM ?", a: "Oui, comme pour toute institution : indiquez l'entrée et le service destinataire, car les accès diffèrent selon les bâtiments." },
-      { q: "Intervenez-vous le soir et le week-end dans le 3e ?", a: "Oui, 7j/7 de 7h à 23h, sous réserve de disponibilité à la commande. Le week-end, le Marais est très fréquenté : prévoyez un contact pour la remise." },
+      { q: "Intervenez-vous le soir et le week-end dans le 3e ?", a: "Le soir jusqu'à 19h et le samedi, oui ; nous sommes fermés le dimanche. Le samedi, le Marais est très fréquenté : prévoyez un contact pour la remise." },
     ],
   },
 
@@ -170,7 +170,7 @@ export const PARIS_LOCAL: Record<string, { localGuide: ZoneGuide; faq: ZoneFaqIt
     faq: [
       { q: "Transportez-vous des prototypes ou des pièces entre ateliers ?", a: "Oui, pour des pièces qui tiennent dans un top-case verrouillé de 18 kg. Au-delà, contactez-nous avant de commander." },
       { q: "Peut-on organiser des tournées régulières entre un atelier du 11e et des boutiques ?", a: "Oui : tournées sur créneaux fixes, facturées mensuellement dans le cadre d'un compte entreprise." },
-      { q: "Livrez-vous à Bastille et à Nation le soir ?", a: "Oui, jusqu'à 23h, 7j/7, sous réserve de disponibilité à la commande." },
+      { q: "Livrez-vous à Bastille et à Nation le soir ?", a: "Oui, jusqu'à 19h, du lundi au samedi, sous réserve de disponibilité à la commande." },
     ],
   },
 
@@ -275,7 +275,7 @@ export const PARIS_LOCAL: Record<string, { localGuide: ZoneGuide; faq: ZoneFaqIt
     faq: [
       { q: "Livrez-vous au sommet de la butte Montmartre ?", a: "Oui, jusqu'au point accessible à moto. Si l'adresse est en escalier, indiquez la rue la plus proche et un contact qui vient récupérer le colis." },
       { q: "Transportez-vous des documents ou des échantillons vers Bichat ?", a: "Oui, en course dédiée. Précisez le service destinataire, l'heure limite et, pour un échantillon, la température de conservation." },
-      { q: "Intervenez-vous à Pigalle le soir ?", a: "Oui, jusqu'à 23h, 7j/7, sous réserve de disponibilité à la commande." },
+      { q: "Intervenez-vous à Pigalle le soir ?", a: "Oui, jusqu'à 19h, du lundi au samedi, sous réserve de disponibilité à la commande." },
     ],
   },
 

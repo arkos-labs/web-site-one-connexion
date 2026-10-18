@@ -22,7 +22,7 @@ const STATS = [
   { value: "120+", label: "Coursiers actifs" },
   { value: "18 kg", label: "Charge par course" },
   { value: "< 45 min", label: "Prise en charge moyenne" },
-  { value: "7j/7", label: "Disponibilité" },
+  { value: "6j/7", label: "Lun–sam, 9h–19h" },
 ];
 
 const VEHICLES = [
@@ -55,7 +55,7 @@ const VEHICLES = [
 const FEATURES = [
   { Icon: Award, title: "Discrétion & rigueur", desc: "Nos coursiers sont sensibilisés aux exigences juridiques et médicales et travaillent en toute discrétion." },
   { Icon: Route, title: "Optimisation d'itinéraire", desc: "Dispatch assuré par notre équipe pour affecter le coursier le plus adapté." },
-  { Icon: Clock, title: "Disponibilité étendue", desc: "Plages horaires 7h–23h en standard, interventions d'urgence nocturnes sur accord." },
+  { Icon: Clock, title: "Horaires d'ouverture", desc: "Du lundi au samedi, de 9h à 19h. En dehors de ces horaires, sur demande et selon disponibilité." },
   { Icon: CheckCircle2, title: "Coursiers vérifiés", desc: "Permis et casier judiciaire vérifiés, formation interne obligatoire avant prise de poste." },
 ];
 

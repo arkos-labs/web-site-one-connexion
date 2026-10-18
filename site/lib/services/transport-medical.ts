@@ -19,9 +19,9 @@ export const transportMedical: Service = {
   },
 
   seo: {
-    title: "Coursier médical Paris — transport laboratoire 7j/7",
+    title: "Coursier médical Paris — transport laboratoire",
     description:
-      "Coursier médical à Paris : transport de laboratoire, prélèvements et échantillons pour cliniques et cabinets d’Île-de-France. Course dédiée, contenants isothermes, 7j/7.",
+      "Coursier médical à Paris : transport de laboratoire, prélèvements et échantillons pour cliniques et cabinets d’Île-de-France. Course dédiée, contenants isothermes, du lundi au samedi.",
     keywords: [
       "coursier médical",
       "transport laboratoire",
@@ -44,7 +44,7 @@ export const transportMedical: Service = {
 
   stats: [
     { value: "< 45 min", label: "Prise en charge" },
-    { value: "7j/7", label: "7h – 23h" },
+    { value: "6j/7", label: "Lun–sam, 9h – 19h" },
     { value: "Dédiée", label: "Course sans regroupement" },
   ],
 
@@ -117,7 +117,7 @@ export const transportMedical: Service = {
     {
       question: "Pouvez-vous transporter des prélèvements sanguins et des échantillons réfrigérés ?",
       answer:
-        "Nous transportons des prélèvements sanguins, échantillons et pièces en contenant isotherme adapté, en course dédiée et directe, 7j/7. Pour un transport réfrigéré, précisez à la commande la plage de température et le délai de stabilité fixés par le laboratoire : nous confirmons la faisabilité avant d’engager la course.",
+        "Nous transportons des prélèvements sanguins, échantillons et pièces en contenant isotherme adapté, en course dédiée et directe, du lundi au samedi. Pour un transport réfrigéré, précisez à la commande la plage de température et le délai de stabilité fixés par le laboratoire : nous confirmons la faisabilité avant d’engager la course.",
     },
     {
       question: "Quel est le prix d’un coursier médical à Paris ?",
@@ -152,7 +152,7 @@ export const transportMedical: Service = {
     {
       question: "Intervenez-vous le week-end ?",
       answer:
-        "Nous opérons 7j/7, de 7h à 23h. Les collectes de week-end s’organisent aux mêmes conditions, sous réserve de disponibilité au moment de la commande.",
+        "Le samedi oui, de 9h à 19h, comme en semaine. Nous sommes fermés le dimanche et les jours fériés.",
     },
   ],
 };

@@ -17,8 +17,8 @@ const FAQ = [
     a: "Le coursier le plus proche est dispatché dès la confirmation de la course. L'enlèvement se fait en moins de 45 minutes à Paris intramuros et en petite couronne.",
   },
   {
-    q: "Quels sont vos horaires (nuit, weekend, jours fériés) ?",
-    a: "Le service est ouvert 7j/7, de 7h à 23h, jours fériés inclus. Ouvert le samedi, le dimanche et les jours fériés avec un régulateur dédié joignable en permanence. Pour une course de nuit (après 23h), contactez-nous.",
+    q: "Quels sont vos horaires ?",
+    a: "Le service est ouvert du lundi au samedi, de 9h à 19h. Il est fermé le dimanche et les jours fériés. Pour une course en dehors de ces horaires, contactez-nous : nous étudions la demande au cas par cas.",
   },
   {
     q: "Comment connaître le prix d’une course ?",

@@ -19,7 +19,7 @@ export const coursierExpressParis: Service = {
   seo: {
     title: "Coursier express Paris — prix dès 31,50 € TTC, livraison en 1 h 30",
     description:
-      "Coursier express à Paris : enlèvement en moins de 45 minutes, course dédiée en moto ou scooter, suivi en ligne, 7j/7. Prix coursier express Paris : dès 31,50 € TTC en urgent (1 h 30), 42 € TTC en formule Super (1 h).",
+      "Coursier express à Paris : enlèvement en moins de 45 minutes, course dédiée en moto ou scooter, suivi en ligne, du lundi au samedi. Prix coursier express Paris : dès 31,50 € TTC en urgent (1 h 30), 42 € TTC en formule Super (1 h).",
     keywords: [
       "coursier express Paris",
       "coursier paris express",
@@ -34,12 +34,12 @@ export const coursierExpressParis: Service = {
   h1: "Coursier express à Paris : enlèvement en moins de 45 minutes",
 
   intro:
-    "Quand un pli, un colis ou une pièce doit partir maintenant, One Connexion envoie un coursier en deux-roues en course dédiée : un enlèvement, un trajet direct, une remise horodatée. Paris intra-muros et Île-de-France, 7j/7 de 7h à 23h.",
+    "Quand un pli, un colis ou une pièce doit partir maintenant, One Connexion envoie un coursier en deux-roues en course dédiée : un enlèvement, un trajet direct, une remise horodatée. Paris intra-muros et Île-de-France, du lundi au samedi de 9h à 19h.",
 
   stats: [
     { value: "< 45 min", label: "Prise en charge" },
     { value: "Dès 31,50 € TTC", label: "Course urgente Paris (1 h 30)" },
-    { value: "7j/7", label: "7h – 23h" },
+    { value: "6j/7", label: "Lun–sam, 9h – 19h" },
   ],
 
   context: {
@@ -135,7 +135,7 @@ export const coursierExpressParis: Service = {
     {
       question: "Travaillez-vous le week-end ?",
       answer:
-        "Nous opérons 7j/7, de 7h à 23h, sous réserve de disponibilité au moment de la commande.",
+        "Le samedi oui, de 9h à 19h, comme en semaine. Nous sommes fermés le dimanche et les jours fériés.",
     },
   ],
 };

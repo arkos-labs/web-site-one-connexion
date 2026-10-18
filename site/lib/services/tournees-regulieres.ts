@@ -18,7 +18,7 @@ export const tourneesRegulieres: Service = {
   stats: [
     { value: "100%", label: "Respect des horaires" },
     { value: "0", label: "Gestion RH à votre charge" },
-    { value: "7j/7", label: "Disponibilité" },
+    { value: "6j/7", label: "Lun–sam, 9h–19h" },
   ],
   context: {
     title: "La régularité comme maître-mot",

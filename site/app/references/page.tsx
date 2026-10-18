@@ -57,7 +57,7 @@ const SECTEURS = [
 ];
 
 const CHIFFRES = [
-  { value: "7j/7", label: "Amplitude 7h–23h, jours fériés inclus" },
+  { value: "6j/7", label: "Du lundi au samedi, 9h–19h" },
   { value: "< 45 min", label: "Prise en charge dès validation" },
   { value: "< 45 min", label: "Enlèvement" },
   { value: "Depuis 2026", label: "Expertise B2B Île-de-France" },
@@ -172,7 +172,7 @@ export default function ReferencesPage() {
           </div>
           <div className="grid grid-cols-2 gap-4">
             {[
-              { val: "7j/7", label: "amplitude 7h–23h, jours fériés inclus" },
+              { val: "6j/7", label: "du lundi au samedi, 9h–19h" },
               { val: "< 45 min", label: "prise en charge dès validation" },
               { val: "< 45 min", label: "enlèvement" },
               { val: "1", label: "interlocuteur unique" },

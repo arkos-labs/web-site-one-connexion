@@ -223,7 +223,7 @@ export default async function ZonePage({ params }: Props) {
                   <Clock size={14} className="mt-0.5 shrink-0 text-accent" />
                   <div>
                     <div className="text-[13px] font-semibold text-white">Enlèvement &lt; 45 min</div>
-                    <div className="text-[11px] text-white/40">7j/7, 7h–23h</div>
+                    <div className="text-[11px] text-white/40">lun–sam, 9h–19h</div>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
@@ -289,7 +289,7 @@ export default async function ZonePage({ params }: Props) {
                 { icon: Clock, label: "Réactivité", value: "< 45 min" },
                 { icon: MapPin, label: "Couverture", value: "Toute la zone" },
                 { icon: CheckCircle, label: "Traçabilité", value: "100% des courses" },
-                { icon: Phone, label: "Disponibilité", value: "7j/7 · 7h–23h" },
+                { icon: Phone, label: "Disponibilité", value: "Lun–sam · 9h–19h" },
               ].map((item) => {
                 const Icon = item.icon;
                 return (

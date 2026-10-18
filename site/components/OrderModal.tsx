@@ -232,9 +232,13 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
     // Connecté à un compte, mais la commande est passée avec un autre e-mail (autre client, autre
     // entreprise) : elle ne doit pas atterrir dans ce compte. On déconnecte, la commande part comme
     // celle d'un nouveau client et son propre compte est créé à la confirmation.
-    if (user && user.email?.toLowerCase() !== contactEmail.trim().toLowerCase()) {
-      await supabase.auth.signOut();
-      user = null;
+    if (user && user.email?.toLowerCase() !== contactEmail.trim().toLowerCase()) user = null;
+    // Commande « sans compte » : aucune session ne doit rester dans le navigateur, sinon l'insertion
+    // part avec le jeton de l'ancien compte et la base la refuse. Déconnexion locale (sans appel réseau,
+    // elle ne peut pas échouer), y compris si la vérification du compte a échoué mais qu'un jeton reste.
+    if (!user) {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) await supabase.auth.signOut({ scope: "local" });
     }
 
     // Code de suivi généré ici : un visiteur non connecté n'a pas le droit

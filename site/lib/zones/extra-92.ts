@@ -39,7 +39,7 @@ export const EXTRA_92: Record<string, ExtraZoneContent> = {
     ],
     faq: [
       { q: "Peut-on suivre l'arrivée du coursier dans la tour ?", a: "Oui, la progression de la course est visible en ligne, et nous pouvons vous appeler à l'arrivée à l'accueil." },
-      { q: "Livrez-vous le soir à La Défense ?", a: "Oui, jusqu'à 23h, 7j/7, sous réserve de disponibilité au moment de la commande." },
+      { q: "Livrez-vous le soir à La Défense ?", a: "Oui, jusqu'à 19h, du lundi au samedi, sous réserve de disponibilité au moment de la commande." },
     ],
   },
 

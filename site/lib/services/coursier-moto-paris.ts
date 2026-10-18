@@ -19,7 +19,7 @@ export const coursierMotoParis: Service = {
   seo: {
     title: "Coursier moto et scooter Paris — dès 21 € TTC",
     description:
-      "Coursier moto et scooter à Paris : livraison express en deux-roues, top-case verrouillé, suivi en ligne, 7j/7. Prix coursier moto Paris : dès 21 € TTC en normal (3 h), 42 € TTC en formule Super (1 h).",
+      "Coursier moto et scooter à Paris : livraison express en deux-roues, top-case verrouillé, suivi en ligne, du lundi au samedi. Prix coursier moto Paris : dès 21 € TTC en normal (3 h), 42 € TTC en formule Super (1 h).",
     keywords: [
       "coursier moto Paris",
       "coursier scooter Paris",
@@ -38,7 +38,7 @@ export const coursierMotoParis: Service = {
   stats: [
     { value: "Dès 21 € TTC", label: "Course normale Paris (3 h)" },
     { value: "< 45 min", label: "Prise en charge" },
-    { value: "7j/7", label: "7h – 23h" },
+    { value: "6j/7", label: "Lun–sam, 9h – 19h" },
   ],
 
   context: {
@@ -129,7 +129,7 @@ export const coursierMotoParis: Service = {
     {
       question: "Intervenez-vous le week-end ?",
       answer:
-        "Tous les jours de 7h à 23h. Les courses du soir et du dimanche sont possibles, selon la disponibilité des pilotes au moment de la commande.",
+        "Le samedi oui, de 9h à 19h, comme en semaine. Nous sommes fermés le dimanche et les jours fériés.",
     },
   ],
 };

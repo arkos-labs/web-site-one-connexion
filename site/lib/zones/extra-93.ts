@@ -20,7 +20,7 @@ export const EXTRA_93: Record<string, ExtraZoneContent> = {
       "Les camionnettes saturent les rues du commerce de gros l'après-midi : privilégiez une course matinale.",
     ],
     faq: [
-      { q: "Livrez-vous le week-end dans le quartier du commerce de gros ?", a: "Oui, 7j/7 de 7h à 23h, sous réserve de disponibilité. Vérifiez les horaires de réception du destinataire." },
+      { q: "Livrez-vous le week-end dans le quartier du commerce de gros ?", a: "Le samedi oui, de 9h à 19h ; nous sommes fermés le dimanche. Vérifiez les horaires de réception du destinataire." },
       { q: "Quelle preuve de livraison est fournie ?", a: "Nom du destinataire, date, heure et lieu de remise." },
     ],
   },
@@ -164,7 +164,7 @@ export const EXTRA_93: Record<string, ExtraZoneContent> = {
       "Le T8 est un repère mais pas un itinéraire.",
     ],
     faq: [
-      { q: "Livrez-vous le soir sur un plateau ?", a: "Oui jusqu'à 23h, 7j/7, sous réserve de disponibilité." },
+      { q: "Livrez-vous le soir sur un plateau ?", a: "Oui jusqu'à 19h, du lundi au samedi, sous réserve de disponibilité." },
       { q: "Peut-on transporter des supports de stockage ?", a: "Oui, remis en main propre au destinataire." },
     ],
   },

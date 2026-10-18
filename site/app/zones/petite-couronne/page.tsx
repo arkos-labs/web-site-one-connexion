@@ -16,7 +16,7 @@ import { MapPin } from "lucide-react";
 export const metadata: Metadata = {
   title: "Coursier Paris banlieue (92, 93, 94) — Express 45 min",
   description:
-    "Coursier banlieue Paris en petite couronne : Hauts-de-Seine (92), Seine-Saint-Denis (93), Val-de-Marne (94). Coursier moto dédié, enlèvement moins de 45 minutes, 7j/7.",
+    "Coursier banlieue Paris en petite couronne : Hauts-de-Seine (92), Seine-Saint-Denis (93), Val-de-Marne (94). Coursier moto dédié, enlèvement moins de 45 minutes, du lundi au samedi.",
   alternates: { canonical: "/zones/petite-couronne" },
   openGraph: {
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION — Coursier B2B Paris & Île-de-France" }],
@@ -286,7 +286,7 @@ export default function ZonePetiteCouronne() {
               <h2 className="mb-3 text-[clamp(24px,3vw,36px)] font-bold leading-[1.2] tracking-[-0.02em]">
                 Une course en petite couronne maintenant ?
               </h2>
-              <p className="text-[15px] text-white/60">Dispatch en moins de 2 minutes, 7j/7 de 7h à 23h.</p>
+              <p className="text-[15px] text-white/60">Dispatch en moins de 2 minutes, du lundi au samedi de 9h à 19h.</p>
             </div>
             <a href={`tel:${PHONE_TEL}`} className="rounded-[4px] bg-accent px-8 py-4 text-center text-[15px] font-bold text-white hover:bg-accent-dark">
               {PHONE_DISPLAY}

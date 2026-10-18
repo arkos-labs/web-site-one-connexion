@@ -12,7 +12,7 @@ import { AddressAutocomplete } from "@/components/AddressAutocomplete";
 const COMMITMENTS = [
   { label: "Enlèvement du colis", value: "< 45 min", sub: "après confirmation de la course", fill: 70 },
   { label: "Course", value: "Dédiée", sub: "un coursier, sans regroupement", fill: null },
-  { label: "Amplitude", value: "7j/7", sub: "7h – 23h, jours fériés inclus", fill: null },
+  { label: "Amplitude", value: "6j/7", sub: "du lundi au samedi, 9h – 19h", fill: null },
   { label: "Livraison", value: "1 h", sub: "formule Super, porte à porte", fill: 85 },
 ];
 

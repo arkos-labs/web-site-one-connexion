@@ -6,7 +6,7 @@
 import { SHOW_TESTIMONIALS } from "@/lib/site-content";
 
 const STATS = [
-  { value: "7j/7", label: "Amplitude 7h–23h, jours fériés inclus" },
+  { value: "6j/7", label: "Du lundi au samedi, 9h–19h" },
   { value: "< 45 min", label: "Prise en charge dès validation" },
   { value: "< 45 min", label: "Enlèvement" },
 ];

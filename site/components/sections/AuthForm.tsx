@@ -18,7 +18,7 @@ const PERKS = [
   { title: "Commander en quelques clics", sub: "Course flash prise en charge en moins de 45 min." },
   { title: "Suivi de chaque course en ligne", sub: "Statut à chaque étape, de la prise en charge à la remise, avec preuve de livraison." },
   { title: "Factures & reporting centralisé", sub: "Relevés mensuels détaillés par centre de coût." },
-  { title: "Dispatch 7j/7 · 7h–23h", sub: "Un régulateur dédié, joignable en permanence." },
+  { title: "Dispatch du lundi au samedi · 9h–19h", sub: "Un régulateur dédié, joignable aux heures d'ouverture." },
 ];
 
 export default function AuthForm() {

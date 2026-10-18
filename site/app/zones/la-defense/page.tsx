@@ -45,7 +45,7 @@ const VILLES = [
 const STATS = [
   { value: "< 45 min", label: "Prise en charge" },
   { value: "< 45 min", label: "Enlèvement" },
-  { value: "7j/7", label: "7h–23h" },
+  { value: "6j/7", label: "Lun–sam, 9h – 19h" },
   { value: "92", label: "Dépt. couvert" },
 ];
 
@@ -230,7 +230,7 @@ export default function ZonelaDefense() {
               <h2 className="mb-3 text-[clamp(24px,3vw,36px)] font-bold leading-[1.2] tracking-[-0.02em]">
                 Une course dans le 92 maintenant ?
               </h2>
-              <p className="text-[15px] text-white/60">Dispatch en moins de 2 minutes, 7j/7.</p>
+              <p className="text-[15px] text-white/60">Dispatch en moins de 2 minutes, du lundi au samedi.</p>
             </div>
             <a href={`tel:${PHONE_TEL}`} className="rounded-[4px] bg-accent px-8 py-4 text-center text-[15px] font-bold text-white hover:bg-accent-dark">
               {PHONE_DISPLAY}

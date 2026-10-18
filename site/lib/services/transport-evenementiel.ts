@@ -16,7 +16,7 @@ export const transportEvenementiel: Service = {
   h1: "Le partenaire logistique de vos événements d'exception.",
   intro: "Défiez les imprévus. Qu'il s'agisse de la Fashion Week, d'un séminaire ou d'une opération de relations publiques, nous assurons des livraisons VIP au cordeau.",
   stats: [
-    { value: "24/24", label: "Astreinte possible" },
+    { value: "Sur devis", label: "Astreinte hors horaires" },
     { value: "100%", label: "Discrétion VIP" },
     { value: "ZTL", label: "Accès hyper-centre" },
   ],

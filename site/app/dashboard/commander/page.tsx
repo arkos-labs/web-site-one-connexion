@@ -900,7 +900,7 @@ export default function CommanderPage() {
                 </li>
                 <li className="flex items-center gap-2">
                   <Radio size={14} className="shrink-0 text-green-400" />
-                  Suivi GPS temps réel · Support 7j/7
+                  Suivi GPS temps réel · Support du lundi au samedi, 9h–19h
                 </li>
               </ul>
             </div>
