@@ -16,9 +16,9 @@ export const livraisonEcommerce: Service = {
   },
 
   seo: {
-    title: "Livraison coursier Paris - Livraison jour même e-commerce",
+    title: "Coursier jour : livraison same-day pour l'e-commerce",
     description:
-      "Livraison coursier Paris : collecte en boutique ou entrepôt, livraison le jour même à Paris et en petite couronne. Créneau choisi, suivi en ligne, preuve de livraison.",
+      "Coursier jour : collecte en boutique ou entrepôt, livraison le jour même à Paris et en petite couronne. Créneau choisi, suivi en ligne, preuve de livraison.",
     keywords: [
       "livraison jour même Paris",
       "coursier e-commerce Paris",
@@ -28,7 +28,7 @@ export const livraisonEcommerce: Service = {
     ],
   },
 
-  h1: "Livraison le jour même à Paris pour votre e-commerce",
+  h1: "Coursier jour",
 
   intro:
     "Vos clients commandent le matin et reçoivent avant le dîner. One Connexion collecte en boutique ou en entrepôt et livre dans la journée sur Paris et la petite couronne, avec un créneau choisi par le destinataire.",

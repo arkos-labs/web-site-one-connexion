@@ -9,9 +9,9 @@ import { SITE_URL } from "@/lib/site-content";
 import DeptCards from "@/components/sections/DeptCards";
 
 export const metadata: Metadata = {
-  title: { absolute: "Zones de livraison express Paris & Île-de-France" },
+  title: { absolute: "Zones île-de-france : couverture complète de Paris et Île-de-France" },
   description:
-    "One Connexion couvre Paris, la petite couronne (92, 93, 94) et toute l'Île-de-France. Retrouvez par zone les délais, tarifs et villes couvertes.",
+    "Zones île-de-france : One Connexion couvre Paris, la petite couronne (92, 93, 94) et toute l'Île-de-France. Retrouvez par zone les délais, tarifs et villes couvertes.",
   alternates: { canonical: "/zones" },
 };
 
@@ -108,7 +108,7 @@ export default function ZonesPage() {
             Couverture géographique
           </div>
           <h1 className="mb-6 max-w-[20ch] text-balance text-[clamp(36px,5vw,64px)] font-bold leading-[1.05] tracking-[-0.035em]">
-            Île-de-France complète, un seul interlocuteur.
+            Zones île-de-france
           </h1>
           <p className="max-w-[58ch] text-pretty text-[17px] leading-[1.6] text-white/66">
             Paris intramuros, petite couronne et grande couronne sont couverts

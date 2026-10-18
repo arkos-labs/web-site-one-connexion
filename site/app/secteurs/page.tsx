@@ -11,9 +11,9 @@ import { SITE_URL } from "@/lib/site-content";
 import { Scale, Activity, ShoppingBag, Briefcase, Stethoscope, Building2 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Secteurs desservis - Coursier B2B",
+  title: "Coursier secteurs : solutions par domaine d'activité",
   description:
-    "One Connexion opère pour les cabinets juridiques, laboratoires, e-commerçants, agences et entreprises d'Île-de-France. Découvrez nos solutions par secteur.",
+    "Coursier secteurs : One Connexion opère pour les cabinets juridiques, laboratoires, e-commerçants, agences et entreprises d'Île-de-France. Découvrez nos solutions par secteur.",
   alternates: { canonical: "/secteurs" },
   openGraph: {
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION - Coursier B2B Paris & Île-de-France" }],
@@ -157,7 +157,7 @@ export default function SecteursPage() {
             Secteurs desservis
           </div>
           <h1 className="mb-6 max-w-[22ch] text-balance text-[clamp(36px,5vw,64px)] font-bold leading-[1.05] tracking-[-0.035em]">
-            Chaque secteur a ses contraintes. Nous les connaissons.
+            Coursier secteurs
           </h1>
           <p className="max-w-[58ch] text-pretty text-[17px] leading-[1.6] text-white/66">
             One Connexion ne fait pas de transport généraliste. Nos procédures sont
