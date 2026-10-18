@@ -5,11 +5,15 @@ import { useSearchParams } from "next/navigation";
 import { CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import GuestAccountBox from "@/components/GuestAccountBox";
+import { clearOrderDraft } from "@/lib/order-draft";
 
 function OrderSuccessContent() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
   const orderId = searchParams.get("order_id");
+
+  // Commande payée : plus besoin du brouillon gardé pour un éventuel retour arrière.
+  useEffect(() => { clearOrderDraft(); }, []);
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">

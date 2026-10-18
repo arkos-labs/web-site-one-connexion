@@ -186,7 +186,7 @@ export async function POST(req: Request) {
           mode: 'setup',
           customer: customer.id,
           success_url: `${baseUrl}/commande/succes?session_id={CHECKOUT_SESSION_ID}&order_id=${orderId}`,
-          cancel_url: `${baseUrl}/#commander-form`,
+          cancel_url: `${baseUrl}/?commande_annulee=${orderId}`,
           metadata: {
             orderId: orderId,
             clientType: 'entreprise',
@@ -248,7 +248,7 @@ export async function POST(req: Request) {
         // Le refus de carte (payment_intent.payment_failed) retrouve la commande par ce code.
         payment_intent_data: { metadata: { orderId } },
         success_url: `${baseUrl}/commande/succes?session_id={CHECKOUT_SESSION_ID}&order_id=${orderId}`,
-        cancel_url: `${baseUrl}/#commander-form`,
+        cancel_url: `${baseUrl}/?commande_annulee=${orderId}`,
         metadata: {
           orderId: orderId,
           clientType: clientType === 'entreprise' ? 'entreprise' : 'particulier',

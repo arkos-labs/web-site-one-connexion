@@ -25,6 +25,7 @@ import UnservedAddressAlert, { useUnservedAddresses } from "@/components/Unserve
 import { ORDER_NATURES, NATURE_DETAIL_MAX, natureLabel } from "@/lib/order-nature";
 import { notifyNewOrder } from "@/lib/notify-new-order";
 import GuestAccountBox from "@/components/GuestAccountBox";
+import { saveOrderDraft, loadOrderDraft, clearOrderDraft, checkoutSessionIdFromUrl, cameBackFromCheckout, abandonCheckout } from "@/lib/order-draft";
 
 // Tarifs TTC (TVA 20 % comprise) pour tous les clients.
 const eur = (n: number) => `${n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`;
@@ -111,6 +112,41 @@ export default function OrderForm() {
   };
 
   // Vérification automatique dès que les 14 chiffres sont saisis
+  // Commande envoyée : la confirmation (code de suivi) est bien plus courte que le formulaire,
+  // on remonte dessus au lieu de laisser le client face au pied de page.
+  useEffect(() => {
+    if (submitted) document.getElementById("commander")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [submitted]);
+
+  // Retour de Stripe sans payer : bouton débloqué (page restaurée du cache), commande abandonnée
+  // annulée, et formulaire rempli comme le client l'avait laissé, à la dernière étape.
+  useEffect(() => {
+    const comeBack = (persisted: boolean) => {
+      setSubmitting(false);
+      const draft = loadOrderDraft();
+      if (draft?.source !== "form" || (!persisted && !cameBackFromCheckout())) return;
+      abandonCheckout(draft);
+      if (!persisted) {
+        const v = draft.values;
+        setClientType(v.clientType ?? "entreprise"); setFormat(v.format ?? "doc"); setNature(v.nature ?? "");
+        setNatureDetail(v.natureDetail ?? ""); setDelai(v.delai ?? "standard");
+        setPickupAddress(v.pickupAddress ?? ""); setDropoffAddress(v.dropoffAddress ?? "");
+        setContactName(v.contactName ?? ""); setContactPhone(v.contactPhone ?? "");
+        setContactEmail(v.contactEmail ?? ""); setContactEmailConfirm(v.contactEmailConfirm ?? "");
+        setNotes(v.notes ?? ""); setPickupDetails(v.pickupDetails ?? ""); setRecipientName(v.recipientName ?? "");
+        setScheduledDate(v.scheduledDate ?? ""); setScheduledTime(v.scheduledTime ?? "");
+        setSiret(v.siret ?? ""); setRaisonSociale(v.raisonSociale ?? ""); setAdresseFacturation(v.adresseFacturation ?? "");
+        setTva(v.tva ?? ""); setPaymentMode(v.paymentMode ?? "carte"); setDebitMethod(v.debitMethod ?? "sepa");
+        setStep(3);
+        setTimeout(() => document.getElementById("commander")?.scrollIntoView({ behavior: "smooth" }), 300);
+      }
+    };
+    comeBack(false);
+    const onPageShow = (e: PageTransitionEvent) => { if (e.persisted) comeBack(true); };
+    window.addEventListener("pageshow", onPageShow);
+    return () => window.removeEventListener("pageshow", onPageShow);
+  }, []);
+
   useEffect(() => {
     siretRef.current = siret;
     if (siret.length === 14) validateSiretHandler(siret);
@@ -304,7 +340,19 @@ export default function OrderForm() {
         setTrackingCode(trackingCode);
         setSubmitted(true);
         setSubmitting(false);
+        clearOrderDraft();
       } else if (data.url) {
+        // Brouillon : si le client revient de Stripe pour corriger, tout est encore rempli.
+        saveOrderDraft({
+          source: "form",
+          trackingCode,
+          checkoutSessionId: checkoutSessionIdFromUrl(data.url),
+          values: {
+            clientType, format, nature, natureDetail, delai, pickupAddress, dropoffAddress, contactName, contactPhone,
+            contactEmail, contactEmailConfirm, notes, pickupDetails, recipientName, scheduledDate, scheduledTime,
+            siret, raisonSociale, adresseFacturation, tva, paymentMode, debitMethod,
+          },
+        });
         window.location.href = data.url;
       } else {
         throw new Error(data.error || "Erreur inconnue");

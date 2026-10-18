@@ -82,6 +82,7 @@ export async function POST(req: Request) {
           .from('orders')
           .update({ billing_status: 'echec' })
           .eq('tracking_code', orderId)
+          .not('status', 'in', '(annulee,cancelled)') // commande abandonnée pour être refaite : pas d'alerte
           .or('billing_status.is.null,billing_status.neq.paye')
           .select('id');
 

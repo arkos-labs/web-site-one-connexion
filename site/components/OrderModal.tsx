@@ -13,6 +13,7 @@ import { calculatePrice, splitTTC, isServedAddress, ServiceLevel } from "@/lib/p
 import UnservedAddressAlert, { useUnservedAddresses } from "@/components/UnservedAddressAlert";
 import { notifyNewOrder } from "@/lib/notify-new-order";
 import GuestAccountBox from "@/components/GuestAccountBox";
+import { saveOrderDraft, loadOrderDraft, clearOrderDraft, checkoutSessionIdFromUrl } from "@/lib/order-draft";
 import { ORDER_NATURES, NATURE_DETAIL_MAX, natureLabel } from "@/lib/order-nature";
 
 interface OrderModalProps {
@@ -20,12 +21,14 @@ interface OrderModalProps {
   onClose: () => void;
   initialPickup?: string;
   initialDropoff?: string;
+  /** Retour de Stripe sans payer : on remet la commande telle que le client l'avait remplie. */
+  restoreDraft?: boolean;
 }
 
 // Tarifs TTC (TVA 20 % comprise) pour tous les clients.
 const eur = (n: number) => `${n.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`;
 
-export default function OrderModal({ open, onClose, initialPickup = "", initialDropoff = "" }: OrderModalProps) {
+export default function OrderModal({ open, onClose, initialPickup = "", initialDropoff = "", restoreDraft = false }: OrderModalProps) {
   const [step, setStep] = useState(1);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -77,8 +80,22 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
       setSubmitting(false);
       setPickupAddress(initialPickup);
       setDropoffAddress(initialDropoff);
+
+      const draft = restoreDraft ? loadOrderDraft() : null;
+      if (draft?.source === "modal") {
+        const v = draft.values;
+        setClientType(v.clientType ?? "entreprise"); setFormat(v.format ?? "doc"); setNature(v.nature ?? "");
+        setNatureDetail(v.natureDetail ?? ""); setDelai(v.delai ?? "standard");
+        setPickupAddress(v.pickupAddress ?? ""); setDropoffAddress(v.dropoffAddress ?? "");
+        setContactName(v.contactName ?? ""); setContactPhone(v.contactPhone ?? "");
+        setContactEmail(v.contactEmail ?? ""); setContactEmailConfirm(v.contactEmailConfirm ?? "");
+        setNotes(v.notes ?? ""); setSiret(v.siret ?? ""); setRaisonSociale(v.raisonSociale ?? "");
+        setAdresseFacturation(v.adresseFacturation ?? ""); setTva(v.tva ?? "");
+        setPaymentMode(v.paymentMode ?? "carte"); setDebitMethod(v.debitMethod ?? "sepa");
+        setStep(3); // dernière étape : il corrige et recommande
+      }
     }
-  }, [open, initialPickup, initialDropoff]);
+  }, [open, initialPickup, initialDropoff, restoreDraft]);
 
   // Retour arrière depuis Stripe : le navigateur restaure la page telle quelle
   // (bfcache), bouton bloqué sur « Redirection… ». On le débloque.
@@ -277,8 +294,19 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
         // Virement : pas de passage par Stripe, la facture avec l'IBAN est partie par email.
         setTrackingCode(trackingCode);
         setSubmitted(true);
+        clearOrderDraft();
         setSubmitting(false);
       } else if (data.url) {
+        // Brouillon : si le client revient de Stripe pour corriger, tout est encore rempli.
+        saveOrderDraft({
+          source: "modal",
+          trackingCode,
+          checkoutSessionId: checkoutSessionIdFromUrl(data.url),
+          values: {
+            clientType, format, nature, natureDetail, delai, pickupAddress, dropoffAddress, contactName, contactPhone,
+            contactEmail, contactEmailConfirm, notes, siret, raisonSociale, adresseFacturation, tva, paymentMode, debitMethod,
+          },
+        });
         window.location.href = data.url;
       } else {
         throw new Error(data.error || "Erreur inconnue");
