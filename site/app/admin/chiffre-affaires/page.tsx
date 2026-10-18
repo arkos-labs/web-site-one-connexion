@@ -71,6 +71,11 @@ function toCsvValue(v: string | number | null) {
   return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
 }
 
+// Tous les montants stockés sont TTC (TVA 20 % « dont »). HT = TTC / 1,20,
+// arrondi à 2 décimales, comme sur la facture PDF (lib/generate-invoice-pdf.ts).
+const TVA_RATE = 0.2;
+const htOf = (ttc: number) => Math.round((ttc / (1 + TVA_RATE)) * 100) / 100;
+
 const VALID_PERIODS: Period[] = ["jour", "semaine", "mois", "annee"];
 
 export default function AdminChiffreAffairesPage() {
@@ -217,7 +222,7 @@ function AdminChiffreAffairesPageInner() {
   const exportCsv = () => {
     const start = periodStart(period);
     const rows = billables.filter((b) => new Date(b.date) >= start);
-    const header = ["Date", "Type", "Référence", "Client", "Trajet", "Statut", "Montant TTC"];
+    const header = ["Date", "Type", "Référence", "Client", "Trajet", "Statut", "Montant HT", "Montant TTC"];
     const lines = rows.map((b) =>
       [
         new Date(b.date).toLocaleString("fr-FR"),
@@ -226,6 +231,7 @@ function AdminChiffreAffairesPageInner() {
         b.client,
         b.route.replace(" → ", " -> "),
         b.status,
+        htOf(b.amount).toFixed(2),
         b.amount.toFixed(2),
       ]
         .map(toCsvValue)
@@ -282,16 +288,18 @@ function AdminChiffreAffairesPageInner() {
       <div className="grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-3 [&>:last-child:nth-child(odd)]:col-span-2 sm:[&>:last-child:nth-child(odd)]:col-span-1">
         <StatCard
           label={PERIOD_LABEL[period]}
-          value={`${current.toFixed(2)} €`}
+          value={`${current.toFixed(2)} € TTC`}
+          ht={`${htOf(current).toFixed(2)} €`}
           sub={`${countSince(periodStart(period))} ligne${countSince(periodStart(period)) > 1 ? "s" : ""} facturable${countSince(periodStart(period)) > 1 ? "s" : ""}`}
           accent
         />
         <StatCard
           label="Période précédente"
-          value={`${previous.toFixed(2)} €`}
+          value={`${previous.toFixed(2)} € TTC`}
+          ht={`${htOf(previous).toFixed(2)} €`}
           sub={variation !== null ? `${variation >= 0 ? "+" : ""}${variation}% vs actuelle` : "Pas de données comparables"}
         />
-        <StatCard label="Cumul historique" value={`${totalWithNavettes.toFixed(2)} €`} sub="Courses + navettes actives" />
+        <StatCard label="Cumul historique" value={`${totalWithNavettes.toFixed(2)} € TTC`} ht={`${htOf(totalWithNavettes).toFixed(2)} €`} sub="Courses + navettes actives" />
       </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1.7fr_1fr]">
@@ -382,6 +390,7 @@ function AdminChiffreAffairesPageInner() {
                 <th className="p-4">Client</th>
                 <th className="p-4">Trajet</th>
                 <th className="p-4">Statut</th>
+                <th className="p-4 text-right">Montant HT</th>
                 <th className="p-4 text-right">Montant TTC</th>
               </tr>
             </thead>
@@ -404,11 +413,12 @@ function AdminChiffreAffairesPageInner() {
                   <td className="p-4">
                     <span className="rounded-full bg-paper px-2 py-0.5 text-[11px] font-bold text-muted">{b.status}</span>
                   </td>
-                  <td className="p-4 text-right font-bold text-ink">{b.amount.toFixed(2)} €</td>
+                  <td className="p-4 text-right font-semibold text-muted tabular-nums">{htOf(b.amount).toFixed(2)} €</td>
+                  <td className="p-4 text-right font-bold text-ink tabular-nums">{b.amount.toFixed(2)} €</td>
                 </tr>
               ))}
               {billables.length === 0 && (
-                <tr><td colSpan={5} className="p-6 text-center text-[13px] font-medium text-muted">Aucune opération facturable pour l&apos;instant.</td></tr>
+                <tr><td colSpan={6} className="p-6 text-center text-[13px] font-medium text-muted">Aucune opération facturable pour l&apos;instant.</td></tr>
               )}
             </tbody>
           </table>
@@ -423,11 +433,14 @@ function AdminChiffreAffairesPageInner() {
   );
 }
 
-function StatCard({ label, value, sub, accent = false }: { label: string; value: string; sub?: string; accent?: boolean }) {
+function StatCard({ label, value, ht, sub, accent = false }: { label: string; value: string; ht?: string; sub?: string; accent?: boolean }) {
   return (
     <div className={`rounded-2xl border p-3.5 sm:p-5 ${accent ? "border-accent/30 bg-accent/[0.04]" : "border-line bg-white"}`}>
       <div className={`font-mono text-[10px] sm:text-[11px] font-semibold tracking-[0.03em] uppercase ${accent ? "text-accent" : "text-label"}`}>{label}</div>
       <div className={`mt-2 font-mono text-[22px] sm:text-[28px] font-bold leading-none tracking-[-0.02em] tabular-nums ${accent ? "text-accent" : "text-ink"}`}>{value}</div>
+      {ht && (
+        <div className="mt-1.5 font-mono text-[12px] sm:text-[13px] font-semibold tabular-nums text-muted">dont HT&nbsp;: {ht}</div>
+      )}
       {sub && (
         <div className="mt-2 flex items-start gap-1.5 text-[11px] font-medium leading-snug text-muted sm:text-[12px]">
           <span className="mt-[5px] h-1.5 w-1.5 shrink-0 rounded-full bg-line" />
