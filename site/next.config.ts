@@ -35,7 +35,15 @@ const nextConfig: NextConfig = {
         source: "/:area(dashboard|admin)/:path*",
         headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
       },
+      // Page de l'app chauffeur : publique (exigée par Apple) mais jamais indexée ni liée depuis le site.
+      {
+        source: "/:page(chauffeur|support-chauffeur.html)",
+        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" }],
+      },
     ];
+  },
+  async rewrites() {
+    return [{ source: "/chauffeur", destination: "/support-chauffeur.html" }];
   },
 };
 

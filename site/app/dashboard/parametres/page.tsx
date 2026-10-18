@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { User, Building2, CreditCard, Lock, Save, ShieldCheck, Loader2, Check } from "lucide-react";
+import { User, Building2, MapPin, CreditCard, Lock, Save, ShieldCheck, Loader2, Check } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { PageShell, INPUT, LABEL, BTN_ACCENT, BTN_PRIMARY } from "@/components/dashboard/ui";
 import PaymentMethodCard from "@/components/dashboard/PaymentMethodCard";
+import { isProAccount } from "@/lib/dashboard-nav";
 
 const TABS = [
   { id: "profil", label: "Profil utilisateur", icon: User },
@@ -35,6 +36,7 @@ export default function ParametresPage() {
   }, []);
 
   const [loading, setLoading] = useState(true);
+  const [isPro, setIsPro] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
   const [saveError, setSaveError] = useState<string | null>(null);
@@ -63,6 +65,7 @@ export default function ParametresPage() {
         }
 
         setEmail(user.email || "");
+        setIsPro(isProAccount(user));
 
         // Charger profil
         const { data: profileData } = await supabase
@@ -87,6 +90,7 @@ export default function ParametresPage() {
           setCompany(clientData.company_name || "");
           setSiret(clientData.siret || "");
           setBillingAddress(clientData.billing_address || "");
+          if (clientData.siret) setIsPro(true);
         }
       } catch (err) {
         console.error("Erreur de chargement du profil:", err);
@@ -193,7 +197,7 @@ export default function ParametresPage() {
       fill
       eyebrow="Mon compte"
       title="Paramètres du compte"
-      subtitle="Vos informations personnelles, professionnelles et vos préférences de facturation."
+      subtitle={isPro ? "Vos informations personnelles, professionnelles et vos préférences de facturation." : "Vos informations personnelles, votre adresse et vos préférences de paiement."}
     >
       <div className="flex min-h-0 flex-1 flex-col md:flex-row">
         {/* Navigation */}
@@ -201,7 +205,9 @@ export default function ParametresPage() {
           aria-label="Sections des paramètres"
           className="no-scrollbar flex shrink-0 gap-1 overflow-x-auto border-b border-line bg-paper-card p-3 md:w-64 md:flex-col md:overflow-visible md:border-b-0 md:border-r md:p-4"
         >
-          {TABS.map(({ id, label, icon: Icon }) => {
+          {TABS.map(({ id, label: tabLabel, icon: tabIcon }) => {
+            const label = id === "societe" && !isPro ? "Mon adresse" : tabLabel;
+            const Icon = id === "societe" && !isPro ? MapPin : tabIcon;
             const active = activeTab === id;
             return (
               <button
@@ -239,7 +245,7 @@ export default function ParametresPage() {
                         <input id="full-name" type="text" value={fullName} onChange={(e) => setFullName(e.target.value)} className={INPUT} />
                       </div>
                       <div>
-                        <label htmlFor="email" className={LABEL}>Email professionnel</label>
+                        <label htmlFor="email" className={LABEL}>{isPro ? "Email professionnel" : "Email"}</label>
                         <input id="email" type="email" value={email} disabled className={INPUT} />
                       </div>
                       <div>
@@ -258,7 +264,25 @@ export default function ParametresPage() {
                   </div>
                 )}
 
-                {activeTab === "societe" && (
+                {activeTab === "societe" && !isPro && (
+                  <div className="max-w-2xl">
+                    <SectionTitle title="Votre adresse" text="Elle figure sur vos factures." />
+                    <div>
+                      <label htmlFor="billing" className={LABEL}>Adresse complète</label>
+                      <input
+                        id="billing"
+                        type="text"
+                        autoComplete="street-address"
+                        value={billingAddress}
+                        onChange={(e) => setBillingAddress(e.target.value)}
+                        placeholder="Ex : 12 rue de la Paix, 75002 Paris"
+                        className={INPUT}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === "societe" && isPro && (
                   <div className="max-w-2xl">
                     <SectionTitle title="Informations de l'entreprise" text="Les détails de votre structure juridique, repris sur vos factures." />
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">

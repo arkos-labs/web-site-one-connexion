@@ -218,7 +218,9 @@ export default function CommanderPage() {
   useEffect(() => { fetchSavedMethod().then(setSavedMethod); }, []);
   const [natureDetail, setNatureDetail] = useState("");
   const [natureError, setNatureError] = useState(false);
-  const [delai, setDelai] = useState<string>("standard");
+  const [delai, setDelai] = useState<string>("");
+  // Étape 3 : délai, nom et téléphone du demandeur obligatoires
+  const [step3Errors, setStep3Errors] = useState<{ delai?: string; name?: string; phone?: string }>({});
   const [scheduledDate, setScheduledDate] = useState("");
   const [scheduledTime, setScheduledTime] = useState("");
 
@@ -254,7 +256,7 @@ export default function CommanderPage() {
 
   useEffect(() => {
     if (pickupAddress && dropoffAddress && !outOfZone) {
-      setEstimatedPrice(calculatePrice(pickupAddress, dropoffAddress, delai as ServiceLevel));
+      setEstimatedPrice(calculatePrice(pickupAddress, dropoffAddress, (delai || "standard") as ServiceLevel));
     } else {
       setEstimatedPrice(null);
     }
@@ -276,6 +278,14 @@ export default function CommanderPage() {
     e.preventDefault();
     if (outOfZone) return; // adresse hors zone : alerte affichée
     if (step === 2 && (!nature || (nature === "autre" && !natureDetail.trim()))) { setNatureError(true); return; }
+    if (step === 3) {
+      const errors: { delai?: string; name?: string; phone?: string } = {};
+      if (!delai) errors.delai = "Choisissez un délai.";
+      if (!contactName.trim()) errors.name = "Indiquez votre nom.";
+      if (!/^0[1-9]\d{8}$/.test(contactPhone.replace(/[\s.]/g, ""))) errors.phone = "Indiquez un numéro à 10 chiffres.";
+      setStep3Errors(errors);
+      if (Object.keys(errors).length) return;
+    }
     setStep(step + 1);
   };
 
@@ -372,9 +382,9 @@ export default function CommanderPage() {
     setStep(1);
     setPickupAddress(""); setPickupContactName(""); setPickupContactPhone("");
     setDropoffAddress(""); setDropoffContactName(""); setDropoffContactPhone("");
-    setStops([]); setFormat("pli"); setNature(""); setNatureDetail(""); setDelai("flash");
+    setStops([]); setFormat("pli"); setNature(""); setNatureDetail("");
     setScheduledDate(""); setScheduledTime("");
-    setTrackingCode(null); setNotes(""); setContactName(""); setContactPhone("");
+    setTrackingCode(null); setNotes(""); setContactName(""); setContactPhone(""); setDelai(""); setStep3Errors({});
   };
 
   const currentFormat = FORMATS.find((f) => f.id === format) ?? FORMATS[0];
@@ -674,7 +684,7 @@ export default function CommanderPage() {
                             name="delai"
                             value={d.id}
                             checked={selected}
-                            onChange={() => setDelai(d.id)}
+                            onChange={() => { setDelai(d.id); setStep3Errors((e) => ({ ...e, delai: undefined })); }}
                             className="sr-only"
                           />
                           <span
@@ -692,6 +702,7 @@ export default function CommanderPage() {
                       );
                     })}
                   </div>
+                  {step3Errors.delai && <p role="alert" className="-mt-2 text-xs font-semibold text-red-600">{step3Errors.delai}</p>}
 
                   <div className="grid grid-cols-1 gap-4 border-t border-line pt-4 md:grid-cols-2">
                     <div className="flex flex-col">
@@ -707,27 +718,31 @@ export default function CommanderPage() {
                     </div>
                     <div className="flex flex-col gap-2.5">
                       <div>
-                        <label htmlFor="contact-name" className={`${LABEL} mb-1.5 block`}>Votre nom (demandeur)</label>
+                        <label htmlFor="contact-name" className={`${LABEL} mb-1.5 block`}>Votre nom (demandeur) *</label>
                         <input
                           id="contact-name"
                           type="text"
                           value={contactName}
-                          onChange={(e) => setContactName(e.target.value)}
+                          onChange={(e) => { setContactName(e.target.value); setStep3Errors((er) => ({ ...er, name: undefined })); }}
                           placeholder="Ex : M. Dupont"
-                          className={INPUT}
+                          aria-invalid={!!step3Errors.name}
+                          className={`${INPUT} ${step3Errors.name ? "!border-red-500" : ""}`}
                         />
+                        {step3Errors.name && <p role="alert" className="mt-1 text-xs font-semibold text-red-600">{step3Errors.name}</p>}
                       </div>
                       <div>
-                        <label htmlFor="contact-phone" className={`${LABEL} mb-1.5 block`}>Votre téléphone</label>
+                        <label htmlFor="contact-phone" className={`${LABEL} mb-1.5 block`}>Votre téléphone *</label>
                         <input
                           id="contact-phone"
                           type="tel"
                           value={contactPhone}
-                          onChange={(e) => setContactPhone(e.target.value)}
-                          maxLength={10}
+                          onChange={(e) => { setContactPhone(e.target.value); setStep3Errors((er) => ({ ...er, phone: undefined })); }}
+                          maxLength={14}
                           placeholder="06 12 34 56 78"
-                          className={INPUT}
+                          aria-invalid={!!step3Errors.phone}
+                          className={`${INPUT} ${step3Errors.phone ? "!border-red-500" : ""}`}
                         />
+                        {step3Errors.phone && <p role="alert" className="mt-1 text-xs font-semibold text-red-600">{step3Errors.phone}</p>}
                       </div>
                     </div>
                   </div>
