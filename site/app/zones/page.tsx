@@ -67,7 +67,7 @@ const ZONES = [
   {
     dept: "77",
     name: "Seine-et-Marne",
-    desc: "Melun, Marne-la-Vallée, Meaux — dès 78 € TTC.",
+    desc: "Melun, Marne-la-Vallée, Meaux - dès 78 € TTC.",
     href: "/flotte",
     tag: "Dès 78 € TTC",
     tagColor: "bg-amber-100 text-amber-700",
@@ -75,7 +75,7 @@ const ZONES = [
   {
     dept: "78",
     name: "Yvelines",
-    desc: "Versailles, Saint-Quentin-en-Yvelines — dès 78 € TTC.",
+    desc: "Versailles, Saint-Quentin-en-Yvelines - dès 78 € TTC.",
     href: "/flotte",
     tag: "Dès 78 € TTC",
     tagColor: "bg-amber-100 text-amber-700",
@@ -83,7 +83,7 @@ const ZONES = [
   {
     dept: "91",
     name: "Essonne",
-    desc: "Évry-Courcouronnes, Massy, Palaiseau — dès 78 € TTC.",
+    desc: "Évry-Courcouronnes, Massy, Palaiseau - dès 78 € TTC.",
     href: "/flotte",
     tag: "Dès 78 € TTC",
     tagColor: "bg-amber-100 text-amber-700",
@@ -91,7 +91,7 @@ const ZONES = [
   {
     dept: "95",
     name: "Val-d'Oise",
-    desc: "Cergy-Pontoise, Argenteuil, Roissy-CDG — dès 78 € TTC.",
+    desc: "Cergy-Pontoise, Argenteuil, Roissy-CDG - dès 78 € TTC.",
     href: "/flotte",
     tag: "Dès 78 € TTC",
     tagColor: "bg-amber-100 text-amber-700",

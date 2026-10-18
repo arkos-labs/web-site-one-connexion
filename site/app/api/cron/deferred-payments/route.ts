@@ -96,7 +96,7 @@ export async function GET(req: Request) {
             invoice: draft.id,
             currency: 'eur',
             amount: Math.round(Number(order.amount_due) * 100),
-            description: `Course ${ref} — ${order.pickup_address} → ${order.dropoff_address}`,
+            description: `Course ${ref} - ${order.pickup_address} → ${order.dropoff_address}`,
           },
           { idempotencyKey: `deferred-item-${order.id}` }
         );

@@ -9,14 +9,14 @@ export const plisConfidentiels: Service = {
   slug: "plis-confidentiels",
 
   card: {
-    tag: "01 — Juridique & notarial",
+    tag: "01 - Juridique & notarial",
     title: "Plis confidentiels",
     body: "Remise en main propre, chaîne de responsabilité documentée, coursiers dédiés aux cabinets et études.",
     note: "Preuve de dépôt horodatée",
   },
 
   seo: {
-    title: "Envoi de pli confidentiel à Paris — coursier juridique",
+    title: "Envoi de pli confidentiel à Paris - coursier juridique",
     description:
       "Envoyer un pli confidentiel à Paris : course dédiée pour avocats, notaires et huissiers, remise en main propre, preuve horodatée.",
     keywords: [
@@ -100,6 +100,17 @@ export const plisConfidentiels: Service = {
 
   coverage:
     "Paris intra-muros et petite couronne (92, 93, 94) au tarif standard. Roissy, Orly et la grande couronne au tarif de leur zone. Les palais de justice, greffes et études d’Île-de-France sont desservis aux mêmes conditions.",
+
+  pricing: {
+    title: "Tarif d’un pli confidentiel",
+    intro:
+      "Un pli confidentiel se facture comme toute course : selon la zone et le délai, jamais selon la nature du document. La course dédiée et la remise en main propre au destinataire sont comprises, sans supplément.",
+    recommended: ["standard", "urgent"],
+    note:
+      "Une audience, un dépôt au greffe ou un rendez-vous chez le notaire à heure fixe ? Choisissez Urgent ou Super : le coursier part dès la confirmation, sans attendre d’autres plis.",
+  },
+
+  faqTitle: "Vos questions sur l’envoi d’un pli confidentiel.",
 
   faq: [
     {

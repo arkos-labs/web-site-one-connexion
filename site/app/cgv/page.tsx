@@ -17,7 +17,7 @@ export default function CGV() {
 
       <section className="mt-10 space-y-8 text-sm leading-relaxed text-label">
         <div>
-          <h2 className="mb-2 text-lg font-bold text-ink">Article 1 — Objet</h2>
+          <h2 className="mb-2 text-lg font-bold text-ink">Article 1 - Objet</h2>
           <p>
             Les présentes Conditions Générales de Vente (CGV) régissent les relations contractuelles
             entre {LEGAL.denomination} ({LEGAL.forme}, SIRET {LEGAL.siret}), ci-après « le Prestataire »,
@@ -27,7 +27,7 @@ export default function CGV() {
         </div>
 
         <div>
-          <h2 className="mb-2 text-lg font-bold text-ink">Article 2 — Prestations</h2>
+          <h2 className="mb-2 text-lg font-bold text-ink">Article 2 - Prestations</h2>
           <p>
             Le Prestataire assure des services de coursier incluant : le transport de plis et colis,
             les tournées régulières, les navettes récurrentes, et les livraisons express. Les prestations
@@ -36,7 +36,7 @@ export default function CGV() {
         </div>
 
         <div>
-          <h2 className="mb-2 text-lg font-bold text-ink">Article 3 — Tarifs</h2>
+          <h2 className="mb-2 text-lg font-bold text-ink">Article 3 - Tarifs</h2>
           <p>
             Les tarifs sont calculés selon la grille tarifaire en vigueur, basée sur la zone géographique
             de livraison, le type de prestation (course standard ou navette récurrente) et le délai choisi.
@@ -47,7 +47,7 @@ export default function CGV() {
         </div>
 
         <div>
-          <h2 className="mb-2 text-lg font-bold text-ink">Article 4 — Commandes</h2>
+          <h2 className="mb-2 text-lg font-bold text-ink">Article 4 - Commandes</h2>
           <p>
             Toute commande passée via la plateforme en ligne ou par téléphone vaut acceptation des présentes CGV.
             Le Client s&apos;engage à fournir des informations exactes concernant les adresses d&apos;enlèvement
@@ -56,7 +56,7 @@ export default function CGV() {
         </div>
 
         <div>
-          <h2 className="mb-2 text-lg font-bold text-ink">Article 5 — Paiement</h2>
+          <h2 className="mb-2 text-lg font-bold text-ink">Article 5 - Paiement</h2>
           <p>
             Les factures sont payables à réception ou selon les conditions convenues avec le Client
             (paiement à 30 jours pour les comptes entreprise). Tout retard de paiement entraînera
@@ -66,7 +66,7 @@ export default function CGV() {
         </div>
 
         <div>
-          <h2 className="mb-2 text-lg font-bold text-ink">Article 6 — Responsabilité</h2>
+          <h2 className="mb-2 text-lg font-bold text-ink">Article 6 - Responsabilité</h2>
           <p>
             Le Prestataire s&apos;engage à assurer le transport des marchandises avec le soin nécessaire.
             Sa responsabilité est limitée conformément aux dispositions du Code de commerce relatives au
@@ -77,7 +77,7 @@ export default function CGV() {
         </div>
 
         <div>
-          <h2 className="mb-2 text-lg font-bold text-ink">Article 7 — Annulation</h2>
+          <h2 className="mb-2 text-lg font-bold text-ink">Article 7 - Annulation</h2>
           <p>
             Toute annulation d&apos;une course déjà prise en charge pourra donner lieu à la facturation
             de la prestation. L&apos;annulation avant la prise en charge est gratuite.
@@ -85,7 +85,7 @@ export default function CGV() {
         </div>
 
         <div>
-          <h2 className="mb-2 text-lg font-bold text-ink">Article 8 — Données personnelles</h2>
+          <h2 className="mb-2 text-lg font-bold text-ink">Article 8 - Données personnelles</h2>
           <p>
             Les données collectées sont traitées conformément au RGPD. Pour toute demande relative à vos
             données, contactez-nous à <a href={`mailto:${EMAIL}`} className="text-accent hover:underline">{EMAIL}</a>.
@@ -93,7 +93,7 @@ export default function CGV() {
         </div>
 
         <div>
-          <h2 className="mb-2 text-lg font-bold text-ink">Article 9 — Droit applicable</h2>
+          <h2 className="mb-2 text-lg font-bold text-ink">Article 9 - Droit applicable</h2>
           <p>
             Les présentes CGV sont soumises au droit français. En cas de litige, les parties s&apos;efforceront
             de trouver une solution amiable. À défaut, le litige sera porté devant les tribunaux compétents

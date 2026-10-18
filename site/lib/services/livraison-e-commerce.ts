@@ -9,14 +9,14 @@ export const livraisonEcommerce: Service = {
   slug: "livraison-e-commerce",
 
   card: {
-    tag: "03 — E-commerce",
+    tag: "03 - E-commerce",
     title: "Livraison jour même",
     body: "Collecte en boutique ou en entrepôt, livraison dans la journée sur Paris et première couronne. Créneaux au choix du destinataire.",
     note: "Tournées récurrentes possibles",
   },
 
   seo: {
-    title: "Livraison coursier Paris — Livraison jour même e-commerce",
+    title: "Livraison coursier Paris - Livraison jour même e-commerce",
     description:
       "Livraison coursier Paris : collecte en boutique ou entrepôt, livraison le jour même à Paris et en petite couronne. Créneau choisi, suivi en ligne, preuve de livraison.",
     keywords: [
@@ -99,6 +99,17 @@ export const livraisonEcommerce: Service = {
   coverage:
     "Paris intra-muros et petite couronne (92, 93, 94) au tarif standard. Roissy, Orly et la grande couronne au tarif de leur zone. Les collectes récurrentes s’organisent sur créneaux fixes convenus à l’avance.",
 
+  pricing: {
+    title: "Tarif d’une livraison e-commerce le jour même",
+    intro:
+      "Pour livrer un client le jour même dans Paris ou en Île-de-France, la formule Normale (3 h) suffit le plus souvent. Le colis voyage seul, sans tournée partagée, et le prix est connu avant l’envoi.",
+    recommended: ["standard"],
+    note:
+      "Vous expédiez chaque semaine ? Avec un compte entreprise, vos livraisons partent sur une facture mensuelle, avec un tarif dégressif selon le volume.",
+  },
+
+  faqTitle: "Vos questions sur la livraison le jour même.",
+
   faq: [
     {
       question: "Que se passe-t-il si le destinataire est absent ?",
@@ -114,6 +125,16 @@ export const livraisonEcommerce: Service = {
       question: "Gérez-vous les retours ?",
       answer:
         "Oui, sur le même principe qu’une livraison : enlèvement chez le client et retour vers votre boutique ou votre entrepôt, avec preuve d’enlèvement.",
+    },
+    {
+      question: "Combien coûte une livraison le jour même ?",
+      answer:
+        "Dans Paris, 21 € TTC en Normal (livré sous 3 h) ; 42 € TTC vers la petite couronne. Le prix est le même quel que soit le colis, dans la limite de 18 kg.",
+    },
+    {
+      question: "Jusqu’à quelle heure commander pour livrer le jour même ?",
+      answer:
+        "Nous travaillons du lundi au samedi, de 9h à 19h. Pour une livraison en Normal (3 h) le jour même, commandez avant 16h ; en Super (1 h), jusqu’à 18h.",
     },
   ],
 };

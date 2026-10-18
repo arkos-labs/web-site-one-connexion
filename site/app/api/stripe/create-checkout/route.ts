@@ -86,7 +86,7 @@ async function sendTransferInvoice(p: {
       invoice: invoice.id,
       currency: 'eur',
       amount: Math.round(p.price * 100),
-      description: `Course ${p.orderId} — ${p.pickupAddress} → ${p.dropoffAddress}`,
+      description: `Course ${p.orderId} - ${p.pickupAddress} → ${p.dropoffAddress}`,
     },
     { idempotencyKey: `transfer-item-${order.id}` }
   );

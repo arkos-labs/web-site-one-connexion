@@ -33,7 +33,7 @@ function fmt(n: number) {
 }
 
 function truncate(str: string | undefined, max: number): string {
-  if (!str) return "—";
+  if (!str) return "-";
   return str.length > max ? str.slice(0, max - 1) + "…" : str;
 }
 
@@ -145,7 +145,7 @@ export async function generateInvoicePDF(data: InvoiceData) {
   doc.setFontSize(11);
   doc.setFont("helvetica", "bold");
   doc.setTextColor(...DARK);
-  doc.text(data.clientName || "—", colRight, yR);
+  doc.text(data.clientName || "-", colRight, yR);
   yR += 5;
   doc.setFontSize(8.5);
   doc.setFont("helvetica", "normal");
@@ -173,9 +173,9 @@ export async function generateInvoicePDF(data: InvoiceData) {
 
   const tableBody = data.orders.map((o) => {
     const type = o._type === "navette" ? "Navette" : "Course";
-    const reception = [o.delivery_recipient, o.delivery_department].filter(Boolean).join(" — ") || "—";
+    const reception = [o.delivery_recipient, o.delivery_department].filter(Boolean).join(" - ") || "-";
     return [
-      o.tracking_code || "—",
+      o.tracking_code || "-",
       type,
       new Date(o.created_at).toLocaleDateString("fr-FR", {
         day: "2-digit",
@@ -185,7 +185,7 @@ export async function generateInvoicePDF(data: InvoiceData) {
       truncate(o.pickup_address, 30),
       truncate(o.dropoff_address, 30),
       truncate(reception, 30),
-      o.price_estimate ? `${fmt(Number(o.price_estimate))} €` : "—",
+      o.price_estimate ? `${fmt(Number(o.price_estimate))} €` : "-",
     ];
   });
 

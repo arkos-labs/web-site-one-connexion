@@ -131,12 +131,12 @@ export default function FacturesPage() {
       <KpiStrip
         items={[
           { label: "Total à régler (TTC)", value: eur(pendingTotal), accent: pendingTotal > 0 },
-          { label: "Dernière facture", value: latest ? eur(latest.amount) : "—", hint: latest?.number },
+          { label: "Dernière facture", value: latest ? eur(latest.amount) : "-", hint: latest?.number },
           {
             label: "Moyen de paiement",
             value: savedMethod
               ? <span className="text-sm font-bold sm:text-base">{savedMethod.label}</span>
-              : <Link href="/dashboard/parametres?onglet=facturation" className="text-sm font-bold text-white/60 underline hover:text-white sm:text-base">Aucun — en ajouter un</Link>,
+              : <Link href="/dashboard/parametres?onglet=facturation" className="text-sm font-bold text-white/60 underline hover:text-white sm:text-base">Aucun - en ajouter un</Link>,
           },
         ]}
       />

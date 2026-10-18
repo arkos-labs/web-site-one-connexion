@@ -5,7 +5,7 @@ export type ServiceLevel = 'navette' | 'standard' | 'urgent' | 'flash';
 
 // Prix TTC, TVA 20 % comprise, identiques pour les pros et les particuliers.
 const PRICING_GRID = {
-  navette: [18.00, 30.00, 42.00, 54.00, 78.00],
+  navette: [18.00, 30.00, 66.00, 72.00, 78.00],
   standard: [21.00, 42.00, 78.00, 96.00, 109.20],
   urgent: [31.50, 63.00, 117.00, 144.00, 163.80],
   flash: [42.00, 84.00, 156.00, 192.00, 218.40]
@@ -61,6 +61,11 @@ export function getZoneFromDepartment(dept: string | null): Zone {
   if (['77', '78', '91', '95'].includes(dept)) return 2; // Moyenne Couronne (simplification)
   // Par défaut pour le reste de l'IDF
   return 3;
+}
+
+/** Prix TTC d'une formule pour une zone (0 Paris, 1 petite couronne, 2 grande couronne), pour l'affichage. */
+export function gridPrice(service: ServiceLevel, zone: Zone): number {
+  return PRICING_GRID[service][zone];
 }
 
 /** Départements desservis : Paris et Île-de-France. */

@@ -9,8 +9,8 @@ import { LEGAL } from '@/lib/site-content';
 
 /** Mentions légales affichées en pied de chaque facture (à faire valider par l'expert-comptable). */
 const IDENTITY =
-  `${LEGAL.denomination} — ${LEGAL.forme} au capital de ${LEGAL.capital} — ${LEGAL.adresse} — ` +
-  `SIREN ${LEGAL.siren} — SIRET ${LEGAL.siret} — TVA intracommunautaire ${LEGAL.tva} — NAF ${LEGAL.naf}.`;
+  `${LEGAL.denomination} - ${LEGAL.forme} au capital de ${LEGAL.capital} - ${LEGAL.adresse} - ` +
+  `SIREN ${LEGAL.siren}, SIRET ${LEGAL.siret}, TVA intracommunautaire ${LEGAL.tva}, NAF ${LEGAL.naf}.`;
 const LATE_PAYMENT =
   ` En cas de retard de paiement : pénalités égales à 3 fois le taux d'intérêt légal et indemnité forfaitaire ` +
   `de recouvrement de 40 € (art. L441-10 du Code de commerce). Pas d'escompte pour paiement anticipé.`;

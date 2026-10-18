@@ -259,7 +259,7 @@ export async function renderCoursesDuJour() {
 
   const lignes = data.map(
     (o) =>
-      `• <b>${parisTime(new Date(o.created_at))}</b> · <code>${escapeHtml(o.tracking_code ?? "—")}</code> · ${escapeHtml(o.status)}` +
+      `• <b>${parisTime(new Date(o.created_at))}</b> · <code>${escapeHtml(o.tracking_code ?? "-")}</code> · ${escapeHtml(o.status)}` +
       `${o.price_estimate ? ` · ${euros(o.price_estimate)}` : ""}\n` +
       `   ${escapeHtml(o.pickup_address ?? "?")} → ${escapeHtml(o.dropoff_address ?? "?")}`
   );

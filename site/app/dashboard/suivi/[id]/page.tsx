@@ -26,14 +26,14 @@ const STATUS_LABELS: Record<string, string> = {
 const FORMAT_LABELS: Record<string, string> = {
   doc: "Pli / document (< 1 kg)",
   pli: "Pli / document (< 1 kg)",
-  petit: "Petit colis (1 à 5 kg)",
-  volumineux: "Volumineux (5 à 15 kg)",
+  petit: "Petit colis (1 à 10 kg)",
+  volumineux: "Volumineux (10 à 18 kg ou encombrant)",
 };
 
 const DELAI_LABELS: Record<string, string> = {
-  standard: "Normal — livré sous 3 h",
-  urgent: "Urgent — livré sous 1 h 30",
-  flash: "Super — livré sous 1 h",
+  standard: "Normal - livré sous 3 h",
+  urgent: "Urgent - livré sous 1 h 30",
+  flash: "Super - livré sous 1 h",
   navette: "Navette programmée",
 };
 
@@ -41,10 +41,10 @@ const DELAI_LABELS: Record<string, string> = {
 function paymentLabel(o: any): string | null {
   if (o.billing_status === "a_regler") return "Facture à régler sous 30 jours";
   if (o.billing_status === "echec" && !o.payment_mode) return "Paiement non réussi";
-  if (o.payment_mode === "carte") return o.billing_status === "rembourse" ? "Carte bancaire — remboursé" : "Carte bancaire — réglé";
+  if (o.payment_mode === "carte") return o.billing_status === "rembourse" ? "Carte bancaire - remboursé" : "Carte bancaire - réglé";
   if (o.payment_mode === "fin_de_mois") {
     const how = o.billing_status === "virement_attendu" ? "virement" : "prélèvement";
-    return o.billing_status === "paye" ? `Sur facture (${how}) — réglé` : `Sur facture à 30 jours (${how})`;
+    return o.billing_status === "paye" ? `Sur facture (${how}) - réglé` : `Sur facture à 30 jours (${how})`;
   }
   // Pro avec compte, sans paiement à la commande : la course part sur la facture du mois.
   if (o.client_type === "entreprise" && o.user_id) return "Facture mensuelle de votre compte";

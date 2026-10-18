@@ -16,8 +16,8 @@ export const metadata: Metadata = {
     "Coursier moto dédié à La Défense, Nanterre, Neuilly, Boulogne-Billancourt et tout le 92. Enlèvement < 45 min, suivi en ligne. Prix affiché avant de commander.",
   alternates: { canonical: "/zones/la-defense" },
   openGraph: {
-    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION — Coursier B2B Paris & Île-de-France" }],
-    title: "Coursier La Défense & Hauts-de-Seine — ONE CONNEXION",
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION - Coursier B2B Paris & Île-de-France" }],
+    title: "Coursier La Défense & Hauts-de-Seine - ONE CONNEXION",
     description: "Livraison express professionnelle à La Défense et dans tout le 92. Course dédiée, sans regroupement.",
     url: "/zones/la-defense",
     type: "website",
@@ -212,7 +212,9 @@ export default function ZonelaDefense() {
             {[
               { q: "Quels sont les délais d'intervention à La Défense ?", a: "Pour une course urgente, nous garantissons un enlèvement en moins de 45 minutes sur tout le parvis de La Défense et les communes limitrophes (Courbevoie, Puteaux, Nanterre)." },
               { q: "Vos coursiers accèdent-ils aux étages des tours ?", a: "Oui, nos coursiers sont habitués aux protocoles de sécurité des grandes tours (badges, quais de livraison, contrôle d'identité) et assurent une remise en main propre." },
-              { q: "Proposez-vous la livraison depuis le 92 vers la banlieue éloignée ?", a: "Tout à fait. Bien que spécialistes de Paris et petite couronne, nous assurons des livraisons dédiées depuis le 92 vers toute l'Île-de-France et la province." }
+              { q: "Proposez-vous la livraison depuis le 92 vers la banlieue éloignée ?", a: "Oui, depuis La Défense vers toute l'Île-de-France, en course dédiée. Nous ne livrons pas en province : pour une course hors Île-de-France, appelez-nous." },
+              { q: "Combien coûte une course depuis La Défense ?", a: "La Défense est en petite couronne : 42 € TTC en Normal (3 h), 63 € en Urgent (1 h 30) et 84 € en Super (1 h) vers Paris ou le 92, 93, 94. Le prix s'affiche avant de commander." },
+              { q: "Quels sont vos horaires à La Défense ?", a: "Du lundi au samedi, de 9h à 19h. Nous sommes fermés le dimanche et les jours fériés." }
             ].map((faq, i) => (
               <div key={i} className="rounded-xl border border-line bg-white p-5 hover:border-accent/30 transition-colors">
                 <h3 className="mb-2 text-[15.5px] font-bold text-ink">{faq.q}</h3>

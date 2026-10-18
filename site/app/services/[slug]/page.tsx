@@ -13,6 +13,7 @@ import ServiceHero from "@/components/services/ServiceHero";
 import ServiceRelated from "@/components/services/ServiceRelated";
 import ServiceSteps from "@/components/services/ServiceSteps";
 import ServiceUseCases from "@/components/services/ServiceUseCases";
+import ServicePricing from "@/components/services/ServicePricing";
 import { SERVICE_SLUGS, getService } from "@/lib/services";
 import { SITE_URL } from "@/lib/site-content";
 
@@ -39,7 +40,7 @@ export async function generateMetadata({
     description: service.seo.description,
     alternates: { canonical: url },
     openGraph: {
-      images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION — Coursier B2B Paris & Île-de-France" }],
+      images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION - Coursier B2B Paris & Île-de-France" }],
       title: service.seo.title,
       description: service.seo.description,
       url,
@@ -165,6 +166,18 @@ export default async function ServicePage({
         </section>
 
         <section className="border-b border-line py-[72px]">
+          <div className="mb-9">
+            <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
+              Tarifs
+            </div>
+            <h2 className="max-w-[24ch] text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
+              {service.pricing.title}
+            </h2>
+          </div>
+          <ServicePricing pricing={service.pricing} />
+        </section>
+
+        <section className="border-b border-line py-[72px]">
           <div className="mb-5 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
             Zone couverte
           </div>
@@ -185,7 +198,7 @@ export default async function ServicePage({
               Questions fréquentes
             </div>
             <h2 className="max-w-[20ch] text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-              Ce que les cabinets nous demandent.
+              {service.faqTitle}
             </h2>
           </div>
           <ServiceFaq faq={service.faq} />

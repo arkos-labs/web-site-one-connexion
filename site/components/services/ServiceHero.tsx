@@ -8,7 +8,7 @@ import type { Service } from "@/lib/services";
 import { EMAIL, PHONE_DISPLAY, PHONE_TEL } from "@/lib/site-content";
 
 export default function ServiceHero({ service }: { service: Service }) {
-  const subject = encodeURIComponent(`Demande de course — ${service.card.title}`);
+  const subject = encodeURIComponent(`Demande de course - ${service.card.title}`);
 
   return (
     <section className="bg-ink text-white">

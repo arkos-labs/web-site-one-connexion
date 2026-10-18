@@ -3,8 +3,9 @@
  * Prestation santé & laboratoires. Requêtes visées : coursier médical Paris,
  * transport de prélèvements, transport d'échantillons biologiques Île-de-France.
  *
- * ATTENTION : aucune conformité réglementaire (UN3373, ADR, agrément) n'est
- * affirmée ici. Les mentions correspondantes restent PLACEHOLDER.
+ * ATTENTION : aucune certification ni agrément (ADR, transport de matières dangereuses) n'est
+ * affirmé ici. UN3373 est expliqué comme un conditionnement préparé par l'expéditeur, que le
+ * coursier transporte fermé : ne pas écrire « certifié » ou « agréé UN3373 ».
  */
 import type { Service } from "./types";
 
@@ -12,14 +13,14 @@ export const transportMedical: Service = {
   slug: "transport-medical",
 
   card: {
-    tag: "02 — Santé & laboratoires",
+    tag: "02 - Santé & laboratoires",
     title: "Transport médical",
     body: "Prélèvements, pièces critiques et matériel technique. Contenants isothermes et relevés de température à la demande.",
     note: "Course dédiée, sans regroupement",
   },
 
   seo: {
-    title: "Coursier médical Paris — transport laboratoire",
+    title: "Coursier médical Paris - transport laboratoire",
     description:
       "Coursier médical à Paris : transport de laboratoire, prélèvements et échantillons pour cliniques et cabinets d’Île-de-France. Course dédiée, contenants isothermes, du lundi au samedi.",
     keywords: [
@@ -53,7 +54,7 @@ export const transportMedical: Service = {
     paragraphs: [
       "Un prélèvement dégradé n’est pas une livraison ratée : c’est un patient qu’il faut reconvoquer, une analyse à refaire, et un résultat qui arrive trop tard pour la décision qu’il devait éclairer. Contrairement à un colis, un échantillon ne se réexpédie pas.",
       "Le délai de stabilité commande toute la course. Il varie selon la nature du prélèvement et les exigences du laboratoire destinataire : c’est vous qui le fixez, et c’est lui qui détermine si la course est réalisable. Nous confirmons la faisabilité avant d’engager, plutôt que d’accepter puis d’échouer.",
-      "Le maintien en température suit la même logique. Le contenant isotherme est choisi en fonction de ce qui est transporté, et un relevé de température peut être joint à la course lorsque le protocole du laboratoire l’exige — à préciser à la commande.",
+      "Le maintien en température suit la même logique. Le contenant isotherme est choisi en fonction de ce qui est transporté, et un relevé de température peut être joint à la course lorsque le protocole du laboratoire l’exige, à préciser à la commande.",
     ],
   },
 
@@ -83,6 +84,7 @@ export const transportMedical: Service = {
   included: [
     "Course dédiée, sans regroupement ni rupture de charge",
     "Contenant isotherme adapté, convenu à la commande",
+    "Colis UN3373 en triple emballage transportés fermés, sans jamais être ouverts",
     "Relevé de température sur demande",
     "Confirmation de faisabilité avant engagement de la course",
     "Suivi de chaque course en ligne",
@@ -107,6 +109,17 @@ export const transportMedical: Service = {
 
   coverage:
     "Paris intra-muros et petite couronne (92, 93, 94) au tarif standard. Roissy, Orly et la grande couronne au tarif de leur zone. Laboratoires, cliniques et plateaux techniques d’Île-de-France desservis aux mêmes conditions.",
+
+  pricing: {
+    title: "Tarif d’un coursier médical",
+    intro:
+      "Un prélèvement ou un échantillon se facture au même prix qu’une autre course : la zone et le délai font le tarif. Le contenant isotherme et le transport fermé du triple emballage UN3373 sont compris.",
+    recommended: ["urgent", "flash"],
+    note:
+      "Pour un prélèvement dont le délai de stabilité est court, préférez Super (1 h) : le coursier va directement au laboratoire, sans aucun arrêt.",
+  },
+
+  faqTitle: "Vos questions sur le transport d’échantillons.",
 
   faq: [
     {
@@ -137,7 +150,12 @@ export const transportMedical: Service = {
     {
       question: "Qui est responsable du conditionnement de l’échantillon ?",
       answer:
-        "Le conditionnement relève du site expéditeur, qui applique les protocoles propres à la nature du prélèvement. Nous assurons le transport dans le contenant convenu et le maintien des conditions pendant la course.",
+        "Le conditionnement relève du site expéditeur, qui applique les protocoles propres à la nature du prélèvement (triple emballage UN3373 pour un échantillon biologique). Nous assurons le transport dans le contenant convenu et le maintien des conditions pendant la course.",
+    },
+    {
+      question: "Transportez-vous les échantillons UN3373 (triple emballage) ?",
+      answer:
+        "Oui. Un échantillon biologique de catégorie B (UN3373) voyage dans un triple emballage : un récipient primaire étanche (le tube ou le flacon), un emballage secondaire étanche avec un matériau absorbant, puis un emballage extérieur rigide qui porte l’étiquette UN3373. L’expéditeur prépare ce conditionnement ; le coursier le transporte fermé, calé et dans le sens indiqué, dans le contenant convenu, sans jamais l’ouvrir, jusqu’au laboratoire destinataire.",
     },
     {
       question: "Que se passe-t-il si le délai de stabilité ne peut pas être tenu ?",

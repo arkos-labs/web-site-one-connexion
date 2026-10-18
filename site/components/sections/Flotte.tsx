@@ -55,7 +55,7 @@ export default function Flotte({ hideHeader = false }: { hideHeader?: boolean } 
           {/* Carte de la zone de couverture (Île-de-France) — figée, non interactive. */}
           <div className="relative aspect-[4/3] overflow-hidden border border-white/12">
             <iframe
-              title="Zone de couverture One Connexion — Île-de-France"
+              title="Zone de couverture One Connexion - Île-de-France"
               src="https://www.google.com/maps?ll=48.7,2.5&hl=fr&z=9&output=embed"
               className="pointer-events-none h-full w-full border-0"
               loading="lazy"

@@ -10,8 +10,8 @@ export const metadata: Metadata = {
     "Guides pratiques pour vos envois urgents à Paris : plis confidentiels, transport de prélèvements médicaux et calcul du prix d'un coursier express.",
   alternates: { canonical: "/guides" },
   openGraph: {
-    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION — Coursier B2B Paris & Île-de-France" }],
-    title: "Guides du coursier B2B à Paris — ONE CONNEXION",
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION - Coursier B2B Paris & Île-de-France" }],
+    title: "Guides du coursier B2B à Paris - ONE CONNEXION",
     description: "Plis confidentiels, prélèvements médicaux, prix d'un coursier : nos guides pratiques.",
     url: "/guides",
     type: "website",

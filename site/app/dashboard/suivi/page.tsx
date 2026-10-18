@@ -216,7 +216,7 @@ export default function SuiviPage() {
 
   const Price = ({ d }: { d: any }) => {
     const ttc = priceOf(d);
-    if (ttc === null) return <span className="text-xs text-label">—</span>;
+    if (ttc === null) return <span className="text-xs text-label">-</span>;
     return (
       <div className="whitespace-nowrap text-right">
         <div className="text-sm font-extrabold tabular-nums text-ink">{eur(ttc)}</div>

@@ -33,7 +33,7 @@ export async function sendInvoiceEmail(i: InvoiceEmailInput): Promise<boolean> {
 
   const statusLine =
     i.state === 'paid'
-      ? `<strong style="color:#1a7f37">Facture acquittée</strong> — votre paiement a bien été reçu, il ne vous reste rien à régler.`
+      ? `<strong style="color:#1a7f37">Facture acquittée</strong> - votre paiement a bien été reçu, il ne vous reste rien à régler.`
       : i.state === 'auto'
         ? `Cette facture sera <strong>prélevée automatiquement le ${i.dueDate ? day(i.dueDate) : 'jour de l’échéance'}</strong> sur le moyen de paiement que vous avez enregistré. Aucune action n’est nécessaire.`
         : `Cette facture est à régler <strong>avant le ${i.dueDate ? day(i.dueDate) : 'jour de l’échéance'}</strong>, par carte ou par virement.`;

@@ -95,7 +95,7 @@ export async function issueInternalInvoice(
     const deliveredOn = new Map((deliveries ?? []).map((d) => [d.id as string, d.delivered_at as string | null]));
     const describe = (i: { order_id: string | null; description: string }) => {
       const at = i.order_id ? deliveredOn.get(i.order_id) : null;
-      return at ? `${i.description} — livrée le ${new Date(at).toLocaleDateString('fr-FR', { timeZone: 'Europe/Paris' })}` : i.description;
+      return at ? `${i.description} - livrée le ${new Date(at).toLocaleDateString('fr-FR', { timeZone: 'Europe/Paris' })}` : i.description;
     };
 
     const taxRate = await vatRateId(stripe);

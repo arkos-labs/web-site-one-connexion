@@ -11,13 +11,13 @@ import { SITE_URL } from "@/lib/site-content";
 import { Scale, Activity, ShoppingBag, Briefcase, Stethoscope, Building2 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Secteurs desservis — Coursier B2B",
+  title: "Secteurs desservis - Coursier B2B",
   description:
     "One Connexion opère pour les cabinets juridiques, laboratoires, e-commerçants, agences et entreprises d'Île-de-France. Découvrez nos solutions par secteur.",
   alternates: { canonical: "/secteurs" },
   openGraph: {
-    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION — Coursier B2B Paris & Île-de-France" }],
-    title: "Secteurs desservis — Coursier B2B Paris | ONE CONNEXION",
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION - Coursier B2B Paris & Île-de-France" }],
+    title: "Secteurs desservis - Coursier B2B Paris | ONE CONNEXION",
     description: "Solutions de transport express par secteur : juridique, médical, e-commerce, corporate. Paris & IDF.",
     url: "/secteurs",
     type: "website",
@@ -39,7 +39,7 @@ const SECTEURS = [
     icon: Scale,
     slug: "juridique",
     name: "Juridique & Notarial",
-    tag: "01 — Cabinets & études",
+    tag: "01 - Cabinets & études",
     color: "border-blue-200 bg-blue-50",
     iconBg: "bg-blue-100 text-blue-700",
     desc: "Cabinets d'avocats, études notariales, offices d'huissiers. Transport de plis confidentiels avec remise en main propre et preuve horodatée.",
@@ -56,7 +56,7 @@ const SECTEURS = [
     icon: Activity,
     slug: "medical",
     name: "Médical & Laboratoires",
-    tag: "02 — Santé & analyses",
+    tag: "02 - Santé & analyses",
     color: "border-green-200 bg-green-50",
     iconBg: "bg-green-100 text-green-700",
     desc: "Laboratoires d'analyses, cliniques privées, pharmacies hospitalières, CHU. Transport de prélèvements biologiques, matériel médical sensible et médicaments urgents.",
@@ -73,7 +73,7 @@ const SECTEURS = [
     icon: ShoppingBag,
     slug: "ecommerce",
     name: "E-commerce & Retail",
-    tag: "03 — Commerce en ligne",
+    tag: "03 - Commerce en ligne",
     color: "border-orange-200 bg-orange-50",
     iconBg: "bg-orange-100 text-orange-700",
     desc: "E-commerçants, boutiques de luxe, showrooms et places de marché. Livraison même jour (J+0) avec remise en main propre et preuve de livraison horodatée.",
@@ -90,7 +90,7 @@ const SECTEURS = [
     icon: Briefcase,
     slug: "corporate",
     name: "Corporate & Agences",
-    tag: "04 — Entreprises & conseil",
+    tag: "04 - Entreprises & conseil",
     color: "border-purple-200 bg-purple-50",
     iconBg: "bg-purple-100 text-purple-700",
     desc: "Directions générales, agences de communication, cabinets de conseil et studios créatifs. Transport de maquettes, prototypes, contrats et cadeaux d'affaires.",
@@ -107,7 +107,7 @@ const SECTEURS = [
     icon: Stethoscope,
     slug: "evenementiel",
     name: "Événementiel & Culture",
-    tag: "05 — Événements",
+    tag: "05 - Événements",
     color: "border-pink-200 bg-pink-50",
     iconBg: "bg-pink-100 text-pink-700",
     desc: "Organisateurs d'événements, salons professionnels, maisons de production. Transport de matériel de scène, objets d'exposition et supports de communication en temps contraint.",
@@ -124,7 +124,7 @@ const SECTEURS = [
     icon: Building2,
     slug: "entreprises",
     name: "Grands comptes & PME",
-    tag: "06 — Comptes entreprise",
+    tag: "06 - Comptes entreprise",
     color: "border-gray-200 bg-gray-50",
     iconBg: "bg-gray-100 text-gray-700",
     desc: "Entreprises multi-sites, ETI et grands comptes. Compte entreprise avec facturation mensuelle, imputation par service ou dossier, interlocuteur dispatch dédié.",
@@ -161,7 +161,7 @@ export default function SecteursPage() {
           </h1>
           <p className="max-w-[58ch] text-pretty text-[17px] leading-[1.6] text-white/66">
             One Connexion ne fait pas de transport généraliste. Nos procédures sont
-            conçues secteur par secteur — juridique, médical, e-commerce, corporate —
+            conçues secteur par secteur - juridique, médical, e-commerce, corporate -
             pour répondre aux exigences spécifiques de chaque flux.
           </p>
         </div>
@@ -213,7 +213,7 @@ export default function SecteursPage() {
                 Votre secteur, nos procédures.
               </h2>
               <p className="text-[15px] text-white/60">
-                Décrivez vos flux — nous proposons la procédure adaptée à votre métier.
+                Décrivez vos flux - nous proposons la procédure adaptée à votre métier.
               </p>
             </div>
             <div className="flex flex-col gap-3 sm:flex-row">

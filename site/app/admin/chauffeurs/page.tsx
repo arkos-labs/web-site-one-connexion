@@ -338,7 +338,7 @@ function AdminChauffeursPageInner() {
                           )}
                         </div>
                         <div className="mt-0.5 text-[12.5px] text-muted">{d.vehicle || "Véhicule non renseigné"}</div>
-                        <div className="text-[12.5px] text-muted">{d.phone || "—"}</div>
+                        <div className="text-[12.5px] text-muted">{d.phone || "-"}</div>
                       </div>
                     </div>
                     <div className="flex items-center gap-2 pl-14 sm:pl-0">

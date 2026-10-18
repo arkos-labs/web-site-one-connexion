@@ -7,9 +7,9 @@ export const metadata: Metadata = {
     "Contactez One Connexion pour vos livraisons urgentes à Paris et en Île-de-France. Prix affiché avant commande, réponse rapide. Téléphone, email ou formulaire.",
   alternates: { canonical: "/contact" },
   openGraph: {
-    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION — Coursier B2B Paris & Île-de-France" }],
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION - Coursier B2B Paris & Île-de-France" }],
     url: "/contact",
-    title: "Contact — ONE CONNEXION",
+    title: "Contact - ONE CONNEXION",
     description:
       "Contactez-nous pour vos livraisons urgentes à Paris et en Île-de-France.",
   },

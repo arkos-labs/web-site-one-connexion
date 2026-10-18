@@ -419,7 +419,7 @@ function AdminCoursesPageInner() {
       {clientFilter && (
         <div className="flex items-center justify-between gap-3 rounded-2xl border border-line bg-white p-4">
           <span className="text-[13px] font-semibold text-ink">
-            Filtré sur le client <span className="text-accent">{clientFilterName || clientFilter}</span> — {visible.length} course{visible.length > 1 ? "s" : ""}
+            Filtré sur le client <span className="text-accent">{clientFilterName || clientFilter}</span>, {visible.length} course{visible.length > 1 ? "s" : ""}
           </span>
           <Link href="/admin/courses" className="rounded-lg border border-line px-3 py-1.5 text-[12.5px] font-bold text-muted transition-colors hover:text-ink">
             Voir toutes les courses
@@ -627,7 +627,7 @@ function AdminCoursesPageInner() {
                     {(c.deliveryRecipient || c.deliveryDepartment || c.deliveryComment || c.deliveryPhotoUrl) && (
                       <div className="ml-5 mt-1 text-[11px] text-slate-500 bg-slate-50 p-2 rounded-lg border border-slate-100">
                         {(c.deliveryRecipient || c.deliveryDepartment) && (
-                          <p>Remis à: <strong className="text-slate-700">{c.deliveryRecipient}</strong> {c.deliveryDepartment && <span> — Lieu: <strong className="text-slate-700">{c.deliveryDepartment}</strong></span>}</p>
+                          <p>Remis à: <strong className="text-slate-700">{c.deliveryRecipient}</strong> {c.deliveryDepartment && <span> - Lieu: <strong className="text-slate-700">{c.deliveryDepartment}</strong></span>}</p>
                         )}
                         {c.deliveryComment && <p className="mt-0.5">Commentaire: <span className="italic">{c.deliveryComment}</span></p>}
                         {c.deliveryPhotoUrl && (

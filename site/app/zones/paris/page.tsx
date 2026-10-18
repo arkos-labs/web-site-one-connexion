@@ -16,8 +16,8 @@ export const metadata: Metadata = {
     "Coursier Paris en moto et scooter, 20 arrondissements : dès 21 € TTC en 3 h, 31,50 € en urgent, 42 € en 1 h. Enlèvement en moins de 45 min, suivi en ligne.",
   alternates: { canonical: "/zones/paris" },
   openGraph: {
-    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION — Coursier B2B Paris & Île-de-France" }],
-    title: "Coursier Paris : livraison express — ONE CONNEXION",
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION - Coursier B2B Paris & Île-de-France" }],
+    title: "Coursier Paris : livraison express - ONE CONNEXION",
     description: "Livraison express dans tout Paris (75). Course dédiée, sans regroupement, remise en main propre.",
     url: "/zones/paris",
     type: "website",
@@ -39,7 +39,7 @@ const serviceSchema = {
   "@context": "https://schema.org",
   "@type": "Service",
   "@id": `${SITE_URL}/zones/paris#service`,
-  name: "Coursier express — Paris intramuros",
+  name: "Coursier express - Paris intramuros",
   serviceType: "Coursier B2B",
   url: `${SITE_URL}/zones/paris`,
   provider: { "@id": `${SITE_URL}/#organization` },
@@ -80,11 +80,11 @@ const faqSchema = {
 };
 
 const ARRONDISSEMENTS = [
-  "1er — Louvre, Châtelet", "2e — Bourse", "3e — Le Marais", "4e — Île de la Cité",
-  "5e — Quartier Latin", "6e — Saint-Germain", "7e — Tour Eiffel", "8e — Champs-Élysées",
-  "9e — Opéra", "10e — Gare du Nord / Est", "11e — Bastille", "12e — Gare de Lyon",
-  "13e — Italie", "14e — Montparnasse", "15e — Vaugirard", "16e — Trocadéro",
-  "17e — Batignolles", "18e — Montmartre", "19e — Buttes-Chaumont", "20e — Belleville",
+  "1er - Louvre, Châtelet", "2e - Bourse", "3e - Le Marais", "4e - Île de la Cité",
+  "5e - Quartier Latin", "6e - Saint-Germain", "7e - Tour Eiffel", "8e - Champs-Élysées",
+  "9e - Opéra", "10e - Gare du Nord / Est", "11e - Bastille", "12e - Gare de Lyon",
+  "13e - Italie", "14e - Montparnasse", "15e - Vaugirard", "16e - Trocadéro",
+  "17e - Batignolles", "18e - Montmartre", "19e - Buttes-Chaumont", "20e - Belleville",
 ];
 
 const STATS = [

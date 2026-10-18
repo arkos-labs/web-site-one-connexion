@@ -10,6 +10,7 @@ import { notFound } from "next/navigation";
 import JsonLd from "@/components/JsonLd";
 import { SITE_URL, PHONE_DISPLAY, PHONE_TEL, EMAIL } from "@/lib/site-content";
 import { ZONES, getZone, isZoneIndexed } from "@/lib/zones/data";
+import { withFaqComplements } from "@/lib/zones/faq-complements";
 import {
   Scale, Activity, ShoppingBag, Briefcase, CalendarDays, Building2,
   MapPin, Phone, Clock, CheckCircle, ArrowRight, ChevronRight
@@ -39,7 +40,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: zone.seo.description,
     alternates: { canonical: `/zones/${slug}` },
     openGraph: {
-      images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION — Coursier B2B Paris & Île-de-France" }],
+      images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION - Coursier B2B Paris & Île-de-France" }],
       title: zone.seo.title,
       description: zone.seo.description,
       url: `/zones/${slug}`,
@@ -132,7 +133,7 @@ export default async function ZonePage({ params }: Props) {
     "@context": "https://schema.org",
     "@type": "Service",
     "@id": `${SITE_URL}/zones/${slug}#service`,
-    name: `Coursier express — ${zone.fullName}`,
+    name: `Coursier express - ${zone.fullName}`,
     serviceType: "Coursier B2B",
     description: zone.seo.description,
     url: `${SITE_URL}/zones/${slug}`,
@@ -141,17 +142,17 @@ export default async function ZonePage({ params }: Props) {
   };
 
   /* FAQ : propre à la zone si elle existe, sinon FAQ générique */
-  const faqItems = zone.faq ?? [
+  const faqItems = withFaqComplements(zone, zone.faq ?? [
     { q: `Quels sont les délais d'enlèvement à ${zone.name} ?`, a: `Pour toute urgence, un coursier intervient à ${zone.name} en moins de 45 minutes après validation de la commande, quel que soit le quartier.` },
     { q: `Effectuez-vous des livraisons volumineuses depuis ${zone.name} ?`, a: "Notre flotte est composée de deux-roues (scooters et motos) : elle convient aux plis, colis et matériel léger. Pour un volume ou un gabarit important, contactez-nous avant de commander, nous vous dirons si nous pouvons le prendre en charge." },
     { q: `Puis-je regrouper mes expéditions depuis ${zone.name} ?`, a: "Absolument. Nous proposons des tournées régulières et la création de comptes entreprise pour optimiser vos coûts logistiques au quotidien." },
-  ];
+  ]);
 
-  const faqSchema = zone.faq
+  const faqSchema = faqItems.length
     ? {
         "@context": "https://schema.org",
         "@type": "FAQPage",
-        mainEntity: zone.faq.map(({ q, a }) => ({
+        mainEntity: faqItems.map(({ q, a }) => ({
           "@type": "Question",
           name: q,
           acceptedAnswer: { "@type": "Answer", text: a },
@@ -527,7 +528,7 @@ export default async function ZonePage({ params }: Props) {
                 Une course urgente à {zone.name} ?
               </h2>
               <p className="text-[16px] text-white/60 leading-[1.6]">
-                Appelez-nous ou décrivez votre besoin — nous intervenons dans les 45 minutes pour assurer la continuité de votre activité.
+                Appelez-nous ou décrivez votre besoin, nous intervenons dans les 45 minutes pour assurer la continuité de votre activité.
               </p>
             </div>
             <div className="flex flex-col gap-3 sm:flex-row">

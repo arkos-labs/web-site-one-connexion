@@ -26,7 +26,7 @@ type Navette = {
 };
 
 function initialsOf(name: string) {
-  return name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase() || "—";
+  return name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase() || "-";
 }
 
 export default function AdminNavettesPage() {
@@ -267,7 +267,7 @@ function AdminNavettesPageInner() {
                   {/* Dernière livraison */}
                   {(n.delivery_recipient || n.delivery_department) && (
                     <div className="mt-3 rounded-xl bg-emerald-50 border border-emerald-100 p-3 text-[11px] text-emerald-700">
-                      <p className="font-bold text-[11px] uppercase tracking-widest text-emerald-500 mb-1">Dernière livraison {n.delivered_at && `— ${new Date(n.delivered_at).toLocaleDateString("fr-FR", { day: "numeric", month: "short" })}`}</p>
+                      <p className="font-bold text-[11px] uppercase tracking-widest text-emerald-500 mb-1">Dernière livraison {n.delivered_at && `- ${new Date(n.delivered_at).toLocaleDateString("fr-FR", { day: "numeric", month: "short" })}`}</p>
                       {n.delivery_recipient && <p>Déposé à: <strong>{n.delivery_recipient}</strong></p>}
                       {n.delivery_department && <p>Lieu / Service: <strong>{n.delivery_department}</strong></p>}
                       {n.delivery_comment && <p className="mt-0.5 italic">{n.delivery_comment}</p>}

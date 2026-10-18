@@ -174,7 +174,7 @@ export default function AdminChatPage() {
                     <span className="truncate text-sm font-bold text-ink">{driver.name || "Chauffeur"}</span>
                     {last && <span className="shrink-0 text-xs text-muted">{formatTime(last.created_at)}</span>}
                   </div>
-                  <span className="truncate text-xs text-muted/80">{driver.vehicle || "—"}</span>
+                  <span className="truncate text-xs text-muted/80">{driver.vehicle || "-"}</span>
                   <span className="mt-1 truncate text-xs text-muted">{last?.content || "Aucun message"}</span>
                 </div>
               </button>
@@ -195,7 +195,7 @@ export default function AdminChatPage() {
                 <div>
                   <h2 className="text-base font-bold text-ink">{selectedDriver.name || "Chauffeur"}</h2>
                   <div className="flex items-center gap-2 text-xs text-muted">
-                    <span className="flex items-center gap-1"><Truck size={12} /> {selectedDriver.vehicle || "—"}</span>
+                    <span className="flex items-center gap-1"><Truck size={12} /> {selectedDriver.vehicle || "-"}</span>
                     <span>•</span>
                     <span className={isOnline(selectedDriver) ? "text-green-600" : "text-gray-500"}>
                       {isOnline(selectedDriver) ? "En ligne" : "Hors ligne"}

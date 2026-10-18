@@ -17,7 +17,7 @@ export const coursierMotoParis: Service = {
   },
 
   seo: {
-    title: "Coursier moto et scooter Paris — dès 21 € TTC",
+    title: "Coursier moto et scooter Paris - dès 21 € TTC",
     description:
       "Coursier moto et scooter à Paris : livraison express en deux-roues, top-case verrouillé, suivi en ligne, du lundi au samedi. Prix coursier moto Paris : dès 21 € TTC en normal (3 h), 42 € TTC en formule Super (1 h).",
     keywords: [
@@ -99,6 +99,17 @@ export const coursierMotoParis: Service = {
 
   coverage:
     "Les 20 arrondissements de Paris dès 21 € TTC, puis les Hauts-de-Seine, la Seine-Saint-Denis et le Val-de-Marne dès 42 € TTC, et la grande couronne (77, 78, 91, 95) dès 78 € TTC.",
+
+  pricing: {
+    title: "Prix d’un coursier moto à Paris",
+    intro:
+      "Scooter ou moto, le tarif est le même : il dépend de la zone et du délai choisis. Le deux-roues passe là où un utilitaire reste bloqué, ce qui permet de tenir les trois délais, même aux heures de pointe.",
+    recommended: ["standard", "urgent", "flash"],
+    note:
+      "Dans Paris intra-muros, une course moto démarre à 21 € TTC en Normal (3 h). Pour La Défense, Roissy ou Orly, comptez le tarif de la zone d’arrivée.",
+  },
+
+  faqTitle: "Vos questions sur le coursier moto.",
 
   faq: [
     {

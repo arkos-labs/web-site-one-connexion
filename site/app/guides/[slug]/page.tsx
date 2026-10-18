@@ -25,8 +25,8 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
     description: guide.description,
     alternates: { canonical: url },
     openGraph: {
-      images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION — Coursier B2B Paris & Île-de-France" }],
-      title: `${guide.seoTitle} — ONE CONNEXION`,
+      images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION - Coursier B2B Paris & Île-de-France" }],
+      title: `${guide.seoTitle} - ONE CONNEXION`,
       description: guide.description,
       url,
       type: "article",

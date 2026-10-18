@@ -73,7 +73,7 @@ type Invoice = {
 };
 
 function initialsOf(name: string) {
-  return name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase() || "—";
+  return name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase() || "-";
 }
 
 const ORDER_STATUS_LABEL: Record<string, string> = {
@@ -377,7 +377,7 @@ export default function AdminClientDetailPage() {
                     <span className="text-[12.5px] font-semibold text-muted">
                       {new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }).format(new Date(o.created_at))}
                     </span>
-                    <span className="text-[14px] font-bold text-ink">{o.price_estimate ? `${o.price_estimate.toFixed(2)} €` : "—"}</span>
+                    <span className="text-[14px] font-bold text-ink">{o.price_estimate ? `${o.price_estimate.toFixed(2)} €` : "-"}</span>
                   </div>
                 </div>
               ))}
@@ -464,7 +464,7 @@ function InfoRow({ label, value }: { label: string; value: string | null }) {
   return (
     <div className="flex items-center justify-between gap-3">
       <span className="font-bold uppercase tracking-wide text-label">{label}</span>
-      <span className="text-right text-ink">{value || "—"}</span>
+      <span className="text-right text-ink">{value || "-"}</span>
     </div>
   );
 }

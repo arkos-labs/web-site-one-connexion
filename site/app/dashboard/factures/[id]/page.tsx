@@ -132,7 +132,7 @@ export default function FactureDetailsPage() {
         {o.delivery_photo_url && <a href={o.delivery_photo_url} target="_blank" rel="noreferrer" className="font-bold text-accent-dark underline">Photo</a>}
       </div>
     ) : (
-      <span className="text-xs text-label">—</span>
+      <span className="text-xs text-label">-</span>
     );
 
   return (

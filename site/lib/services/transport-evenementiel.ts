@@ -41,10 +41,37 @@ export const transportEvenementiel: Service = {
   useCases: [
     { title: "Opération RP & Influence", body: "Envoi simultané de 50 invitations VIP personnalisées ou de press kits sur tout Paris dans un créneau strict de 2 heures." },
     { title: "Fashion Week", body: "Récupération d'un accessoire manquant dans un atelier pour livraison express en backstage quelques minutes avant le défilé." },
+    { title: "Salon professionnel", body: "Documentation ou échantillons épuisés sur un stand de Paris Expo Porte de Versailles : le coursier les récupère au bureau et les livre au stand en cours de journée." },
   ],
-  coverage: "Hyper-centre parisien, palaces, centres d'exposition, et toute la région.",
+  coverage: "Paris et toute l’Île-de-France : palaces et hôtels du centre, parcs des expositions (Paris Expo Porte de Versailles, Paris Nord Villepinte, Le Bourget), studios de Saint-Denis et de Boulogne, salles de spectacle. Précisez le point de livraison exact (hall, stand, loge) : l’accès y est souvent contrôlé.",
+  pricing: {
+    title: "Tarif d’une course événementielle",
+    intro:
+      "Accréditations oubliées, matériel de stand, pièce pour un tournage : la course se facture comme les autres, à la zone et au délai. Le coursier part dès la confirmation, sans regroupement.",
+    recommended: ["urgent", "flash"],
+    note:
+      "Montage de nuit, démontage le dimanche ou astreinte pendant un salon : en dehors de nos horaires (lun–sam, 9h–19h), le tarif se fait sur devis.",
+  },
+
+  faqTitle: "Vos questions sur la logistique événementielle.",
+
   faq: [
     { question: "Assurez-vous des livraisons de nuit pour le démontage d'événements ?", answer: "Oui, sous réserve d'une planification préalable ou de l'ouverture d'un compte entreprise spécifique, nous pouvons organiser des astreintes logistiques de nuit." },
     { question: "Le coursier peut-il s'adapter au niveau d'exigence d'un palace ou d'un salon VIP ?", answer: "Absolument. Le respect strict de la confidentialité et une présentation irréprochable font partie intégrante de notre cahier des charges événementiel." },
+    {
+      question: "Combien coûte une course pendant un événement ?",
+      answer:
+        "Le même prix qu’une autre course : il dépend de la zone et du délai, par exemple 42 € TTC pour une course Super (1 h) dans Paris. Seules les astreintes hors de nos horaires se font sur devis.",
+    },
+    {
+      question: "Livrez-vous directement sur un stand ou en coulisses ?",
+      answer:
+        "Oui. Donnez le hall, le numéro de stand ou la loge, et le nom de la personne à prévenir : l’accès des parcs d’exposition et des salles est souvent contrôlé, le coursier se présente avec ces informations.",
+    },
+    {
+      question: "Quel délai pour une pièce oubliée le jour J ?",
+      answer:
+        "Choisissez la formule Super : le coursier part dès la confirmation et livre sous 1 h dans Paris, sans regroupement avec d’autres courses.",
+    },
   ],
 };

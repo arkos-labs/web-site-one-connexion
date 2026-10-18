@@ -26,6 +26,7 @@ import { AddressAutocomplete } from "@/components/AddressAutocomplete";
 import { createClient } from "@/lib/supabase/client";
 import { calculatePrice, isServedAddress, ServiceLevel } from "@/lib/pricing";
 import UnservedAddressAlert, { useUnservedAddresses } from "@/components/UnservedAddressAlert";
+import LargeParcelAlert from "@/components/LargeParcelAlert";
 import { notifyNewOrder } from "@/lib/notify-new-order";
 import { fetchSavedMethod, payWithSavedMethod, type SavedMethod } from "@/lib/saved-payment";
 import { ORDER_NATURES, NATURE_DETAIL_MAX, natureLabel } from "@/lib/order-nature";
@@ -37,8 +38,8 @@ const STEPS = ["Trajet", "Format", "Délai", "Validation"] as const;
 
 const FORMATS = [
   { id: "doc", name: "Pli / Document", weight: "Jusqu'à 1 kg", example: "Enveloppe, contrat, clé", vehicle: "Moto express", icon: Package },
-  { id: "petit", name: "Petit colis", weight: "Jusqu'à 8 kg", example: "Format boîte à chaussures", vehicle: "Moto ou scooter", icon: Box },
-  { id: "volumineux", name: "Volumineux", weight: "Jusqu'à 30 kg+", example: "Cartons multiples", vehicle: "Moto ou fourgonnette 100 % électrique", icon: Truck },
+  { id: "petit", name: "Petit colis", weight: "1 à 10 kg", example: "Format boîte à chaussures", vehicle: "Moto ou scooter", icon: Box },
+  { id: "volumineux", name: "Volumineux", weight: "10 à 18 kg ou encombrant", example: "Carton, pièce encombrante", vehicle: "Moto, top-case 18 kg maximum", icon: Truck },
 ] as const;
 
 const DELAIS = [
@@ -645,6 +646,7 @@ export default function CommanderPage() {
                       );
                     })}
                   </div>
+                  {format === "volumineux" && <LargeParcelAlert />}
                 </div>
               )}
 

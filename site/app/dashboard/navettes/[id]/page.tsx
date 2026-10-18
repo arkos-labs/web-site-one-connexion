@@ -242,7 +242,7 @@ export default function NavetteDetailsPage() {
         <>
           {isPending ? (
             <span className="max-w-[260px] rounded-xl bg-amber-50 px-3 py-2 text-xs font-bold leading-snug text-amber-800">
-              En attente de confirmation — One Connexion va vous rappeler
+              En attente de confirmation - One Connexion va vous rappeler
             </span>
           ) : (
             <button type="button" onClick={handleToggleStatus} disabled={togglingStatus} className={btnDark}>
@@ -334,7 +334,7 @@ export default function NavetteDetailsPage() {
               </div>
               <div className="px-5 py-4">
                 <div className="flex items-baseline gap-2">
-                  <span className="text-3xl font-extrabold leading-none tracking-tight tabular-nums">{navette.estimated_price ?? "—"}</span>
+                  <span className="text-3xl font-extrabold leading-none tracking-tight tabular-nums">{navette.estimated_price ?? "-"}</span>
                   {navette.estimated_price != null && <span className="text-sm font-semibold text-white/60">€ TTC / passage</span>}
                 </div>
                 {navette.estimated_price != null && (

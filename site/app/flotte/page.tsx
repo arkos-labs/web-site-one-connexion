@@ -8,8 +8,8 @@ export const metadata = {
   description: "Flotte de scooters et motos pour la livraison express à Paris et en Île-de-France, équipée pour un usage professionnel. Coursiers vérifiés.",
   alternates: { canonical: "/flotte" },
   openGraph: {
-    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION — Coursier B2B Paris & Île-de-France" }],
-    title: "Notre flotte de coursiers moto — ONE CONNEXION",
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION - Coursier B2B Paris & Île-de-France" }],
+    title: "Notre flotte de coursiers moto - ONE CONNEXION",
     description:
       "Scooters agiles et motos routières équipés pour la livraison professionnelle, pour la livraison express à Paris et en Île-de-France.",
     url: "/flotte",
@@ -48,7 +48,7 @@ const VEHICLES = [
     icon: MapPin,
     title: "Couverture régionale totale",
     tags: ["Paris 1–20e", "Petite couronne", "Grande couronne"],
-    desc: "De Paris intramuros à l'ensemble des départements d'Île-de-France — 75, 92, 93, 94, 77, 78, 91, 95 — sans rupture de charge ni prestataire intermédiaire. Un seul contact pour toute l'IDF.",
+    desc: "De Paris intramuros à l'ensemble des départements d'Île-de-France, 75, 92, 93, 94, 77, 78, 91, 95, sans rupture de charge ni prestataire intermédiaire. Un seul contact pour toute l'IDF.",
   },
 ];
 
@@ -64,10 +64,10 @@ const ZONES = [
   { dept: "92", name: "Hauts-de-Seine", detail: "Boulogne, Nanterre, Neuilly, Levallois…" },
   { dept: "93", name: "Seine-Saint-Denis", detail: "Saint-Denis, Montreuil, Pantin…" },
   { dept: "94", name: "Val-de-Marne", detail: "Vincennes, Créteil, Ivry…" },
-  { dept: "77", name: "Seine-et-Marne", detail: "Melun, Marne-la-Vallée — dès 78 € TTC" },
-  { dept: "78", name: "Yvelines", detail: "Versailles, Saint-Quentin — dès 78 € TTC" },
-  { dept: "91", name: "Essonne", detail: "Évry, Massy — dès 78 € TTC" },
-  { dept: "95", name: "Val-d'Oise", detail: "Cergy, Pontoise — dès 78 € TTC" },
+  { dept: "77", name: "Seine-et-Marne", detail: "Melun, Marne-la-Vallée - dès 78 € TTC" },
+  { dept: "78", name: "Yvelines", detail: "Versailles, Saint-Quentin - dès 78 € TTC" },
+  { dept: "91", name: "Essonne", detail: "Évry, Massy - dès 78 € TTC" },
+  { dept: "95", name: "Val-d'Oise", detail: "Cergy, Pontoise - dès 78 € TTC" },
 ];
 
 export default function FlottePage() {

@@ -13,6 +13,7 @@ import { AddressAutocomplete } from "@/components/AddressAutocomplete";
 import { checkIdfAddress } from "@/lib/address-idf";
 import { calculatePrice, splitTTC, isServedAddress, ServiceLevel } from "@/lib/pricing";
 import UnservedAddressAlert, { useUnservedAddresses } from "@/components/UnservedAddressAlert";
+import LargeParcelAlert from "@/components/LargeParcelAlert";
 import { notifyNewOrder } from "@/lib/notify-new-order";
 import GuestAccountBox from "@/components/GuestAccountBox";
 import { saveOrderDraft, loadOrderDraft, clearOrderDraft, checkoutSessionIdFromUrl } from "@/lib/order-draft";
@@ -648,8 +649,8 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                       <div className="grid grid-cols-3 gap-2">
                         {[
                           { id: "doc", label: "Pli / Doc", sub: "< 1 kg", Icon: Mail },
-                          { id: "petit", label: "Petit colis", sub: "1–5 kg", Icon: Package },
-                          { id: "volumineux", label: "Volumineux", sub: "5–15 kg", Icon: Truck },
+                          { id: "petit", label: "Petit colis", sub: "1–10 kg", Icon: Package },
+                          { id: "volumineux", label: "Volumineux", sub: "10–18 kg ou encombrant", Icon: Truck },
                         ].map(({ id, label, sub, Icon }) => (
                           <button
                             key={id}
@@ -663,6 +664,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                           </button>
                         ))}
                       </div>
+                      {format === "volumineux" && <LargeParcelAlert className="mt-3" />}
                     </div>
 
                     <div>

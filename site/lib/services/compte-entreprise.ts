@@ -9,14 +9,14 @@ export const compteEntreprise: Service = {
   slug: "compte-entreprise",
 
   card: {
-    tag: "04 — Comptes entreprises",
+    tag: "04 - Comptes entreprises",
     title: "Suivi & facturation",
     body: "Suivi de chaque course, justificatifs de livraison archivés, facturation mensuelle centralisée et export comptable.",
     note: "Interlocuteur unique",
   },
 
   seo: {
-    title: "Compte entreprise coursier — facturation centralisée",
+    title: "Compte entreprise coursier - facturation centralisée",
     description:
       "Compte coursier pour votre entreprise à Paris : commandes multi-collaborateurs, justificatifs archivés, facturation mensuelle unique et export comptable.",
     keywords: [
@@ -98,6 +98,17 @@ export const compteEntreprise: Service = {
   coverage:
     "Le compte entreprise couvre l’ensemble de nos prestations sur Paris et la petite couronne (92, 93, 94), Roissy, Orly et la grande couronne au tarif de leur zone. Il s’applique indifféremment aux plis confidentiels, au transport médical et à la livraison e-commerce.",
 
+  pricing: {
+    title: "Les tarifs avec un compte entreprise",
+    intro:
+      "Un compte entreprise ne change pas le prix des courses : chaque collaborateur commande à la grille ci-dessous, et tout est réglé en fin de mois sur une facture unique, avec le détail de chaque course.",
+    recommended: ["standard", "urgent", "flash"],
+    note:
+      "Au-delà d’un volume mensuel régulier, un tarif dégressif s’applique. Contactez-nous avec votre volume estimé pour le connaître.",
+  },
+
+  faqTitle: "Vos questions sur le compte entreprise.",
+
   faq: [
     {
       question: "Comment sont imputées les courses par dossier ou par service ?",
@@ -113,6 +124,16 @@ export const compteEntreprise: Service = {
       question: "Le compte couvre-t-il toutes les prestations ?",
       answer:
         "Oui : plis confidentiels, transport médical et livraison e-commerce relèvent du même compte, du même interlocuteur et de la même facture mensuelle.",
+    },
+    {
+      question: "Comment ouvrir un compte entreprise ?",
+      answer:
+        "En ligne, en 2 minutes : vous saisissez le SIRET (la raison sociale et l’adresse se remplissent seules), le contact et l’adresse de facturation. Vous pouvez commander dès la création du compte.",
+    },
+    {
+      question: "Quand la facture mensuelle est-elle réglée ?",
+      answer:
+        "Elle regroupe toutes les courses du mois et se règle à 30 jours, par carte, prélèvement ou virement. Elle est disponible dans votre espace, avec le détail de chaque course.",
     },
   ],
 };

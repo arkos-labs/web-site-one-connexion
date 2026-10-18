@@ -21,8 +21,8 @@ export const metadata: Metadata = {
     "Tarif coursier Paris et Île-de-France : dès 21 € TTC en 3 h, 31,50 € en urgent, 42 € en formule Super 1 h. Prix par zone : Paris, petite couronne, banlieue. Compte entreprise.",
   alternates: { canonical: "/tarifs" },
   openGraph: {
-    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION — Coursier B2B Paris & Île-de-France" }],
-    title: "Tarifs coursier express Paris — ONE CONNEXION",
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION - Coursier B2B Paris & Île-de-France" }],
+    title: "Tarifs coursier express Paris - ONE CONNEXION",
     description:
       "Tarif à la course ou compte entreprise mensuel pour vos livraisons urgentes en Île-de-France. Prix affiché avant de commander.",
     url: "/tarifs",
@@ -103,7 +103,7 @@ const FACTORS = [
   {
     icon: Shield,
     title: "Même tarif pour tout colis",
-    desc: "Pli confidentiel, dossier, prélèvement médical ou colis jusqu'à 15 kg : le prix est le même. Seules la zone et le délai le font varier.",
+    desc: "Pli confidentiel, dossier, prélèvement médical ou colis jusqu'à 18 kg : le prix est le même. Seules la zone et le délai le font varier.",
   },
   {
     icon: CheckCircle2,

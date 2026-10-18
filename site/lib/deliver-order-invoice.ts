@@ -149,7 +149,7 @@ export async function deliverOrderInvoice(supabase: SupabaseClient, stripe: Stri
       await stripe.invoiceItems.create(
         {
           customer: customerId, invoice: draft.id, currency: 'eur', amount: Math.round(amount * 100),
-          description: `Course ${ref} — ${o.pickup_address} → ${o.dropoff_address} — livrée le ${delivered}`,
+          description: `Course ${ref} - ${o.pickup_address} → ${o.dropoff_address} - livrée le ${delivered}`,
         },
         { idempotencyKey: `deliver-item-${o.id}` }
       );

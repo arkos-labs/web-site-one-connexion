@@ -7,8 +7,8 @@ export const metadata = {
   description: "Cabinets juridiques, laboratoires, agences et e-commerçants : les secteurs pour lesquels One Connexion assure des livraisons express en Île-de-France.",
   alternates: { canonical: "/references" },
   openGraph: {
-    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION — Coursier B2B Paris & Île-de-France" }],
-    title: "Nos références clients — ONE CONNEXION",
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION - Coursier B2B Paris & Île-de-France" }],
+    title: "Nos références clients - ONE CONNEXION",
     description:
       "Cabinets juridiques, laboratoires, agences et e-commerçants qui confient leurs livraisons express à One Connexion.",
     url: "/references",

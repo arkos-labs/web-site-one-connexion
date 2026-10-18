@@ -14,13 +14,13 @@ const slugOf = (v: string) =>
 import { MapPin } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Coursier Paris banlieue (92, 93, 94) — Express 45 min",
+  title: "Coursier Paris banlieue (92, 93, 94) - Express 45 min",
   description:
     "Coursier banlieue Paris en petite couronne : Hauts-de-Seine (92), Seine-Saint-Denis (93), Val-de-Marne (94). Coursier moto dédié, enlèvement moins de 45 minutes, du lundi au samedi.",
   alternates: { canonical: "/zones/petite-couronne" },
   openGraph: {
-    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION — Coursier B2B Paris & Île-de-France" }],
-    title: "Coursier petite couronne — Hauts-de-Seine, Seine-Saint-Denis, Val-de-Marne | ONE CONNEXION",
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION - Coursier B2B Paris & Île-de-France" }],
+    title: "Coursier petite couronne - Hauts-de-Seine, Seine-Saint-Denis, Val-de-Marne | ONE CONNEXION",
     description: "Livraison urgente B2B dans les 3 départements de petite couronne parisienne. Course dédiée, traçabilité complète.",
     url: "/zones/petite-couronne",
     type: "website",
@@ -84,8 +84,8 @@ export default function ZonePetiteCouronne() {
             Coursier express dans toute la petite couronne parisienne.
           </h1>
           <p className="max-w-[58ch] text-pretty text-[17px] leading-[1.6] text-white/66">
-            One Connexion dessert les trois départements de petite couronne —
-            Hauts-de-Seine (92), Seine-Saint-Denis (93) et Val-de-Marne (94) —
+            One Connexion dessert les trois départements de petite couronne -
+            Hauts-de-Seine (92), Seine-Saint-Denis (93) et Val-de-Marne (94) -
             aux mêmes conditions tarifaires et avec la même exigence opérationnelle.
           </p>
           <div className="mt-10 flex flex-wrap gap-3">
@@ -249,8 +249,10 @@ export default function ZonePetiteCouronne() {
           <div className="flex flex-col gap-4">
             {[
               { q: "Couvrez-vous vraiment toute la petite couronne ?", a: "Oui, notre flotte est répartie de manière optimale pour couvrir l'intégralité des Hauts-de-Seine (92), de la Seine-Saint-Denis (93) et du Val-de-Marne (94)." },
-              { q: "Le tarif est-il plus élevé pour la banlieue ?", a: "Nos tarifs sont basés sur des grilles kilométriques transparentes. Les liaisons Paris ↔ Banlieue ou Banlieue ↔ Banlieue sont très compétitives grâce à notre maillage local." },
-              { q: "Pouvez-vous transporter des colis lourds ou volumineux ?", a: "Notre flotte est composée de deux-roues (scooters et motos) : elle convient aux plis, colis et matériel léger. Pour un volume ou un gabarit important, contactez-nous avant de commander, nous vous dirons si nous pouvons le prendre en charge." }
+              { q: "Le tarif est-il plus élevé pour la banlieue ?", a: "Le tarif dépend de la zone la plus éloignée du trajet, pas des kilomètres : en petite couronne (92, 93, 94), une course coûte 42 € TTC en Normal (3 h), contre 21 € dans Paris." },
+              { q: "Pouvez-vous transporter des colis lourds ou volumineux ?", a: "Notre flotte est composée de deux-roues (scooters et motos) : elle convient aux plis, colis et matériel léger. Pour un volume ou un gabarit important, contactez-nous avant de commander, nous vous dirons si nous pouvons le prendre en charge." },
+              { q: "Quels sont vos horaires en petite couronne ?", a: "Du lundi au samedi, de 9h à 19h, dans les trois départements. Nous sommes fermés le dimanche et les jours fériés." },
+              { q: "Combien de temps pour un enlèvement en banlieue ?", a: "Un coursier vient chercher le colis en moins de 45 minutes après la confirmation de la course, puis le livre directement, sans détour." }
             ].map((faq, i) => (
               <div key={i} className="rounded-xl border border-line bg-white p-5 hover:border-accent/30 transition-colors">
                 <h3 className="mb-2 text-[15.5px] font-bold text-ink">{faq.q}</h3>

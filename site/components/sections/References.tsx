@@ -13,8 +13,8 @@ const STATS = [
 
 // PLACEHOLDER : témoignages réels à intégrer avant mise en ligne.
 const TESTIMONIALS = [
-  "« [Témoignage à remplacer — remise en main propre, traçabilité, réactivité : le retour d'un client réel viendra ici.] »",
-  "« [Deuxième témoignage à remplacer — idéalement un cabinet ou un laboratoire, avec un cas précis et un délai chiffré.] »",
+  "« [Témoignage à remplacer - remise en main propre, traçabilité, réactivité : le retour d'un client réel viendra ici.] »",
+  "« [Deuxième témoignage à remplacer, idéalement un cabinet ou un laboratoire, avec un cas précis et un délai chiffré.] »",
 ];
 
 export default function References({ hideHeader = false }: { hideHeader?: boolean } = {}) {
@@ -59,7 +59,7 @@ export default function References({ hideHeader = false }: { hideHeader?: boolea
                   <span className="font-mono text-[10.5px] leading-relaxed tracking-[0.12em] text-label uppercase">
                     Nom du client
                     <br />
-                    Fonction — entreprise
+                    Fonction - entreprise
                   </span>
                 </footer>
               </blockquote>

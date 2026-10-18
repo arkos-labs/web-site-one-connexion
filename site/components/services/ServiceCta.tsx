@@ -6,7 +6,7 @@
 import { EMAIL, PHONE_DISPLAY, PHONE_TEL } from "@/lib/site-content";
 
 export default function ServiceCta({ serviceTitle }: { serviceTitle: string }) {
-  const subject = encodeURIComponent(`Demande de course — ${serviceTitle}`);
+  const subject = encodeURIComponent(`Demande de course - ${serviceTitle}`);
 
   return (
     <section className="bg-accent text-white">

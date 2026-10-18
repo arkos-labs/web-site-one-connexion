@@ -173,7 +173,7 @@ export default function AdressesPage() {
               items={[
                 { label: "Adresses", value: addresses.length },
                 { label: "Avec contact sur place", value: withContact },
-                { label: "Par défaut", value: addresses.find((a) => a.is_default)?.label ?? "—" },
+                { label: "Par défaut", value: addresses.find((a) => a.is_default)?.label ?? "-" },
               ]}
             />
             <div className="min-h-0 flex-1 overflow-y-auto bg-paper-card p-5 sm:p-8">

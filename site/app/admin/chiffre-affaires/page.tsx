@@ -127,7 +127,7 @@ function AdminChiffreAffairesPageInner() {
       key: `order-${i}`,
       type: "commande",
       date: o.created_at,
-      label: o.tracking_code ?? "—",
+      label: o.tracking_code ?? "-",
       client: clientOf(o.user_id),
       route: `${o.pickup_address} → ${o.dropoff_address}`,
       status: o.status,
@@ -415,7 +415,7 @@ function AdminChiffreAffairesPageInner() {
         </div>
         {billables.length > 10 && (
           <div className="border-t border-line p-4 text-center text-[12.5px] font-medium text-muted">
-            Affichage de 10 sur {billables.length} opérations — affinez avec l&apos;export CSV pour le détail complet.
+            Affichage de 10 sur {billables.length} opérations, affinez avec l&apos;export CSV pour le détail complet.
           </div>
         )}
       </div>

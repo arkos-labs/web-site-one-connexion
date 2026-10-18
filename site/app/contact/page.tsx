@@ -185,7 +185,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <div className="font-mono text-[11px] uppercase tracking-wider text-white/50">Horaires d'opération</div>
-                    <div className="mt-1 text-[15px] font-medium">Du lundi au samedi — 9h00 à 19h00</div>
+                    <div className="mt-1 text-[15px] font-medium">Du lundi au samedi - 9h00 à 19h00</div>
                     <div className="mt-1 text-[13px] text-white/60">Fermé le dimanche et les jours fériés.</div>
                   </div>
                 </div>

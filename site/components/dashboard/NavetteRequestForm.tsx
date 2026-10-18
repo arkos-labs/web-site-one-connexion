@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Truck, MapPin, Clock, Plus, Trash2, ArrowRight, ShieldCheck, AlertTriangle, Loader2, Check } from "lucide-react";
 import { AddressAutocomplete } from "@/components/AddressAutocomplete";
-import { isServedAddress } from "@/lib/pricing";
+import { isServedAddress, getDepartmentFromAddress, getZoneFromDepartment, gridPrice, type Zone } from "@/lib/pricing";
 import UnservedAddressAlert, { useUnservedAddresses } from "@/components/UnservedAddressAlert";
 
 const OUT_OF_ZONE = "Adresse non reconnue : Paris et Île-de-France uniquement";
@@ -154,10 +154,15 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
 
   const capacityExceeded = totalVolumePoints > SCOOTER_MAX_POINTS;
 
+  // Prix TTC par passage (TVA 20 % comprise) : grille navette (lib/pricing), selon la zone la plus
+  // éloignée parmi toutes les adresses de la tournée. Paris 18 €, petite couronne 30 €, grande couronne 66 €.
   const estimatedPrice = useMemo(() => {
-    // Prix TTC (TVA 20 % comprise) par passage.
-    return Math.round((25 + (watchSteps.length * 15) + (totalVolumePoints * 0.8)) * 1.2);
-  }, [watchSteps.length, totalVolumePoints]);
+    const zones = [watchMain ?? "", ...(watchSteps ?? []).map((st) => st?.address ?? "")]
+      .filter((a) => a.trim().length > 0)
+      .map((a) => getZoneFromDepartment(getDepartmentFromAddress(a)));
+    const zone = (zones.length ? Math.max(...zones) : 0) as Zone;
+    return gridPrice("navette", zone);
+  }, [watchMain, watchSteps]);
 
   const onSubmit = async (data: NavetteFormValues) => {
     setIsSubmitting(true);

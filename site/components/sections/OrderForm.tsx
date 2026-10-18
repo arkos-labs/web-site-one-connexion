@@ -24,6 +24,7 @@ import { AddressAutocomplete } from "@/components/AddressAutocomplete";
 import { checkIdfAddress } from "@/lib/address-idf";
 import { calculatePrice, splitTTC, isServedAddress, ServiceLevel } from "@/lib/pricing";
 import UnservedAddressAlert, { useUnservedAddresses } from "@/components/UnservedAddressAlert";
+import LargeParcelAlert from "@/components/LargeParcelAlert";
 import { ORDER_NATURES, NATURE_DETAIL_MAX, natureLabel } from "@/lib/order-nature";
 import { notifyNewOrder } from "@/lib/notify-new-order";
 import GuestAccountBox from "@/components/GuestAccountBox";
@@ -714,7 +715,7 @@ export default function OrderForm() {
                         <div className="p-2 bg-orange-50 rounded-lg"><Package className="w-5 h-5 text-[#ed5518]" /></div>
                         Détails du pli / colis
                       </div>
-                      <span className="text-sm font-medium text-gray-400 bg-gray-100 px-3 py-1 rounded-full">Max 15kg</span>
+                      <span className="text-sm font-medium text-gray-400 bg-gray-100 px-3 py-1 rounded-full">Max 18 kg</span>
                     </div>
 
                     <div className="space-y-8">
@@ -760,14 +761,15 @@ export default function OrderForm() {
                           <button type="button" onClick={() => setFormat('petit')} className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all ${format === 'petit' ? 'border-[#ed5518] bg-orange-50' : 'border-gray-100 bg-white hover:border-gray-200 hover:bg-gray-50'}`}>
                             <Package className={`w-6 h-6 mb-2 ${format === 'petit' ? 'text-[#ed5518]' : 'text-gray-400'}`} />
                             <span className={`text-sm font-bold ${format === 'petit' ? 'text-[#ed5518]' : 'text-gray-700'}`}>Petit colis</span>
-                            <span className={`text-xs mt-1 ${format === 'petit' ? 'text-orange-400/80' : 'text-gray-400'}`}>1 à 5 kg</span>
+                            <span className={`text-xs mt-1 ${format === 'petit' ? 'text-orange-400/80' : 'text-gray-400'}`}>1 à 10 kg</span>
                           </button>
                           <button type="button" onClick={() => setFormat('volumineux')} className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all ${format === 'volumineux' ? 'border-[#ed5518] bg-orange-50' : 'border-gray-100 bg-white hover:border-gray-200 hover:bg-gray-50'}`}>
                             <Truck className={`w-6 h-6 mb-2 ${format === 'volumineux' ? 'text-[#ed5518]' : 'text-gray-400'}`} />
                             <span className={`text-sm font-bold ${format === 'volumineux' ? 'text-[#ed5518]' : 'text-gray-700'}`}>Volumineux</span>
-                            <span className={`text-xs mt-1 ${format === 'volumineux' ? 'text-orange-400/80' : 'text-gray-400'}`}>5 à 15 kg</span>
+                            <span className={`text-xs mt-1 ${format === 'volumineux' ? 'text-orange-400/80' : 'text-gray-400'}`}>10 à 18 kg ou encombrant</span>
                           </button>
                         </div>
+                        {format === 'volumineux' && <LargeParcelAlert className="mt-3" />}
                       </div>
 
                       <div>

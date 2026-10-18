@@ -83,6 +83,16 @@ export const GUIDES: Guide[] = [
         answer:
           "Cela dépend de la distance et de l'heure. Pour une échéance stricte, appelez-nous avant de commander : nous vous confirmons ce qui est réaliste.",
       },
+      {
+        question: "Combien coûte l’envoi d’un pli confidentiel dans Paris ?",
+        answer:
+          "Comme toute course : 21 € TTC en Normal (3 h), 31,50 € en Urgent (1 h 30) et 42 € en Super (1 h) dans Paris. Le prix ne dépend pas du contenu du pli.",
+      },
+      {
+        question: "Le pli peut-il être regroupé avec d’autres envois ?",
+        answer:
+          "Non. Chaque pli part en course dédiée : le coursier va directement de l’enlèvement au destinataire, sans arrêt intermédiaire.",
+      },
     ],
     service: { href: "/services/plis-confidentiels", label: "Plis confidentiels" },
     published: "2026-09-21",
@@ -141,6 +151,16 @@ export const GUIDES: Guide[] = [
         question: "Que faire pour une urgence ?",
         answer:
           "Appelez le dispatching au lieu de passer par le formulaire : nous confirmons la faisabilité avant l'enlèvement.",
+      },
+      {
+        question: "Qu’est-ce que le triple emballage UN3373 ?",
+        answer:
+          "C’est le conditionnement des échantillons biologiques de catégorie B : un récipient étanche (le tube), un emballage secondaire étanche avec absorbant, et un emballage extérieur rigide étiqueté UN3373. Le coursier le transporte fermé, sans l’ouvrir.",
+      },
+      {
+        question: "Combien coûte le transport d’un prélèvement ?",
+        answer:
+          "Le prix d’une course classique, selon la zone et le délai : par exemple 42 € TTC en Super (1 h) dans Paris. Le contenant isotherme est compris.",
       },
     ],
     service: { href: "/services/transport-medical", label: "Transport médical" },
@@ -210,6 +230,21 @@ export const GUIDES: Guide[] = [
         question: "Une course urgente est-elle plus chère ?",
         answer:
           "Oui : un délai de 1 h coûte le double d'un délai de 3 h (42 € TTC contre 21 € TTC dans Paris). Un créneau plus large réduit le tarif.",
+      },
+      {
+        question: "Le prix change-t-il selon le poids ou le contenu ?",
+        answer:
+          "Non. Un pli, un dossier ou un colis jusqu’à 18 kg coûtent le même prix : seuls la zone la plus éloignée du trajet et le délai comptent.",
+      },
+      {
+        question: "Les prix sont-ils HT ou TTC ?",
+        answer:
+          "Les prix affichés sont TTC, TVA de 20 % comprise, pour les professionnels comme pour les particuliers. La facture détaille le montant HT et la TVA.",
+      },
+      {
+        question: "Existe-t-il un tarif dégressif ?",
+        answer:
+          "Oui, avec un compte entreprise : au-delà d’un volume mensuel régulier, un tarif dégressif s’applique et toutes les courses sont regroupées sur une facture mensuelle.",
       },
     ],
     service: { href: "/tarifs", label: "Tarif coursier Paris" },

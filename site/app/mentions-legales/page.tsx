@@ -25,7 +25,7 @@ export default function MentionsLegales() {
             SIREN : {LEGAL.siren}<br />
             SIRET : {LEGAL.siret}<br />
             TVA intracommunautaire : {LEGAL.tva}<br />
-            Code NAF : {LEGAL.naf} — {LEGAL.activite}<br />
+            Code NAF : {LEGAL.naf} - {LEGAL.activite}<br />
             Date de création : {LEGAL.dateCreation}
           </p>
         </div>

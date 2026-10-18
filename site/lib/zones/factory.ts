@@ -78,7 +78,7 @@ export function makeZone(spec: ZoneSpec): Zone {
     slug: spec.slug,
     dept: spec.dept,
     name: spec.name,
-    fullName: spec.fullName ?? `${spec.name} — ${deptLabel(spec.dept)}`,
+    fullName: spec.fullName ?? `${spec.name} - ${deptLabel(spec.dept)}`,
     category: spec.category,
     landmarks: spec.landmarks,
     intro: spec.intro,
