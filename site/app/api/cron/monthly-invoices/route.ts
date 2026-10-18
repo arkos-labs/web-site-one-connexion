@@ -31,13 +31,12 @@ export async function GET(req: Request) {
     results.push(await issueInternalInvoice(supabase, stripe, inv.id));
   }
 
-  // Courses livrées (paiement par carte ou « fin de mois ») dont la facture n'est pas encore partie.
+  // Courses livrées dont la facture n'est pas encore partie (payées, à 30 jours, ou non payées).
   const since = new Date(Date.now() - 45 * 86400000).toISOString();
   const { data: pending } = await supabase
     .from('orders')
     .select('id')
     .in('status', ['delivered', 'livree'])
-    .in('payment_mode', ['carte', 'fin_de_mois'])
     .is('invoice_sent_at', null)
     .gte('delivered_at', since)
     .limit(50);

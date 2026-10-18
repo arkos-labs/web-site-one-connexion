@@ -13,6 +13,7 @@ export default function FacturesPage() {
   const supabase = createClient();
   const router = useRouter();
   const [rows, setRows] = useState<any[]>([]);
+  const [orderRows, setOrderRows] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
 
@@ -32,6 +33,20 @@ export default function FacturesPage() {
           .order("billing_period_start", { ascending: false });
 
         setRows(data || []);
+
+        // Factures Stripe par course (payée par carte, à 30 jours, ou à régler) : visibles une fois la
+        // course livrée, ou dès la commande pour un virement (la facture est partie avec l'IBAN).
+        const { data: orders } = await supabase
+          .from("orders")
+          .select("id, tracking_code, created_at, delivered_at, status, price_estimate, amount_due, billing_status, stripe_invoice_id")
+          .eq("user_id", user.id)
+          .not("stripe_invoice_id", "is", null)
+          .order("created_at", { ascending: false });
+        setOrderRows(
+          (orders || []).filter((o: any) =>
+            ["delivered", "livree"].includes(o.status) || (o.billing_status === "virement_attendu" && !["annulee", "cancelled"].includes(o.status))
+          )
+        );
       } catch (err) {
         console.error("Erreur de chargement des factures:", err);
       } finally {
@@ -46,16 +61,31 @@ export default function FacturesPage() {
   // Une facture par course livrée : émise et envoyée par email dès la livraison, payable sous 30 jours.
   const invoices = useMemo(
     () =>
-      rows.map((r) => ({
-        id: r.id as string,
-        number: r.invoice_number as string,
-        date: new Date(r.billing_period_start).toLocaleDateString("fr-FR", { month: "long", year: "numeric" }),
-        amount: Number(r.total_amount),
-        courses: (r.invoice_items?.[0]?.count ?? 0) as number,
-        navettes: 0,
-        status: r.status as string,
-      })),
-    [rows]
+      [
+        ...rows.map((r) => ({
+          id: r.id as string,
+          href: `/dashboard/factures/${r.id}`,
+          number: r.invoice_number as string,
+          sortAt: r.billing_period_start as string,
+          date: new Date(r.billing_period_start).toLocaleDateString("fr-FR", { month: "long", year: "numeric" }),
+          amount: Number(r.total_amount),
+          courses: (r.invoice_items?.[0]?.count ?? 0) as number,
+          navettes: 0,
+          status: r.status as string,
+        })),
+        ...orderRows.map((o) => ({
+          id: o.id as string,
+          href: `/dashboard/suivi/${o.id}`,
+          number: `Course ${o.tracking_code}`,
+          sortAt: (o.delivered_at || o.created_at) as string,
+          date: new Date(o.delivered_at || o.created_at).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" }),
+          amount: Number(o.amount_due ?? o.price_estimate ?? 0),
+          courses: 1,
+          navettes: 0,
+          status: o.billing_status === "paye" ? "payee" : o.billing_status === "rembourse" ? "rembourse" : o.billing_status === "echec" ? "echec" : "emise",
+        })),
+      ].sort((a, b) => new Date(b.sortAt).getTime() - new Date(a.sortAt).getTime()),
+    [rows, orderRows]
   );
 
   const filteredInvoices = useMemo(() => {
@@ -78,6 +108,8 @@ export default function FacturesPage() {
   const Status = ({ status }: { status: string }) =>
     status === "payee" ? (
       <StatusPill tone="green">Réglée</StatusPill>
+    ) : status === "rembourse" ? (
+      <StatusPill tone="blue">Remboursée</StatusPill>
     ) : status === "echec" ? (
       <StatusPill tone="red">Paiement échoué</StatusPill>
     ) : status === "en_cours" || status === "emission" || status === "retenue" ? (
@@ -90,7 +122,7 @@ export default function FacturesPage() {
     <PageShell
       eyebrow="Facturation & relevés"
       title="Vos factures"
-      subtitle="Une facture par course livrée, envoyée dès la livraison et payable sous 30 jours."
+      subtitle="Une facture par course livrée, envoyée dès la livraison. Elle indique si elle est réglée ou en attente de paiement."
       actions={<SearchInput label="Rechercher une facture" value={search} onChange={setSearch} placeholder="N° de facture, mois…" />}
     >
       <KpiStrip
@@ -137,12 +169,12 @@ export default function FacturesPage() {
               {filteredInvoices.map((invoice) => (
                 <tr
                   key={invoice.id}
-                  onClick={() => router.push(`/dashboard/factures/${invoice.id}`)}
+                  onClick={() => router.push(invoice.href)}
                   className="group cursor-pointer transition-colors hover:bg-paper-card"
                 >
                   <td className={`${TD} whitespace-nowrap`}>
                     <Link
-                      href={`/dashboard/factures/${invoice.id}`}
+                      href={invoice.href}
                       onClick={(e) => e.stopPropagation()}
                       className="font-mono text-[13px] font-bold text-ink hover:text-accent-dark"
                     >
@@ -164,7 +196,7 @@ export default function FacturesPage() {
           <ul className="divide-y divide-line md:hidden">
             {filteredInvoices.map((invoice) => (
               <li key={invoice.id}>
-                <Link href={`/dashboard/factures/${invoice.id}`} className="flex flex-col gap-2 px-5 py-4 text-ink hover:bg-paper-card hover:text-ink">
+                <Link href={invoice.href} className="flex flex-col gap-2 px-5 py-4 text-ink hover:bg-paper-card hover:text-ink">
                   <div className="flex items-center justify-between gap-3">
                     <span className="font-mono text-[13px] font-bold">{invoice.number}</span>
                     <Status status={invoice.status} />

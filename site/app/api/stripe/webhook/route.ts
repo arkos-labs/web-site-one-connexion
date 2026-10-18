@@ -135,9 +135,16 @@ export async function POST(req: Request) {
         // Avant la mise à jour : pour ne prévenir Telegram qu'une fois (Stripe peut renvoyer l'événement)
         const { data: before } = await supabase
           .from('orders')
-          .select('client_type, billing_status')
+          .select('client_type, billing_status, stripe_invoice_id')
           .eq('tracking_code', orderId)
           .maybeSingle();
+
+        // Course livrée non payée : une facture « à régler » est déjà partie. Le client paie finalement
+        // la page Checkout : on annule cette facture pour ne pas le faire payer deux fois.
+        if (before?.billing_status === 'a_regler' && before.stripe_invoice_id) {
+          const pending = await stripe.invoices.retrieve(before.stripe_invoice_id).catch(() => null);
+          if (pending?.status === 'open') await stripe.invoices.voidInvoice(pending.id!).catch((e) => console.error('Annulation facture à régler :', e?.message));
+        }
 
         const { error } = await supabase
           .from('orders')

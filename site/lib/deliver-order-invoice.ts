@@ -71,9 +71,12 @@ export async function deliverOrderInvoice(supabase: SupabaseClient, stripe: Stri
 
   if (!DELIVERED.includes(o.status)) return skip('course pas encore livrée');
   if (o.invoice_sent_at) return skip('facture déjà envoyée');
-  if (o.client_type === 'entreprise' && o.user_id && !o.payment_mode) return skip('pro avec compte : facture à 30 jours (autre circuit)');
+  if (o.client_type === 'entreprise' && o.user_id && !o.payment_mode) {
+    // Pro avec fiche client : la course part sur la facture du mois (lib/issue-invoice).
+    const { data: client } = await supabase.from('clients').select('id').eq('id', o.user_id).maybeSingle();
+    if (client) return skip('pro avec compte : facture à 30 jours (autre circuit)');
+  }
   if (o.payment_mode === 'fin_de_mois' && o.billing_status === 'virement_attendu') return skip('virement : facture déjà envoyée à la commande');
-  if (o.payment_mode !== 'carte' && o.payment_mode !== 'fin_de_mois') return skip('course non payée : aucune facture automatique');
   if (o.billing_status === 'annule') return skip('commande annulée');
 
   // Réservation anti double envoi.
@@ -101,6 +104,8 @@ export async function deliverOrderInvoice(supabase: SupabaseClient, stripe: Stri
       const customerId = await upsertStripeCustomer(stripe, party, o.stripe_customer_id, `cust-order-${o.id}`);
       if (customerId !== o.stripe_customer_id) await supabase.from('orders').update({ stripe_customer_id: customerId }).eq('id', o.id);
       const deferred = o.payment_mode === 'fin_de_mois';
+      // Course livrée sans paiement (carte abandonnée, refusée…) : facture à régler sous 30 jours.
+      const unpaid = !o.payment_mode;
       const amount = Number(deferred ? o.amount_due : o.amount_due ?? o.price_estimate);
       if (!amount) throw new Error('Montant de la course manquant');
       // Prix TTC pour tous (pros et particuliers) : la TVA 20 % est « dont ».
@@ -111,7 +116,8 @@ export async function deliverOrderInvoice(supabase: SupabaseClient, stripe: Stri
         {
           customer: customerId,
           // Facture déjà payée : prélèvement automatique « hors Stripe », donc aucune date d'échéance.
-          collection_method: 'charge_automatically',
+          // Non payée : facture envoyée, à régler sous 30 jours (carte ou virement depuis la page Stripe).
+          ...(unpaid ? { collection_method: 'send_invoice' as const, days_until_due: 30 } : { collection_method: 'charge_automatically' as const }),
           ...(deferred ? { default_payment_method: o.stripe_payment_method_id ?? undefined } : {}),
           auto_advance: false,
           pending_invoice_items_behavior: 'exclude',
@@ -119,7 +125,7 @@ export async function deliverOrderInvoice(supabase: SupabaseClient, stripe: Stri
           default_tax_rates: [taxRate],
           description: `Course ${ref} du ${delivered}`,
           custom_fields: invoiceCustomFields(ref, party),
-          footer: invoiceFooter(!deferred),
+          footer: invoiceFooter(!deferred && !unpaid),
           metadata: { order_id: o.id, tracking_code: ref },
         },
         { idempotencyKey: `deliver-invoice-${o.id}` }
@@ -132,11 +138,13 @@ export async function deliverOrderInvoice(supabase: SupabaseClient, stripe: Stri
         { idempotencyKey: `deliver-item-${o.id}` }
       );
       invoice = await stripe.invoices.finalizeInvoice(draft.id!, { auto_advance: false });
-      if (!deferred && invoice.status === 'open') {
+      if (!deferred && !unpaid && invoice.status === 'open') {
         // Déjà encaissée à la commande (Stripe Checkout) : facture acquittée, sans nouveau débit.
         invoice = await stripe.invoices.pay(invoice.id!, { paid_out_of_band: true });
       }
-      await supabase.from('orders').update({ stripe_invoice_id: invoice.id }).eq('id', o.id);
+      await supabase.from('orders')
+        .update(unpaid ? { stripe_invoice_id: invoice.id, billing_status: 'a_regler', amount_due: amount } : { stripe_invoice_id: invoice.id })
+        .eq('id', o.id);
     } else if (invoice.status === 'draft') {
       invoice = await stripe.invoices.finalizeInvoice(invoice.id!, { auto_advance: false });
     }

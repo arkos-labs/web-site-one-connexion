@@ -39,6 +39,7 @@ const DELAI_LABELS: Record<string, string> = {
 
 /** Mode de règlement tel que le client l'a choisi (rempli par Stripe au paiement). */
 function paymentLabel(o: any): string | null {
+  if (o.billing_status === "a_regler") return "Facture à régler sous 30 jours";
   if (o.billing_status === "echec" && !o.payment_mode) return "Paiement non réussi";
   if (o.payment_mode === "carte") return o.billing_status === "rembourse" ? "Carte bancaire — remboursé" : "Carte bancaire — réglé";
   if (o.payment_mode === "fin_de_mois") {
