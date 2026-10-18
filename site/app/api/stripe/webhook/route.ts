@@ -92,7 +92,26 @@ export async function POST(req: Request) {
       }
     }
 
-    if (event.type === 'checkout.session.completed') {
+    // Paiement en 1 clic : prélèvement SEPA confirmé quelques jours après la commande.
+    if (event.type === 'payment_intent.succeeded') {
+      const pi = event.data.object as Stripe.PaymentIntent;
+      if (pi.metadata?.purpose === 'one_click' && pi.metadata?.orderId) {
+        await supabase
+          .from('orders')
+          .update({ billing_status: 'paye', paid_at: new Date().toISOString() })
+          .eq('tracking_code', pi.metadata.orderId)
+          .neq('billing_status', 'paye');
+      }
+    }
+
+    if (event.type === 'checkout.session.completed' && (event.data.object as Stripe.Checkout.Session).metadata?.purpose === 'save_payment_method') {
+      // Carte ou RIB enregistré depuis l'espace client : il devient le moyen de paiement par défaut (1 clic).
+      const session = event.data.object as Stripe.Checkout.Session;
+      const setupIntent = await stripe.setupIntents.retrieve(session.setup_intent as string);
+      if (typeof session.customer === 'string' && typeof setupIntent.payment_method === 'string') {
+        await stripe.customers.update(session.customer, { invoice_settings: { default_payment_method: setupIntent.payment_method } });
+      }
+    } else if (event.type === 'checkout.session.completed') {
       const session = event.data.object as Stripe.Checkout.Session;
       const orderId = session.metadata?.orderId;
 

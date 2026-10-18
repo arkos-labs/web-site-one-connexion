@@ -7,6 +7,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { X, Package, Mail, Truck, Zap, Clock, Calendar, User, Building2, ChevronRight, ChevronLeft, CheckCircle2, CreditCard } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { createAnonClient } from "@/lib/supabase/anon";
+import { payWithSavedMethod } from "@/lib/saved-payment";
 import { AddressAutocomplete } from "@/components/AddressAutocomplete";
 import { checkIdfAddress } from "@/lib/address-idf";
 import { calculatePrice, splitTTC, isServedAddress, ServiceLevel } from "@/lib/pricing";
@@ -245,7 +247,9 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
     // de relire la commande après l'avoir créée.
     const trackingCode = `OC-${crypto.randomUUID().slice(0, 8).toUpperCase()}`;
 
-    const { data: orderData, error } = await supabase
+    // Sans compte : client « visiteur » sans session, la commande part toujours en rôle anon.
+    const db = user ? supabase : createAnonClient();
+    const { data: orderData, error } = await db
       .from("orders")
       .insert({
         user_id: user?.id ?? null,
@@ -281,6 +285,18 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
 
     if (clientType === "entreprise") notifyNewOrder(); // particulier : alerte après paiement (webhook Stripe)
 
+    // Client connecté avec un moyen de paiement enregistré : réglé en 1 clic, sans la page Stripe
+    // (sauf virement, qui part par facture). Refus ou authentification bancaire : page Stripe ci-dessous.
+    if (user && !(clientType === "entreprise" && paymentMode === "fin_de_mois" && debitMethod === "virement")) {
+      const oneClick = await payWithSavedMethod(trackingCode, clientType === "entreprise" && paymentMode === "fin_de_mois" ? "fin_de_mois" : "carte");
+      if (oneClick.ok) {
+        setTrackingCode(trackingCode);
+        setSubmitted(true);
+        setSubmitting(false);
+        clearOrderDraft();
+        return;
+      }
+    }
     try {
       const res = await fetch('/api/stripe/create-checkout', {
         method: 'POST',

@@ -27,6 +27,7 @@ import { createClient } from "@/lib/supabase/client";
 import { calculatePrice, isServedAddress, ServiceLevel } from "@/lib/pricing";
 import UnservedAddressAlert, { useUnservedAddresses } from "@/components/UnservedAddressAlert";
 import { notifyNewOrder } from "@/lib/notify-new-order";
+import { fetchSavedMethod, payWithSavedMethod, type SavedMethod } from "@/lib/saved-payment";
 import { ORDER_NATURES, NATURE_DETAIL_MAX, natureLabel } from "@/lib/order-nature";
 import { isProAccount } from "@/lib/dashboard-nav";
 
@@ -211,6 +212,9 @@ export default function CommanderPage() {
   const [step, setStep] = useState(1);
   const [format, setFormat] = useState<string>("doc");
   const [nature, setNature] = useState("");
+  // Moyen de paiement enregistré : la course est réglée en 1 clic, sans la page Stripe.
+  const [savedMethod, setSavedMethod] = useState<SavedMethod | null>(null);
+  useEffect(() => { fetchSavedMethod().then(setSavedMethod); }, []);
   const [natureDetail, setNatureDetail] = useState("");
   const [natureError, setNatureError] = useState(false);
   const [delai, setDelai] = useState<string>("standard");
@@ -318,7 +322,18 @@ export default function CommanderPage() {
     }
 
     if (!isPro) {
-      // Particulier : la course n'est prise en charge qu'après le paiement par carte (webhook Stripe)
+      // 1 clic : moyen de paiement enregistré, débité directement.
+      if (savedMethod) {
+        const oneClick = await payWithSavedMethod(data.tracking_code, "carte");
+        if (oneClick.ok) {
+          setTrackingCode(data.tracking_code);
+          setStep(5);
+          setSubmitting(false);
+          return;
+        }
+      }
+      // Sinon (aucun moyen enregistré, refus, authentification bancaire) : page de paiement Stripe.
+      // La course n'est prise en charge qu'après le paiement par carte (webhook Stripe)
       try {
         const res = await fetch("/api/stripe/create-checkout", {
           method: "POST",
@@ -825,7 +840,7 @@ export default function CommanderPage() {
                       </>
                     ) : (
                       <>
-                        {isPro ? <>Confirmer<span className="hidden sm:inline"> la commande</span></> : <>Payer<span className="hidden sm:inline"> par carte</span></>}
+                        {isPro ? <>Confirmer<span className="hidden sm:inline"> la commande</span></> : savedMethod ? <>Payer<span className="hidden sm:inline"> avec {savedMethod.label}</span></> : <>Payer<span className="hidden sm:inline"> par carte</span></>}
                         <CheckCircle2 size={16} strokeWidth={2.5} />
                       </>
                     )}

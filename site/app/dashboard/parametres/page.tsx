@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { User, Building2, CreditCard, Lock, Save, ShieldCheck, Loader2, Check } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { PageShell, INPUT, LABEL, BTN_ACCENT, BTN_PRIMARY } from "@/components/dashboard/ui";
+import PaymentMethodCard from "@/components/dashboard/PaymentMethodCard";
 
 const TABS = [
   { id: "profil", label: "Profil utilisateur", icon: User },
@@ -24,6 +25,14 @@ function SectionTitle({ title, text }: { title: string; text: string }) {
 export default function ParametresPage() {
   const supabase = createClient();
   const [activeTab, setActiveTab] = useState<(typeof TABS)[number]["id"]>("profil");
+  const [methodSaved, setMethodSaved] = useState(false);
+
+  // Retour de la page Stripe d'enregistrement : onglet Facturation, avec confirmation.
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search);
+    if (q.get("onglet") === "facturation") setActiveTab("facturation");
+    if (q.get("moyen") === "ok") setMethodSaved(true);
+  }, []);
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -276,10 +285,12 @@ export default function ParametresPage() {
                 {activeTab === "facturation" && (
                   <div className="max-w-2xl">
                     <SectionTitle title="Facturation & paiement" text="Vos méthodes de paiement et vos conditions." />
-                    <div className="rounded-xl border border-line bg-paper-card p-5">
-                      <h3 className="text-sm font-extrabold text-ink">Méthode de paiement</h3>
-                      <p className="mt-1 text-[13px] text-muted">Aucune méthode de paiement enregistrée pour le moment.</p>
-                    </div>
+                    {methodSaved && (
+                      <p role="status" className="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800">
+                        Moyen de paiement enregistré. Vos prochaines commandes seront réglées en 1 clic.
+                      </p>
+                    )}
+                    <PaymentMethodCard />
                     <p className="mt-5 flex items-center gap-2.5 text-[13px] font-medium text-muted">
                       <span className="flex h-6 w-6 items-center justify-center rounded-full bg-green-50 text-green-600">
                         <ShieldCheck size={14} strokeWidth={2.5} />

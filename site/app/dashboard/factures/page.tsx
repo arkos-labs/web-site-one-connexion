@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FileText, ChevronRight, Plus } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { fetchSavedMethod, type SavedMethod } from "@/lib/saved-payment";
 import { PageShell, SearchInput, KpiStrip, StatusPill, EmptyState, LoadingState, TH, TD, BTN_PRIMARY } from "@/components/dashboard/ui";
 
 const eur = (n: number) => `${n.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`;
@@ -16,6 +17,8 @@ export default function FacturesPage() {
   const [orderRows, setOrderRows] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [savedMethod, setSavedMethod] = useState<SavedMethod | null>(null);
+  useEffect(() => { fetchSavedMethod().then(setSavedMethod); }, []);
 
   useEffect(() => {
     const loadInvoices = async () => {
@@ -131,7 +134,9 @@ export default function FacturesPage() {
           { label: "Dernière facture", value: latest ? eur(latest.amount) : "—", hint: latest?.number },
           {
             label: "Moyen de paiement",
-            value: <span className="text-sm font-bold text-white/60 sm:text-base">Aucun enregistré</span>,
+            value: savedMethod
+              ? <span className="text-sm font-bold sm:text-base">{savedMethod.label}</span>
+              : <Link href="/dashboard/parametres?onglet=facturation" className="text-sm font-bold text-white/60 underline hover:text-white sm:text-base">Aucun — en ajouter un</Link>,
           },
         ]}
       />
