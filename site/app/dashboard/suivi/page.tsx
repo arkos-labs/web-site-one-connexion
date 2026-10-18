@@ -23,7 +23,7 @@ const statusMeta = (status: string): { tone: Tone; label: string } => {
   return { tone: "gray", label: "En attente" };
 };
 
-import { htOf } from "@/lib/price-display";
+import { htOf, normalizeOrderPriceTTC } from "@/lib/price-display";
 
 const ANOMALY_STEP: Record<Anomaly["step"], string> = { enlevement: "Enlèvement", livraison: "Livraison", general: "Général" };
 const eur = (n: number) => `${n.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`;
@@ -157,8 +157,10 @@ export default function SuiviPage() {
 
   /** Prix TTC de la course (estimation, TVA 20 % comprise) ; null si inconnu. */
   const priceOf = (d: any): number | null => {
-    const v = d.type === "navette" ? d.estimated_price : d.price_estimate;
-    return v != null && v !== "" ? Number(v) : null;
+    if (d.type === "navette") {
+      return d.estimated_price != null && d.estimated_price !== "" ? Number(d.estimated_price) : null;
+    }
+    return normalizeOrderPriceTTC(d.price_estimate, d.pickup_address, d.dropoff_address, d.delai);
   };
 
   const Route = ({ d }: { d: any }) => {

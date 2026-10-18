@@ -7,7 +7,7 @@ import { FileText, ChevronRight, Plus } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { fetchSavedMethod, type SavedMethod } from "@/lib/saved-payment";
 import { PageShell, SearchInput, KpiStrip, StatusPill, EmptyState, LoadingState, TH, TD, BTN_PRIMARY } from "@/components/dashboard/ui";
-import { formatEur, htOf } from "@/lib/price-display";
+import { formatEur, htOf, normalizeOrderPriceTTC } from "@/lib/price-display";
 
 const eur = (n: number) => `${formatEur(n)} €`;
 
@@ -83,7 +83,7 @@ export default function FacturesPage() {
           number: `Course ${o.tracking_code}`,
           sortAt: (o.delivered_at || o.created_at) as string,
           date: new Date(o.delivered_at || o.created_at).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" }),
-          amount: Number(o.amount_due ?? o.price_estimate ?? 0),
+          amount: Number(o.amount_due ?? normalizeOrderPriceTTC(o.price_estimate, (o as any).pickup_address, (o as any).dropoff_address) ?? 0),
           courses: 1,
           navettes: 0,
           status: o.billing_status === "paye" ? "payee" : o.billing_status === "rembourse" ? "rembourse" : o.billing_status === "echec" ? "echec" : "emise",

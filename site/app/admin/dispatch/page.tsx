@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { natureLabel } from "@/lib/order-nature";
-import { htOf } from "@/lib/price-display";
+import { htOf, normalizeOrderPriceTTC } from "@/lib/price-display";
 import { AdminPage } from "@/components/dashboard/ui";
 import { useQueryParam } from "@/lib/use-query-state";
 import { AnomalyBadge, AnomalyList, useMissionAnomalies } from "@/components/admin/mission-anomalies";
@@ -164,7 +164,7 @@ function AdminCoursesPageInner() {
       pickup: o.pickup_address,
       dropoff: o.dropoff_address,
       status: o.status,
-      price: o.price_estimate,
+      price: normalizeOrderPriceTTC(o.price_estimate, o.pickup_address, o.dropoff_address, o.delai),
       createdAt: o.created_at,
       driverId: o.driver_id,
       stops: Array.isArray(o.stops) ? o.stops : null,

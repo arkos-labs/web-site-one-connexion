@@ -3,7 +3,7 @@
 import React, { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { htOf } from "@/lib/price-display";
+import { htOf, normalizeOrderPriceTTC } from "@/lib/price-display";
 import { AdminPage } from "@/components/dashboard/ui";
 import { useQueryParam } from "@/lib/use-query-state";
 import { Check, Clock, Search, Truck, X, Zap, Plus } from "lucide-react";
@@ -252,12 +252,15 @@ function CoursesListInner() {
                   </div>
                 </div>
                 <div className="flex flex-col items-end gap-1.5 shrink-0" onClick={(e) => e.stopPropagation()}>
-                  {o.price_estimate !== null && (
-                    <div className="text-right">
-                      <div className="text-[15px] font-bold text-ink">{o.price_estimate.toFixed(2)} € TTC</div>
-                      <div className="text-[11px] font-medium text-muted">{htOf(o.price_estimate).toFixed(2)} € HT</div>
-                    </div>
-                  )}
+                  {(() => {
+                    const pTtc = normalizeOrderPriceTTC(o.price_estimate, o.pickup_address, o.dropoff_address, o.delai);
+                    return pTtc !== null ? (
+                      <div className="text-right">
+                        <div className="text-[15px] font-bold text-ink">{pTtc.toFixed(2)} € TTC</div>
+                        <div className="text-[11px] font-medium text-muted">{htOf(pTtc).toFixed(2)} € HT</div>
+                      </div>
+                    ) : null;
+                  })()}
                   {o.status === "en_attente" && (
                     <div className="flex items-center gap-1.5">
                       <button onClick={() => { if (o.billing_status !== "paye" && o.source !== "admin" && !window.confirm("Cette course n'a pas été payée. L'accepter quand même ?")) return; acceptOrder(o.id); }} className="flex items-center gap-1 rounded-md bg-green-600 px-2 py-1 text-[11px] font-bold text-white hover:bg-green-700">
@@ -281,7 +284,10 @@ function CoursesListInner() {
                   <div className="grid grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-4">
                     {o.format && <DetailRow label="Format" value={o.format} />}
                     {o.delai && <DetailRow label="Délai" value={o.delai} />}
-                    {o.price_estimate !== null && <DetailRow label="Prix" value={`${o.price_estimate.toFixed(2)} € TTC (${htOf(o.price_estimate).toFixed(2)} € HT)`} />}
+                    {(() => {
+                      const pTtc = normalizeOrderPriceTTC(o.price_estimate, o.pickup_address, o.dropoff_address, o.delai);
+                      return pTtc !== null ? <DetailRow label="Prix" value={`${pTtc.toFixed(2)} € TTC (${htOf(pTtc).toFixed(2)} € HT)`} /> : null;
+                    })()}
                     <DetailRow label="Créée" value={new Intl.DateTimeFormat("fr-FR", { dateStyle: "short", timeStyle: "short" }).format(new Date(o.created_at))} />
                     {o.contact_name && <DetailRow label="Contact" value={o.contact_name} />}
                     {o.contact_phone && <DetailRow label="Tél." value={o.contact_phone} />}

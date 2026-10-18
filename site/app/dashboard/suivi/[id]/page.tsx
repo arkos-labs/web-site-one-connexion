@@ -7,6 +7,7 @@ import { createClient } from "@/lib/supabase/client";
 import { natureLabel } from "@/lib/order-nature";
 import { ClientAnomalies, useMissionAnomalies } from "@/components/admin/mission-anomalies";
 import { PageShell, DetailBody, Panel, InfoRow, Fact, NoteBox, StatusPill, ErrorState, LoadingState } from "@/components/dashboard/ui";
+import { normalizeOrderPriceTTC } from "@/lib/price-display";
 
 const STATUS_LABELS: Record<string, string> = {
   en_attente: "En attente",
@@ -247,7 +248,7 @@ export default function DeliveryDetailsPage() {
   const statusLabel = STATUS_LABELS[order.status] || order.status;
   const formatLabel = FORMAT_LABELS[order.format] || order.format;
   // Tarif TTC, TVA 20 % comprise : HT = TTC / 1,20.
-  const totalTTC = order.price_estimate ? Number(order.price_estimate) : null;
+  const totalTTC = normalizeOrderPriceTTC(order.price_estimate, order.pickup_address, order.dropoff_address, order.delai);
   const priceHT = totalTTC !== null ? Math.round((totalTTC / 1.2) * 100) / 100 : null;
   const tva = totalTTC !== null && priceHT !== null ? totalTTC - priceHT : null;
   const canCancel = CANCELLABLE_STATUSES.includes(order.status) && !order.driver_id;

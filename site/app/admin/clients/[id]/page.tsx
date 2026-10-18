@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { formatEur, htOf } from "@/lib/price-display";
+import { formatEur, htOf, normalizeOrderPriceTTC } from "@/lib/price-display";
 import { AdminPage, ErrorState, LoadingState } from "@/components/dashboard/ui";
 import {
   Briefcase,
@@ -207,7 +207,7 @@ export default function AdminClientDetailPage() {
   }, [load]);
 
 
-  const revenue = orders.filter((o) => !CANCELLED.includes(o.status)).reduce((sum, o) => sum + (o.price_estimate ?? 0), 0);
+  const revenue = orders.filter((o) => !CANCELLED.includes(o.status)).reduce((sum, o) => sum + (normalizeOrderPriceTTC(o.price_estimate, o.pickup_address, o.dropoff_address) ?? 0), 0);
   const activeOrders = orders.filter((o) => ![...DELIVERED, ...CANCELLED].includes(o.status));
   // À régler : factures déjà émises. À facturer : factures du mois encore ouvertes (émises le 1er du mois suivant).
   const unpaidTotal = invoices.filter((i) => i.status === "emise" || i.status === "echec").reduce((sum, i) => sum + i.amount, 0);
@@ -380,10 +380,15 @@ export default function AdminClientDetailPage() {
                     <span className="text-[12.5px] font-semibold text-muted">
                       {new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }).format(new Date(o.created_at))}
                     </span>
-                    <div className="text-right">
-                      <div className="text-[14px] font-bold text-ink">{o.price_estimate ? `${o.price_estimate.toFixed(2)} € TTC` : "-"}</div>
-                      {o.price_estimate && <div className="text-[11px] font-medium text-muted">{htOf(o.price_estimate).toFixed(2)} € HT</div>}
-                    </div>
+                    {(() => {
+                      const pTtc = normalizeOrderPriceTTC(o.price_estimate, o.pickup_address, o.dropoff_address);
+                      return (
+                        <div className="text-right">
+                          <div className="text-[14px] font-bold text-ink">{pTtc ? `${pTtc.toFixed(2)} € TTC` : "-"}</div>
+                          {pTtc && <div className="text-[11px] font-medium text-muted">{htOf(pTtc).toFixed(2)} € HT</div>}
+                        </div>
+                      );
+                    })()}
                   </div>
                 </div>
               ))}
