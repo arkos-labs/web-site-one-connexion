@@ -13,7 +13,7 @@ import { SITE_URL } from "@/lib/site-content";
 export const metadata: Metadata = {
   title: { absolute: "Prestations coursier B2B à Paris et en Île-de-France" },
   description:
-    "Service coursier Paris B2B : plis confidentiels, transport médical, livraison e-commerce, tournées régulières. Course dédiée, traçabilité GPS, suivi en ligne.",
+    "Services coursier B2B Île-de-France: plis confidentiels, transport médical, e-commerce, tournées régulières. Tarif fixe, traçabilité complète, 20+ ans d'expérience B2B Paris.",
   alternates: { canonical: "/services" },
   openGraph: {
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION - Coursier B2B Paris & Île-de-France" }],
@@ -101,6 +101,76 @@ export default function ServicesIndexPage() {
           ))}
         </div>
       </div>
+
+      {/* Secteurs d'expertise */}
+      <section className="bg-paper">
+        <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
+          <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
+            Expertise métier
+          </div>
+          <h2 className="mb-12 max-w-[32ch] text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
+            Nos secteurs d'expertise - 20 ans d'expérience B2B
+          </h2>
+          <p className="mb-12 max-w-[70ch] text-[15.5px] leading-[1.7] text-muted">
+            One Connexion n'est pas un coursier générique. Nous avons développé une expertise approfondie dans 4 secteurs stratégiques avec standards opérationnels strictes, formations dédiées et partenariats établis.
+          </p>
+          <div className="grid gap-8 md:grid-cols-2">
+            {[
+              {
+                title: "Plis Confidentiels & Documents Sensibles",
+                standards: ["Signature de discrétion pour chaque coursier", "Acheminement direct (pas de transit)", "Preuve de remise en main propre", "Conformité RGPD pour données personnelles", "Assurance responsabilité civile"],
+                industries: "Cabinets d'avocats, études notariales, banques, assurances, RH",
+                volume: "5000+ plis confidentiels par an"
+              },
+              {
+                title: "Transport Médical & Prélèvements Biologiques",
+                standards: ["Température contrôlée si requise", "Emballage stérile conforme", "Respect délai SFBC (30-60 min)", "Traçabilité chaîne du froid", "Coursiers formés protocoles médicaux"],
+                industries: "Laboratoires d'analyses, cliniques privées, hôpitaux",
+                volume: "15+ laboratoires partenaires, 8+ cliniques"
+              },
+              {
+                title: "Livraison E-commerce Premium & Dernier KM",
+                standards: ["Remise en main propre signée", "Créneaux horaires flexibles", "Notification client avant passage", "Photo de livraison", "Gestion colis non livrés"],
+                industries: "E-commerce luxe, cosmétiques, compléments alimentaires",
+                volume: "Colis volumineux jusqu'à 30 kg"
+              },
+              {
+                title: "Tournées Régulières & Circuits Multi-sites",
+                standards: ["Planning mensuel fixe garanti", "Collecte multi-sites une seule course", "Facture unique par mois", "Réduction tarifaire volume", "Engagement 6-12 mois"],
+                industries: "Multisite parisien, distribution catalogues, navettes inter-sites",
+                volume: "Économies réalisées : -25% vs ponctuelles"
+              }
+            ].map((sector) => (
+              <div key={sector.title} className="rounded-xl border border-line bg-white p-8">
+                <h3 className="mb-6 text-[18px] font-bold text-ink">{sector.title}</h3>
+                <div className="mb-6 space-y-3">
+                  <div>
+                    <div className="mb-2 font-mono text-[10px] tracking-[0.1em] text-label uppercase">Standards appliqués</div>
+                    <ul className="space-y-2">
+                      {sector.standards.map((std) => (
+                        <li key={std} className="flex gap-2 text-[13.5px] text-muted">
+                          <span className="font-bold text-accent">+</span>
+                          <span>{std}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+                <div className="border-t border-line pt-4">
+                  <div className="mb-3">
+                    <div className="font-mono text-[10px] tracking-[0.1em] text-label uppercase">Industries desservies</div>
+                    <p className="text-[13.5px] text-muted">{sector.industries}</p>
+                  </div>
+                  <div>
+                    <div className="font-mono text-[10px] tracking-[0.1em] text-label uppercase">Volume / Partenaires</div>
+                    <p className="text-[13.5px] font-medium text-accent">{sector.volume}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-10">
         <div className="border-t border-line pt-20">

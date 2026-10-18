@@ -13,7 +13,7 @@ import { Clock, MapPin, Zap, Shield } from "lucide-react";
 export const metadata: Metadata = {
   title: { absolute: "Coursier Paris : livraison express dès 21 € TTC" },
   description:
-    "Coursier Paris en moto et scooter, 20 arrondissements : dès 21 € TTC en 3 h, 31,50 € en urgent, 42 € en 1 h. Enlèvement en moins de 45 min, suivi en ligne.",
+    "Coursier Paris 24h/24 : 21 € dès la 1ère course, enlèvement < 45 min. Livraison express en moto dans les 20 arrondissements. Tarifs fixes, suivi GPS, remise horodatée.",
   alternates: { canonical: "/zones/paris" },
   openGraph: {
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION - Coursier B2B Paris & Île-de-France" }],
@@ -290,6 +290,120 @@ export default function ZoneParis() {
               <div className="mt-4 font-mono text-[10px] tracking-[0.1em] text-accent-dark uppercase">Voir →</div>
             </Link>
           ))}
+        </div>
+      </section>
+
+      {/* ── Défis de Paris ── */}
+      <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
+        <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
+          Défis & Solutions
+        </div>
+        <h2 className="mb-8 max-w-[30ch] text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
+          Livraison express à Paris : défis uniques, solutions dédiées
+        </h2>
+        <div className="grid gap-6 md:grid-cols-2 text-[15px] leading-[1.7]">
+          <div>
+            <h3 className="mb-4 font-bold text-ink">Défis de la livraison parisienne</h3>
+            <ul className="space-y-3 text-muted">
+              <li className="flex gap-3">
+                <span className="font-bold text-accent">-</span>
+                <span><strong>Zone à Faibles Émissions (ZFE) :</strong> accès limité pour véhicules non Crit'Air 2+</span>
+              </li>
+              <li className="flex gap-3">
+                <span className="font-bold text-accent">-</span>
+                <span><strong>Circulation :</strong> 250 000 véhicules/jour sur le périphérique parisien</span>
+              </li>
+              <li className="flex gap-3">
+                <span className="font-bold text-accent">-</span>
+                <span><strong>Adresses complexes :</strong> immeubles haussmanniens sans numéro apparent, accès arrière</span>
+              </li>
+              <li className="flex gap-3">
+                <span className="font-bold text-accent">-</span>
+                <span><strong>Sécurité renforcée :</strong> vérification requise pour certains secteurs (gouvernement, ministères)</span>
+              </li>
+              <li className="flex gap-3">
+                <span className="font-bold text-accent">-</span>
+                <span><strong>Horaires restrictifs :</strong> livraisons impossibles avant 9h ou après 19h dans zones sensibles</span>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 className="mb-4 font-bold text-ink">Comment nous résolvons ces défis</h3>
+            <ul className="space-y-3 text-muted">
+              <li className="flex gap-3">
+                <span className="font-bold text-accent">✓</span>
+                <span><strong>Flotte Crit'Air 2+ :</strong> 100% conforme ZFE parisienne</span>
+              </li>
+              <li className="flex gap-3">
+                <span className="font-bold text-accent">✓</span>
+                <span><strong>Coursiers locaux :</strong> connaissent les impasses, accès arrière, horaires de chaque zone</span>
+              </li>
+              <li className="flex gap-3">
+                <span className="font-bold text-accent">✓</span>
+                <span><strong>GPS en temps réel :</strong> validation de chaque adresse avant remise</span>
+              </li>
+              <li className="flex gap-3">
+                <span className="font-bold text-accent">✓</span>
+                <span><strong>Expérience B2B :</strong> vérification de sécurité pour secteurs sensibles</span>
+              </li>
+              <li className="flex gap-3">
+                <span className="font-bold text-accent">✓</span>
+                <span><strong>Flexibilité horaire :</strong> livraisons possible en soirée selon zones</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Secteurs parisiens ── */}
+      <section className="bg-paper">
+        <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
+          <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
+            Secteurs & industries
+          </div>
+          <h2 className="mb-10 text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
+            Secteurs parisiens avec couverture prioritaire
+          </h2>
+          <div className="grid gap-6 md:grid-cols-2">
+            {[
+              {
+                sector: "Finance & Administration",
+                zones: "8e, 1er, 4e",
+                desc: "Plis confidentiels pour banques, assurances, cabinets juridiques. Documents sensibles (contrats, testaments, brevets) livraison certifiée."
+              },
+              {
+                sector: "Fashion & Luxe",
+                zones: "8e, 1er, 6e",
+                desc: "Livraison de collections pour boutiques Champs-Élysées. Documents VIP confidentiels. Échantillons de haute couture."
+              },
+              {
+                sector: "Santé & Médical",
+                zones: "5e, 11e, 14e",
+                desc: "Transport de prélèvements biologiques (tube sec, EDTA). Acheminement d'ordonnances urgentes. Matériel médical stérile."
+              },
+              {
+                sector: "E-Commerce Premium",
+                zones: "15e, 8e",
+                desc: "Livraison du dernier km pour commandes premium. Plis publicitaires haut de gamme. Colis volumineux (moins de 30kg)."
+              },
+              {
+                sector: "Secteur Public",
+                zones: "4e, 1er",
+                desc: "Mails administratifs entre ministères. Dossiers de candidature urgents. Avis officiels."
+              },
+              {
+                sector: "Événementiel",
+                zones: "Tous les arrondissements",
+                desc: "Livraison de documents événementiels (invitations, programmes). Acheminement de matériel urgents pour salons & congrès."
+              }
+            ].map((item) => (
+              <div key={item.sector} className="rounded-xl border border-line bg-white p-6">
+                <div className="mb-2 font-mono text-[10px] tracking-[0.1em] text-label uppercase">{item.zones}</div>
+                <h3 className="mb-3 font-bold text-ink">{item.sector}</h3>
+                <p className="text-[14px] leading-[1.6] text-muted">{item.desc}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 

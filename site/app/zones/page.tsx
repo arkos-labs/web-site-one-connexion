@@ -11,7 +11,7 @@ import DeptCards from "@/components/sections/DeptCards";
 export const metadata: Metadata = {
   title: { absolute: "Zones île-de-france : couverture complète de Paris et Île-de-France" },
   description:
-    "Zones île-de-france : One Connexion couvre Paris, la petite couronne (92, 93, 94) et toute l'Île-de-France. Retrouvez par zone les délais, tarifs et villes couvertes.",
+    "Zones de couverture One Connexion : Paris, petite couronne, La Défense, grande couronne. Livraison express Île-de-France dès 21 euros. Tarifs fixes, traçabilité GPS, 6j/7 9h-19h.",
   alternates: { canonical: "/zones" },
 };
 
@@ -137,6 +137,81 @@ export default function ZonesPage() {
               <div className="mt-auto font-mono text-[10px] tracking-[0.1em] text-accent-dark uppercase">Voir la zone →</div>
             </Link>
           ))}
+        </div>
+      </section>
+
+      {/* Guide par besoin */}
+      <section className="bg-paper">
+        <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
+          <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
+            Quel service selon votre zone
+          </div>
+          <h2 className="mb-12 max-w-[28ch] text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
+            Guide des zones par besoin
+          </h2>
+          <div className="grid gap-6 md:grid-cols-2">
+            {[
+              {
+                zone: "Paris Intramuros",
+                dept: "75",
+                budget: "A partir de 21 euros TTC",
+                delai: "moins de 45 min enlèvement",
+                ideal: "Plis urgents, documents sensibles, e-commerce premium",
+                exemple: "Livrer contrat signé avant 18h en 2h"
+              },
+              {
+                zone: "Petite Couronne",
+                dept: "92, 93, 94",
+                budget: "42 euros TTC (course dédiée)",
+                delai: "moins de 45 min enlèvement",
+                ideal: "Transport médical, logistique B2B, multisite parisiens",
+                exemple: "Enlever prélèvements biologiques Vitry et livrer Créteil en moins de 1h"
+              },
+              {
+                zone: "La Défense & Hauts-de-Seine",
+                dept: "92",
+                budget: "A partir de 21 euros TTC",
+                delai: "moins de 30 min enlèvement intra-Défense",
+                ideal: "Livraisons inter-tours, documents confidentiels, démarches RH",
+                exemple: "Distribuer dossier candidature entre tours de La Défense"
+              },
+              {
+                zone: "Grande Couronne",
+                dept: "77, 78, 91, 95",
+                budget: "A partir de 52 euros TTC",
+                delai: "60-90 min enlèvement",
+                ideal: "Livraisons moins urgentes, zones éloignées",
+                exemple: "Enlever échantillons Évry et livrer Versailles en 2h"
+              }
+            ].map((item) => (
+              <div key={item.zone} className="rounded-xl border border-line bg-white p-6">
+                <div className="mb-3 flex items-start justify-between">
+                  <h3 className="font-bold text-ink">{item.zone}</h3>
+                  <span className="rounded-full bg-accent/10 px-2.5 py-1 font-mono text-[10px] font-bold text-accent">
+                    {item.dept}
+                  </span>
+                </div>
+                <div className="space-y-3 text-[13.5px]">
+                  <div>
+                    <div className="font-medium text-label">Budget :</div>
+                    <div className="text-muted">{item.budget}</div>
+                  </div>
+                  <div>
+                    <div className="font-medium text-label">Délai :</div>
+                    <div className="text-muted">{item.delai}</div>
+                  </div>
+                  <div>
+                    <div className="font-medium text-label">Idéal pour :</div>
+                    <div className="text-muted">{item.ideal}</div>
+                  </div>
+                  <div>
+                    <div className="font-medium text-label">Exemple :</div>
+                    <div className="text-muted">{item.exemple}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 

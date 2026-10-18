@@ -16,7 +16,7 @@ import { MapPin } from "lucide-react";
 export const metadata: Metadata = {
   title: "Coursier petite couronne 92, 93, 94",
   description:
-    "Coursier banlieue Paris en petite couronne : Hauts-de-Seine (92), Seine-Saint-Denis (93), Val-de-Marne (94). Coursier moto dédié, enlèvement moins de 45 minutes, du lundi au samedi.",
+    "Coursier petite couronne 92, 93, 94 : livraison 1h/jour même en banlieue. Tarif 42 euros TTC. Enlèvement moins de 45 min, suivi GPS, remise certifiée. Service B2B dédié Île-de-France.",
   alternates: { canonical: "/zones/petite-couronne" },
   openGraph: {
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION - Coursier B2B Paris & Île-de-France" }],
@@ -234,6 +234,95 @@ export default function ZonePetiteCouronne() {
               <div className="mt-4 font-mono text-[10px] tracking-[0.1em] text-accent-dark uppercase">Voir →</div>
             </Link>
           ))}
+        </div>
+      </section>
+
+      {/* ── Avantages petite couronne ── */}
+      <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
+        <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
+          Avantage géographique
+        </div>
+        <h2 className="mb-10 max-w-[30ch] text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
+          Pourquoi choisir la petite couronne pour vos livraisons
+        </h2>
+        <div className="mb-12 grid gap-6 md:grid-cols-3">
+          {[
+            { label: "Distance moyenne", value: "12-18 km", desc: "Du centre de Paris" },
+            { label: "Temps d'intervention", value: "moins de 45 min", desc: "Enlèvement garanti" },
+            { label: "Coût", value: "42 euros TTC", desc: "Identique à Paris pour course dédiée" }
+          ].map((item) => (
+            <div key={item.label} className="rounded-xl border border-line bg-paper-card p-6 text-center">
+              <div className="mb-2 font-mono text-[10px] tracking-[0.1em] text-label uppercase">{item.label}</div>
+              <div className="mb-3 text-[28px] font-bold text-accent">{item.value}</div>
+              <p className="text-[13.5px] text-muted">{item.desc}</p>
+            </div>
+          ))}
+        </div>
+        <div className="rounded-xl border border-line bg-white overflow-hidden">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-line bg-paper">
+                <th className="p-4 text-left font-bold text-ink">Zone</th>
+                <th className="p-4 text-center font-bold text-ink">Distance</th>
+                <th className="p-4 text-center font-bold text-ink">Enlèvement</th>
+                <th className="p-4 text-center font-bold text-ink">Tarif</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-line">
+              <tr>
+                <td className="p-4 font-medium text-ink">Paris intramuros</td>
+                <td className="p-4 text-center text-muted">0-10 km</td>
+                <td className="p-4 text-center text-muted">moins de 30 min</td>
+                <td className="p-4 text-center text-muted">21-42 euros</td>
+              </tr>
+              <tr>
+                <td className="p-4 font-medium text-ink">Petite couronne</td>
+                <td className="p-4 text-center text-accent font-bold">12-20 km</td>
+                <td className="p-4 text-center text-accent font-bold">moins de 45 min</td>
+                <td className="p-4 text-center text-accent font-bold">42 euros</td>
+              </tr>
+              <tr>
+                <td className="p-4 font-medium text-ink">Grande couronne</td>
+                <td className="p-4 text-center text-muted">25-50 km</td>
+                <td className="p-4 text-center text-muted">60-90 min</td>
+                <td className="p-4 text-center text-muted">52-68 euros</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      {/* ── Industries petite couronne ── */}
+      <section className="bg-paper">
+        <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
+          <h2 className="mb-10 text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
+            Industries principales en petite couronne
+          </h2>
+          <div className="grid gap-6 md:grid-cols-2">
+            {[
+              {
+                industry: "Industrie pharmaceutique & logistique",
+                desc: "Créteil, Vitry. Transport de médicaments, emballages stériles, documents de conformité."
+              },
+              {
+                industry: "Services administratifs & RH",
+                desc: "La Défense. Livraison de dossiers, avis administratifs, documents confidentiels entre sièges."
+              },
+              {
+                industry: "E-commerce & logistique",
+                desc: "Zones d'activité Île-de-France. Enlèvement et distribution de colis, fulfillment express."
+              },
+              {
+                industry: "Cliniques privées & hôpitaux",
+                desc: "Créteil, Saint-Maur. Transport de prélèvements, dossiers patients, matériel médical."
+              }
+            ].map((item) => (
+              <div key={item.industry} className="rounded-xl border border-line bg-white p-6">
+                <h3 className="mb-3 font-bold text-ink">{item.industry}</h3>
+                <p className="text-[14px] leading-[1.6] text-muted">{item.desc}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
