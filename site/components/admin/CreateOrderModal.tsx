@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 import { calculatePrice, ServiceLevel } from "@/lib/pricing";
 import { AddressAutocomplete } from "@/components/AddressAutocomplete";
 import { notifyNewOrder } from "@/lib/notify-new-order";
+import { htOf } from "@/lib/price-display";
 
 type Profile = { id: string; full_name: string | null; company: string | null };
 type Driver = { id: string; name: string };
@@ -216,7 +217,7 @@ export function CreateOrderModal({ isOpen, onClose, onSuccess, profiles, drivers
             {price !== null && (
               <div className="p-4 bg-green-50 border border-green-100 rounded-xl flex items-center justify-between">
                 <span className="font-bold text-green-800">Tarif calculé :</span>
-                <span className="text-xl font-extrabold text-green-700">{price.toFixed(2)} €</span>
+                <span className="text-base font-extrabold text-green-700">{price.toFixed(2)} € TTC ({htOf(price).toFixed(2)} € HT)</span>
               </div>
             )}
 
