@@ -4,16 +4,11 @@ import React, { Suspense, useCallback, useEffect, useMemo, useState } from "reac
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { formatEur, htOf } from "@/lib/price-display";
 import { natureLabel } from "@/lib/order-nature";
-import { formatEur, htOf } from "@/lib/price-display";
 import { AdminPage } from "@/components/dashboard/ui";
-import { formatEur, htOf } from "@/lib/price-display";
 import { useQueryParam } from "@/lib/use-query-state";
-import { formatEur, htOf } from "@/lib/price-display";
 import { AlertTriangle, ArrowRight, ChevronDown, ChevronUp, Clock, MapPin, Search, Send, Truck, Users, X, Zap, Plus } from "lucide-react";
 import { CreateOrderModal } from "@/components/admin/CreateOrderModal";
-import { formatEur, htOf } from "@/lib/price-display";
 
 type Course = {
   key: string;
