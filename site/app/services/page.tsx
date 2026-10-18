@@ -65,13 +65,14 @@ export default function ServicesIndexPage() {
           </div>
 
           <h1 className="mb-6 max-w-[20ch] text-balance text-[clamp(32px,4.4vw,58px)] font-bold leading-[1.05] tracking-[-0.035em]">
-            Coursier B2B à Paris : des solutions expertes, une même exigence.
+            Nos prestations de coursier à Paris et en Île-de-France.
           </h1>
 
           <p className="max-w-[58ch] text-pretty text-[17px] leading-[1.6] text-white/66">
-            Chaque secteur impose ses contraintes : signature manuscrite,
-            maintien en température, créneau de réception. Nos procédures sont
-            écrites par type de flux, pas improvisées à la course.
+            Plis confidentiels, prélèvements médicaux, colis e-commerce, tournées
+            régulières : choisissez votre besoin pour voir comment se déroule la
+            course. Le tarif, lui, ne change pas : il dépend seulement de la zone
+            et du délai.
           </p>
         </div>
       </section>

@@ -39,7 +39,7 @@ export const ZONES_93: Zone[] = [
       },
       {
         q: "Quel est le prix d'une livraison à Montreuil ?",
-        a: "Montreuil relève du tarif petite couronne : à partir de 42 € TTC en normal (3 h) et 84 € TTC en super urgent (1 h). Le prix final dépend de la destination, du délai et de la nature du colis. Prix affiché avant de commander.",
+        a: "Montreuil relève du tarif petite couronne : à partir de 42 € TTC en normal (3 h) et 84 € TTC en super urgent (1 h). Le prix dépend seulement de la destination et du délai, quel que soit le colis. Prix affiché avant de commander.",
       },
       {
         q: "Pouvez-vous transporter des maquettes ou du matériel de tournage ?",

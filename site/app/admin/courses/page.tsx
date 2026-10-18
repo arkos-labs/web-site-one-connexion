@@ -4,6 +4,7 @@ import React, { Suspense, useCallback, useEffect, useMemo, useState } from "reac
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { natureLabel } from "@/lib/order-nature";
 import { AdminPage } from "@/components/dashboard/ui";
 import { useQueryParam } from "@/lib/use-query-state";
 import { AlertTriangle, ArrowRight, ChevronDown, ChevronUp, Clock, MapPin, Search, Send, Truck, Users, X, Zap, Plus } from "lucide-react";
@@ -25,6 +26,8 @@ type Course = {
   stops: { address: string; contact_name?: string; contact_phone?: string }[] | null;
   delai?: string | null;
   format?: string | null;
+  nature?: string | null;
+  natureDetail?: string | null;
   contactName?: string | null;
   contactPhone?: string | null;
   driverAcceptedAt?: string | null;
@@ -153,7 +156,7 @@ function AdminCoursesPageInner() {
       supabase.from("drivers").select("id, name, phone, vehicle, status, auth_id").order("name"),
       supabase
         .from("orders")
-        .select("id, pickup_address, dropoff_address, status, driver_id, tracking_code, price_estimate, created_at, user_id, stops, point_progress, delai, format, contact_name, contact_phone, driver_accepted_at, picked_up_at, delivered_at, delivery_recipient, delivery_department, delivery_comment, delivery_photo_url, client_type, source, billing_status")
+        .select("id, pickup_address, dropoff_address, status, driver_id, tracking_code, price_estimate, created_at, user_id, stops, point_progress, delai, format, nature, nature_detail, contact_name, contact_phone, driver_accepted_at, picked_up_at, delivered_at, delivery_recipient, delivery_department, delivery_comment, delivery_photo_url, client_type, source, billing_status")
         .neq("status", "annulee")
         .order("created_at", { ascending: false }),
       supabase
@@ -203,6 +206,8 @@ function AdminCoursesPageInner() {
       stops: Array.isArray(o.stops) ? o.stops : null,
       delai: o.delai,
       format: o.format,
+      nature: o.nature,
+      natureDetail: o.nature_detail,
       contactName: o.contact_name,
       contactPhone: o.contact_phone,
       driverAcceptedAt: o.driver_accepted_at,
@@ -708,8 +713,9 @@ function AdminCoursesPageInner() {
                     )}
 
                     {/* Informations supplémentaires compactes si existantes */}
-                    {(c.format || c.price || c.contactName) && (
+                    {(c.nature || c.format || c.price || c.contactName) && (
                       <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] font-medium text-muted">
+                        {c.nature && <div><span className="font-bold text-label uppercase">Envoi:</span> {natureLabel(c.nature, c.natureDetail)}</div>}
                         {c.format && <div><span className="font-bold text-label uppercase">Format:</span> {c.format}</div>}
                         {c.price !== null && <div><span className="font-bold text-label uppercase">Prix:</span> {c.price.toFixed(2)} €</div>}
                         {c.contactName && <div><span className="font-bold text-label uppercase">Contact:</span> {c.contactName} {c.contactPhone}</div>}

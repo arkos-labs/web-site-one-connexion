@@ -26,6 +26,7 @@ import { AddressAutocomplete } from "@/components/AddressAutocomplete";
 import { createClient } from "@/lib/supabase/client";
 import { calculatePrice, ServiceLevel } from "@/lib/pricing";
 import { notifyNewOrder } from "@/lib/notify-new-order";
+import { ORDER_NATURES, NATURE_DETAIL_MAX, natureLabel } from "@/lib/order-nature";
 import { isProAccount } from "@/lib/dashboard-nav";
 
 /* ── Données métier ───────────────────────────────────────────────────── */
@@ -208,6 +209,9 @@ function RoutePoint({
 export default function CommanderPage() {
   const [step, setStep] = useState(1);
   const [format, setFormat] = useState<string>("doc");
+  const [nature, setNature] = useState("");
+  const [natureDetail, setNatureDetail] = useState("");
+  const [natureError, setNatureError] = useState(false);
   const [delai, setDelai] = useState<string>("standard");
   const [scheduledDate, setScheduledDate] = useState("");
   const [scheduledTime, setScheduledTime] = useState("");
@@ -260,6 +264,7 @@ export default function CommanderPage() {
 
   const handleNextStep = (e: React.FormEvent) => {
     e.preventDefault();
+    if (step === 2 && (!nature || (nature === "autre" && !natureDetail.trim()))) { setNatureError(true); return; }
     setStep(step + 1);
   };
 
@@ -283,6 +288,8 @@ export default function CommanderPage() {
           contact_phone: s.contactPhone
         })),
         format,
+        nature,
+        nature_detail: nature === "autre" ? natureDetail.trim() : null,
         delai,
         notes: `Enlèvement contact: ${pickupContactName} ${pickupContactPhone}\nLivraison contact: ${dropoffContactName} ${dropoffContactPhone}\nNotes: ${notes}`.trim(),
         contact_name: contactName,
@@ -342,7 +349,7 @@ export default function CommanderPage() {
     setStep(1);
     setPickupAddress(""); setPickupContactName(""); setPickupContactPhone("");
     setDropoffAddress(""); setDropoffContactName(""); setDropoffContactPhone("");
-    setStops([]); setFormat("pli"); setDelai("flash");
+    setStops([]); setFormat("pli"); setNature(""); setNatureDetail(""); setDelai("flash");
     setScheduledDate(""); setScheduledTime("");
     setTrackingCode(null); setNotes(""); setContactName(""); setContactPhone("");
   };
@@ -527,6 +534,47 @@ export default function CommanderPage() {
                 <div className="flex flex-col gap-5">
                   <div>
                     <h2 className="text-lg font-extrabold tracking-tight text-ink">Que faut-il transporter ?</h2>
+                    <p className="mt-0.5 text-[13px] text-muted">Pour préparer le coursier. Le prix reste le même.</p>
+                  </div>
+
+                  <div role="radiogroup" aria-label="Type d'envoi" className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
+                    {ORDER_NATURES.map(({ id, label, Icon }) => {
+                      const selected = nature === id;
+                      return (
+                        <button
+                          key={id}
+                          type="button"
+                          role="radio"
+                          aria-checked={selected}
+                          onClick={() => { setNature(id); setNatureError(false); }}
+                          className={`flex items-center gap-2 rounded-xl border-2 px-3 py-3 text-left text-sm font-bold transition-all ${
+                            selected ? "border-accent bg-accent/[0.03] text-ink" : "border-line bg-white text-muted hover:border-[#c9c5bd]"
+                          }`}
+                        >
+                          <Icon size={18} className={`shrink-0 ${selected ? "text-accent" : "text-label"}`} />
+                          {label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {nature === "autre" && (
+                    <input
+                      type="text"
+                      value={natureDetail}
+                      onChange={(e) => { setNatureDetail(e.target.value.slice(0, NATURE_DETAIL_MAX)); setNatureError(false); }}
+                      maxLength={NATURE_DETAIL_MAX}
+                      autoFocus
+                      placeholder="Précisez ce que vous envoyez (ex. : clés, maquette, pièce détachée…)"
+                      aria-label="Précisez ce que vous envoyez"
+                      className="mt-2 w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
+                    />
+                  )}
+                  {natureError && (
+                    <p role="alert" className="-mt-2 text-sm font-semibold text-red-600">{nature === "autre" ? "Précisez ce que vous envoyez." : "Choisissez ce que vous envoyez."}</p>
+                  )}
+
+                  <div className="mt-2">
+                    <h3 className="text-sm font-extrabold text-ink">Format</h3>
                     <p className="mt-0.5 text-[13px] text-muted">Le format détermine le véhicule envoyé. Flotte 100 % décarbonée.</p>
                   </div>
 
@@ -698,6 +746,7 @@ export default function CommanderPage() {
                     )}
 
                     <ReviewCard title="Format" onEdit={() => setStep(2)}>
+                      {nature && <p className="text-sm font-bold text-ink">{natureLabel(nature, natureDetail)}</p>}
                       <p className="text-sm font-bold text-ink">{currentFormat.name}</p>
                       <p className="mt-0.5 text-xs text-muted">{currentFormat.weight} · {currentFormat.vehicle}</p>
                     </ReviewCard>
@@ -805,6 +854,7 @@ export default function CommanderPage() {
                 <div>
                   <dt className="label-mono text-[11px] font-medium text-white/50">Format</dt>
                   <dd className="mt-1 text-sm font-bold leading-snug">{currentFormat.name}</dd>
+                  {nature && <dd className="text-xs font-medium text-white/60">{natureLabel(nature, natureDetail)}</dd>}
                 </div>
                 <div>
                   <dt className="label-mono text-[11px] font-medium text-white/50">Délai</dt>

@@ -102,8 +102,8 @@ const FACTORS = [
   },
   {
     icon: Shield,
-    title: "Nature du transport",
-    desc: "Plis confidentiels avec remise contre signature, transport médical avec protocole de manutention, ou colis standard. Chaque nature a ses exigences opérationnelles.",
+    title: "Même tarif pour tout colis",
+    desc: "Pli confidentiel, dossier, prélèvement médical ou colis jusqu'à 15 kg : le prix est le même. Seules la zone et le délai le font varier.",
   },
   {
     icon: CheckCircle2,
@@ -182,7 +182,7 @@ export default function TarifsPage() {
       {/* ── Facteurs de prix ── */}
       <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
         <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
-          Les 4 critères du prix coursier Paris
+          Prix coursier Paris : ce qui compte
         </div>
         <h2 className="mb-14 max-w-[24ch] text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
           Comment se calcule le prix d'une course.

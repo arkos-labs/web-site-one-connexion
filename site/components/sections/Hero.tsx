@@ -10,10 +10,10 @@ import { MapPin, Flag } from "lucide-react";
 import { AddressAutocomplete } from "@/components/AddressAutocomplete";
 
 const COMMITMENTS = [
-  { label: "Prise en charge", value: "< 45 min", sub: "dès validation commande", fill: 70 },
+  { label: "Enlèvement du colis", value: "< 45 min", sub: "après confirmation de la course", fill: 70 },
   { label: "Course", value: "Dédiée", sub: "un coursier, sans regroupement", fill: null },
   { label: "Amplitude", value: "7j/7", sub: "7h – 23h, jours fériés inclus", fill: null },
-  { label: "Enlèvement", value: "< 45 min", sub: "course express", fill: 85 },
+  { label: "Livraison", value: "1 h", sub: "formule Super, porte à porte", fill: 85 },
 ];
 
 // PLACEHOLDER : logos clients à déposer avant mise en ligne.
@@ -47,14 +47,14 @@ export default function Hero() {
               Le dernier kilomètre, tenu à l&rsquo;heure.
             </h1>
             <p className="mb-6 max-w-[56ch] text-pretty text-[16px] leading-[1.6] text-white/66">
-              One Connexion opère les coursiers moto pour livraisons urgentes des cabinets juridiques,
-              laboratoires et e-commerçants d&rsquo;Île-de-France. Flotte deux-roues dédiée,
-              traçabilité complète, un interlocuteur unique.
+              Plis, dossiers, colis&nbsp;: un coursier à moto les enlève en moins de 45&nbsp;minutes
+              et les livre sans détour, partout en Île-de-France. Prix affiché avant de commander,
+              suivi de chaque étape en ligne.
             </p>
             
             <div className="mb-8 flex flex-wrap gap-3">
               <a
-                href="#contact"
+                href="/inscription"
                 className="rounded-[2px] bg-accent px-[22px] py-[12px] text-[14px] font-semibold text-white hover:bg-accent-dark"
               >
                 Ouvrir un compte entreprise

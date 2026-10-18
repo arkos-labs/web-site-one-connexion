@@ -11,6 +11,7 @@ import { AddressAutocomplete } from "@/components/AddressAutocomplete";
 import { checkIdfAddress } from "@/lib/address-idf";
 import { calculatePrice, splitTTC, ServiceLevel } from "@/lib/pricing";
 import { notifyNewOrder } from "@/lib/notify-new-order";
+import { ORDER_NATURES, NATURE_DETAIL_MAX, natureLabel } from "@/lib/order-nature";
 
 interface OrderModalProps {
   open: boolean;
@@ -31,6 +32,8 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
   const [checkingAddress, setCheckingAddress] = useState(false);
   const [clientType, setClientType] = useState<"entreprise" | "particulier">("entreprise");
   const [format, setFormat] = useState("doc");
+  const [nature, setNature] = useState("");
+  const [natureDetail, setNatureDetail] = useState("");
   const [delai, setDelai] = useState("standard");
   const [pickupAddress, setPickupAddress] = useState(initialPickup);
   const [dropoffAddress, setDropoffAddress] = useState(initialDropoff);
@@ -197,6 +200,8 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
     }
 
     if (step < 3) { setStep(step + 1); return; }
+    if (!nature) { setFormError("Choisissez ce que vous envoyez."); return; }
+    if (nature === "autre" && !natureDetail.trim()) { setFormError("Précisez ce que vous envoyez."); return; }
 
     setSubmitting(true);
     const { data: { user } } = await supabase.auth.getUser();
@@ -214,6 +219,8 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
         dropoff_address: dropoffAddress.trim(),
         stops: [],
         format,
+        nature,
+        nature_detail: nature === "autre" ? natureDetail.trim() : null,
         delai,
         notes,
         contact_name: contactName.trim(),
@@ -526,6 +533,37 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                 {step === 3 && (
                   <div className="flex flex-col gap-6">
                     <div>
+                      <label className="mb-1 block text-sm font-bold text-ink">Que voulez-vous envoyer ? <span className="text-accent">*</span></label>
+                      <p className="mb-3 text-xs text-gray-500">Pour préparer le coursier. Le prix reste le même.</p>
+                      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                        {ORDER_NATURES.map(({ id, label, Icon }) => (
+                          <button
+                            key={id}
+                            type="button"
+                            onClick={() => { setNature(id); setFormError(""); }}
+                            aria-pressed={nature === id}
+                            className={`flex items-center gap-2 rounded-xl border-2 px-3 py-2.5 text-left transition-all ${nature === id ? "border-accent bg-accent/5" : "border-gray-100 bg-white hover:border-gray-200"}`}
+                          >
+                            <Icon size={18} className={`shrink-0 ${nature === id ? "text-accent" : "text-gray-400"}`} />
+                            <span className={`text-xs font-bold ${nature === id ? "text-accent" : "text-gray-700"}`}>{label}</span>
+                          </button>
+                        ))}
+                      </div>
+                      {nature === "autre" && (
+                        <input
+                          type="text"
+                          value={natureDetail}
+                          onChange={(e) => { setNatureDetail(e.target.value.slice(0, NATURE_DETAIL_MAX)); setFormError(""); }}
+                          maxLength={NATURE_DETAIL_MAX}
+                          autoFocus
+                          placeholder="Précisez ce que vous envoyez (ex. : clés, maquette, pièce détachée…)"
+                          aria-label="Précisez ce que vous envoyez"
+                          className="mt-2 w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
+                        />
+                      )}
+                    </div>
+
+                    <div>
                       <label className="mb-3 block text-sm font-bold text-ink">Format du courrier</label>
                       <div className="grid grid-cols-3 gap-2">
                         {[
@@ -638,6 +676,12 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                           <span>Arrivée :</span>
                           <span className="font-medium text-gray-900 truncate text-right">{dropoffAddress || "À renseigner"}</span>
                         </div>
+                        {nature && (
+                          <div className="flex justify-between">
+                            <span>Envoi :</span>
+                            <span className="font-medium text-gray-900">{natureLabel(nature, natureDetail)}</span>
+                          </div>
+                        )}
                         <div className="flex justify-between">
                           <span>Format :</span>
                           <span className="font-medium text-gray-900">{format === 'doc' ? 'Pli/Doc' : format === 'petit' ? 'Petit Colis' : 'Volumineux'}</span>
@@ -717,6 +761,12 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                     <span className="font-medium text-gray-900">{dropoffAddress || "À renseigner"}</span>
                   </div>
                   
+                  {nature && (
+                    <div className="flex flex-col gap-1 border-b border-gray-200 pb-3">
+                      <span className="text-xs font-semibold uppercase text-gray-400">Envoi</span>
+                      <span className="font-medium text-gray-900">{natureLabel(nature, natureDetail)}</span>
+                    </div>
+                  )}
                   <div className="flex flex-col gap-1 border-b border-gray-200 pb-3">
                     <span className="text-xs font-semibold uppercase text-gray-400">Format</span>
                     <span className="font-medium text-gray-900">{format === 'doc' ? 'Pli/Doc' : format === 'petit' ? 'Petit Colis' : 'Volumineux'}</span>
