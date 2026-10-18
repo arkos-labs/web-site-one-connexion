@@ -3,7 +3,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
-import { htOf } from "@/lib/price-display";
+import { htOf, normalizeOrderPriceTTC } from "@/lib/price-display";
 import { AdminPage } from "@/components/dashboard/ui";
 import { AlertTriangle, ArrowRight, Clock, Euro, Package, Plus, Truck, Users } from "lucide-react";
 
@@ -79,7 +79,7 @@ export default function AdminOverviewPage() {
     startOfDay.setHours(0, 0, 0, 0);
 
     const [ordersToday, ordersEnCours, navettesPendingCount, ordersAwaitingCount, ordersAwaiting, navettesPending, driversData] = await Promise.all([
-      supabase.from("orders").select("price_estimate, status").gte("created_at", startOfDay.toISOString()).neq("status", "annulee"),
+      supabase.from("orders").select("price_estimate, pickup_address, dropoff_address, delai, status").gte("created_at", startOfDay.toISOString()).neq("status", "annulee"),
       supabase.from("orders").select("id", { count: "exact", head: true }).eq("status", "en_cours"),
       supabase
         .from("navettes")
@@ -106,7 +106,7 @@ export default function AdminOverviewPage() {
     ]);
 
     const todayRows = ordersToday.data ?? [];
-    const caJour = todayRows.reduce((sum, o) => sum + (o.price_estimate ?? 0), 0);
+    const caJour = todayRows.reduce((sum, o) => sum + (normalizeOrderPriceTTC(o.price_estimate, o.pickup_address, o.dropoff_address, o.delai) ?? 0), 0);
 
     const orderRows = ordersAwaiting.data ?? [];
     const userIds = [...new Set(orderRows.map((o) => o.user_id).filter(Boolean))];

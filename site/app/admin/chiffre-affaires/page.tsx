@@ -5,11 +5,13 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { AdminPage } from "@/components/dashboard/ui";
 import { Calendar, Download } from "lucide-react";
+import { normalizeOrderPriceTTC } from "@/lib/price-display";
 
 type Period = "jour" | "semaine" | "mois" | "annee";
 
 type OrderRow = {
   price_estimate: number | null;
+  delai: string | null;
   status: string;
   created_at: string;
   tracking_code: string | null;
@@ -108,7 +110,7 @@ function AdminChiffreAffairesPageInner() {
     const [{ data: orderRows }, { data: navetteRows }, { data: profileRows }, { data: clientRows }] = await Promise.all([
       supabase
         .from("orders")
-        .select("price_estimate, status, created_at, tracking_code, pickup_address, dropoff_address, user_id")
+        .select("price_estimate, delai, status, created_at, tracking_code, pickup_address, dropoff_address, user_id")
         .neq("status", "annulee")
         .order("created_at", { ascending: false }),
       supabase
@@ -136,7 +138,7 @@ function AdminChiffreAffairesPageInner() {
       client: clientOf(o.user_id),
       route: `${o.pickup_address} → ${o.dropoff_address}`,
       status: o.status,
-      amount: o.price_estimate ?? 0,
+      amount: normalizeOrderPriceTTC(o.price_estimate, o.pickup_address, o.dropoff_address, o.delai) ?? 0,
     }));
 
     // Une navette récurrente n'a qu'un seul enregistrement (pas d'historique

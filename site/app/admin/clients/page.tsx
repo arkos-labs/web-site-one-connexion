@@ -3,7 +3,7 @@
 import React, { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
-import { htOf } from "@/lib/price-display";
+import { htOf, normalizeOrderPriceTTC } from "@/lib/price-display";
 import { AdminPage } from "@/components/dashboard/ui";
 import { useQueryParam } from "@/lib/use-query-state";
 import { Briefcase, Building2, Calendar, Clock, Euro, Search, ShoppingBag, Users, Plus } from "lucide-react";
@@ -51,7 +51,7 @@ function AdminClientsPageInner() {
     const [{ data: profilesData }, { data: clientsData }, { data: orders }, { data: navettes }, monthOrders] = await Promise.all([
       supabase.from("profiles").select("id, full_name, phone, created_at").eq("role", "client").order("created_at", { ascending: false }),
       supabase.from("clients").select("id, company_name"),
-      supabase.from("orders").select("user_id, price_estimate, status, client_type, contact_name, contact_email, contact_phone, created_at"),
+      supabase.from("orders").select("user_id, price_estimate, pickup_address, dropoff_address, delai, status, client_type, contact_name, contact_email, contact_phone, created_at"),
       supabase.from("navettes").select("user_id").eq("status", "active"),
       supabase.from("orders").select("id", { count: "exact", head: true }).gte("created_at", startOfMonth.toISOString()).neq("status", "annulee"),
     ]);
@@ -61,7 +61,7 @@ function AdminClientsPageInner() {
 
     const rows: ClientRow[] = profiles.map((p) => {
       const own = (orders ?? []).filter((o) => o.user_id === p.id);
-      const revenue = own.filter((o) => o.status !== "annulee").reduce((sum, o) => sum + (o.price_estimate ?? 0), 0);
+      const revenue = own.filter((o) => o.status !== "annulee").reduce((sum, o) => sum + (normalizeOrderPriceTTC(o.price_estimate, o.pickup_address, o.dropoff_address, o.delai) ?? 0), 0);
       const activeNavettes = (navettes ?? []).filter((n) => n.user_id === p.id).length;
       // La fiche société peut être vide : un client qui commande en tant qu'entreprise reste un pro.
       const company = p.company || (own.some((o: { client_type: string | null }) => o.client_type === "entreprise") ? "Entreprise" : null);
@@ -79,7 +79,7 @@ function AdminClientsPageInner() {
         createdAt: o.created_at, ordersCount: 0, revenue: 0, activeNavettes: 0,
       };
       g.ordersCount += 1;
-      if (o.status !== "annulee") g.revenue += o.price_estimate ?? 0;
+      if (o.status !== "annulee") g.revenue += normalizeOrderPriceTTC(o.price_estimate, o.pickup_address, o.dropoff_address, o.delai) ?? 0;
       if (o.client_type === "entreprise") g.pro = true;
       if (o.created_at < g.createdAt) g.createdAt = o.created_at;
       g.full_name = o.contact_name || g.full_name;
