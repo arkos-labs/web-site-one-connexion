@@ -401,7 +401,7 @@ export default function OrderForm() {
                     {clientType === 'entreprise' && (
                       <div className="mb-8 p-4 bg-blue-50 border border-blue-100 rounded-xl flex gap-3 text-sm text-blue-800">
                         <CreditCard className="w-5 h-5 text-blue-500 shrink-0" />
-                        <p>Pour les professionnels, <strong>2 règlements possibles : par carte ou sur facture</strong>. Vous choisirez à la dernière étape.</p>
+                        <p>Pour les professionnels, <strong>deux modes de règlement : par carte bancaire ou sur facture à 30 jours</strong>. Vous choisirez à la dernière étape.</p>
                       </div>
                     )}
 
