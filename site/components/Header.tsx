@@ -25,6 +25,7 @@ const NAV_ITEMS = [
   { label: "Méthode", href: "/methode" },
   { label: "Flotte", href: "/flotte" },
   { label: "Références", href: "/references" },
+  { label: "Contact", href: "/contact" },
 ];
 
 export default function Header() {

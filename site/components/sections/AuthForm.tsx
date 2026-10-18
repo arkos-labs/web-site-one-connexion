@@ -17,7 +17,7 @@ import { createClient } from "@/lib/supabase/client";
 const PERKS = [
   { title: "Commander en quelques clics", sub: "Course flash prise en charge en moins de 45 min." },
   { title: "Suivi de chaque course en ligne", sub: "Statut à chaque étape, de la prise en charge à la remise, avec preuve de livraison." },
-  { title: "Factures & reporting centralisé", sub: "Relevés mensuels détaillés par centre de coût." },
+  { title: "Factures à 30 jours", sub: "Factures détaillées course par course, à régler sous 30 jours." },
   { title: "Dispatch du lundi au samedi · 9h–19h", sub: "Un régulateur dédié, joignable aux heures d'ouverture." },
 ];
 

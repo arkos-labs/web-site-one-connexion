@@ -15,6 +15,7 @@ import ServiceSteps from "@/components/services/ServiceSteps";
 import ServiceUseCases from "@/components/services/ServiceUseCases";
 import ServicePricing from "@/components/services/ServicePricing";
 import { SERVICE_SLUGS, getService } from "@/lib/services";
+import { GUIDES } from "@/lib/guides";
 import { SITE_URL } from "@/lib/site-content";
 
 type Params = { slug: string };
@@ -190,6 +191,15 @@ export default async function ServicePage({
           >
             Voir la flotte et la couverture →
           </Link>
+          {GUIDES.filter((g) => g.service.href === `/services/${service.slug}`).map((g) => (
+            <Link
+              key={g.slug}
+              href={`/guides/${g.slug}`}
+              className="mt-3 block font-mono text-[10.5px] tracking-[0.1em] text-accent-dark uppercase hover:text-ink"
+            >
+              Guide pratique : {g.title} →
+            </Link>
+          ))}
         </section>
 
         <section className="border-b border-line py-[72px]">

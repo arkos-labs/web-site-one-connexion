@@ -1,11 +1,11 @@
 /**
  * lib/services/compte-entreprise.ts
- * Prestation transversale : compte entreprise, suivi et facturation mensuelle.
- * Requêtes visées : compte coursier entreprise, facturation mensuelle coursier.
+ * Prestation transversale : compte entreprise, suivi et des factures à 30 jours.
+ * Requêtes visées : compte coursier entreprise, factures à 30 jours coursier.
  *
  * Fonctionnement réel : ouverture immédiate en ligne ; une entreprise peut ouvrir plusieurs comptes
  * avec le même SIRET (un par collaborateur, service ou site) ; chaque compte voit ses propres courses
- * et reçoit sa propre facture mensuelle. Ne pas promettre d'export comptable ni de référence de dossier.
+ * et reçoit ses propres factures, à régler sous 30 jours. Ne pas promettre d'export comptable ni de référence de dossier.
  */
 import type { Service } from "./types";
 
@@ -15,30 +15,30 @@ export const compteEntreprise: Service = {
   card: {
     tag: "04 - Comptes entreprises",
     title: "Suivi & facturation",
-    body: "Ouverture immédiate, un compte par collaborateur, service ou site, suivi de chaque course et facture mensuelle.",
+    body: "Ouverture immédiate, un compte par collaborateur, service ou site, suivi de chaque course et factures à 30 jours.",
     note: "Plusieurs comptes avec le même SIRET",
   },
 
   seo: {
-    title: "Compte entreprise coursier - ouverture immédiate, facture mensuelle",
+    title: "Compte entreprise coursier - paiement à 30 jours",
     description:
-      "Compte coursier pour votre entreprise à Paris : ouverture immédiate en ligne, plusieurs comptes avec le même SIRET (un par service ou par site), suivi de chaque course et facture mensuelle.",
+      "Compte coursier pour votre entreprise à Paris : ouverture immédiate en ligne, plusieurs comptes avec le même SIRET (un par service ou par site), suivi de chaque course et factures à régler sous 30 jours.",
     keywords: [
       "compte coursier entreprise",
-      "facturation mensuelle coursier",
+      "coursier paiement 30 jours",
       "contrat coursier entreprise Paris",
       "coursier multi-sites Île-de-France",
     ],
   },
 
-  h1: "Compte entreprise : ouverture immédiate, suivi en ligne et facture mensuelle",
+  h1: "Compte entreprise : ouverture immédiate, suivi en ligne et paiement à 30 jours",
 
   intro:
-    "Ouvrez votre compte en ligne et commandez dans la minute. Chaque collaborateur, service ou site peut avoir son propre compte avec le même SIRET : chacun suit ses courses et reçoit sa facture du mois, sans avancer de frais.",
+    "Ouvrez votre compte en ligne et commandez dans la minute. Chaque collaborateur, service ou site peut avoir son propre compte avec le même SIRET : chacun suit ses courses et reçoit ses factures, à régler sous 30 jours, sans avancer de frais.",
 
   stats: [
     { value: "Immédiate", label: "Ouverture du compte" },
-    { value: "Mensuelle", label: "Facturation" },
+    { value: "30 jours", label: "Pour régler les factures" },
     { value: "Illimité", label: "Comptes par SIRET" },
   ],
 
@@ -46,7 +46,7 @@ export const compteEntreprise: Service = {
     title: "Le coût d’une course n’est pas seulement son prix",
     paragraphs: [
       "Dans la plupart des structures, les courses se commandent au fil de l’eau : chacun appelle, chacun avance, et la comptabilité récupère en fin de mois une liasse de justificatifs disparates qu’il faut rapprocher un par un. Le temps passé à régulariser dépasse souvent le prix des courses elles-mêmes.",
-      "Avec un compte par service ou par site, ce tri est fait d’avance : chaque compte reçoit sa propre facture mensuelle, avec le détail de ses courses. La comptabilité sait tout de suite à quel service rattacher chaque montant.",
+      "Avec un compte par service ou par site, ce tri est fait d’avance : chaque compte reçoit ses propres factures, avec le détail de ses courses. La comptabilité sait tout de suite à quel service rattacher chaque montant.",
       "Reste la preuve. Pour chaque course livrée, le nom de la personne qui a reçu le colis et l’heure de remise sont enregistrés dans l’espace du compte : le jour où une réception est contestée, l’information est retrouvée en quelques secondes.",
     ],
   },
@@ -69,8 +69,8 @@ export const compteEntreprise: Service = {
       body: "Pour chaque course livrée, le nom du destinataire et l’heure de remise sont enregistrés et consultables depuis l’espace du compte.",
     },
     {
-      title: "Facture mensuelle par compte",
-      body: "Chaque compte reçoit une facture unique par mois, détaillée course par course, à régler sous 30 jours par carte, prélèvement ou virement.",
+      title: "Paiement à 30 jours",
+      body: "Chaque compte reçoit ses factures, détaillées course par course, à régler sous 30 jours par carte, prélèvement ou virement.",
     },
   ],
 
@@ -81,13 +81,13 @@ export const compteEntreprise: Service = {
     "Commandes sans avance de frais",
     "Suivi de chaque course en ligne",
     "Nom du destinataire et heure de remise enregistrés",
-    "Facture mensuelle par compte, détaillée course par course",
+    "Factures par compte, détaillées course par course, à 30 jours",
   ],
 
   useCases: [
     {
       title: "Cabinet multi-associés",
-      body: "Chaque associé ouvre son compte avec le SIRET du cabinet : il suit ses propres courses, et sa facture mensuelle correspond à ses dossiers.",
+      body: "Chaque associé ouvre son compte avec le SIRET du cabinet : il suit ses propres courses, et ses factures correspondent à ses dossiers.",
     },
     {
       title: "Entreprise multi-sites",
@@ -105,7 +105,7 @@ export const compteEntreprise: Service = {
   pricing: {
     title: "Les tarifs avec un compte entreprise",
     intro:
-      "Un compte entreprise ne change pas le prix des courses : chaque compte commande à la grille ci-dessous, et tout est réglé en fin de mois sur une facture unique, avec le détail de chaque course.",
+      "Un compte entreprise ne change pas le prix des courses : chaque compte commande à la grille ci-dessous, et les factures, détaillées course par course, se règlent sous 30 jours.",
     recommended: ["standard", "urgent", "flash"],
     note:
       "Au-delà d’un volume mensuel régulier, un tarif dégressif s’applique. Contactez-nous avec votre volume estimé pour le connaître.",
@@ -130,9 +130,9 @@ export const compteEntreprise: Service = {
         "Non. Chaque compte voit uniquement ses propres courses et ses propres factures. Pour qu’une équipe partage le même suivi, elle utilise un seul compte commun.",
     },
     {
-      question: "Comment fonctionne la facture mensuelle ?",
+      question: "Comment fonctionne la facturation ?",
       answer:
-        "Chaque compte reçoit une facture par mois, qui regroupe toutes ses courses avec leur détail. Elle se règle sous 30 jours, par carte, prélèvement ou virement, et reste disponible dans l’espace du compte.",
+        "Chaque compte reçoit ses factures, avec le détail de chaque course. Elles se règlent sous 30 jours, par carte, prélèvement ou virement, et restent disponibles dans l’espace du compte.",
     },
     {
       question: "Le compte couvre-t-il toutes les prestations ?",

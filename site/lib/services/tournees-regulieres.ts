@@ -35,7 +35,7 @@ export const tourneesRegulieres: Service = {
   included: [
     "Continuité de service (coursiers de remplacement garantis)",
     "Véhicules adaptés (moto, scooter ou cargo)",
-    "Facturation mensuelle centralisée",
+    "Factures à régler sous 30 jours",
     "Reporting personnalisé",
   ],
   useCases: [

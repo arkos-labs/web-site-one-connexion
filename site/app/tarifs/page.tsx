@@ -16,7 +16,7 @@ const euro = (n: number) =>
   `${n.toLocaleString("fr-FR", { minimumFractionDigits: Number.isInteger(n) ? 0 : 2, maximumFractionDigits: 2 })} €`;
 
 export const metadata: Metadata = {
-  title: "Prix coursier Paris : tarif dès 21 € TTC par course",
+  title: "Prix coursier Paris : dès 21 € TTC",
   description:
     "Tarif coursier Paris et Île-de-France : dès 21 € TTC en 3 h, 31,50 € en urgent, 42 € en formule Super 1 h. Prix par zone : Paris, petite couronne, banlieue. Compte entreprise.",
   alternates: { canonical: "/tarifs" },
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION - Coursier B2B Paris & Île-de-France" }],
     title: "Tarifs coursier express Paris - ONE CONNEXION",
     description:
-      "Tarif à la course ou compte entreprise mensuel pour vos livraisons urgentes en Île-de-France. Prix affiché avant de commander.",
+      "Tarif à la course ou compte entreprise payable à 30 jours pour vos livraisons urgentes en Île-de-France. Prix affiché avant de commander.",
     url: "/tarifs",
     type: "website",
     locale: "fr_FR",
@@ -108,7 +108,7 @@ const FACTORS = [
   {
     icon: CheckCircle2,
     title: "Volume mensuel",
-    desc: "Les clients avec compte entreprise bénéficient d'une grille dégressive selon le volume mensuel. La facturation est centralisée et mensuelle.",
+    desc: "Les clients avec compte entreprise bénéficient d'une grille dégressive selon le volume mensuel. Les factures se règlent sous 30 jours.",
   },
 ];
 
@@ -134,13 +134,13 @@ const FORMULES = [
     name: "Compte entreprise",
     tag: "Recommandé",
     tagColor: "bg-accent text-white",
-    price: "Grille mensuelle",
-    priceNote: "facturation en fin de mois",
+    price: "Grille officielle",
+    priceNote: "factures à régler sous 30 jours",
     items: [
       "Ouverture du compte immédiate",
       "Plusieurs comptes avec le même SIRET",
       "Chaque compte suit ses propres courses",
-      "Facture mensuelle, paiement à 30 jours",
+      "Factures à régler sous 30 jours",
       "Tarif dégressif selon volume",
     ],
     cta: "Ouvrir un compte",
@@ -206,7 +206,7 @@ export default function TarifsPage() {
             Nos formules
           </div>
           <h2 className="mb-14 text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-            À la course ou en compte mensuel.
+            À la course ou en compte entreprise, à 30 jours.
           </h2>
           <div className="grid gap-6 md:grid-cols-2 max-w-[780px]">
             {FORMULES.map((f) => (

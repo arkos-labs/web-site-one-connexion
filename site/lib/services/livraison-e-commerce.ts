@@ -105,7 +105,7 @@ export const livraisonEcommerce: Service = {
       "Pour livrer un client le jour même dans Paris ou en Île-de-France, la formule Normale (3 h) suffit le plus souvent. Le colis voyage seul, sans tournée partagée, et le prix est connu avant l’envoi.",
     recommended: ["standard"],
     note:
-      "Vous expédiez chaque semaine ? Avec un compte entreprise, vos livraisons partent sur une facture mensuelle, avec un tarif dégressif selon le volume.",
+      "Vous expédiez chaque semaine ? Avec un compte entreprise, vos livraisons sont facturées à 30 jours, avec un tarif dégressif selon le volume.",
   },
 
   faqTitle: "Vos questions sur la livraison le jour même.",

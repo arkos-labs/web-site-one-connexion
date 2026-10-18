@@ -35,7 +35,7 @@ export const PARIS_LOCAL: Record<string, { localGuide: ZoneGuide; faq: ZoneFaqIt
     faq: [
       { q: "Livrez-vous des échantillons de tissu et des vêtements dans le Sentier ?", a: "Oui, pour des pièces légères qui tiennent dans un top-case verrouillé et étanche, jusqu'à 18 kg. Pour une série plus volumineuse, appelez-nous avant de commander." },
       { q: "Comment gérer les adresses en cour intérieure ?", a: "Communiquez le code, l'étage et un contact joignable. Le coursier ne perd pas de temps à chercher l'entrée dans les passages couverts, et la remise est horodatée." },
-      { q: "Faites-vous des navettes régulières entre un showroom du 2e et des boutiques ?", a: "Oui, en tournées sur créneaux fixes dans le cadre d'un compte entreprise, avec une facturation mensuelle unique." },
+      { q: "Faites-vous des navettes régulières entre un showroom du 2e et des boutiques ?", a: "Oui, en tournées sur créneaux fixes dans le cadre d'un compte entreprise, avec des factures à 30 jours." },
     ],
   },
 
@@ -80,7 +80,7 @@ export const PARIS_LOCAL: Record<string, { localGuide: ZoneGuide; faq: ZoneFaqIt
     faq: [
       { q: "Transportez-vous des échantillons entre laboratoires du Quartier Latin ?", a: "Oui, en course dédiée avec un contenant isotherme choisi à la commande. Précisez le délai de stabilité fixé par le laboratoire : nous vous disons avant le départ si la course est tenable." },
       { q: "Livrez-vous des manuscrits et des épreuves à des éditeurs ?", a: "Oui. La remise se fait en main propre, avec le nom du réceptionnaire et l'heure consignés, ce qui évite les contestations de livraison." },
-      { q: "Peut-on prévoir des passages réguliers entre deux sites universitaires ?", a: "Oui, par tournées sur créneaux fixes, avec un compte entreprise et une facturation mensuelle imputable par laboratoire ou département." },
+      { q: "Peut-on prévoir des passages réguliers entre deux sites universitaires ?", a: "Oui, par tournées sur créneaux fixes, avec un compte entreprise et des factures à 30 jours." },
     ],
   },
 
@@ -169,7 +169,7 @@ export const PARIS_LOCAL: Record<string, { localGuide: ZoneGuide; faq: ZoneFaqIt
     },
     faq: [
       { q: "Transportez-vous des prototypes ou des pièces entre ateliers ?", a: "Oui, pour des pièces qui tiennent dans un top-case verrouillé de 18 kg. Au-delà, contactez-nous avant de commander." },
-      { q: "Peut-on organiser des tournées régulières entre un atelier du 11e et des boutiques ?", a: "Oui : tournées sur créneaux fixes, facturées mensuellement dans le cadre d'un compte entreprise." },
+      { q: "Peut-on organiser des tournées régulières entre un atelier du 11e et des boutiques ?", a: "Oui : tournées sur créneaux fixes, facturées à 30 jours dans le cadre d'un compte entreprise." },
       { q: "Livrez-vous à Bastille et à Nation le soir ?", a: "Oui, jusqu'à 19h, du lundi au samedi, sous réserve de disponibilité à la commande." },
     ],
   },
@@ -260,7 +260,7 @@ export const PARIS_LOCAL: Record<string, { localGuide: ZoneGuide; faq: ZoneFaqIt
     faq: [
       { q: "Pouvez-vous déposer des conclusions au tribunal de Paris ?", a: "Oui. Précisez le service, la référence du dossier et l'heure limite ; la remise est horodatée et nominative, avec un justificatif à annexer au dossier." },
       { q: "Livrez-vous au Palais des Congrès et à la Porte Maillot ?", a: "Oui. Pour un salon ou un congrès, donnez le hall, le stand ou le service destinataire et un contact." },
-      { q: "Peut-on organiser une navette quotidienne entre un cabinet du 17e et le tribunal ?", a: "Oui, par tournées sur créneaux fixes avec un compte entreprise, facturation mensuelle unique et imputation par dossier." },
+      { q: "Peut-on organiser une navette quotidienne entre un cabinet du 17e et le tribunal ?", a: "Oui, par tournées sur créneaux fixes avec un compte entreprise, facture à 30 jours." },
     ],
   },
 

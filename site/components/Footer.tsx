@@ -19,6 +19,12 @@ const NAV_LINKS = [
   { label: "Tarifs", href: "/tarifs" },
   { label: "Coursier express Paris", href: "/services/coursier-express-paris" },
   { label: "Coursier moto Paris", href: "/services/coursier-moto-paris" },
+  { label: "Guides pratiques", href: "/guides" },
+  { label: "Contact", href: "/contact" },
+];
+
+const BOTTOM_LINKS = [
+  { label: "Zones desservies", href: "/zones" },
   { label: "Mentions légales", href: "/mentions-legales" },
   { label: "CGV", href: "/cgv" },
   { label: "Confidentialité", href: "/politique-de-confidentialite" },
@@ -30,7 +36,7 @@ const TAGLINES: Record<string, string> = {
   "/tarifs": "Des tarifs clairs et adaptés à vos volumes. Prix affiché avant de commander.",
   "/zones": "Couverture intégrale de Paris et Île-de-France. Enlèvement express en moins de 45 min.",
   "/zones/paris": "Paris intramuros livré en moins de 45 minutes. Disponible lun–sam, 9h–19h.",
-  "/zones/petite-couronne": "Petite couronne couverte du lundi au samedi. Clients réguliers : compte mensuel sans surprise.",
+  "/zones/petite-couronne": "Petite couronne couverte du lundi au samedi. Clients réguliers : compte entreprise, factures à 30 jours.",
   "/zones/la-defense": "La Défense et Hauts-de-Seine : enlèvement rapide, preuve de remise horodatée.",
   "/services": "Plis confidentiels, transport médical, livraison e-commerce, tournées régulières.",
   "/services/plis-confidentiels": "Plis strictement confidentiels en course dédiée. Du lundi au samedi, 9h–19h.",
@@ -70,7 +76,8 @@ const ZONE_LINKS = [
   { label: "Paris intramuros (75)", href: "/zones/paris" },
   { label: "La Défense & 92", href: "/zones/la-defense" },
   { label: "Petite couronne (92/93/94)", href: "/zones/petite-couronne" },
-  { label: "Île-de-France complète", href: "/flotte" },
+  { label: "Grande couronne (77/78/91/95)", href: "/zones/grande-couronne" },
+  { label: "Toutes les villes desservies", href: "/zones" },
 ];
 
 const EXPRESS = "/services/coursier-express-paris";
@@ -280,7 +287,7 @@ export default function Footer() {
       {/* Barre légale */}
       <div style={{ borderTop: "1px solid rgba(244,242,238,0.06)" }}>
         <div
-          className="mx-auto flex flex-wrap items-center justify-between gap-2 px-[clamp(20px,4vw,32px)] py-3"
+          className="mx-auto flex flex-wrap items-center justify-center gap-x-5 gap-y-2 px-[clamp(20px,4vw,32px)] py-4 text-center"
           style={{ maxWidth: "1240px" }}
         >
           <span
@@ -289,6 +296,16 @@ export default function Footer() {
           >
             © 2026 One Connexion · Tous droits réservés
           </span>
+          {BOTTOM_LINKS.map((l) => (
+            <Link
+              key={l.href}
+              href={l.href}
+              className="font-mono text-[10px] tracking-[0.12em] uppercase transition-colors hover:!text-[rgba(244,242,238,0.5)]"
+              style={{ color: "rgba(244,242,238,0.25)", textDecoration: "none" }}
+            >
+              {l.label}
+            </Link>
+          ))}
         </div>
       </div>
     </footer>

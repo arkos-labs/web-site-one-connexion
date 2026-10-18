@@ -211,7 +211,7 @@ export const GUIDES: Guide[] = [
       {
         heading: "Le volume mensuel",
         paragraphs: [
-          "Si vous envoyez régulièrement, un compte entreprise regroupe la facturation en fin de mois et peut ouvrir une grille adaptée au volume. La page tarifs détaille les formules.",
+          "Si vous envoyez régulièrement, un compte entreprise permet de régler les factures sous 30 jours et peut ouvrir une grille adaptée au volume. La page tarifs détaille les formules.",
         ],
       },
       {
@@ -244,7 +244,7 @@ export const GUIDES: Guide[] = [
       {
         question: "Existe-t-il un tarif dégressif ?",
         answer:
-          "Oui, avec un compte entreprise : au-delà d’un volume mensuel régulier, un tarif dégressif s’applique et toutes les courses sont regroupées sur une facture mensuelle.",
+          "Oui, avec un compte entreprise : au-delà d’un volume mensuel régulier, un tarif dégressif s’applique et les factures se règlent sous 30 jours.",
       },
     ],
     service: { href: "/tarifs", label: "Tarif coursier Paris" },

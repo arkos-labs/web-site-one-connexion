@@ -93,7 +93,7 @@ export const EXTRA_92: Record<string, ExtraZoneContent> = {
     ],
     faq: [
       { q: "Livrez-vous dans les parcs d'activités de Rueil-Malmaison ?", a: "Oui, avec le nom de l'entreprise, le bâtiment et un contact. L'accès aux sites est contrôlé." },
-      { q: "Peut-on prévoir un passage quotidien ?", a: "Oui, par tournées sur créneaux fixes avec un compte entreprise et une facturation mensuelle." },
+      { q: "Peut-on prévoir un passage quotidien ?", a: "Oui, par tournées sur créneaux fixes avec un compte entreprise et des factures à 30 jours." },
     ],
   },
 
@@ -200,7 +200,7 @@ export const EXTRA_92: Record<string, ExtraZoneContent> = {
       "Les voies vers Paris 14e sont courtes mais chargées : une course immédiate est plus fiable.",
     ],
     faq: [
-      { q: "Peut-on organiser une tournée hebdomadaire ?", a: "Oui, sur créneaux fixes avec un compte entreprise, facturation mensuelle." },
+      { q: "Peut-on organiser une tournée hebdomadaire ?", a: "Oui, sur créneaux fixes avec un compte entreprise, factures à 30 jours." },
       { q: "Quelle preuve de livraison est fournie ?", a: "Un justificatif avec nom du destinataire, date, heure et lieu." },
     ],
   },

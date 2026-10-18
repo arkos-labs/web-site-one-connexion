@@ -501,7 +501,16 @@ function withLocalContent(z: Zone): Zone {
   const lead = places[0] ?? local.landmarks[0];
   const second = places[1] ?? local.landmarks[1];
   const baseTitle = `Coursier ${z.name} ${z.dept}`;
-  const title = `${baseTitle} - ${lead}`.length <= 68 ? `${baseTitle} - ${lead}` : baseTitle;
+  // Titre entre 30 et 60 caractères (Google coupe au-delà) : le lieu phare si la place le permet,
+  // sinon une forme plus courte ; jamais un titre trop court comme « Coursier Fresnes 94260 ».
+  const fits = (t: string) => t.length >= 30 && t.length <= 60;
+  const title =
+    [
+      `${baseTitle} - ${lead}`,
+      `Coursier ${z.name} - ${lead}`,
+      `${baseTitle} - livraison express`,
+      `Coursier ${z.name} - livraison express`,
+    ].find(fits) ?? baseTitle;
 
   const extra = EXTRA_LOCAL[z.slug];
 
@@ -544,13 +553,12 @@ export const ZONE_SLUGS = ZONES.map((z) => z.slug);
  * de contenu local propre. Pour en activer une : ajouter son slug ici.
  */
 /** Départements de la petite couronne : tarif standard, cœur de marché. */
-const PETITE_COURONNE = new Set(["92", "93", "94"]);
+const PETITE_COURONNE = new Set(["92", "93", "94", "77", "78", "91", "95"]); // + grande couronne, ouverte le 18/10/2026
 
 /**
  * Indexation par vagues. Une zone n'est indexable que si elle a son contenu
- * propre (guide local + FAQ). Vague 1 : Paris et la petite couronne. La grande
- * couronne (77, 78, 91, 95), à partir de 78 € TTC, a son contenu mais reste en
- * noindex : ajouter "77", "78", "91", "95" à PETITE_COURONNE pour l'ouvrir.
+ * propre (guide local + FAQ). Vague 1 : Paris et la petite couronne. Vague 2
+ * (18/10/2026) : la grande couronne (77, 78, 91, 95), avec son contenu et 5 questions de FAQ.
  */
 export function isZoneIndexed(zone: Zone): boolean {
   if (zone.category === "paris") return true;

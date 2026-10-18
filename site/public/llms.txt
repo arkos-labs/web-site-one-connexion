@@ -11,7 +11,7 @@
 - Enlèvement : en moins de 45 minutes à Paris et en petite couronne
 - Prix affiché automatiquement avant de commander
 - Modèle : course dédiée (sans regroupement), preuve de remise horodatée
-- Tarification : à la course ou compte entreprise avec facturation mensuelle
+- Tarification : à la course ou compte entreprise, factures à 30 jours
 
 ## Prestations
 - [Plis confidentiels](https://www.oneconnexion.com/services/plis-confidentiels): remise en main propre de documents sensibles (contrats, actes, dossiers judiciaires), course dédiée et preuve de remise horodatée
@@ -19,7 +19,7 @@
 - [Livraison e-commerce](https://www.oneconnexion.com/services/livraison-e-commerce): livraison le jour même pour les e-commerçants à Paris et en Île-de-France
 - [Tournées régulières](https://www.oneconnexion.com/services/tournees-regulieres): navettes inter-sites et tournées planifiées pour les entreprises en Île-de-France
 - [Transport événementiel](https://www.oneconnexion.com/services/transport-evenementiel): logistique d'événements, pop-up stores et opérations RP à Paris
-- [Compte entreprise](https://www.oneconnexion.com/services/compte-entreprise): commandes en ligne, suivi et facturation mensuelle pour les clients professionnels
+- [Compte entreprise](https://www.oneconnexion.com/services/compte-entreprise): commandes en ligne, suivi et factures à 30 jours pour les clients professionnels
 
 ## Guides pratiques
 - [Prix d'un coursier express à Paris](https://www.oneconnexion.com/guides/prix-coursier-express-paris): distance, délai, nature du transport et volume, les critères qui font varier le tarif et comment connaître le prix avant de commander
@@ -37,7 +37,7 @@
 - [Toutes les prestations](https://www.oneconnexion.com/services): vue d'ensemble des services de coursier B2B
 - [Notre méthode](https://www.oneconnexion.com/methode): fonctionnement d'une course, de la commande à la preuve de remise
 - [Flotte et couverture](https://www.oneconnexion.com/flotte): scooters et motos équipés pour un usage professionnel, coursiers vérifiés
-- [Tarifs](https://www.oneconnexion.com/tarifs): logique tarifaire, paiement à la course ou compte entreprise mensuel, prix affiché avant de commander
+- [Tarifs](https://www.oneconnexion.com/tarifs): logique tarifaire, paiement à la course ou compte entreprise à 30 jours, prix affiché avant de commander
 - [Secteurs](https://www.oneconnexion.com/secteurs): solutions par secteur (juridique, médical, e-commerce, corporate)
 - [Références clients](https://www.oneconnexion.com/references): cabinets juridiques, laboratoires, agences et e-commerçants servis
 - [Contact](https://www.oneconnexion.com/contact): coordonnées et formulaire de contact

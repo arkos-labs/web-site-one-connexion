@@ -37,8 +37,8 @@ const FAQ = [
     a: "Oui. Chaque remise est horodatée et rattachée au nom du destinataire, pour une preuve de livraison fiable.",
   },
   {
-    q: "Comment payer, et existe-t-il une facturation mensuelle ?",
-    a: "Vous pouvez payer à la course (carte bancaire, Apple Pay, Google Pay, prélèvement SEPA) ou ouvrir un compte entreprise avec facturation mensuelle centralisée.",
+    q: "Comment payer, et peut-on régler à 30 jours ?",
+    a: "Vous pouvez payer à la course (carte bancaire, Apple Pay, Google Pay, prélèvement SEPA) ou ouvrir un compte entreprise et régler ses factures sous 30 jours.",
   },
 ];
 

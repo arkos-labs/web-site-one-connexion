@@ -16,7 +16,7 @@ export const ZONES_93: Zone[] = [
       ecommerce: "Expéditions le jour même des créateurs, ateliers et boutiques en ligne installés à Montreuil, vers des clients parisiens et franciliens, avec preuve de remise.",
       corporate: "Courses dédiées entre les agences et start-ups de Montreuil et leurs clients de Paris, pour des maquettes, contrats et épreuves à remettre en main propre.",
       evenementiel: "Décors, accessoires et matériel pour les studios, tournages et lieux culturels de Montreuil, avec des créneaux de livraison alignés sur le plateau.",
-      grandsComptes: "Compte entreprise pour les agences, productions et PME de Montreuil, avec facturation mensuelle et imputation par projet.",
+      grandsComptes: "Compte entreprise pour les agences, productions et PME de Montreuil, avec des factures à 30 jours.",
     },
     keyClients: ["Agences créatives et studios", "Ateliers et créateurs", "Start-ups", "Hôpital André-Grégoire"],
     distanceParis: "Aux portes de Paris 20e",

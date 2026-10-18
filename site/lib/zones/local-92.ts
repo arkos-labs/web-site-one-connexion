@@ -212,7 +212,7 @@ export const LOCAL_92: Record<string, LocalZoneContent> = {
     },
     faq: [
       { q: "Livrez-vous à Malakoff en plein centre, près du métro ?", a: "Oui. Indiquez la rue et la station de métro la plus proche pour accélérer la remise." },
-      { q: "Peut-on organiser des tournées régulières entre Malakoff et Paris ?", a: "Oui, sur créneaux fixes, avec facturation mensuelle dans le cadre d'un compte entreprise." },
+      { q: "Peut-on organiser des tournées régulières entre Malakoff et Paris ?", a: "Oui, sur créneaux fixes, avec des factures à 30 jours dans le cadre d'un compte entreprise." },
       { q: "Quel tarif à Malakoff ?", a: "Dès 42 € TTC en normal (3 h) et 84 € TTC en formule Super (1 h), comme toute la petite couronne." },
     ],
   },
@@ -421,7 +421,7 @@ export const LOCAL_92: Record<string, LocalZoneContent> = {
     },
     faq: [
       { q: "Livrez-vous de part et d'autre de la voie ferrée à Bourg-la-Reine ?", a: "Oui. Précisez le côté de la voie et la rue : cela évite un détour." },
-      { q: "Peut-on prévoir un passage quotidien depuis Bourg-la-Reine ?", a: "Oui, par tournées sur créneaux fixes, avec facturation mensuelle." },
+      { q: "Peut-on prévoir un passage quotidien depuis Bourg-la-Reine ?", a: "Oui, par tournées sur créneaux fixes, avec des factures à 30 jours." },
       { q: "Quel est le tarif de Bourg-la-Reine ?", a: "Dès 42 € TTC en normal (3 h) et 84 € TTC en formule Super (1 h)." },
     ],
   },
@@ -478,7 +478,7 @@ export const LOCAL_92: Record<string, LocalZoneContent> = {
     },
     faq: [
       { q: "Pouvez-vous livrer à La Défense depuis La Garenne-Colombes ?", a: "Oui. La course est courte ; précisez la tour, l'accueil et un contact." },
-      { q: "Faites-vous des tournées régulières depuis La Garenne-Colombes ?", a: "Oui, avec un compte entreprise, sur créneaux fixes et facturation mensuelle." },
+      { q: "Faites-vous des tournées régulières depuis La Garenne-Colombes ?", a: "Oui, avec un compte entreprise, sur créneaux fixes et des factures à 30 jours." },
       { q: "Quel tarif ?", a: "Dès 42 € TTC en normal (3 h) et 84 € TTC en formule Super (1 h)." },
     ],
   },

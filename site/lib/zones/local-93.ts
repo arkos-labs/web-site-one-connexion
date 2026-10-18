@@ -248,7 +248,7 @@ export const LOCAL_93: Record<string, LocalZoneContent> = {
     },
     faq: [
       { q: "Livrez-vous dans les zones d'activité du Blanc-Mesnil ?", a: "Oui, avec le nom du bâtiment, le quai et un contact." },
-      { q: "Peut-on prévoir une tournée régulière ?", a: "Oui, avec un compte entreprise, sur créneaux fixes et facturation mensuelle." },
+      { q: "Peut-on prévoir une tournée régulière ?", a: "Oui, avec un compte entreprise, sur créneaux fixes et des factures à 30 jours." },
       { q: "Quel tarif au Blanc-Mesnil ?", a: "Dès 42 € TTC en normal (3 h) et 84 € TTC en formule Super (1 h)." },
     ],
   },

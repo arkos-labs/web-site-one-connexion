@@ -46,8 +46,8 @@ function paymentLabel(o: any): string | null {
     const how = o.billing_status === "virement_attendu" ? "virement" : "prélèvement";
     return o.billing_status === "paye" ? `Sur facture (${how}) - réglé` : `Sur facture à 30 jours (${how})`;
   }
-  // Pro avec compte, sans paiement à la commande : la course part sur la facture du mois.
-  if (o.client_type === "entreprise" && o.user_id) return "Facture mensuelle de votre compte";
+  // Pro avec compte, sans paiement à la commande : facture à régler sous 30 jours.
+  if (o.client_type === "entreprise" && o.user_id) return "Facture à 30 jours";
   return null;
 }
 
@@ -92,7 +92,7 @@ export default function DeliveryDetailsPage() {
   const [cancelInfo, setCancelInfo] = useState<string | null>(null);
   const [driver, setDriver] = useState<{ name: string | null; phone: string | null; vehicle: string | null } | null>(null);
   const anomalies = useMissionAnomalies(supabase, `client-anomalies-${id}`);
-  // Facture de la course : Stripe (paiement à la commande / à 30 jours) ou facture mensuelle du compte.
+  // Facture de la course : Stripe (paiement à la commande / à 30 jours) ou facture du compte.
   const [invoice, setInvoice] = useState<{ number: string | null; status: string; url: string | null; pdf: string | null } | null>(null);
   const [monthlyInvoice, setMonthlyInvoice] = useState<{ id: string; status: string } | null>(null);
 
@@ -484,7 +484,7 @@ export default function DeliveryDetailsPage() {
                 )}
                 {isDelivered && !invoice?.url && monthlyInvoice && (
                   <a href={`/dashboard/factures/${monthlyInvoice.id}`} className="mt-3 flex h-10 items-center justify-center gap-2 rounded-xl bg-accent text-sm font-bold text-white hover:bg-accent-dark hover:text-white">
-                    <FileText size={15} /> Voir la facture du mois
+                    <FileText size={15} /> Voir la facture
                   </a>
                 )}
                 {isDelivered && !invoice?.url && !monthlyInvoice && (

@@ -210,7 +210,7 @@ export default function RegisterForm() {
               </div>
               <div>
                 <h3 className="font-bold text-ink">Facturation & Reporting Centralisés</h3>
-                <p className="mt-1 text-sm text-muted">Accès extranet complet, suivi budgétaire mensuel et preuve électronique de livraison.</p>
+                <p className="mt-1 text-sm text-muted">Suivi de chaque course en ligne, factures à 30 jours et preuve de livraison.</p>
               </div>
             </div>
           </div>

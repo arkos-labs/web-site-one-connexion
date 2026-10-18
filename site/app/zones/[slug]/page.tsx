@@ -242,7 +242,7 @@ export default async function ZonePage({ params }: Props) {
                     <div className="text-[13px] font-semibold text-white">
                       Tarif {zone.pricingZone === "standard" ? "standard" : "grande couronne"}
                     </div>
-                    <div className="text-[11px] text-white/40">Facturation à la course ou mensuelle</div>
+                    <div className="text-[11px] text-white/40">Paiement à la course ou à 30 jours</div>
                   </div>
                 </div>
               </div>

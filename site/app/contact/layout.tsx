@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import PageSchema from "@/components/PageSchema";
 
 export const metadata: Metadata = {
-  title: "Contact",
+  title: "Contact coursier Paris & Île-de-France",
   description:
     "Contactez One Connexion pour vos livraisons urgentes à Paris et en Île-de-France. Prix affiché avant commande, réponse rapide. Téléphone, email ou formulaire.",
   alternates: { canonical: "/contact" },

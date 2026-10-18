@@ -24,12 +24,13 @@ const STATIC_PATHS = [
   "/zones/paris",
   "/zones/la-defense",
   "/zones/petite-couronne",
+  "/zones/grande-couronne",
   "/mentions-legales",
   "/cgv",
   "/politique-de-confidentialite",
 ];
 
-const STATIC_ZONE_PAGES = new Set(["paris", "la-defense", "petite-couronne"]);
+const STATIC_ZONE_PAGES = new Set(["paris", "la-defense", "petite-couronne", "grande-couronne"]);
 
 function sourceFiles(path: string): string[] {
   if (path === "") return ["app/page.tsx"];

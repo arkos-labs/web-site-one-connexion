@@ -151,7 +151,7 @@ export const plisConfidentiels: Service = {
     {
       question: "Peut-on ouvrir un compte pour l’ensemble du cabinet ?",
       answer:
-        "Oui. Le compte entreprise regroupe les courses de tous les collaborateurs, centralise la facturation sur une échéance mensuelle et permet l’imputation par dossier.",
+        "Oui. Le compte entreprise regroupe les courses de tous les collaborateurs, permet de régler les factures sous 30 jours.",
     },
   ],
 };

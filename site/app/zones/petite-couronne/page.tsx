@@ -14,7 +14,7 @@ const slugOf = (v: string) =>
 import { MapPin } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Coursier Paris banlieue (92, 93, 94) - Express 45 min",
+  title: "Coursier petite couronne 92, 93, 94",
   description:
     "Coursier banlieue Paris en petite couronne : Hauts-de-Seine (92), Seine-Saint-Denis (93), Val-de-Marne (94). Coursier moto dédié, enlèvement moins de 45 minutes, du lundi au samedi.",
   alternates: { canonical: "/zones/petite-couronne" },
@@ -274,7 +274,7 @@ export default function ZonePetiteCouronne() {
             <Link href="/zones/la-defense" className="rounded-lg border border-line bg-paper-card px-4 py-2.5 text-[13.5px] font-medium hover:border-ink">
               La Défense & Hauts-de-Seine (92)
             </Link>
-            <Link href="/flotte" className="rounded-lg border border-line bg-paper-card px-4 py-2.5 text-[13.5px] font-medium hover:border-ink">
+            <Link href="/zones/grande-couronne" className="rounded-lg border border-line bg-paper-card px-4 py-2.5 text-[13.5px] font-medium hover:border-ink">
               Grande couronne (77, 78, 91, 95) →
             </Link>
           </div>

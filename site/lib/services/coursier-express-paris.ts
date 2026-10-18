@@ -17,7 +17,7 @@ export const coursierExpressParis: Service = {
   },
 
   seo: {
-    title: "Coursier express Paris - prix dès 31,50 € TTC, livraison en 1 h 30",
+    title: "Coursier express Paris - dès 31,50 € TTC",
     description:
       "Coursier express à Paris : enlèvement en moins de 45 minutes, course dédiée en moto ou scooter, suivi en ligne, du lundi au samedi. Prix coursier express Paris : dès 31,50 € TTC en urgent (1 h 30), 42 € TTC en formule Super (1 h).",
     keywords: [

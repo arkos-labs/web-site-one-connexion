@@ -11,7 +11,7 @@ import { SERVICES } from "@/lib/services";
 import { SITE_URL } from "@/lib/site-content";
 
 export const metadata: Metadata = {
-  title: { absolute: "Service coursier Paris - Prestations B2B & solutions sur-mesure" },
+  title: { absolute: "Prestations coursier B2B à Paris et en Île-de-France" },
   description:
     "Service coursier Paris B2B : plis confidentiels, transport médical, livraison e-commerce, tournées régulières. Course dédiée, traçabilité GPS, suivi en ligne.",
   alternates: { canonical: "/services" },

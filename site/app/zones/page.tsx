@@ -6,14 +6,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import JsonLd from "@/components/JsonLd";
 import { SITE_URL } from "@/lib/site-content";
-import { getIndexedZonesByDept } from "@/lib/zones/data";
-
-// Départements dont chaque commune a sa page : liens directs pour que Google les découvre depuis le hub.
-const CITY_GROUPS = [
-  { dept: "92", label: "Hauts-de-Seine (92)" },
-  { dept: "93", label: "Seine-Saint-Denis (93)" },
-  { dept: "94", label: "Val-de-Marne (94)" },
-] as const;
+import DeptCards from "@/components/sections/DeptCards";
 
 export const metadata: Metadata = {
   title: { absolute: "Zones de livraison express Paris & Île-de-France" },
@@ -68,7 +61,7 @@ const ZONES = [
     dept: "77",
     name: "Seine-et-Marne",
     desc: "Melun, Marne-la-Vallée, Meaux - dès 78 € TTC.",
-    href: "/flotte",
+    href: "/zones/grande-couronne",
     tag: "Dès 78 € TTC",
     tagColor: "bg-amber-100 text-amber-700",
   },
@@ -76,7 +69,7 @@ const ZONES = [
     dept: "78",
     name: "Yvelines",
     desc: "Versailles, Saint-Quentin-en-Yvelines - dès 78 € TTC.",
-    href: "/flotte",
+    href: "/zones/grande-couronne",
     tag: "Dès 78 € TTC",
     tagColor: "bg-amber-100 text-amber-700",
   },
@@ -84,7 +77,7 @@ const ZONES = [
     dept: "91",
     name: "Essonne",
     desc: "Évry-Courcouronnes, Massy, Palaiseau - dès 78 € TTC.",
-    href: "/flotte",
+    href: "/zones/grande-couronne",
     tag: "Dès 78 € TTC",
     tagColor: "bg-amber-100 text-amber-700",
   },
@@ -92,7 +85,7 @@ const ZONES = [
     dept: "95",
     name: "Val-d'Oise",
     desc: "Cergy-Pontoise, Argenteuil, Roissy-CDG - dès 78 € TTC.",
-    href: "/flotte",
+    href: "/zones/grande-couronne",
     tag: "Dès 78 € TTC",
     tagColor: "bg-amber-100 text-amber-700",
   },
@@ -154,24 +147,9 @@ export default function ZonesPage() {
           Villes desservies
         </div>
         <h2 className="mb-10 max-w-[24ch] text-balance text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-          Un coursier dédié dans chaque commune de la petite couronne.
+          Une page pour chaque ville, petite et grande couronne.
         </h2>
-        <div className="grid gap-10 lg:grid-cols-3">
-          {CITY_GROUPS.map((g) => (
-            <div key={g.dept}>
-              <h3 className="mb-4 border-b border-line pb-3 font-mono text-[11px] font-semibold tracking-[0.14em] text-ink uppercase">{g.label}</h3>
-              <ul className="flex flex-wrap gap-x-4 gap-y-2.5">
-                {getIndexedZonesByDept(g.dept).map((z) => (
-                  <li key={z.slug}>
-                    <Link href={`/zones/${z.slug}`} className="text-[14px] text-muted underline-offset-4 transition-colors hover:text-ink hover:underline">
-                      {z.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
+        <DeptCards depts={["92", "93", "94", "77", "78", "91", "95"]} />
       </section>
     </>
   );
