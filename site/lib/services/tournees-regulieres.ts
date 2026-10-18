@@ -16,7 +16,7 @@ export const tourneesRegulieres: Service = {
   h1: "Vos navettes inter-sites et tournées régulières.",
   intro: "Une organisation logistique sur-mesure pour vos flux récurrents, assurée par un dispatcheur dédié et des coursiers familiers de vos exigences.",
   stats: [
-    { value: "100%", label: "Respect des horaires" },
+    { value: "Fixe", label: "Même créneau chaque semaine" },
     { value: "0", label: "Gestion RH à votre charge" },
     { value: "6j/7", label: "Lun–sam, 9h–19h" },
   ],

@@ -17,8 +17,8 @@ export const transportEvenementiel: Service = {
   intro: "Défiez les imprévus. Qu'il s'agisse de la Fashion Week, d'un séminaire ou d'une opération de relations publiques, nous assurons des livraisons VIP au cordeau.",
   stats: [
     { value: "Sur devis", label: "Astreinte hors horaires" },
-    { value: "100%", label: "Discrétion VIP" },
-    { value: "ZTL", label: "Accès hyper-centre" },
+    { value: "< 45 min", label: "Enlèvement après confirmation" },
+    { value: "Dédiée", label: "Course sans regroupement" },
   ],
   context: {
     title: "L'urgence de la dernière minute parfaitement maîtrisée",
@@ -39,7 +39,7 @@ export const transportEvenementiel: Service = {
     "Traitement minutieux des objets fragiles (prototypes, maquettes)",
   ],
   useCases: [
-    { title: "Opération RP & Influence", body: "Envoi simultané de 50 invitations VIP personnalisées ou de press kits sur tout Paris dans un créneau strict de 2 heures." },
+    { title: "Opération RP", body: "Un press kit ou une invitation à remettre en main propre à une rédaction parisienne avant son bouclage : le coursier part dès la confirmation et livre sans détour." },
     { title: "Fashion Week", body: "Récupération d'un accessoire manquant dans un atelier pour livraison express en backstage quelques minutes avant le défilé." },
     { title: "Salon professionnel", body: "Documentation ou échantillons épuisés sur un stand de Paris Expo Porte de Versailles : le coursier les récupère au bureau et les livre au stand en cours de journée." },
   ],
