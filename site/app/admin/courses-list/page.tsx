@@ -3,10 +3,14 @@
 import React, { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { formatEur, htOf } from "@/lib/price-display";
 import { AdminPage } from "@/components/dashboard/ui";
+import { formatEur, htOf } from "@/lib/price-display";
 import { useQueryParam } from "@/lib/use-query-state";
+import { formatEur, htOf } from "@/lib/price-display";
 import { Check, Clock, Search, Truck, X, Zap, Plus } from "lucide-react";
 import { CreateOrderModal } from "@/components/admin/CreateOrderModal";
+import { formatEur, htOf } from "@/lib/price-display";
 
 const STATUS_DISPLAY: Record<string, string> = {
   en_attente: "En attente",

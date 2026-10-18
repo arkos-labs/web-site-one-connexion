@@ -3,10 +3,14 @@
 import React, { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import { formatEur, htOf } from "@/lib/price-display";
 import { AdminPage } from "@/components/dashboard/ui";
+import { formatEur, htOf } from "@/lib/price-display";
 import { useQueryParam } from "@/lib/use-query-state";
+import { formatEur, htOf } from "@/lib/price-display";
 import { Briefcase, Building2, Calendar, Clock, Euro, Search, ShoppingBag, Users, Plus } from "lucide-react";
 import { CreateClientModal } from "@/components/admin/CreateClientModal";
+import { formatEur, htOf } from "@/lib/price-display";
 
 type ClientRow = {
   id: string;

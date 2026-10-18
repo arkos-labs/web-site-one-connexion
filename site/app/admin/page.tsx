@@ -3,7 +3,9 @@
 import React, { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import { formatEur, htOf } from "@/lib/price-display";
 import { AdminPage } from "@/components/dashboard/ui";
+import { formatEur, htOf } from "@/lib/price-display";
 import { AlertTriangle, ArrowRight, Clock, Euro, Package, Plus, Truck, Users } from "lucide-react";
 
 type PendingItem = {
