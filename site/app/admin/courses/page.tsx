@@ -162,7 +162,7 @@ function AdminCoursesPageInner() {
         .order("created_at", { ascending: false }),
       supabase
         .from("navettes")
-        .select("id, name, pickup_address, dropoff_address, status, driver_id, last_dispatch_date, days_of_week, created_at, user_id, stops, point_progress, driver_accepted_at, delivery_recipient, delivery_department, delivery_comment, delivery_photo_url, picked_up_at, delivered_at")
+        .select("id, name, pickup_address, dropoff_address, status, driver_id, last_dispatch_date, days_of_week, created_at, user_id, stops, point_progress, estimated_price, driver_accepted_at, delivery_recipient, delivery_department, delivery_comment, delivery_photo_url, picked_up_at, delivered_at")
         .eq("status", "active")
         .contains("days_of_week", [todayId()]),
       supabase.from("profiles").select("id, full_name").eq("role", "client").order("full_name"),
@@ -281,7 +281,7 @@ function AdminCoursesPageInner() {
         status: confirmedToday 
           ? (completedToday ? "livree" : "assigned") 
           : "en_attente",
-        price: null,
+        price: n.estimated_price != null && n.estimated_price !== "" ? Number(n.estimated_price) : null,
         createdAt: n.created_at,
         driverAcceptedAt: n.driver_accepted_at,
         driverId: confirmedToday ? n.driver_id : null,
