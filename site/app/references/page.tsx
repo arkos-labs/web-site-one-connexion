@@ -175,7 +175,7 @@ export default function ReferencesPage() {
               { val: "6j/7", label: "du lundi au samedi, 9h–19h" },
               { val: "< 45 min", label: "enlèvement après confirmation" },
               { val: "10 ans+", label: "d’expérience du coursier B2B" },
-              { val: "1", label: "interlocuteur unique" },
+              { val: "100%", label: "Marchandise assurée" },
             ].map((item) => (
               <div key={item.label} className="flex flex-col gap-2 rounded-2xl border border-line bg-white p-6 shadow-sm">
                 <span className="text-[clamp(22px,2.5vw,32px)] font-bold text-accent">{item.val}</span>
