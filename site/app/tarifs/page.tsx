@@ -18,7 +18,7 @@ const euro = (n: number) =>
 export const metadata: Metadata = {
   title: "Prix coursier Paris : dès 21 € TTC",
   description:
-    "Tarif coursier Paris et Île-de-France : dès 21 € TTC en 3 h, 31,50 € en urgent, 42 € en formule Super 1 h. Prix par zone : Paris, petite couronne, banlieue. Compte entreprise.",
+    "Tarifs coursier : dès 21€ à Paris, 42€ petite couronne. Voir la grille tarifaire par zone, prix affiché avant de commander. Compte entreprise 30j.",
   alternates: { canonical: "/tarifs" },
   openGraph: {
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION - Coursier B2B Paris & Île-de-France" }],

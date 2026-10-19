@@ -16,7 +16,7 @@ import { MapPin } from "lucide-react";
 export const metadata: Metadata = {
   title: "Coursier petite couronne 92, 93, 94",
   description:
-    "Coursier petite couronne 92, 93, 94 : livraison 1h/jour même en banlieue. Tarif 42 euros TTC. Enlèvement moins de 45 min, suivi GPS, remise certifiée. Service B2B dédié Île-de-France.",
+    "Livraison express banlieue : commander en petite couronne (92, 93, 94) dès 42€ TTC. Enlèvement < 45 min, course dédiée, suivi GPS, remise certifiée.",
   alternates: { canonical: "/zones/petite-couronne" },
   openGraph: {
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION - Coursier B2B Paris & Île-de-France" }],

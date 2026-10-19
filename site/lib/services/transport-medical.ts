@@ -22,7 +22,7 @@ export const transportMedical: Service = {
   seo: {
     title: "Coursier médical Paris - transport laboratoire",
     description:
-      "Coursier médical à Paris : transport de laboratoire, prélèvements et échantillons pour cliniques et cabinets d’Île-de-France. Course dédiée, contenants isothermes, du lundi au samedi.",
+      "Coursier médical : transport prélèvements et échantillons pour laboratoires. Enlèvement < 45 min, contenants isothermes, remise directe, dès 21€.",
     keywords: [
       "coursier médical",
       "transport laboratoire",

@@ -13,7 +13,7 @@ import { Clock, MapPin, Zap, Shield } from "lucide-react";
 export const metadata: Metadata = {
   title: { absolute: "Coursier Paris : livraison express dès 21 € TTC" },
   description:
-    "Coursier Paris 24h/24 : 21 € dès la 1ère course, enlèvement < 45 min. Livraison express en moto dans les 20 arrondissements. Tarifs fixes, suivi GPS, remise horodatée.",
+    "Coursier Paris : commander une livraison express dès 21€, enlèvement < 45 min. 1h, 3h ou normal. Tous les arrondissements, suivi GPS, remise horodatée.",
   alternates: { canonical: "/zones/paris" },
   openGraph: {
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION - Coursier B2B Paris & Île-de-France" }],
