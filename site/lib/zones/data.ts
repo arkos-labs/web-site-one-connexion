@@ -561,8 +561,7 @@ const PETITE_COURONNE = new Set(["92", "93", "94", "77", "78", "91", "95"]); // 
  * (18/10/2026) : la grande couronne (77, 78, 91, 95), avec son contenu et 5 questions de FAQ.
  */
 export function isZoneIndexed(zone: Zone): boolean {
-  if (zone.category === "paris") return true;
-  return Boolean(zone.localGuide) && PETITE_COURONNE.has(zone.dept.slice(0, 2));
+  return true; // Index toutes les zones - elles ont toutes du contenu substantiel
 }
 
 export const INDEXED_ZONE_SLUGS = ZONES.filter(isZoneIndexed).map((z) => z.slug);
