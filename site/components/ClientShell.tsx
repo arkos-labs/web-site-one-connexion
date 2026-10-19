@@ -13,6 +13,10 @@ export default function ClientShell({ children }: { children: React.ReactNode })
   const pathname = usePathname();
 
   useEffect(() => {
+    // Disable Lenis on touch devices (mobile) to improve INP/TBT
+    const isTouch = window.matchMedia("(hover: none)").matches;
+    if (isTouch) return;
+
     const lenis = new Lenis({
       lerp: 0.1,
       duration: 1.2,

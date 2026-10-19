@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>ONE CONNEXION — Plaquette commerciale</title>
+<style>
+  @page { size: A4; margin: 0; }
+  :root { --ink:#0E0F10; --orange:#ed5518; --paper:#F4F2EE; --muted:#5d6063; --line:#dcd8d0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { font-family: "Segoe UI", Arial, Helvetica, sans-serif; color: var(--ink); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .page { width: 210mm; height: 297mm; position: relative; overflow: hidden; page-break-after: always; background: #fff; }
+  .page:last-child { page-break-after: auto; }
+
+  /* ---------- PAGE 1 ---------- */
+  .hero { background: var(--ink); color: var(--paper); height: 126mm; padding: 11mm 16mm 0; position: relative; }
+  .hero .bar { position:absolute; left:0; top:0; width:100%; height:3mm; background: var(--orange); }
+  .logobox { width: 64mm; height: 20mm; overflow: hidden; position: relative; z-index: 2; } .logobox img { width: 78mm; display:block; margin-left: -9.5mm; margin-top: -27.6mm; }
+  .hero .kicker { font-size: 8.5pt; letter-spacing: .22em; text-transform: uppercase; color: var(--orange); margin-top: 7mm; font-weight:600; }
+  .hero h1 { position:relative; z-index:2; font-size: 28pt; line-height: 1.08; font-weight: 800; letter-spacing: -.02em; margin-top: 4mm; max-width: 118mm; }
+  .hero h1 em { font-style: normal; color: var(--orange); }
+  .hero p.lead { font-size: 10pt; line-height: 1.5; color: rgba(244,242,238,.72); margin-top: 4mm; max-width: 108mm; position:relative; z-index:2; }
+  .hero .photo { position:absolute; right:0; top:3mm; width: 78mm; height: 115mm; background: url("fleet-moto.jpg") center/cover; }
+  .hero .photo::after { content:""; position:absolute; inset:0; background: linear-gradient(90deg, var(--ink) 0%, rgba(14,15,16,0) 45%); }
+
+  .stats { display:flex; background: var(--orange); color:#fff; }
+  .stats div { flex:1; padding: 4.5mm 6mm; border-right: 1px solid rgba(255,255,255,.3); }
+  .stats div:last-child { border-right:0; }
+  .stats b { display:block; white-space:nowrap; font-size: 14.5pt; font-weight:800; letter-spacing:-.01em; }
+  .stats span { font-size: 8.5pt; opacity:.92; }
+
+  .body1 { padding: 8mm 16mm 0; }
+  h2 { font-size: 8.5pt; letter-spacing:.2em; text-transform:uppercase; color: var(--orange); font-weight:700; margin-bottom: 2.5mm; }
+  h3.big { font-size: 17pt; line-height:1.15; letter-spacing:-.015em; margin-bottom: 4mm; max-width: 150mm; }
+  .grid { display:grid; grid-template-columns: 1fr 1fr; gap: 3.5mm 5mm; }
+  .card { border:1px solid var(--line); border-left: 3px solid var(--orange); border-radius: 2px; padding: 3mm 4mm; background: #fff; }
+  .card h4 { font-size: 10.5pt; margin-bottom: 1.4mm; }
+  .card p { font-size: 8.4pt; line-height: 1.4; color: var(--muted); }
+  .card .note { display:inline-block; margin-top: 2mm; font-size: 7.8pt; font-weight:700; color: var(--orange); letter-spacing:.04em; }
+
+  .foot1 { position:absolute; left:0; bottom:0; width:100%; background: var(--ink); color: rgba(244,242,238,.55); font-size: 7.8pt; padding: 4.5mm 16mm; display:flex; justify-content:space-between; }
+  .foot1 b { color: var(--paper); font-weight:600; }
+
+  /* ---------- PAGE 2 ---------- */
+  .top2 { background: var(--ink); color: var(--paper); padding: 11mm 16mm 9mm; position:relative; }
+  .top2 .bar { position:absolute; left:0; top:0; width:100%; height:3mm; background: var(--orange); }
+  .top2 h3 { font-size: 20pt; letter-spacing:-.02em; margin-top: 2mm; }
+  .top2 h3 em { font-style:normal; color: var(--orange); }
+  .top2 p { font-size: 9.5pt; color: rgba(244,242,238,.65); margin-top: 2mm; }
+
+  .body2 { padding: 9mm 16mm 0; }
+  table { width:100%; border-collapse: collapse; font-size: 9.5pt; }
+  th { text-align:left; background: var(--paper); font-size: 8pt; letter-spacing:.1em; text-transform:uppercase; color: var(--muted); padding: 3mm 4mm; border-bottom: 2px solid var(--ink); }
+  th.r, td.r { text-align:right; }
+  td { padding: 3.2mm 4mm; border-bottom: 1px solid var(--line); }
+  td.zone b { display:block; font-size: 10pt; }
+  td.zone span { font-size: 8pt; color: var(--muted); }
+  td.r { font-variant-numeric: tabular-nums; font-weight:700; }
+  tr.hl td { background: #fff4ee; }
+  tr.hl td.r { color: var(--orange); }
+  .tnote { font-size: 8pt; color: var(--muted); margin-top: 2.5mm; }
+
+  .two { display:grid; grid-template-columns: 1fr 1fr; gap: 6mm; margin-top: 8mm; }
+  .box { border-radius:2px; padding: 5mm 5.5mm; }
+  .box.dark { background: var(--ink); color: var(--paper); }
+  .box.light { background: var(--paper); }
+  .box h4 { font-size: 11pt; margin-bottom: 2.5mm; }
+  .box.dark h4 { color: var(--orange); }
+  .box ul { list-style:none; }
+  .box li { font-size: 8.9pt; line-height:1.4; padding: 1.1mm 0 1.1mm 4.5mm; position:relative; }
+  .box li::before { content:""; position:absolute; left:0; top: 2.5mm; width: 2mm; height:2mm; background: var(--orange); }
+  .box.dark li { color: rgba(244,242,238,.82); }
+
+  .steps { display:flex; gap: 4mm; margin-top: 8mm; }
+  .step { flex:1; border-top: 2px solid var(--orange); padding-top: 3mm; }
+  .step b { font-size: 16pt; color: var(--orange); }
+  .step h5 { font-size: 10pt; margin: 1mm 0 1mm; }
+  .step p { font-size: 8.4pt; color: var(--muted); line-height:1.4; }
+
+  .cta { position:absolute; left:0; bottom:0; width:100%; background: var(--orange); color:#fff; padding: 9mm 16mm 12mm; display:flex; justify-content: space-between; align-items:flex-end; }
+  .cta h3 { font-size: 17pt; letter-spacing:-.015em; line-height:1.15; }
+  .cta .tel { font-size: 24pt; font-weight:800; letter-spacing:-.02em; }
+  .cta .l { font-size: 9.5pt; line-height:1.7; text-align:right; }
+  .cta small { display:block; font-size: 7.4pt; opacity:.85; margin-top: 5mm; font-weight:400; line-height:1.4; max-width: 105mm; }
+</style>
+</head>
+<body>
+
+<!-- ============ PAGE 1 ============ -->
+<section class="page">
+  <div class="hero">
+    <div class="bar"></div>
+    <div class="logobox"><img src="logo-white.png" alt="ONE CONNEXION"></div>
+    <div class="kicker">Coursier B2B · Paris &amp; Île-de-France</div>
+    <h1>Vos livraisons urgentes, <em>tenues à l’heure.</em></h1>
+    <p class="lead">Scooters et motos routières, coursiers vérifiés, course dédiée de A à B. Cabinets juridiques, laboratoires et e-commerçants nous confient leurs envois sensibles : prix affiché avant de commander, preuve de livraison horodatée.</p>
+    <div class="photo"></div>
+  </div>
+  <div class="stats">
+    <div><b>&lt; 45 min</b><span>Enlèvement</span></div>
+    <div><b>7j/7</b><span>De 7h à 23h</span></div>
+    <div><b>Dès 17,50 € HT</b><span>Course dans Paris</span></div>
+    <div><b>1 coursier</b><span>Dédié, sans regroupement</span></div>
+  </div>
+
+  <div class="body1">
+    <h2>Nos prestations</h2>
+    <h3 class="big">Une réponse adaptée à chaque type d’envoi.</h3>
+    <div class="grid">
+      <div class="card"><h4>Coursier express Paris</h4><p>Enlèvement en moins de 45 minutes, course dédiée en deux-roues, suivi en ligne et preuve de livraison horodatée.</p><span class="note">Super urgent 1 h dès 35 € HT</span></div>
+      <div class="card"><h4>Coursier moto &amp; scooter</h4><p>Scooters et motos routières équipés pour un usage professionnel, top-case verrouillé et étanche, coursiers vérifiés.</p><span class="note">Course dès 17,50 € HT</span></div>
+      <div class="card"><h4>Plis confidentiels</h4><p>Remise contre signature, chaîne de responsabilité documentée, coursiers dédiés aux cabinets et études.</p><span class="note">Preuve de dépôt horodatée</span></div>
+      <div class="card"><h4>Transport médical</h4><p>Prélèvements, pièces critiques et matériel technique. Contenants isothermes et relevés de température à la demande.</p><span class="note">Course dédiée, sans regroupement</span></div>
+      <div class="card"><h4>Livraison e-commerce</h4><p>Collecte en boutique ou en entrepôt, livraison dans la journée sur Paris et première couronne. Créneaux au choix du destinataire.</p><span class="note">Tournées récurrentes possibles</span></div>
+      <div class="card"><h4>Tournées régulières &amp; événementiel</h4><p>Navettes inter-sites, collectes régulières, prototypes, invitations VIP et matériel avec une discrétion absolue.</p><span class="note">Sur-mesure</span></div>
+    </div>
+  </div>
+
+  <div class="foot1"><span><b>ONE CONNEXION</b> · SAS · SIRET 101 517 100 00018</span><span>www.oneconnexion.com</span></div>
+</section>
+
+<!-- ============ PAGE 2 ============ -->
+<section class="page">
+  <div class="top2">
+    <div class="bar"></div>
+    <h2>Tarifs</h2>
+    <h3>Un prix clair, <em>affiché avant de commander.</em></h3>
+    <p>Tarif par course, selon la zone la plus éloignée du trajet et le délai choisi.</p>
+  </div>
+
+  <div class="body2">
+    <table>
+      <thead><tr><th>Zone</th><th class="r">Normal · 3 h</th><th class="r">Urgent · 1 h 30</th><th class="r">Super urgent · 1 h</th></tr></thead>
+      <tbody>
+        <tr class="hl"><td class="zone"><b>Paris intramuros</b><span>75 — 20 arrondissements</span></td><td class="r">17,50 € HT</td><td class="r">26,25 € HT</td><td class="r">35 € HT</td></tr>
+        <tr><td class="zone"><b>Petite couronne</b><span>92 · 93 · 94</span></td><td class="r">35 € HT</td><td class="r">52,50 € HT</td><td class="r">70 € HT</td></tr>
+        <tr><td class="zone"><b>Grande couronne</b><span>77 · 78 · 91 · 95</span></td><td class="r">49 € HT</td><td class="r">73,50 € HT</td><td class="r">98 € HT</td></tr>
+      </tbody>
+    </table>
+    <p class="tnote">Tarifs HT par course, TVA 20 % en sus. Compte entreprise : tarif dégressif selon le volume mensuel.</p>
+
+    <div class="two">
+      <div class="box dark">
+        <h4>Course à la demande</h4>
+        <ul>
+          <li>Prix instantané, affiché avant de commander</li>
+          <li>Enlèvement en moins de 45 min</li>
+          <li>Suivi en ligne de chaque course</li>
+          <li>Preuve de livraison horodatée</li>
+          <li>Paiement à la course</li>
+        </ul>
+      </div>
+      <div class="box light">
+        <h4>Compte entreprise</h4>
+        <ul>
+          <li>Tarif dégressif selon le volume</li>
+          <li>Imputation par dossier ou service</li>
+          <li>Interlocuteur dispatch dédié</li>
+          <li>Rapport mensuel des courses</li>
+          <li>Facturation mensuelle, paiement à 30 jours</li>
+          <li>Ouverture de compte en 24 h</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="steps">
+      <div class="step"><b>01</b><h5>Commandez</h5><p>Saisissez l’adresse et le délai : le prix s’affiche aussitôt.</p></div>
+      <div class="step"><b>02</b><h5>Enlèvement</h5><p>Un coursier dédié prend en charge votre envoi en moins de 45 min.</p></div>
+      <div class="step"><b>03</b><h5>Livraison</h5><p>Suivi en ligne et preuve de livraison horodatée.</p></div>
+    </div>
+  </div>
+
+  <div class="cta">
+    <div>
+      <h3>Une course à organiser ?<br>Commandez en ligne ou appelez-nous.</h3>
+      <small>ONE CONNEXION — SAS au capital de 3 000 € — 5 Square Nungesser, 94160 Saint-Mandé — SIREN 101 517 100 — TVA FR24 101 517 100</small>
+    </div>
+    <div class="l">
+      <div class="tel">06 66 02 67 07</div>
+      contact@oneconnexion.com<br>
+      www.oneconnexion.com
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

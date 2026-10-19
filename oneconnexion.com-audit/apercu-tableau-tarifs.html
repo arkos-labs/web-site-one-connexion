@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Aperçu – Grille tarifaire One Connexion</title>
+<style>
+:root{--ink:#0E0F10;--accent:#ed5518;--paper:#F4F2EE;--line:#DFDCD6;--muted:#4A4845;--label:#8C8882}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1100px;margin:0 auto;padding:72px clamp(20px,4vw,28px) 80px}
+.mono{font:11px ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--label)}
+h2{font-size:clamp(28px,3.4vw,40px);line-height:1.1;letter-spacing:-.03em;margin:10px 0 14px;font-weight:700}
+.lead{max-width:56ch;color:var(--muted);font-size:16px;line-height:1.65;margin:0 0 40px}
+table{width:100%;border-collapse:collapse;border-top:2px solid var(--ink)}
+thead th{padding:16px 0 14px;text-align:right;font-weight:400}
+thead th:first-child{text-align:left}
+thead th span{display:block;font-size:15px;font-weight:700;color:var(--ink);letter-spacing:-.01em;text-transform:none;font-family:inherit}
+tbody th,tbody td{padding:30px 0;border-top:1px solid var(--line);vertical-align:baseline}
+tbody tr:first-child th,tbody tr:first-child td{border-top:1px solid var(--ink)}
+tbody th{text-align:left;font-weight:400}
+.zn{display:block;font-size:20px;font-weight:700;letter-spacing:-.02em}
+.zd{display:block;margin-top:4px;font-size:14px;color:var(--muted)}
+td{text-align:right;font-variant-numeric:tabular-nums}
+.p{font-size:clamp(24px,3vw,34px);font-weight:700;letter-spacing:-.04em}
+.p i{font-style:normal;font-size:.6em;font-weight:600;margin-left:3px}
+td.s .p{box-shadow:inset 0 -3px 0 var(--accent)}
+.note{margin-top:20px;display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;font-size:13.5px;color:var(--muted);line-height:1.6}
+.note p{margin:0;max-width:62ch}
+a.cta{display:inline-block;margin-top:36px;background:var(--ink);color:#fff;padding:14px 26px;border-radius:4px;font-weight:700;font-size:14px;text-decoration:none}
+a.cta:hover{background:var(--accent)}
+@media(max-width:640px){
+ thead th:not(:first-child) span{font-size:12.5px}
+ .zn{font-size:16px}.zd{font-size:12.5px}
+ tbody th,tbody td{padding:22px 0}
+ thead th:not(:first-child),tbody td{padding-left:14px}
+ .p{font-size:19px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="mono">Tarifs par zone</div>
+  <h2>Combien coûte une course ?</h2>
+  <p class="lead">Le prix dépend de la zone et du délai. Quand le trajet traverse deux zones, on applique la plus éloignée : Paris vers Nanterre est facturé au tarif petite couronne.</p>
+
+  <table>
+    <caption style="position:absolute;left:-9999px">Tarifs HT d'une course par zone et par délai</caption>
+    <thead>
+      <tr class="mono">
+        <th scope="col">Zone</th>
+        <th scope="col"><span>Normal</span>3 h</th>
+        <th scope="col"><span>Urgent</span>1 h 30</th>
+        <th scope="col"><span>Super urgent</span>1 h</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row"><span class="zn">Paris</span><span class="zd">Les 20 arrondissements</span></th>
+        <td><span class="p">17,50<i>€</i></span></td>
+        <td><span class="p">26,25<i>€</i></span></td>
+        <td class="s"><span class="p">35<i>€</i></span></td>
+      </tr>
+      <tr>
+        <th scope="row"><span class="zn">Petite couronne</span><span class="zd">Hauts-de-Seine, Seine-Saint-Denis, Val-de-Marne</span></th>
+        <td><span class="p">35<i>€</i></span></td>
+        <td><span class="p">52,50<i>€</i></span></td>
+        <td class="s"><span class="p">70<i>€</i></span></td>
+      </tr>
+      <tr>
+        <th scope="row"><span class="zn">Grande couronne</span><span class="zd">Seine-et-Marne, Yvelines, Essonne, Val-d'Oise</span></th>
+        <td><span class="p">49<i>€</i></span></td>
+        <td><span class="p">73,50<i>€</i></span></td>
+        <td class="s"><span class="p">98<i>€</i></span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="note">
+    <p>Tarifs HT par course, TVA 20 % en sus. Le prix exact s'affiche avant de valider votre commande. Compte entreprise : tarif dégressif selon le volume mensuel.</p>
+  </div>
+  <a class="cta" href="#">Commander une course</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,657 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ONE CONNEXION — Coursier B2B Paris &amp; Île-de-France · Plaquette 2026</title>
+<meta name="description" content="Coursier B2B en deux-roues à Paris et en Île-de-France : enlèvement en moins de 45 minutes, prix affiché avant de commander, preuve de livraison horodatée.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Barlow+Condensed:wght@600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* =====================================================================
+   ONE CONNEXION — Plaquette commerciale 2026
+   Charte : ink #0E0F10 · papier #F4F2EE · accent orange #ed5518
+   Polices (identiques au site) : Archivo · Barlow Condensed · IBM Plex Mono
+   Structure : Hero → Constat → Offre → Preuves → Tarifs → Zones → Contact
+   ===================================================================== */
+
+/* ---------- 1. Tokens ---------- */
+:root{
+  --ink:#0E0F10; --ink-2:#17181A; --ink-3:#222427;
+  --paper:#F4F2EE; --card:#FBFAF8; --line:#DFDCD6;
+  --muted:#4A4845; --label:#8C8882;
+  --accent:#ed5518; --accent-dark:#c94410; --accent-soft:#fff1ea;
+  --white:#fff;
+
+  --f-body:"Archivo","Segoe UI",Arial,sans-serif;
+  --f-display:"Barlow Condensed","Archivo Narrow","Arial Narrow",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+
+  --r:6px; --r-lg:14px;
+  --gutter:clamp(20px,5vw,72px);
+  --max:1240px;
+  --shadow-soft:0 1px 2px rgba(14,15,16,.04),0 12px 32px -12px rgba(14,15,16,.16);
+  --shadow-deep:0 30px 60px -20px rgba(0,0,0,.55);
+}
+
+/* ---------- 2. Base ---------- */
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;font-family:var(--f-body);color:var(--ink);background:var(--paper);line-height:1.55;-webkit-font-smoothing:antialiased;
+  -webkit-print-color-adjust:exact;print-color-adjust:exact}
+img,svg{display:block;max-width:100%}
+a{color:inherit}
+h1,h2,h3,h4,p,ul{margin:0}
+ul{padding:0;list-style:none}
+.wrap{width:100%;max-width:calc(var(--max) + var(--gutter)*2);margin:0 auto;padding:0 var(--gutter)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+.eyebrow{font:500 12px/1 var(--f-mono);letter-spacing:.22em;text-transform:uppercase;color:var(--accent);display:flex;align-items:center;gap:12px}
+.eyebrow::before{content:"";width:28px;height:2px;background:currentColor}
+.display{font-family:var(--f-display);font-weight:800;text-transform:uppercase;letter-spacing:-.005em;line-height:.92}
+.h2{font-family:var(--f-display);font-weight:800;text-transform:uppercase;line-height:.95;letter-spacing:-.005em;font-size:clamp(40px,6.2vw,84px)}
+.h2 em,.display em{font-style:normal;color:var(--accent)}
+.lead{font-size:clamp(16px,1.5vw,19px);line-height:1.6;color:var(--muted);max-width:56ch}
+.on-dark .lead{color:rgba(244,242,238,.68)}
+
+.btn{display:inline-flex;align-items:center;gap:10px;padding:16px 26px;border-radius:var(--r);font:700 14px/1 var(--f-body);letter-spacing:.02em;text-decoration:none;
+  transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s,background .25s,color .25s;border:2px solid transparent;cursor:pointer}
+.btn:hover{transform:translateY(-2px)}
+.btn svg{width:18px;height:18px}
+.btn-accent{background:var(--accent);color:#fff;box-shadow:0 14px 30px -12px rgba(237,85,24,.7)}
+.btn-accent:hover{background:var(--accent-dark)}
+.btn-ghost{border-color:rgba(255,255,255,.28);color:#fff}
+.btn-ghost:hover{background:rgba(255,255,255,.08)}
+.btn-dark{background:var(--ink);color:#fff}
+
+/* logo recadré (le fichier source a de larges marges) */
+.logo{position:relative;overflow:hidden;aspect-ratio:64/20;display:block}
+.logo img{position:absolute;width:121.9%;left:-14.84%;top:-138%;max-width:none}
+
+/* ---------- 3. Navigation ---------- */
+.nav{position:fixed;inset:0 0 auto 0;z-index:50;transition:background .3s,backdrop-filter .3s,border-color .3s;border-bottom:1px solid transparent}
+.nav.solid{background:rgba(14,15,16,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-color:rgba(255,255,255,.08)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:68px}
+.nav .logo{width:118px}
+.nav ul{display:flex;gap:30px}
+.nav a.l{font:500 12px/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;text-decoration:none;color:rgba(255,255,255,.7);transition:color .2s}
+.nav a.l:hover{color:#fff}
+.nav .btn{padding:11px 18px;font-size:13px}
+
+/* ---------- 4. Hero ---------- */
+.hero{position:relative;min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;color:var(--paper);background:var(--ink);overflow:hidden;isolation:isolate}
+.hero-bg{position:absolute;inset:0;z-index:-2;background:url("img/flotte.jpg") 62% 40%/cover no-repeat;transform:scale(1.04);animation:drift 22s ease-in-out infinite alternate}
+@keyframes drift{to{transform:scale(1.12) translate3d(-1.5%,-1%,0)}}
+.hero::before{content:"";position:absolute;inset:0;z-index:-1;
+  background:
+    linear-gradient(90deg,rgba(14,15,16,.96) 0%,rgba(14,15,16,.84) 38%,rgba(14,15,16,.28) 78%,rgba(14,15,16,.1) 100%),
+    linear-gradient(0deg,var(--ink) 0%,rgba(14,15,16,0) 38%)}
+.hero-inner{padding-top:150px;padding-bottom:clamp(36px,6vw,64px)}
+.hero .tag{display:inline-flex;align-items:center;gap:10px;padding:8px 14px;border:1px solid rgba(255,255,255,.18);border-radius:999px;font:500 11px/1 var(--f-mono);letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.8);background:rgba(255,255,255,.04);backdrop-filter:blur(6px)}
+.hero .tag i{width:7px;height:7px;border-radius:50%;background:#3ddc84;box-shadow:0 0 0 4px rgba(61,220,132,.2);animation:pulse 2s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 8px rgba(61,220,132,0)}}
+.hero h1{font-size:clamp(64px,13.2vw,208px);margin:26px 0 0;max-width:11ch}
+.hero h1 .l2{display:block}
+.hero .lead{margin-top:clamp(18px,2.4vw,30px);max-width:52ch}
+.hero .cta{display:flex;flex-wrap:wrap;gap:14px;margin-top:clamp(24px,3vw,38px)}
+
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin-top:clamp(40px,6vw,80px);background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.12);border-radius:var(--r-lg);overflow:hidden;backdrop-filter:blur(10px)}
+.kpi{padding:clamp(16px,2vw,26px);background:rgba(14,15,16,.62)}
+.kpi b{display:block;font:800 clamp(30px,4vw,52px)/1 var(--f-display);text-transform:uppercase;color:#fff}
+.kpi b small{font-size:.5em;color:var(--accent);margin-left:2px}
+.kpi span{display:block;margin-top:8px;font:500 11px/1.3 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.55)}
+
+.marquee{background:var(--accent);color:#fff;overflow:hidden;white-space:nowrap;padding:16px 0;border-block:1px solid rgba(0,0,0,.12)}
+.marquee-track{display:inline-flex;gap:0;animation:run 38s linear infinite}
+.marquee span{font:800 22px/1 var(--f-display);text-transform:uppercase;letter-spacing:.04em;padding:0 22px;display:inline-flex;align-items:center;gap:44px}
+.marquee span::after{content:"";width:9px;height:9px;background:#fff;transform:rotate(45deg);opacity:.7}
+@keyframes run{to{transform:translateX(-50%)}}
+
+/* ---------- 5. Sections ---------- */
+section{position:relative}
+.pad{padding:clamp(72px,11vw,150px) 0}
+.on-dark{background:var(--ink);color:var(--paper)}
+.sec-head{display:grid;gap:clamp(18px,2.4vw,28px);margin-bottom:clamp(40px,6vw,76px);max-width:920px}
+
+/* Constat */
+.constat-grid{display:grid;grid-template-columns:5fr 7fr;gap:clamp(30px,6vw,100px);align-items:start}
+.constat-title{position:sticky;top:110px}
+.pains{display:grid;gap:18px}
+.pain{position:relative;display:grid;grid-template-columns:auto 1fr;gap:clamp(16px,3vw,34px);padding:clamp(22px,3vw,34px);background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s,border-color .35s;overflow:hidden}
+.pain::after{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--accent);transform:scaleY(0);transform-origin:top;transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+.pain:hover{transform:translateY(-4px);box-shadow:var(--shadow-soft);border-color:#cfcac2}
+.pain:hover::after{transform:scaleY(1)}
+.pain .n{font:800 clamp(56px,7vw,92px)/.8 var(--f-display);color:transparent;-webkit-text-stroke:1.5px var(--accent);letter-spacing:-.02em}
+.pain h3{font:800 clamp(24px,2.6vw,32px)/1.05 var(--f-display);text-transform:uppercase;margin-bottom:8px}
+.pain p{color:var(--muted);font-size:15.5px}
+.pivot{margin-top:clamp(26px,4vw,44px);padding:clamp(20px,3vw,30px);border-radius:var(--r-lg);background:var(--ink);color:var(--paper);display:flex;gap:18px;align-items:center}
+.pivot svg{flex:none;width:44px;height:44px;color:var(--accent)}
+.pivot p{font:700 clamp(18px,2vw,23px)/1.25 var(--f-body)}
+.pivot em{font-style:normal;color:var(--accent)}
+
+/* Offre */
+.offre{background:var(--ink);color:var(--paper);overflow:hidden}
+.offre::before{content:"";position:absolute;width:760px;height:760px;right:-260px;top:-240px;border-radius:50%;background:radial-gradient(closest-side,rgba(237,85,24,.18),transparent)}
+.promise{display:grid;grid-template-columns:1fr 1fr;gap:clamp(30px,6vw,90px);align-items:center;margin-bottom:clamp(50px,7vw,100px)}
+.photo{position:relative;border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--shadow-deep);aspect-ratio:4/4.4}
+.photo img{width:100%;height:100%;object-fit:cover;object-position:62% 50%;transition:transform 1.2s cubic-bezier(.2,.8,.2,1)}
+.photo:hover img{transform:scale(1.04)}
+.badge{position:absolute;left:18px;bottom:18px;right:18px;display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:12px;background:rgba(14,15,16,.78);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.14)}
+.badge svg{flex:none;width:34px;height:34px;color:var(--accent)}
+.badge b{display:block;font:700 15px/1.2 var(--f-body)}
+.badge span{font:500 11px/1.4 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.55)}
+.pillars{display:grid;gap:clamp(18px,2.4vw,30px);margin-top:clamp(26px,3.4vw,40px)}
+.pillar{display:grid;grid-template-columns:56px 1fr;gap:18px;align-items:start}
+.ico{display:grid;place-items:center;width:56px;height:56px;border-radius:14px;background:rgba(237,85,24,.12);border:1px solid rgba(237,85,24,.4);color:var(--accent)}
+.ico svg{width:26px;height:26px}
+.pillar h3{font:800 24px/1.05 var(--f-display);text-transform:uppercase;margin-bottom:5px}
+.pillar p{color:rgba(244,242,238,.62);font-size:15px}
+
+.bento{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+.cell{position:relative;overflow:hidden;border-radius:var(--r-lg);padding:clamp(22px,2.6vw,32px);background:var(--ink-2);border:1px solid rgba(255,255,255,.09);display:flex;flex-direction:column;justify-content:space-between;min-height:250px;
+  transition:transform .35s cubic-bezier(.2,.8,.2,1),border-color .35s,background .35s}
+.cell:hover{transform:translateY(-5px);border-color:rgba(237,85,24,.55);background:var(--ink-3)}
+.cell .ico{width:48px;height:48px;border-radius:12px}
+.cell .ico svg{width:22px;height:22px}
+.cell h3{font:800 clamp(26px,2.5vw,34px)/1 var(--f-display);text-transform:uppercase;margin:34px 0 8px}
+.cell p{color:rgba(244,242,238,.62);font-size:14.5px;max-width:44ch}
+.cell .note{margin-top:18px;font:600 11px/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.c1{grid-column:span 7}.c2{grid-column:span 5}.c3,.c4,.c5{grid-column:span 4}.c6{grid-column:span 12;min-height:0;flex-direction:row;align-items:center;gap:30px}
+.c2{background:#000 url("img/scooter.jpg") 70% 42%/cover no-repeat;border-color:rgba(255,255,255,.12)}
+.c2::before{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.88),rgba(0,0,0,.15) 62%)}
+.c2>*{position:relative}
+.c1{background:linear-gradient(90deg,#17181a 0%,#17181a 46%,rgba(23,24,26,.55) 72%,rgba(23,24,26,.2) 100%),#000 url("img/moto.jpg") 92% 50%/auto 128% no-repeat}
+.c1 p,.c1 h3{max-width:34ch}
+.c1 .big{font:800 clamp(90px,12vw,170px)/.8 var(--f-display);color:transparent;-webkit-text-stroke:1.5px rgba(237,85,24,.55);margin:6px 0 -6px}
+.c6 h3{margin:0 0 6px}.c6 .ico{flex:none}.c6 .txt{flex:1}
+.sectors{display:flex;flex-wrap:wrap;gap:10px;margin-top:clamp(26px,3vw,40px)}
+.chip{padding:11px 16px;border-radius:999px;border:1px solid rgba(255,255,255,.2);font:600 13px/1 var(--f-body);color:rgba(244,242,238,.85);transition:all .25s}
+.chip:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+
+/* Preuves */
+.proof-nums{display:grid;grid-template-columns:repeat(4,1fr);border-block:2px solid var(--ink)}
+.num{padding:clamp(24px,3vw,44px) clamp(14px,2vw,28px);border-right:1px solid var(--line)}
+.num:last-child{border-right:0}
+.num b{display:block;font:800 clamp(56px,8.4vw,128px)/.82 var(--f-display);text-transform:uppercase;letter-spacing:-.02em}
+.num b small{font-size:.38em;color:var(--accent);letter-spacing:0;margin-left:4px}
+.num h3{font:700 16px/1.2 var(--f-body);margin:16px 0 4px}
+.num p{font-size:13.5px;color:var(--muted)}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(18px,3vw,46px);margin-top:clamp(50px,7vw,96px);position:relative}
+.steps::before{content:"";position:absolute;left:0;right:0;top:34px;height:2px;background:repeating-linear-gradient(90deg,var(--accent) 0 8px,transparent 8px 16px)}
+.step{position:relative}
+.step .dot{position:relative;display:grid;place-items:center;width:68px;height:68px;border-radius:50%;background:var(--paper);border:2px solid var(--accent);font:800 26px/1 var(--f-display);color:var(--accent);margin-bottom:20px}
+.step h3{font:800 clamp(26px,2.6vw,34px)/1 var(--f-display);text-transform:uppercase;margin-bottom:8px}
+.step p{color:var(--muted);font-size:15px;max-width:34ch}
+.why{display:grid;grid-template-columns:5fr 7fr;gap:clamp(30px,6vw,100px);margin-top:clamp(60px,9vw,120px);align-items:start}
+.checks{display:grid;grid-template-columns:1fr 1fr;gap:clamp(12px,1.6vw,18px)}
+.check{display:flex;gap:14px;align-items:flex-start;padding:18px;border-radius:12px;background:var(--card);border:1px solid var(--line);transition:all .3s}
+.check:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:var(--shadow-soft)}
+.check svg{flex:none;width:24px;height:24px;color:var(--accent);margin-top:1px}
+.check b{display:block;font:700 15.5px/1.25 var(--f-body);margin-bottom:3px}
+.check span{font-size:13.5px;color:var(--muted);line-height:1.45}
+
+/* Tarifs */
+.tarifs{background:var(--ink);color:var(--paper)}
+.tar-grid{display:grid;grid-template-columns:7fr 5fr;gap:clamp(22px,3.4vw,46px);align-items:start}
+.ptable{display:grid;gap:12px}
+.prow{display:grid;grid-template-columns:1.05fr repeat(3,1fr);gap:1px;border:1px solid rgba(255,255,255,.1);border-radius:var(--r-lg);overflow:hidden;background:rgba(255,255,255,.1)}
+.prow>div{background:var(--ink-2);padding:clamp(14px,1.8vw,24px)}
+.prow.head>div{background:transparent;font:500 11px/1.3 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5);padding-block:6px}
+.prow.head{border:0;background:none;gap:0}
+.zone b{display:block;font:800 clamp(22px,2.2vw,30px)/1 var(--f-display);text-transform:uppercase}
+.zone span{font:500 11px/1.4 var(--f-mono);color:rgba(255,255,255,.5);letter-spacing:.08em}
+.price{display:flex;flex-direction:column;justify-content:center}
+.price b{font:800 clamp(24px,2.5vw,36px)/1 var(--f-display);color:#fff;white-space:nowrap}
+.price b small{font-size:.5em;color:rgba(255,255,255,.55);margin-left:3px}
+.prow.hot>div{background:linear-gradient(180deg,#201309,#17120d)}
+.prow.hot .price b{color:var(--accent)}
+.fine{margin-top:14px;font:400 12px/1.5 var(--f-mono);color:rgba(255,255,255,.45)}
+.calc{position:sticky;top:96px;padding:clamp(22px,2.6vw,34px);border-radius:var(--r-lg);background:linear-gradient(160deg,#1b1c1f,#101112);border:1px solid rgba(237,85,24,.45);box-shadow:0 0 0 6px rgba(237,85,24,.06),var(--shadow-deep)}
+.calc h3{font:800 28px/1 var(--f-display);text-transform:uppercase;margin:12px 0 22px}
+.fld{margin-bottom:16px}
+.fld label{display:block;font:500 11px/1 var(--f-mono);letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:9px}
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:6px;padding:5px;border-radius:10px;background:rgba(255,255,255,.06)}
+.seg button{all:unset;cursor:pointer;text-align:center;padding:12px 6px;border-radius:7px;font:600 13px/1.15 var(--f-body);color:rgba(255,255,255,.65);transition:all .2s}
+.seg button small{display:block;font:500 10px/1.2 var(--f-mono);margin-top:3px;opacity:.7;letter-spacing:.04em}
+.seg button:hover{color:#fff}
+.seg button[aria-pressed="true"]{background:var(--accent);color:#fff;box-shadow:0 8px 18px -8px rgba(237,85,24,.8)}
+.result{margin-top:22px;padding-top:22px;border-top:1px dashed rgba(255,255,255,.2);display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
+.result .big{font:800 clamp(64px,7vw,92px)/.85 var(--f-display);color:#fff}
+.result .big small{font-size:.38em;color:var(--accent);margin-left:5px}
+.result .ttc{font:500 12px/1.5 var(--f-mono);color:rgba(255,255,255,.55);text-align:right}
+.result .ttc b{color:#fff;font-size:15px}
+.account{margin-top:clamp(26px,3.4vw,44px);display:grid;grid-template-columns:auto 1fr auto;gap:clamp(18px,3vw,34px);align-items:center;padding:clamp(22px,3vw,34px);border-radius:var(--r-lg);background:var(--accent);color:#fff}
+.account .ico{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.4);color:#fff;width:64px;height:64px}
+.account h3{font:800 clamp(26px,3vw,38px)/1 var(--f-display);text-transform:uppercase;margin-bottom:8px}
+.account ul{display:flex;flex-wrap:wrap;gap:6px 22px;font-size:14px;font-weight:500}
+.account li{display:flex;gap:8px;align-items:center}
+.account li::before{content:"";width:6px;height:6px;background:#fff;transform:rotate(45deg)}
+
+/* Zones */
+.zones-grid{display:grid;grid-template-columns:6fr 5fr;gap:clamp(30px,6vw,90px);align-items:center}
+.radar{position:relative;max-width:520px;width:100%;margin:0 auto}
+.radar svg{width:100%;height:auto;overflow:visible}
+.ring{transform-origin:200px 200px;animation:ringpulse 5s ease-in-out infinite}
+.ring:nth-child(2){animation-delay:.6s}.ring:nth-child(3){animation-delay:1.2s}
+@keyframes ringpulse{50%{opacity:.7}}
+.legend{display:grid;gap:14px;margin-top:clamp(22px,3vw,34px)}
+.leg{display:grid;grid-template-columns:18px 1fr auto;gap:14px;align-items:center;padding:16px 18px;border-radius:12px;background:var(--card);border:1px solid var(--line)}
+.leg i{width:14px;height:14px;border-radius:50%}
+.leg b{display:block;font:800 22px/1 var(--f-display);text-transform:uppercase}
+.leg span{font-size:13px;color:var(--muted)}
+.leg em{font:800 26px/1 var(--f-display);font-style:normal;color:var(--accent-dark);text-align:right}
+.leg em small{display:block;font:500 10px/1.2 var(--f-mono);color:var(--label);letter-spacing:.1em;text-transform:uppercase}
+
+/* CTA final */
+.final{background:var(--accent);color:#fff;overflow:hidden}
+.final::before{content:"ONE";position:absolute;right:-2%;bottom:-18%;font:800 clamp(220px,40vw,640px)/.8 var(--f-display);color:rgba(0,0,0,.07);pointer-events:none}
+.final .wrap{position:relative}
+.final h2{font-size:clamp(52px,10vw,160px);max-width:12ch}
+.final h2 em{color:var(--ink)}
+.phone{display:inline-block;margin-top:clamp(26px,4vw,50px);font:800 clamp(44px,8.4vw,128px)/.9 var(--f-display);letter-spacing:-.01em;text-decoration:none;border-bottom:4px solid rgba(255,255,255,.45);transition:border-color .25s}
+.phone:hover{border-color:#fff}
+.final .cta{display:flex;flex-wrap:wrap;gap:14px;margin-top:clamp(28px,4vw,46px)}
+.final .btn-dark:hover{background:#000}
+.final .btn-ghost{border-color:rgba(255,255,255,.55)}
+.contacts{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,3vw,40px);margin-top:clamp(50px,7vw,100px);padding-top:28px;border-top:1px solid rgba(255,255,255,.4)}
+.contacts div b{display:block;font:500 11px/1 var(--f-mono);letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:8px}
+.contacts a,.contacts p{font:700 18px/1.35 var(--f-body);text-decoration:none}
+.legal{background:var(--ink);color:rgba(244,242,238,.5);font:400 11.5px/1.7 var(--f-mono);padding:26px 0}
+.legal .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center}
+.legal .logo{width:96px}
+
+/* ---------- 6. Révélations au scroll ---------- */
+.js .rv{opacity:0;transform:translateY(26px);transition:opacity .9s cubic-bezier(.2,.8,.2,1),transform .9s cubic-bezier(.2,.8,.2,1);transition-delay:var(--d,0s)}
+.js .rv.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  .js .rv{opacity:1;transform:none}
+}
+
+/* ---------- 7. Responsive ---------- */
+@media (max-width:1024px){
+  .nav ul{display:none}
+  .constat-grid,.why,.zones-grid,.tar-grid,.promise{grid-template-columns:1fr}
+  .constat-title,.calc{position:static}
+  .promise .photo{aspect-ratio:16/11}
+  .c1,.c2{grid-column:span 12}.c3,.c4,.c5{grid-column:span 6}.c5{grid-column:span 12}
+  .proof-nums{grid-template-columns:1fr 1fr}
+  .num:nth-child(2){border-right:0}.num:nth-child(-n+2){border-bottom:1px solid var(--line)}
+}
+@media (max-width:720px){
+  .hero-inner{padding-top:120px}
+  .kpis{grid-template-columns:1fr 1fr}
+  .steps{grid-template-columns:1fr;gap:34px}
+  .steps::before{left:33px;right:auto;top:0;bottom:0;width:2px;height:auto;background:repeating-linear-gradient(180deg,var(--accent) 0 8px,transparent 8px 16px)}
+  .step{padding-left:92px}.step .dot{position:absolute;left:0;top:-6px;margin:0}
+  .checks{grid-template-columns:1fr}
+  .c3,.c4{grid-column:span 12}.c6{flex-direction:column;align-items:flex-start}
+  .prow{grid-template-columns:1fr 1fr 1fr}.prow .zone{grid-column:1/-1}.prow.head .zone{display:none}
+  .prow.head>div:nth-child(n+2){font-size:9.5px;letter-spacing:.06em}
+  .account{grid-template-columns:1fr}
+  .contacts{grid-template-columns:1fr}
+  .pain{grid-template-columns:1fr;gap:8px}.pain .n{font-size:64px}
+  .nav .btn span{display:none}
+  .marquee span{font-size:18px}
+}
+
+/* ---------- 8. Impression / export PDF (A4) ---------- */
+@page{size:A4;margin:0}
+@media print{
+  html{scroll-behavior:auto}
+  .nav,.marquee{display:none!important}
+  .js .rv{opacity:1!important;transform:none!important}
+  .hero{min-height:0;height:auto;padding-top:0}
+  .hero-bg,.ring,.hero .tag i{animation:none!important}
+  .pad{padding:44px 0}
+  section,.pain,.cell,.num,.check,.leg,.step,.prow,.account,.calc,.pivot{break-inside:avoid;page-break-inside:avoid}
+  .constat-title,.calc{position:static}
+  .final,.tarifs,.offre{break-before:page}
+  .h2{font-size:54px}
+  .hero h1{font-size:96px}
+  .hero-inner{padding-top:70px}
+}
+</style>
+</head>
+
+<body>
+
+<!-- ============ Sprite d'icônes (tracé fin, cohérent avec la charte) ============ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-bolt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4.5 13.5H11L10 22l8.5-11.5H12L13 2Z"/></symbol>
+    <symbol id="i-scooter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.5" cy="17" r="2.5"/><circle cx="18.5" cy="17" r="2.5"/><path d="M8 17h8l-2.5-6H10m6.5 1 1.5-5h-3M5 11h4"/></symbol>
+    <symbol id="i-seal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6.5 8.5-6.5"/><circle cx="12" cy="14.5" r="2.4" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-med" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6V3Z"/></symbol>
+    <symbol id="i-box" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2.5 8.5 4.5v10L12 21.5 3.5 17V7L12 2.5Z"/><path d="m3.8 7.2 8.2 4.4 8.2-4.4M12 11.6v9.6"/></symbol>
+    <symbol id="i-loop" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 0 1 13.7-5.6L20 8.5M20 4v4.5h-4.5M20 12a8 8 0 0 1-13.7 5.6L4 15.5M4 20v-4.5h4.5"/></symbol>
+    <symbol id="i-tag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12.2V4a1 1 0 0 1 1-1h8.2a1 1 0 0 1 .7.3l8 8a1 1 0 0 1 0 1.4l-7.2 7.2a1 1 0 0 1-1.4 0l-8-8a1 1 0 0 1-.3-.7Z"/><circle cx="8" cy="8" r="1.4"/></symbol>
+    <symbol id="i-proof" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6V3Z"/><path d="M14 3v5h5M9 14l2 2 4-4"/></symbol>
+    <symbol id="i-dedicated" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="2"/><circle cx="19" cy="12" r="2"/><path d="M7 12h10M14 9l3 3-3 3"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="m7.8 12.4 2.8 2.8 5.6-6"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a1 1 0 0 1-1 1A16 16 0 0 1 4 5a1 1 0 0 1 1-1Z"/></symbol>
+    <symbol id="i-account" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/></symbol>
+  </defs>
+</svg>
+
+<!-- ============ Navigation ============ -->
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a href="#top" class="logo" aria-label="ONE CONNEXION — accueil"><img src="img/logo-white.png" alt="ONE CONNEXION"></a>
+    <nav aria-label="Navigation principale"><ul>
+      <li><a class="l" href="#constat">Constat</a></li>
+      <li><a class="l" href="#offre">Offre</a></li>
+      <li><a class="l" href="#preuves">Preuves</a></li>
+      <li><a class="l" href="#tarifs">Tarifs</a></li>
+      <li><a class="l" href="#zones">Zones</a></li>
+    </ul></nav>
+    <a class="btn btn-accent" href="tel:+33666026707"><svg><use href="#i-phone"/></svg><span>06 66 02 67 07</span></a>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ============ 1. HERO / COUVERTURE ============ -->
+<section class="hero on-dark">
+  <div class="hero-bg" role="img" aria-label="Coursiers ONE CONNEXION en deux-roues dans une rue de Paris"></div>
+  <div class="wrap hero-inner">
+    <span class="tag rv"><i></i>Coursier B2B · Paris &amp; Île-de-France · 7j/7</span>
+    <h1 class="display rv" style="--d:.08s">Vos envois urgents<span class="l2"><em>livrés à l’heure.</em></span></h1>
+    <p class="lead rv" style="--d:.16s">Une moto ou un scooter, un coursier vérifié, une course dédiée de A à B. Cabinets juridiques, laboratoires et e-commerçants nous confient leurs envois sensibles&nbsp;: le prix s’affiche avant de commander, la preuve de livraison est horodatée.</p>
+    <div class="cta rv" style="--d:.24s">
+      <a class="btn btn-accent" href="https://www.oneconnexion.com/#commander">Commander une course <svg><use href="#i-arrow"/></svg></a>
+      <a class="btn btn-ghost" href="#tarifs">Voir les tarifs</a>
+    </div>
+    <div class="kpis rv" style="--d:.32s">
+      <div class="kpi"><b>&lt;45<small>min</small></b><span>Enlèvement</span></div>
+      <div class="kpi"><b>7j/7</b><span>De 7h à 23h</span></div>
+      <div class="kpi"><b>17,50<small>€ HT</small></b><span>Dès · course dans Paris</span></div>
+      <div class="kpi"><b>1 = 1</b><span>Un coursier, une course</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee" aria-hidden="true"><div class="marquee-track">
+  <span>Plis confidentiels</span><span>Transport médical</span><span>Livraison e-commerce</span><span>Tournées B2B</span><span>Logistique événementielle</span><span>Coursier express</span><span>Coursier moto &amp; scooter</span>
+  <span>Plis confidentiels</span><span>Transport médical</span><span>Livraison e-commerce</span><span>Tournées B2B</span><span>Logistique événementielle</span><span>Coursier express</span><span>Coursier moto &amp; scooter</span>
+</div></div>
+
+<!-- ============ 2. LE CONSTAT ============ -->
+<section id="constat" class="pad">
+  <div class="wrap constat-grid">
+    <div class="constat-title">
+      <p class="eyebrow rv">Le constat</p>
+      <h2 class="h2 rv" style="margin-top:22px;--d:.06s">Quand un pli doit arriver <em>aujourd’hui,</em> tout se joue en une heure.</h2>
+      <p class="lead rv" style="margin-top:26px;--d:.12s">Vous le savez : un envoi urgent, ce n’est pas un colis comme un autre. Voici ce qui fait perdre du temps, de l’argent et de la confiance.</p>
+    </div>
+    <div>
+      <div class="pains">
+        <article class="pain rv"><span class="n">01</span><div><h3>La circulation décide du délai</h3><p>Dans Paris, un utilitaire reste bloqué là où un deux-roues passe. Chaque minute perdue, c’est un dossier en retard et un client qui attend.</p></div></article>
+        <article class="pain rv" style="--d:.06s"><span class="n">02</span><div><h3>Un tarif qu’il faut négocier</h3><p>Prix à demander, à attendre, à recalculer. Vous découvrez le montant après la course, parfois sur la facture.</p></div></article>
+        <article class="pain rv" style="--d:.12s"><span class="n">03</span><div><h3>Parti… sans aucune nouvelle</h3><p>Pas de suivi, pas de preuve de remise. Le jour où il y a un litige, vous n’avez rien en main.</p></div></article>
+        <article class="pain rv" style="--d:.18s"><span class="n">04</span><div><h3>Votre pli partage la tournée d’un autre</h3><p>Avec un coursier qui regroupe les arrêts, votre envoi sensible attend entre trois autres livraisons.</p></div></article>
+      </div>
+      <div class="pivot rv">
+        <svg><use href="#i-arrow"/></svg>
+        <p>Chez ONE CONNEXION, on a construit l’inverse&nbsp;: <em>une course dédiée, un prix affiché, une preuve horodatée.</em></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3. LA SOLUTION / NOTRE OFFRE ============ -->
+<section id="offre" class="offre pad">
+  <div class="wrap" style="position:relative">
+    <div class="promise">
+      <div class="photo rv">
+        <img src="img/coursier.jpg" alt="Coursier ONE CONNEXION remettant un colis fragile dans Paris" loading="lazy">
+        <div class="badge"><svg><use href="#i-proof"/></svg><div><b>Remise contre signature</b><span>Preuve de livraison horodatée</span></div></div>
+      </div>
+      <div>
+        <p class="eyebrow rv">Notre réponse</p>
+        <h2 class="h2 rv" style="margin-top:22px;--d:.06s">Un coursier dédié. Un prix affiché. <em>Une preuve.</em></h2>
+        <div class="pillars">
+          <div class="pillar rv"><div class="ico"><svg><use href="#i-dedicated"/></svg></div><div><h3>Course dédiée, sans regroupement</h3><p>Votre envoi part tout de suite, directement de A à B. Un coursier, une course : pas d’arrêts intermédiaires.</p></div></div>
+          <div class="pillar rv" style="--d:.06s"><div class="ico"><svg><use href="#i-tag"/></svg></div><div><h3>Prix instantané</h3><p>Le montant s’affiche avant de commander, selon la zone et le délai. Aucune mauvaise surprise.</p></div></div>
+          <div class="pillar rv" style="--d:.12s"><div class="ico"><svg><use href="#i-proof"/></svg></div><div><h3>Suivi et preuve de livraison</h3><p>Chaque course se suit en ligne et se termine par une preuve de remise horodatée, archivée pour votre dossier.</p></div></div>
+        </div>
+      </div>
+    </div>
+
+    <p class="eyebrow rv" style="margin-bottom:26px">Nos prestations</p>
+    <div class="bento">
+      <article class="cell c1 rv">
+        <div><div class="ico"><svg><use href="#i-bolt"/></svg></div><div class="big" aria-hidden="true">45′</div></div>
+        <div><h3>Coursier express Paris</h3><p>Enlèvement en moins de 45 minutes, course dédiée en deux-roues, suivi en ligne et preuve de livraison horodatée.</p><div class="note">Super urgent 1 h · dès 35 € HT</div></div>
+      </article>
+      <article class="cell c2 rv" style="--d:.06s">
+        <div class="ico"><svg><use href="#i-scooter"/></svg></div>
+        <div><h3>Moto &amp; scooter</h3><p>Scooters électriques, 125 cc et motos routières équipés pour un usage professionnel. Top-case verrouillé et étanche, coursiers vérifiés.</p><div class="note">Course dès 17,50 € HT</div></div>
+      </article>
+      <article class="cell c3 rv">
+        <div class="ico"><svg><use href="#i-seal"/></svg></div>
+        <div><h3>Plis confidentiels</h3><p>Remise contre signature, chaîne de responsabilité documentée. Pensé pour les cabinets et études.</p><div class="note">Preuve de dépôt horodatée</div></div>
+      </article>
+      <article class="cell c4 rv" style="--d:.06s">
+        <div class="ico"><svg><use href="#i-med"/></svg></div>
+        <div><h3>Transport médical</h3><p>Prélèvements, pièces critiques et matériel technique. Contenants isothermes et relevés de température à la demande.</p><div class="note">Course dédiée</div></div>
+      </article>
+      <article class="cell c5 rv" style="--d:.12s">
+        <div class="ico"><svg><use href="#i-box"/></svg></div>
+        <div><h3>Livraison e-commerce</h3><p>Collecte en boutique ou en entrepôt, livraison dans la journée sur Paris et première couronne. Créneaux au choix du destinataire.</p><div class="note">Tournées récurrentes possibles</div></div>
+      </article>
+      <article class="cell c6 rv">
+        <div class="ico"><svg><use href="#i-loop"/></svg></div>
+        <div class="txt"><h3>Tournées régulières &amp; logistique événementielle</h3><p style="max-width:80ch">Navettes inter-sites, collectes récurrentes avec un coursier dédié&nbsp;; prototypes, invitations VIP, cadeaux d’affaires et matériel livrés avec une discrétion absolue.</p></div>
+        <div class="note" style="margin:0">Sur-mesure</div>
+      </article>
+    </div>
+
+    <div class="sectors rv" aria-label="Secteurs accompagnés">
+      <span class="chip">Cabinets juridiques &amp; notaires</span><span class="chip">Laboratoires &amp; santé</span><span class="chip">E-commerçants</span><span class="chip">Agences &amp; corporate</span><span class="chip">Événementiel</span><span class="chip">Grands comptes</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4. PREUVES & BÉNÉFICES ============ -->
+<section id="preuves" class="pad">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow rv">Preuves &amp; bénéfices</p>
+      <h2 class="h2 rv" style="--d:.06s">Des engagements <em>mesurables,</em> pas des promesses.</h2>
+    </div>
+
+    <div class="proof-nums">
+      <div class="num rv"><b data-count="45" data-prefix="&lt;">&lt;45<small>min</small></b><h3>Enlèvement</h3><p>Un coursier prend en charge votre envoi en moins de 45 minutes.</p></div>
+      <div class="num rv" style="--d:.06s"><b>7<small>j/7</small></b><h3>De 7h à 23h</h3><p>Sept jours sur sept, pour vos urgences du matin comme du soir.</p></div>
+      <div class="num rv" style="--d:.12s"><b data-count="1">1<small>h</small></b><h3>Super urgent</h3><p>Enlèvement et livraison sous 1 heure, dès 35 € HT dans Paris.</p></div>
+      <div class="num rv" style="--d:.18s"><b data-count="30">30<small>jours</small></b><h3>Pour régler</h3><p>Compte entreprise : facture envoyée dès la livraison, à payer sous 30 jours.</p></div>
+    </div>
+
+    <div class="steps">
+      <div class="step rv"><div class="dot">1</div><h3>Commandez</h3><p>Saisissez les adresses et le délai&nbsp;: le prix s’affiche aussitôt, avant toute validation.</p></div>
+      <div class="step rv" style="--d:.08s"><div class="dot">2</div><h3>Enlèvement</h3><p>Un coursier dédié prend en charge votre envoi en moins de 45 minutes. Suivi en ligne en temps réel.</p></div>
+      <div class="step rv" style="--d:.16s"><div class="dot">3</div><h3>Livraison &amp; preuve</h3><p>Remise horodatée, justificatif archivé. Pour les pros, la facture part dès la livraison.</p></div>
+    </div>
+
+    <div class="why">
+      <div>
+        <p class="eyebrow rv">Pourquoi nous</p>
+        <h2 class="h2 rv" style="margin-top:22px;--d:.06s">Tout ce qu’on <em>vous évite.</em></h2>
+        <p class="lead rv" style="margin-top:22px;--d:.12s">De la prise en charge à la facture, chaque étape est pensée pour que vous n’ayez rien à relancer.</p>
+      </div>
+      <div class="checks">
+        <div class="check rv"><svg><use href="#i-check"/></svg><div><b>Coursiers vérifiés</b><span>Des professionnels identifiés, équipés pour un usage pro.</span></div></div>
+        <div class="check rv" style="--d:.05s"><svg><use href="#i-check"/></svg><div><b>Top-case verrouillé et étanche</b><span>Vos documents et colis voyagent à l’abri.</span></div></div>
+        <div class="check rv" style="--d:.1s"><svg><use href="#i-check"/></svg><div><b>Flotte agile en ville</b><span>Scooters électriques et 125 cc, non limités par la ZFE.</span></div></div>
+        <div class="check rv" style="--d:.15s"><svg><use href="#i-check"/></svg><div><b>Interlocuteur dispatch dédié</b><span>Une personne qui connaît votre compte et vos habitudes.</span></div></div>
+        <div class="check rv" style="--d:.2s"><svg><use href="#i-check"/></svg><div><b>Imputation par dossier</b><span>Chaque course rattachée à un dossier ou à un service.</span></div></div>
+        <div class="check rv" style="--d:.25s"><svg><use href="#i-check"/></svg><div><b>Rapport mensuel des courses</b><span>Un récapitulatif clair pour votre comptabilité.</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 5. TARIFS ============ -->
+<section id="tarifs" class="tarifs on-dark pad">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow rv">Tarifs</p>
+      <h2 class="h2 rv" style="--d:.06s">Un prix clair, <em>affiché avant</em> de commander.</h2>
+      <p class="lead rv" style="--d:.12s">Tarif par course, selon la zone la plus éloignée du trajet et le délai choisi.</p>
+    </div>
+
+    <div class="tar-grid">
+      <div>
+        <div class="ptable">
+          <div class="prow head"><div class="zone"></div><div>Normal<br>3 h</div><div>Urgent<br>1 h 30</div><div>Super urgent<br>1 h</div></div>
+          <div class="prow hot rv"><div class="zone"><b>Paris</b><span>75 · 20 arr.</span></div><div class="price"><b>17,50<small>€ HT</small></b></div><div class="price"><b>26,25<small>€ HT</small></b></div><div class="price"><b>35<small>€ HT</small></b></div></div>
+          <div class="prow rv" style="--d:.06s"><div class="zone"><b>Petite couronne</b><span>92 · 93 · 94</span></div><div class="price"><b>35<small>€ HT</small></b></div><div class="price"><b>52,50<small>€ HT</small></b></div><div class="price"><b>70<small>€ HT</small></b></div></div>
+          <div class="prow rv" style="--d:.12s"><div class="zone"><b>Grande couronne</b><span>77 · 78 · 91 · 95</span></div><div class="price"><b>49<small>€ HT</small></b></div><div class="price"><b>73,50<small>€ HT</small></b></div><div class="price"><b>98<small>€ HT</small></b></div></div>
+        </div>
+        <p class="fine">Tarifs HT par course, TVA 20&nbsp;% en sus. Compte entreprise&nbsp;: tarif dégressif selon le volume mensuel.</p>
+      </div>
+
+      <!-- Estimateur interactif : mêmes montants que la grille ci-contre -->
+      <aside class="calc rv" aria-labelledby="calc-t">
+        <p class="eyebrow">Estimez votre course</p>
+        <h3 id="calc-t">Combien ça coûte&nbsp;?</h3>
+        <div class="fld"><label>Zone du trajet</label>
+          <div class="seg" id="seg-zone">
+            <button type="button" aria-pressed="true" data-zone="0">Paris<small>75</small></button>
+            <button type="button" aria-pressed="false" data-zone="1">Petite couronne<small>92·93·94</small></button>
+            <button type="button" aria-pressed="false" data-zone="2">Grande couronne<small>77·78·91·95</small></button>
+          </div></div>
+        <div class="fld"><label>Délai</label>
+          <div class="seg" id="seg-delai">
+            <button type="button" aria-pressed="true" data-delai="0">Normal<small>3 h</small></button>
+            <button type="button" aria-pressed="false" data-delai="1">Urgent<small>1 h 30</small></button>
+            <button type="button" aria-pressed="false" data-delai="2">Super urgent<small>1 h</small></button>
+          </div></div>
+        <div class="result" aria-live="polite">
+          <div class="big"><span id="out-ht">17,50</span><small>€ HT</small></div>
+          <div class="ttc">soit <b id="out-ttc">21,00 €</b> TTC<br>TVA 20&nbsp;%</div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="account rv">
+      <div class="ico"><svg><use href="#i-account"/></svg></div>
+      <div>
+        <h3>Compte entreprise</h3>
+        <ul><li>Tarif dégressif selon le volume</li><li>Facture envoyée dès la livraison</li><li>30 jours pour régler, par carte ou virement</li><li>Rapport mensuel des courses</li><li>Ouverture en 24 h</li></ul>
+      </div>
+      <a class="btn btn-dark" href="https://www.oneconnexion.com/inscription">Ouvrir un compte <svg><use href="#i-arrow"/></svg></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6. ZONES ============ -->
+<section id="zones" class="pad">
+  <div class="wrap zones-grid">
+    <div class="radar rv" aria-label="Schéma des zones : Paris, petite couronne, grande couronne">
+      <svg viewBox="0 0 400 400" role="img">
+        <defs>
+          <radialGradient id="g0" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#ed5518"/><stop offset="1" stop-color="#c94410"/></radialGradient>
+        </defs>
+        <circle class="ring" cx="200" cy="200" r="190" fill="rgba(14,15,16,.04)" stroke="#0E0F10" stroke-opacity=".35" stroke-dasharray="3 7" stroke-width="1.5"/>
+        <circle class="ring" cx="200" cy="200" r="128" fill="rgba(237,85,24,.1)" stroke="#ed5518" stroke-opacity=".7" stroke-width="1.5"/>
+        <circle class="ring" cx="200" cy="200" r="64" fill="url(#g0)"/>
+        <g font-family="Barlow Condensed, sans-serif" font-weight="800" text-anchor="middle">
+          <text x="200" y="196" font-size="28" fill="#fff">PARIS</text>
+          <text x="200" y="212" font-size="11.5" fill="#fff" font-family="IBM Plex Mono, monospace" font-weight="500">dès 17,50 €</text>
+          <text x="200" y="118" font-size="22" fill="#c94410">PETITE COURONNE</text>
+          <text x="200" y="136" font-size="12" fill="#4A4845" font-family="IBM Plex Mono, monospace" font-weight="500">92 · 93 · 94 · dès 35 €</text>
+          <text x="200" y="40" font-size="22" fill="#0E0F10">GRANDE COURONNE</text>
+          <text x="200" y="58" font-size="12" fill="#4A4845" font-family="IBM Plex Mono, monospace" font-weight="500">77 · 78 · 91 · 95 · dès 49 €</text>
+        </g>
+              </svg>
+    </div>
+    <div>
+      <p class="eyebrow rv">Zones couvertes</p>
+      <h2 class="h2 rv" style="margin-top:22px;--d:.06s">Toute l’Île-de-France, <em>à portée de moto.</em></h2>
+      <p class="lead rv" style="margin-top:22px;--d:.12s">Des 20 arrondissements de Paris à la grande couronne, un coursier dédié vient chercher votre envoi. Le prix dépend de la zone la plus éloignée du trajet.</p>
+      <div class="legend">
+        <div class="leg rv"><i style="background:var(--accent)"></i><div><b>Paris intramuros</b><span>20 arrondissements</span></div><em>17,50 €<small>dès · HT</small></em></div>
+        <div class="leg rv" style="--d:.06s"><i style="background:#e8a283"></i><div><b>Petite couronne</b><span>Hauts-de-Seine, Seine-Saint-Denis, Val-de-Marne</span></div><em>35 €<small>dès · HT</small></em></div>
+        <div class="leg rv" style="--d:.12s"><i style="background:#0E0F10"></i><div><b>Grande couronne</b><span>Seine-et-Marne, Yvelines, Essonne, Val-d’Oise</span></div><em>49 €<small>dès · HT</small></em></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 7. APPEL À L'ACTION ============ -->
+<section id="contact" class="final pad">
+  <div class="wrap">
+    <p class="eyebrow rv" style="color:#fff">Passez à l’action</p>
+    <h2 class="h2 rv" style="margin-top:22px;--d:.06s">Une course <em>à organiser&nbsp;?</em></h2>
+    <a class="phone rv" style="--d:.12s" href="tel:+33666026707">06 66 02 67 07</a>
+    <div class="cta rv" style="--d:.18s">
+      <a class="btn btn-dark" href="https://www.oneconnexion.com/#commander">Commander en ligne <svg><use href="#i-arrow"/></svg></a>
+      <a class="btn btn-ghost" href="https://www.oneconnexion.com/inscription">Ouvrir un compte entreprise</a>
+    </div>
+    <div class="contacts">
+      <div><b>Téléphone · 7j/7</b><a href="tel:+33666026707">06 66 02 67 07</a><p style="font-weight:500;font-size:14px;opacity:.85">De 7h à 23h</p></div>
+      <div><b>E-mail</b><a href="mailto:contact@oneconnexion.com">contact@oneconnexion.com</a></div>
+      <div><b>Site &amp; siège</b><a href="https://www.oneconnexion.com">www.oneconnexion.com</a><p style="font-weight:500;font-size:14px;opacity:.85">5 Square Nungesser, 94160 Saint-Mandé</p></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="legal">
+  <div class="wrap">
+    <a href="#top" class="logo" aria-label="ONE CONNEXION"><img src="img/logo-white.png" alt="ONE CONNEXION"></a>
+    <span>ONE CONNEXION — SAS au capital de 3 000 € · SIREN 101 517 100 · SIRET 101 517 100 00018 · TVA FR24 101 517 100 · 5 Square Nungesser, 94160 Saint-Mandé</span>
+  </div>
+</footer>
+
+<script>
+/* Interactions : navigation, révélations au scroll, estimateur de prix. Aucune dépendance. */
+(function(){
+  var d=document, root=d.documentElement;
+  root.classList.add('js');
+
+  // Barre de navigation : transparente sur le hero, opaque ensuite
+  var nav=d.getElementById('nav');
+  function onScroll(){ nav.classList.toggle('solid', window.scrollY>40); }
+  onScroll(); window.addEventListener('scroll', onScroll, {passive:true});
+
+  // Révélation progressive au scroll (visible d'office si IntersectionObserver absent)
+  var els=[].slice.call(d.querySelectorAll('.rv'));
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+    },{threshold:.12, rootMargin:'0px 0px -6% 0px'});
+    els.forEach(function(el){ io.observe(el); });
+  } else { els.forEach(function(el){ el.classList.add('in'); }); }
+
+  // Estimateur — mêmes tarifs que la grille (HT par course, TVA 20 %)
+  var GRID=[[17.5,26.25,35],[35,52.5,70],[49,73.5,98]];
+  var zone=0, delai=0;
+  var fmt=function(n){ return n.toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2}); };
+  function render(){
+    var ht=GRID[zone][delai];
+    d.getElementById('out-ht').textContent=fmt(ht);
+    d.getElementById('out-ttc').textContent=fmt(ht*1.2)+' €';
+  }
+  function bind(id,attr,setter){
+    var box=d.getElementById(id);
+    box.addEventListener('click',function(e){
+      var b=e.target.closest('button'); if(!b) return;
+      [].forEach.call(box.children,function(x){ x.setAttribute('aria-pressed', x===b ? 'true':'false'); });
+      setter(+b.getAttribute(attr)); render();
+    });
+  }
+  bind('seg-zone','data-zone',function(v){ zone=v; });
+  bind('seg-delai','data-delai',function(v){ delai=v; });
+  render();
+})();
+</script>
+</body>
+</html>

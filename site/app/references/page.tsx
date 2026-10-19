@@ -167,7 +167,7 @@ export default function ReferencesPage() {
               Dans un environnement où chaque minute compte, One Connexion met au service des entreprises d'Île-de-France un modèle simple : une course dédiée par pli, des dispatcheurs joignables et un suivi en ligne de chaque course.
             </p>
             <p className="text-[15.5px] leading-[1.7] text-muted">
-              Nos engagements : un enlèvement en moins de 45 minutes, un prix affiché avant de commander et un interlocuteur unique.
+              Nos engagements : un enlèvement en moins de 45 minutes, un prix affiché avant de commander et 100% de la Marchandise assurée.
             </p>
           </div>
           <div className="grid grid-cols-2 gap-4">

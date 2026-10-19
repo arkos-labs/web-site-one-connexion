@@ -44,39 +44,12 @@ export const metadata: Metadata = {
     template: "%s | ONE CONNEXION",
   },
   alternates: { canonical: "/" },
-  keywords: [
-    "transport express",
-    "coursiers",
-    "transport de colis",
-    "transport de marchandises",
-    "coursier express",
-    "transitaire en douane",
-    "affrètement",
-    "coursier moto",
-    "coursier scooter",
-    "livraison de colis",
-    "affrètement routier",
-    "colis express",
-    "courrier express",
-    "course régionale",
-    "coursier médical",
-    "enlèvement de colis",
-    "expédition",
-    "livraison de pharmacie",
-    "livraison sous 24h",
-    "transport colis lourd",
-    "transport colis léger",
-    "transport colis volumineux",
-    "transport d'objet fragile",
-    "transport d'oeuvre d'art",
-    "transport à la demande",
-  ],
   description:
     "One Connexion opère les livraisons urgentes des cabinets juridiques, laboratoires et e-commerçants d'Île-de-France. Flotte deux-roues, traçabilité complète.",
   openGraph: {
     title: "ONE CONNEXION - Coursier B2B, Paris & Île-de-France",
     description:
-      "Le dernier kilomètre, tenu à l'heure. Flotte deux-roues, traçabilité complète, interlocuteur unique.",
+      "Le dernier kilomètre, tenu à l'heure. Flotte deux-roues, traçabilité complète, 100% Marchandise assurée.",
     type: "website",
     locale: "fr_FR",
     siteName: "ONE CONNEXION",
@@ -86,7 +59,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "ONE CONNEXION - Coursier B2B, Paris & Île-de-France",
     description:
-      "Le dernier kilomètre, tenu à l'heure. Flotte deux-roues, traçabilité complète, interlocuteur unique.",
+      "Le dernier kilomètre, tenu à l'heure. Flotte deux-roues, traçabilité complète, 100% Marchandise assurée.",
     images: ["/og-image.jpg"],
   },
   robots: { index: true, follow: true },
@@ -100,15 +73,7 @@ export default function RootLayout({
   return (
       <html lang="fr" className={`${archivo.variable} ${ibmPlexMono.variable} ${barlowCondensed.variable}`}>
       <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-PD8DT425');`
-          }}
-        />
+        {/* GTM moved to afterInteractive strategy below */}
       </head>
       <body className="bg-paper text-ink antialiased">
         <noscript>
@@ -127,6 +92,17 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <CookieConsent />
         <Analytics />
         <SpeedInsights />
+        <Script
+          id="gtm"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-PD8DT425');`
+          }}
+        />
       </body>
     </html>
   );

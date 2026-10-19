@@ -8,7 +8,7 @@ import { LEGAL, PHONE_TEL, EMAIL, SITE_URL, MAPS_URL } from "@/lib/site-content"
 
 const organizationSchema = {
   "@context": "https://schema.org",
-  "@type": "LocalBusiness",
+  "@type": ["LocalBusiness", "Organization"],
   "@id": `${SITE_URL}/#organization`,
   name: LEGAL.denomination,
   legalName: LEGAL.denomination,
@@ -44,21 +44,38 @@ const organizationSchema = {
   },
   hasMap: MAPS_URL,
   sameAs: [
-    "https://share.google/XuYslOmCjc7YpqLmf",
     "https://www.wikidata.org/wiki/Q141752000",
   ],
-  openingHours: "Mo-Sa 09:00-19:00",
+  openingHoursSpecification: [
+    {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+      opens: "09:00",
+      closes: "19:00",
+    },
+  ],
   priceRange: "€€",
   vatID: LEGAL.tva,
   taxID: LEGAL.siren,
   foundingDate: LEGAL.dateCreationISO,
   description:
-    "Coursier B2B spécialisé à Paris et en Île-de-France : plis confidentiels, transport médical, livraison e-commerce et tournées régulières. Flotte deux-roues, traçabilité complète, interlocuteur unique.",
+    "Coursier B2B spécialisé à Paris et en Île-de-France : plis confidentiels, transport médical, livraison e-commerce et tournées régulières. Flotte deux-roues, traçabilité complète, 100% Marchandise assurée.",
+};
+
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": `${SITE_URL}/#website`,
+  url: SITE_URL,
+  name: "ONE CONNEXION",
+  inLanguage: "fr-FR",
+  publisher: { "@id": `${SITE_URL}/#organization` },
 };
 
 export default function Home() {
   return (
     <>
+      <JsonLd data={websiteSchema} />
       <JsonLd data={organizationSchema} />
       <Hero />
       <About />

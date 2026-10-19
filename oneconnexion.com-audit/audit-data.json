@@ -1,11 +1,234 @@
-{"summary":{"health_score":72,"business_type":"Service local / coursier B2B (Paris et Île-de-France)","top_findings":["Pages zones gabaritées à grande échelle (35)","Pas de politique de confidentialité","Empreinte externe E-E-A-T faible","Titres >60 caractères sur 30+ pages","Meta descriptions trop courtes sur les communes"],"quick_wins":["Publier la politique de confidentialité","Corriger le format ISO de foundingDate","Ajouter lastmod au sitemap","Raccourcir les titres","Ajouter sameAs/geo au LocalBusiness"]},
-"categories":[
-{"name":"SEO technique","score":82,"what_works":["Toutes les URL en 200","Canoniques","HSTS + en-têtes de sécurité","robots.txt/sitemap propres"],"findings":[{"title":"Pas d'en-tête CSP","severity":"Low","description":"Content-Security-Policy absent","recommendation":"Ajouter un CSP"},{"title":"Sitemap sans lastmod","severity":"Medium","description":"0 entrée lastmod","recommendation":"Ajouter lastmod"}]},
-{"name":"Qualité du contenu","score":68,"what_works":["35 pages locales","6 pages services"],"findings":[{"title":"Pages zones gabaritées","severity":"High","description":"~690 mots chacune, structure identique","recommendation":"Rendre uniques ou supprimer"},{"title":"Accueil léger","severity":"Medium","description":"~470 mots","recommendation":"Étoffer avec preuves et FAQ"}]},
-{"name":"SEO on-page","score":72,"what_works":["H1 unique","Titres uniques"],"findings":[{"title":"Titres trop longs","severity":"Medium","description":"30+ titres >60 caractères (max 81)","recommendation":"Raccourcir"},{"title":"Meta descriptions courtes","severity":"Medium","description":"Pages communes : 85-111 caractères","recommendation":"140-160 caractères"},{"title":"Pas de politique de confidentialité","severity":"High","description":"/politique-de-confidentialite en 404, non liée","recommendation":"Publier et lier"}]},
-{"name":"Données structurées","score":72,"what_works":["LocalBusiness","Service","BreadcrumbList"],"findings":[{"title":"foundingDate invalide","severity":"Medium","description":"21/02/2026 n'est pas au format ISO","recommendation":"Utiliser 2026-02-21"},{"title":"Aucun schéma sur 4 pages","severity":"Low","description":"/methode /flotte /references /contact","recommendation":"Ajouter BreadcrumbList/ContactPage"}]},
-{"name":"Performance (CWV)","score":75,"what_works":["TTFB 0,3-0,5 s","Cache CDN HIT","Prérendu"],"findings":[{"title":"Non mesuré","severity":"Info","description":"Aucun test Lighthouse/CrUX","recommendation":"Lancer PageSpeed/CrUX"}]},
-{"name":"Visibilité moteurs IA","score":55,"what_works":["Données d'entité claires"],"findings":[{"title":"Pas de llms.txt/FAQ/guides","severity":"Low","description":"Peu de passages citables","recommendation":"Ajouter FAQ et guides"}]},
-{"name":"Images","score":85,"what_works":["Alt sur toutes les images","Dimensions définies"],"findings":[{"title":"Alt du logo générique","severity":"Low","description":"One Connexion Logo","recommendation":"Alt descriptif"}]}],
-"action_plan":{"phases":[{"name":"Phase 1 : corrections critiques","timeframe":"Semaine 1","items":["Politique de confidentialité","Audit des pages zones","Google Business Profile"]},{"name":"Phase 2 : améliorations à fort impact","timeframe":"Semaines 2-3","items":["Titres","Meta descriptions","Corrections de schéma","lastmod du sitemap"]},{"name":"Phase 3 : contenu et autorité","timeframe":"Mois 2","items":["Étoffer l'accueil","Avis","Guides"]},{"name":"Phase 4 : suivi et itération","timeframe":"En continu","items":["Couverture GSC","Suivi des CWV"]}]},
-"artifacts":{"findings_dir":"findings/","screenshots_dir":"screenshots/"}}
+{
+  "summary": {
+    "health_score": 72,
+    "business_type": "B2B Courier Service (Île-de-France)",
+    "audit_date": "2026-10-19",
+    "top_findings": [
+      "Core Web Vitals CRITIQUE: LCP mobile 4-8s (cible <2.5s) → +5h dev pour fix",
+      "Doorway-page risk: 125 zone pages (85% du site) bulk-indexed 18 oct → verify GSC coverage",
+      "Cannibalisation: 6 URLs combattent 'coursier paris' + 'prix coursier' → consolidation query-to-page",
+      "Trust signals ZÉRO: pas d'avis, pas de clients nommés, pas de mentions tiers (sauf Wikidata)",
+      "'Interlocuteur unique' toujours actif dans og:description + schema (vs 'Marchandise assurée' elsewhere)"
+    ],
+    "quick_wins": [
+      "Désactiver Lenis smooth scroll mobile (30 min, -20% TBT mobile)",
+      "GTM → strategy='afterInteractive' (1h, -0.5s bootup)",
+      "Hero video: ajouter poster WebP + preload (30 min, LCP 4.7s → 2.8s)",
+      "Batch update zone titles: 'Coursier [city] : dès [price]€' (2-3h, +2-3% CTR)",
+      "Expand /references 207w → 600w + cases + logos (1-2j, +2-3 positions)"
+    ]
+  },
+  "categories": [
+    {
+      "name": "Core Web Vitals & Performance",
+      "score": 35,
+      "weight": "10%",
+      "what_works": ["Server-rendered Next.js, edge-cached", "TTFB 0-190ms excellent", "CLS perfect (0)", "Fonts preloaded"],
+      "findings": [
+        {
+          "title": "LCP mobile excessif 4-8s vs cible 2.5s",
+          "severity": "Critical",
+          "description": "Home 4.7s, /tarifs 3.0s, /paris 5.0s, /references 5.5s, /services 7.9s. Desktop perfect 0.6-1.1s. Gap 5-13x = CPU-bound.",
+          "recommendation": "Phase 1: Lenis disable mobile, GTM afterInteractive, Hero poster+preload, AddressAutocomplete lazy, favicon reduce"
+        },
+        {
+          "title": "JavaScript main thread énorme (3.5-3.8s)",
+          "severity": "Critical",
+          "description": "Home script eval 3.5s, bootup 3.8s. Trois chunks 1.7s+1.0s+0.6s. Lenis + RAF loop permanent.",
+          "recommendation": "Run @next/bundle-analyzer. Disable Lenis mobile. Lazy-load AddressAutocomplete."
+        }
+      ]
+    },
+    {
+      "name": "Technical SEO",
+      "score": 88,
+      "weight": "22%",
+      "what_works": ["Crawlability: robots + sitemap correct", "Indexability: 149 URLs 200 OK", "Security: HSTS, CSP, HTTPS", "Mobile: viewport, lang='fr'"],
+      "findings": [
+        {
+          "title": "4 titres trop longs (70-74 chars, troncature SERP)",
+          "severity": "Medium",
+          "description": "/methode, /secteurs, /zones, /zones/evry-courcouronnes. Risk troncature ~60 chars.",
+          "recommendation": "Shorten <60 chars"
+        },
+        {
+          "title": "lastmod batch timestamps (93 URLs identiques 2026-10-18T19:42:53Z)",
+          "severity": "Medium",
+          "description": "Git commit dates. Zone pages shared data.ts. Google ignores unreliable lastmod.",
+          "recommendation": "Per-page updatedAt field ou drop shared data.ts"
+        }
+      ]
+    },
+    {
+      "name": "Content Quality & E-E-A-T",
+      "score": 66,
+      "weight": "23%",
+      "what_works": ["Zone pages 750w, local detail unique", "Service pages competent", "Readability 13-19w sentences", "Freshness recent"],
+      "findings": [
+        {
+          "title": "/references 207w (besoin 600w) — zéro clients nommés",
+          "severity": "Critical",
+          "description": "Proof page critique. Zéro testimonials. Impact trust + AIO.",
+          "recommendation": "Expand 207→600w, ajouter 3-5 case studies, logos, Review schema, AggregateRating"
+        },
+        {
+          "title": "'Interlocuteur unique' toujours dans og:description + LocalBusiness",
+          "severity": "Medium",
+          "description": "Commit cee9d6c l'a changé en 'Marchandise assurée' partout sauf meta/schema.",
+          "recommendation": "Purge globale: og:description, twitter:description, JSON-LD"
+        }
+      ]
+    },
+    {
+      "name": "Schema & Structured Data",
+      "score": 66,
+      "weight": "10%",
+      "what_works": ["LocalBusiness valid", "FAQPage 8 Q&A", "BreadcrumbList zones/services", "Service schema present"],
+      "findings": [
+        {
+          "title": "openingHours format ancien (besoin openingHoursSpecification)",
+          "severity": "High",
+          "description": "Legacy format. Modern prefer array avec dayOfWeek.",
+          "recommendation": "Replace openingHours avec openingHoursSpecification Mo-Sa 09:00-19:00"
+        },
+        {
+          "title": "WebSite node missing à home",
+          "severity": "Medium",
+          "description": "No publisher relationship.",
+          "recommendation": "Add WebSite schema with publisher"
+        }
+      ]
+    },
+    {
+      "name": "AI Search Readiness & Brand",
+      "score": 66,
+      "weight": "10%",
+      "what_works": ["All AI crawlers allowed", "Server-rendered", "llms.txt present", "Pricing quotable 'dès 21€'"],
+      "findings": [
+        {
+          "title": "Brand mentions tiers TRÈS faibles (Wikidata only)",
+          "severity": "High",
+          "description": "No Wikipedia, Reddit, YouTube, LinkedIn. Biggest gap for AI citations.",
+          "recommendation": "Build GBP, LinkedIn, YouTube. Add to sameAs. Aim 10+ reviews."
+        },
+        {
+          "title": "Publication dates incorrectes (2014, 2026-01-01 vs fondation 2026-02-21)",
+          "severity": "Medium",
+          "description": "Prédatent company creation.",
+          "recommendation": "Fix datePublished: 2026-10-18+, add dateModified, visible 'Mis à jour' date"
+        }
+      ]
+    },
+    {
+      "name": "On-Page SEO & SXO",
+      "score": 61,
+      "weight": "20%",
+      "what_works": ["/tarifs strong 78/100", "Service pages 72-74/100", "Zone template unique 750w", "Breadcrumbs correct"],
+      "findings": [
+        {
+          "title": "Cannibalisation: 6 URLs fight 'coursier paris' + 'prix'",
+          "severity": "High",
+          "description": "/, /zones/paris, /services/coursier-express-paris, /services/coursier-moto, /tarifs, /guides/prix all carry 'dès 21€'.",
+          "recommendation": "Pick 1 owner per query. Consolidate or differentiate."
+        },
+        {
+          "title": "Zone titles use landmarks vs commercial hooks",
+          "severity": "High",
+          "description": "'Coursier Poissy 78300 - Villa Savoye' vs 'Coursier Montreuil 93100 : dès 21€'.",
+          "recommendation": "Batch: 'Coursier [city] [CP] : livraison express dès [price]€ TTC'"
+        },
+        {
+          "title": "E-commerce page weak (52/100 persona score)",
+          "severity": "High",
+          "description": "H1 'Coursier jour' bizarre. No price. No API/Shopify.",
+          "recommendation": "Rename 'Livraison same-day e-commerce'. Add price, API sections, CTA."
+        }
+      ]
+    },
+    {
+      "name": "Sitemap & Indexation",
+      "score": 78,
+      "weight": "5%",
+      "what_works": ["149 URLs all 200 OK", "Valid XML", "No 404s/redirects", "Correct noindex"],
+      "findings": [
+        {
+          "title": "Doorway-page risk: 125 zones = 85%, bulk-indexed 18 oct",
+          "severity": "High",
+          "description": "isZoneIndexed() hard-coded true. 125 > 50-page threshold. Bulk-index pattern penalized.",
+          "recommendation": "Verify 60%+ unique content. Prepare noindex if GSC shows 'Crawled, not indexed' spike."
+        }
+      ]
+    }
+  ],
+  "action_plan": {
+    "phases": [
+      {
+        "name": "Phase 1: Critical Fixes (Semaine 1)",
+        "timeframe": "7 jours",
+        "effort": "5h dev",
+        "items": [
+          "Core Web Vitals: Lenis disable mobile (30 min)",
+          "Core Web Vitals: GTM afterInteractive (1h)",
+          "Core Web Vitals: Hero poster+preload (30 min)",
+          "Core Web Vitals: AddressAutocomplete lazy (1h)",
+          "Schema: openingHours → openingHoursSpecification (30 min)",
+          "Content: Purge 'interlocuteur unique' (30 min)"
+        ]
+      },
+      {
+        "name": "Phase 2: Content & Trust (Semaines 2-3)",
+        "timeframe": "14 jours",
+        "effort": "24h dev",
+        "items": [
+          "Trust: Expand /references 207w→600w (1-2j)",
+          "Zone pages: Batch update titles (2-3h)",
+          "E-commerce: Restructure page (3-4h)",
+          "SLA: Align contradictions (2h)"
+        ]
+      },
+      {
+        "name": "Phase 3: Optimization Sémantique (Semaines 3-4)",
+        "timeframe": "14 jours",
+        "effort": "16h dev",
+        "items": [
+          "Cannibalisation: Consolidate queries (2-3h)",
+          "Zone local signals: Map+widget (6-7h)",
+          "Internal links: Add home→key pages (1h)",
+          "Schema: Add sameAs improvements (30 min)"
+        ]
+      },
+      {
+        "name": "Phase 4: Monitoring (Continu)",
+        "timeframe": "Weekly",
+        "effort": "1h/week",
+        "items": [
+          "Weekly: Check Core Web Vitals (GSC, PageSpeed)",
+          "3j post: Track CTR changes",
+          "Monthly: GSC indexation check",
+          "Monthly: SERP position tracking"
+        ]
+      }
+    ]
+  },
+  "roi": {
+    "investment_dev_hours": 50,
+    "timeline_weeks": 4,
+    "expected_impact_30d": {
+      "organic_traffic_increase_pct": 25,
+      "avg_position_improvement": 5,
+      "ctr_improvement_pct": 30,
+      "mobile_score_improvement": 30
+    },
+    "expected_impact_90d": {
+      "organic_traffic_increase_pct": 100,
+      "avg_position_improvement": 10,
+      "ctr_improvement_pct": 50,
+      "zone_pages_indexed": 120
+    }
+  },
+  "artifacts": {
+    "findings_dir": "findings/",
+    "screenshots_dir": "screenshots/",
+    "report_markdown": "RAPPORT-AUDIT-SEO-COMPLET.md"
+  }
+}

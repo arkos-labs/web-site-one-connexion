@@ -7,7 +7,12 @@
 
 import { useState } from "react";
 import { MapPin, Flag } from "lucide-react";
-import { AddressAutocomplete } from "@/components/AddressAutocomplete";
+import dynamic from "next/dynamic";
+
+const AddressAutocomplete = dynamic(
+  () => import("@/components/AddressAutocomplete").then((mod) => ({ default: mod.AddressAutocomplete })),
+  { ssr: false, loading: () => <input placeholder="Adresse..." className="w-full bg-white rounded-xl px-4 py-3 text-[14px] text-gray-900" /> }
+);
 
 const COMMITMENTS = [
   { tag: "Enlèvement express", value: "< 45", unit: "min", title: "Enlèvement du colis", desc: "Après confirmation de la course, un coursier part immédiatement." },
@@ -30,7 +35,9 @@ export default function Hero() {
         loop
         muted
         playsInline
-        preload="metadata"
+        preload="auto"
+        poster="/hero-poster.webp"
+        fetchPriority="high"
         aria-hidden="true"
         className="absolute inset-0 w-full h-full object-cover object-[center_60%] z-0"
       >
