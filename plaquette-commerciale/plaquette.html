@@ -23,28 +23,36 @@
   h2 { font-size: 13pt; font-weight: 700; margin-bottom: 4mm; }
   .lead { font-size: 10.5pt; line-height: 1.6; color: var(--gray); margin-top: 4mm; max-width: 155mm; }
 
+  .bleed { margin-left: -16mm; margin-right: -16mm; padding-left: 16mm; padding-right: 16mm; }
+  .head.top { border-bottom: 0; margin-bottom: 0; }
+
   /* Page 1 */
-  .cover { height: 86mm; border-radius: 2mm; background: url("img/flotte.jpg") center 55% / cover; margin-bottom: 8mm; }
-  .facts { display: grid; grid-template-columns: repeat(4, 1fr); margin: 8mm 0 9mm; border-top: 1.5px solid var(--ink); }
-  .facts div { padding: 3.5mm 4mm 0 0; }
-  .facts div + div { padding-left: 4mm; border-left: 1px solid var(--line); }
-  .facts b { display: block; font-size: 14pt; font-weight: 800; }
-  .facts span { font-size: 8.5pt; color: var(--gray); }
+  .hero { background: var(--ink); color: #fff; border-top: 2mm solid var(--orange); padding-top: 13mm; padding-bottom: 11mm; margin-bottom: 10mm; }
+  .hero h1 { font-size: 27pt; }
+  .hero h1 span { color: var(--orange); }
+  .hero .lead { color: rgba(255,255,255,.75); margin-top: 5mm; }
+  .facts { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 10mm; border-top: 1px solid rgba(255,255,255,.2); }
+  .facts div { padding: 4mm 4mm 0 0; }
+  .facts div + div { padding-left: 4mm; border-left: 1px solid rgba(255,255,255,.2); }
+  .facts b { display: block; font-size: 15pt; font-weight: 800; color: var(--orange); }
+  .facts span { font-size: 8.5pt; color: rgba(255,255,255,.7); }
 
   .services { display: grid; grid-template-columns: 1fr 1fr; column-gap: 9mm; }
-  .service { border-top: 1px solid var(--line); padding: 3.5mm 0 4mm; }
-  .service h3 { font-size: 10.5pt; font-weight: 700; margin-bottom: 1.2mm; }
-  .service p { font-size: 8.8pt; line-height: 1.5; color: var(--gray); }
-  .service em { display: block; font-style: normal; font-size: 8.5pt; font-weight: 600; color: var(--ink); margin-top: 1.5mm; }
+  .service { border-top: 1px solid var(--line); padding: 5mm 0 6.5mm; }
+  .service h3 { font-size: 11pt; font-weight: 700; margin-bottom: 1.5mm; }
+  .service p { font-size: 9.2pt; line-height: 1.55; color: var(--gray); }
+  .service em { display: block; font-style: normal; font-size: 8.5pt; font-weight: 700; color: var(--orange); margin-top: 1.5mm; }
+  .service:nth-child(-n+2) { border-top: 2px solid var(--ink); }
 
-  .foot { margin-top: auto; padding-top: 4mm; border-top: 1px solid var(--line); display: flex; justify-content: space-between; font-size: 7.8pt; color: var(--gray); }
-  .foot b { color: var(--ink); font-weight: 600; }
+  .foot { margin-top: auto; margin-bottom: -11mm; padding-top: 5mm; padding-bottom: 5mm; background: var(--orange); display: flex; justify-content: space-between; font-size: 8pt; color: #fff; }
+  .foot b { font-weight: 700; }
 
   /* Page 2 */
   table { width: 100%; border-collapse: collapse; margin-top: 7mm; }
   th { background: var(--ink); color: #fff; font-size: 8.8pt; font-weight: 600; text-align: right; padding: 3mm 4mm; }
   th small { display: block; font-weight: 400; color: rgba(255,255,255,.65); font-size: 7.8pt; margin-top: .5mm; }
-  th { border: 0; vertical-align: bottom; }
+  th { border: 0; border-bottom: 1.2mm solid var(--orange); vertical-align: bottom; }
+  tbody tr:first-child .ttc { color: var(--orange); }
   th:first-child { text-align: left; }
   td { padding: 4mm 4mm; border-bottom: 1px solid var(--line); text-align: right; vertical-align: top; }
   td:first-child { text-align: left; }
@@ -56,36 +64,35 @@
   .note { font-size: 8.5pt; color: var(--gray); margin-top: 3.5mm; line-height: 1.5; }
 
   .offers { display: grid; grid-template-columns: 1fr 1fr; gap: 9mm; margin-top: 10mm; }
-  .offer h2 { padding-bottom: 2.5mm; border-bottom: 1.5px solid var(--ink); margin-bottom: 1mm; }
+  .offer h2 { padding-bottom: 2.5mm; border-bottom: 2px solid var(--orange); margin-bottom: 1mm; }
   .offer li { list-style: none; font-size: 9.2pt; line-height: 1.45; padding: 2.2mm 0; border-bottom: 1px solid var(--line); }
 
-  .contact { margin-top: auto; background: var(--ink); color: #fff; border-radius: 2mm; padding: 8mm 9mm; display: flex; justify-content: space-between; align-items: center; gap: 8mm; }
-  .contact h2 { font-size: 15pt; margin-bottom: 1.5mm; }
-  .contact p { font-size: 9pt; color: rgba(255,255,255,.7); line-height: 1.5; }
+  .contact { margin-top: auto; background: var(--orange); color: #fff; padding-top: 9mm; padding-bottom: 8mm; display: flex; justify-content: space-between; align-items: center; gap: 8mm; }
+  .contact h2 { font-size: 16pt; margin-bottom: 1.5mm; }
+  .contact p { font-size: 9pt; color: rgba(255,255,255,.9); line-height: 1.5; }
   .contact .right { text-align: right; flex: none; }
-  .contact .tel { font-size: 20pt; font-weight: 800; color: var(--orange); white-space: nowrap; letter-spacing: -.01em; }
-  .contact .right span { display: block; font-size: 9pt; color: rgba(255,255,255,.85); margin-top: 1mm; }
-  .legal { font-size: 7.4pt; color: var(--gray); text-align: center; margin-top: 4mm; }
+  .contact .tel { font-size: 22pt; font-weight: 800; color: var(--ink); white-space: nowrap; letter-spacing: -.01em; }
+  .contact .right span { display: block; font-size: 9pt; color: #fff; margin-top: 1mm; }
+  .legal { margin-bottom: -11mm; padding-top: 3.5mm; padding-bottom: 4mm; background: var(--ink); font-size: 7.4pt; color: rgba(255,255,255,.65); text-align: center; }
 </style>
 </head>
 <body>
 
 <section class="page">
-  <div class="head">
+  <div class="head top">
     <img src="logos/logo-rectangle-orange-noir.png" alt="ONE CONNEXION">
     <span>Coursier B2B — Paris et Île-de-France</span>
   </div>
 
-  <div class="cover" role="img" aria-label="Coursiers ONE CONNEXION à Paris"></div>
-
-  <h1>Vos plis et colis urgents,<br>livrés par un coursier dédié.</h1>
-  <p class="lead">Scooters et motos, coursiers vérifiés, une course directe de A à B sans regroupement. Cabinets juridiques, laboratoires et e-commerçants nous confient leurs envois sensibles&nbsp;: le prix est connu avant de commander et chaque livraison est confirmée par une preuve horodatée.</p>
-
-  <div class="facts">
-    <div><b>&lt; 45 min</b><span>Délai d’enlèvement</span></div>
-    <div><b>7j/7</b><span>De 7 h à 23 h</span></div>
-    <div><b>Dès 18 € TTC</b><span>Course dans Paris</span></div>
-    <div><b>1 course</b><span>= 1 coursier dédié</span></div>
+  <div class="hero bleed">
+    <h1>Vos plis et colis urgents,<br><span>livrés par un coursier dédié.</span></h1>
+    <p class="lead">Scooters et motos, coursiers vérifiés, une course directe de A à B sans regroupement. Cabinets juridiques, laboratoires et e-commerçants nous confient leurs envois sensibles&nbsp;: le prix est connu avant de commander et chaque livraison est confirmée par une preuve horodatée.</p>
+    <div class="facts">
+      <div><b>&lt; 45 min</b><span>Délai d’enlèvement</span></div>
+      <div><b>7j/7</b><span>De 7 h à 23 h</span></div>
+      <div><b>Dès 18 € TTC</b><span>Course dans Paris</span></div>
+      <div><b>1 course</b><span>= 1 coursier dédié</span></div>
+    </div>
   </div>
 
   <h2>Nos prestations</h2>
@@ -98,7 +105,7 @@
     <div class="service"><h3>Événementiel</h3><p>Invitations, prototypes, cadeaux d’affaires et matériel livrés avec discrétion.</p><em>Sur devis</em></div>
   </div>
 
-  <div class="foot">
+  <div class="foot bleed">
     <span><b>ONE CONNEXION</b> · SAS · SIRET 101 517 100 00018</span>
     <span>06 66 02 67 07 · contact@oneconnexion.com · oneconnexion.com</span>
   </div>
@@ -172,7 +179,7 @@
     </div>
   </div>
 
-  <div class="contact">
+  <div class="contact bleed">
     <div>
       <h2>Une course à organiser ?</h2>
       <p>Commandez en ligne sur oneconnexion.com ou appelez-nous,<br>7 jours sur 7 de 7 h à 23 h.</p>
@@ -183,7 +190,7 @@
       <span>www.oneconnexion.com</span>
     </div>
   </div>
-  <p class="legal">ONE CONNEXION — SAS au capital de 3 000 € — 5 square Nungesser, 94160 Saint-Mandé — SIREN 101 517 100 — TVA FR24 101 517 100</p>
+  <p class="legal bleed">ONE CONNEXION — SAS au capital de 3 000 € — 5 square Nungesser, 94160 Saint-Mandé — SIREN 101 517 100 — TVA FR24 101 517 100</p>
 </section>
 
 </body>
