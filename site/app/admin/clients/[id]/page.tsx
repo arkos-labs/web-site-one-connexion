@@ -290,7 +290,7 @@ export default function AdminClientDetailPage() {
 
   // Préparer / bloquer / débloquer une facture avant son envoi (route admin, la RLS interdit l'écriture directe).
   const [invoiceBusy, setInvoiceBusy] = useState<string | null>(null);
-  const runInvoiceAction = async (invoiceId: string, action: "prepare" | "hold" | "release") => {
+  const runInvoiceAction = async (invoiceId: string, action: "prepare" | "hold" | "release" | "redo") => {
     setInvoiceBusy(invoiceId);
     try {
       const res = await fetch("/api/admin/invoices", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ invoiceId, action }) });
@@ -454,6 +454,9 @@ export default function AdminClientDetailPage() {
                     )}
                     {(inv.status === "en_cours" || inv.status === "prete") && (
                       <InvoiceAction invoiceId={inv.id} action="hold" label="Bloquer l'envoi" busy={invoiceBusy} onRun={runInvoiceAction} />
+                    )}
+                    {(inv.status === "prete" || inv.status === "retenue") && inv.url && (
+                      <InvoiceAction invoiceId={inv.id} action="redo" label="Annuler et refaire" busy={invoiceBusy} onRun={runInvoiceAction} />
                     )}
                     {inv.status === "retenue" && inv.url && (
                       <InvoiceAction invoiceId={inv.id} action="release" label="Débloquer l'envoi" busy={invoiceBusy} onRun={runInvoiceAction} primary />
@@ -627,10 +630,10 @@ function InvoiceAction({
   primary = false,
 }: {
   invoiceId: string;
-  action: "prepare" | "hold" | "release";
+  action: "prepare" | "hold" | "release" | "redo";
   label: string;
   busy: string | null;
-  onRun: (invoiceId: string, action: "prepare" | "hold" | "release") => void;
+  onRun: (invoiceId: string, action: "prepare" | "hold" | "release" | "redo") => void;
   primary?: boolean;
 }) {
   return (

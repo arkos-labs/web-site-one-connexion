@@ -18,7 +18,9 @@ export type IssueResult = { invoice: string; ok: boolean; skipped?: boolean; det
 export async function issueInternalInvoice(
   supabase: SupabaseClient,
   stripe: Stripe,
-  invoiceId: string
+  invoiceId: string,
+  // Facture refaite après annulation : clés Stripe neuves, sinon Stripe renverrait la facture annulée.
+  attempt = ''
 ): Promise<IssueResult> {
   const { data: claimed } = await supabase
     .from('invoices')
@@ -141,11 +143,11 @@ export async function issueInternalInvoice(
             },
           },
         },
-        { idempotencyKey: `invoice-${claimed.id}-bt` }
+        { idempotencyKey: `invoice-${claimed.id}${attempt}-bt` }
       );
     } catch (err: any) {
       if (!String(err?.message).includes('customer_balance')) throw err;
-      draft = await stripe.invoices.create(base, { idempotencyKey: `invoice-${claimed.id}-card` });
+      draft = await stripe.invoices.create(base, { idempotencyKey: `invoice-${claimed.id}${attempt}-card` });
     }
 
     for (const item of items) {
@@ -157,7 +159,7 @@ export async function issueInternalInvoice(
           amount: Math.round(Number(item.total_price) * 100),
           description: describe(item),
         },
-        { idempotencyKey: `item-${item.id}` }
+        { idempotencyKey: `item-${item.id}${attempt}` }
       );
     }
 
