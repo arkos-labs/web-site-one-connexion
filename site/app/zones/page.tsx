@@ -11,7 +11,7 @@ import DeptCards from "@/components/sections/DeptCards";
 export const metadata: Metadata = {
   title: { absolute: "Zones île-de-france : couverture complète de Paris et Île-de-France" },
   description:
-    "Zones de couverture One Connexion : Paris, petite couronne, La Défense, grande couronne. Livraison express Île-de-France dès 21 euros. Tarifs fixes, traçabilité GPS, 6j/7 9h-19h.",
+    "Zones de couverture One Connexion : Paris, petite couronne, La Défense, grande couronne. Livraison express Île-de-France dès 28 euros. Tarifs fixes, traçabilité GPS, 6j/7 9h-19h.",
   alternates: { canonical: "/zones" },
 };
 
@@ -60,33 +60,33 @@ const ZONES = [
   {
     dept: "77",
     name: "Seine-et-Marne",
-    desc: "Melun, Marne-la-Vallée, Meaux - dès 78 € TTC.",
+    desc: "Melun, Marne-la-Vallée, Meaux - dès 76 € TTC selon la distance.",
     href: "/zones/grande-couronne",
-    tag: "Dès 78 € TTC",
+    tag: "Dès 76 € TTC",
     tagColor: "bg-amber-100 text-amber-700",
   },
   {
     dept: "78",
     name: "Yvelines",
-    desc: "Versailles, Saint-Quentin-en-Yvelines - dès 78 € TTC.",
+    desc: "Versailles, Saint-Quentin-en-Yvelines - dès 62 € TTC selon la distance.",
     href: "/zones/grande-couronne",
-    tag: "Dès 78 € TTC",
+    tag: "Dès 62 € TTC",
     tagColor: "bg-amber-100 text-amber-700",
   },
   {
     dept: "91",
     name: "Essonne",
-    desc: "Évry-Courcouronnes, Massy, Palaiseau - dès 78 € TTC.",
+    desc: "Évry-Courcouronnes, Massy, Palaiseau - dès 62 € TTC selon la distance.",
     href: "/zones/grande-couronne",
-    tag: "Dès 78 € TTC",
+    tag: "Dès 62 € TTC",
     tagColor: "bg-amber-100 text-amber-700",
   },
   {
     dept: "95",
     name: "Val-d'Oise",
-    desc: "Cergy-Pontoise, Argenteuil, Roissy-CDG - dès 78 € TTC.",
+    desc: "Cergy-Pontoise, Argenteuil, Roissy-CDG - dès 60 € TTC selon la distance.",
     href: "/zones/grande-couronne",
-    tag: "Dès 78 € TTC",
+    tag: "Dès 60 € TTC",
     tagColor: "bg-amber-100 text-amber-700",
   },
 ];
@@ -154,7 +154,7 @@ export default function ZonesPage() {
               {
                 zone: "Paris Intramuros",
                 dept: "75",
-                budget: "A partir de 21 euros TTC",
+                budget: "A partir de 28 euros TTC",
                 delai: "moins de 45 min enlèvement",
                 ideal: "Plis urgents, documents sensibles, e-commerce premium",
                 exemple: "Livrer contrat signé avant 18h en 2h"
@@ -162,7 +162,7 @@ export default function ZonesPage() {
               {
                 zone: "Petite Couronne",
                 dept: "92, 93, 94",
-                budget: "42 euros TTC (course dédiée)",
+                budget: "59 euros TTC (course dédiée)",
                 delai: "moins de 45 min enlèvement",
                 ideal: "Transport médical, logistique B2B, multisite parisiens",
                 exemple: "Enlever prélèvements biologiques Vitry et livrer Créteil en moins de 1h"
@@ -170,7 +170,7 @@ export default function ZonesPage() {
               {
                 zone: "La Défense & Hauts-de-Seine",
                 dept: "92",
-                budget: "A partir de 21 euros TTC",
+                budget: "A partir de 59 euros TTC",
                 delai: "moins de 30 min enlèvement intra-Défense",
                 ideal: "Livraisons inter-tours, documents confidentiels, démarches RH",
                 exemple: "Distribuer dossier candidature entre tours de La Défense"
@@ -178,7 +178,7 @@ export default function ZonesPage() {
               {
                 zone: "Grande Couronne",
                 dept: "77, 78, 91, 95",
-                budget: "A partir de 52 euros TTC",
+                budget: "A partir de 60 euros TTC",
                 delai: "60-90 min enlèvement",
                 ideal: "Livraisons moins urgentes, zones éloignées",
                 exemple: "Enlever échantillons Évry et livrer Versailles en 2h"

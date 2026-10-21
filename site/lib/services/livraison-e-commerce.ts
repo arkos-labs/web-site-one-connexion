@@ -129,7 +129,7 @@ export const livraisonEcommerce: Service = {
     {
       question: "Combien coûte une livraison le jour même ?",
       answer:
-        "Dans Paris, 21 € TTC en Normal (livré sous 3 h) ; 42 € TTC vers la petite couronne. Le prix est le même quel que soit le colis, dans la limite de 18 kg.",
+        "Dans Paris, 28 € TTC en Normal (livré sous 3 h) ; 59 € TTC vers la petite couronne. Le prix est le même quel que soit le colis, dans la limite de 18 kg.",
     },
     {
       question: "Jusqu’à quelle heure commander pour livrer le jour même ?",

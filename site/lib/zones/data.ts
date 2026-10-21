@@ -24,6 +24,7 @@ import { ZONES_95 } from "./data-95";
 import { ZONES_77 } from "./data-77";
 import { ZONES_78 } from "./data-78";
 import { PARIS_LOCAL } from "./paris-local";
+import { priceFromParis, type ServiceLevel } from "@/lib/pricing";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // PARIS INTRAMUROS — 20 arrondissements
@@ -529,7 +530,28 @@ function withLocalContent(z: Zone): Zone {
   };
 }
 
-export const ZONES: Zone[] = [
+const TOKEN_SERVICE: Record<string, ServiceLevel> = { normal: "standard", urgent: "urgent", super: "flash" };
+const euroNumber = (n: number) =>
+  n.toLocaleString("fr-FR", { minimumFractionDigits: Number.isInteger(n) ? 0 : 2, maximumFractionDigits: 2 });
+
+/**
+ * Remplace les prix écrits {normal}, {urgent}, {super} par ceux de la grille pour la commune de la page,
+ * ou pour une autre commune avec {normal@Saclay 91}. En grande couronne, le prix dépend de la distance.
+ */
+function withPrices<T>(value: T, place: string): T {
+  if (typeof value === "string") {
+    return value.replace(/\{(normal|urgent|super)(?:@([^}]+))?\}/g, (_, level: string, other?: string) =>
+      euroNumber(priceFromParis(other ?? place, TOKEN_SERVICE[level])),
+    ) as T;
+  }
+  if (Array.isArray(value)) return value.map((v) => withPrices(v, place)) as T;
+  if (value && typeof value === "object") {
+    return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, withPrices(v, place)])) as T;
+  }
+  return value;
+}
+
+const ZONES_RAW: Zone[] = [
   ...ZONES_75.map((z) => {
     const local = PARIS_LOCAL[z.slug];
     const extra = EXTRA_75[z.slug];
@@ -543,6 +565,8 @@ export const ZONES: Zone[] = [
   }),
   ...[...ZONES_92, ...ZONES_93, ...ZONES_94, ...ZONES_91, ...ZONES_95, ...ZONES_77, ...ZONES_78].map(withLocalContent),
 ];
+
+export const ZONES: Zone[] = ZONES_RAW.map((z) => withPrices(z, `${z.name} ${z.dept}`));
 
 export const ZONE_SLUGS = ZONES.map((z) => z.slug);
 

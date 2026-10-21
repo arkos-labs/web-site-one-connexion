@@ -8,11 +8,18 @@ import JsonLd from "@/components/JsonLd";
 import DeptCards from "@/components/sections/DeptCards";
 import { SITE_URL, PHONE_TEL, PHONE_DISPLAY } from "@/lib/site-content";
 import { SERVICES } from "@/lib/services";
+import { priceFromParis } from "@/lib/pricing";
+
+/** Exemples de prix, du plus proche au plus loin de Paris (calculés par la grille). */
+const EXAMPLES = ["Argenteuil 95", "Versailles 78", "Évry-Courcouronnes 91", "Cergy 95", "Meaux 77", "Coulommiers 77"];
+
+const euro = (n: number) =>
+  `${n.toLocaleString("fr-FR", { minimumFractionDigits: Number.isInteger(n) ? 0 : 2, maximumFractionDigits: 2 })} €`;
 
 export const metadata: Metadata = {
   title: "Coursier grande couronne 77, 78, 91, 95",
   description:
-    "Coursier en grande couronne : Seine-et-Marne (77), Yvelines (78), Essonne (91), Val-d'Oise (95). Course directe vers Paris ou la banlieue, dès 78 € TTC, du lundi au samedi.",
+    "Coursier en grande couronne : Seine-et-Marne (77), Yvelines (78), Essonne (91), Val-d'Oise (95). Course directe vers Paris ou la banlieue, dès 60 € TTC selon la distance, du lundi au samedi.",
   alternates: { canonical: "/zones/grande-couronne" },
   openGraph: {
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION - Coursier B2B Paris & Île-de-France" }],
@@ -35,7 +42,7 @@ const breadcrumbSchema = {
 };
 
 const FAQ = [
-  { q: "Quel est le prix d’une course en grande couronne ?", a: "Le prix dépend de la zone la plus éloignée du trajet, pas des kilomètres. Avec une adresse en grande couronne (77, 78, 91, 95), une course coûte 78 € TTC en Normal (3 h), 117 € en Urgent (1 h 30) et 156 € en Super (1 h)." },
+  { q: "Quel est le prix d’une course en grande couronne ?", a: "En grande couronne, le prix suit la distance entre Paris et l’adresse la plus éloignée du trajet, retour du coursier compris. En délai Normal (3 h) : 76 € TTC pour Versailles, 102 € pour Évry, 118 € pour Cergy, 158 € pour Meaux. L’Urgent (1 h 30) coûte 1,5 fois ce prix, le Super (1 h) 2 fois." },
   { q: "Faites-vous les trajets entre la grande couronne et Paris ?", a: "Oui, dans les deux sens, et aussi vers la petite couronne ou une autre commune de grande couronne. Le coursier va directement de l’enlèvement à la remise." },
   { q: "Quel poids peut-on vous confier ?", a: "Jusqu’à 18 kg, dans le top-case d’un deux-roues. Au-delà de 10 kg, ou pour un colis encombrant, appelez-nous avant de commander." },
   { q: "Quels sont vos horaires en grande couronne ?", a: "Du lundi au samedi, de 9h à 19h, comme à Paris. Nous sommes fermés le dimanche et les jours fériés." },
@@ -103,23 +110,34 @@ export default function ZoneGrandeCouronne() {
         <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
           <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">Tarifs</div>
           <h2 className="mb-8 max-w-[24ch] text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-            Un prix fixe, connu avant de commander.
+            Un prix selon la distance, connu avant de commander.
           </h2>
-          <div className="grid gap-4 sm:grid-cols-3">
-            {[
-              { name: "Normal", delay: "3 h", price: "78 €" },
-              { name: "Urgent", delay: "1 h 30", price: "117 €" },
-              { name: "Super", delay: "1 h", price: "156 €" },
-            ].map((p) => (
-              <div key={p.name} className="rounded-xl border border-line bg-white p-6">
-                <div className="font-mono text-[10px] tracking-[0.14em] text-label uppercase">{p.name} · {p.delay}</div>
-                <div className="mt-2 text-[32px] font-bold tracking-[-0.02em] text-ink">{p.price} <span className="text-[14px] font-medium text-muted">TTC</span></div>
-              </div>
-            ))}
+          <div className="overflow-x-auto rounded-xl border border-line bg-white">
+            <table className="w-full min-w-[520px] border-collapse text-[14.5px]">
+              <thead>
+                <tr className="border-b border-line">
+                  <th className="p-4 text-left font-mono text-[10px] tracking-[0.14em] text-label uppercase">Course Paris ↔</th>
+                  <th className="p-4 text-right font-mono text-[10px] tracking-[0.14em] text-label uppercase">Normal · 3 h</th>
+                  <th className="p-4 text-right font-mono text-[10px] tracking-[0.14em] text-label uppercase">Urgent · 1 h 30</th>
+                  <th className="p-4 text-right font-mono text-[10px] tracking-[0.14em] text-label uppercase">Super · 1 h</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-line">
+                {EXAMPLES.map((place) => (
+                  <tr key={place}>
+                    <td className="p-4 font-medium text-ink">{place.replace(/ \d+$/, "")} <span className="font-mono text-[12px] text-muted">{place.slice(-2)}</span></td>
+                    {(["standard", "urgent", "flash"] as const).map((s) => (
+                      <td key={s} className="p-4 text-right font-semibold text-ink tabular-nums">{euro(priceFromParis(place, s))}</td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
           <p className="mt-6 max-w-[70ch] text-[14.5px] leading-[1.65] text-muted">
-            Le prix dépend de la zone la plus éloignée du trajet : dès qu’une adresse est en grande couronne,
-            c’est le tarif ci-dessus, que l’autre adresse soit à Paris, en petite couronne ou en grande couronne.
+            Prix TTC. Le coursier part de Paris : le prix suit la distance entre Paris et l’adresse la plus éloignée
+            du trajet, retour compris, que l’autre adresse soit à Paris, en petite couronne ou en grande couronne.
+            Le prix exact de votre course s’affiche dès que vous saisissez les adresses.
             Avec un compte entreprise, les factures se règlent sous 30 jours.
           </p>
         </div>

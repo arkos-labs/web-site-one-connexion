@@ -61,7 +61,7 @@ export const transportEvenementiel: Service = {
     {
       question: "Combien coûte une course pendant un événement ?",
       answer:
-        "Le même prix qu’une autre course : il dépend de la zone et du délai, par exemple 42 € TTC pour une course Super (1 h) dans Paris. Seules les astreintes hors de nos horaires se font sur devis.",
+        "Le même prix qu’une autre course : il dépend de la zone et du délai, par exemple 56 € TTC pour une course Super (1 h) dans Paris. Seules les astreintes hors de nos horaires se font sur devis.",
     },
     {
       question: "Livrez-vous directement sur un stand ou en coulisses ?",

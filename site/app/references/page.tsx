@@ -59,7 +59,7 @@ const SECTEURS = [
 const CHIFFRES = [
   { value: "6j/7", label: "Du lundi au samedi, 9h–19h" },
   { value: "< 45 min", label: "Enlèvement après confirmation" },
-  { value: "Dès 21 €", label: "TTC, une course dans Paris" },
+  { value: "Dès 28 €", label: "TTC, une course dans Paris" },
   { value: "10 ans+", label: "D’expérience du coursier B2B en Île-de-France" },
 ];
 

@@ -1,15 +1,43 @@
 import { COMMUNES_IDF } from "./communes-idf";
+import { KM_BY_COMMUNE, KM_BY_POSTCODE } from "./communes-distance";
 
 export type Zone = 0 | 1 | 2 | 3 | 4;
 export type ServiceLevel = 'navette' | 'standard' | 'urgent' | 'flash';
 
 // Prix TTC, TVA 20 % comprise, identiques pour les pros et les particuliers.
+// Bâtis sur le coût réel d'un coursier deux-roues (octobre 2026) : 4 720 € de charges hors véhicule
+// + 3 000 € de bénéfice visé, sur 180 h roulées par mois → 42,89 € HT de l'heure ; véhicule
+// remboursé en indemnités kilométriques (barème 2026, 125 cm³) : 0,248 € par km.
+// Paris : course de 30 min, approche comprise, 8 km → 28 € TTC.
+// Petite couronne : 1 h environ avec un retour partiel → 59 € TTC.
+// Grande couronne (zone 2) : prix selon la distance depuis Paris, retour à vide compris.
+// Les zones 3 et 4 (hors Île-de-France, adresse introuvable) ne sont pas desservies.
 const PRICING_GRID = {
   navette: [18.00, 30.00, 66.00, 72.00, 78.00],
-  standard: [21.00, 42.00, 78.00, 96.00, 109.20],
-  urgent: [31.50, 63.00, 117.00, 144.00, 163.80],
-  flash: [42.00, 84.00, 156.00, 192.00, 218.40]
+  standard: [28.00, 59.00, 0, 96.00, 109.20],
+  urgent: [42.00, 88.50, 0, 144.00, 163.80],
+  flash: [56.00, 118.00, 0, 192.00, 218.40]
 };
+
+/** Majoration par délai, appliquée au prix Normal de la grande couronne (comme sur la grille Paris). */
+const DELAY_FACTOR: Record<Exclude<ServiceLevel, "navette">, number> = { standard: 1, urgent: 1.5, flash: 2 };
+
+// Grande couronne : aller avec le colis + retour à vide vers Paris à 50 km/h de moyenne,
+// plus 20 min d'approche, d'enlèvement et de remise. HT = heures × 42,89 € + km × 0,248 €.
+const GC_HOURLY_HT = 42.89;
+const GC_KM_HT = 0.248;
+const GC_SPEED_KMH = 50;
+const GC_FIXED_HOURS = 20 / 60;
+
+/** Prix Normal TTC d'une course grande couronne à `km` de Paris, jamais sous le prix petite couronne. */
+function grandeCouronneTTC(km: number): number {
+  const roundTrip = 2 * km;
+  const ht = (roundTrip / GC_SPEED_KMH + GC_FIXED_HOURS) * GC_HOURLY_HT + roundTrip * GC_KM_HT;
+  return Math.max(PRICING_GRID.standard[1], Math.round(ht * 1.2));
+}
+
+/** Prix d'appel de la grande couronne : la commune la plus proche de Paris. */
+const GC_FROM_KM = Math.min(...Object.values(KM_BY_COMMUNE));
 
 /** Décomposition d'un prix TTC (TVA 20 % comprise) : HT = TTC / 1,20, TVA = TTC − HT. */
 export function splitTTC(ttc: number) {
@@ -34,24 +62,48 @@ function communes(): Map<string, string[]> {
   return communeIndex;
 }
 
+/**
+ * Commune nommée dans l'adresse, limitée à `dept` s'il est connu. La ville est en général à la fin
+ * (« 54 rue de Paris, Montreuil ») : on garde la commune trouvée le plus loin dans l'adresse,
+ * et la plus longue à égalité (« Saint-Denis » > « Denis »).
+ */
+function findCommune(address: string, dept?: string): { name: string; depts: string[] } | null {
+  const text = ` ${normalize(address)} `;
+  let best: { end: number; len: number; name: string; depts: string[] } | null = null;
+  for (const [name, all] of communes()) {
+    const depts = dept ? all.filter((d) => d === dept) : all;
+    if (!depts.length) continue;
+    const at = text.lastIndexOf(` ${name} `);
+    if (at < 0) continue;
+    const end = at + name.length;
+    if (!best || end > best.end || (end === best.end && name.length > best.len)) best = { end, len: name.length, name, depts };
+  }
+  return best && { name: best.name, depts: best.depts };
+}
+
 /** Département de l'adresse : par le code postal, sinon par le nom de la ville (« Montreuil », « Paris 15e »). */
 export function getDepartmentFromAddress(address: string): string | null {
   const match = address.match(/\b([0-9]{2})[0-9]{3}\b/);
   if (match) return match[1];
 
-  // La ville est en général à la fin (« 54 rue de Paris, Montreuil ») : on garde la commune
-  // trouvée le plus loin dans l'adresse, et la plus longue à égalité (« Saint-Denis » > « Denis »).
-  const text = ` ${normalize(address)} `;
-  let best: { end: number; len: number; depts: string[] } | null = null;
-  for (const [name, depts] of communes()) {
-    const at = text.lastIndexOf(` ${name} `);
-    if (at < 0) continue;
-    const end = at + name.length;
-    if (!best || end > best.end || (end === best.end && name.length > best.len)) best = { end, len: name.length, depts };
-  }
-  if (!best) return null;
+  const found = findCommune(address);
+  if (!found) return null;
   // Homonyme : on retient la zone la plus éloignée.
-  return best.depts.reduce((a, b) => (getZoneFromDepartment(b) > getZoneFromDepartment(a) ? b : a));
+  return found.depts.reduce((a, b) => (getZoneFromDepartment(b) > getZoneFromDepartment(a) ? b : a));
+}
+
+/** Km estimés depuis Paris d'une adresse de grande couronne : la commune, sinon le code postal, sinon la médiane du département. */
+function kmFromParis(address: string, dept: string): number {
+  const commune = findCommune(address, dept);
+  if (commune) {
+    const km = KM_BY_COMMUNE[`${dept}|${commune.name}`];
+    if (km != null) return km;
+  }
+  const cp = address.match(/\b([0-9]{5})\b/)?.[1];
+  if (cp && KM_BY_POSTCODE[cp] != null) return KM_BY_POSTCODE[cp];
+  // Code postal CEDEX ou inconnu : distance médiane du département.
+  const kms = Object.entries(KM_BY_COMMUNE).filter(([k]) => k.startsWith(`${dept}|`)).map(([, v]) => v).sort((a, b) => a - b);
+  return kms[Math.floor(kms.length / 2)];
 }
 
 export function getZoneFromDepartment(dept: string | null): Zone {
@@ -63,9 +115,18 @@ export function getZoneFromDepartment(dept: string | null): Zone {
   return 3;
 }
 
-/** Prix TTC d'une formule pour une zone (0 Paris, 1 petite couronne, 2 grande couronne), pour l'affichage. */
+/**
+ * Prix TTC d'une formule pour une zone (0 Paris, 1 petite couronne, 2 grande couronne), pour l'affichage.
+ * Grande couronne : prix d'appel (« dès »), celui de la commune la plus proche de Paris.
+ */
 export function gridPrice(service: ServiceLevel, zone: Zone): number {
+  if (zone === 2 && service !== "navette") return grandeCouronneTTC(GC_FROM_KM) * DELAY_FACTOR[service];
   return PRICING_GRID[service][zone];
+}
+
+/** Prix TTC d'une course entre Paris et `address` (une commune suffit : « Meaux 77 », « Cergy »). */
+export function priceFromParis(address: string, service: ServiceLevel): number {
+  return calculatePrice("Paris 75001", address, service);
 }
 
 /** Départements desservis : Paris et Île-de-France. */
@@ -85,6 +146,16 @@ export function calculatePrice(pickup: string, dropoff: string, service: Service
   const zoneDropoff = getZoneFromDepartment(deptDropoff);
 
   const maxZone = Math.max(zonePickup, zoneDropoff) as Zone;
+
+  // Grande couronne : le coursier part de Paris, le prix suit l'adresse la plus éloignée de Paris.
+  if (maxZone === 2 && service !== "navette") {
+    const km = Math.max(
+      ...[[pickup, deptPickup, zonePickup], [dropoff, deptDropoff, zoneDropoff]]
+        .filter(([, , zone]) => zone === 2)
+        .map(([address, dept]) => kmFromParis(address as string, dept as string)),
+    );
+    return grandeCouronneTTC(km) * DELAY_FACTOR[service];
+  }
 
   return PRICING_GRID[service][maxZone];
 }

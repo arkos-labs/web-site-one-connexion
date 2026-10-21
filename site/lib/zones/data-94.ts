@@ -21,7 +21,7 @@ export const ZONES_94: Zone[] = [
     keyClients: ["Cabinets d'avocats et études notariales", "Agences et sociétés de services", "Professions de santé", "Commerces de la rue du Midi"],
     distanceParis: "Voisine de Paris 12e et 20e",
     pricingZone: "standard",
-    seoTitle: "Coursier Vincennes - livraison express 94300, dès 42 € TTC",
+    seoTitle: "Coursier Vincennes - livraison express 94300, dès {normal} € TTC",
     seoDesc: "Coursier express à Vincennes (94300) : plis, documents, prélèvements et colis en deux-roues. Voisin de notre siège, enlèvement en moins de 45 min, prix immédiat.",
     seoKeywords: ["coursier Vincennes", "livraison express 94300", "coursier 94 Vincennes", "coursier château de Vincennes"],
     localGuide: {
@@ -39,7 +39,7 @@ export const ZONES_94: Zone[] = [
       },
       {
         q: "Quel est le prix d'un coursier à Vincennes ?",
-        a: "Vincennes relève du tarif petite couronne : à partir de 42 € TTC en normal (3 h) et 84 € TTC en formule Super (1 h). Le prix exact dépend de la destination et du délai, et s’affiche avant de commander.",
+        a: "Vincennes relève du tarif petite couronne : à partir de {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h). Le prix exact dépend de la destination et du délai, et s’affiche avant de commander.",
       },
       {
         q: "Pouvez-vous porter des actes de Vincennes au tribunal de Créteil ?",
@@ -92,7 +92,7 @@ export const ZONES_94: Zone[] = [
       },
       {
         q: "Combien coûte une course au départ de Saint-Mandé ?",
-        a: "Saint-Mandé relève du tarif petite couronne : à partir de 42 € TTC en normal (3 h) et 84 € TTC en formule Super (1 h). Pour un trajet vers Paris, la grille de la page tarifs donne les fourchettes par zone.",
+        a: "Saint-Mandé relève du tarif petite couronne : à partir de {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h). Pour un trajet vers Paris, la grille de la page tarifs donne les fourchettes par zone.",
       },
       {
         q: "Peut-on ouvrir un compte entreprise depuis Saint-Mandé ?",

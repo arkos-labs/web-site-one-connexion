@@ -86,7 +86,7 @@ export const GUIDES: Guide[] = [
       {
         question: "Combien coûte l’envoi d’un pli confidentiel dans Paris ?",
         answer:
-          "Comme toute course : 21 € TTC en Normal (3 h), 31,50 € en Urgent (1 h 30) et 42 € en Super (1 h) dans Paris. Le prix ne dépend pas du contenu du pli.",
+          "Comme toute course : 28 € TTC en Normal (3 h), 42 € en Urgent (1 h 30) et 56 € en Super (1 h) dans Paris. Le prix ne dépend pas du contenu du pli.",
       },
       {
         question: "Le pli peut-il être regroupé avec d’autres envois ?",
@@ -160,7 +160,7 @@ export const GUIDES: Guide[] = [
       {
         question: "Combien coûte le transport d’un prélèvement ?",
         answer:
-          "Le prix d’une course classique, selon la zone et le délai : par exemple 42 € TTC en Super (1 h) dans Paris. Le contenant isotherme est compris.",
+          "Le prix d’une course classique, selon la zone et le délai : par exemple 56 € TTC en Super (1 h) dans Paris. Le contenant isotherme est compris.",
       },
     ],
     service: { href: "/services/transport-medical", label: "Transport médical" },
@@ -183,9 +183,9 @@ export const GUIDES: Guide[] = [
         table: {
           head: ["Zone", "Normal 3 h", "Urgent 1 h 30", "Super 1 h"],
           rows: [
-            ["Paris (75)", "21 €", "31,50 €", "42 €"],
-            ["Petite couronne (92, 93, 94)", "42 €", "63 €", "84 €"],
-            ["Grande couronne (77, 78, 91, 95)", "78 €", "117 €", "156 €"],
+            ["Paris (75)", "28 €", "42 €", "56 €"],
+            ["Petite couronne (92, 93, 94)", "59 €", "88,50 €", "118 €"],
+            ["Grande couronne (77, 78, 91, 95)", "dès 60 €", "dès 90 €", "dès 120 €"],
           ],
           note: "Tarifs TTC par course, TVA 20 % comprise. Le prix exact s'affiche avant de valider la commande.",
         },
@@ -199,7 +199,7 @@ export const GUIDES: Guide[] = [
       {
         heading: "Le délai demandé",
         paragraphs: [
-          "Plus le délai est court, plus la course coûte cher : à Paris, la même course passe de 21 € TTC en 3 h à 42 € TTC en 1 h. Une navette régulière, avec un passage programmé, est en général la formule la plus économique pour des besoins répétés.",
+          "Plus le délai est court, plus la course coûte cher : à Paris, la même course passe de 28 € TTC en 3 h à 56 € TTC en 1 h. Une navette régulière, avec un passage programmé, est en général la formule la plus économique pour des besoins répétés.",
         ],
       },
       {
@@ -229,7 +229,7 @@ export const GUIDES: Guide[] = [
       {
         question: "Une course urgente est-elle plus chère ?",
         answer:
-          "Oui : un délai de 1 h coûte le double d'un délai de 3 h (42 € TTC contre 21 € TTC dans Paris). Un créneau plus large réduit le tarif.",
+          "Oui : un délai de 1 h coûte le double d'un délai de 3 h (56 € TTC contre 28 € TTC dans Paris). Un créneau plus large réduit le tarif.",
       },
       {
         question: "Le prix change-t-il selon le poids ou le contenu ?",

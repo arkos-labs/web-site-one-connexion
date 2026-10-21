@@ -9,16 +9,16 @@ import Link from "next/link";
 import JsonLd from "@/components/JsonLd";
 import { SITE_URL, PHONE_DISPLAY, PHONE_TEL } from "@/lib/site-content";
 import { CheckCircle2, Clock, MapPin, Shield } from "lucide-react";
-import { splitTTC } from "@/lib/pricing";
+import { gridPrice, splitTTC, type Zone } from "@/lib/pricing";
 
 // 31,5 → « 31,50 € », 42 → « 42 € »
 const euro = (n: number) =>
   `${n.toLocaleString("fr-FR", { minimumFractionDigits: Number.isInteger(n) ? 0 : 2, maximumFractionDigits: 2 })} €`;
 
 export const metadata: Metadata = {
-  title: "Prix coursier Paris : dès 21 € TTC",
+  title: "Prix coursier Paris : dès 28 € TTC",
   description:
-    "Tarifs coursier : dès 21€ à Paris, 42€ petite couronne. Voir la grille tarifaire par zone, prix affiché avant de commander. Compte entreprise 30j.",
+    "Tarifs coursier : dès 28€ à Paris, 59€ petite couronne. Voir la grille tarifaire par zone, prix affiché avant de commander. Compte entreprise 30j.",
   alternates: { canonical: "/tarifs" },
   openGraph: {
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION - Coursier B2B Paris & Île-de-France" }],
@@ -43,27 +43,27 @@ const breadcrumbSchema = {
 const FAQ = [
   {
     q: "Quel est le prix d'un coursier à Paris ?",
-    a: "À Paris intramuros, une course normale sous 3 h démarre à 21 € TTC, une course urgente sous 1 h 30 à 31,50 € TTC et une course Super sous 1 h à 42 € TTC.",
+    a: "À Paris intramuros, une course normale sous 3 h démarre à 28 € TTC, une course urgente sous 1 h 30 à 42 € TTC et une course Super sous 1 h à 56 € TTC.",
   },
   {
     q: "Quel est le tarif d'un coursier en petite couronne ?",
-    a: "En petite couronne (92, 93, 94), le tarif est de 42 € TTC en normal, 63 € TTC en urgent et 84 € TTC en formule Super. En grande couronne (77, 78, 91, 95) : 78, 117 et 156 € TTC.",
+    a: "En petite couronne (92, 93, 94), le tarif est de 59 € TTC en normal, 88,50 € TTC en urgent et 118 € TTC en formule Super. En grande couronne (77, 78, 91, 95), le prix suit la distance depuis Paris : 76 € TTC pour Versailles, 158 € TTC pour Meaux en normal.",
   },
   {
     q: "Combien coûte un coursier moto à Paris ?",
-    a: "Une course en moto dans Paris intramuros démarre à 21 € TTC en normal 3 h et 42 € TTC en formule Super (enlèvement et livraison sous 1 h).",
+    a: "Une course en moto dans Paris intramuros démarre à 28 € TTC en normal 3 h et 56 € TTC en formule Super (enlèvement et livraison sous 1 h).",
   },
   {
     q: "Quel est le prix d'un coursier express à Paris ?",
-    a: "Une course express dans Paris se facture 31,50 € TTC en urgent (1 h 30) ou 42 € TTC en formule Super (1 h). En petite couronne : 63 € TTC ou 84 € TTC.",
+    a: "Une course express dans Paris se facture 42 € TTC en urgent (1 h 30) ou 56 € TTC en formule Super (1 h). En petite couronne : 88,50 € TTC ou 118 € TTC.",
   },
   {
     q: "Quel est le tarif d'un coursier en banlieue de Paris ?",
-    a: "En banlieue proche (92, 93, 94), comptez 42 € TTC en normal, 63 € TTC en urgent et 84 € TTC en formule Super. Plus loin en Île-de-France (77, 78, 91, 95) : 78, 117 et 156 € TTC.",
+    a: "En banlieue proche (92, 93, 94), comptez 59 € TTC en normal, 88,50 € TTC en urgent et 118 € TTC en formule Super. Plus loin en Île-de-France (77, 78, 91, 95), le prix suit la distance depuis Paris, dès 60 € TTC en normal.",
   },
   {
     q: "Combien coûte un coursier en Île-de-France ?",
-    a: "Le tarif d'un coursier en Île-de-France va de 21 € TTC (Paris, délai 3 h) à 156 € TTC (grande couronne, Super 1 h). Le prix dépend de la zone la plus éloignée du trajet et du délai choisi.",
+    a: "Le tarif d'un coursier en Île-de-France part de 28 € TTC (Paris, délai 3 h). En petite couronne, comptez 59 € TTC. En grande couronne, le prix suit la distance depuis Paris : 76 € TTC pour Versailles, 158 € TTC pour Meaux, en délai 3 h. Le délai Urgent coûte 1,5 fois le prix Normal, le Super 2 fois.",
   },
   {
     q: "Le prix d'un coursier pour un pli confidentiel ou un transport médical est-il différent ?",
@@ -168,11 +168,11 @@ export default function TarifsPage() {
             Tarification
           </div>
           <h1 className="mb-6 max-w-[22ch] text-balance text-[clamp(36px,5vw,64px)] font-bold leading-[1.05] tracking-[-0.035em]">
-            Prix coursier Paris : tarif dès 21 € TTC la course.
+            Prix coursier Paris : tarif dès 28 € TTC la course.
           </h1>
           <p className="max-w-[58ch] text-pretty text-[17px] leading-[1.6] text-white/66">
-            Course moto dès 21 € TTC dans Paris en
-            normal 3 h, 42 € TTC en formule Super 1 h. Voici la grille par zone
+            Course moto dès 28 € TTC dans Paris en
+            normal 3 h, 56 € TTC en formule Super 1 h. Voici la grille par zone
             et par délai, et ce qui fait varier le prix d'un coursier.
           </p>
         </div>
@@ -276,8 +276,10 @@ export default function TarifsPage() {
         </h2>
         <p className="mb-10 max-w-[60ch] text-[15.5px] leading-[1.7] text-muted">
           Quand le trajet traverse deux zones, on applique la plus éloignée :
-          Paris vers Nanterre est facturé au tarif petite couronne. Le prix
-          exact s&apos;affiche avant de valider votre commande.
+          Paris vers Nanterre est facturé au tarif petite couronne. En grande
+          couronne, le prix suit la distance depuis Paris, retour du coursier
+          compris : 76 € TTC pour Versailles, 158 € TTC pour Meaux en Normal.
+          Le prix exact s&apos;affiche avant de valider votre commande.
         </p>
         <div className="overflow-x-auto">
           <table className="w-full min-w-[560px] border-collapse text-[14.5px]">
@@ -292,16 +294,16 @@ export default function TarifsPage() {
             </thead>
             <tbody className="divide-y divide-line">
               {[
-                { zone: "Paris", dept: "75", prix: [21, 31.5, 42] },
-                { zone: "Petite couronne", dept: "92, 93, 94", prix: [42, 63, 84] },
-                { zone: "Grande couronne", dept: "77, 78, 91, 95", prix: [78, 117, 156] },
-              ].map((row) => (
+                { zone: "Paris", dept: "75", z: 0 },
+                { zone: "Petite couronne", dept: "92, 93, 94", z: 1 },
+                { zone: "Grande couronne", dept: "77, 78, 91, 95", z: 2 },
+              ].map(({ z, ...row }) => ({ ...row, from: z === 2, prix: (["standard", "urgent", "flash"] as const).map((s) => gridPrice(s, z as Zone)) })).map((row) => (
                 <tr key={row.zone}>
                   <td className="py-4 pr-6 font-medium text-ink">{row.zone}</td>
                   <td className="py-4 pr-6 font-mono text-[13px] text-muted">{row.dept}</td>
                   {row.prix.map((p, i) => (
                     <td key={i} className={`py-4 ${i < 2 ? "pr-6" : ""}`}>
-                      <div className="font-semibold text-ink">{euro(p)} TTC</div>
+                      <div className="font-semibold text-ink">{row.from ? "dès " : ""}{euro(p)} TTC</div>
                       <div className="text-[12px] text-muted">{euro(splitTTC(p).ht)} HT</div>
                     </td>
                   ))}

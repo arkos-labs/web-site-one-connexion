@@ -11,9 +11,9 @@ import { SERVICES } from "@/lib/services";
 import { Clock, MapPin, Zap, Shield } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: { absolute: "Coursier Paris : livraison express dès 21 € TTC" },
+  title: { absolute: "Coursier Paris : livraison express dès 28 € TTC" },
   description:
-    "Coursier Paris : commander une livraison express dès 21€, enlèvement < 45 min. 1h, 3h ou normal. Tous les arrondissements, suivi GPS, remise horodatée.",
+    "Coursier Paris : commander une livraison express dès 28€, enlèvement < 45 min. 1h, 3h ou normal. Tous les arrondissements, suivi GPS, remise horodatée.",
   alternates: { canonical: "/zones/paris" },
   openGraph: {
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION - Coursier B2B Paris & Île-de-France" }],
@@ -49,11 +49,11 @@ const serviceSchema = {
 const FAQ_PARIS = [
   {
     q: "Quel est le prix d'un coursier à Paris ?",
-    a: "Une course dans Paris intramuros coûte 21 € TTC en normal (livraison sous 3 h), 31,50 € TTC en urgent (sous 1 h 30) et 42 € TTC en formule Super (sous 1 h). Le prix s'affiche avant de valider la commande.",
+    a: "Une course dans Paris intramuros coûte 28 € TTC en normal (livraison sous 3 h), 42 € TTC en urgent (sous 1 h 30) et 56 € TTC en formule Super (sous 1 h). Le prix s'affiche avant de valider la commande.",
   },
   {
     q: "Quel est le tarif d'un coursier moto ou scooter à Paris ?",
-    a: "Les courses sont effectuées en moto ou scooter. Le tarif est le même dans les 20 arrondissements : de 21 € TTC à 42 € TTC selon le délai choisi.",
+    a: "Les courses sont effectuées en moto ou scooter. Le tarif est le même dans les 20 arrondissements : de 28 € TTC à 56 € TTC selon le délai choisi.",
   },
   {
     q: "Comment gérez-vous la circulation parisienne (ZFE, embouteillages) ?",
@@ -88,7 +88,7 @@ const ARRONDISSEMENTS = [
 ];
 
 const STATS = [
-  { value: "Dès 21 €", label: "TTC, course Normale (3 h)" },
+  { value: "Dès 28 €", label: "TTC, course Normale (3 h)" },
   { value: "< 45 min", label: "Enlèvement" },
   { value: "6j/7", label: "Lun–sam, 9h – 19h" },
   { value: "20/20", label: "Arrondissements couverts" },
@@ -119,7 +119,7 @@ export default function ZoneParis() {
             Coursier Paris : livraison express dans les 20 arrondissements.
           </h1>
           <p className="max-w-[58ch] text-pretty text-[17px] leading-[1.6] text-white/66">
-            Coursier à Paris en moto et scooter, dès 21 € TTC la course. One
+            Coursier à Paris en moto et scooter, dès 28 € TTC la course. One
             Connexion couvre les 20 arrondissements avec sa flotte de deux-roues. Enlèvement en moins de 45 minutes, suivi de
             chaque course en ligne, preuve de remise horodatée à chaque livraison.
           </p>
@@ -179,7 +179,7 @@ export default function ZoneParis() {
           Tarif coursier Paris
         </div>
         <h2 className="mb-4 max-w-[28ch] text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-          Prix d&apos;une course dans Paris : dès 21 € TTC.
+          Prix d&apos;une course dans Paris : dès 28 € TTC.
         </h2>
         <p className="mb-10 max-w-[60ch] text-[15.5px] leading-[1.7] text-muted">
           Le tarif est le même dans les 20 arrondissements. Seul le délai change
@@ -187,9 +187,9 @@ export default function ZoneParis() {
         </p>
         <div className="grid max-w-[780px] gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-3">
           {[
-            { name: "Normal", delay: "livré sous 3 h", price: "21 €" },
-            { name: "Urgent", delay: "livré sous 1 h 30", price: "31,50 €" },
-            { name: "Super", delay: "livré sous 1 h", price: "42 €" },
+            { name: "Normal", delay: "livré sous 3 h", price: "28 €" },
+            { name: "Urgent", delay: "livré sous 1 h 30", price: "42 €" },
+            { name: "Super", delay: "livré sous 1 h", price: "56 €" },
           ].map((t) => (
             <div key={t.name} className="bg-white p-6">
               <div className="text-[15px] font-bold">{t.name}</div>

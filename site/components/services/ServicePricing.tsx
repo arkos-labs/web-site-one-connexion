@@ -57,7 +57,7 @@ export default function ServicePricing({ pricing }: { pricing: Pricing }) {
                   const highlight = navette || pricing.recommended.includes(c);
                   return (
                     <td key={c} className={`py-4 pr-6 ${highlight ? "" : "opacity-60"}`}>
-                      <div className="font-semibold text-ink">{navette ? `dès ${euro(ttc)}` : euro(ttc)} TTC</div>
+                      <div className="font-semibold text-ink">{navette || zone === 2 ? `dès ${euro(ttc)}` : euro(ttc)} TTC</div>
                       <div className="text-[12px] text-muted">{euro(splitTTC(ttc).ht)} HT</div>
                     </td>
                   );
@@ -69,7 +69,7 @@ export default function ServicePricing({ pricing }: { pricing: Pricing }) {
       </div>
       <p className="mt-6 max-w-[68ch] border-l-2 border-accent pl-4 text-[15px] leading-[1.6] text-ink">{pricing.note}</p>
       <p className="mt-4 text-[12.5px] text-muted">
-        Prix par course, TVA 20 % comprise. Le prix dépend de la zone la plus éloignée du trajet et du délai, jamais du contenu.{" "}
+        Prix par course, TVA 20 % comprise. Le prix dépend de la zone la plus éloignée du trajet et du délai, jamais du contenu. En grande couronne, il suit la distance depuis Paris.{" "}
         <Link href="/tarifs" className="font-semibold text-accent-dark hover:underline">Grille complète</Link>
       </p>
     </div>

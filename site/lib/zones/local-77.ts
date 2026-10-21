@@ -1,6 +1,7 @@
 /**
  * lib/zones/local-77.ts
- * Contenu propre aux communes de Seine-et-Marne (grande couronne : dès 78 € TTC).
+ * Contenu propre aux communes de Seine-et-Marne (grande couronne : prix selon la distance depuis Paris).
+ * Les prix s'écrivent {normal}, {urgent}, {super} (ou {normal@Commune 77}) : data.ts les remplace par la grille.
  * Faits publics uniquement ; aucune entreprise citée comme cliente.
  */
 import type { LocalZoneContent } from "./types";
@@ -15,13 +16,13 @@ export const LOCAL_77: Record<string, LocalZoneContent> = {
       title: "Melun : justice et préfecture au milieu de la Seine",
       paragraphs: [
         "Pour les cabinets du département, Melun est l'adresse du tribunal judiciaire. Les dépôts se jouent à l'heure du greffe : précisez le service et l'heure limite. La remise est horodatée, nominative, avec un justificatif à annexer au dossier.",
-        "La Seine divise la ville en deux rives. Une adresse sur l'île ou sur la rive opposée n'est pas à la même distance du centre que le nom de la rue le suggère. Donnez l'adresse complète. Melun étant en grande couronne, le tarif est de 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en formule Super.",
+        "La Seine divise la ville en deux rives. Une adresse sur l'île ou sur la rive opposée n'est pas à la même distance du centre que le nom de la rue le suggère. Donnez l'adresse complète. Melun étant en grande couronne, le tarif est de {normal} € TTC en normal (3 h), {urgent} € TTC en urgent et {super} € TTC en formule Super.",
       ],
     },
     faq: [
       { q: "Pouvez-vous déposer un acte au tribunal de Melun ?", a: "Oui, depuis Paris ou depuis Melun même, en course dédiée, remis en main propre, avec justificatif horodaté." },
       { q: "Livrez-vous au centre hospitalier de Melun ?", a: "Oui. Précisez le service, le bâtiment et un contact." },
-      { q: "Quel tarif pour Melun ?", a: "Dès 78 € TTC, la commune étant en grande couronne. Réponse en moins de 2 heures." },
+      { q: "Quel tarif pour Melun ?", a: "Dès {normal} € TTC, la commune étant en grande couronne. Réponse en moins de 2 heures." },
     ],
   },
 
@@ -34,13 +35,13 @@ export const LOCAL_77: Record<string, LocalZoneContent> = {
       title: "Meaux : une ville à plus de cinquante kilomètres de Paris",
       paragraphs: [
         "Pour une course entre Paris et Meaux, le temps de trajet pèse plus que dans la petite couronne. Indiquez l'heure à laquelle le colis doit arriver : nous confirmons la faisabilité et le départ avant d'engager le coursier. En cas d'urgence, une course immédiate part dans l'heure.",
-        "Le centre hospitalier de Meaux échange avec les laboratoires parisiens. Pour un prélèvement, précisez la température de conservation et le délai de stabilité. Le tarif de la grande couronne est de 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en formule Super.",
+        "Le centre hospitalier de Meaux échange avec les laboratoires parisiens. Pour un prélèvement, précisez la température de conservation et le délai de stabilité. Depuis Paris, le tarif est de {normal} € TTC en normal (3 h), {urgent} € TTC en urgent et {super} € TTC en formule Super.",
       ],
     },
     faq: [
       { q: "Pouvez-vous livrer entre Paris et Meaux en urgence ?", a: "Oui, en course immédiate. Nous confirmons la faisabilité et le délai avant d'engager le coursier." },
       { q: "Transportez-vous des prélèvements depuis l'hôpital de Meaux ?", a: "Oui, en course dédiée, avec contenant isotherme à la demande." },
-      { q: "Quel tarif pour Meaux ?", a: "Dès 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en formule Super." },
+      { q: "Quel tarif pour Meaux ?", a: "Dès {normal} € TTC en normal (3 h), {urgent} € TTC en urgent et {super} € TTC en formule Super." },
     ],
   },
 
@@ -53,13 +54,13 @@ export const LOCAL_77: Record<string, LocalZoneContent> = {
       title: "Chelles : une grande commune étalée le long de la Marne",
       paragraphs: [
         "Chelles s'étend du centre historique au quartier de Gournay, sur plusieurs kilomètres. Une adresse mal située peut rallonger un trajet de vingt minutes. Donnez le quartier, le numéro et un contact joignable à l'arrivée.",
-        "Les cabinets, artisans et PME de la commune envoient surtout des plis et des colis légers vers Paris et la Seine-et-Marne. Pour des échanges réguliers, un compte entreprise permet des passages à créneaux fixes. Chelles étant en grande couronne, le tarif est de 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en formule Super.",
+        "Les cabinets, artisans et PME de la commune envoient surtout des plis et des colis légers vers Paris et la Seine-et-Marne. Pour des échanges réguliers, un compte entreprise permet des passages à créneaux fixes. Chelles étant en grande couronne, le tarif est de {normal} € TTC en normal (3 h), {urgent} € TTC en urgent et {super} € TTC en formule Super.",
       ],
     },
     faq: [
       { q: "Desservez-vous tous les quartiers de Chelles ?", a: "Oui, dont Gournay. Donnez le quartier et la rue pour un délai fiable." },
       { q: "Peut-on prévoir un passage régulier ?", a: "Oui, avec un compte entreprise, sur créneaux fixes." },
-      { q: "Quel tarif pour Chelles ?", a: "Dès 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en formule Super." },
+      { q: "Quel tarif pour Chelles ?", a: "Dès {normal} € TTC en normal (3 h), {urgent} € TTC en urgent et {super} € TTC en formule Super." },
     ],
   },
 
@@ -72,13 +73,13 @@ export const LOCAL_77: Record<string, LocalZoneContent> = {
       title: "Torcy : une ville nouvelle aux adresses par quartier",
       paragraphs: [
         "À Marne-la-Vallée, les adresses sont nombreuses et les rues se ressemblent. Donnez le quartier, le nom du bâtiment ou de la résidence et un contact joignable. Sans ces éléments, le coursier peut chercher longtemps entre des immeubles identiques.",
-        "Les entreprises de la ville nouvelle sont principalement tertiaires. Elles envoient des plis, des documents et des colis légers. La proximité de Disneyland Paris et de Val d'Europe peut aussi générer des livraisons événementielles. Torcy étant en grande couronne, le tarif est de 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en formule Super.",
+        "Les entreprises de la ville nouvelle sont principalement tertiaires. Elles envoient des plis, des documents et des colis légers. La proximité de Disneyland Paris et de Val d'Europe peut aussi générer des livraisons événementielles. Torcy étant en grande couronne, le tarif est de {normal} € TTC en normal (3 h), {urgent} € TTC en urgent et {super} € TTC en formule Super.",
       ],
     },
     faq: [
       { q: "Livrez-vous dans les résidences de Torcy ?", a: "Oui. Donnez la résidence, le bâtiment et un contact." },
-      { q: "Pouvez-vous livrer à Val d'Europe depuis Torcy ?", a: "Oui, les communes sont proches. Le tarif est de 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en formule Super." },
-      { q: "Quel tarif pour Torcy ?", a: "Dès 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en formule Super." },
+      { q: "Pouvez-vous livrer à Val d'Europe depuis Torcy ?", a: "Oui, les communes sont proches. Le tarif est de {normal} € TTC en normal (3 h), {urgent} € TTC en urgent et {super} € TTC en formule Super." },
+      { q: "Quel tarif pour Torcy ?", a: "Dès {normal} € TTC en normal (3 h), {urgent} € TTC en urgent et {super} € TTC en formule Super." },
     ],
   },
 
@@ -91,13 +92,13 @@ export const LOCAL_77: Record<string, LocalZoneContent> = {
       title: "Lagny-sur-Marne : un centre ancien au bord de la rivière",
       paragraphs: [
         "Le centre de Lagny est médiéval : rues étroites, places piétonnes, stationnement rare. Indiquez le numéro, le point de remise et un contact joignable. Pour un commerce, précisez si la livraison peut se faire par l'arrière.",
-        "Les artisans et commerçants de la ville envoient des plis, des colis légers et des documents vers Paris et la Seine-et-Marne. La course dédiée évite les ruptures de charge. Lagny étant en grande couronne, le tarif est de 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en formule Super.",
+        "Les artisans et commerçants de la ville envoient des plis, des colis légers et des documents vers Paris et la Seine-et-Marne. La course dédiée évite les ruptures de charge. Lagny étant en grande couronne, le tarif est de {normal} € TTC en normal (3 h), {urgent} € TTC en urgent et {super} € TTC en formule Super.",
       ],
     },
     faq: [
       { q: "Livrez-vous dans le centre ancien de Lagny ?", a: "Oui. Donnez le numéro, le point de remise et un contact." },
       { q: "Quel est le délai vers Paris ?", a: "Nous confirmons le délai précis à la commande, selon l'heure et la destination." },
-      { q: "Quel tarif pour Lagny-sur-Marne ?", a: "Dès 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en formule Super." },
+      { q: "Quel tarif pour Lagny-sur-Marne ?", a: "Dès {normal} € TTC en normal (3 h), {urgent} € TTC en urgent et {super} € TTC en formule Super." },
     ],
   },
 
@@ -110,13 +111,13 @@ export const LOCAL_77: Record<string, LocalZoneContent> = {
       title: "Pontault-Combault : zones d'activité le long de la Francilienne",
       paragraphs: [
         "Les zones d'activité de Pontault-Combault regroupent entrepôts, PME et services aux entreprises. Les horaires de réception y sont stricts, l'heure limite fixe donc le départ du coursier. Donnez le nom de la société, le bâtiment et le quai.",
-        "Ces entreprises envoient surtout des documents de livraison, des pièces et des échantillons. Pour des échanges réguliers avec Paris, une tournée à créneaux fixes est plus économique que des courses ponctuelles. Le tarif de la grande couronne est de 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en formule Super.",
+        "Ces entreprises envoient surtout des documents de livraison, des pièces et des échantillons. Pour des échanges réguliers avec Paris, une tournée à créneaux fixes est plus économique que des courses ponctuelles. Depuis Paris, le tarif est de {normal} € TTC en normal (3 h), {urgent} € TTC en urgent et {super} € TTC en formule Super.",
       ],
     },
     faq: [
       { q: "Livrez-vous dans les zones d'activité de Pontault-Combault ?", a: "Oui, avec le nom de la société, le bâtiment et un contact au quai." },
       { q: "Peut-on prévoir une tournée régulière ?", a: "Oui, avec un compte entreprise, sur créneaux fixes." },
-      { q: "Quel tarif pour Pontault-Combault ?", a: "Dès 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en formule Super." },
+      { q: "Quel tarif pour Pontault-Combault ?", a: "Dès {normal} € TTC en normal (3 h), {urgent} € TTC en urgent et {super} € TTC en formule Super." },
     ],
   },
 
@@ -129,13 +130,13 @@ export const LOCAL_77: Record<string, LocalZoneContent> = {
       title: "Fontainebleau : château, forêt et école internationale",
       paragraphs: [
         "Pour livrer à Fontainebleau depuis Paris, il faut compter plus d'une heure de route. Les envois urgents y sont des documents, des pièces ou des échantillons. Indiquez l'heure limite : nous confirmons la faisabilité avant d'engager la course, plutôt que d'accepter puis de retarder.",
-        "L'école internationale et les hôtels de prestige reçoivent des colis et des documents de qualité. Donnez le bâtiment, le service et un contact. La remise se fait en main propre, avec nom et heure consignés. Fontainebleau étant en grande couronne, le tarif est de 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en formule Super.",
+        "L'école internationale et les hôtels de prestige reçoivent des colis et des documents de qualité. Donnez le bâtiment, le service et un contact. La remise se fait en main propre, avec nom et heure consignés. Fontainebleau étant en grande couronne, le tarif est de {normal} € TTC en normal (3 h), {urgent} € TTC en urgent et {super} € TTC en formule Super.",
       ],
     },
     faq: [
       { q: "Pouvez-vous livrer à Fontainebleau le jour même depuis Paris ?", a: "Oui, en course immédiate ou planifiée. Nous confirmons la faisabilité avant le départ." },
       { q: "Livrez-vous au château de Fontainebleau ?", a: "Oui, à l'entrée de service, avec le nom du destinataire et un contact." },
-      { q: "Quel tarif pour Fontainebleau ?", a: "Dès 78 € TTC en normal (3 h), 117 € TTC en urgent et 156 € TTC en formule Super." },
+      { q: "Quel tarif pour Fontainebleau ?", a: "Dès {normal} € TTC en normal (3 h), {urgent} € TTC en urgent et {super} € TTC en formule Super." },
     ],
   },
 };
