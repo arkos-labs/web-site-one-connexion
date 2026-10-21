@@ -290,10 +290,15 @@ export default function AdminClientDetailPage() {
 
   // Préparer / bloquer / débloquer une facture avant son envoi (route admin, la RLS interdit l'écriture directe).
   const [invoiceBusy, setInvoiceBusy] = useState<string | null>(null);
-  const runInvoiceAction = async (invoiceId: string, action: "prepare" | "hold" | "release" | "redo") => {
+  const runInvoiceAction = async (invoiceId: string, action: InvoiceActionKind) => {
+    // Paiement reçu hors Stripe : facture marquée payée ici et sur Stripe (plus de relance).
+    const paid = action === "paid" || action === "paid_order";
+    if (paid && !window.confirm("Le client a bien payé cette facture ? Elle sera marquée réglée, ici et sur Stripe.")) return;
     setInvoiceBusy(invoiceId);
     try {
-      const res = await fetch("/api/admin/invoices", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ invoiceId, action }) });
+      const res = paid
+        ? await fetch("/api/admin/mark-paid", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(action === "paid" ? { invoiceId } : { orderId: invoiceId }) })
+        : await fetch("/api/admin/invoices", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ invoiceId, action }) });
       const data = await res.json().catch(() => ({}));
       if (!res.ok || data.ok === false) alert(data.error || data.detail || "L'action a échoué.");
     } finally {
@@ -416,11 +421,14 @@ export default function AdminClientDetailPage() {
                       )}
                     </div>
                   </div>
-                  <div className="flex shrink-0 items-center gap-3">
+                  <div className="flex flex-wrap items-center justify-end gap-2 sm:gap-3">
                     <div className="text-right">
                       <div className="text-[15px] font-bold text-ink">{amount.toFixed(2)} € TTC</div>
                       <div className="text-[11px] font-medium text-muted">{htOf(amount).toFixed(2)} € HT</div>
                     </div>
+                    {payment.due && o.stripe_invoice_id && (
+                      <InvoiceAction invoiceId={o.id} action="paid_order" label="Marquer comme payée" busy={invoiceBusy} onRun={runInvoiceAction} />
+                    )}
                     <span className={`flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1 text-[11px] font-bold ${PAYMENT_TONE[payment.tone]}`}>
                       {payment.paid ? <CheckCircle2 size={12} /> : <Clock size={12} />} {payment.label}
                     </span>
@@ -457,6 +465,9 @@ export default function AdminClientDetailPage() {
                     )}
                     {(inv.status === "prete" || inv.status === "retenue") && inv.url && (
                       <InvoiceAction invoiceId={inv.id} action="redo" label="Annuler et refaire" busy={invoiceBusy} onRun={runInvoiceAction} />
+                    )}
+                    {(inv.status === "emise" || inv.status === "echec") && (
+                      <InvoiceAction invoiceId={inv.id} action="paid" label="Marquer comme payée" busy={invoiceBusy} onRun={runInvoiceAction} />
                     )}
                     {inv.status === "retenue" && inv.url && (
                       <InvoiceAction invoiceId={inv.id} action="release" label="Débloquer l'envoi" busy={invoiceBusy} onRun={runInvoiceAction} primary />
@@ -621,6 +632,8 @@ export default function AdminClientDetailPage() {
   );
 }
 
+type InvoiceActionKind = "prepare" | "hold" | "release" | "redo" | "paid" | "paid_order";
+
 function InvoiceAction({
   invoiceId,
   action,
@@ -630,10 +643,10 @@ function InvoiceAction({
   primary = false,
 }: {
   invoiceId: string;
-  action: "prepare" | "hold" | "release" | "redo";
+  action: InvoiceActionKind;
   label: string;
   busy: string | null;
-  onRun: (invoiceId: string, action: "prepare" | "hold" | "release" | "redo") => void;
+  onRun: (invoiceId: string, action: InvoiceActionKind) => void;
   primary?: boolean;
 }) {
   return (
