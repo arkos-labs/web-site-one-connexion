@@ -93,6 +93,12 @@ export async function issueInternalInvoice(
     // Date de livraison de chaque course sur la ligne de facture.
     const { data: deliveries } = await supabase.from('orders').select('id, delivered_at').in('id', items.map((i) => i.order_id).filter(Boolean));
     const deliveredOn = new Map((deliveries ?? []).map((d) => [d.id as string, d.delivered_at as string | null]));
+    // Date de la facture : la dernière livraison facturée, même si la facture part plus tard.
+    const lastDelivery = (deliveries ?? []).reduce<Date | null>((max, d) => {
+      const at = d.delivered_at ? new Date(d.delivered_at as string) : null;
+      return at && (!max || at > max) ? at : max;
+    }, null);
+    const issuedOn = lastDelivery && lastDelivery < new Date() ? lastDelivery : new Date();
     const describe = (i: { order_id: string | null; description: string }) => {
       const at = i.order_id ? deliveredOn.get(i.order_id) : null;
       return at ? `${i.description} - livrée le ${new Date(at).toLocaleDateString('fr-FR', { timeZone: 'Europe/Paris' })}` : i.description;
@@ -104,6 +110,7 @@ export async function issueInternalInvoice(
       collection_method: 'send_invoice',
       days_until_due: 30,
       auto_advance: false,
+      effective_at: Math.floor(issuedOn.getTime() / 1000),
       pending_invoice_items_behavior: 'exclude',
       currency: 'eur',
       default_tax_rates: taxRate ? [taxRate] : undefined,
@@ -153,7 +160,6 @@ export async function issueInternalInvoice(
     const finalized = await stripe.invoices.finalizeInvoice(draft.id!, { auto_advance: false });
     await stripe.invoices.sendInvoice(draft.id!);
 
-    const today = parisDate(new Date());
     await supabase
       .from('invoices')
       .update({
@@ -161,7 +167,7 @@ export async function issueInternalInvoice(
         stripe_invoice_id: finalized.id,
         hosted_invoice_url: finalized.hosted_invoice_url,
         pdf_url: finalized.invoice_pdf,
-        invoice_date: today,
+        invoice_date: parisDate(issuedOn),
         due_date: parisDate(new Date(Date.now() + 30 * 86400000)),
       })
       .eq('id', claimed.id);

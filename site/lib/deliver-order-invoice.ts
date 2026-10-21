@@ -128,6 +128,8 @@ export async function deliverOrderInvoice(supabase: SupabaseClient, stripe: Stri
           ...(unpaid ? { collection_method: 'send_invoice' as const, days_until_due: 30 } : { collection_method: 'charge_automatically' as const }),
           ...(deferred ? { default_payment_method: o.stripe_payment_method_id ?? undefined } : {}),
           auto_advance: false,
+          // Date d'émission imprimée sur la facture : le jour de la livraison, même si la facture part plus tard.
+          ...(o.delivered_at ? { effective_at: Math.floor(new Date(o.delivered_at).getTime() / 1000) } : {}),
           pending_invoice_items_behavior: 'exclude',
           currency: 'eur',
           default_tax_rates: [taxRate],
