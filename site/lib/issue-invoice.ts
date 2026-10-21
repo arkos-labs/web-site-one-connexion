@@ -192,8 +192,11 @@ export async function issueInternalInvoice(
   }
 }
 
-// Envoie au client (e-mail Stripe) une facture préparée la veille ou avant : l'admin a eu le temps de la
-// relire. Une facture préparée le jour même attend le prochain passage.
+// Temps laissé à l'admin pour relire une facture préparée avant qu'elle parte.
+const REVIEW_DELAY_MS = 6 * 3600 * 1000;
+
+// Envoie au client (e-mail Stripe) une facture préparée depuis au moins 6 h : l'admin a eu le temps de la
+// relire. Une facture plus récente attend le passage suivant (chaque jour à 9 h).
 export async function sendPreparedInvoice(
   supabase: SupabaseClient,
   stripe: Stripe,
@@ -212,9 +215,9 @@ export async function sendPreparedInvoice(
   try {
     const invoice = await stripe.invoices.retrieve(claimed.stripe_invoice_id);
     const finalizedAt = invoice.status_transitions?.finalized_at;
-    if (finalizedAt && parisDate(new Date(finalizedAt * 1000)) >= parisDate(new Date())) {
+    if (finalizedAt && Date.now() - finalizedAt * 1000 < REVIEW_DELAY_MS) {
       await back('prete');
-      return { invoice: claimed.invoice_number, ok: true, skipped: true, detail: 'préparée aujourd\'hui, envoi au prochain passage' };
+      return { invoice: claimed.invoice_number, ok: true, skipped: true, detail: 'préparée il y a moins de 6 h, envoi au prochain passage' };
     }
     if (invoice.status === 'paid') {
       await back('payee');

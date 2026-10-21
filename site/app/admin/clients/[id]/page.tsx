@@ -475,7 +475,7 @@ export default function AdminClientDetailPage() {
                       </span>
                     ) : inv.status === "prete" ? (
                       <span className="flex items-center gap-1.5 whitespace-nowrap rounded-full bg-violet-50 px-2.5 py-1 text-[11px] font-bold text-violet-700">
-                        <Clock size={12} /> Prête · envoi demain 9 h
+                        <Clock size={12} /> Prête · envoi à 9 h
                       </span>
                     ) : inv.status === "envoi" ? (
                       <span className="flex items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-1 text-[11px] font-bold text-blue-700">

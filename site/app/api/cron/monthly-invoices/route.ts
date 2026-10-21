@@ -5,7 +5,7 @@ import { deliverOrderInvoice } from '@/lib/deliver-order-invoice';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder');
 
-// Appelé chaque jour (9 h à Paris) : envoie les factures préparées (visibles par l'admin depuis la veille),
+// Appelé chaque jour (9 h à Paris) : envoie les factures préparées (visibles par l'admin depuis au moins 6 h),
 // puis prépare celles restées ouvertes. Une course livrée est normalement préparée tout de suite
 // (trigger en base -> /api/invoices/issue) ; ce passage rattrape un appel manqué ou une erreur Stripe.
 // Le nom de la route est conservé (vercel.json).
@@ -17,7 +17,7 @@ export async function GET(req: Request) {
 
   const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
 
-  // 1) Envoi des factures préparées la veille ou avant, que l'admin n'a pas bloquées.
+  // 1) Envoi des factures préparées depuis au moins 6 h, que l'admin n'a pas bloquées.
   const { data: prepared, error: preparedError } = await supabase.from('invoices').select('id').eq('status', 'prete').order('created_at');
   if (preparedError) return Response.json({ error: preparedError.message }, { status: 500 });
 
