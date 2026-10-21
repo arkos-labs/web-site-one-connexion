@@ -110,6 +110,7 @@ type Invoice = {
   number: string;
   monthLabel: string;
   courses: number;
+  orderIds: string[];
   amount: number;
   status: string;
   url: string | null;
@@ -203,7 +204,7 @@ export default function AdminClientDetailPage() {
       supabase.from("addresses").select("id, label, address, is_default, contact_name, contact_phone").eq("user_id", clientId),
       supabase
         .from("invoices")
-        .select("id, invoice_number, billing_period_start, status, total_amount, hosted_invoice_url, invoice_items(count)")
+        .select("id, invoice_number, billing_period_start, status, total_amount, hosted_invoice_url, invoice_items(order_id)")
         .eq("client_id", clientId)
         .order("billing_period_start", { ascending: false }),
     ]);
@@ -235,7 +236,8 @@ export default function AdminClientDetailPage() {
         id: r.id,
         number: r.invoice_number,
         monthLabel: new Date(r.billing_period_start).toLocaleDateString("fr-FR", { month: "long", year: "numeric" }),
-        courses: r.invoice_items?.[0]?.count ?? 0,
+        courses: r.invoice_items?.length ?? 0,
+        orderIds: (r.invoice_items ?? []).map((it: any) => it.order_id),
         amount: Number(r.total_amount),
         status: r.status,
         url: r.hosted_invoice_url,
@@ -248,12 +250,33 @@ export default function AdminClientDetailPage() {
     load();
   }, [load]);
 
+  // Factures Stripe des courses : lien vers la page de la facture et son PDF (même route que le client).
+  const [stripeInvoices, setStripeInvoices] = useState<Record<string, { number: string | null; url: string | null; pdf: string | null }>>({});
+  useEffect(() => {
+    const withInvoice = orders.filter((o) => o.stripe_invoice_id && !CANCELLED.includes(o.status));
+    if (!withInvoice.length) return;
+    let cancelled = false;
+    Promise.all(
+      withInvoice.map((o) =>
+        fetch("/api/orders/invoice", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ orderId: o.id }) })
+          .then((r) => r.json())
+          .then((d) => [o.id, d?.invoice ?? null] as const)
+          .catch(() => [o.id, null] as const)
+      )
+    ).then((entries) => {
+      if (!cancelled) setStripeInvoices(Object.fromEntries(entries.filter(([, inv]) => inv)));
+    });
+    return () => { cancelled = true; };
+  }, [orders]);
 
   const revenue = orders.filter((o) => !CANCELLED.includes(o.status)).reduce((sum, o) => sum + (normalizeOrderPriceTTC(o.price_estimate, o.pickup_address, o.dropoff_address) ?? 0), 0);
   const activeOrders = orders.filter((o) => ![...DELIVERED, ...CANCELLED].includes(o.status));
   // À régler : factures déjà émises. À facturer : factures du mois encore ouvertes (émises le 1er du mois suivant).
   // Factures par course (Stripe), avec leur paiement.
+  // Une course comprise dans une facture mensuelle est déjà facturée : elle apparaît dans cette facture.
+  const inMonthlyInvoice = new Set(invoices.flatMap((i) => i.orderIds));
   const orderBills = orders
+    .filter((o) => o.billing_status || !inMonthlyInvoice.has(o.id))
     .map((o) => ({ order: o, payment: paymentOf(o), amount: Number(o.amount_due ?? normalizeOrderPriceTTC(o.price_estimate, o.pickup_address, o.dropoff_address) ?? 0) }))
     .filter((b): b is { order: OrderRow; payment: NonNullable<ReturnType<typeof paymentOf>>; amount: number } => b.payment !== null);
   const orderDueTotal = orderBills.filter((b) => b.payment.due).reduce((sum, b) => sum + b.amount, 0);
@@ -369,8 +392,11 @@ export default function AdminClientDetailPage() {
                     <div className="font-mono text-[12.5px] font-bold text-ink">Course {o.tracking_code ?? o.id.slice(0, 8)}</div>
                     <div className="text-[12.5px] text-muted">
                       {new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "long", year: "numeric" }).format(new Date(o.delivered_at || o.created_at))}
-                      {o.stripe_invoice_id && (
-                        <> · <a href={`https://dashboard.stripe.com/invoices/${o.stripe_invoice_id}`} target="_blank" rel="noreferrer" className="font-bold text-accent-dark underline">Voir sur Stripe</a></>
+                      {stripeInvoices[o.id]?.url && (
+                        <> · <a href={stripeInvoices[o.id].url!} target="_blank" rel="noreferrer" className="font-bold text-accent-dark underline">Voir la facture{stripeInvoices[o.id].number ? ` ${stripeInvoices[o.id].number}` : ""}</a></>
+                      )}
+                      {stripeInvoices[o.id]?.pdf && (
+                        <> · <a href={stripeInvoices[o.id].pdf!} className="font-bold text-accent-dark underline">PDF</a></>
                       )}
                     </div>
                   </div>
@@ -391,8 +417,9 @@ export default function AdminClientDetailPage() {
                     <div className="font-bold capitalize text-ink">{inv.monthLabel}</div>
                     <div className="text-[12.5px] text-muted">
                       {inv.number} · {inv.courses} course{inv.courses > 1 ? "s" : ""}
+                      {" · "}<Link href={`/admin/factures/${inv.id}`} className="font-bold text-accent-dark underline">Voir la facture</Link>
                       {inv.url && (
-                        <> · <a href={inv.url} target="_blank" rel="noreferrer" className="font-bold text-accent-dark underline">Voir</a></>
+                        <> · <a href={inv.url} target="_blank" rel="noreferrer" className="font-bold text-accent-dark underline">Page de paiement</a></>
                       )}
                     </div>
                   </div>
@@ -447,7 +474,7 @@ export default function AdminClientDetailPage() {
                         {ORDER_STATUS_LABEL[o.status] ?? o.status}
                       </span>
                       {(() => {
-                        const payment = paymentOf(o);
+                        const payment = !o.billing_status && inMonthlyInvoice.has(o.id) ? null : paymentOf(o);
                         return payment && (
                           <span className={`rounded-full px-2 py-0.5 text-[11px] font-bold ${PAYMENT_TONE[payment.tone]}`}>{payment.label}</span>
                         );

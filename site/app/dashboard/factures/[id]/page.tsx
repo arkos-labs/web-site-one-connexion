@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import { CreditCard, Download } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { generateInvoicePDF } from "@/lib/generate-invoice-pdf";
@@ -33,6 +33,9 @@ export default function FactureDetailsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [userInfo, setUserInfo] = useState<{ name: string; email: string }>({ name: "", email: "" });
+  const [clientId, setClientId] = useState<string | null>(null);
+  // La même page sert à l'admin (/admin/factures/[id]) : le retour mène alors à la fiche client.
+  const adminView = usePathname()?.startsWith("/admin") ?? false;
 
   useEffect(() => {
     const loadInvoice = async () => {
@@ -46,12 +49,11 @@ export default function FactureDetailsPage() {
         const { data: inv } = await supabase
           .from("invoices")
           .select(
-            "id, invoice_number, billing_period_start, status, subtotal, tax_amount, total_amount, hosted_invoice_url, pdf_url, " +
+            "id, client_id, invoice_number, billing_period_start, status, subtotal, tax_amount, total_amount, hosted_invoice_url, pdf_url, " +
               "invoice_items(total_price, orders(id, tracking_code, created_at, pickup_address, dropoff_address, stops, delivered_at, delivery_recipient, delivery_department, delivery_comment, delivery_photo_url))"
           )
           .eq("id", invoiceId)
-          .eq("client_id", user.id)
-          .maybeSingle();
+          .maybeSingle(); // RLS : le client ne lit que ses factures, l'admin lit toutes
 
         if (!inv) {
           setError("Facture introuvable");
@@ -75,8 +77,14 @@ export default function FactureDetailsPage() {
           pdfUrl: (inv as any).pdf_url,
         });
 
-        const { data: profile } = await supabase.from("profiles").select("full_name").eq("id", user.id).single();
-        setUserInfo({ name: profile?.full_name || "", email: user.email || "" });
+        // Nom et email du client de la facture (l'admin consulte la facture d'un autre compte).
+        const clientId = (inv as any).client_id as string;
+        const [{ data: profile }, { data: client }] = await Promise.all([
+          supabase.from("profiles").select("full_name").eq("id", clientId).maybeSingle(),
+          supabase.from("clients").select("contact_email").eq("id", clientId).maybeSingle(),
+        ]);
+        setUserInfo({ name: profile?.full_name || "", email: clientId === user.id ? user.email || "" : client?.contact_email || "" });
+        setClientId(clientId);
       } catch (err) {
         setError("Erreur de chargement");
       } finally {
@@ -88,7 +96,9 @@ export default function FactureDetailsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [invoiceId]);
 
-  const back = { href: "/dashboard/factures", label: "Vos factures" };
+  const back = adminView
+    ? { href: clientId ? `/admin/clients/${clientId}` : "/admin/clients", label: "Fiche client" }
+    : { href: "/dashboard/factures", label: "Vos factures" };
 
   if (loading) {
     return (
