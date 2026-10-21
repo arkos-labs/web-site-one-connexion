@@ -14,6 +14,7 @@ import ServiceRelated from "@/components/services/ServiceRelated";
 import ServiceSteps from "@/components/services/ServiceSteps";
 import ServiceUseCases from "@/components/services/ServiceUseCases";
 import ServicePricing from "@/components/services/ServicePricing";
+import CityLinks from "@/components/sections/CityLinks";
 import { SERVICE_SLUGS, getService } from "@/lib/services";
 import { GUIDES } from "@/lib/guides";
 import { SITE_URL } from "@/lib/site-content";
@@ -212,6 +213,21 @@ export default async function ServicePage({
             </h2>
           </div>
           <ServiceFaq faq={service.faq} />
+        </section>
+
+        <section className="border-b border-line py-[72px]">
+          <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
+            Villes desservies
+          </div>
+          <h2 className="mb-4 max-w-[28ch] text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
+            Nos coursiers à Paris et dans la petite couronne
+          </h2>
+          <p className="mb-9 max-w-[62ch] text-[15px] leading-[1.6] text-muted">
+            Nous intervenons dans les 20 arrondissements de{" "}
+            <Link href="/zones/paris" className="text-ink underline underline-offset-2">Paris</Link> et dans les villes ci-dessous.
+            Chaque page de ville détaille les délais et les particularités d’accès.
+          </p>
+          <CityLinks depts={["92", "93", "94"]} />
         </section>
 
         <section className="py-[72px]">
