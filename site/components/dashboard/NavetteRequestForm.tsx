@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Truck, MapPin, Clock, Plus, Trash2, ArrowRight, ShieldCheck, AlertTriangle, Loader2, Check } from "lucide-react";
 import { AddressAutocomplete } from "@/components/AddressAutocomplete";
-import { isServedAddress, getDepartmentFromAddress, getZoneFromDepartment, gridPrice, type Zone } from "@/lib/pricing";
+import { isServedAddress } from "@/lib/pricing";
 import UnservedAddressAlert, { useUnservedAddresses } from "@/components/UnservedAddressAlert";
 
 const OUT_OF_ZONE = "Adresse non reconnue : Paris et Île-de-France uniquement";
@@ -154,16 +154,8 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
 
   const capacityExceeded = totalVolumePoints > SCOOTER_MAX_POINTS;
 
-  // Prix TTC par passage (TVA 20 % comprise) : grille navette (lib/pricing), selon la zone la plus
-  // éloignée parmi toutes les adresses de la tournée. Paris 18 €, petite couronne 30 €, grande couronne 66 €.
-  const estimatedPrice = useMemo(() => {
-    const zones = [watchMain ?? "", ...(watchSteps ?? []).map((st) => st?.address ?? "")]
-      .filter((a) => a.trim().length > 0)
-      .map((a) => getZoneFromDepartment(getDepartmentFromAddress(a)));
-    const zone = (zones.length ? Math.max(...zones) : 0) as Zone;
-    return gridPrice("navette", zone);
-  }, [watchMain, watchSteps]);
-
+  // La navette est sur devis : One Connexion fixe le prix par passage après avoir étudié la tournée
+  // (champ estimated_price, renseigné par l'admin). Une modification ne touche pas au prix déjà fixé.
   const onSubmit = async (data: NavetteFormValues) => {
     setIsSubmitting(true);
     try {
@@ -173,7 +165,6 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
 
       const navettePayload = {
         user_id: user?.id || null,
-        estimated_price: estimatedPrice,
         name: `Demande de Navette (${data.type === "distribution" ? "Distribution" : "Collecte"})`,
         pickup_address: data.type === "distribution" ? data.mainAddress : data.steps[0].address,
         pickup_contact_name: data.type === "distribution" ? data.mainContactName : data.steps[0].contactName,
@@ -195,7 +186,7 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
         if (error) throw error;
       } else {
         // La navette reste en attente : One Connexion rappelle le client pour la confirmer
-        const { error } = await supabase.from("navettes").insert({ ...navettePayload, status: "en_attente" });
+        const { error } = await supabase.from("navettes").insert({ ...navettePayload, estimated_price: null, status: "en_attente" });
         if (error) throw error;
       }
       
@@ -233,8 +224,8 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
         </h2>
         <p className="mb-7 max-w-md text-sm leading-relaxed text-muted">
           {isEdit
-            ? `Les modifications ont été prises en compte. Le nouveau tarif est de ${estimatedPrice} € TTC par passage.`
-            : `Un conseiller One Connexion vous rappellera très prochainement pour obtenir plus d'informations et confirmer votre navette. Tarif estimé : ${estimatedPrice} € TTC par passage.`}
+            ? "Les modifications ont été prises en compte. Si elles changent le prix de la tournée, un conseiller vous envoie un nouveau devis."
+            : "Un conseiller One Connexion vous rappelle très prochainement pour préciser votre tournée et vous envoyer le devis."}
         </p>
         <button
           type="button"
@@ -441,14 +432,11 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
 
         <section className="overflow-hidden rounded-xl bg-ink text-white">
           <div className="border-b border-white/10 px-5 py-3">
-            <h2 className="label-mono text-xs font-medium text-white/60">Tarif estimé</h2>
+            <h2 className="label-mono text-xs font-medium text-white/60">Tarif</h2>
           </div>
           <div className="px-5 py-4">
-            <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-extrabold leading-none tracking-tight tabular-nums">{outOfZone ? "--" : estimatedPrice} €</span>
-              <span className="text-sm font-semibold text-white/60">TTC / passage</span>
-            </div>
-            {!outOfZone && <p className="mt-2 text-xs text-white/60">dont TVA 20 % : {(estimatedPrice - Math.round((estimatedPrice / 1.2) * 100) / 100).toFixed(2).replace(".", ",")} €</p>}
+            <div className="text-3xl font-extrabold leading-none tracking-tight">Sur devis</div>
+            <p className="mt-2 text-xs text-white/60">Le prix par passage dépend des arrêts, des horaires et du volume. Un conseiller vous l&apos;envoie après étude de la tournée.</p>
             {showZoneAlert && <UnservedAddressAlert className="mt-4 text-left" />}
             <button
               type="submit"

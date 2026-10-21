@@ -336,7 +336,7 @@ export default function NavetteDetailsPage() {
               <div className="px-5 py-4">
                 <div className="flex items-baseline gap-2">
                   <span className="text-3xl font-extrabold leading-none tracking-tight tabular-nums">
-                    {navette.estimated_price != null ? formatEur(Number(navette.estimated_price)) : "-"}
+                    {navette.estimated_price != null ? formatEur(Number(navette.estimated_price)) : "Sur devis"}
                   </span>
                   {navette.estimated_price != null && <span className="text-sm font-semibold text-white/60">€ TTC / passage</span>}
                 </div>

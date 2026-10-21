@@ -217,7 +217,9 @@ export default function NavettesPage() {
                       </div>
 
                       <div className="flex items-center gap-4">
-                        {n.estimated_price != null && (
+                        {n.estimated_price == null ? (
+                          <div className="text-right text-sm font-bold text-muted">Devis en préparation</div>
+                        ) : (
                           <div className="text-right">
                             <div className="text-lg font-extrabold leading-none tabular-nums text-ink">{formatEur(Number(n.estimated_price))} € TTC</div>
                             <div className="mt-0.5 text-[11px] font-medium text-muted tabular-nums">{formatEur(htOf(Number(n.estimated_price)))} € HT / passage</div>

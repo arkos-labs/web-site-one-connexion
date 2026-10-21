@@ -161,7 +161,7 @@ export async function POST(req: Request) {
       'standard': 'Normal (3h)',
       'urgent': 'Urgent (1h30)',
       'flash': 'Super (1h)',
-      'navette': 'Navette'
+      'navette': 'Course programmée'
     };
 
     const formatLabel = formatLabels[format] || format;

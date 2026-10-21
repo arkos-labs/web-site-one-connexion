@@ -796,7 +796,7 @@ export default function OrderForm() {
                           {clientType === 'entreprise' && hasAccount && (
                             <button type="button" onClick={() => setDelai('navette')} className={`flex items-center gap-2 px-5 py-3 rounded-xl transition-all ${delai === 'navette' ? 'bg-[#ed5518] text-white shadow-md shadow-accent/20' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
                               <Calendar className="w-5 h-5" />
-                              <span className="font-semibold">Navette (Programmé)</span>
+                              <span className="font-semibold">Programmée (tarif Normal)</span>
                             </button>
                           )}
                         </div>

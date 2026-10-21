@@ -17,7 +17,6 @@ const FORMULES = {
   standard: "Normal · 3 h",
   urgent: "Urgent · 1 h 30",
   flash: "Super · 1 h",
-  navette: "Navette · par passage",
 } as const;
 
 const euro = (n: number) =>
@@ -25,7 +24,21 @@ const euro = (n: number) =>
 
 export default function ServicePricing({ pricing }: { pricing: Pricing }) {
   const navette = pricing.recommended.includes("navette");
-  const columns = (navette ? ["navette"] : ["standard", "urgent", "flash"]) as (keyof typeof FORMULES)[];
+  const columns = ["standard", "urgent", "flash"] as (keyof typeof FORMULES)[];
+
+  // Les navettes sont sur devis : pas de grille, le prix par passage est fixé après étude de la tournée.
+  if (navette) {
+    return (
+      <div>
+        <p className="mb-8 max-w-[68ch] text-[16.5px] leading-[1.65] text-muted">{pricing.intro}</p>
+        <div className="max-w-[68ch] rounded-xl border border-line bg-white p-6">
+          <div className="font-mono text-[10px] tracking-[0.14em] text-label uppercase">Navette · par passage</div>
+          <div className="mt-2 text-[28px] font-bold tracking-[-0.02em] text-ink">Sur devis</div>
+        </div>
+        <p className="mt-6 max-w-[68ch] border-l-2 border-accent pl-4 text-[15px] leading-[1.6] text-ink">{pricing.note}</p>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -38,7 +51,7 @@ export default function ServicePricing({ pricing }: { pricing: Pricing }) {
               {columns.map((c) => (
                 <th key={c} className="py-3 pr-6 text-left font-mono text-[10px] tracking-[0.14em] text-label uppercase">
                   {FORMULES[c]}
-                  {!navette && pricing.recommended.includes(c) && (
+                  {pricing.recommended.includes(c) && (
                     <span className="ml-2 rounded-sm bg-accent/10 px-1.5 py-0.5 text-[9px] font-bold text-accent-dark">Conseillé</span>
                   )}
                 </th>
@@ -54,10 +67,10 @@ export default function ServicePricing({ pricing }: { pricing: Pricing }) {
                 </td>
                 {columns.map((c) => {
                   const ttc = gridPrice(c, zone);
-                  const highlight = navette || pricing.recommended.includes(c);
+                  const highlight = pricing.recommended.includes(c);
                   return (
                     <td key={c} className={`py-4 pr-6 ${highlight ? "" : "opacity-60"}`}>
-                      <div className="font-semibold text-ink">{navette || zone === 2 ? `dès ${euro(ttc)}` : euro(ttc)} TTC</div>
+                      <div className="font-semibold text-ink">{zone === 2 ? `dès ${euro(ttc)}` : euro(ttc)} TTC</div>
                       <div className="text-[12px] text-muted">{euro(splitTTC(ttc).ht)} HT</div>
                     </td>
                   );

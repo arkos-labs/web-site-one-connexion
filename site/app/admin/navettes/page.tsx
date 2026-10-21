@@ -64,6 +64,15 @@ function AdminNavettesPageInner() {
     load();
   }, [load]);
 
+  // Navette sur devis : l'admin saisit le prix par passage (TTC) une fois la tournée étudiée.
+  const saveQuote = async (id: string, value: string) => {
+    const ttc = value.trim() === "" ? null : Math.round(Number(value.replace(",", ".")) * 100) / 100;
+    if (ttc !== null && (!Number.isFinite(ttc) || ttc < 0)) return alert("Prix invalide.");
+    const { error } = await supabase.from("navettes").update({ estimated_price: ttc }).eq("id", id);
+    if (error) alert("Erreur : " + error.message);
+    load();
+  };
+
   const toggleStatus = async (id: string, current: string) => {
     const { error } = await supabase.from("navettes").update({ status: current === "active" ? "inactive" : "active" }).eq("id", id);
     if (error) alert("Erreur : " + error.message);
@@ -117,7 +126,7 @@ function AdminNavettesPageInner() {
         <StatCard icon={Calendar} label="Total navettes" value={String(total)} sub="Tous statuts confondus" />
         <StatCard icon={ToggleRight} label="Actives" value={String(active.length)} sub={total ? `${Math.round((active.length / total) * 100)}% du parc` : undefined} accent={active.length > 0} />
         <StatCard icon={ToggleLeft} label="Inactives" value={String(inactive.length)} sub="En pause" />
-        <StatCard icon={Euro} label="Estimation mensuelle" value={`${monthlyEstimate.toFixed(2)} € TTC`} sub={`${htOf(monthlyEstimate).toFixed(2)} € HT · Navettes actives`} />
+        <StatCard icon={Euro} label="Estimation mensuelle" value={`${monthlyEstimate.toFixed(2)} € TTC`} sub={`${htOf(monthlyEstimate).toFixed(2)} € HT · Navettes actives${navettes.some((n) => n.estimated_price == null) ? ` · ${navettes.filter((n) => n.estimated_price == null).length} devis à faire` : ""}`} accent={navettes.some((n) => n.estimated_price == null)} />
       </div>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -198,9 +207,26 @@ function AdminNavettesPageInner() {
                 </div>
                 <div className="flex items-center gap-4 pl-14 sm:pl-0">
                   <div className="text-right">
-                    <div className="text-[11px] font-bold uppercase tracking-wide text-label">Estimé</div>
-                    <div className="text-[14px] font-bold text-ink">{(n.estimated_price ?? 0).toFixed(2)} € TTC</div>
-                    <div className="text-[11px] font-medium text-muted">{htOf(n.estimated_price ?? 0).toFixed(2)} € HT</div>
+                    <label htmlFor={`quote-${n.id}`} className={`block text-[11px] font-bold uppercase tracking-wide ${n.estimated_price == null ? "text-accent" : "text-label"}`}>
+                      {n.estimated_price == null ? "Devis à faire" : "Devis · passage"}
+                    </label>
+                    <div className="mt-0.5 flex items-center justify-end gap-1">
+                      <input
+                        id={`quote-${n.id}`}
+                        key={`${n.id}-${n.estimated_price ?? ""}`}
+                        type="text"
+                        inputMode="decimal"
+                        defaultValue={n.estimated_price != null ? String(n.estimated_price).replace(".", ",") : ""}
+                        placeholder="Prix"
+                        onBlur={(e) => {
+                          if (e.target.value !== (n.estimated_price != null ? String(n.estimated_price).replace(".", ",") : "")) saveQuote(n.id, e.target.value);
+                        }}
+                        onKeyDown={(e) => { if (e.key === "Enter") (e.target as HTMLInputElement).blur(); }}
+                        className="h-8 w-20 rounded-lg border border-line bg-white px-2 text-right text-[14px] font-bold tabular-nums text-ink focus:border-accent focus:outline-none"
+                      />
+                      <span className="text-[12px] font-semibold text-muted">€ TTC</span>
+                    </div>
+                    {n.estimated_price != null && <div className="text-[11px] font-medium text-muted">{htOf(n.estimated_price).toFixed(2)} € HT</div>}
                   </div>
                   <button
                     onClick={() => toggleStatus(n.id, n.status)}

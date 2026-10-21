@@ -43,14 +43,14 @@ export const tourneesRegulieres: Service = {
     { title: "Réassort de boutiques", body: "Distribution régulière de stocks légers depuis un entrepôt francilien vers vos différents points de vente en centre-ville." },
     { title: "Collecte de prélèvements", body: "Passage chaque fin de matinée dans plusieurs cabinets médicaux du même secteur pour récupérer les prélèvements et les déposer ensemble au laboratoire." },
   ],
-  coverage: "Les tournées couvrent Paris et toute l’Île-de-France : sièges et agences parisiennes, zones d’activité de petite couronne (La Défense, Saint-Denis, Rungis) et sites de grande couronne. Un même circuit peut relier plusieurs départements ; le prix par passage dépend alors de la zone la plus éloignée.",
+  coverage: "Les tournées couvrent Paris et toute l’Île-de-France : sièges et agences parisiennes, zones d’activité de petite couronne (La Défense, Saint-Denis, Rungis) et sites de grande couronne. Un même circuit peut relier plusieurs départements.",
   pricing: {
     title: "Tarif d’une tournée régulière",
     intro:
-      "Une tournée se facture au passage, moins cher qu’une course ponctuelle : le trajet, les jours et les horaires sont connus d’avance. Le prix ci-dessous est un point de départ par passage, selon la zone.",
+      "Une tournée se facture au passage, moins cher qu’une course ponctuelle : le trajet, les jours et les horaires sont connus d’avance. Chaque tournée est différente, le prix est donc établi sur devis.",
     recommended: ["navette"],
     note:
-      "Le prix exact dépend du nombre d’arrêts et du volume transporté. Il s’affiche quand vous configurez votre navette depuis votre espace client, avant toute validation.",
+      "Le prix dépend des adresses, du nombre d’arrêts, des horaires et du volume. Décrivez votre tournée depuis votre espace client : un conseiller vous envoie le devis avant toute mise en place.",
   },
 
   faqTitle: "Vos questions sur les tournées régulières.",
@@ -61,7 +61,7 @@ export const tourneesRegulieres: Service = {
     {
       question: "Combien coûte une tournée régulière ?",
       answer:
-        "Une tournée se facture au passage. Le prix dépend de la zone, du nombre d’arrêts et du volume ; il s’affiche quand vous configurez la navette dans votre espace client, avant validation.",
+        "Une tournée se facture au passage, sur devis. Le prix dépend des adresses, du nombre d’arrêts et du volume : décrivez la tournée depuis votre espace client, un conseiller vous envoie le devis avant validation.",
     },
     {
       question: "Quels jours et à quelles heures une navette peut-elle passer ?",

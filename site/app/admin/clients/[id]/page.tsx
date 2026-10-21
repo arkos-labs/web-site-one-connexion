@@ -42,7 +42,49 @@ type OrderRow = {
   created_at: string;
   driver_id: string | null;
   client_type?: string | null;
+  billing_status: string | null;
+  amount_due: number | null;
+  payment_due_date: string | null;
+  paid_at: string | null;
+  delivered_at: string | null;
+  stripe_invoice_id: string | null;
 };
+
+/** Paiement d'une course, lu sur orders.billing_status (facture Stripe par course). */
+type PaymentTone = "green" | "blue" | "orange" | "red" | "amber";
+const PAYMENT_TONE: Record<PaymentTone, string> = {
+  green: "bg-green-50 text-green-700",
+  blue: "bg-blue-50 text-blue-700",
+  orange: "bg-orange-50 text-orange-700",
+  red: "bg-red-50 text-red-700",
+  amber: "bg-amber-50 text-amber-800",
+};
+const shortDate = (d: string) => new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "short" }).format(new Date(d));
+
+function paymentOf(o: OrderRow): { label: string; tone: PaymentTone; paid: boolean; due: boolean } | null {
+  switch (o.billing_status) {
+    case "paye":
+      return { label: o.paid_at ? `Payée le ${shortDate(o.paid_at)}` : "Payée", tone: "green", paid: true, due: false };
+    case "rembourse":
+      return { label: "Remboursée", tone: "blue", paid: false, due: false };
+    case "a_regler":
+    case "virement_attendu":
+      return { label: o.payment_due_date ? `À régler avant le ${shortDate(o.payment_due_date)}` : "À régler", tone: "orange", paid: false, due: true };
+    case "a_debiter":
+      return { label: o.payment_due_date ? `Prélèvement le ${shortDate(o.payment_due_date)}` : "Prélèvement prévu", tone: "blue", paid: false, due: true };
+    case "prelevement_en_cours":
+      return { label: "Prélèvement en cours", tone: "blue", paid: false, due: true };
+    case "en_retard":
+      return { label: "En retard", tone: "red", paid: false, due: true };
+    case "echec":
+      return { label: "Paiement échoué", tone: "red", paid: false, due: true };
+    case "annule":
+      return null;
+    default:
+      // Course livrée sans facture : rien n'a été demandé au client.
+      return DELIVERED.includes(o.status) ? { label: "Non facturée", tone: "amber", paid: false, due: false } : null;
+  }
+}
 
 type NavetteRow = {
   id: string;
@@ -114,7 +156,7 @@ export default function AdminClientDetailPage() {
     if (guestEmail) {
       const { data: rows } = await supabase
         .from("orders")
-        .select("id, tracking_code, pickup_address, dropoff_address, status, price_estimate, created_at, driver_id, client_type, contact_name, contact_phone")
+        .select("id, tracking_code, pickup_address, dropoff_address, status, price_estimate, created_at, driver_id, client_type, contact_name, contact_phone, billing_status, amount_due, payment_due_date, paid_at, delivered_at, stripe_invoice_id")
         .is("user_id", null)
         .ilike("contact_email", guestEmail.replace(/[\\%_]/g, "\\$&"))
         .order("created_at", { ascending: false });
@@ -150,7 +192,7 @@ export default function AdminClientDetailPage() {
       supabase.from("clients").select("company_name, siret, tax_id, billing_address, billing_postal_code, billing_city, contact_email").eq("id", clientId).maybeSingle(),
       supabase
         .from("orders")
-        .select("id, tracking_code, pickup_address, dropoff_address, status, price_estimate, created_at, driver_id, client_type")
+        .select("id, tracking_code, pickup_address, dropoff_address, status, price_estimate, created_at, driver_id, client_type, billing_status, amount_due, payment_due_date, paid_at, delivered_at, stripe_invoice_id")
         .eq("user_id", clientId)
         .order("created_at", { ascending: false }),
       supabase
@@ -210,7 +252,15 @@ export default function AdminClientDetailPage() {
   const revenue = orders.filter((o) => !CANCELLED.includes(o.status)).reduce((sum, o) => sum + (normalizeOrderPriceTTC(o.price_estimate, o.pickup_address, o.dropoff_address) ?? 0), 0);
   const activeOrders = orders.filter((o) => ![...DELIVERED, ...CANCELLED].includes(o.status));
   // À régler : factures déjà émises. À facturer : factures du mois encore ouvertes (émises le 1er du mois suivant).
-  const unpaidTotal = invoices.filter((i) => i.status === "emise" || i.status === "echec").reduce((sum, i) => sum + i.amount, 0);
+  // Factures par course (Stripe), avec leur paiement.
+  const orderBills = orders
+    .map((o) => ({ order: o, payment: paymentOf(o), amount: Number(o.amount_due ?? normalizeOrderPriceTTC(o.price_estimate, o.pickup_address, o.dropoff_address) ?? 0) }))
+    .filter((b): b is { order: OrderRow; payment: NonNullable<ReturnType<typeof paymentOf>>; amount: number } => b.payment !== null);
+  const orderDueTotal = orderBills.filter((b) => b.payment.due).reduce((sum, b) => sum + b.amount, 0);
+  const paidTotal =
+    orderBills.filter((b) => b.payment.paid).reduce((sum, b) => sum + b.amount, 0) +
+    invoices.filter((i) => i.status === "payee").reduce((sum, i) => sum + i.amount, 0);
+  const unpaidTotal = orderDueTotal + invoices.filter((i) => i.status === "emise" || i.status === "echec").reduce((sum, i) => sum + i.amount, 0);
   const toBillTotal = invoices.filter((i) => i.status === "en_cours" || i.status === "emission" || i.status === "retenue").reduce((sum, i) => sum + i.amount, 0);
   const pendingTotal = unpaidTotal + toBillTotal;
   // Courses livrées sans prix : elles n'entrent dans aucune facture.
@@ -287,6 +337,7 @@ export default function AdminClientDetailPage() {
           }
           accent={pendingTotal > 0 || unpricedDelivered.length > 0}
         />
+        <StatCard icon={CheckCircle2} label="Déjà payé" value={`${paidTotal.toFixed(2)} € TTC`} sub={`${htOf(paidTotal).toFixed(2)} € HT`} />
         <StatCard icon={Building2} label="Navettes récurrentes" value={String(navettes.length)} sub={navettes.filter((n) => n.status === "active").length > 0 ? `${navettes.filter((n) => n.status === "active").length} active(s)` : undefined} />
       </div>
 
@@ -297,7 +348,7 @@ export default function AdminClientDetailPage() {
             <div className="border-b border-line p-5">
               <h2 className="text-[15px] font-bold text-ink">Facturation</h2>
               <p className="mt-0.5 text-[12.5px] font-medium text-muted">
-                Une facture par course livrée, envoyée par Stripe dès la livraison, payable sous 30 jours (carte ou virement).
+                Une facture par course livrée, envoyée par Stripe dès la livraison, payable sous 30 jours (carte ou virement). Le statut indique si le client a payé.
               </p>
             </div>
             {unpricedDelivered.length > 0 && (
@@ -307,11 +358,33 @@ export default function AdminClientDetailPage() {
               </div>
             )}
             <div className="flex flex-col divide-y divide-line">
-              {invoices.length === 0 && (
+              {invoices.length === 0 && orderBills.length === 0 && (
                 <div className="p-6 text-center text-[13px] font-medium text-muted">
                   {profile.guest ? "Client sans compte : chaque course est payée en ligne à la commande." : "Aucune course livrée facturable pour l'instant."}
                 </div>
               )}
+              {orderBills.map(({ order: o, payment, amount }) => (
+                <div key={o.id} className="flex items-center justify-between gap-3 p-4">
+                  <div className="min-w-0">
+                    <div className="font-mono text-[12.5px] font-bold text-ink">Course {o.tracking_code ?? o.id.slice(0, 8)}</div>
+                    <div className="text-[12.5px] text-muted">
+                      {new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "long", year: "numeric" }).format(new Date(o.delivered_at || o.created_at))}
+                      {o.stripe_invoice_id && (
+                        <> · <a href={`https://dashboard.stripe.com/invoices/${o.stripe_invoice_id}`} target="_blank" rel="noreferrer" className="font-bold text-accent-dark underline">Voir sur Stripe</a></>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex shrink-0 items-center gap-3">
+                    <div className="text-right">
+                      <div className="text-[15px] font-bold text-ink">{amount.toFixed(2)} € TTC</div>
+                      <div className="text-[11px] font-medium text-muted">{htOf(amount).toFixed(2)} € HT</div>
+                    </div>
+                    <span className={`flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1 text-[11px] font-bold ${PAYMENT_TONE[payment.tone]}`}>
+                      {payment.paid ? <CheckCircle2 size={12} /> : <Clock size={12} />} {payment.label}
+                    </span>
+                  </div>
+                </div>
+              ))}
               {invoices.map((inv) => (
                 <div key={inv.id} className="flex items-center justify-between gap-3 p-4">
                   <div>
@@ -373,6 +446,12 @@ export default function AdminClientDetailPage() {
                       <span className={`rounded-full px-2 py-0.5 text-[11px] font-bold ${o.status === "annulee" ? "bg-red-50 text-red-600" : o.status === "livree" ? "bg-green-50 text-green-700" : o.driver_id ? "bg-blue-50 text-blue-700" : "bg-amber-50 text-amber-700"}`}>
                         {ORDER_STATUS_LABEL[o.status] ?? o.status}
                       </span>
+                      {(() => {
+                        const payment = paymentOf(o);
+                        return payment && (
+                          <span className={`rounded-full px-2 py-0.5 text-[11px] font-bold ${PAYMENT_TONE[payment.tone]}`}>{payment.label}</span>
+                        );
+                      })()}
                     </div>
                     <div className="mt-1 text-[12.5px] text-muted">{o.pickup_address} → {o.dropoff_address}</div>
                   </div>
@@ -419,7 +498,7 @@ export default function AdminClientDetailPage() {
                   <div className="flex items-center gap-3 text-right">
                     <span className="text-[12.5px] font-semibold text-muted">{n.days_str || "Jours non définis"}</span>
                     <div className="text-right">
-                      <div className="text-[14px] font-bold text-ink">{(n.estimated_price ?? 0).toFixed(2)} € TTC</div>
+                      <div className="text-[14px] font-bold text-ink">{n.estimated_price != null ? `${n.estimated_price.toFixed(2)} € TTC` : "Sur devis"}</div>
                       {n.estimated_price && <div className="text-[11px] font-medium text-muted">{htOf(n.estimated_price).toFixed(2)} € HT</div>}
                     </div>
                   </div>

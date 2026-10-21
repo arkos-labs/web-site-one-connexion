@@ -12,15 +12,17 @@ export type ServiceLevel = 'navette' | 'standard' | 'urgent' | 'flash';
 // Petite couronne : 1 h environ avec un retour partiel → 59 € TTC.
 // Grande couronne (zone 2) : prix selon la distance depuis Paris, retour à vide compris.
 // Les zones 3 et 4 (hors Île-de-France, adresse introuvable) ne sont pas desservies.
+// La navette régulière est sur devis. « navette » reste le délai d'une course programmée (date et heure
+// choisies au formulaire) : elle se paie au tarif Normal.
 const PRICING_GRID = {
-  navette: [18.00, 30.00, 66.00, 72.00, 78.00],
   standard: [28.00, 59.00, 0, 96.00, 109.20],
   urgent: [42.00, 88.50, 0, 144.00, 163.80],
   flash: [56.00, 118.00, 0, 192.00, 218.40]
 };
 
 /** Majoration par délai, appliquée au prix Normal de la grande couronne (comme sur la grille Paris). */
-const DELAY_FACTOR: Record<Exclude<ServiceLevel, "navette">, number> = { standard: 1, urgent: 1.5, flash: 2 };
+const DELAY_FACTOR: Record<ServiceLevel, number> = { navette: 1, standard: 1, urgent: 1.5, flash: 2 };
+const gridLevel = (service: ServiceLevel) => (service === "navette" ? "standard" : service);
 
 // Grande couronne : aller avec le colis + retour à vide vers Paris à 50 km/h de moyenne,
 // plus 20 min d'approche, d'enlèvement et de remise. HT = heures × 42,89 € + km × 0,248 €.
@@ -120,8 +122,8 @@ export function getZoneFromDepartment(dept: string | null): Zone {
  * Grande couronne : prix d'appel (« dès »), celui de la commune la plus proche de Paris.
  */
 export function gridPrice(service: ServiceLevel, zone: Zone): number {
-  if (zone === 2 && service !== "navette") return grandeCouronneTTC(GC_FROM_KM) * DELAY_FACTOR[service];
-  return PRICING_GRID[service][zone];
+  if (zone === 2) return grandeCouronneTTC(GC_FROM_KM) * DELAY_FACTOR[service];
+  return PRICING_GRID[gridLevel(service)][zone];
 }
 
 /** Prix TTC d'une course entre Paris et `address` (une commune suffit : « Meaux 77 », « Cergy »). */
@@ -148,7 +150,7 @@ export function calculatePrice(pickup: string, dropoff: string, service: Service
   const maxZone = Math.max(zonePickup, zoneDropoff) as Zone;
 
   // Grande couronne : le coursier part de Paris, le prix suit l'adresse la plus éloignée de Paris.
-  if (maxZone === 2 && service !== "navette") {
+  if (maxZone === 2) {
     const km = Math.max(
       ...[[pickup, deptPickup, zonePickup], [dropoff, deptDropoff, zoneDropoff]]
         .filter(([, , zone]) => zone === 2)
@@ -157,5 +159,5 @@ export function calculatePrice(pickup: string, dropoff: string, service: Service
     return grandeCouronneTTC(km) * DELAY_FACTOR[service];
   }
 
-  return PRICING_GRID[service][maxZone];
+  return PRICING_GRID[gridLevel(service)][maxZone];
 }

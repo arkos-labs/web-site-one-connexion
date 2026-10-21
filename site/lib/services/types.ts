@@ -13,7 +13,7 @@ export type FaqItem = { question: string; answer: string };
 export type ServicePricing = {
   title: string;
   intro: string;
-  /** Formules mises en avant pour ce service (« navette » : prix par passage). */
+  /** Formules mises en avant pour ce service (« navette » : sur devis). */
   recommended: ("standard" | "urgent" | "flash" | "navette")[];
   /** Conseil propre au service, sous la grille. */
   note: string;
