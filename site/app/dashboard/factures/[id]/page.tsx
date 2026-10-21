@@ -2,9 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import { useParams, usePathname } from "next/navigation";
-import { CreditCard, Download } from "lucide-react";
+import { CreditCard, Download, ExternalLink } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import { generateInvoicePDF } from "@/lib/generate-invoice-pdf";
 import { PageShell, KpiStrip, StatusPill, ErrorState, LoadingState, TH, TD, BTN_ACCENT } from "@/components/dashboard/ui";
 import { htOf, normalizeOrderPriceTTC } from "@/lib/price-display";
 
@@ -32,7 +31,6 @@ export default function FactureDetailsPage() {
   const [invoice, setInvoice] = useState<InvoiceInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [userInfo, setUserInfo] = useState<{ name: string; email: string }>({ name: "", email: "" });
   const [clientId, setClientId] = useState<string | null>(null);
   // La même page sert à l'admin (/admin/factures/[id]) : le retour mène alors à la fiche client.
   const adminView = usePathname()?.startsWith("/admin") ?? false;
@@ -77,14 +75,7 @@ export default function FactureDetailsPage() {
           pdfUrl: (inv as any).pdf_url,
         });
 
-        // Nom et email du client de la facture (l'admin consulte la facture d'un autre compte).
-        const clientId = (inv as any).client_id as string;
-        const [{ data: profile }, { data: client }] = await Promise.all([
-          supabase.from("profiles").select("full_name").eq("id", clientId).maybeSingle(),
-          supabase.from("clients").select("contact_email").eq("id", clientId).maybeSingle(),
-        ]);
-        setUserInfo({ name: profile?.full_name || "", email: clientId === user.id ? user.email || "" : client?.contact_email || "" });
-        setClientId(clientId);
+        setClientId((inv as any).client_id);
       } catch (err) {
         setError("Erreur de chargement");
       } finally {
@@ -163,22 +154,21 @@ export default function FactureDetailsPage() {
               Payer la facture
             </a>
           )}
-          <button
-            type="button"
-            onClick={() =>
-              generateInvoicePDF({
-                invoiceId: invoice.number,
-                monthLabel: invoice.monthLabel,
-                clientName: userInfo.name,
-                clientEmail: userInfo.email,
-                orders,
-              })
-            }
-            className={BTN_ACCENT}
-          >
-            <Download size={16} strokeWidth={2.5} />
-            Télécharger le PDF
-          </button>
+          {/* La facture est celle de Stripe : on ouvre et télécharge exactement ce document. */}
+          {!unpaid && invoice.payUrl && (
+            <a href={invoice.payUrl} target="_blank" rel="noreferrer" className={BTN_ACCENT}>
+              <ExternalLink size={16} strokeWidth={2.5} />
+              Voir la facture
+            </a>
+          )}
+          {invoice.pdfUrl ? (
+            <a href={invoice.pdfUrl} className={BTN_ACCENT}>
+              <Download size={16} strokeWidth={2.5} />
+              Télécharger le PDF
+            </a>
+          ) : (
+            <span className="text-[13px] font-semibold text-muted">Facture pas encore émise</span>
+          )}
         </>
       }
     >
