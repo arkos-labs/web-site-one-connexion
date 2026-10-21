@@ -114,6 +114,7 @@ type Invoice = {
   amount: number;
   status: string;
   url: string | null;
+  pdf: string | null;
 };
 
 function initialsOf(name: string) {
@@ -204,7 +205,7 @@ export default function AdminClientDetailPage() {
       supabase.from("addresses").select("id, label, address, is_default, contact_name, contact_phone").eq("user_id", clientId),
       supabase
         .from("invoices")
-        .select("id, invoice_number, billing_period_start, status, total_amount, hosted_invoice_url, invoice_items(order_id)")
+        .select("id, invoice_number, billing_period_start, status, total_amount, hosted_invoice_url, pdf_url, invoice_items(order_id)")
         .eq("client_id", clientId)
         .order("billing_period_start", { ascending: false }),
     ]);
@@ -241,6 +242,7 @@ export default function AdminClientDetailPage() {
         amount: Number(r.total_amount),
         status: r.status,
         url: r.hosted_invoice_url,
+        pdf: r.pdf_url,
       }))
     );
     setLoading(false);
@@ -417,9 +419,13 @@ export default function AdminClientDetailPage() {
                     <div className="font-bold capitalize text-ink">{inv.monthLabel}</div>
                     <div className="text-[12.5px] text-muted">
                       {inv.number} · {inv.courses} course{inv.courses > 1 ? "s" : ""}
-                      {" · "}<Link href={`/admin/factures/${inv.id}`} className="font-bold text-accent-dark underline">Voir la facture</Link>
-                      {inv.url && (
-                        <> · <a href={inv.url} target="_blank" rel="noreferrer" className="font-bold text-accent-dark underline">Page de paiement</a></>
+                      {inv.url ? (
+                        <> · <a href={inv.url} target="_blank" rel="noreferrer" className="font-bold text-accent-dark underline">Voir la facture</a></>
+                      ) : (
+                        <> · <span className="font-semibold">pas encore émise sur Stripe</span> · <Link href={`/admin/factures/${inv.id}`} className="font-bold text-accent-dark underline">Détail des courses</Link></>
+                      )}
+                      {inv.pdf && (
+                        <> · <a href={inv.pdf} className="font-bold text-accent-dark underline">PDF</a></>
                       )}
                     </div>
                   </div>
