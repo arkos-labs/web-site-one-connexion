@@ -9,7 +9,7 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 // Appelée par la base (trigger sur orders, via pg_net) dès qu'une course est livrée : le client reçoit sa
 // facture. Deux circuits :
-//  - pro avec compte (paiement à 30 jours) : facture Stripe envoyée par Stripe (lib/issue-invoice) ;
+//  - pro avec compte (paiement à 30 jours) : facture Stripe préparée, envoyée le lendemain matin (lib/issue-invoice) ;
 //  - course déjà payée par carte, ou pro « fin de mois » : facture acquittée / prélevée à l'échéance,
 //    envoyée par e-mail (lib/deliver-order-invoice).
 // Pas de secret : la route n'accepte qu'un id de course, ne lit aucun montant dans la requête et n'agit que
@@ -25,10 +25,8 @@ export async function POST(req: Request) {
 
   const { data: item } = await supabase.from('invoice_items').select('invoice_id').eq('order_id', orderId).maybeSingle();
   if (item) {
+    // Facture préparée (visible par l'admin), envoyée le lendemain matin par le cron.
     const result = await issueInternalInvoice(supabase, stripe, item.invoice_id);
-    if (result.ok && !result.skipped) {
-      await supabase.from('orders').update({ invoice_sent_at: new Date().toISOString() }).eq('id', orderId).is('invoice_sent_at', null);
-    }
     return Response.json(result, { status: result.ok ? 200 : 500 });
   }
 

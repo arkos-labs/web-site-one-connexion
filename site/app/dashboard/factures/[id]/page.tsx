@@ -64,6 +64,7 @@ export default function FactureDetailsPage() {
           .sort((a: any, b: any) => new Date(b.delivered_at || b.created_at).getTime() - new Date(a.delivered_at || a.created_at).getTime());
 
         setOrders(lines);
+        const visible = adminView || !["prete", "envoi", "retenue"].includes((inv as any).status);
         setInvoice({
           number: (inv as any).invoice_number,
           monthLabel: new Date((inv as any).billing_period_start).toLocaleDateString("fr-FR", { month: "long", year: "numeric" }),
@@ -71,8 +72,9 @@ export default function FactureDetailsPage() {
           subtotal: Number((inv as any).subtotal),
           tax: Number((inv as any).tax_amount),
           total: Number((inv as any).total_amount),
-          payUrl: (inv as any).hosted_invoice_url,
-          pdfUrl: (inv as any).pdf_url,
+          // Préparée mais pas encore envoyée : seul l'admin voit la facture Stripe.
+          payUrl: visible ? (inv as any).hosted_invoice_url : null,
+          pdfUrl: visible ? (inv as any).pdf_url : null,
         });
 
         setClientId((inv as any).client_id);

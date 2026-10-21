@@ -8,9 +8,13 @@ const parisDate = (d: Date) =>
 
 export type IssueResult = { invoice: string; ok: boolean; skipped?: boolean; detail?: string };
 
-// Émet via Stripe une facture interne ouverte ('en_cours') : e-mail au client, échéance à 30 jours,
-// paiement par carte ou virement (IBAN Stripe, rapproché automatiquement). Idempotent : la facture est
-// "réservée" avant l'appel Stripe, donc deux déclenchements simultanés n'émettent qu'une facture.
+// Statuts d'une facture : en_cours (courses qui s'ajoutent) → emission (création Stripe) → prete (validée
+// sur Stripe, visible par l'admin, pas encore envoyée) → envoi → emise (envoyée, à régler) → payee.
+// retenue : bloquée par l'admin, rien ne part.
+
+// Prépare via Stripe une facture interne ouverte ('en_cours') : facture validée, échéance à 30 jours,
+// paiement par carte ou virement (IBAN Stripe, rapproché automatiquement), sans l'envoyer. Idempotent : la
+// facture est "réservée" avant l'appel Stripe, donc deux déclenchements simultanés ne créent qu'une facture.
 export async function issueInternalInvoice(
   supabase: SupabaseClient,
   stripe: Stripe,
@@ -157,13 +161,14 @@ export async function issueInternalInvoice(
       );
     }
 
+    // Validée sur Stripe (numéro, PDF, lien de paiement) mais pas encore envoyée : l'admin la voit dans
+    // la fiche client, et l'envoi part le lendemain matin (sendPreparedInvoices) s'il ne l'a pas bloquée.
     const finalized = await stripe.invoices.finalizeInvoice(draft.id!, { auto_advance: false });
-    await stripe.invoices.sendInvoice(draft.id!);
 
     await supabase
       .from('invoices')
       .update({
-        status: 'emise',
+        status: 'prete',
         stripe_invoice_id: finalized.id,
         hosted_invoice_url: finalized.hosted_invoice_url,
         pdf_url: finalized.invoice_pdf,
@@ -181,6 +186,50 @@ export async function issueInternalInvoice(
   } catch (err: any) {
     console.error('Issue invoice error', claimed.invoice_number, err);
     await release();
+    return { invoice: claimed.invoice_number, ok: false, detail: err.message };
+  }
+}
+
+// Envoie au client (e-mail Stripe) une facture préparée la veille ou avant : l'admin a eu le temps de la
+// relire. Une facture préparée le jour même attend le prochain passage.
+export async function sendPreparedInvoice(
+  supabase: SupabaseClient,
+  stripe: Stripe,
+  invoiceId: string
+): Promise<IssueResult> {
+  const { data: claimed } = await supabase
+    .from('invoices')
+    .update({ status: 'envoi' })
+    .eq('id', invoiceId)
+    .eq('status', 'prete')
+    .select('id, invoice_number, stripe_invoice_id')
+    .maybeSingle();
+  if (!claimed) return { invoice: invoiceId, ok: true, skipped: true, detail: 'pas prête ou bloquée' };
+  const back = (status: string) => supabase.from('invoices').update({ status }).eq('id', invoiceId);
+
+  try {
+    const invoice = await stripe.invoices.retrieve(claimed.stripe_invoice_id);
+    const finalizedAt = invoice.status_transitions?.finalized_at;
+    if (finalizedAt && parisDate(new Date(finalizedAt * 1000)) >= parisDate(new Date())) {
+      await back('prete');
+      return { invoice: claimed.invoice_number, ok: true, skipped: true, detail: 'préparée aujourd\'hui, envoi au prochain passage' };
+    }
+    if (invoice.status === 'paid') {
+      await back('payee');
+      return { invoice: claimed.invoice_number, ok: true, skipped: true, detail: 'déjà payée' };
+    }
+    await stripe.invoices.sendInvoice(invoice.id!);
+    await back('emise');
+
+    const { data: items } = await supabase.from('invoice_items').select('order_id').eq('invoice_id', invoiceId);
+    const orderIds = (items ?? []).map((i) => i.order_id).filter(Boolean);
+    if (orderIds.length) {
+      await supabase.from('orders').update({ invoice_sent_at: new Date().toISOString() }).in('id', orderIds).is('invoice_sent_at', null);
+    }
+    return { invoice: claimed.invoice_number, ok: true };
+  } catch (err: any) {
+    console.error('Send invoice error', claimed.invoice_number, err);
+    await back('prete');
     return { invoice: claimed.invoice_number, ok: false, detail: err.message };
   }
 }

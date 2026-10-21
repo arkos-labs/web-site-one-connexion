@@ -286,7 +286,21 @@ export default function AdminClientDetailPage() {
     orderBills.filter((b) => b.payment.paid).reduce((sum, b) => sum + b.amount, 0) +
     invoices.filter((i) => i.status === "payee").reduce((sum, i) => sum + i.amount, 0);
   const unpaidTotal = orderDueTotal + invoices.filter((i) => i.status === "emise" || i.status === "echec").reduce((sum, i) => sum + i.amount, 0);
-  const toBillTotal = invoices.filter((i) => i.status === "en_cours" || i.status === "emission" || i.status === "retenue").reduce((sum, i) => sum + i.amount, 0);
+  const toBillTotal = invoices.filter((i) => ["en_cours", "emission", "prete", "envoi", "retenue"].includes(i.status)).reduce((sum, i) => sum + i.amount, 0);
+
+  // Préparer / bloquer / débloquer une facture avant son envoi (route admin, la RLS interdit l'écriture directe).
+  const [invoiceBusy, setInvoiceBusy] = useState<string | null>(null);
+  const runInvoiceAction = async (invoiceId: string, action: "prepare" | "hold" | "release") => {
+    setInvoiceBusy(invoiceId);
+    try {
+      const res = await fetch("/api/admin/invoices", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ invoiceId, action }) });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || data.ok === false) alert(data.error || data.detail || "L'action a échoué.");
+    } finally {
+      setInvoiceBusy(null);
+      load();
+    }
+  };
   const pendingTotal = unpaidTotal + toBillTotal;
   // Courses livrées sans prix : elles n'entrent dans aucune facture.
   const unpricedDelivered = orders.filter((o) => DELIVERED.includes(o.status) && o.price_estimate == null);
@@ -422,18 +436,28 @@ export default function AdminClientDetailPage() {
                       {inv.url ? (
                         <> · <a href={inv.url} target="_blank" rel="noreferrer" className="font-bold text-accent-dark underline">Voir la facture</a></>
                       ) : (
-                        <> · <span className="font-semibold">pas encore émise sur Stripe</span> · <Link href={`/admin/factures/${inv.id}`} className="font-bold text-accent-dark underline">Détail des courses</Link></>
+                        <> · <span className="font-semibold">pas encore préparée sur Stripe</span> · <Link href={`/admin/factures/${inv.id}`} className="font-bold text-accent-dark underline">Détail des courses</Link></>
                       )}
                       {inv.pdf && (
                         <> · <a href={inv.pdf} className="font-bold text-accent-dark underline">PDF</a></>
                       )}
                     </div>
                   </div>
-                  <div className="flex items-center gap-3">
+                  <div className="flex flex-wrap items-center justify-end gap-2 sm:gap-3">
                     <div className="text-right">
                       <div className="text-[15px] font-bold text-ink">{inv.amount.toFixed(2)} € TTC</div>
                       <div className="text-[11px] font-medium text-muted">{htOf(inv.amount).toFixed(2)} € HT</div>
                     </div>
+                    {/* Avant l'envoi : l'admin prépare la facture sur Stripe, la relit, peut bloquer l'envoi. */}
+                    {(inv.status === "en_cours" || (inv.status === "retenue" && !inv.url)) && (
+                      <InvoiceAction invoiceId={inv.id} action="prepare" label="Préparer la facture" busy={invoiceBusy} onRun={runInvoiceAction} primary />
+                    )}
+                    {(inv.status === "en_cours" || inv.status === "prete") && (
+                      <InvoiceAction invoiceId={inv.id} action="hold" label="Bloquer l'envoi" busy={invoiceBusy} onRun={runInvoiceAction} />
+                    )}
+                    {inv.status === "retenue" && inv.url && (
+                      <InvoiceAction invoiceId={inv.id} action="release" label="Débloquer l'envoi" busy={invoiceBusy} onRun={runInvoiceAction} primary />
+                    )}
                     {inv.status === "payee" ? (
                       <span className="flex items-center gap-1.5 rounded-full bg-green-50 px-2.5 py-1 text-[11px] font-bold text-green-700">
                         <CheckCircle2 size={12} /> Réglée
@@ -443,8 +467,16 @@ export default function AdminClientDetailPage() {
                         <Clock size={12} /> Paiement échoué
                       </span>
                     ) : inv.status === "retenue" ? (
-                      <span className="flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-bold text-slate-600">
-                        <Clock size={12} /> Retenue
+                      <span className="flex items-center gap-1.5 whitespace-nowrap rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-bold text-slate-600">
+                        <Clock size={12} /> Bloquée, pas envoyée
+                      </span>
+                    ) : inv.status === "prete" ? (
+                      <span className="flex items-center gap-1.5 whitespace-nowrap rounded-full bg-violet-50 px-2.5 py-1 text-[11px] font-bold text-violet-700">
+                        <Clock size={12} /> Prête · envoi demain 9 h
+                      </span>
+                    ) : inv.status === "envoi" ? (
+                      <span className="flex items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-1 text-[11px] font-bold text-blue-700">
+                        <RefreshCw size={12} /> Envoi en cours
                       </span>
                     ) : inv.status === "en_cours" || inv.status === "emission" ? (
                       <span className="flex items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-1 text-[11px] font-bold text-blue-700">
@@ -583,6 +615,35 @@ export default function AdminClientDetailPage() {
         </div>
       </div>
     </AdminPage>
+  );
+}
+
+function InvoiceAction({
+  invoiceId,
+  action,
+  label,
+  busy,
+  onRun,
+  primary = false,
+}: {
+  invoiceId: string;
+  action: "prepare" | "hold" | "release";
+  label: string;
+  busy: string | null;
+  onRun: (invoiceId: string, action: "prepare" | "hold" | "release") => void;
+  primary?: boolean;
+}) {
+  return (
+    <button
+      type="button"
+      disabled={busy !== null}
+      onClick={() => onRun(invoiceId, action)}
+      className={`whitespace-nowrap rounded-full px-3 py-1 text-[11.5px] font-bold transition-colors disabled:opacity-50 ${
+        primary ? "bg-accent text-white hover:bg-accent-dark" : "border border-line text-muted hover:border-ink/20 hover:text-ink"
+      }`}
+    >
+      {busy === invoiceId ? "…" : label}
+    </button>
   );
 }
 
