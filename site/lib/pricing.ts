@@ -164,12 +164,10 @@ export function calculatePrice(pickup: string, dropoff: string, service: Service
 
 /* ── Adresses de livraison en plus ──────────────────────────────────────────────────────────────
  * La course A → B garde le prix de la grille. Chaque adresse de livraison en plus se paie
- * 5 € par arrêt (stationnement, remise, photo : ~5 min) + un prix au km depuis l'adresse précédente,
- * puis la majoration du délai. Prix au km bâti sur le coût du coursier (42,89 € HT/h + 0,248 €/km) :
+ * uniquement au km depuis l'adresse précédente, sans forfait par arrêt, puis la majoration du délai.
+ * Prix au km bâti sur le coût du coursier (42,89 € HT/h + 0,248 €/km) :
  * Paris et petite couronne ~18 km/h → 3 € TTC/km ; grande couronne ~50 km/h → 1,50 € TTC/km.
- * Ainsi 10 adresses coûtent 10 arrêts : le coursier n'est jamais payé au prix d'une seule course.
  */
-export const EXTRA_STOP_FEE = 5;
 export const EXTRA_KM_CITY = 3;
 export const EXTRA_KM_GC = 1.5;
 /** En Super (sous 1 h), au plus 2 adresses de livraison : au-delà, le délai n'est pas tenable. */
@@ -180,7 +178,7 @@ export type ExtraStop = { from: string; to: string; km: number; price: number };
 /** Prix TTC d'une adresse en plus, arrondi à 0,50 € : zone grande couronne si l'une des deux adresses y est. */
 export function extraStopPrice(from: string, to: string, km: number, service: ServiceLevel): number {
   const gc = [from, to].some((a) => getZoneFromDepartment(getDepartmentFromAddress(a)) === 2);
-  const normal = EXTRA_STOP_FEE + (gc ? EXTRA_KM_GC : EXTRA_KM_CITY) * Math.max(0, km);
+  const normal = (gc ? EXTRA_KM_GC : EXTRA_KM_CITY) * Math.max(0, km);
   return Math.round(normal * DELAY_FACTOR[service] * 2) / 2;
 }
 

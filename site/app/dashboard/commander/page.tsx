@@ -241,7 +241,7 @@ export default function CommanderPage() {
   const [trackingCode, setTrackingCode] = useState<string | null>(null);
   const [favoriteAddresses, setFavoriteAddresses] = useState<Favorite[]>([]);
   const [estimatedPrice, setEstimatedPrice] = useState<number | null>(null);
-  // Détail du prix : course A → B, puis chaque adresse de livraison en plus (5 € + prix au km).
+  // Détail du prix : course A → B, puis chaque adresse de livraison en plus (prix au km).
   const [quote, setQuote] = useState<{ base: number; extras: ExtraStop[] } | null>(null);
   // Adresses hors Paris / IDF (enlèvement, étapes, livraison) : pas de tarif ni de commande.
   const allAddresses = [pickupAddress, ...stops.map((st) => st.address ?? ""), dropoffAddress];
@@ -963,7 +963,7 @@ export default function CommanderPage() {
                       <span className="font-bold text-white">{formatEur(e.price)} €</span>
                     </li>
                   ))}
-                  <li className="pt-1 text-[11px] text-white/50">Adresse en plus : 5 € + prix au km depuis la précédente, selon le délai.</li>
+                  <li className="pt-1 text-[11px] text-white/50">Adresse en plus : 3 € par km depuis la précédente (1,50 € en grande couronne), selon le délai.</li>
                 </ul>
               )}
               <div className="mt-3 rounded-lg bg-white/5 border border-white/10 p-3 text-xs text-white/80">
