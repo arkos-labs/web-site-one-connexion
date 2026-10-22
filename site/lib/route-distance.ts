@@ -1,8 +1,9 @@
 /**
  * lib/route-distance.ts
  * Distance entre deux adresses de livraison, pour le prix des adresses en plus (lib/pricing.ts).
- * Position de chaque adresse : Base Adresse Nationale. Distance à vol d'oiseau × 1,3, comme la
- * grande couronne (lib/communes-distance.ts), arrondie à 0,1 km. Même calcul côté formulaire et serveur.
+ * Position de chaque adresse : Base Adresse Nationale. Distance par la route : itinéraire voiture le plus
+ * court de l'IGN (Géoplateforme, gratuit, sans clé), arrondie à 0,1 km. Si l'IGN ne répond pas :
+ * vol d'oiseau × 1,3. Même calcul côté formulaire et serveur.
  */
 import { joinNumberSuffix } from "./address-idf";
 import { calculateRoutePrice, type ServiceLevel } from "./pricing";
@@ -13,6 +14,7 @@ const FALLBACK_KM = 8;
 
 type Point = { lat: number; lon: number };
 const cache = new Map<string, Promise<Point | null>>();
+const routeCache = new Map<string, Promise<number | null>>();
 
 function locate(address: string): Promise<Point | null> {
   const q = joinNumberSuffix(address.trim());
@@ -44,13 +46,40 @@ function haversineKm(a: Point, b: Point): number {
   return 2 * 6371 * Math.asin(Math.sqrt(h));
 }
 
+/** Km par la route entre deux points (IGN), null si le service ne répond pas. */
+function routeKm(a: Point, b: Point): Promise<number | null> {
+  const key = `${a.lon},${a.lat};${b.lon},${b.lat}`;
+  if (!routeCache.has(key)) {
+    routeCache.set(
+      key,
+      fetch(
+        "https://data.geopf.fr/navigation/itineraire?resource=bdtopo-osrm&profile=car&optimization=shortest" +
+          `&start=${a.lon},${a.lat}&end=${b.lon},${b.lat}&distanceUnit=kilometer&getSteps=false&getBbox=false`,
+        { signal: AbortSignal.timeout(8000) }
+      )
+        .then((r) => (r.ok ? r.json() : null))
+        .then((d) => (typeof d?.distance === "number" ? d.distance : null))
+        .catch(() => null)
+        .then((km) => {
+          if (km == null) routeCache.delete(key);
+          return km;
+        })
+    );
+  }
+  return routeCache.get(key)!;
+}
+
 /** Km par la route entre chaque livraison et la suivante. */
 export async function legDistancesKm(deliveries: string[]): Promise<number[]> {
   const points = await Promise.all(deliveries.map(locate));
-  return deliveries.slice(1).map((_, i) => {
-    const a = points[i], b = points[i + 1];
-    return a && b ? Math.round(haversineKm(a, b) * ROAD_FACTOR * 10) / 10 : FALLBACK_KM;
-  });
+  return Promise.all(
+    deliveries.slice(1).map(async (_, i) => {
+      const a = points[i], b = points[i + 1];
+      if (!a || !b) return FALLBACK_KM;
+      const km = (await routeKm(a, b)) ?? haversineKm(a, b) * ROAD_FACTOR;
+      return Math.round(km * 10) / 10;
+    })
+  );
 }
 
 /** Prix complet d'une course à une ou plusieurs adresses de livraison (la dernière = dropoff). */
