@@ -13,6 +13,7 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import { vatRateId } from '@/lib/stripe-vat';
 import { invoiceFooter, invoiceCustomFields, upsertStripeCustomer, type InvoiceParty } from '@/lib/invoice-info';
 import { sendInvoiceEmail } from '@/lib/invoice-email';
+import { orderRouteLabel } from '@/lib/order-route';
 
 const DELIVERED = ['delivered', 'livree'];
 const fr = (d: Date) => d.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'Europe/Paris' });
@@ -151,7 +152,7 @@ export async function deliverOrderInvoice(supabase: SupabaseClient, stripe: Stri
       await stripe.invoiceItems.create(
         {
           customer: customerId, invoice: draft.id, currency: 'eur', amount: Math.round(amount * 100),
-          description: `Course ${ref} - ${o.pickup_address} → ${o.dropoff_address} - livrée le ${delivered}`,
+          description: `Course ${ref} - ${orderRouteLabel(o)} - livrée le ${delivered}`,
         },
         { idempotencyKey: `deliver-item-${o.id}` }
       );

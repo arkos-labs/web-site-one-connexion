@@ -1,6 +1,7 @@
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 import { vatRateId } from '@/lib/stripe-vat';
+import { orderRouteLabel } from '@/lib/order-route';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder');
 
@@ -19,7 +20,7 @@ export async function GET(req: Request) {
 
   const { data: orders, error } = await supabase
     .from('orders')
-    .select('id, tracking_code, status, pickup_address, dropoff_address, amount_due, stripe_customer_id, stripe_payment_method_id, stripe_invoice_id')
+    .select('id, tracking_code, status, pickup_address, dropoff_address, stops, amount_due, stripe_customer_id, stripe_payment_method_id, stripe_invoice_id')
     .eq('billing_status', 'a_debiter')
     .lte('payment_due_date', today);
 
@@ -96,7 +97,7 @@ export async function GET(req: Request) {
             invoice: draft.id,
             currency: 'eur',
             amount: Math.round(Number(order.amount_due) * 100),
-            description: `Course ${ref} - ${order.pickup_address} → ${order.dropoff_address}`,
+            description: `Course ${ref} - ${orderRouteLabel(order)}`,
           },
           { idempotencyKey: `deferred-item-${order.id}` }
         );
