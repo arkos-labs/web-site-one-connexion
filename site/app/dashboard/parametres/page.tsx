@@ -14,6 +14,9 @@ const TABS = [
   { id: "securite", label: "Sécurité", icon: Lock },
 ] as const;
 
+// Champ verrouillé : lisible, mais visiblement non modifiable.
+const LOCKED = "cursor-not-allowed bg-paper text-muted focus:ring-0";
+
 function SectionTitle({ title, text }: { title: string; text: string }) {
   return (
     <div className="mb-6">
@@ -48,6 +51,9 @@ export default function ParametresPage() {
   const [siret, setSiret] = useState("");
   const [vatNumber, setVatNumber] = useState("");
   const [billingAddress, setBillingAddress] = useState("");
+  // Informations de la société déjà renseignées : verrouillées (trigger clients_lock_company_info),
+  // seul l'admin les modifie. Un champ encore vide peut être complété.
+  const [locked, setLocked] = useState({ company: false, siret: false, vat: false, billing: false });
 
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -82,15 +88,23 @@ export default function ParametresPage() {
         // Charger données client (billing_address, siret, etc)
         const { data: clientData } = await supabase
           .from("clients")
-          .select("company_name, siret, billing_address")
+          .select("company_name, siret, tax_id, billing_address")
           .eq("id", user.id)
           .maybeSingle();
 
         if (clientData) {
+          const billing = clientData.billing_address === "À remplir" ? "" : clientData.billing_address || "";
           setCompany(clientData.company_name || "");
           setSiret(clientData.siret || "");
-          setBillingAddress(clientData.billing_address || "");
+          setVatNumber(clientData.tax_id || "");
+          setBillingAddress(billing);
           if (clientData.siret) setIsPro(true);
+          setLocked({
+            company: !!clientData.company_name?.trim(),
+            siret: !!clientData.siret?.trim(),
+            vat: !!clientData.tax_id?.trim(),
+            billing: !!clientData.siret?.trim() && !!billing.trim(),
+          });
         }
       } catch (err) {
         console.error("Erreur de chargement du profil:", err);
@@ -132,21 +146,25 @@ export default function ParametresPage() {
         return;
       }
 
-      // Mettre à jour données client
-      const { error: clientError } = await supabase
-        .from("clients")
-        .upsert({
-          id: user.id,
-          company_name: company,
-          // siret est UNIQUE en base : on envoie null plutôt qu'une chaîne vide
-          siret: siret?.trim() ? siret.trim() : null,
-          billing_address: billingAddress,
-          contact_email: user.email || "",
-        });
+      // Mettre à jour données client : seuls les champs encore modifiables sont envoyés.
+      const clientUpdate: Record<string, string | null> = { id: user.id, contact_email: user.email || "" };
+      if (!locked.company) clientUpdate.company_name = company;
+      // siret est UNIQUE en base : on envoie null plutôt qu'une chaîne vide
+      if (!locked.siret) clientUpdate.siret = siret?.trim() ? siret.trim() : null;
+      if (!locked.vat) clientUpdate.tax_id = vatNumber?.trim() ? vatNumber.trim() : null;
+      if (!locked.billing) clientUpdate.billing_address = billingAddress;
+      const { error: clientError } = await supabase.from("clients").upsert(clientUpdate);
 
       if (clientError) {
         setSaveError(`Erreur: ${clientError.message}`);
       } else {
+        // Ce qui vient d'être rempli est désormais verrouillé.
+        setLocked((l) => ({
+          company: l.company || !!company.trim(),
+          siret: l.siret || !!siret.trim(),
+          vat: l.vat || !!vatNumber.trim(),
+          billing: l.billing || ((l.siret || !!siret.trim()) && !!billingAddress.trim()),
+        }));
         setSaveMessage("Modifications enregistrées.");
         // Demande au layout de recharger le nom affiché dans la sidebar
         window.dispatchEvent(new Event("profile-updated"));
@@ -285,22 +303,32 @@ export default function ParametresPage() {
                 {activeTab === "societe" && isPro && (
                   <div className="max-w-2xl">
                     <SectionTitle title="Informations de l'entreprise" text="Les détails de votre structure juridique, repris sur vos factures." />
+                    {(locked.company || locked.siret || locked.vat || locked.billing) && (
+                      <p className="mb-5 flex items-start gap-2.5 rounded-xl border border-line bg-paper px-4 py-3 text-[13px] font-medium text-muted">
+                        <Lock size={15} className="mt-0.5 shrink-0 text-label" />
+                        <span>
+                          Les informations déjà enregistrées ne peuvent plus être modifiées, car elles figurent sur vos factures.
+                          Pour les changer, contactez-nous au <a href="tel:+33666026707" className="font-bold text-ink underline">06 66 02 67 07</a> ou
+                          à <a href="mailto:contact@oneconnexion.com" className="font-bold text-ink underline">contact@oneconnexion.com</a>.
+                        </span>
+                      </p>
+                    )}
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                       <div className="sm:col-span-2">
                         <label htmlFor="company" className={LABEL}>Nom de la société / cabinet</label>
-                        <input id="company" type="text" value={company} onChange={(e) => setCompany(e.target.value)} placeholder="Ex : Cabinet Dupont & Associés" className={INPUT} />
+                        <input id="company" type="text" value={company} onChange={(e) => setCompany(e.target.value)} readOnly={locked.company} placeholder="Ex : Cabinet Dupont & Associés" className={`${INPUT} ${locked.company ? LOCKED : ""}`} />
                       </div>
                       <div>
                         <label htmlFor="siret" className={LABEL}>Numéro de SIRET</label>
-                        <input id="siret" type="text" value={siret} onChange={(e) => setSiret(e.target.value)} placeholder="123 456 789 00012" className={INPUT} />
+                        <input id="siret" type="text" value={siret} onChange={(e) => setSiret(e.target.value)} readOnly={locked.siret} placeholder="123 456 789 00012" className={`${INPUT} ${locked.siret ? LOCKED : ""}`} />
                       </div>
                       <div>
                         <label htmlFor="vat" className={LABEL}>TVA intracommunautaire</label>
-                        <input id="vat" type="text" value={vatNumber} onChange={(e) => setVatNumber(e.target.value)} placeholder="FR 12 123456789" className={INPUT} />
+                        <input id="vat" type="text" value={vatNumber} onChange={(e) => setVatNumber(e.target.value)} readOnly={locked.vat} placeholder="FR 12 123456789" className={`${INPUT} ${locked.vat ? LOCKED : ""}`} />
                       </div>
                       <div className="sm:col-span-2">
                         <label htmlFor="billing" className={LABEL}>Adresse de facturation</label>
-                        <input id="billing" type="text" value={billingAddress} onChange={(e) => setBillingAddress(e.target.value)} placeholder="Adresse complète" className={INPUT} />
+                        <input id="billing" type="text" value={billingAddress} onChange={(e) => setBillingAddress(e.target.value)} readOnly={locked.billing} placeholder="Adresse complète" className={`${INPUT} ${locked.billing ? LOCKED : ""}`} />
                       </div>
                     </div>
                   </div>
