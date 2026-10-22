@@ -902,8 +902,8 @@ export default function CommanderPage() {
           </form>
 
           {/* ── Récapitulatif live ─────────────────────────────────── */}
-          <aside className="hidden min-h-0 flex-col bg-ink text-white lg:flex">
-            <div className="flex items-center justify-between border-b border-white/10 px-6 py-4">
+          <aside data-lenis-prevent className="hidden min-h-0 flex-col overflow-y-auto bg-ink text-white lg:flex">
+            <div className="sticky top-0 z-10 flex shrink-0 items-center justify-between border-b border-white/10 bg-ink px-6 py-4">
               <span className="label-mono text-xs font-medium text-white/60">Récapitulatif</span>
               <span className="flex items-center gap-1.5 text-xs font-semibold text-white/70">
                 <span className="h-1.5 w-1.5 rounded-full bg-green-400 shadow-[0_0_6px_rgba(74,222,128,0.6)]" />
@@ -911,8 +911,8 @@ export default function CommanderPage() {
               </span>
             </div>
 
-            {/* Trajet */}
-            <div data-lenis-prevent className="no-scrollbar min-h-0 flex-1 overflow-y-auto px-6 py-5">
+            {/* Trajet : tout le panneau défile, chaque adresse reste visible */}
+            <div className="shrink-0 px-6 py-5">
               <div className="relative flex flex-col gap-4 pl-6">
                 <span aria-hidden className="absolute bottom-3 left-[7px] top-3 border-l border-dashed border-white/25" />
                 <SummaryStop kind="start" label="Enlèvement" value={pickupAddress} />
@@ -936,7 +936,7 @@ export default function CommanderPage() {
             </div>
 
             {/* Tarif */}
-            <div className="border-t border-white/10 px-6 py-5">
+            <div className="mt-auto shrink-0 border-t border-white/10 px-6 py-5">
               <span className="label-mono text-xs font-medium text-white/60">Tarif estimé</span>
               <div className="mt-2">
                 {estimatedPrice !== null ? (
