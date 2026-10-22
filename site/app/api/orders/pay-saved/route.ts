@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
-import { calculatePrice, isServedAddress, ServiceLevel } from '@/lib/pricing';
+import { isServedAddress, MAX_FLASH_DELIVERIES, ServiceLevel } from '@/lib/pricing';
+import { priceRoute, deliveriesOf } from '@/lib/route-distance';
 import { sessionUser, customerIdFor, savedMethodOf } from '@/lib/payment-method';
 import { notifyPaidOrder } from '@/lib/telegram-dashboard';
 
@@ -30,7 +31,7 @@ export async function POST(req: Request) {
     const admin = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
     const { data: order } = await admin
       .from('orders')
-      .select('id, user_id, created_at, status, payment_mode, billing_status, pickup_address, dropoff_address, delai, client_type, siret')
+      .select('id, user_id, created_at, status, payment_mode, billing_status, pickup_address, dropoff_address, stops, delai, client_type, siret')
       .eq('tracking_code', trackingCode)
       .maybeSingle();
     if (!order || order.user_id !== user.id || order.payment_mode || order.billing_status === 'paye'
@@ -38,8 +39,12 @@ export async function POST(req: Request) {
         || ['annulee', 'cancelled'].includes(order.status)) {
       return NextResponse.json({ fallback: true });
     }
-    if (!isServedAddress(order.pickup_address) || !isServedAddress(order.dropoff_address)) {
+    const deliveries = deliveriesOf(order);
+    if (!isServedAddress(order.pickup_address) || deliveries.some((a) => !isServedAddress(a))) {
       return NextResponse.json({ error: 'Adresse hors zone.' }, { status: 400 });
+    }
+    if (order.delai === 'flash' && deliveries.length > MAX_FLASH_DELIVERIES) {
+      return NextResponse.json({ error: `En Super 1 h, ${MAX_FLASH_DELIVERIES} adresses de livraison au maximum.` }, { status: 400 });
     }
 
     const customerId = await customerIdFor(admin, stripe, user, false);
@@ -50,7 +55,8 @@ export async function POST(req: Request) {
     const pro = order.client_type === 'entreprise' && !!order.siret;
     if (!pro && (deferred || saved.method.type !== 'card')) return NextResponse.json({ fallback: true });
 
-    const price = calculatePrice(order.pickup_address, order.dropoff_address, (order.delai || 'standard') as ServiceLevel);
+    // Course A → B, plus chaque adresse de livraison en plus (lib/pricing.ts).
+    const { total: price } = await priceRoute(order.pickup_address, deliveries, (order.delai || 'standard') as ServiceLevel);
     const common = { amount_due: price, stripe_customer_id: customerId, stripe_payment_method_id: saved.method.id };
 
     if (deferred) {

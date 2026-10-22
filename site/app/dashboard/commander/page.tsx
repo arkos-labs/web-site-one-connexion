@@ -24,7 +24,8 @@ import {
 } from "lucide-react";
 import { AddressAutocomplete } from "@/components/AddressAutocomplete";
 import { createClient } from "@/lib/supabase/client";
-import { calculatePrice, isServedAddress, ServiceLevel } from "@/lib/pricing";
+import { isServedAddress, MAX_FLASH_DELIVERIES, ServiceLevel, type ExtraStop } from "@/lib/pricing";
+import { priceRoute } from "@/lib/route-distance";
 import UnservedAddressAlert, { useUnservedAddresses } from "@/components/UnservedAddressAlert";
 import LargeParcelAlert from "@/components/LargeParcelAlert";
 import { notifyNewOrder } from "@/lib/notify-new-order";
@@ -240,6 +241,8 @@ export default function CommanderPage() {
   const [trackingCode, setTrackingCode] = useState<string | null>(null);
   const [favoriteAddresses, setFavoriteAddresses] = useState<Favorite[]>([]);
   const [estimatedPrice, setEstimatedPrice] = useState<number | null>(null);
+  // Détail du prix : course A → B, puis chaque adresse de livraison en plus (5 € + prix au km).
+  const [quote, setQuote] = useState<{ base: number; extras: ExtraStop[] } | null>(null);
   // Adresses hors Paris / IDF (enlèvement, étapes, livraison) : pas de tarif ni de commande.
   const allAddresses = [pickupAddress, ...stops.map((st) => st.address ?? ""), dropoffAddress];
   const outOfZone = allAddresses.some((a) => a.trim().length > 0 && !isServedAddress(a));
@@ -255,13 +258,30 @@ export default function CommanderPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Livraisons dans l'ordre : étapes remplies, puis livraison finale.
+  const deliveries = [...stops.map((st) => (st.address ?? "").trim()).filter(Boolean), dropoffAddress];
+  const deliveriesKey = deliveries.join("|");
+  const flashAllowed = deliveries.length <= MAX_FLASH_DELIVERIES;
+
   useEffect(() => {
-    if (pickupAddress && dropoffAddress && !outOfZone) {
-      setEstimatedPrice(calculatePrice(pickupAddress, dropoffAddress, (delai || "standard") as ServiceLevel));
-    } else {
+    if (!pickupAddress || !dropoffAddress || outOfZone) {
       setEstimatedPrice(null);
+      setQuote(null);
+      return;
     }
-  }, [pickupAddress, dropoffAddress, delai, outOfZone]);
+    let live = true;
+    priceRoute(pickupAddress, deliveriesKey.split("|"), (delai || "standard") as ServiceLevel).then((r) => {
+      if (!live) return;
+      setEstimatedPrice(r.total);
+      setQuote({ base: r.base, extras: r.extras });
+    });
+    return () => { live = false; };
+  }, [pickupAddress, dropoffAddress, deliveriesKey, delai, outOfZone]);
+
+  // Super 1 h : au plus 2 adresses de livraison.
+  useEffect(() => {
+    if (delai === "flash" && !flashAllowed) setDelai("");
+  }, [delai, flashAllowed]);
 
   useEffect(() => {
     supabase.from("addresses").select("id, label, address").then(({ data }: { data: Favorite[] | null }) => {
@@ -528,7 +548,7 @@ export default function CommanderPage() {
                       <RoutePoint
                         key={stop.id}
                         kind="stop"
-                        label={`Étape ${index + 1}`}
+                        label={`Livraison ${index + 1}`}
                         address={stop.address}
                         onAddress={(v) => patchStop(stop.id, { address: v })}
                         contactName={stop.contactName || ""}
@@ -545,12 +565,12 @@ export default function CommanderPage() {
                       className="flex h-9 items-center justify-center gap-1.5 rounded-lg border border-dashed border-[#c9c5bd] text-xs font-bold text-muted transition-colors hover:border-accent hover:bg-accent/5 hover:text-accent-dark"
                     >
                       <Plus size={14} strokeWidth={2.5} />
-                      Ajouter une étape intermédiaire
+                      Ajouter une adresse de livraison
                     </button>
 
                     <RoutePoint
                       kind="end"
-                      label="Livraison"
+                      label={stops.length ? `Livraison ${stops.length + 1}` : "Livraison"}
                       address={dropoffAddress}
                       onAddress={setDropoffAddress}
                       contactName={dropoffContactName}
@@ -672,12 +692,14 @@ export default function CommanderPage() {
                   <div role="radiogroup" aria-label="Délai souhaité" className="grid grid-cols-1 gap-2.5 sm:grid-cols-3">
                     {DELAIS.map((d) => {
                       const selected = delai === d.id;
+                      const disabled = d.id === "flash" && !flashAllowed;
                       const Icon = d.icon;
                       return (
                         <label
                           key={d.id}
-                          className={`flex cursor-pointer items-center gap-2.5 rounded-xl border-2 px-3 py-3 transition-all focus-within:ring-2 focus-within:ring-accent/30 ${
-                            selected ? "border-accent bg-accent/[0.03]" : "border-line bg-white hover:border-[#c9c5bd]"
+                          className={`flex items-center gap-2.5 rounded-xl border-2 px-3 py-3 transition-all focus-within:ring-2 focus-within:ring-accent/30 ${
+                            disabled ? "cursor-not-allowed border-line bg-paper opacity-60"
+                              : selected ? "cursor-pointer border-accent bg-accent/[0.03]" : "cursor-pointer border-line bg-white hover:border-[#c9c5bd]"
                           }`}
                         >
                           <input
@@ -685,6 +707,7 @@ export default function CommanderPage() {
                             name="delai"
                             value={d.id}
                             checked={selected}
+                            disabled={disabled}
                             onChange={() => { setDelai(d.id); setStep3Errors((e) => ({ ...e, delai: undefined })); }}
                             className="sr-only"
                           />
@@ -697,7 +720,7 @@ export default function CommanderPage() {
                           </span>
                           <span className="flex min-w-0 flex-col">
                             <span className="text-[13px] font-extrabold leading-tight text-ink">{d.name}</span>
-                            <span className={`text-xs font-medium ${selected ? "text-accent-dark" : "text-muted"}`}>{d.hint}</span>
+                            <span className={`text-xs font-medium ${selected ? "text-accent-dark" : "text-muted"}`}>{disabled ? `${MAX_FLASH_DELIVERIES} adresses max.` : d.hint}</span>
                           </span>
                         </label>
                       );
@@ -774,7 +797,7 @@ export default function CommanderPage() {
                     </ReviewCard>
 
                     {stops.length > 0 && (
-                      <ReviewCard title={`Étapes intermédiaires (${stops.length})`} onEdit={() => setStep(1)} wide>
+                      <ReviewCard title={`Livraisons avant la dernière (${stops.length})`} onEdit={() => setStep(1)} wide>
                         <ul className="flex flex-col gap-1">
                           {stops.map((s, i) => (
                             <li key={s.id} className="text-sm font-bold text-ink">
@@ -894,9 +917,9 @@ export default function CommanderPage() {
                 <span aria-hidden className="absolute bottom-3 left-[7px] top-3 border-l border-dashed border-white/25" />
                 <SummaryStop kind="start" label="Enlèvement" value={pickupAddress} />
                 {stops.map((s, i) => (
-                  <SummaryStop key={s.id} kind="stop" label={`Étape ${i + 1}`} value={s.address} />
+                  <SummaryStop key={s.id} kind="stop" label={`Livraison ${i + 1}`} value={s.address} />
                 ))}
-                <SummaryStop kind="end" label="Livraison" value={dropoffAddress} />
+                <SummaryStop kind="end" label={stops.length ? `Livraison ${stops.length + 1}` : "Livraison"} value={dropoffAddress} />
               </div>
 
               <dl className="mt-6 grid grid-cols-2 gap-3 border-t border-white/10 pt-5">
@@ -928,6 +951,21 @@ export default function CommanderPage() {
                   <span className="text-[34px] font-extrabold leading-none tracking-tight">-- €</span>
                 )}
               </div>
+              {quote && quote.extras.length > 0 && (
+                <ul className="mt-3 flex flex-col gap-1 border-t border-white/10 pt-3 text-xs text-white/70">
+                  <li className="flex justify-between gap-3">
+                    <span>Course jusqu&apos;à la livraison 1</span>
+                    <span className="font-bold text-white">{formatEur(quote.base)} €</span>
+                  </li>
+                  {quote.extras.map((e, i) => (
+                    <li key={i} className="flex justify-between gap-3">
+                      <span>Livraison {i + 2} · {e.km.toLocaleString("fr-FR")} km</span>
+                      <span className="font-bold text-white">{formatEur(e.price)} €</span>
+                    </li>
+                  ))}
+                  <li className="pt-1 text-[11px] text-white/50">Adresse en plus : 5 € + prix au km depuis la précédente, selon le délai.</li>
+                </ul>
+              )}
               <div className="mt-3 rounded-lg bg-white/5 border border-white/10 p-3 text-xs text-white/80">
                 {isPro ? (
                   <>

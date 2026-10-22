@@ -1,7 +1,9 @@
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
-import { calculatePrice, isServedAddress, ServiceLevel } from '@/lib/pricing';
+import { isServedAddress, MAX_FLASH_DELIVERIES, ServiceLevel } from '@/lib/pricing';
+import { priceRoute, deliveriesOf } from '@/lib/route-distance';
+import { orderRouteLabel } from '@/lib/order-route';
 import { vatRateId } from '@/lib/stripe-vat';
 import { INVOICE_FOOTER, invoiceFooter, invoiceCustomFields, upsertStripeCustomer, type InvoiceParty } from '@/lib/invoice-info';
 
@@ -14,7 +16,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder'
 // le webhook invoice.paid passe la commande en 'paye', le cron deferred-payments gère retard/annulation.
 async function sendTransferInvoice(p: {
   orderId: string; email: string; companyName?: string; siret?: string;
-  price: number; pickupAddress: string; dropoffAddress: string;
+  price: number; pickupAddress: string; dropoffAddress: string; stops?: unknown;
 }) {
   const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
 
@@ -86,7 +88,7 @@ async function sendTransferInvoice(p: {
       invoice: invoice.id,
       currency: 'eur',
       amount: Math.round(p.price * 100),
-      description: `Course ${p.orderId} - ${p.pickupAddress} → ${p.dropoffAddress}`,
+      description: `Course ${p.orderId} - ${orderRouteLabel({ pickup_address: p.pickupAddress, dropoff_address: p.dropoffAddress, stops: p.stops })}`,
     },
     { idempotencyKey: `transfer-item-${order.id}` }
   );
@@ -129,19 +131,27 @@ export async function POST(req: Request) {
     if (!isServedAddress(String(pickupAddress ?? '')) || !isServedAddress(String(dropoffAddress ?? ''))) {
       return NextResponse.json({ error: 'Adresse non reconnue : nous livrons uniquement à Paris et en Île-de-France.' }, { status: 400 });
     }
-    const price = calculatePrice(pickupAddress, dropoffAddress, service as ServiceLevel);
-    // Stripe takes amounts in cents
-    const unitAmount = Math.round(price * 100);
-
     // Coordonnées du client (saisies à la commande) : elles figureront sur la facture envoyée à la livraison.
     // Les particuliers paient uniquement par carte : le paiement à 30 jours n'est accepté que si
     // la commande enregistrée est bien une commande pro avec SIRET (jamais sur la seule foi de la requête).
     const admin = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
     const { data: ord } = await admin
       .from('orders')
-      .select('id, client_type, contact_name, contact_email, raison_sociale, adresse_facturation, siret, tva_number')
+      .select('id, client_type, contact_name, contact_email, raison_sociale, adresse_facturation, siret, tva_number, stops')
       .eq('tracking_code', orderId)
       .maybeSingle();
+
+    // Prix recalculé ici : course A → B, plus chaque adresse de livraison en plus (étapes enregistrées).
+    const deliveries = deliveriesOf({ dropoff_address: dropoffAddress, stops: ord?.stops });
+    if (deliveries.some((a) => !isServedAddress(a))) {
+      return NextResponse.json({ error: 'Adresse non reconnue : nous livrons uniquement à Paris et en Île-de-France.' }, { status: 400 });
+    }
+    if (service === 'flash' && deliveries.length > MAX_FLASH_DELIVERIES) {
+      return NextResponse.json({ error: `En Super 1 h, ${MAX_FLASH_DELIVERIES} adresses de livraison au maximum.` }, { status: 400 });
+    }
+    const { total: price } = await priceRoute(pickupAddress, deliveries, service as ServiceLevel);
+    // Stripe takes amounts in cents
+    const unitAmount = Math.round(price * 100);
     const pro = clientType === 'entreprise' && ord?.client_type === 'entreprise' && !!ord?.siret;
     const party: InvoiceParty = {
       name: (pro ? ord?.raison_sociale || ord?.contact_name || companyName : ord?.contact_name) || '',
@@ -171,7 +181,7 @@ export async function POST(req: Request) {
     const baseUrl = origin;
 
     if (pro && paymentMode === 'fin_de_mois' && debitMethod === 'virement') {
-      return sendTransferInvoice({ orderId, email, companyName, siret, price, pickupAddress, dropoffAddress });
+      return sendTransferInvoice({ orderId, email, companyName, siret, price, pickupAddress, dropoffAddress, stops: ord?.stops });
     }
 
     if (pro && paymentMode === 'fin_de_mois') {
@@ -236,7 +246,7 @@ export async function POST(req: Request) {
               currency: 'eur',
               product_data: {
                 name: '⚡ Livraison Express Paris & Île-de-France',
-                description: `✓ Enlèvement sécurisé  •  Confirmation de livraison  •  Garantie de confidentialité\n\nFORMULE: ${formatLabel} | DÉLAI: ${serviceLabel} | TARIF: ${price.toFixed(2)}€\n\nDe: ${pickupAddress}\nÀ: ${dropoffAddress}`,
+                description: `✓ Enlèvement sécurisé  •  Confirmation de livraison  •  Garantie de confidentialité\n\nFORMULE: ${formatLabel} | DÉLAI: ${serviceLabel} | TARIF: ${price.toFixed(2)}€\n\nDe: ${pickupAddress}\nÀ: ${deliveries.join(' puis ')}`,
               },
               unit_amount: unitAmount,
             },
