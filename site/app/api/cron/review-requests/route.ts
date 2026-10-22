@@ -36,7 +36,7 @@ export async function GET(req: Request) {
 
     const party = await partyForOrder(supabase, o);
     const sent = party.email
-      ? await sendReviewEmail({ to: party.email, name: party.name, trackingCode: o.tracking_code || o.id })
+      ? await sendReviewEmail({ to: party.email, name: party.name, trackingCode: o.tracking_code || o.id, orderedAt: o.created_at })
       : false;
     if (!sent) await supabase.from('orders').update({ review_requested_at: null }).eq('id', o.id);
     results.push({ order: o.tracking_code || o.id, sent });
