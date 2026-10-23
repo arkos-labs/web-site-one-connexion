@@ -33,8 +33,7 @@ export default function Hero() {
   const [pickup, setPickup] = useState("");
   const [dropoff, setDropoff] = useState("");
 
-  // Prix tout de suite, avant tout formulaire : le visiteur sait combien ça coûte. Formule Normale (3 h),
-  // la moins chère, avec la même grille que le formulaire de commande ; les autres délais s'y affichent.
+  // Prix tout de suite, avant tout formulaire : le visiteur sait combien ça coûte. Formule la moins chère, avec la même grille que le formulaire de commande ; les autres délais s'y affichent.
   const price = useMemo(() => {
     if (!isServedAddress(pickup) || !isServedAddress(dropoff)) return null;
     try {
@@ -141,7 +140,7 @@ export default function Hero() {
         <p aria-live="polite" className="mb-6 -mt-3 px-1 text-[14px] text-white/80">
           {price != null ? (
             <>
-              Votre course : <strong className="text-[16px] font-bold text-white">dès {formatEur(price)} € TTC</strong>, livrée en 3 h.
+              Votre course : <strong className="text-[16px] font-bold text-white">dès {formatEur(price)} € TTC</strong>
             </>
           ) : (
             <>Entrez vos deux adresses : le prix s&rsquo;affiche tout de suite, sans inscription.</>
