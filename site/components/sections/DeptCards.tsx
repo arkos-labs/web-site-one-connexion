@@ -1,9 +1,9 @@
 /**
  * components/sections/DeptCards.tsx
- * Une carte par département, avec un lien vers la page de chaque ville qui en a une.
+ * Une carte par département, avec un lien vers la page de chaque ville qui en a une
+ * (liste repliée sur téléphone, voir DeptCityList).
  */
-import Link from "next/link";
-import { MapPin } from "lucide-react";
+import DeptCityList from "./DeptCityList";
 import { getIndexedZonesByDept } from "@/lib/zones/data";
 
 export type DeptCard = { dept: string; name: string; color: string; dotColor: string; sub: string };
@@ -20,11 +20,11 @@ export const DEPT_CARDS: Record<string, DeptCard> = {
 
 export default function DeptCards({ depts }: { depts: string[] }) {
   return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3">
       {depts.map((code) => {
         const d = DEPT_CARDS[code];
         return (
-          <div key={d.dept} id={`dept-${d.dept}`} className={`scroll-mt-28 rounded-2xl border p-6 ${d.color}`}>
+          <div key={d.dept} id={`dept-${d.dept}`} className={`scroll-mt-28 rounded-2xl border p-5 md:p-6 ${d.color}`}>
             <div className="mb-4 flex items-center gap-3">
               <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${d.dotColor} text-[13px] font-bold text-white`}>
                 {d.dept}
@@ -34,16 +34,7 @@ export default function DeptCards({ depts }: { depts: string[] }) {
                 <div className="text-[12px] text-muted">{d.sub}</div>
               </div>
             </div>
-            <ul className="grid grid-cols-2 gap-1.5">
-              {getIndexedZonesByDept(d.dept).map((z) => (
-                <li key={z.slug}>
-                  <Link href={`/zones/${z.slug}`} className="flex items-center gap-1.5 text-[12.5px] text-muted transition-colors hover:text-ink">
-                    <MapPin size={10} className="shrink-0 text-accent" />
-                    {z.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <DeptCityList cities={getIndexedZonesByDept(d.dept).map((z) => ({ slug: z.slug, name: z.name }))} />
           </div>
         );
       })}
