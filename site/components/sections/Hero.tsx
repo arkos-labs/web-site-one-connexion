@@ -6,6 +6,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { MapPin, Flag } from "lucide-react";
 import dynamic from "next/dynamic";
 
@@ -54,7 +55,11 @@ export default function Hero() {
               Le dernier kilomètre, tenu à l&rsquo;heure.
             </h1>
             <p className="mb-6 max-w-[56ch] text-pretty text-[16px] leading-[1.6] text-white/66">
-              Plis, dossiers, colis&nbsp;: un coursier à moto les enlève en moins de 45&nbsp;minutes
+              Plis, dossiers, colis&nbsp;: un{" "}
+              <Link href="/services/coursier-moto-paris" className="text-white underline decoration-accent underline-offset-4 hover:text-accent">
+                coursier moto
+              </Link>{" "}
+              les enlève en moins de 45&nbsp;minutes
               et les livre sans détour, partout en Île-de-France. Prix affiché avant de commander,
               suivi de chaque étape en ligne.
             </p>

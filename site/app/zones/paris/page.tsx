@@ -119,7 +119,12 @@ export default function ZoneParis() {
             Coursier Paris : livraison express dans les 20 arrondissements.
           </h1>
           <p className="max-w-[58ch] text-pretty text-[17px] leading-[1.6] text-white/66">
-            Coursier à Paris en moto et scooter, dès 28 € TTC la course. One
+            Coursier à Paris en moto et scooter, dès 28 € TTC la course
+            (voir notre{" "}
+            <Link href="/services/coursier-moto-paris" className="text-white underline decoration-accent underline-offset-4 hover:text-accent">
+              coursier moto Paris
+            </Link>
+            ). One
             Connexion couvre les 20 arrondissements avec sa flotte de deux-roues. Enlèvement en moins de 45 minutes, suivi de
             chaque course en ligne, preuve de remise horodatée à chaque livraison.
           </p>

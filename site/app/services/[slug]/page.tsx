@@ -192,6 +192,14 @@ export default async function ServicePage({
           >
             Voir la flotte et la couverture →
           </Link>
+          {service.slug !== "coursier-moto-paris" && (
+            <Link
+              href="/services/coursier-moto-paris"
+              className="mt-3 block font-mono text-[10.5px] tracking-[0.1em] text-accent-dark uppercase hover:text-ink"
+            >
+              Coursier moto Paris : livraison en deux-roues →
+            </Link>
+          )}
           {GUIDES.filter((g) => g.service.href === `/services/${service.slug}`).map((g) => (
             <Link
               key={g.slug}

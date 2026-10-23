@@ -86,6 +86,11 @@ export default function FlottePage() {
           </h1>
           <p className="max-w-[55ch] text-[17px] leading-[1.65] text-white/65">
             Une flotte de coursiers deux-roues sur Paris et toute l'Île-de-France. Chaque livraison est horodatée, avec une preuve de remise.
+            Pour commander, voir notre{" "}
+            <Link href="/services/coursier-moto-paris" className="text-white underline decoration-accent underline-offset-4 hover:text-accent">
+              coursier moto Paris
+            </Link>
+            .
           </p>
         </div>
 
