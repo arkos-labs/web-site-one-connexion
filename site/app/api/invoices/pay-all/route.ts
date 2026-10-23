@@ -58,6 +58,8 @@ export async function POST(req: Request) {
       ),
       payment_intent_data: {
         description: `Règlement de ${count} facture${count > 1 ? 's' : ''}`,
+        // Reçu envoyé par Stripe (une ligne par course) : le site n'en envoie pas.
+        ...(user.email ? { receipt_email: user.email } : {}),
         metadata: { purpose: 'pay_all', user_id: user.id },
       },
       metadata,
