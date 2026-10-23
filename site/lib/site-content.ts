@@ -11,6 +11,11 @@ export const FOUNDED_YEAR = "2026";
 export const SITE_URL = "https://www.oneconnexion.com";
 
 // Lien Google Maps vers le siège (schema.org hasMap, page contact).
+// Avis Google (fiche ONE CONNEXION). Note et nombre d'avis à recopier depuis la fiche Google :
+// laisser null tant qu'ils ne sont pas renseignés (la note n'est jamais affichée sans eux).
+export const GOOGLE_RATING: { score: number; count: number } | null = null;
+export const GOOGLE_REVIEWS_URL = "https://search.google.com/local/reviews?placeid=ChIJ03P4ffzN6gURKEyb9g0skuk";
+
 export const MAPS_URL =
   "https://www.google.com/maps/search/?api=1&query=5+Square+Nungesser+94160+Saint-Mand%C3%A9";
 

@@ -10,6 +10,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import OrderModalProvider from "@/components/OrderModalProvider";
 import CookieConsent from "@/components/CookieConsent";
+import MobileActionBar from "@/components/MobileActionBar";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import { SITE_URL } from "@/lib/site-content";
 import { Analytics } from "@vercel/analytics/next";
@@ -88,6 +89,7 @@ export default function RootLayout({
         <OrderModalProvider />
         <ClientShell>{children}</ClientShell>
         <Footer />
+        <MobileActionBar />
         <GoogleAnalytics />
         <CookieConsent />
         <Analytics />
