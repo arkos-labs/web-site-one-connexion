@@ -250,6 +250,102 @@ export const GUIDES: Guide[] = [
     service: { href: "/tarifs", label: "Tarif coursier Paris" },
     published: "2026-09-21",
   },
+  {
+    slug: "expedier-du-materiel-de-laboratoire",
+    title: "Expédier du matériel de laboratoire en Île-de-France : préparer l'envoi",
+    seoTitle: "Expédier du matériel de laboratoire : guide",
+    description:
+      "Réactifs, consommables, pièce d'automate, instrument fragile : comment qualifier, emballer et faire transporter du matériel de laboratoire en Île-de-France, et à quel prix.",
+    intro:
+      "Un laboratoire n'expédie pas seulement des prélèvements. Il fait aussi circuler des réactifs, des consommables, des pièces d'automates et des instruments entre ses sites, ses fournisseurs et ses partenaires. Chacun de ces envois a ses propres contraintes. Ce guide vous aide à les identifier avant de commander une course, pour que le colis arrive à temps et en bon état.",
+    sections: [
+      {
+        heading: "Ce que recouvre le matériel de laboratoire",
+        paragraphs: [
+          "Derrière la même expression se cachent des envois très différents. Les consommables (cônes, tubes, plaques, gants) sont légers et peu sensibles. Les réactifs peuvent demander une température de conservation précise. Une pièce de rechange d'automate est souvent urgente, parce qu'elle immobilise une machine. Un instrument de mesure est fragile et doit voyager dans un sens donné.",
+          "Ces différences comptent plus que la distance. Elles déterminent le contenant, le délai à choisir et les informations à donner au coursier. Avant de commander, prenez une minute pour classer votre envoi dans l'une de ces catégories.",
+        ],
+      },
+      {
+        heading: "Qualifier le colis avant de commander",
+        paragraphs: [
+          "La plupart des incidents viennent d'une information manquante au moment de la commande. Voici ce qu'il faut savoir et transmettre :",
+        ],
+        list: [
+          "La nature du contenu : consommable, réactif, pièce technique, instrument ou échantillon.",
+          "La température de conservation, s'il y en a une, et la durée pendant laquelle elle doit être tenue.",
+          "La fragilité et le sens de transport, par exemple un appareil qui doit rester à plat.",
+          "Le poids et les dimensions approximatives : un deux-roues transporte jusqu'à 18 kg, dans un top-case.",
+          "L'heure limite d'arrivée réelle, par exemple le démarrage d'une série d'analyses.",
+          "Le nom du destinataire, son service et un numéro joignable à l'enlèvement comme à la remise.",
+        ],
+      },
+      {
+        heading: "L'emballage reste à la charge de l'expéditeur",
+        paragraphs: [
+          "Le coursier transporte le colis fermé, tel qu'il lui est remis. C'est donc à l'expéditeur de le préparer. Pour un instrument fragile, un calage qui empêche tout mouvement et une flèche indiquant le haut évitent l'essentiel des casses. Pour un réactif à conserver au froid, le contenant isotherme est convenu à la commande, et un relevé de température peut être joint si votre protocole l'exige.",
+          "Les échantillons biologiques de catégorie B voyagent en triple emballage UN3373, préparé par l'expéditeur. Le coursier le transporte fermé, sans l'ouvrir.",
+          "Certains produits demandent plus de précautions : solvants, produits corrosifs, gaz, carboglace. Selon leur nature et leur quantité, ils peuvent relever de la réglementation du transport de marchandises dangereuses, dite ADR. Dans ce cas, appelez-nous avant de commander : nous vous dirons clairement si nous pouvons prendre l'envoi en charge ou s'il faut passer par un transporteur spécialisé.",
+        ],
+      },
+      {
+        heading: "Course dédiée, course programmée ou tournée",
+        paragraphs: [
+          "Le bon choix dépend de l'urgence et de la fréquence de vos envois.",
+        ],
+        list: [
+          "Course dédiée immédiate : pour une pièce qui bloque un automate ou un réactif attendu le jour même. Le coursier passe en moins de 45 minutes et va directement chez le destinataire, sans arrêt intermédiaire.",
+          "Course programmée : pour un envoi prévu à l'avance, à une date et une heure choisies dans le formulaire. Elle se paie au tarif Normal.",
+          "Tournée régulière : pour des navettes fréquentes entre deux sites, par exemple un réapprovisionnement en consommables plusieurs fois par semaine. Les jours et heures de passage sont fixés avec vous, sur devis.",
+        ],
+      },
+      {
+        heading: "Prix et délais en Île-de-France",
+        paragraphs: [
+          "Le prix ne dépend ni du contenu ni du poids, jusqu'à 18 kg. Seuls comptent la zone la plus éloignée du trajet et le délai choisi. Le service fonctionne du lundi au samedi, de 9 h à 19 h.",
+        ],
+        table: {
+          head: ["Zone", "Normal 3 h", "Urgent 1 h 30", "Super 1 h"],
+          rows: [
+            ["Paris (75)", "28 €", "42 €", "56 €"],
+            ["Petite couronne (92, 93, 94)", "59 €", "88,50 €", "118 €"],
+            ["Grande couronne (77, 78, 91, 95)", "selon la distance", "selon la distance", "selon la distance"],
+          ],
+          note: "Tarifs TTC par course, TVA 20 % comprise. Le prix exact s'affiche avant de valider la commande.",
+        },
+      },
+      {
+        heading: "Envoyer plus loin qu'en Île-de-France",
+        paragraphs: [
+          "ONE CONNEXION ne livre qu'à Paris et en Île-de-France. Pour un envoi en province ou à l'étranger, la course peut toutefois assurer le premier trajet : de votre laboratoire jusqu'aux locaux d'un transporteur national ou international en Île-de-France, ou jusqu'aux aéroports de Roissy et d'Orly, desservis au tarif de leur zone. Le transporteur longue distance prend ensuite le relais avec ses propres conditions d'emballage et de documents.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "Quel poids et quelle taille maximum pour un colis de laboratoire ?",
+        answer:
+          "18 kg, dans un top-case d'environ 60 × 40 cm. Au-delà de 10 kg, ou pour un colis encombrant, appelez-nous avant de commander.",
+      },
+      {
+        question: "Pouvez-vous transporter des réactifs ou des produits chimiques ?",
+        answer:
+          "Cela dépend du produit et de la quantité. Pour tout produit susceptible d'être classé dangereux (solvant, corrosif, gaz, carboglace), contactez-nous avant de commander : nous confirmons ce qui est possible avant d'engager la course.",
+      },
+      {
+        question: "Une pièce d'automate peut-elle être livrée le jour même ?",
+        answer:
+          "Oui, du lundi au samedi entre 9 h et 19 h. En course Super, la livraison se fait en 1 h, par exemple pour 56 € TTC dans Paris. Le coursier passe en moins de 45 minutes.",
+      },
+      {
+        question: "Comment ouvrir un compte pour les envois du laboratoire ?",
+        answer:
+          "L'ouverture du compte entreprise est immédiate. Il permet de commander en ligne, de suivre chaque course et de régler les factures sous 30 jours.",
+      },
+    ],
+    service: { href: "/services/transport-medical", label: "Transport médical" },
+    published: "2026-10-23",
+  },
 ];
 
 export const GUIDE_SLUGS = GUIDES.map((g) => g.slug);
