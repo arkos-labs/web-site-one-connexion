@@ -311,13 +311,13 @@ export default function DeliveryDetailsPage() {
             {/* Avancement */}
             <Panel title="Avancement">
               {!isCancelled ? (
-                <ol className="flex items-start gap-1 px-4 py-5">
+                <ol className="flex items-start gap-1 px-3 py-5 sm:px-4">
                   {STEPS.map((step, index) => {
                     const Icon = step.icon;
                     const isReached = index <= currentStepIndex;
                     return (
                       <React.Fragment key={step.key}>
-                        <li className="flex w-14 shrink-0 flex-col items-center gap-1.5 text-center sm:w-[76px]">
+                        <li className="flex min-w-0 flex-1 basis-0 flex-col items-center gap-1.5 text-center sm:w-[76px] sm:flex-none sm:basis-auto">
                           <span
                             className={`flex h-9 w-9 items-center justify-center rounded-full border-2 transition-colors ${
                               isReached ? "border-accent bg-accent text-white" : "border-line bg-white text-label"
@@ -331,7 +331,7 @@ export default function DeliveryDetailsPage() {
                           )}
                         </li>
                         {index < STEPS.length - 1 && (
-                          <span aria-hidden className={`mt-[17px] h-0.5 min-w-2 flex-1 rounded-full ${index < currentStepIndex ? "bg-accent" : "bg-line"}`} />
+                          <span aria-hidden className={`mt-[17px] hidden h-0.5 min-w-2 flex-1 rounded-full sm:block ${index < currentStepIndex ? "bg-accent" : "bg-line"}`} />
                         )}
                       </React.Fragment>
                     );

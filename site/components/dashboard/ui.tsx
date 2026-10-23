@@ -68,7 +68,7 @@ export function PageShell({
           <h1 className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-2 text-xl font-extrabold leading-none tracking-tight text-white sm:text-[22px]">{title}</h1>
           {subtitle && <p className="mt-1.5 max-w-xl text-xs leading-snug text-white/60">{subtitle}</p>}
         </div>
-        {actions && <div className="flex shrink-0 items-center gap-3">{actions}</div>}
+        {actions && <div className="flex flex-wrap items-center gap-2 sm:shrink-0 sm:gap-3">{actions}</div>}
       </header>
       <div className="flex min-h-0 flex-1 flex-col">{children}</div>
     </div>
