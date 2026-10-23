@@ -2,7 +2,7 @@
  * app/layout.tsx
  * Shell principal : Lenis smooth scroll, polices (Archivo + IBM Plex Mono), meta SEO.
  */
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Archivo, IBM_Plex_Mono, Barlow_Condensed } from "next/font/google";
 import "./globals.css";
 import ClientShell from "@/components/ClientShell";
@@ -37,6 +37,14 @@ const ibmPlexMono = IBM_Plex_Mono({
   display: "swap",
   weight: ["400", "500"],
 });
+
+// Sur téléphone, la page ne se zoome pas : ni en pinçant, ni quand on touche un champ du formulaire.
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
