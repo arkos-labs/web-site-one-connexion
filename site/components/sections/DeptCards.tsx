@@ -20,22 +20,17 @@ export const DEPT_CARDS: Record<string, DeptCard> = {
 
 export default function DeptCards({ depts }: { depts: string[] }) {
   return (
-    <div className="grid gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3">
+    <div className="grid gap-3 md:grid-cols-2 md:gap-5 lg:grid-cols-3">
       {depts.map((code) => {
         const d = DEPT_CARDS[code];
         return (
-          <div key={d.dept} id={`dept-${d.dept}`} className={`scroll-mt-28 rounded-2xl border p-5 md:p-6 ${d.color}`}>
-            <div className="mb-4 flex items-center gap-3">
-              <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${d.dotColor} text-[13px] font-bold text-white`}>
-                {d.dept}
-              </div>
-              <div>
-                <h3 className="font-bold text-ink">{d.name}</h3>
-                <div className="text-[12px] text-muted">{d.sub}</div>
-              </div>
-            </div>
-            <DeptCityList cities={getIndexedZonesByDept(d.dept).map((z) => ({ slug: z.slug, name: z.name }))} />
-          </div>
+          <DeptCityList
+            key={d.dept}
+            dept={d.dept}
+            name={d.name}
+            sub={d.sub}
+            cities={getIndexedZonesByDept(d.dept).map((z) => ({ slug: z.slug, name: z.name }))}
+          />
         );
       })}
     </div>
