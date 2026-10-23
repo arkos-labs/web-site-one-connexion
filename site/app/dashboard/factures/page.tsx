@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FileText, ChevronRight, Plus } from "lucide-react";
+import { FileText, ChevronRight, Plus, CheckCircle2, Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { fetchSavedMethod, type SavedMethod } from "@/lib/saved-payment";
-import { PageShell, SearchInput, KpiStrip, StatusPill, EmptyState, LoadingState, TH, TD, BTN_PRIMARY } from "@/components/dashboard/ui";
+import { PageShell, SearchInput, KpiStrip, StatusPill, EmptyState, LoadingState, TH, TD, BTN_PRIMARY, BTN_ACCENT } from "@/components/dashboard/ui";
 import { formatEur, htOf, normalizeOrderPriceTTC } from "@/lib/price-display";
 
 const eur = (n: number) => `${formatEur(n)} €`;
@@ -20,6 +20,39 @@ export default function FacturesPage() {
   const [search, setSearch] = useState("");
   const [savedMethod, setSavedMethod] = useState<SavedMethod | null>(null);
   useEffect(() => { fetchSavedMethod().then(setSavedMethod); }, []);
+
+  // « Tout régler » : factures à régler relues chez Stripe, payées en une fois.
+  const [payAll, setPayAll] = useState<{ count: number; totalCents: number; left: number } | null>(null);
+  const [paying, setPaying] = useState(false);
+  const [payError, setPayError] = useState<string | null>(null);
+  // Retour de la page de paiement Stripe (?reglement=ok).
+  const justPaid = useSyncExternalStore(
+    () => () => {},
+    () => new URLSearchParams(window.location.search).get("reglement") === "ok",
+    () => false
+  );
+  useEffect(() => {
+    fetch("/api/invoices/pay-all")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => d && setPayAll(d))
+      .catch(() => {});
+  }, []);
+  const startPayAll = async () => {
+    setPaying(true);
+    setPayError(null);
+    try {
+      const res = await fetch("/api/invoices/pay-all", { method: "POST" });
+      const data = await res.json().catch(() => ({}));
+      if (data.url) {
+        window.location.href = data.url;
+        return;
+      }
+      setPayError(data.error || "Paiement indisponible pour le moment.");
+    } catch {
+      setPayError("Paiement indisponible pour le moment.");
+    }
+    setPaying(false);
+  };
 
   useEffect(() => {
     const loadInvoices = async () => {
@@ -141,6 +174,35 @@ export default function FacturesPage() {
           },
         ]}
       />
+
+      {justPaid && (
+        <div role="status" className="flex items-start gap-3 border-b border-line bg-green-50 px-5 py-4 text-sm text-green-800 sm:px-6">
+          <CheckCircle2 size={18} className="mt-0.5 shrink-0" />
+          <p>
+            <strong>Paiement reçu, merci.</strong> Vos factures passent en « Réglée » dans quelques instants. Le reçu
+            détaillé, avec une ligne par course, arrive par e-mail.
+          </p>
+        </div>
+      )}
+
+      {!justPaid && payAll && payAll.count > 0 && (
+        <div className="flex flex-col gap-3 border-b border-line bg-paper-card px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+          <div className="min-w-0">
+            <p className="text-sm font-extrabold text-ink">
+              {payAll.count} facture{payAll.count > 1 ? "s" : ""} à régler · {eur(payAll.totalCents / 100)} TTC
+            </p>
+            <p className="mt-0.5 text-xs text-muted">
+              Réglez-les en un seul paiement par carte. Vous recevez un reçu avec le détail de chaque course.
+              {payAll.left > 0 && ` ${payAll.left} facture${payAll.left > 1 ? "s" : ""} plus récente${payAll.left > 1 ? "s" : ""} ${payAll.left > 1 ? "resteront" : "restera"} à régler ensuite.`}
+            </p>
+            {payError && <p role="alert" className="mt-1 text-xs font-semibold text-red-700">{payError}</p>}
+          </div>
+          <button type="button" onClick={startPayAll} disabled={paying} className={`${BTN_ACCENT} h-11 w-full sm:w-auto`}>
+            {paying && <Loader2 size={16} className="animate-spin" />}
+            Tout régler · {eur(payAll.totalCents / 100)}
+          </button>
+        </div>
+      )}
 
       {loading ? (
         <LoadingState text="Chargement de vos factures…" />
