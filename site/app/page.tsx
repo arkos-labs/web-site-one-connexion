@@ -99,17 +99,14 @@ export default function Home() {
           <Link href="/zones/grande-couronne" className="text-ink underline underline-offset-2">grande couronne</Link> est aussi desservie.
         </p>
         <DeptCards depts={["92", "93", "94"]} />
-        <div className="mt-6 flex flex-col gap-5 rounded-xl bg-ink px-6 py-6 text-white sm:flex-row sm:items-center sm:justify-between sm:px-8">
+        <div className="mt-6 rounded-xl bg-ink px-6 py-6 text-white sm:px-8">
           <div>
             <p className="text-[19px] font-bold leading-tight">Votre ville n’est pas dans la liste ? On y livre aussi.</p>
             <p className="mt-2 text-[14px] leading-[1.6] text-white/70">
               Toute l’Île-de-France est desservie : Seine-et-Marne (77), Yvelines (78), Essonne (91) et Val-d’Oise (95).
-              Entrez vos adresses, votre prix s’affiche en quelques secondes.
+              Entrez vos adresses en haut de la page : votre prix s’affiche en quelques secondes.
             </p>
           </div>
-          <a href="#top" className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-accent px-6 py-3.5 text-[15px] font-bold text-white transition hover:opacity-90">
-            Voir mon prix <span aria-hidden="true">→</span>
-          </a>
         </div>
       </section>
       <Contact />
