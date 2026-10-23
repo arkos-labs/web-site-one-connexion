@@ -12,7 +12,7 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 // Factures que le client peut régler lui-même. Les courses « à débiter » (prélèvement programmé à
 // J+30) et les prélèvements en cours sont exclus : ils seraient payés deux fois.
 const UNPAID_ORDER = ['a_regler', 'echec', 'en_retard', 'virement_attendu'];
-const UNPAID_INVOICE = ['emise', 'echec'];
+const UNPAID_INVOICE = ['prete', 'emise', 'echec'];
 
 /** Limite Stripe : 100 lignes par page de paiement. */
 export const MAX_LINES = 100;
