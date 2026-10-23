@@ -143,18 +143,23 @@ export default function Hero() {
             JE COMMANDE MA COURSE
           </button>
         </div>
-        <div aria-live="polite" className="mb-6 -mt-3 min-h-[20px] px-1 text-[13px] text-white/75">
+        <div aria-live="polite" className="mb-6 -mt-3">
           {prices ? (
-            <p className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-              <span className="font-semibold text-white">Prix TTC :</span>
-              {prices.map((p) => (
-                <span key={p.level}>
-                  {p.label} <strong className="text-[15px] text-white">{formatEur(p.ttc)} €</strong>
-                </span>
-              ))}
-            </p>
+            <div className="rounded-2xl bg-white p-4 text-ink shadow-2xl">
+              <p className="mb-3 text-[12px] font-bold uppercase tracking-wider text-muted">Prix de votre course (TTC)</p>
+              <ul className="grid grid-cols-3 gap-2">
+                {prices.map((p) => (
+                  <li key={p.level} className="rounded-xl border border-line px-2 py-3 text-center">
+                    <p className="text-[12px] font-semibold text-muted">{p.label}</p>
+                    <p className="mt-1 whitespace-nowrap text-[19px] font-extrabold leading-none tracking-tight text-ink sm:text-[24px]">{formatEur(p.ttc)} €</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
           ) : (
-            <p>Entrez vos deux adresses : le prix s&rsquo;affiche tout de suite, sans inscription.</p>
+            <p className="px-1 text-[14px] font-medium text-white">
+              Entrez vos deux adresses : le prix s&rsquo;affiche tout de suite, sans inscription.
+            </p>
           )}
         </div>
       </div>

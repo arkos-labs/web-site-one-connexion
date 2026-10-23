@@ -5,7 +5,7 @@
  * Le visiteur peut joindre un dispatcheur ou lancer une course à tout moment, sans remonter la page.
  */
 import { usePathname } from "next/navigation";
-import { Phone, Zap } from "lucide-react";
+import { Phone } from "lucide-react";
 import { PHONE_TEL } from "@/lib/site-content";
 
 // Espace client, admin et parcours de commande : pas de barre.
@@ -34,9 +34,8 @@ export default function MobileActionBar() {
         <button
           type="button"
           onClick={() => window.dispatchEvent(new CustomEvent("open-order-modal"))}
-          className="flex h-12 flex-[1.4] items-center justify-center gap-2 rounded-xl bg-accent text-[15px] font-bold text-white active:bg-accent-dark"
+          className="flex h-12 flex-[1.4] items-center justify-center rounded-xl bg-accent text-[15px] font-bold text-white active:bg-accent-dark"
         >
-          <Zap size={18} />
           Commander
         </button>
       </nav>
