@@ -93,13 +93,11 @@ function AdminChauffeursPageInner() {
     const driverRows = (data ?? []) as (Driver & { auth_id?: string | null })[];
     setDrivers(driverRows);
 
-    // Photos des chauffeurs (profiles.avatar_url du compte du chauffeur).
-    const authIds = driverRows.map((d) => d.auth_id).filter(Boolean) as string[];
-    if (authIds.length) {
-      const { data: profs } = await supabase.from("profiles").select("id, avatar_url").in("id", authIds);
-      const urlByAuth = new Map((profs ?? []).map((p: { id: string; avatar_url: string | null }) => [p.id, p.avatar_url]));
-      setPhotos(Object.fromEntries(driverRows.filter((d) => d.auth_id && urlByAuth.get(d.auth_id!)).map((d) => [d.id, urlByAuth.get(d.auth_id!)!])));
-    }
+    // Photos des chauffeurs : ajoutées par eux depuis l'appli chauffeur, lues côté serveur.
+    fetch("/api/admin/drivers")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => d?.photos && setPhotos(d.photos))
+      .catch(() => {});
 
     const authIdToDriverId = new Map(
       driverRows.filter((d) => d.auth_id).map((d) => [d.auth_id!, d.id])
