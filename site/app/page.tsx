@@ -7,7 +7,7 @@ import JsonLd from "@/components/JsonLd";
 import DeptCards from "@/components/sections/DeptCards";
 import TrustStrip from "@/components/sections/TrustStrip";
 import Link from "next/link";
-import { LEGAL, PHONE_TEL, EMAIL, SITE_URL, MAPS_URL } from "@/lib/site-content";
+import { LEGAL, PHONE_TEL, PHONE_DISPLAY, EMAIL, SITE_URL, MAPS_URL } from "@/lib/site-content";
 
 const organizationSchema = {
   "@context": "https://schema.org",
@@ -91,13 +91,19 @@ export default function Home() {
           Villes desservies
         </div>
         <h2 className="mb-4 max-w-[26ch] text-balance text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-          Coursier dans toute l’Île-de-France.
+          Coursier dans toute la petite couronne.
         </h2>
         <p className="mb-10 max-w-[62ch] text-[15px] leading-[1.6] text-muted">
           En plus des 20 arrondissements de <Link href="/zones/paris" className="text-ink underline underline-offset-2">Paris</Link>,
-          nous desservons toute la petite et la grande couronne. Chaque ville a sa page avec ses délais et ses particularités.
+          chaque ville a sa page avec ses délais et ses particularités. La{" "}
+          <Link href="/zones/grande-couronne" className="text-ink underline underline-offset-2">grande couronne</Link> est aussi desservie.
         </p>
-        <DeptCards depts={["92", "93", "94", "77", "78", "91", "95"]} />
+        <DeptCards depts={["92", "93", "94"]} />
+        <p className="mt-6 rounded-lg border border-line bg-white px-5 py-4 text-[14px] leading-[1.6] text-muted">
+          Votre ville n’est pas dans la liste ? Nous livrons aussi dans le reste de l’Île-de-France.{" "}
+          <a href={`tel:${PHONE_TEL}`} className="whitespace-nowrap font-semibold text-ink underline underline-offset-2">Appelez-nous au {PHONE_DISPLAY}</a>{" "}
+          ou <a href="#contact" className="text-ink underline underline-offset-2">écrivez-nous</a> pour vérifier.
+        </p>
       </section>
       <Contact />
     </>
