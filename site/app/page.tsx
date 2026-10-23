@@ -7,7 +7,7 @@ import JsonLd from "@/components/JsonLd";
 import DeptCards from "@/components/sections/DeptCards";
 import TrustStrip from "@/components/sections/TrustStrip";
 import Link from "next/link";
-import { LEGAL, PHONE_TEL, PHONE_DISPLAY, EMAIL, SITE_URL, MAPS_URL } from "@/lib/site-content";
+import { LEGAL, PHONE_TEL, EMAIL, SITE_URL, MAPS_URL } from "@/lib/site-content";
 
 const organizationSchema = {
   "@context": "https://schema.org",
@@ -99,11 +99,15 @@ export default function Home() {
           <Link href="/zones/grande-couronne" className="text-ink underline underline-offset-2">grande couronne</Link> est aussi desservie.
         </p>
         <DeptCards depts={["92", "93", "94"]} />
-        <p className="mt-6 rounded-lg border border-line bg-white px-5 py-4 text-[14px] leading-[1.6] text-muted">
-          Votre ville n’est pas dans la liste ? Nous livrons aussi dans toute l’Île-de-France : Seine-et-Marne (77), Yvelines (78), Essonne (91) et Val-d’Oise (95).{" "}
-          <a href={`tel:${PHONE_TEL}`} className="whitespace-nowrap font-semibold text-ink underline underline-offset-2">Appelez-nous au {PHONE_DISPLAY}</a>{" "}
-          ou <a href="#contact" className="whitespace-nowrap text-ink underline underline-offset-2">écrivez-nous</a> pour vérifier.
-        </p>
+        <div className="mt-6 rounded-xl bg-ink px-6 py-6 text-white sm:px-8">
+          <div>
+            <p className="text-[19px] font-bold leading-tight">Votre ville n’est pas dans la liste ? On y livre aussi.</p>
+            <p className="mt-2 text-[14px] leading-[1.6] text-white/70">
+              Toute l’Île-de-France est desservie : Seine-et-Marne (77), Yvelines (78), Essonne (91) et Val-d’Oise (95).
+              Entrez vos adresses en haut de la page : votre prix s’affiche en quelques secondes.
+            </p>
+          </div>
+        </div>
       </section>
       <Contact />
     </>
