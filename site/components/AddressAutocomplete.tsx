@@ -94,7 +94,7 @@ export function AddressAutocomplete({
           }
 
           // Ne garder que les 8 meilleurs résultats
-          setSuggestions(filteredFeatures.slice(0, 8));
+          setSuggestions(filteredFeatures.slice(0, 5));
           setIsOpen(true);
         }
       } catch (error) {
