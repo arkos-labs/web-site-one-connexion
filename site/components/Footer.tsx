@@ -5,9 +5,11 @@
  */
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { ChevronDown } from "lucide-react";
 import { SERVICES } from "@/lib/services";
 import { EMAIL, LEGAL, PHONE_DISPLAY, PHONE_TEL } from "@/lib/site-content";
 
@@ -123,6 +125,32 @@ function ColLabel({ children }: { children: React.ReactNode }) {
   );
 }
 
+/**
+ * Colonne de liens. Sur téléphone, elle est repliée derrière son titre (un tap l'ouvre) pour que le pied de
+ * page reste court ; à partir de md, elle est toujours ouverte. Les liens restent dans la page (référencement).
+ */
+function FooterColumn({ title, children }: { title: React.ReactNode; children: React.ReactNode }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="border-b md:border-b-0" style={{ borderColor: "rgba(244,242,238,0.08)" }}>
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        className="flex w-full items-center justify-between py-3.5 font-mono text-[10px] uppercase tracking-[0.22em] md:hidden"
+        style={{ color: ACCENT }}
+      >
+        {title}
+        <ChevronDown size={16} className={`transition-transform ${open ? "rotate-180" : ""}`} />
+      </button>
+      <div className="hidden md:block">
+        <ColLabel>{title}</ColLabel>
+      </div>
+      <nav className={`${open ? "flex" : "hidden"} flex-col gap-[11px] pb-4 md:flex md:gap-[9px] md:pb-0`}>{children}</nav>
+    </div>
+  );
+}
+
 const PAYMENT_METHODS = [
   { name: "Stripe", src: "/payments/stripe.svg", width: 48, height: 32 },
   { name: "Visa", src: "/payments/visa.svg", width: 48, height: 32 },
@@ -136,12 +164,15 @@ const PAYMENT_METHODS = [
 export default function Footer() {
   const pathname = usePathname();
   const tagline = getTagline(pathname);
+  // Espace client et admin : pas de pied de page du site public, seulement la ligne légale.
+  const compact = /^\/(dashboard|admin)(\/|$)/.test(pathname);
 
   return (
     <footer className="bg-ink text-paper">
       {/* Liseré orange */}
       <div style={{ height: "3px", background: ACCENT }} />
 
+      {!compact && (<>
       {/* Grille principale — Marque + 5 colonnes de liens */}
       <div className="mx-auto px-[clamp(20px,4vw,32px)] pt-10 pb-8" style={{ maxWidth: "1240px" }}>
 
@@ -160,62 +191,46 @@ export default function Footer() {
         </div>
 
         {/* Ligne 2 : 5 colonnes de liens */}
-        <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:grid-cols-5">
+        <div className="grid grid-cols-1 md:grid-cols-3 md:gap-8 lg:grid-cols-5">
 
           {/* ── COL 1 : Prestations ── */}
-          <div>
-            <ColLabel>Prestations</ColLabel>
-            <nav className="flex flex-col gap-[9px]">
+          <FooterColumn title="Prestations">
               {SERVICES.map((s) => (
                 <Link key={s.slug} href={`/services/${s.slug}`} className="text-[13px] transition-colors" style={{ color: "rgba(244,242,238,0.5)" }}>
                   {s.card.title}
                 </Link>
               ))}
-            </nav>
-          </div>
+          </FooterColumn>
 
           {/* ── COL 2 : Secteurs ── */}
-          <div>
-            <ColLabel>
-              <Link href="/secteurs" style={{ color: "inherit", textDecoration: "none" }}>Secteurs</Link>
-            </ColLabel>
-            <nav className="flex flex-col gap-[9px]">
+          <FooterColumn title="Secteurs">
               {SECTEUR_LINKS.map((l) => (
                 <Link key={l.label} href={l.href} className="text-[13px] transition-colors" style={{ color: "rgba(244,242,238,0.5)" }}>
                   {l.label}
                 </Link>
               ))}
-            </nav>
-          </div>
+          </FooterColumn>
 
           {/* ── COL 3 : Zones ── */}
-          <div>
-            <ColLabel>
-              <Link href="/zones" style={{ color: "inherit", textDecoration: "none" }}>Zones</Link>
-            </ColLabel>
-            <nav className="flex flex-col gap-[9px]">
+          <FooterColumn title="Zones">
               {ZONE_LINKS.map((l) => (
                 <Link key={l.label} href={l.href} className="text-[13px] transition-colors" style={{ color: "rgba(244,242,238,0.5)" }}>
                   {l.label}
                 </Link>
               ))}
-            </nav>
-          </div>
+          </FooterColumn>
 
           {/* ── COL 4 : Navigation ── */}
-          <div>
-            <ColLabel>Navigation</ColLabel>
-            <nav className="flex flex-col gap-[9px]">
+          <FooterColumn title="Navigation">
               {NAV_LINKS.map((l) => (
                 <Link key={l.label} href={l.href} className="text-[13px] transition-colors" style={{ color: "rgba(244,242,238,0.5)" }}>
                   {l.label}
                 </Link>
               ))}
-            </nav>
-          </div>
+          </FooterColumn>
 
           {/* ── COL 5 : Contact ── */}
-          <div>
+          <div className="pt-6 md:pt-0">
             <ColLabel>Nous joindre</ColLabel>
             <div className="font-mono text-[9px] tracking-[0.16em] uppercase mb-1" style={{ color: "rgba(244,242,238,0.25)" }}>Téléphone</div>
             <a href={`tel:${PHONE_TEL}`} className="block text-[20px] font-bold leading-none mb-4 transition-colors" style={{ letterSpacing: "-0.02em", color: "#F4F2EE", textDecoration: "none" }}>
@@ -237,8 +252,8 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Nos prestations de transport (mots-clés visibles) */}
-      <div style={{ borderTop: "1px solid rgba(244,242,238,0.06)" }}>
+      {/* Nos prestations de transport (mots-clés visibles) : ordinateur seulement, trop long sur téléphone */}
+      <div className="hidden md:block" style={{ borderTop: "1px solid rgba(244,242,238,0.06)" }}>
         <div className="mx-auto px-[clamp(20px,4vw,32px)] py-4" style={{ maxWidth: "1240px" }}>
           <h2 className="sr-only">Nos prestations de transport</h2>
           <ul className="flex flex-wrap gap-x-3 gap-y-1">
@@ -283,6 +298,8 @@ export default function Footer() {
           </ul>
         </div>
       </div>
+
+      </>)}
 
       {/* Barre légale */}
       <div style={{ borderTop: "1px solid rgba(244,242,238,0.06)" }}>

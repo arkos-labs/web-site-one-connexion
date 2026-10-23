@@ -258,34 +258,34 @@ export default function ZonePetiteCouronne() {
             </div>
           ))}
         </div>
-        <div className="rounded-xl border border-line bg-white overflow-hidden">
-          <table className="w-full">
+        <div className="rounded-xl border border-line bg-white overflow-x-auto">
+          <table className="w-full text-[14px] sm:text-base">
             <thead>
               <tr className="border-b border-line bg-paper">
-                <th className="p-4 text-left font-bold text-ink">Zone</th>
-                <th className="p-4 text-center font-bold text-ink">Distance</th>
-                <th className="p-4 text-center font-bold text-ink">Enlèvement</th>
-                <th className="p-4 text-center font-bold text-ink">Tarif</th>
+                <th className="p-2.5 sm:p-4 text-left font-bold text-ink">Zone</th>
+                <th className="p-2.5 sm:p-4 text-center font-bold text-ink">Distance</th>
+                <th className="p-2.5 sm:p-4 text-center font-bold text-ink">Enlèvement</th>
+                <th className="p-2.5 sm:p-4 text-center font-bold text-ink">Tarif</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-line">
               <tr>
-                <td className="p-4 font-medium text-ink">Paris intramuros</td>
-                <td className="p-4 text-center text-muted">0-10 km</td>
-                <td className="p-4 text-center text-muted">moins de 30 min</td>
-                <td className="p-4 text-center text-muted">28-56 euros</td>
+                <td className="p-2.5 sm:p-4 font-medium text-ink">Paris intramuros</td>
+                <td className="p-2.5 sm:p-4 text-center text-muted">0-10 km</td>
+                <td className="p-2.5 sm:p-4 text-center text-muted">moins de 30 min</td>
+                <td className="p-2.5 sm:p-4 text-center text-muted">28-56 euros</td>
               </tr>
               <tr>
-                <td className="p-4 font-medium text-ink">Petite couronne</td>
-                <td className="p-4 text-center text-accent font-bold">12-20 km</td>
-                <td className="p-4 text-center text-accent font-bold">moins de 45 min</td>
-                <td className="p-4 text-center text-accent font-bold">59 euros</td>
+                <td className="p-2.5 sm:p-4 font-medium text-ink">Petite couronne</td>
+                <td className="p-2.5 sm:p-4 text-center text-accent font-bold">12-20 km</td>
+                <td className="p-2.5 sm:p-4 text-center text-accent font-bold">moins de 45 min</td>
+                <td className="p-2.5 sm:p-4 text-center text-accent font-bold">59 euros</td>
               </tr>
               <tr>
-                <td className="p-4 font-medium text-ink">Grande couronne</td>
-                <td className="p-4 text-center text-muted">25-50 km</td>
-                <td className="p-4 text-center text-muted">60-90 min</td>
-                <td className="p-4 text-center text-muted">84-150 euros</td>
+                <td className="p-2.5 sm:p-4 font-medium text-ink">Grande couronne</td>
+                <td className="p-2.5 sm:p-4 text-center text-muted">25-50 km</td>
+                <td className="p-2.5 sm:p-4 text-center text-muted">60-90 min</td>
+                <td className="p-2.5 sm:p-4 text-center text-muted">84-150 euros</td>
               </tr>
             </tbody>
           </table>
