@@ -58,6 +58,7 @@ export default function AdminChauffeursPage() {
 function AdminChauffeursPageInner() {
   const supabase = createClient();
   const [drivers, setDrivers] = useState<Driver[]>([]);
+  const [photos, setPhotos] = useState<Record<string, string>>({});
   const [coursesByDriver, setCoursesByDriver] = useState<Record<string, AssignedCourse[]>>({});
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -91,6 +92,14 @@ function AdminChauffeursPageInner() {
 
     const driverRows = (data ?? []) as (Driver & { auth_id?: string | null })[];
     setDrivers(driverRows);
+
+    // Photos des chauffeurs (profiles.avatar_url du compte du chauffeur).
+    const authIds = driverRows.map((d) => d.auth_id).filter(Boolean) as string[];
+    if (authIds.length) {
+      const { data: profs } = await supabase.from("profiles").select("id, avatar_url").in("id", authIds);
+      const urlByAuth = new Map((profs ?? []).map((p: { id: string; avatar_url: string | null }) => [p.id, p.avatar_url]));
+      setPhotos(Object.fromEntries(driverRows.filter((d) => d.auth_id && urlByAuth.get(d.auth_id!)).map((d) => [d.id, urlByAuth.get(d.auth_id!)!])));
+    }
 
     const authIdToDriverId = new Map(
       driverRows.filter((d) => d.auth_id).map((d) => [d.auth_id!, d.id])
@@ -325,9 +334,14 @@ function AdminChauffeursPageInner() {
                 >
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <Link href={`/admin/chauffeurs/${d.id}`} className="group flex items-center gap-3">
-                      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-ink text-[12px] font-bold text-white">
-                        {initialsOf(d.name)}
-                      </div>
+                      {photos[d.id] ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={photos[d.id]} alt={`Photo de ${d.name}`} className="h-11 w-11 shrink-0 rounded-full object-cover" />
+                      ) : (
+                        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-ink text-[12px] font-bold text-white">
+                          {initialsOf(d.name)}
+                        </div>
+                      )}
                       <div>
                         <div className="flex flex-wrap items-center gap-2">
                           <span className="font-bold text-ink group-hover:underline">{d.name}</span>

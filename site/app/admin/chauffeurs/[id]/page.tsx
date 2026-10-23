@@ -6,7 +6,7 @@ import { useParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { htOf, normalizeOrderPriceTTC } from "@/lib/price-display";
 import { AdminPage, ErrorState, LoadingState } from "@/components/dashboard/ui";
-import { AlertTriangle, CheckCircle2, Euro, Eye, EyeOff, Phone, Timer, Truck } from "lucide-react";
+import { AlertTriangle, Camera, CheckCircle2, Euro, Eye, EyeOff, Phone, Timer, Truck } from "lucide-react";
 
 /**
  * Fiche chauffeur (admin) : profil, courses en cours, historique des courses, navettes, incidents signalés.
@@ -90,6 +90,32 @@ function durationLabel(minutes: number) {
   return m ? `${h} h ${String(m).padStart(2, "0")}` : `${h} h`;
 }
 
+/** Photo réduite (600 px, JPEG) avant l'envoi : une photo de téléphone dépasse souvent la taille acceptée. */
+async function shrinkPhoto(file: File): Promise<Blob> {
+  try {
+    const img = await createImageBitmap(file);
+    const scale = Math.min(1, 600 / Math.max(img.width, img.height));
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.round(img.width * scale);
+    canvas.height = Math.round(img.height * scale);
+    canvas.getContext("2d")!.drawImage(img, 0, 0, canvas.width, canvas.height);
+    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.85));
+    return blob ?? file;
+  } catch {
+    return file; // format que le navigateur ne sait pas lire : envoyé tel quel, le serveur tranche
+  }
+}
+
+function DriverPhoto({ url, name, size }: { url: string | null; name: string; size: "sm" | "lg" }) {
+  const box = size === "lg" ? "h-28 w-28 text-[28px]" : "h-9 w-9 text-[12px]";
+  return url ? (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src={url} alt={`Photo de ${name}`} className={`${box} shrink-0 rounded-full object-cover ring-2 ring-white`} />
+  ) : (
+    <span className={`${box} flex shrink-0 items-center justify-center rounded-full bg-ink font-bold text-white ring-2 ring-white/20`}>{initialsOf(name)}</span>
+  );
+}
+
 function initialsOf(name: string) {
   return name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase() || "-";
 }
@@ -102,7 +128,9 @@ export default function AdminDriverDetailPage() {
   const driverId = decodeURIComponent(params.id as string);
 
   const [driver, setDriver] = useState<Driver | null>(null);
-  const [account, setAccount] = useState<{ email: string | null; lastSignInAt: string | null } | null>(null);
+  const [account, setAccount] = useState<{ email: string | null; lastSignInAt: string | null; avatarUrl: string | null } | null>(null);
+  const [photoBusy, setPhotoBusy] = useState(false);
+  const [photoError, setPhotoError] = useState<string | null>(null);
   const [orders, setOrders] = useState<OrderRow[]>([]);
   const [navettes, setNavettes] = useState<NavetteRow[]>([]);
   const [anomalies, setAnomalies] = useState<AnomalyRow[]>([]);
@@ -162,9 +190,29 @@ export default function AdminDriverDetailPage() {
     load();
     fetch(`/api/admin/drivers/${encodeURIComponent(driverId)}`)
       .then((r) => (r.ok ? r.json() : null))
-      .then((data) => data && setAccount({ email: data.email, lastSignInAt: data.lastSignInAt }))
+      .then((data) => data && setAccount({ email: data.email, lastSignInAt: data.lastSignInAt, avatarUrl: data.avatarUrl }))
       .catch(() => {});
   }, [load, driverId]);
+
+  const uploadPhoto = async (file: File) => {
+    setPhotoError(null);
+    setPhotoBusy(true);
+    try {
+      const body = new FormData();
+      body.append("photo", await shrinkPhoto(file), "photo.jpg");
+      const res = await fetch(`/api/admin/drivers/${encodeURIComponent(driverId)}`, { method: "POST", body });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setPhotoError(data.error || "Photo non enregistrée.");
+        return;
+      }
+      setAccount((a) => ({ email: a?.email ?? null, lastSignInAt: a?.lastSignInAt ?? null, avatarUrl: data.avatarUrl }));
+    } catch {
+      setPhotoError("Photo non enregistrée.");
+    } finally {
+      setPhotoBusy(false);
+    }
+  };
 
   const delivered = useMemo(() => orders.filter((o) => DELIVERED.includes(o.status)), [orders]);
   const active = useMemo(() => orders.filter((o) => ![...DELIVERED, ...CANCELLED].includes(o.status)), [orders]);
@@ -210,6 +258,7 @@ export default function AdminDriverDetailPage() {
       eyebrow="Fiche chauffeur"
       title={
         <>
+          <DriverPhoto url={account?.avatarUrl ?? null} name={driver.name} size="sm" />
           <span>{driver.name}</span>
           <span className={`rounded-full px-2.5 py-1 text-xs font-bold ${STATUS_BADGE[displayStatus]}`}>{STATUS_LABEL[displayStatus]}</span>
         </>
@@ -288,11 +337,30 @@ export default function AdminDriverDetailPage() {
         {/* Colonne latérale */}
         <div className="flex flex-col gap-4">
           <div className="rounded-2xl border border-line bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
-            <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-ink text-[13px] font-bold text-white">{initialsOf(driver.name)}</div>
+            <div className="flex flex-col items-center gap-3 text-center">
+              <label className={`group relative cursor-pointer ${photoBusy ? "pointer-events-none opacity-60" : ""}`} title="Changer la photo">
+                <DriverPhoto url={account?.avatarUrl ?? null} name={driver.name} size="lg" />
+                <span className="absolute bottom-0 right-0 flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-accent text-white shadow">
+                  <Camera size={15} />
+                </span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="sr-only"
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    e.target.value = "";
+                    if (f) uploadPhoto(f);
+                  }}
+                />
+              </label>
               <div className="min-w-0">
-                <div className="truncate font-bold text-ink">{driver.name}</div>
+                <div className="truncate text-[16px] font-bold text-ink">{driver.name}</div>
                 <div className="text-[12.5px] text-muted">{driver.vehicle || "Véhicule non renseigné"}</div>
+                <div className="mt-1 text-[12px] font-semibold text-accent-dark">
+                  {photoBusy ? "Envoi de la photo…" : account?.avatarUrl ? "Changer la photo" : "Ajouter sa photo"}
+                </div>
+                {photoError && <div className="mt-1 text-[12px] font-semibold text-red-600">{photoError}</div>}
               </div>
             </div>
             <div className="mt-4 flex flex-col gap-2.5 text-[12.5px]">
