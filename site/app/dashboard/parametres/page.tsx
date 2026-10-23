@@ -223,7 +223,7 @@ export default function ParametresPage() {
         {/* Navigation */}
         <nav
           aria-label="Sections des paramètres"
-          className="no-scrollbar flex shrink-0 gap-1 overflow-x-auto border-b border-line bg-paper-card p-3 md:w-64 md:flex-col md:overflow-visible md:border-b-0 md:border-r md:p-4"
+          className="grid shrink-0 grid-cols-2 gap-1 border-b border-line bg-paper-card p-3 md:flex md:w-64 md:flex-col md:border-b-0 md:border-r md:p-4"
         >
           {TABS.map(({ id, label: tabLabel, icon: tabIcon }) => {
             const label = id === "societe" && !isPro ? "Mon adresse" : tabLabel;
@@ -235,11 +235,11 @@ export default function ParametresPage() {
                 type="button"
                 onClick={() => setActiveTab(id)}
                 aria-current={active ? "page" : undefined}
-                className={`flex h-11 shrink-0 items-center gap-3 whitespace-nowrap rounded-lg px-3.5 text-sm font-bold transition-colors ${
+                className={`flex min-h-11 items-center gap-2 rounded-lg px-3 py-2 text-left text-[13px] font-bold leading-tight transition-colors md:h-11 md:shrink-0 md:gap-3 md:whitespace-nowrap md:px-3.5 md:text-sm ${
                   active ? "bg-white text-ink shadow-sm ring-1 ring-line" : "text-muted hover:bg-white/70 hover:text-ink"
                 }`}
               >
-                <Icon size={17} className={active ? "text-accent" : "text-label"} />
+                <Icon size={17} className={`shrink-0 ${active ? "text-accent" : "text-label"}`} />
                 {label}
               </button>
             );
