@@ -100,9 +100,9 @@ export default function Home() {
         </p>
         <DeptCards depts={["92", "93", "94"]} />
         <p className="mt-6 rounded-lg border border-line bg-white px-5 py-4 text-[14px] leading-[1.6] text-muted">
-          Votre ville n’est pas dans la liste ? Nous livrons aussi dans le reste de l’Île-de-France.{" "}
+          Votre ville n’est pas dans la liste ? Nous livrons aussi dans toute l’Île-de-France : Seine-et-Marne (77), Yvelines (78), Essonne (91) et Val-d’Oise (95).{" "}
           <a href={`tel:${PHONE_TEL}`} className="whitespace-nowrap font-semibold text-ink underline underline-offset-2">Appelez-nous au {PHONE_DISPLAY}</a>{" "}
-          ou <a href="#contact" className="text-ink underline underline-offset-2">écrivez-nous</a> pour vérifier.
+          ou <a href="#contact" className="whitespace-nowrap text-ink underline underline-offset-2">écrivez-nous</a> pour vérifier.
         </p>
       </section>
       <Contact />
