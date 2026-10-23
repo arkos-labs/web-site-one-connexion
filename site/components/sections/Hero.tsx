@@ -9,7 +9,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { MapPin, Flag, Phone } from "lucide-react";
 import dynamic from "next/dynamic";
-import { calculatePrice, isServedAddress, type ServiceLevel } from "@/lib/pricing";
+import { calculatePrice, isServedAddress } from "@/lib/pricing";
 import { formatEur } from "@/lib/price-display";
 import { PHONE_DISPLAY, PHONE_TEL } from "@/lib/site-content";
 
@@ -25,12 +25,6 @@ const COMMITMENTS = [
   { tag: "Livraison rapide", value: "1", unit: "h", title: "Livraison en formule Super", desc: "Livraison porte à porte en 1 h dans Paris." },
 ];
 
-// Prix affichés dès que les deux adresses sont reconnues (même grille que le formulaire de commande).
-const PRICE_LEVELS: { level: ServiceLevel; name: string; delay: string }[] = [
-  { level: "standard", name: "Normal", delay: "3 h" },
-  { level: "urgent", name: "Urgent", delay: "1 h 30" },
-  { level: "flash", name: "Super", delay: "1 h" },
-];
 
 const openOrder = (detail?: { pickup: string; dropoff: string }) =>
   window.dispatchEvent(new CustomEvent("open-order-modal", detail ? { detail } : undefined));
@@ -39,11 +33,12 @@ export default function Hero() {
   const [pickup, setPickup] = useState("");
   const [dropoff, setDropoff] = useState("");
 
-  // Prix tout de suite, avant tout formulaire : le visiteur sait combien ça coûte.
-  const prices = useMemo(() => {
+  // Prix tout de suite, avant tout formulaire : le visiteur sait combien ça coûte. Formule Normale (3 h),
+  // la moins chère, avec la même grille que le formulaire de commande ; les autres délais s'y affichent.
+  const price = useMemo(() => {
     if (!isServedAddress(pickup) || !isServedAddress(dropoff)) return null;
     try {
-      return PRICE_LEVELS.map((p) => ({ ...p, ttc: calculatePrice(pickup, dropoff, p.level) }));
+      return calculatePrice(pickup, dropoff, "standard");
     } catch {
       return null;
     }
@@ -143,26 +138,15 @@ export default function Hero() {
             JE COMMANDE MA COURSE
           </button>
         </div>
-        <div aria-live="polite" className="mb-6 -mt-3 px-1 text-[14px] text-white/80">
-          {prices ? (
-            <div className="max-w-md">
-              <p className="mb-2 text-[13px] font-semibold uppercase tracking-wider text-white/60">Prix de votre course (TTC)</p>
-              <ul>
-                {prices.map((p) => (
-                  <li key={p.level} className="flex items-baseline justify-between gap-4 border-t border-white/10 py-2.5">
-                    <span>
-                      <span className="font-semibold text-white">{p.name}</span>
-                      <span className="text-white/60"> · livré en {p.delay}</span>
-                    </span>
-                    <strong className="whitespace-nowrap text-[16px] font-bold text-white">{formatEur(p.ttc)} €</strong>
-                  </li>
-                ))}
-              </ul>
-            </div>
+        <p aria-live="polite" className="mb-6 -mt-3 px-1 text-[14px] text-white/80">
+          {price != null ? (
+            <>
+              Votre course : <strong className="text-[16px] font-bold text-white">dès {formatEur(price)} € TTC</strong>, livrée en 3 h.
+            </>
           ) : (
-            <p>Entrez vos deux adresses : le prix s&rsquo;affiche tout de suite, sans inscription.</p>
+            <>Entrez vos deux adresses : le prix s&rsquo;affiche tout de suite, sans inscription.</>
           )}
-        </div>
+        </p>
       </div>
 
 
