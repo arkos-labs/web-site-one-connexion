@@ -7,7 +7,7 @@ import JsonLd from "@/components/JsonLd";
 import DeptCards from "@/components/sections/DeptCards";
 import TrustStrip from "@/components/sections/TrustStrip";
 import Link from "next/link";
-import { LEGAL, PHONE_TEL, PHONE_DISPLAY, EMAIL, SITE_URL, MAPS_URL } from "@/lib/site-content";
+import { LEGAL, PHONE_TEL, EMAIL, SITE_URL, MAPS_URL } from "@/lib/site-content";
 
 const organizationSchema = {
   "@context": "https://schema.org",
@@ -99,17 +99,16 @@ export default function Home() {
           <Link href="/zones/grande-couronne" className="text-ink underline underline-offset-2">grande couronne</Link> est aussi desservie.
         </p>
         <DeptCards depts={["92", "93", "94"]} />
-        <div className="mt-6 flex flex-col gap-4 rounded-lg border border-line bg-white px-5 py-5 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-6 flex flex-col gap-5 rounded-xl bg-ink px-6 py-6 text-white sm:flex-row sm:items-center sm:justify-between sm:px-8">
           <div>
-            <p className="text-[16px] font-bold text-ink">Votre ville n’est pas dans la liste ? Testez votre adresse.</p>
-            <p className="mt-1 text-[14px] leading-[1.6] text-muted">
-              Nous livrons dans toute l’Île-de-France : Seine-et-Marne (77), Yvelines (78), Essonne (91) et Val-d’Oise (95).
-              Tapez vos adresses pour voir le prix tout de suite, ou appelez-nous au{" "}
-              <a href={`tel:${PHONE_TEL}`} className="whitespace-nowrap font-semibold text-ink underline underline-offset-2">{PHONE_DISPLAY}</a>.
+            <p className="text-[19px] font-bold leading-tight">Votre ville n’est pas dans la liste ? On y livre aussi.</p>
+            <p className="mt-2 text-[14px] leading-[1.6] text-white/70">
+              Toute l’Île-de-France est desservie : Seine-et-Marne (77), Yvelines (78), Essonne (91) et Val-d’Oise (95).
+              Entrez vos adresses, votre prix s’affiche en quelques secondes.
             </p>
           </div>
-          <a href="#top" className="inline-flex shrink-0 items-center justify-center rounded-lg bg-accent px-5 py-3 text-[15px] font-bold text-white hover:opacity-90">
-            Tester mon adresse
+          <a href="#top" className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-accent px-6 py-3.5 text-[15px] font-bold text-white transition hover:opacity-90">
+            Voir mon prix <span aria-hidden="true">→</span>
           </a>
         </div>
       </section>
