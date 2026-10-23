@@ -26,10 +26,10 @@ const COMMITMENTS = [
 ];
 
 // Prix affichés dès que les deux adresses sont reconnues (même grille que le formulaire de commande).
-const PRICE_LEVELS: { level: ServiceLevel; label: string }[] = [
-  { level: "standard", label: "Normal 3 h" },
-  { level: "urgent", label: "Urgent 1 h 30" },
-  { level: "flash", label: "Super 1 h" },
+const PRICE_LEVELS: { level: ServiceLevel; name: string; delay: string }[] = [
+  { level: "standard", name: "Normal", delay: "3 h" },
+  { level: "urgent", name: "Urgent", delay: "1 h 30" },
+  { level: "flash", name: "Super", delay: "1 h" },
 ];
 
 const openOrder = (detail?: { pickup: string; dropoff: string }) =>
@@ -145,14 +145,20 @@ export default function Hero() {
         </div>
         <div aria-live="polite" className="mb-6 -mt-3 px-1 text-[14px] text-white/80">
           {prices ? (
-            <p className="flex flex-wrap gap-x-4 gap-y-1">
-              <span>Prix TTC :</span>
-              {prices.map((p) => (
-                <span key={p.level} className="whitespace-nowrap">
-                  {p.label} <strong className="font-semibold text-white">{formatEur(p.ttc)} €</strong>
-                </span>
-              ))}
-            </p>
+            <div className="max-w-md">
+              <p className="mb-2 text-[13px] font-semibold uppercase tracking-wider text-white/60">Prix de votre course (TTC)</p>
+              <ul>
+                {prices.map((p) => (
+                  <li key={p.level} className="flex items-baseline justify-between gap-4 border-t border-white/10 py-2.5">
+                    <span>
+                      <span className="font-semibold text-white">{p.name}</span>
+                      <span className="text-white/60"> · livré en {p.delay}</span>
+                    </span>
+                    <strong className="whitespace-nowrap text-[16px] font-bold text-white">{formatEur(p.ttc)} €</strong>
+                  </li>
+                ))}
+              </ul>
+            </div>
           ) : (
             <p>Entrez vos deux adresses : le prix s&rsquo;affiche tout de suite, sans inscription.</p>
           )}
