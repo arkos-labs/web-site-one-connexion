@@ -107,8 +107,8 @@ export async function POST(req: Request) {
 
     if (order.client_type === 'particulier') {
       await notifyPaidOrder(trackingCode).catch((e) => console.error('Telegram paid-order notify failed:', e));
-      // E-mail de confirmation (la facture partira à la livraison : pas de facture Stripe ici).
-      await sendOrderConfirmation(admin, stripe, trackingCode);
+      // E-mail de confirmation (la facture part à la livraison).
+      await sendOrderConfirmation(admin, trackingCode);
     }
     return NextResponse.json({ ok: true, paid, method: saved.method.label });
   } catch (err: any) {

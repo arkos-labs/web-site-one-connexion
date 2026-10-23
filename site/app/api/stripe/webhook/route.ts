@@ -182,8 +182,8 @@ export async function POST(req: Request) {
         // Particulier : l'alerte Telegram part seulement quand la course est payée
         if (session.mode === 'payment' && before?.client_type === 'particulier' && before.billing_status !== 'paye') {
           await notifyPaidOrder(orderId).catch((e) => console.error('Telegram paid-order notify failed:', e));
-          // Particulier : e-mail de confirmation après le paiement, avec numéro de course, suivi et facture.
-          await sendOrderConfirmation(supabase, stripe, orderId);
+          // Particulier : e-mail de confirmation après le paiement (numéro de course et suivi ; facture à la livraison).
+          await sendOrderConfirmation(supabase, orderId);
         }
       }
     }

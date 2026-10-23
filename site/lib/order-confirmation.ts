@@ -1,11 +1,10 @@
 /**
  * lib/order-confirmation.ts (serveur)
  * E-mail « Votre commande est confirmée » (API Resend) : numéro de course, trajet, prix, bouton
- * « Suivre ma commande ». Particulier : envoyé après le paiement, avec sa facture. Pro : envoyé dès la
- * commande, la facture suit à la livraison.
+ * « Suivre ma commande ». Particulier : envoyé après le paiement. Pro : envoyé dès la commande.
+ * La facture n'y figure jamais : elle part une seule fois, à la livraison (lib/deliver-order-invoice).
  * Une seule fois par commande : Resend ignore un second envoi avec la même clé d'idempotence (24 h).
  */
-import type Stripe from 'stripe';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { EMAIL_LOGO_ATTACHMENT } from '@/lib/email-logo';
 import { EMAIL, PHONE_DISPLAY, SITE_URL } from '@/lib/site-content';
@@ -32,16 +31,12 @@ export type OrderConfirmationInput = {
   priceTTC: number | null;
   pro: boolean;
   followUrl: string;
-  /** Particulier : facture de la course payée (PDF ou page Stripe). */
-  invoiceUrl?: string | null;
 };
 
 export function orderConfirmationHtml(i: OrderConfirmationInput): string {
   const payment = i.pro
     ? 'Votre facture vous sera envoyée par e-mail à la livraison de la course.'
-    : i.invoiceUrl
-      ? '<strong style="color:#1a7f37">Paiement reçu.</strong> Votre facture acquittée est disponible ci-dessous.'
-      : '<strong style="color:#1a7f37">Paiement reçu.</strong> Votre facture vous sera envoyée par e-mail à la livraison.';
+    : '<strong style="color:#1a7f37">Paiement reçu.</strong> Votre facture vous sera envoyée par e-mail à la livraison de la course.';
 
   const row = (label: string, value: string) =>
     `<tr><td style="padding:6px 0;font-size:13px;color:#6B6862;width:110px;vertical-align:top">${label}</td><td style="padding:6px 0;font-size:14px;line-height:1.5">${value}</td></tr>`;
@@ -67,7 +62,6 @@ ${i.priceTTC != null ? row('Prix', `<strong>${eur(i.priceTTC)} TTC</strong>`) : 
 <p style="margin:22px 0 8px"><a href="${esc(i.followUrl)}" style="background:#ed5518;color:#fff;text-decoration:none;font-weight:700;padding:14px 22px;border-radius:6px;display:inline-block">Suivre ma commande</a></p>
 <p style="margin:0 0 18px;font-size:13px;line-height:1.6;color:#4A4845">Suivez chaque étape en direct depuis votre espace client. Première fois ? Vous choisirez votre mot de passe en un clic.</p>
 <p style="margin:18px 0;padding:12px 14px;background:#FFF4EE;border-left:3px solid #ed5518;font-size:14px;line-height:1.6">${payment}</p>
-${i.invoiceUrl ? `<p style="margin:0 0 18px"><a href="${esc(i.invoiceUrl)}" style="color:#c94410;font-weight:700">Télécharger ma facture (PDF)</a></p>` : ''}
 </td></tr>
 <tr><td style="padding:8px 28px 28px;font-size:13px;line-height:1.6;color:#4A4845;border-top:1px solid #eee">
 Une question sur votre course ? Répondez à cet e-mail ou appelez-nous au ${esc(PHONE_DISPLAY)}.<br>
@@ -79,7 +73,7 @@ Une question sur votre course ? Répondez à cet e-mail ou appelez-nous au ${esc
  * Envoie la confirmation d'une commande. Sans erreur bloquante : une commande ne doit jamais échouer
  * parce que l'e-mail n'est pas parti. Renvoie true si Resend l'a accepté.
  */
-export async function sendOrderConfirmation(admin: SupabaseClient, stripe: Stripe | null, trackingCode: string): Promise<boolean> {
+export async function sendOrderConfirmation(admin: SupabaseClient, trackingCode: string): Promise<boolean> {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
     console.warn('RESEND_API_KEY manquante : confirmation de commande non envoyée.');
@@ -88,7 +82,7 @@ export async function sendOrderConfirmation(admin: SupabaseClient, stripe: Strip
   try {
     const { data: o } = await admin
       .from('orders')
-      .select('id, user_id, tracking_code, contact_email, contact_name, raison_sociale, client_type, pickup_address, dropoff_address, stops, delai, price_estimate, amount_due, stripe_invoice_id')
+      .select('id, user_id, tracking_code, contact_email, contact_name, raison_sociale, client_type, pickup_address, dropoff_address, stops, delai, price_estimate, amount_due')
       .eq('tracking_code', trackingCode)
       .maybeSingle();
     if (!o) return false;
@@ -102,11 +96,6 @@ export async function sendOrderConfirmation(admin: SupabaseClient, stripe: Strip
     if (!to) return false;
 
     const pro = o.client_type === 'entreprise';
-    let invoiceUrl: string | null = null;
-    if (!pro && o.stripe_invoice_id && stripe) {
-      const inv = await stripe.invoices.retrieve(o.stripe_invoice_id).catch(() => null);
-      if (inv?.status === 'paid') invoiceUrl = inv.invoice_pdf ?? inv.hosted_invoice_url ?? null;
-    }
     const price = o.amount_due != null ? Number(o.amount_due) : normalizeOrderPriceTTC(o.price_estimate, o.pickup_address, o.dropoff_address, o.delai);
 
     const html = orderConfirmationHtml({
@@ -118,7 +107,6 @@ export async function sendOrderConfirmation(admin: SupabaseClient, stripe: Strip
       priceTTC: price,
       pro,
       followUrl: orderFollowUrl(o.tracking_code, o.id),
-      invoiceUrl,
     });
 
     const res = await fetch('https://api.resend.com/emails', {
