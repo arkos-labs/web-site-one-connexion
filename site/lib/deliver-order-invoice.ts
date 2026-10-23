@@ -77,7 +77,10 @@ export async function deliverOrderInvoice(supabase: SupabaseClient, stripe: Stri
     const { data: client } = await supabase.from('clients').select('id').eq('id', o.user_id).maybeSingle();
     if (client) return skip('pro avec compte : facture à 30 jours (autre circuit)');
   }
-  if (o.payment_mode === 'fin_de_mois' && o.billing_status === 'virement_attendu') return skip('virement : facture déjà envoyée à la commande');
+  // Virement : la facture (avec l'IBAN) est partie à la commande. On ne la renvoie pas, même si le virement
+  // est arrivé avant la livraison (billing_status 'paye') ou en retard. Le virement se reconnaît à sa facture
+  // créée à la commande sans moyen de paiement enregistré (carte/RIB « fin de mois » : stripe_payment_method_id).
+  if (o.payment_mode === 'fin_de_mois' && o.stripe_invoice_id && !o.stripe_payment_method_id) return skip('virement : facture déjà envoyée à la commande');
   if (o.billing_status === 'annule') return skip('commande annulée');
 
   // Réservation anti double envoi.
