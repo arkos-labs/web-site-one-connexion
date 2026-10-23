@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowRight, Eye, EyeOff, Lock } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { markPasswordSet } from "@/lib/password-set";
 
 type Status = "checking" | "ready" | "invalid";
 
@@ -61,6 +62,7 @@ export default function ResetPasswordForm() {
       setLoading(false);
       return;
     }
+    await markPasswordSet();
     // /connexion redirige un utilisateur connecté vers son espace (client ou admin).
     router.push("/connexion");
     router.refresh();

@@ -3,6 +3,7 @@ import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 import { notifyPaidOrder, notifyFailedPayment } from '@/lib/telegram-dashboard';
 import { settlePayAll } from '@/lib/pay-all';
+import { sendOrderConfirmation } from '@/lib/order-confirmation';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder', {
   apiVersion: '2025-02-24.acacia',
@@ -181,6 +182,8 @@ export async function POST(req: Request) {
         // Particulier : l'alerte Telegram part seulement quand la course est payée
         if (session.mode === 'payment' && before?.client_type === 'particulier' && before.billing_status !== 'paye') {
           await notifyPaidOrder(orderId).catch((e) => console.error('Telegram paid-order notify failed:', e));
+          // Particulier : e-mail de confirmation après le paiement, avec numéro de course, suivi et facture.
+          await sendOrderConfirmation(supabase, stripe, orderId);
         }
       }
     }

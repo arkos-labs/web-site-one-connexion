@@ -394,7 +394,7 @@ export default function CommanderPage() {
     }
 
     setTrackingCode(data.tracking_code);
-    notifyNewOrder();
+    notifyNewOrder(data.tracking_code);
     setStep(5);
     setSubmitting(false);
   };

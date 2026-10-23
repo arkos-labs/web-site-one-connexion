@@ -334,7 +334,7 @@ export default function OrderForm() {
       return;
     }
 
-    if (clientType === 'entreprise') notifyNewOrder(); // particulier : alerte après paiement (webhook Stripe)
+    if (clientType === 'entreprise') notifyNewOrder(trackingCode); // particulier : alerte et e-mail après paiement (webhook Stripe)
 
     // Client connecté avec un moyen de paiement enregistré : réglé en 1 clic, sans la page Stripe
     // (sauf virement, qui part par facture). Refus ou authentification bancaire : page Stripe ci-dessous.
