@@ -21,6 +21,6 @@ export async function POST(req: Request) {
   if (!order || order.client_type !== 'entreprise' || Date.now() - new Date(order.created_at).getTime() > MAX_AGE_MS) {
     return NextResponse.json({ sent: false });
   }
-  const sent = await sendOrderConfirmation(admin, null, trackingCode);
+  const sent = await sendOrderConfirmation(admin, trackingCode);
   return NextResponse.json({ sent });
 }
