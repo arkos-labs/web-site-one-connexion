@@ -99,11 +99,19 @@ export default function Home() {
           <Link href="/zones/grande-couronne" className="text-ink underline underline-offset-2">grande couronne</Link> est aussi desservie.
         </p>
         <DeptCards depts={["92", "93", "94"]} />
-        <p className="mt-6 rounded-lg border border-line bg-white px-5 py-4 text-[14px] leading-[1.6] text-muted">
-          Votre ville n’est pas dans la liste ? Nous livrons aussi dans toute l’Île-de-France : Seine-et-Marne (77), Yvelines (78), Essonne (91) et Val-d’Oise (95).{" "}
-          <a href={`tel:${PHONE_TEL}`} className="whitespace-nowrap font-semibold text-ink underline underline-offset-2">Appelez-nous au {PHONE_DISPLAY}</a>{" "}
-          ou <a href="#contact" className="whitespace-nowrap text-ink underline underline-offset-2">écrivez-nous</a> pour vérifier.
-        </p>
+        <div className="mt-6 flex flex-col gap-4 rounded-lg border border-line bg-white px-5 py-5 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="text-[16px] font-bold text-ink">Votre ville n’est pas dans la liste ? Testez votre adresse.</p>
+            <p className="mt-1 text-[14px] leading-[1.6] text-muted">
+              Nous livrons dans toute l’Île-de-France : Seine-et-Marne (77), Yvelines (78), Essonne (91) et Val-d’Oise (95).
+              Tapez vos adresses pour voir le prix tout de suite, ou appelez-nous au{" "}
+              <a href={`tel:${PHONE_TEL}`} className="whitespace-nowrap font-semibold text-ink underline underline-offset-2">{PHONE_DISPLAY}</a>.
+            </p>
+          </div>
+          <a href="#top" className="inline-flex shrink-0 items-center justify-center rounded-lg bg-accent px-5 py-3 text-[15px] font-bold text-white hover:opacity-90">
+            Tester mon adresse
+          </a>
+        </div>
       </section>
       <Contact />
     </>
