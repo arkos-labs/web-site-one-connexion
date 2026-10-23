@@ -5,6 +5,7 @@ import Contact from "@/components/sections/Contact";
 import Faq from "@/components/sections/Faq";
 import JsonLd from "@/components/JsonLd";
 import DeptCards from "@/components/sections/DeptCards";
+import TrustStrip from "@/components/sections/TrustStrip";
 import Link from "next/link";
 import { LEGAL, PHONE_TEL, EMAIL, SITE_URL, MAPS_URL } from "@/lib/site-content";
 
@@ -80,6 +81,7 @@ export default function Home() {
       <JsonLd data={websiteSchema} />
       <JsonLd data={organizationSchema} />
       <Hero />
+      <TrustStrip />
       <About />
       <OrderForm />
       <Faq />

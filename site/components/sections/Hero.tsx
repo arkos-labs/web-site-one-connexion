@@ -5,10 +5,13 @@
  */
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
-import { MapPin, Flag } from "lucide-react";
+import { MapPin, Flag, Phone } from "lucide-react";
 import dynamic from "next/dynamic";
+import { calculatePrice, isServedAddress, type ServiceLevel } from "@/lib/pricing";
+import { formatEur } from "@/lib/price-display";
+import { PHONE_DISPLAY, PHONE_TEL } from "@/lib/site-content";
 
 const AddressAutocomplete = dynamic(
   () => import("@/components/AddressAutocomplete").then((mod) => ({ default: mod.AddressAutocomplete })),
@@ -22,12 +25,29 @@ const COMMITMENTS = [
   { tag: "Livraison rapide", value: "1", unit: "h", title: "Livraison en formule Super", desc: "Livraison porte à porte en 1 h dans Paris." },
 ];
 
-// PLACEHOLDER : logos clients à déposer avant mise en ligne.
-const CLIENT_LOGO_SLOTS = 5;
+// Prix affichés dès que les deux adresses sont reconnues (même grille que le formulaire de commande).
+const PRICE_LEVELS: { level: ServiceLevel; label: string }[] = [
+  { level: "standard", label: "Normal 3 h" },
+  { level: "urgent", label: "Urgent 1 h 30" },
+  { level: "flash", label: "Super 1 h" },
+];
+
+const openOrder = (detail?: { pickup: string; dropoff: string }) =>
+  window.dispatchEvent(new CustomEvent("open-order-modal", detail ? { detail } : undefined));
 
 export default function Hero() {
   const [pickup, setPickup] = useState("");
   const [dropoff, setDropoff] = useState("");
+
+  // Prix tout de suite, avant tout formulaire : le visiteur sait combien ça coûte.
+  const prices = useMemo(() => {
+    if (!isServedAddress(pickup) || !isServedAddress(dropoff)) return null;
+    try {
+      return PRICE_LEVELS.map((p) => ({ ...p, ttc: calculatePrice(pickup, dropoff, p.level) }));
+    } catch {
+      return null;
+    }
+  }, [pickup, dropoff]);
 
   return (
     <section id="top" className="relative border-b border-white/10 bg-ink text-white">
@@ -64,20 +84,30 @@ export default function Hero() {
               suivi de chaque étape en ligne.
             </p>
             
-            <div className="mb-8 flex flex-wrap gap-3">
+            <div className="mb-4 flex flex-wrap gap-3">
+              <button
+                type="button"
+                onClick={() => openOrder()}
+                className="rounded-[2px] bg-accent px-[22px] py-[12px] text-[14px] font-semibold text-white hover:bg-accent-dark"
+              >
+                Commander une course
+              </button>
               <a
                 href="/inscription"
-                className="rounded-[2px] bg-accent px-[22px] py-[12px] text-[14px] font-semibold text-white hover:bg-accent-dark"
+                className="rounded-[2px] border border-white/22 px-[22px] py-[12px] text-[14px] font-semibold text-white hover:border-white"
               >
                 Ouvrir un compte entreprise
               </a>
-              <a
-                href="/services"
-                className="rounded-[2px] border border-white/22 px-[22px] py-[12px] text-[14px] font-semibold text-white hover:border-white"
-              >
-                Voir les prestations
-              </a>
             </div>
+            <a
+              href={`tel:${PHONE_TEL}`}
+              className="mb-8 inline-flex items-center gap-2 text-[14px] font-semibold text-white/80 hover:text-white"
+            >
+              <Phone size={15} className="shrink-0 text-accent" />
+              <span>
+                Une course urgente ? <span className="whitespace-nowrap font-mono text-white">{PHONE_DISPLAY}</span>
+              </span>
+            </a>
           </div>
         </div>
         
@@ -107,13 +137,25 @@ export default function Hero() {
           </div>
           <button
             type="button"
-            onClick={() => {
-              window.dispatchEvent(new CustomEvent("open-order-modal", { detail: { pickup, dropoff } }));
-            }}
+            onClick={() => openOrder({ pickup, dropoff })}
             className="flex items-center justify-center bg-accent text-white rounded-xl px-8 py-3 text-[14px] font-bold hover:bg-accent-dark transition-colors whitespace-nowrap shadow-lg shadow-accent/20"
           >
             JE COMMANDE MA COURSE
           </button>
+        </div>
+        <div aria-live="polite" className="mb-6 -mt-3 min-h-[20px] px-1 text-[13px] text-white/75">
+          {prices ? (
+            <p className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+              <span className="font-semibold text-white">Prix TTC :</span>
+              {prices.map((p) => (
+                <span key={p.level}>
+                  {p.label} <strong className="text-[15px] text-white">{formatEur(p.ttc)} €</strong>
+                </span>
+              ))}
+            </p>
+          ) : (
+            <p>Entrez vos deux adresses : le prix s&rsquo;affiche tout de suite, sans inscription.</p>
+          )}
         </div>
       </div>
 
