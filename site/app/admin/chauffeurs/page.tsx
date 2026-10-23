@@ -324,13 +324,13 @@ function AdminChauffeursPageInner() {
                   className={`relative flex flex-col gap-3 overflow-hidden rounded-2xl border border-line bg-white p-4 pl-6 shadow-[0_2px_12px_rgba(0,0,0,0.02)] before:absolute before:inset-y-0 before:left-0 before:w-1.5 ${STATUS_BAR[displayStatus]}`}
                 >
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                    <div className="flex items-center gap-3">
+                    <Link href={`/admin/chauffeurs/${d.id}`} className="group flex items-center gap-3">
                       <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-ink text-[12px] font-bold text-white">
                         {initialsOf(d.name)}
                       </div>
                       <div>
                         <div className="flex flex-wrap items-center gap-2">
-                          <span className="font-bold text-ink">{d.name}</span>
+                          <span className="font-bold text-ink group-hover:underline">{d.name}</span>
                           {assigned.length > 0 && (
                             <span className="rounded-full bg-blue-50 px-2 py-0.5 text-[11px] font-bold text-blue-700">
                               {assigned.length} course{assigned.length > 1 ? "s" : ""} sur son app
@@ -340,8 +340,8 @@ function AdminChauffeursPageInner() {
                         <div className="mt-0.5 text-[12.5px] text-muted">{d.vehicle || "Véhicule non renseigné"}</div>
                         <div className="text-[12.5px] text-muted">{d.phone || "-"}</div>
                       </div>
-                    </div>
-                    <div className="flex items-center gap-2 pl-14 sm:pl-0">
+                    </Link>
+                    <div className="flex flex-wrap items-center gap-2 pl-14 sm:pl-0">
                       <select
                         value={displayStatus}
                         disabled
@@ -351,6 +351,12 @@ function AdminChauffeursPageInner() {
                           <option key={value} value={value}>{label}</option>
                         ))}
                       </select>
+                      <Link
+                        href={`/admin/chauffeurs/${d.id}`}
+                        className="flex items-center justify-center whitespace-nowrap rounded-lg border border-line bg-white px-4 py-2 text-[13px] font-bold text-ink transition-colors hover:bg-paper"
+                      >
+                        Voir la fiche
+                      </Link>
                       {d.status !== "hors_service" && (
                         <Link
                           href="/admin/courses"
