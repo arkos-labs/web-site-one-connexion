@@ -4,11 +4,10 @@
  *  1. dueInvoices() relit chez Stripe les factures à régler du client (Stripe fait foi pour le montant) ;
  *  2. la route /api/invoices/pay-all ouvre une page de paiement Stripe avec une ligne par course ;
  *  3. au paiement, le webhook appelle settlePayAll() : chaque facture est marquée payée (« hors Stripe »,
- *     l'argent est sur le paiement groupé), la base est mise à jour et le reçu détaillé part par e-mail.
+ *     l'argent est sur le paiement groupé) et la base est mise à jour. Le reçu est celui de Stripe.
  */
 import type Stripe from 'stripe';
 import type { SupabaseClient } from '@supabase/supabase-js';
-import { sendPaymentReceiptEmail } from '@/lib/payment-receipt-email';
 
 // Factures que le client peut régler lui-même. Les courses « à débiter » (prélèvement programmé à
 // J+30) et les prélèvements en cours sont exclus : ils seraient payés deux fois.
@@ -149,24 +148,6 @@ export async function settlePayAll(admin: SupabaseClient, stripe: Stripe, sessio
     if (i.error) throw new Error(i.error.message);
   }
 
-  // Reçu détaillé : une fois seulement, même si l'événement revient.
-  const pi = await stripe.paymentIntents.retrieve(paymentIntentId, { expand: ['payment_method'] });
-  const to = session.customer_details?.email;
-  if (pi.metadata?.receipt_sent || !to) return { settled: settled.length, refunded };
-
-  const items = await stripe.checkout.sessions.listLineItems(session.id, { limit: MAX_LINES });
-  const pm = typeof pi.payment_method === 'object' ? pi.payment_method : null;
-  const brand = pm?.card?.brand ? pm.card.brand.charAt(0).toUpperCase() + pm.card.brand.slice(1) : 'Carte';
-  const sent = await sendPaymentReceiptEmail({
-    to,
-    name: session.customer_details?.name ?? '',
-    paidAt: new Date((pi.created ?? Date.now() / 1000) * 1000),
-    method: pm?.card ? `${brand} •••• ${pm.card.last4}` : 'Carte bancaire',
-    lines: items.data.map((l) => ({ description: l.description ?? '', amount: l.amount_total })),
-    totalCents: session.amount_total ?? 0,
-    invoiceCount: settled.length,
-    refundedCents: refunded,
-  });
-  if (sent) await stripe.paymentIntents.update(paymentIntentId, { metadata: { ...pi.metadata, receipt_sent: 'oui' } });
+  // Pas de reçu envoyé par le site : Stripe envoie le sien (une ligne par course) après le paiement.
   return { settled: settled.length, refunded };
 }

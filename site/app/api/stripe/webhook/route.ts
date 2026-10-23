@@ -107,7 +107,7 @@ export async function POST(req: Request) {
     }
 
     if (event.type === 'checkout.session.completed' && (event.data.object as Stripe.Checkout.Session).metadata?.purpose === 'pay_all') {
-      // « Tout régler » : toutes les factures du paiement groupé passent en réglées, reçu détaillé par e-mail.
+      // « Tout régler » : toutes les factures du paiement groupé passent en réglées (reçu envoyé par Stripe).
       const session = event.data.object as Stripe.Checkout.Session;
       if (session.payment_status === 'paid') await settlePayAll(supabase, stripe, session);
     } else if (event.type === 'checkout.session.completed' && (event.data.object as Stripe.Checkout.Session).metadata?.purpose === 'save_payment_method') {
