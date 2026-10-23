@@ -45,6 +45,8 @@ export async function POST(req: Request) {
         email,
         password: randomBytes(24).toString('base64url'), // remplacé par celui que le client choisit
         email_confirm: true,
+        // Pas encore de mot de passe choisi : le lien « Suivre ma commande » des e-mails le proposera.
+        app_metadata: { password_set: false },
         user_metadata: {
           role: 'client',
           full_name: order.contact_name ?? '',

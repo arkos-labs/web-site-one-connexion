@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Loader2, MapPin } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { markPasswordSet } from "@/lib/password-set";
 
 type State =
   | { kind: "loading" }
@@ -64,6 +65,7 @@ export default function GuestAccountBox({ trackingCode }: { trackingCode: string
     if (otpError) { setBusy(false); setError("Lien expiré. Connectez-vous avec « Mot de passe oublié »."); return; }
     const { error: pwError } = await supabase.auth.updateUser({ password });
     if (pwError) { setBusy(false); setError(pwError.message.includes("weak") ? "Mot de passe trop simple." : "Mot de passe non enregistré, réessayez."); return; }
+    await markPasswordSet();
     window.location.href = `/dashboard/suivi/${state.orderId}`;
   };
 

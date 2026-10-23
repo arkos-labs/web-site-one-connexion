@@ -5,6 +5,7 @@ import { isServedAddress, MAX_FLASH_DELIVERIES, ServiceLevel } from '@/lib/prici
 import { priceRoute, deliveriesOf } from '@/lib/route-distance';
 import { sessionUser, customerIdFor, savedMethodOf } from '@/lib/payment-method';
 import { notifyPaidOrder } from '@/lib/telegram-dashboard';
+import { sendOrderConfirmation } from '@/lib/order-confirmation';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder', {
   apiVersion: '2025-02-24.acacia',
@@ -106,6 +107,8 @@ export async function POST(req: Request) {
 
     if (order.client_type === 'particulier') {
       await notifyPaidOrder(trackingCode).catch((e) => console.error('Telegram paid-order notify failed:', e));
+      // E-mail de confirmation (la facture partira à la livraison : pas de facture Stripe ici).
+      await sendOrderConfirmation(admin, stripe, trackingCode);
     }
     return NextResponse.json({ ok: true, paid, method: saved.method.label });
   } catch (err: any) {

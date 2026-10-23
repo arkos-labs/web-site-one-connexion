@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { markPasswordSet } from "@/lib/password-set";
 import { User, Building2, MapPin, CreditCard, Lock, Save, ShieldCheck, Loader2, Check } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { PageShell, INPUT, LABEL, BTN_ACCENT, BTN_PRIMARY } from "@/components/dashboard/ui";
@@ -198,6 +199,7 @@ export default function ParametresPage() {
         setPasswordError(`Erreur: ${error.message}`);
       } else {
         setPasswordMessage("Mot de passe mis à jour.");
+        markPasswordSet();
         setNewPassword("");
         setConfirmPassword("");
       }
