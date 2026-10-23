@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 import { notifyPaidOrder, notifyFailedPayment } from '@/lib/telegram-dashboard';
+import { settlePayAll } from '@/lib/pay-all';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder', {
   apiVersion: '2025-02-24.acacia',
@@ -104,7 +105,11 @@ export async function POST(req: Request) {
       }
     }
 
-    if (event.type === 'checkout.session.completed' && (event.data.object as Stripe.Checkout.Session).metadata?.purpose === 'save_payment_method') {
+    if (event.type === 'checkout.session.completed' && (event.data.object as Stripe.Checkout.Session).metadata?.purpose === 'pay_all') {
+      // « Tout régler » : toutes les factures du paiement groupé passent en réglées, reçu détaillé par e-mail.
+      const session = event.data.object as Stripe.Checkout.Session;
+      if (session.payment_status === 'paid') await settlePayAll(supabase, stripe, session);
+    } else if (event.type === 'checkout.session.completed' && (event.data.object as Stripe.Checkout.Session).metadata?.purpose === 'save_payment_method') {
       // Carte ou RIB enregistré depuis l'espace client : il devient le moyen de paiement par défaut (1 clic).
       const session = event.data.object as Stripe.Checkout.Session;
       const setupIntent = await stripe.setupIntents.retrieve(session.setup_intent as string);
