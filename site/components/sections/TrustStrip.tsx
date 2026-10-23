@@ -1,7 +1,8 @@
 /**
  * components/sections/TrustStrip.tsx
- * Juste sous l'ouverture de la page d'accueil : ce qui rassure un nouveau visiteur, et les avis Google.
- * La note Google ne s'affiche que si elle est renseignée dans lib/site-content (GOOGLE_RATING), jamais inventée.
+ * Juste sous l'ouverture de la page d'accueil : ce qui rassure un nouveau visiteur.
+ * La note et le lien des avis Google n'apparaissent que si la note est renseignée dans lib/site-content
+ * (GOOGLE_RATING), jamais inventée.
  */
 import { ShieldCheck, Lock, FileText, MapPin, Star, ExternalLink } from "lucide-react";
 import { GOOGLE_RATING, GOOGLE_REVIEWS_URL } from "@/lib/site-content";
@@ -31,14 +32,17 @@ export default function TrustStrip() {
           ) : (
             <p className="text-[15px] font-bold text-ink">Pourquoi les entreprises nous confient leurs courses</p>
           )}
-          <a
-            href={GOOGLE_REVIEWS_URL}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-muted underline-offset-4 hover:text-ink hover:underline"
-          >
-            Lire nos avis Google <ExternalLink size={13} />
-          </a>
+          {/* Sans avis, le lien mènerait à une page vide : il n'apparaît qu'avec la note. */}
+          {GOOGLE_RATING && (
+            <a
+              href={GOOGLE_REVIEWS_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-muted underline-offset-4 hover:text-ink hover:underline"
+            >
+              Lire nos avis Google <ExternalLink size={13} />
+            </a>
+          )}
         </div>
         <ul className="grid grid-cols-2 gap-x-6 gap-y-6 lg:grid-cols-4">
           {FACTS.map(({ icon: Icon, title, desc }) => (
