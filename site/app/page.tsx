@@ -91,14 +91,13 @@ export default function Home() {
           Villes desservies
         </div>
         <h2 className="mb-4 max-w-[26ch] text-balance text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-          Coursier dans toute la petite couronne.
+          Coursier dans toute l’Île-de-France.
         </h2>
         <p className="mb-10 max-w-[62ch] text-[15px] leading-[1.6] text-muted">
           En plus des 20 arrondissements de <Link href="/zones/paris" className="text-ink underline underline-offset-2">Paris</Link>,
-          chaque ville a sa page avec ses délais et ses particularités. La{" "}
-          <Link href="/zones/grande-couronne" className="text-ink underline underline-offset-2">grande couronne</Link> est aussi desservie.
+          nous desservons toute la petite et la grande couronne. Chaque ville a sa page avec ses délais et ses particularités.
         </p>
-        <DeptCards depts={["92", "93", "94"]} />
+        <DeptCards depts={["92", "93", "94", "77", "78", "91", "95"]} />
       </section>
       <Contact />
     </>
