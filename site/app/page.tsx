@@ -93,7 +93,8 @@ export default function Home() {
         </h2>
         <p className="mb-10 max-w-[62ch] text-[15px] leading-[1.6] text-muted">
           En plus des 20 arrondissements de <Link href="/zones/paris" className="text-ink underline underline-offset-2">Paris</Link>,
-          chaque ville a sa page avec ses délais et ses particularités. La{" "}
+          chaque ville a sa page avec ses délais et ses particularités. Pour une vue d'ensemble, voir notre page{" "}
+          <Link href="/zones/petite-couronne" className="text-ink underline underline-offset-2">coursier Paris banlieue (92, 93, 94)</Link>. La{" "}
           <Link href="/zones/grande-couronne" className="text-ink underline underline-offset-2">grande couronne</Link> est aussi desservie.
         </p>
         <DeptCards depts={["92", "93", "94"]} />

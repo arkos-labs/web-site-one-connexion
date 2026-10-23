@@ -169,6 +169,15 @@ export default async function ZonePage({ params }: Props) {
   const at = sameDept.findIndex((z) => z.slug === slug);
   const related = Array.from({ length: Math.min(4, sameDept.length - 1) }, (_, i) => sameDept[(at + 1 + i) % sameDept.length]);
 
+  /* Page « secteur » parente, selon le département (code postal) */
+  const deptCode = zone.dept.slice(0, 2);
+  const hub =
+    deptCode === "75"
+      ? { href: "/zones/paris", label: "Voir tout Paris intramuros (75)" }
+      : ["92", "93", "94"].includes(deptCode)
+        ? { href: "/zones/petite-couronne", label: "Voir toute la petite couronne (92, 93, 94)" }
+        : { href: "/zones/grande-couronne", label: "Voir toute la grande couronne (77, 78, 91, 95)" };
+
   return (
     <>
       <JsonLd data={breadcrumbSchema} />
@@ -562,6 +571,12 @@ export default async function ZonePage({ params }: Props) {
             <h2 className="text-[clamp(20px,2.5vw,26px)] font-bold text-ink">
               Nous intervenons aussi dans ces zones
             </h2>
+            <Link
+              href={hub.href}
+              className="mt-3 inline-flex items-center gap-1 text-[14px] font-semibold text-accent hover:text-ink"
+            >
+              {hub.label} <ArrowRight size={12} />
+            </Link>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {related.map((z) => (

@@ -4,10 +4,12 @@
  * source, pour qu'ils ne divergent jamais. Uniquement des faits déjà publiés
  * ailleurs sur le site (délais, amplitude, zones, tarification).
  */
+import Link from "next/link";
 import JsonLd from "@/components/JsonLd";
 import { SITE_URL } from "@/lib/site-content";
 
-const FAQ = [
+// `link` : lien affiché sous la réponse, hors du JSON-LD.
+const FAQ: { q: string; a: string; link?: { href: string; label: string } }[] = [
   {
     q: "Quelles zones couvre ONE CONNEXION ?",
     a: "Paris intramuros (1er au 20e arrondissement), La Défense, la petite couronne (92, 93, 94) et l'ensemble de l'Île-de-France. Roissy-CDG (95) et Orly (94) sont desservis au tarif de leur zone.",
@@ -23,6 +25,7 @@ const FAQ = [
   {
     q: "Comment connaître le prix d’une course ?",
     a: "Le prix s’affiche automatiquement dès que vous saisissez les adresses et le délai, avant de valider la commande. La zone et le délai déterminent le tarif.",
+    link: { href: "/guides/prix-coursier-express-paris", label: "Prix d'un coursier à Paris : le guide complet" },
   },
   {
     q: "Quels types de courses prenez-vous en charge ?",
@@ -65,13 +68,21 @@ export default function Faq() {
         Coursier B2B à Paris : les réponses avant votre première course.
       </h2>
       <div className="max-w-[860px] divide-y divide-line border-y border-line">
-        {FAQ.map(({ q, a }) => (
+        {FAQ.map(({ q, a, link }) => (
           <details key={q} className="group py-4">
             <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-[16.5px] font-semibold text-ink">
               {q}
               <span aria-hidden className="text-accent transition-transform group-open:rotate-45">+</span>
             </summary>
             <p className="mt-3 text-[16px] leading-[1.65] text-muted">{a}</p>
+            {link && (
+              <Link
+                href={link.href}
+                className="mt-2 inline-block text-[15px] font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark"
+              >
+                {link.label} →
+              </Link>
+            )}
           </details>
         ))}
       </div>
