@@ -149,7 +149,7 @@ export default function FacturesPage() {
       <StatusPill tone="blue">Remboursée</StatusPill>
     ) : status === "echec" ? (
       <StatusPill tone="red">Paiement échoué</StatusPill>
-    ) : ["en_cours", "emission", "prete", "envoi", "retenue"].includes(status) ? (
+    ) : ["en_cours", "emission", "envoi", "retenue"].includes(status) ? (
       <StatusPill tone="blue">En cours d&apos;émission</StatusPill>
     ) : (
       <StatusPill tone="orange">À régler</StatusPill>

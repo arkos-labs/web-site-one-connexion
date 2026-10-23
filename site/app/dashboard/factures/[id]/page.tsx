@@ -64,7 +64,7 @@ export default function FactureDetailsPage() {
           .sort((a: any, b: any) => new Date(b.delivered_at || b.created_at).getTime() - new Date(a.delivered_at || a.created_at).getTime());
 
         setOrders(lines);
-        const visible = adminView || !["prete", "envoi", "retenue"].includes((inv as any).status);
+        const visible = adminView || !["envoi", "retenue"].includes((inv as any).status);
         setInvoice({
           number: (inv as any).invoice_number,
           monthLabel: new Date((inv as any).billing_period_start).toLocaleDateString("fr-FR", { month: "long", year: "numeric" }),
