@@ -59,7 +59,7 @@ export default function Hero() {
         <source src="/videos/hero-video-opt.mp4" type="video/mp4" />
       </video>
       <div className="absolute inset-0 bg-ink/40 z-10 pointer-events-none"></div>
-      <div className="relative z-20 mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)]">
+      <div className="relative z-30 mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)]">
         <div className="pt-8">
           <div className="min-w-0">
             <div className="mb-4 inline-block rounded-full bg-black/40 backdrop-blur-sm px-3 py-1 font-mono text-[11px] tracking-[0.16em] text-accent uppercase border border-white/10 shadow-lg">
