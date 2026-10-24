@@ -16,7 +16,7 @@ const organizationSchema = {
   name: LEGAL.denomination,
   legalName: LEGAL.denomination,
   url: SITE_URL,
-  logo: `${SITE_URL}/logo.png`,
+  logo: `${SITE_URL}/logo-google.png`,
   image: `${SITE_URL}/og-image.jpg`,
   contactPoint: {
     "@type": "ContactPoint",
