@@ -30,6 +30,16 @@ export default function OrderModalProvider() {
     return () => window.removeEventListener("open-order-modal", handler);
   }, []);
 
+  // Lien direct vers le modal (pubs Google Ads, e-mails…) : oneconnexion.com/?commander
+  // ouvre le modal au chargement, puis retire le paramètre de l'adresse.
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    if (!url.searchParams.has("commander")) return;
+    setOpen(true);
+    url.searchParams.delete("commander");
+    window.history.replaceState(null, "", url.pathname + url.search + url.hash);
+  }, []);
+
   // Le modal vit dans le layout : il se ferme dès qu'on change de page (lien « Connectez-vous », etc.).
   const pathname = usePathname();
   const lastPath = useRef(pathname);
