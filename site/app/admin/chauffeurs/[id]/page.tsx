@@ -7,7 +7,7 @@ import { createClient } from "@/lib/supabase/client";
 import { htOf, normalizeOrderPriceTTC } from "@/lib/price-display";
 import { AdminPage, ErrorState, LoadingState } from "@/components/dashboard/ui";
 import { AlertTriangle, CheckCircle2, Euro, Eye, EyeOff, Pencil, Phone, Truck, Wallet } from "lucide-react";
-import { DRIVER_MIN_PAY, DRIVER_SHARE, driverPayOf } from "@/lib/driver-pay";
+import { DRIVER_MIN_PAY, DRIVER_SHARE, companyNet, courseBreakdown, driverPayOf } from "@/lib/driver-pay";
 
 /**
  * Fiche chauffeur (admin) : profil, courses en cours, historique des courses, navettes, incidents signalés.
@@ -191,8 +191,9 @@ export default function AdminDriverDetailPage() {
   const revenueMonth = deliveredThisMonth.reduce((s, o) => s + priceOf(o), 0);
   const payTotal = delivered.reduce((s, o) => s + payOf(o).amount, 0);
   const payMonth = deliveredThisMonth.reduce((s, o) => s + payOf(o).amount, 0);
-  // Ce qui reste à la société sur les courses livrées : prix HT moins la part du chauffeur.
-  const marginMonth = deliveredThisMonth.reduce((s, o) => s + htOf(priceOf(o)) - payOf(o).amount, 0);
+  // Ce qui reste vraiment à la société ce mois-ci (après chauffeur, Stripe et impôt sur les sociétés).
+  const marginMonth = deliveredThisMonth.reduce((s, o) => s + companyNet(priceOf(o), payOf(o).amount), 0);
+  const feesMonth = deliveredThisMonth.reduce((s, o) => s + courseBreakdown(priceOf(o), payOf(o).amount).fees, 0);
 
   // Montant du chauffeur fixé à la main sur une course (vide = règle 35 %, minimum 10 €).
   const saveDriverPay = async (orderId: string, value: number | null) => {
@@ -260,7 +261,7 @@ export default function AdminDriverDetailPage() {
         <StatCard icon={CheckCircle2} label="Courses livrées" value={String(delivered.length)} sub={`${deliveredThisMonth.length} ce mois-ci${avgDuration != null ? ` · ${durationLabel(avgDuration)} en moyenne` : ""}`} />
         <StatCard icon={Euro} label="CA des courses" value={`${eur(revenue)} TTC`} sub={`${eur(revenueMonth)} TTC ce mois-ci`} />
         <StatCard icon={Truck} label="En cours" value={String(active.length)} sub={lastDelivery ? `Dernière livraison le ${dateTime(lastDelivery)}` : "Aucune livraison"} accent={active.length > 0} />
-        <StatCard icon={Wallet} label="À payer au chauffeur" value={`${eur(payMonth)}`} sub={`Ce mois-ci · ${eur(payTotal)} en tout · reste ${eur(marginMonth)} HT à la société ce mois-ci`} accent />
+        <StatCard icon={Wallet} label="À payer au chauffeur" value={`${eur(payMonth)}`} sub={`Ce mois-ci · ${eur(payTotal)} en tout · ce mois-ci : ${eur(feesMonth)} de frais (TVA, Stripe, impôt), il te reste ≈ ${eur(marginMonth)}`} accent />
       </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)] [&>*]:min-w-0">
@@ -426,15 +427,17 @@ function CourseRow({ o, client, href, onSavePay }: { o: OrderRow; client: string
           </div>
         )}
       </div>
-      <div className="flex shrink-0 items-center gap-3 sm:flex-col sm:items-end sm:gap-0.5">
-        <span className="text-[12px] font-semibold text-muted">{dateTime(o.created_at)}</span>
-        {price > 0 && !isCancelled && (
-          <span className="text-[14px] font-bold text-ink">
-            {eur(price)} TTC <span className="text-[11px] font-medium text-muted">· {eur(htOf(price))} HT</span>
-          </span>
-        )}
+      <div className="flex w-full shrink-0 flex-col gap-1.5 sm:w-[250px] sm:items-end sm:gap-0.5">
+        <div className="flex flex-wrap items-baseline justify-between gap-x-3 sm:flex-col sm:items-end">
+          <span className="text-[12px] font-semibold text-muted">{dateTime(o.created_at)}</span>
+          {price > 0 && !isCancelled && (
+            <span className="text-[14px] font-bold text-ink">
+              {eur(price)} TTC <span className="text-[11px] font-medium text-muted">· {eur(htOf(price))} HT</span>
+            </span>
+          )}
+        </div>
         {price > 0 && !isCancelled && !editing && (
-          <div className="flex flex-col items-end gap-0.5 sm:mt-1">
+          <div className="flex flex-col items-start gap-0.5 sm:mt-1 sm:items-end">
             <button
               onClick={() => {
                 setDraft(pay.amount.toFixed(2).replace(".", ","));
@@ -446,13 +449,29 @@ function CourseRow({ o, client, href, onSavePay }: { o: OrderRow; client: string
               Chauffeur : {eur(pay.amount)} <Pencil size={12} />
             </button>
             <span className="text-[11px] font-medium text-muted">
-              {pay.manual ? "Montant fixé à la main" : `${Math.round(DRIVER_SHARE * 100)} % du HT, min. ${DRIVER_MIN_PAY} €`} · reste {eur(htOf(price) - pay.amount)} HT à la société
+              {pay.manual ? "Montant fixé à la main" : `${Math.round(DRIVER_SHARE * 100)} % du HT, min. ${DRIVER_MIN_PAY} €`}
             </span>
+            {(() => {
+              const b = courseBreakdown(price, pay.amount);
+              return (
+                <div className="mt-1 w-full rounded-lg border border-line bg-paper-card px-3 py-2 text-[12px]">
+                  <BreakdownLine label="Client paie" value={eur(price)} />
+                  <BreakdownLine label="TVA (État)" value={`− ${eur(b.vat)}`} />
+                  <BreakdownLine label="Chauffeur" value={`− ${eur(b.driver)}`} />
+                  <BreakdownLine label="Frais Stripe ≈" value={`− ${eur(b.stripe)}`} />
+                  <BreakdownLine label="Impôt société 15 %" value={`− ${eur(b.tax)}`} />
+                  <div className="mt-1 flex items-center justify-between gap-3 border-t border-line pt-1 font-bold text-ink">
+                    <span>Il te reste</span>
+                    <span className={b.net < 0 ? "text-red-600" : "text-green-700"}>{eur(b.net)}</span>
+                  </div>
+                </div>
+              );
+            })()}
           </div>
         )}
         {editing && (
           <form
-            className="flex flex-wrap items-center justify-end gap-1.5 sm:mt-1"
+            className="flex flex-wrap items-center gap-1.5 sm:mt-1 sm:justify-end"
             onSubmit={(e) => {
               e.preventDefault();
               const v = Number(draft.replace(",", ".").replace(/[^\d.]/g, ""));
@@ -479,6 +498,15 @@ function CourseRow({ o, client, href, onSavePay }: { o: OrderRow; client: string
           </form>
         )}
       </div>
+    </div>
+  );
+}
+
+function BreakdownLine({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-center justify-between gap-3 text-muted">
+      <span>{label}</span>
+      <span className="font-semibold tabular-nums text-ink">{value}</span>
     </div>
   );
 }
