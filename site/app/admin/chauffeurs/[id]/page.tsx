@@ -6,7 +6,8 @@ import { useParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { htOf, normalizeOrderPriceTTC } from "@/lib/price-display";
 import { AdminPage, ErrorState, LoadingState } from "@/components/dashboard/ui";
-import { AlertTriangle, CheckCircle2, Euro, Eye, EyeOff, Phone, Timer, Truck } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Euro, Eye, EyeOff, Pencil, Phone, Truck, Wallet } from "lucide-react";
+import { DRIVER_MIN_PAY, DRIVER_SHARE, driverPayOf } from "@/lib/driver-pay";
 
 /**
  * Fiche chauffeur (admin) : profil, courses en cours, historique des courses, navettes, incidents signalés.
@@ -35,6 +36,7 @@ type OrderRow = {
   status: string;
   price_estimate: number | null;
   amount_due: number | null;
+  driver_pay: number | null;
   delai: string | null;
   created_at: string;
   assigned_at: string | null;
@@ -105,6 +107,8 @@ function initialsOf(name: string) {
 }
 
 const priceOf = (o: OrderRow) => Number(o.amount_due ?? normalizeOrderPriceTTC(o.price_estimate, o.pickup_address, o.dropoff_address) ?? 0);
+/** Part du chauffeur sur une course (0 si annulée). */
+const payOf = (o: OrderRow) => (CANCELLED.includes(o.status) ? { amount: 0, manual: false } : driverPayOf(priceOf(o), o.driver_pay));
 
 export default function AdminDriverDetailPage() {
   const supabase = createClient();
@@ -135,7 +139,7 @@ export default function AdminDriverDetailPage() {
     const [{ data: o }, { data: n }, { data: a }] = await Promise.all([
       supabase
         .from("orders")
-        .select("id, tracking_code, pickup_address, dropoff_address, status, price_estimate, amount_due, delai, created_at, assigned_at, picked_up_at, delivered_at, delivery_recipient, delivery_photo_url, delivery_signature_url, user_id, contact_name, raison_sociale")
+        .select("id, tracking_code, pickup_address, dropoff_address, status, price_estimate, amount_due, driver_pay, delai, created_at, assigned_at, picked_up_at, delivered_at, delivery_recipient, delivery_photo_url, delivery_signature_url, user_id, contact_name, raison_sociale")
         .in("driver_id", ids)
         .order("created_at", { ascending: false }),
       supabase
@@ -185,6 +189,21 @@ export default function AdminDriverDetailPage() {
   const deliveredThisMonth = delivered.filter((o) => new Date(o.delivered_at || o.created_at).getTime() >= monthStart);
   const revenue = delivered.reduce((s, o) => s + priceOf(o), 0);
   const revenueMonth = deliveredThisMonth.reduce((s, o) => s + priceOf(o), 0);
+  const payTotal = delivered.reduce((s, o) => s + payOf(o).amount, 0);
+  const payMonth = deliveredThisMonth.reduce((s, o) => s + payOf(o).amount, 0);
+  // Ce qui reste à la société sur les courses livrées : prix HT moins la part du chauffeur.
+  const marginMonth = deliveredThisMonth.reduce((s, o) => s + htOf(priceOf(o)) - payOf(o).amount, 0);
+
+  // Montant du chauffeur fixé à la main sur une course (vide = règle 35 %, minimum 10 €).
+  const saveDriverPay = async (orderId: string, value: number | null) => {
+    const { error } = await supabase.from("orders").update({ driver_pay: value }).eq("id", orderId);
+    if (error) {
+      alert("Montant non enregistré : " + error.message);
+      return false;
+    }
+    setOrders((prev) => prev.map((o) => (o.id === orderId ? { ...o, driver_pay: value } : o)));
+    return true;
+  };
   const durations = delivered
     .filter((o) => o.picked_up_at && o.delivered_at)
     .map((o) => (new Date(o.delivered_at!).getTime() - new Date(o.picked_up_at!).getTime()) / 60000)
@@ -238,10 +257,10 @@ export default function AdminDriverDetailPage() {
       }
     >
       <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-        <StatCard icon={CheckCircle2} label="Courses livrées" value={String(delivered.length)} sub={`${deliveredThisMonth.length} ce mois-ci`} />
+        <StatCard icon={CheckCircle2} label="Courses livrées" value={String(delivered.length)} sub={`${deliveredThisMonth.length} ce mois-ci${avgDuration != null ? ` · ${durationLabel(avgDuration)} en moyenne` : ""}`} />
         <StatCard icon={Euro} label="CA des courses" value={`${eur(revenue)} TTC`} sub={`${eur(revenueMonth)} TTC ce mois-ci`} />
         <StatCard icon={Truck} label="En cours" value={String(active.length)} sub={lastDelivery ? `Dernière livraison le ${dateTime(lastDelivery)}` : "Aucune livraison"} accent={active.length > 0} />
-        <StatCard icon={Timer} label="Durée moyenne" value={avgDuration != null ? durationLabel(avgDuration) : "-"} sub="De l'enlèvement à la livraison" />
+        <StatCard icon={Wallet} label="À payer au chauffeur" value={`${eur(payMonth)}`} sub={`Ce mois-ci · ${eur(payTotal)} en tout · reste ${eur(marginMonth)} HT à la société ce mois-ci`} accent />
       </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)] [&>*]:min-w-0">
@@ -249,7 +268,7 @@ export default function AdminDriverDetailPage() {
           {active.length > 0 && (
             <Card title="Sur son application maintenant" sub={`${active.length} course${active.length > 1 ? "s" : ""} en cours.`}>
               {active.map((o) => (
-                <CourseRow key={o.id} o={o} client={clientOf(o)} href={courseHref(o)} />
+                <CourseRow key={o.id} o={o} client={clientOf(o)} href={courseHref(o)} onSavePay={saveDriverPay} />
               ))}
             </Card>
           )}
@@ -276,7 +295,7 @@ export default function AdminDriverDetailPage() {
           >
             {history.length === 0 && <div className="p-6 text-center text-[13px] font-medium text-muted">Aucune course sur cette période.</div>}
             {history.map((o) => (
-              <CourseRow key={o.id} o={o} client={clientOf(o)} href={courseHref(o)} />
+              <CourseRow key={o.id} o={o} client={clientOf(o)} href={courseHref(o)} onSavePay={saveDriverPay} />
             ))}
           </Card>
 
@@ -369,8 +388,18 @@ export default function AdminDriverDetailPage() {
   );
 }
 
-function CourseRow({ o, client, href }: { o: OrderRow; client: string; href: string }) {
+function CourseRow({ o, client, href, onSavePay }: { o: OrderRow; client: string; href: string; onSavePay: (id: string, value: number | null) => Promise<boolean> }) {
   const price = priceOf(o);
+  const pay = payOf(o);
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState("");
+  const [saving, setSaving] = useState(false);
+  const save = async (value: number | null) => {
+    setSaving(true);
+    const ok = await onSavePay(o.id, value);
+    setSaving(false);
+    if (ok) setEditing(false);
+  };
   const isDelivered = DELIVERED.includes(o.status);
   const isCancelled = CANCELLED.includes(o.status);
   return (
@@ -403,6 +432,51 @@ function CourseRow({ o, client, href }: { o: OrderRow; client: string; href: str
           <span className="text-[14px] font-bold text-ink">
             {eur(price)} TTC <span className="text-[11px] font-medium text-muted">· {eur(htOf(price))} HT</span>
           </span>
+        )}
+        {price > 0 && !isCancelled && !editing && (
+          <div className="flex flex-col items-end gap-0.5 sm:mt-1">
+            <button
+              onClick={() => {
+                setDraft(pay.amount.toFixed(2).replace(".", ","));
+                setEditing(true);
+              }}
+              className="flex items-center gap-1.5 rounded-lg bg-accent/10 px-2.5 py-1 text-[12.5px] font-bold text-accent-dark hover:bg-accent/15"
+              title="Changer le montant du chauffeur"
+            >
+              Chauffeur : {eur(pay.amount)} <Pencil size={12} />
+            </button>
+            <span className="text-[11px] font-medium text-muted">
+              {pay.manual ? "Montant fixé à la main" : `${Math.round(DRIVER_SHARE * 100)} % du HT, min. ${DRIVER_MIN_PAY} €`} · reste {eur(htOf(price) - pay.amount)} HT à la société
+            </span>
+          </div>
+        )}
+        {editing && (
+          <form
+            className="flex flex-wrap items-center justify-end gap-1.5 sm:mt-1"
+            onSubmit={(e) => {
+              e.preventDefault();
+              const v = Number(draft.replace(",", ".").replace(/[^\d.]/g, ""));
+              if (!Number.isFinite(v) || v < 0 || draft.trim() === "") return;
+              save(Math.round(v * 100) / 100);
+            }}
+          >
+            <input
+              autoFocus
+              inputMode="decimal"
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+              className="w-20 rounded-lg border border-line px-2 py-1 text-right text-[13px] font-bold text-ink"
+              aria-label="Montant du chauffeur en euros"
+            />
+            <span className="text-[13px] font-bold text-ink">€</span>
+            <button type="submit" disabled={saving} className="rounded-lg bg-accent px-2.5 py-1 text-[12px] font-bold text-white disabled:opacity-60">OK</button>
+            {pay.manual && (
+              <button type="button" disabled={saving} onClick={() => save(null)} className="rounded-lg border border-line px-2.5 py-1 text-[12px] font-bold text-muted">
+                Remettre {Math.round(DRIVER_SHARE * 100)} %
+              </button>
+            )}
+            <button type="button" onClick={() => setEditing(false)} className="px-1 text-[12px] font-bold text-muted">Annuler</button>
+          </form>
         )}
       </div>
     </div>
