@@ -7,7 +7,7 @@ import { createClient } from "@/lib/supabase/client";
 import { htOf, normalizeOrderPriceTTC } from "@/lib/price-display";
 import { AdminPage, ErrorState, LoadingState } from "@/components/dashboard/ui";
 import { AlertTriangle, CheckCircle2, Euro, Eye, EyeOff, Pencil, Phone, Truck, Wallet } from "lucide-react";
-import { DRIVER_MIN_PAY, DRIVER_SHARE, driverPayOf } from "@/lib/driver-pay";
+import { DRIVER_MIN_PAY, DRIVER_SHARE, companyNet, driverPayOf } from "@/lib/driver-pay";
 
 /**
  * Fiche chauffeur (admin) : profil, courses en cours, historique des courses, navettes, incidents signalés.
@@ -191,8 +191,8 @@ export default function AdminDriverDetailPage() {
   const revenueMonth = deliveredThisMonth.reduce((s, o) => s + priceOf(o), 0);
   const payTotal = delivered.reduce((s, o) => s + payOf(o).amount, 0);
   const payMonth = deliveredThisMonth.reduce((s, o) => s + payOf(o).amount, 0);
-  // Ce qui reste à la société sur les courses livrées : prix HT moins la part du chauffeur.
-  const marginMonth = deliveredThisMonth.reduce((s, o) => s + htOf(priceOf(o)) - payOf(o).amount, 0);
+  // Ce qui reste vraiment à la société ce mois-ci (après chauffeur, Stripe et impôt sur les sociétés).
+  const marginMonth = deliveredThisMonth.reduce((s, o) => s + companyNet(priceOf(o), payOf(o).amount), 0);
 
   // Montant du chauffeur fixé à la main sur une course (vide = règle 35 %, minimum 10 €).
   const saveDriverPay = async (orderId: string, value: number | null) => {
@@ -260,7 +260,7 @@ export default function AdminDriverDetailPage() {
         <StatCard icon={CheckCircle2} label="Courses livrées" value={String(delivered.length)} sub={`${deliveredThisMonth.length} ce mois-ci${avgDuration != null ? ` · ${durationLabel(avgDuration)} en moyenne` : ""}`} />
         <StatCard icon={Euro} label="CA des courses" value={`${eur(revenue)} TTC`} sub={`${eur(revenueMonth)} TTC ce mois-ci`} />
         <StatCard icon={Truck} label="En cours" value={String(active.length)} sub={lastDelivery ? `Dernière livraison le ${dateTime(lastDelivery)}` : "Aucune livraison"} accent={active.length > 0} />
-        <StatCard icon={Wallet} label="À payer au chauffeur" value={`${eur(payMonth)}`} sub={`Ce mois-ci · ${eur(payTotal)} en tout · reste ${eur(marginMonth)} HT à la société ce mois-ci`} accent />
+        <StatCard icon={Wallet} label="À payer au chauffeur" value={`${eur(payMonth)}`} sub={`Ce mois-ci · ${eur(payTotal)} en tout · il reste ≈ ${eur(marginMonth)} à la société ce mois-ci`} accent />
       </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)] [&>*]:min-w-0">
@@ -446,7 +446,7 @@ function CourseRow({ o, client, href, onSavePay }: { o: OrderRow; client: string
               Chauffeur : {eur(pay.amount)} <Pencil size={12} />
             </button>
             <span className="text-[11px] font-medium text-muted">
-              {pay.manual ? "Montant fixé à la main" : `${Math.round(DRIVER_SHARE * 100)} % du HT, min. ${DRIVER_MIN_PAY} €`} · reste {eur(htOf(price) - pay.amount)} HT à la société
+              {pay.manual ? "Montant fixé à la main" : `${Math.round(DRIVER_SHARE * 100)} % du HT, min. ${DRIVER_MIN_PAY} €`} · il reste ≈ {eur(companyNet(price, pay.amount))} à la société
             </span>
           </div>
         )}

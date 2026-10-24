@@ -19,3 +19,18 @@ export function driverPayOf(priceTTC: number, saved: number | string | null | un
   if (saved !== null && saved !== undefined && saved !== "") return { amount: Number(saved), manual: true };
   return { amount: defaultDriverPay(priceTTC), manual: false };
 }
+
+/** Estimation des frais Stripe d'un paiement par carte : 1,5 % + 0,25 €. */
+export const stripeFeeEstimate = (priceTTC: number) => (priceTTC > 0 ? round2(priceTTC * 0.015 + 0.25) : 0);
+
+/** Impôt sur les sociétés, taux réduit des PME (15 %). */
+export const CORPORATE_TAX = 0.15;
+
+/**
+ * Ce qui reste vraiment à la société sur une course (estimation) : prix HT, moins la part du chauffeur,
+ * moins les frais Stripe, moins l'impôt sur les sociétés. Pas d'URSSAF : la SAS ne verse pas de salaire.
+ */
+export function companyNet(priceTTC: number, driverPay: number): number {
+  const beforeTax = priceTTC / 1.2 - driverPay - stripeFeeEstimate(priceTTC);
+  return round2(beforeTax > 0 ? beforeTax * (1 - CORPORATE_TAX) : beforeTax);
+}
