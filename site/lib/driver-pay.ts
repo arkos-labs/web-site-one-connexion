@@ -31,6 +31,16 @@ export const CORPORATE_TAX = 0.15;
  * moins les frais Stripe, moins l'impôt sur les sociétés. Pas d'URSSAF : la SAS ne verse pas de salaire.
  */
 export function companyNet(priceTTC: number, driverPay: number): number {
-  const beforeTax = priceTTC / 1.2 - driverPay - stripeFeeEstimate(priceTTC);
-  return round2(beforeTax > 0 ? beforeTax * (1 - CORPORATE_TAX) : beforeTax);
+  return courseBreakdown(priceTTC, driverPay).net;
+}
+
+/** Détail d'une course : où part le prix payé par le client, et ce qui reste à la société. */
+export function courseBreakdown(priceTTC: number, driverPay: number) {
+  const ht = priceTTC / 1.2;
+  const vat = round2(priceTTC - ht);
+  const stripe = stripeFeeEstimate(priceTTC);
+  const beforeTax = ht - driverPay - stripe;
+  const tax = round2(beforeTax > 0 ? beforeTax * CORPORATE_TAX : 0);
+  const net = round2(beforeTax - tax);
+  return { vat, driver: round2(driverPay), stripe, tax, fees: round2(vat + stripe + tax), net };
 }
