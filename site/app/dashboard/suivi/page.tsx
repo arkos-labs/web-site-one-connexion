@@ -24,6 +24,7 @@ const statusMeta = (status: string): { tone: Tone; label: string } => {
 };
 
 import { htOf, normalizeOrderPriceTTC } from "@/lib/price-display";
+import { CLIENT_VISIBLE_ORDERS } from "@/lib/admin-order-filter";
 
 const ANOMALY_STEP: Record<Anomaly["step"], string> = { enlevement: "Enlèvement", livraison: "Livraison", general: "Général" };
 const eur = (n: number) => `${n.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`;
@@ -54,7 +55,8 @@ export default function SuiviPage() {
           supabase
             .from("orders")
             .select("*")
-            .eq("user_id", user.id),
+            .eq("user_id", user.id)
+            .or(CLIENT_VISIBLE_ORDERS),
           supabase
             .from("navettes")
             .select("*")

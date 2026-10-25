@@ -8,6 +8,7 @@ import { PHONE_TEL } from "@/lib/site-content";
 import { DASHBOARD_NAV_ITEMS, isProAccount } from "@/lib/dashboard-nav";
 import { createClient } from "@/lib/supabase/client";
 import type { User } from "@supabase/supabase-js";
+import { CLIENT_VISIBLE_ORDERS } from "@/lib/admin-order-filter";
 
 export default function DashboardLayout({
   children,
@@ -34,6 +35,7 @@ export default function DashboardLayout({
       .from("orders")
       .select("id", { count: "exact", head: true })
       .eq("user_id", authUser.id)
+      .or(CLIENT_VISIBLE_ORDERS)
       .gte("created_at", startOfMonth.toISOString())
       .then(({ count }: { count: number | null }) => setOrdersThisMonth(count ?? 0));
 

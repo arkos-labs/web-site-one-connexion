@@ -4,6 +4,7 @@ import React, { Suspense, useCallback, useEffect, useMemo, useState } from "reac
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { ADMIN_VISIBLE_ORDERS } from "@/lib/admin-order-filter";
 import { natureLabel } from "@/lib/order-nature";
 import { htOf, normalizeOrderPriceTTC } from "@/lib/price-display";
 import { AdminPage } from "@/components/dashboard/ui";
@@ -158,6 +159,7 @@ function AdminCoursesPageInner() {
       supabase
         .from("orders")
         .select("id, pickup_address, dropoff_address, status, driver_id, tracking_code, price_estimate, created_at, user_id, stops, point_progress, delai, format, nature, nature_detail, contact_name, contact_phone, driver_accepted_at, picked_up_at, delivered_at, delivery_recipient, delivery_department, delivery_comment, delivery_photo_url, client_type, source, billing_status")
+        .or(ADMIN_VISIBLE_ORDERS)
         .neq("status", "annulee")
         .order("created_at", { ascending: false }),
       supabase
@@ -522,7 +524,7 @@ function AdminCoursesPageInner() {
                       )}
                       {c.source && (
                         <span className="rounded-full bg-gray-100 px-2 py-0.5 text-[11px] font-medium text-gray-600">
-                          {c.source === 'page_publique' ? 'Page publique' : c.source === 'admin' ? 'Admin' : c.source === 'dashboard' ? 'Espace Pro' : c.source}
+                          {c.source === 'page_publique' ? 'Page publique' : c.source === 'admin' ? 'Admin' : c.source === 'dashboard' ? 'Espace Pro' : c.source === 'application' ? 'Appli' : c.source}
                         </span>
                       )}
                       <span className={`rounded-full px-2 py-0.5 text-[11px] font-bold uppercase ${c.type === "navette" ? "bg-blue-50 text-blue-700" : "bg-slate-100 text-slate-700"}`}>

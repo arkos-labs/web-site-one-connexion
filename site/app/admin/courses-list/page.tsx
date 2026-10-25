@@ -3,6 +3,7 @@
 import React, { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { ADMIN_VISIBLE_ORDERS } from "@/lib/admin-order-filter";
 import { htOf, normalizeOrderPriceTTC } from "@/lib/price-display";
 import { AdminPage } from "@/components/dashboard/ui";
 import { useQueryParam } from "@/lib/use-query-state";
@@ -75,6 +76,7 @@ function CoursesListInner() {
     const { data: ordersData } = await supabase
       .from("orders")
       .select("id, tracking_code, pickup_address, dropoff_address, status, price_estimate, created_at, user_id, driver_id, format, delai, contact_name, contact_phone, stops, point_progress, billing_status, source")
+      .or(ADMIN_VISIBLE_ORDERS)
       .order("created_at", { ascending: false });
 
     const rows = (ordersData ?? []) as Order[];
