@@ -8,7 +8,8 @@ import { NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { z } from "zod";
 import { SYSTEM_PROMPT } from "@/lib/chatbot/knowledge";
-import { calculatePrice, isServedAddress, type ServiceLevel } from "@/lib/pricing";
+import { isServedAddress, type ServiceLevel } from "@/lib/pricing";
+import { priceRoute } from "@/lib/route-distance";
 import { EMAIL, PHONE_DISPLAY } from "@/lib/site-content";
 
 const MODEL = "claude-opus-5-5";
@@ -72,7 +73,7 @@ const tools: Anthropic.Beta.BetaTool[] = [
   },
 ];
 
-function estimerPrix(input: unknown): string {
+async function estimerPrix(input: unknown): Promise<string> {
   const parsed = z
     .object({ depart: z.string().max(200), arrivee: z.string().max(200), delai: z.enum(["normal", "urgent", "super"]) })
     .safeParse(input);
@@ -82,7 +83,7 @@ function estimerPrix(input: unknown): string {
   if (unserved.length) {
     return `Adresse non reconnue ou hors Île-de-France : ${unserved.join(", ")}. Demander la ville ou le code postal ; hors Île-de-France, la course n'est pas desservie.`;
   }
-  const prix = calculatePrice(depart, arrivee, DELAIS[delai]);
+  const { total: prix } = await priceRoute(depart, [arrivee], DELAIS[delai]);
   return `Prix estimé : ${prix.toFixed(2).replace(".", ",")} € TTC (délai ${delai}).`;
 }
 
@@ -120,13 +121,15 @@ export async function POST(req: Request) {
 
       if (response.stop_reason === "tool_use") {
         messages.push({ role: "assistant", content: response.content });
-        const results: Anthropic.Beta.BetaToolResultBlockParam[] = response.content
-          .filter((b): b is Anthropic.Beta.BetaToolUseBlock => b.type === "tool_use")
-          .map((b) => ({
-            type: "tool_result",
-            tool_use_id: b.id,
-            content: b.name === "estimer_prix" ? estimerPrix(b.input) : "Outil inconnu.",
-          }));
+        const results: Anthropic.Beta.BetaToolResultBlockParam[] = await Promise.all(
+          response.content
+            .filter((b): b is Anthropic.Beta.BetaToolUseBlock => b.type === "tool_use")
+            .map(async (b) => ({
+              type: "tool_result" as const,
+              tool_use_id: b.id,
+              content: b.name === "estimer_prix" ? await estimerPrix(b.input) : "Outil inconnu.",
+            })),
+        );
         messages.push({ role: "user", content: results });
         continue;
       }

@@ -5,7 +5,7 @@
  * car la commande et la facturation diffèrent (pro : à 30 jours possible ; particulier : carte à la commande).
  */
 import { PHONE_DISPLAY } from "@/lib/site-content";
-import { gridPrice } from "@/lib/pricing";
+import { gridPrice, pcKmPrice, PC_INCLUDED_KM } from "@/lib/pricing";
 
 export const eur = (n: number) => `${n.toFixed(2).replace(".", ",").replace(",00", "")} €`;
 
@@ -70,9 +70,9 @@ export const STEPS: Record<StepId, { text: string; choices: Choice[] }> = {
   },
   prix: {
     text:
-      `Prix TTC selon la zone la plus éloignée du trajet et le délai :\n` +
+      `Prix TTC selon le trajet et le délai :\n` +
       `• Paris : ${eur(P.paris.normal)} (Normal, 3 h), ${eur(P.paris.urgent)} (Urgent, 1 h 30), ${eur(P.paris.super)} (Super, 1 h)\n` +
-      `• Petite couronne (92, 93, 94) : ${eur(P.pc.normal)}, ${eur(P.pc.urgent)}, ${eur(P.pc.super)}\n` +
+      `• Petite couronne (92, 93, 94) : mêmes prix jusqu'à ${PC_INCLUDED_KM} km de route, puis ${eur(pcKmPrice("standard"))} par km en Normal (${eur(pcKmPrice("urgent"))} en Urgent, ${eur(pcKmPrice("flash"))} en Super). Exemple : 15 km en Normal = ${eur(P.paris.normal + 7 * pcKmPrice("standard"))}.\n` +
       `• Grande couronne (77, 78, 91, 95) : selon la distance depuis Paris, dès ${eur(P.gcFrom)} en Normal.\n` +
       `Le prix exact s'affiche dès que vous saisissez les adresses dans le formulaire de commande.`,
     choices: [ORDER, HOW, MENU],
