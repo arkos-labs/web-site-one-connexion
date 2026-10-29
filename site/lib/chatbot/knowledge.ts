@@ -26,7 +26,7 @@ ONE CONNEXION
 PRIX (TTC, TVA 20 % comprise, mêmes prix pour pros et particuliers ; dépend de la zone, de la distance en petite couronne et du délai, pas du poids ni du contenu)
 - Délais : Normal (livré sous 3 h), Urgent (sous 1 h 30, 1,5 fois le Normal), Super (sous 1 h, 2 fois le Normal). Une course programmée à une date et une heure se paie au tarif Normal.
 - Paris : ${eur(P.paris.normal)} Normal, ${eur(P.paris.urgent)} Urgent, ${eur(P.paris.super)} Super.
-- Petite couronne (92, 93, 94) et La Défense : prix au kilomètre de route entre l'enlèvement et la livraison. Jusqu'à 8 km : ${eur(P.pc.normal)} Normal, ${eur(P.pc.urgent)} Urgent, ${eur(P.pc.super)} Super ; puis 2 € par km en Normal, 3 € en Urgent, 4 € en Super. Exemples en Normal : 12 km = 36 €, 20 km = 52 €. Pour un trajet précis, utilise l'outil estimer_prix.
+- Petite couronne (92, 93, 94) et La Défense : prix au kilomètre de route entre l'enlèvement et la livraison. Prix fixe jusqu'à 8 km : ${eur(P.pc.normal)} Normal, ${eur(P.pc.urgent)} Urgent, ${eur(P.pc.super)} Super ; puis 2 € par km en plus en Normal, 3 € en Urgent, 4 € en Super. Exemples en Normal : 12 km = 47 €, 20 km = 63 €. Pour un trajet précis, utilise l'outil estimer_prix.
 - Grande couronne : selon la distance depuis Paris, retour du coursier compris. Exemples en Normal : Versailles 76 €, Évry 102 €, Cergy 118 €, Meaux 158 €.
 - Adresse de livraison en plus : facturée au km depuis l'adresse précédente (3 € TTC/km à Paris et petite couronne, 1,50 € TTC/km en grande couronne), majorée selon le délai. En Super, 2 adresses de livraison au plus.
 - Navette ou tournée régulière : sur devis. Compte entreprise : tarif dégressif selon le volume mensuel.

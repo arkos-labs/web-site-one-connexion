@@ -72,7 +72,7 @@ export const STEPS: Record<StepId, { text: string; choices: Choice[] }> = {
     text:
       `Prix TTC selon le trajet et le délai :\n` +
       `• Paris : ${eur(P.paris.normal)} (Normal, 3 h), ${eur(P.paris.urgent)} (Urgent, 1 h 30), ${eur(P.paris.super)} (Super, 1 h)\n` +
-      `• Petite couronne (92, 93, 94) : mêmes prix jusqu'à ${PC_INCLUDED_KM} km de route, puis ${eur(pcKmPrice("standard"))} par km en Normal (${eur(pcKmPrice("urgent"))} en Urgent, ${eur(pcKmPrice("flash"))} en Super). Exemple : 15 km en Normal = ${eur(P.paris.normal + 7 * pcKmPrice("standard"))}.\n` +
+      `• Petite couronne (92, 93, 94) : ${eur(P.pc.normal)} (Normal), ${eur(P.pc.urgent)} (Urgent), ${eur(P.pc.super)} (Super) jusqu'à ${PC_INCLUDED_KM} km de route, puis ${eur(pcKmPrice("standard"))}, ${eur(pcKmPrice("urgent"))} ou ${eur(pcKmPrice("flash"))} par km en plus. Exemple : 15 km en Normal = ${eur(P.pc.normal + 7 * pcKmPrice("standard"))}.\n` +
       `• Grande couronne (77, 78, 91, 95) : selon la distance depuis Paris, dès ${eur(P.gcFrom)} en Normal.\n` +
       `Le prix exact s'affiche dès que vous saisissez les adresses dans le formulaire de commande.`,
     choices: [ORDER, HOW, MENU],
