@@ -346,6 +346,110 @@ export const GUIDES: Guide[] = [
     service: { href: "/services/transport-medical", label: "Transport médical" },
     published: "2026-10-23",
   },
+  {
+    slug: "coursier-paris-banlieue",
+    title: "Coursier entre Paris et la banlieue : zones, délais et prix",
+    seoTitle: "Coursier Paris banlieue : zones et prix",
+    description:
+      "Petite couronne, grande couronne, trajets de banlieue à banlieue : comment est calculé le prix d'un coursier entre Paris et la banlieue, quels délais choisir et comment préparer la course.",
+    intro:
+      "Envoyer un dossier de Paris à Nanterre, un colis de Montreuil à Créteil ou une pièce de Boulogne à Versailles : dès que la course sort de Paris, le prix et le délai ne se calculent plus de la même façon. Ce guide explique comment la banlieue est découpée, ce qui fait le prix d'une course et ce qu'il faut prévoir pour qu'elle arrive à l'heure.",
+    sections: [
+      {
+        heading: "Petite couronne et grande couronne : deux façons de compter",
+        paragraphs: [
+          "En Île-de-France, la banlieue se divise en deux zones. La petite couronne regroupe les trois départements qui touchent Paris : les Hauts-de-Seine (92), la Seine-Saint-Denis (93) et le Val-de-Marne (94). La grande couronne regroupe les quatre départements plus éloignés : la Seine-et-Marne (77), les Yvelines (78), l'Essonne (91) et le Val-d'Oise (95).",
+          "Pour une course, c'est la zone la plus éloignée du trajet qui compte. Un aller de Paris 8e à Levallois-Perret est une course de petite couronne. Un trajet de Saint-Denis à Pontoise est une course de grande couronne, parce que l'une des deux adresses est dans le Val-d'Oise.",
+          "La zone dépend du code postal ou du nom de la commune. Une adresse complète, avec son code postal, donne donc le bon prix dès la saisie.",
+        ],
+      },
+      {
+        heading: "Le prix d'une course en petite couronne",
+        paragraphs: [
+          "En petite couronne, le prix suit la distance par la route entre l'adresse d'enlèvement et l'adresse de livraison. Un prix fixe couvre les 8 premiers kilomètres, puis chaque kilomètre en plus est facturé. Par exemple, une course de 15 km coûte 53 € TTC en délai Normal.",
+        ],
+        table: {
+          head: ["Délai", "Jusqu'à 8 km", "Chaque km en plus"],
+          rows: [
+            ["Normal 3 h", "39 €", "2 €"],
+            ["Urgent 1 h 30", "58,50 €", "3 €"],
+            ["Super 1 h", "78 €", "4 €"],
+          ],
+          note: "Tarifs TTC par course, TVA 20 % comprise. Le prix exact s'affiche avant de valider la commande.",
+        },
+      },
+      {
+        heading: "Le prix d'une course en grande couronne",
+        paragraphs: [
+          "En grande couronne, le calcul change. Le coursier part de Paris, et le prix suit la distance entre Paris et l'adresse la plus éloignée du trajet. Il comprend le retour du coursier vers Paris, qui se fait le plus souvent à vide. C'est pour cette raison qu'une course vers Meaux ou Rambouillet coûte nettement plus qu'une course vers une commune proche du périphérique.",
+          "En délai Normal, une course en grande couronne démarre à 59 € TTC. L'Urgent coûte 1,5 fois le prix Normal, soit à partir de 88,50 € TTC, et le Super 2 fois, soit à partir de 118 € TTC. Le prix de votre trajet s'affiche dès que vous saisissez les deux adresses.",
+        ],
+      },
+      {
+        heading: "De banlieue à banlieue, sans passer par Paris",
+        paragraphs: [
+          "Beaucoup de courses ne touchent pas Paris : un document entre deux agences, un colis entre un entrepôt et un client, une pièce entre deux sites industriels. Le coursier va directement de l'adresse d'enlèvement à l'adresse de livraison, sans arrêt intermédiaire.",
+          "Le prix suit les mêmes règles. Entre deux villes de petite couronne, par exemple de Montreuil à Créteil, il dépend des kilomètres entre les deux adresses. Dès qu'une des deux adresses est en grande couronne, il suit la distance depuis Paris de l'adresse la plus éloignée.",
+          "Si la course doit desservir plusieurs destinataires, vous pouvez ajouter des adresses de livraison. Chaque adresse en plus se paie au kilomètre depuis l'adresse précédente, sans forfait par arrêt : 3 € TTC par km à Paris et en petite couronne, 1,50 € TTC par km en grande couronne, en délai Normal. En Super, une course compte au plus deux adresses de livraison.",
+        ],
+      },
+      {
+        heading: "Choisir le bon délai",
+        paragraphs: [
+          "Le délai se choisit selon l'heure à laquelle le colis doit vraiment être arrivé, pas selon la distance. Trois délais sont proposés, du lundi au samedi, de 9 h à 19 h. Le service est fermé le dimanche et les jours fériés.",
+        ],
+        list: [
+          "Normal, 3 h : pour un envoi à livrer dans la demi-journée, comme un contrat à signer l'après-midi ou un réassort de boutique.",
+          "Urgent, 1 h 30 : pour un document attendu à une réunion ou une pièce qui manque à un chantier.",
+          "Super, 1 h : pour une remise qui ne peut pas attendre, par exemple une pièce qui bloque une machine.",
+          "Course programmée : pour un envoi prévu à l'avance, avec une date et une heure choisies dans le formulaire, au tarif Normal.",
+        ],
+      },
+      {
+        heading: "Préparer la course pour éviter les retards",
+        paragraphs: [
+          "Hors de Paris, les retards viennent rarement de la route. Ils viennent d'une adresse difficile à trouver ou d'un destinataire absent. Pour les trajets vers la banlieue, les rocades, La Défense ou les aéroports, nous utilisons des motos routières, plus adaptées que les scooters aux grands axes. Le colis voyage dans un top-case verrouillé, jusqu'à 18 kg.",
+          "Avant de commander, vérifiez ces points :",
+        ],
+        list: [
+          "L'adresse complète avec le code postal, le bâtiment et l'étage, surtout dans les zones d'activité et les grands ensembles de bureaux.",
+          "Le nom du destinataire et un numéro joignable côté enlèvement comme côté livraison.",
+          "Les codes d'accès, l'entrée à utiliser et les horaires de réception, si le site ferme à l'heure du déjeuner.",
+          "Le poids et la taille du colis, pour vérifier qu'il tient dans le top-case.",
+          "Une référence interne, pour retrouver la course sur votre facture.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "Combien coûte un coursier entre Paris et la petite couronne ?",
+        answer:
+          "En délai Normal, 39 € TTC jusqu'à 8 km entre l'enlèvement et la livraison, puis 2 € TTC par km en plus. Une course de 15 km coûte 53 € TTC. En Urgent, c'est 58,50 € puis 3 € par km, et en Super 78 € puis 4 € par km.",
+      },
+      {
+        question: "Faites-vous des courses de banlieue à banlieue ?",
+        answer:
+          "Oui. Le coursier va directement d'une ville à l'autre, sans passer par Paris. En petite couronne, le prix suit les kilomètres entre les deux adresses. Si l'une des adresses est en grande couronne, le prix suit la distance depuis Paris de l'adresse la plus éloignée.",
+      },
+      {
+        question: "Livrez-vous en dehors de l'Île-de-France ?",
+        answer:
+          "Non, nous livrons uniquement à Paris et en Île-de-France. Les aéroports de Roissy et d'Orly sont desservis au tarif de leur zone.",
+      },
+      {
+        question: "Peut-on commander une course le dimanche ?",
+        answer:
+          "Non. Le service fonctionne du lundi au samedi, de 9 h à 19 h. Il est fermé le dimanche et les jours fériés. Pour un envoi prévu à l'avance, vous pouvez programmer la course à la date et à l'heure de votre choix.",
+      },
+      {
+        question: "Comment ouvrir un compte pour les courses de l'entreprise ?",
+        answer:
+          "L'ouverture du compte entreprise est immédiate. Il permet de commander en ligne, de suivre chaque course et de régler les factures sous 30 jours.",
+      },
+    ],
+    service: { href: "/services/coursier-express-paris", label: "Coursier express Paris" },
+    published: "2026-10-29",
+  },
 ];
 
 export const GUIDE_SLUGS = GUIDES.map((g) => g.slug);
