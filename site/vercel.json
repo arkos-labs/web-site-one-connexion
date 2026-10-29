@@ -18,6 +18,10 @@
     },
     {
       "path": "/api/cron/prospects",
+      "schedule": "0 17 * * 0"
+    },
+    {
+      "path": "/api/cron/prospects-send",
       "schedule": "0 7 * * 1"
     }
   ]

@@ -20,6 +20,12 @@ type Prospect = {
   notes: string | null;
   batch_week: string;
   contacted_at: string | null;
+  website: string | null;
+  email: string | null;
+  mail_status: "aucun" | "brouillon" | "envoye" | "pas_d_email";
+  mail_subject: string | null;
+  mail_body: string | null;
+  sent_at: string | null;
 };
 
 const STATUSES: { key: Status | "all"; label: string }[] = [
@@ -47,7 +53,7 @@ export default function AdminProspectionPage() {
     let live = true;
     supabase
       .from("prospect_targets")
-      .select("id, name, city, postcode, department, sector, siret, need, status, notes, batch_week, contacted_at")
+      .select("id, name, city, postcode, department, sector, siret, need, status, notes, batch_week, contacted_at, website, email, mail_status, mail_subject, mail_body, sent_at")
       .order("batch_week", { ascending: false })
       .order("name")
       .limit(1000)
@@ -155,6 +161,30 @@ export default function AdminProspectionPage() {
                     {p.postcode} {p.city} · {sectorLabel(p.sector)} · SIRET {p.siret}
                   </div>
                   {p.need && <p className="mt-2 text-sm text-ink">{p.need}</p>}
+                  <div className="mt-2 flex flex-wrap items-center gap-2 text-xs">
+                    {p.website && (
+                      <a href={p.website} target="_blank" rel="noreferrer" className="font-semibold text-accent-dark underline">
+                        Site
+                      </a>
+                    )}
+                    <span className="text-muted">{p.email ?? "Adresse générique non trouvée"}</span>
+                    <span className={`rounded-full px-2 py-0.5 font-bold ${
+                      p.mail_status === "envoye" ? "bg-green-100 text-green-800"
+                      : p.mail_status === "brouillon" ? "bg-amber-100 text-amber-800"
+                      : "bg-gray-100 text-gray-600"}`}>
+                      {p.mail_status === "envoye" ? `Envoyé le ${dateFr(p.sent_at)}`
+                        : p.mail_status === "brouillon" ? "Prêt pour lundi 9 h"
+                        : p.mail_status === "pas_d_email" ? "Sans adresse : à traiter à la main"
+                        : "Non préparé"}
+                    </span>
+                  </div>
+                  {p.mail_status === "brouillon" && p.mail_body && (
+                    <details className="mt-2 text-sm">
+                      <summary className="cursor-pointer font-semibold text-ink">Voir le mail prévu</summary>
+                      <p className="mt-2 font-semibold">Objet : {p.mail_subject}</p>
+                      <p className="mt-1 whitespace-pre-line text-muted">{p.mail_body}</p>
+                    </details>
+                  )}
                   <div className="mt-2 text-xs text-muted">
                     Liste du {dateFr(p.batch_week)}
                     {p.contacted_at && <> · Démarché le {dateFr(p.contacted_at)}</>}
