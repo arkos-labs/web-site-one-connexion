@@ -5,8 +5,7 @@
  */
 import { EMAIL, PHONE_DISPLAY, SITE_URL } from "@/lib/site-content";
 
-/** Signature en bas du message : Keisha (propositions commerciales et administratif). */
-export const SIGNATURE_NAME = "Keisha";
+/** Signature : Keisha (commercial et administratif), Nicolas (commandes et dispatch). */
 export const KEISHA_PHONE = "06 73 53 50 83";
 
 const ORDER_URL = `${SITE_URL}/#commander`;
@@ -30,10 +29,9 @@ export function buildProspectMail(body: string, contact?: string): { text: strin
 Commander en 2 minutes : ${ORDER_URL}
 Créer un compte entreprise : ${ACCOUNT_URL}
 
-${SIGNATURE_NAME}
-ONE CONNEXION
-Commandes et urgences (dispatch) : ${PHONE_DISPLAY}
-Propositions commerciales et administratif : Keisha · ${KEISHA_PHONE} · ${EMAIL}
+Keisha · Commercial et administratif · ${KEISHA_PHONE} · ${EMAIL}
+Nicolas · Commandes et dispatch · ${PHONE_DISPLAY}
+ONE CONNEXION · 5 Square Nungesser, 94160 Saint-Mandé
 
 —
 Vous recevez ce message car votre entreprise exerce une activité en lien avec nos services.
@@ -50,11 +48,9 @@ ${button(ORDER_URL, "Commander une course", true)}
 ${button(ACCOUNT_URL, "Créer un compte entreprise", false)}
 </td></tr>
 <tr><td style="padding:0 28px 28px 28px;font-size:14px;line-height:1.6;color:#4A4845;">
-<strong style="color:#0E0F10;">${esc(SIGNATURE_NAME)}</strong><br>
-ONE CONNEXION<br>
-Commandes et urgences (dispatch) : ${PHONE_DISPLAY}<br>
-Propositions commerciales et administratif : Keisha · ${KEISHA_PHONE} · <a href="mailto:${EMAIL}" style="color:#ed5518;">${EMAIL}</a><br>
-5 Square Nungesser, 94160 Saint-Mandé
+<strong style="color:#0E0F10;">Keisha</strong> · Commercial et administratif · ${KEISHA_PHONE} · <a href="mailto:${EMAIL}" style="color:#ed5518;">${EMAIL}</a><br>
+<strong style="color:#0E0F10;">Nicolas</strong> · Commandes et dispatch · ${PHONE_DISPLAY}<br>
+ONE CONNEXION · 5 Square Nungesser, 94160 Saint-Mandé
 </td></tr>
 <tr><td style="padding:16px 28px;border-top:1px solid #dfdcd6;font-size:12px;line-height:1.5;color:#8C8882;">
 Vous recevez ce message car votre entreprise exerce une activité en lien avec nos services.
