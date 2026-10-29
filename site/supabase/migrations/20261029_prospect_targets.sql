@@ -2,7 +2,7 @@
 -- Une entreprise (SIRET) n'apparaît qu'une fois : on sait ainsi qui a déjà été démarché.
 -- Lecture et modification réservées à l'admin (les écritures du cron passent par la clé de service).
 
-create table if not exists public.prospects (
+create table if not exists public.prospect_targets (
   id uuid primary key default gen_random_uuid(),
   siret text not null unique,
   siren text,
@@ -22,11 +22,11 @@ create table if not exists public.prospects (
   updated_at timestamptz not null default now()
 );
 
-create index if not exists prospects_status_idx on public.prospects (status);
-create index if not exists prospects_batch_idx on public.prospects (batch_week desc);
+create index if not exists prospect_targets_status_idx on public.prospect_targets (status);
+create index if not exists prospect_targets_batch_idx on public.prospect_targets (batch_week desc);
 
-alter table public.prospects enable row level security;
+alter table public.prospect_targets enable row level security;
 
-drop policy if exists "admin gère les prospects" on public.prospects;
-create policy "admin gère les prospects" on public.prospects
+drop policy if exists "admin gère les prospects" on public.prospect_targets;
+create policy "admin gère les prospects" on public.prospect_targets
   for all using (public.is_admin()) with check (public.is_admin());

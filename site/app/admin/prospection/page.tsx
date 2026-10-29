@@ -46,7 +46,7 @@ export default function AdminProspectionPage() {
   useEffect(() => {
     let live = true;
     supabase
-      .from("prospects")
+      .from("prospect_targets")
       .select("id, name, city, postcode, department, sector, siret, need, status, notes, batch_week, contacted_at")
       .order("batch_week", { ascending: false })
       .order("name")
@@ -64,7 +64,7 @@ export default function AdminProspectionPage() {
 
   async function update(id: string, patch: Partial<Prospect>) {
     setRows((rs) => rs.map((r) => (r.id === id ? { ...r, ...patch } : r)));
-    const { error } = await supabase.from("prospects").update({ ...patch, updated_at: new Date().toISOString() }).eq("id", id);
+    const { error } = await supabase.from("prospect_targets").update({ ...patch, updated_at: new Date().toISOString() }).eq("id", id);
     if (error) setError(error.message);
   }
 

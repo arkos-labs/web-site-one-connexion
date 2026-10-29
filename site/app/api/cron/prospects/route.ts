@@ -18,7 +18,7 @@ export async function GET(req: Request) {
 
   // Entreprises à exclure : déjà listées, ou déjà clientes (SIRET du compte ou de la fiche client).
   const [{ data: listed }, { data: clients }] = await Promise.all([
-    supabase.from("prospects").select("siret"),
+    supabase.from("prospect_targets").select("siret"),
     supabase.from("clients").select("siret").not("siret", "is", null),
   ]);
   const known = new Set([...(listed ?? []), ...(clients ?? [])].map((r) => String(r.siret)));
@@ -54,7 +54,7 @@ export async function GET(req: Request) {
   }
 
   if (rows.length) {
-    const { error } = await supabase.from("prospects").upsert(rows, { onConflict: "siret", ignoreDuplicates: true });
+    const { error } = await supabase.from("prospect_targets").upsert(rows, { onConflict: "siret", ignoreDuplicates: true });
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   }
   return NextResponse.json({ ok: true, week, added: rows.length });
