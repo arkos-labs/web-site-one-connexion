@@ -211,14 +211,11 @@ function MailForm({ prospect, onSent }: { prospect: Prospect; onSent: (to: strin
   const [body, setBody] = useState(
     `Bonjour,
 
-Nous sommes ONE CONNEXION, coursiers à deux-roues pour les entreprises de Paris et d'Île-de-France. ${prospect.need ?? ""}
+Une livraison urgente à faire à ${prospect.city ?? "Paris"} ? ${prospect.need ?? ""}
 
-Nos courses sont dédiées : enlèvement en moins de 45 minutes à Paris et en petite couronne, avec preuve de remise.
+Avec ONE CONNEXION, un coursier vient chercher votre envoi en moins de 45 minutes à Paris et en petite couronne, et le remet en main propre, avec preuve de remise.
 
-Si cela vous intéresse, répondez à ce message ou appelez le 06 66 02 67 07.
-
-Bien cordialement,
-L'équipe ONE CONNEXION`,
+Le prix est affiché avant de commander : 28 € TTC dans Paris, 39 € TTC en petite couronne (jusqu'à 8 km), commande en 2 minutes.`,
   );
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -260,7 +257,7 @@ L'équipe ONE CONNEXION`,
         className="w-full rounded-lg border border-line bg-white px-3 py-2 text-sm"
       />
       <p className="text-xs text-muted">
-        Une mention de désinscription (« répondez STOP ») est ajoutée automatiquement en bas du message.
+        Le bouton « Commander », le bouton « Créer un compte », la signature et la mention de désinscription sont ajoutés automatiquement.
       </p>
       {error && <p className="text-sm text-red-700">{error}</p>}
       <button

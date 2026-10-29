@@ -1,18 +1,11 @@
 import { NextResponse } from "next/server";
 import { requireAdmin, adminSupabase } from "@/lib/admin-auth";
 import { EMAIL } from "@/lib/site-content";
+import { buildProspectMail } from "@/lib/prospection/mail";
 
 // Envoi manuel, depuis le tableau de bord : l'admin relit et clique. Rien n'est envoyé automatiquement.
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-
-// Mention ajoutée à chaque message : identité, raison du contact, et moyen simple de ne plus être contacté.
-const FOOTER = `
-
-—
-Vous recevez ce message car votre entreprise exerce une activité en lien avec nos services.
-Pour ne plus recevoir nos messages, répondez « STOP » à cet e-mail.
-ONE CONNEXION · 5 Square Nungesser, 94160 Saint-Mandé`;
 
 export async function POST(req: Request) {
   const denied = await requireAdmin();
@@ -36,7 +29,7 @@ export async function POST(req: Request) {
       to: [to.trim()],
       reply_to: EMAIL,
       subject: subject.trim(),
-      text: body.trim() + FOOTER,
+      ...buildProspectMail(body),
     }),
   });
   if (!res.ok) {
