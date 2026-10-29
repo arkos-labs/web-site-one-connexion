@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react";
 import { X, MapPin, Loader2, User, Zap, Clock, Calendar } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import { calculatePrice, ServiceLevel } from "@/lib/pricing";
+import { ServiceLevel } from "@/lib/pricing";
+import { useRoutePrice } from "@/lib/use-route-price";
 import { AddressAutocomplete } from "@/components/AddressAutocomplete";
 import { notifyNewOrder } from "@/lib/notify-new-order";
 import { htOf } from "@/lib/price-display";
@@ -25,7 +26,6 @@ export function CreateOrderModal({ isOpen, onClose, onSuccess, profiles, drivers
   const [format, setFormat] = useState("doc");
   const [delai, setDelai] = useState<ServiceLevel>("standard");
   const [notes, setNotes] = useState("");
-  const [price, setPrice] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -40,13 +40,8 @@ export function CreateOrderModal({ isOpen, onClose, onSuccess, profiles, drivers
 
   const supabase = createClient();
 
-  useEffect(() => {
-    if (pickupAddress && dropoffAddress) {
-      setPrice(calculatePrice(pickupAddress, dropoffAddress, delai));
-    } else {
-      setPrice(null);
-    }
-  }, [pickupAddress, dropoffAddress, delai]);
+  // Même prix que le formulaire client (petite couronne : au km, distance par la route).
+  const price = useRoutePrice(pickupAddress, dropoffAddress, delai);
 
   if (!isOpen) return null;
 
@@ -109,7 +104,7 @@ export function CreateOrderModal({ isOpen, onClose, onSuccess, profiles, drivers
       if (onSuccess) onSuccess();
       onClose();
       // Reset
-      setClientId(""); setDriverId(""); setPickupAddress(""); setDropoffAddress(""); setNotes(""); setPrice(null);
+      setClientId(""); setDriverId(""); setPickupAddress(""); setDropoffAddress(""); setNotes("");
       setNewClientFirstName(""); setNewClientLastName(""); setNewClientEmail(""); setNewClientCompany(""); setNewClientSiret(""); setNewClientPhone(""); setNewClientType("pro");
     } catch (err: any) {
       setError(err.message);

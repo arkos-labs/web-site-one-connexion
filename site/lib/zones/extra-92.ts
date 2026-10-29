@@ -398,7 +398,7 @@ export const EXTRA_92: Record<string, ExtraZoneContent> = {
       "Pour Paris, la RD920 se charge aux heures de pointe : planifiez avec une marge.",
     ],
     faq: [
-      { q: "Livrez-vous à Cachan ou L'Haÿ-les-Roses depuis Bourg-la-Reine ?", a: "Oui, ces communes sont voisines et au tarif de la petite couronne." },
+      { q: "Livrez-vous à Cachan ou L'Haÿ-les-Roses depuis Bourg-la-Reine ?", a: "Oui, ces communes sont voisines : la course est courte, au prix de la petite couronne (28 € TTC jusqu’à 8 km)." },
       { q: "Peut-on prévoir des passages réguliers ?", a: "Oui, avec un compte entreprise, sur créneaux fixes." },
     ],
   },
