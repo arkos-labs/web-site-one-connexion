@@ -48,6 +48,9 @@ function fromOtherSite(req: Request): boolean {
 
 const FALLBACK = `Je ne peux pas répondre pour le moment. Appelez-nous au ${PHONE_DISPLAY} (lundi au samedi, 9 h - 19 h) ou écrivez à ${EMAIL}.`;
 
+/** Pas de réponse de l'IA : la fenêtre prend le relais (parcours guidé, rappel). */
+const fallback = () => NextResponse.json({ reply: FALLBACK, fallback: true });
+
 const DELAIS: Record<string, ServiceLevel> = { normal: "standard", urgent: "urgent", super: "flash" };
 
 const tools: Anthropic.Beta.BetaTool[] = [
@@ -94,7 +97,7 @@ export async function POST(req: Request) {
   const parsed = schema.safeParse(await req.json().catch(() => null));
   if (!parsed.success) return NextResponse.json({ error: "Message invalide." }, { status: 400 });
 
-  if (!process.env.ANTHROPIC_API_KEY) return NextResponse.json({ reply: FALLBACK });
+  if (!process.env.ANTHROPIC_API_KEY) return fallback();
 
   const client = new Anthropic();
   const messages: Anthropic.Beta.BetaMessageParam[] = parsed.data.messages.map((m) => ({ role: m.role, content: m.content }));
@@ -113,7 +116,7 @@ export async function POST(req: Request) {
         messages,
       });
 
-      if (response.stop_reason === "refusal") return NextResponse.json({ reply: FALLBACK });
+      if (response.stop_reason === "refusal") return fallback();
 
       if (response.stop_reason === "tool_use") {
         messages.push({ role: "assistant", content: response.content });
@@ -133,12 +136,12 @@ export async function POST(req: Request) {
         .map((b) => b.text)
         .join("\n")
         .trim();
-      return NextResponse.json({ reply: text || FALLBACK });
+      return text ? NextResponse.json({ reply: text }) : fallback();
     }
-    return NextResponse.json({ reply: FALLBACK });
+    return fallback();
   } catch (error) {
     if (error instanceof Anthropic.APIError) console.error("chat: API error", error.status, error.message);
     else console.error("chat: error", error);
-    return NextResponse.json({ reply: FALLBACK });
+    return fallback();
   }
 }
