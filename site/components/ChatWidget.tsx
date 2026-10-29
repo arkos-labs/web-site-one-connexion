@@ -22,7 +22,7 @@ const HIDDEN = /^\/(admin|telegram|commande)(\/|$)/;
 const MAX_LEN = 1000;
 const WELCOME: Msg = {
   role: "assistant",
-  content: "Bonjour ! Je suis l'assistant ONE CONNEXION. Choisissez une question ou écrivez la vôtre.",
+  content: "Bonjour ! Je suis l'assistant ONE CONNEXION. Comment puis-je vous aider aujourd'hui ? Écrivez votre question, ou choisissez une option ci-dessous.",
   choices: STEPS.menu.choices,
 };
 
@@ -87,6 +87,7 @@ export default function ChatWidget() {
     // « fallback » et on affiche le parcours guidé le plus proche.
     const local = matchStep(text);
     setLoading(true);
+    const started = Date.now();
     let reply: Msg;
     try {
       const res = await fetch("/api/chat", {
@@ -100,6 +101,8 @@ export default function ChatWidget() {
     } catch {
       reply = guided(local);
     }
+    // Petit délai « il écrit… » : la réponse arrive comme dans une vraie conversation.
+    await new Promise((resolve) => setTimeout(resolve, Math.max(0, typingMs(reply.content) - (Date.now() - started))));
     setMessages((m) => [...m, reply]);
     setLoading(false);
     inputRef.current?.focus();
@@ -143,7 +146,7 @@ export default function ChatWidget() {
                 <Bubble role={m.role} content={m.content} />
               </div>
             ))}
-            {loading && <div className="w-16 rounded-2xl bg-white px-4 py-3 text-muted shadow-sm">…</div>}
+            {loading && <TypingBubble />}
 
             {callback ? (
               <CallbackForm
@@ -284,6 +287,28 @@ function guided(step: StepId | null): Msg {
     content: "Je n'ai pas la réponse exacte, mais un conseiller peut vous aider. Laissez votre numéro et nous vous rappelons, ou choisissez une question.",
     choices: [{ label: "Être rappelé", action: "callback" }, ...STEPS.menu.choices.filter((c) => !("action" in c))],
   };
+}
+
+/** Durée minimale d'affichage de « il écrit… » : 1 s, plus un peu selon la longueur de la réponse (3 s au plus). */
+function typingMs(text: string): number {
+  return Math.min(3000, 1000 + text.length * 8);
+}
+
+/** Bulle « l'assistant écrit… » : trois points qui rebondissent. */
+function TypingBubble() {
+  return (
+    <div className="flex justify-start" role="status" aria-label="L'assistant écrit">
+      <div className="flex items-center gap-1 rounded-2xl bg-white px-4 py-3 shadow-sm">
+        {[0, 150, 300].map((delay) => (
+          <span
+            key={delay}
+            className="h-2 w-2 animate-bounce rounded-full bg-muted/60"
+            style={{ animationDelay: `${delay}ms` }}
+          />
+        ))}
+      </div>
+    </div>
+  );
 }
 
 /** Historique envoyé à l'IA : 20 derniers messages au plus, en commençant par un message du visiteur. */
