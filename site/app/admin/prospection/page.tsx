@@ -62,6 +62,25 @@ export default function AdminProspectionPage() {
     };
   }, [supabase]);
 
+  const [openMail, setOpenMail] = useState<string | null>(null);
+
+  function onSent(id: string, to: string, subject: string) {
+    const now = new Date().toISOString();
+    setRows((rs) =>
+      rs.map((r) =>
+        r.id === id
+          ? {
+              ...r,
+              status: r.status === "a_contacter" ? "contacte" : r.status,
+              contacted_at: now,
+              notes: [r.notes, `E-mail envoyé à ${to} : « ${subject} »`].filter(Boolean).join("\n"),
+            }
+          : r,
+      ),
+    );
+    setOpenMail(null);
+  }
+
   async function update(id: string, patch: Partial<Prospect>) {
     setRows((rs) => rs.map((r) => (r.id === id ? { ...r, ...patch } : r)));
     const { error } = await supabase.from("prospect_targets").update({ ...patch, updated_at: new Date().toISOString() }).eq("id", id);
@@ -142,6 +161,13 @@ export default function AdminProspectionPage() {
                   </div>
                 </div>
                 <div className="flex flex-col gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setOpenMail(openMail === p.id ? null : p.id)}
+                    className="rounded-lg border border-ink px-3 py-2 text-sm font-bold text-ink hover:bg-ink hover:text-white"
+                  >
+                    {openMail === p.id ? "Fermer" : "Envoyer un e-mail"}
+                  </button>
                   {p.status === "a_contacter" && (
                     <button type="button" onClick={() => markContacted(p)} className="rounded-lg bg-accent px-3 py-2 text-sm font-bold text-white">
                       Marquer démarché
@@ -159,6 +185,9 @@ export default function AdminProspectionPage() {
                   </select>
                 </div>
               </div>
+              {openMail === p.id && (
+                <MailForm prospect={p} onSent={(to, subject) => onSent(p.id, to, subject)} />
+              )}
               <textarea
                 defaultValue={p.notes ?? ""}
                 onBlur={(e) => {
@@ -173,5 +202,75 @@ export default function AdminProspectionPage() {
         </div>
       )}
     </AdminPage>
+  );
+}
+
+function MailForm({ prospect, onSent }: { prospect: Prospect; onSent: (to: string, subject: string) => void }) {
+  const [to, setTo] = useState("");
+  const [subject, setSubject] = useState(`Coursiers à ${prospect.city ?? "Paris"} pour ${prospect.name}`);
+  const [body, setBody] = useState(
+    `Bonjour,
+
+Nous sommes ONE CONNEXION, coursiers à deux-roues pour les entreprises de Paris et d'Île-de-France. ${prospect.need ?? ""}
+
+Nos courses sont dédiées : enlèvement en moins de 45 minutes à Paris et en petite couronne, avec preuve de remise.
+
+Si cela vous intéresse, répondez à ce message ou appelez le 06 66 02 67 07.
+
+Bien cordialement,
+L'équipe ONE CONNEXION`,
+  );
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function send() {
+    setSending(true);
+    setError(null);
+    const res = await fetch("/api/admin/prospects/send", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: prospect.id, to, subject, body }),
+    });
+    const data = (await res.json().catch(() => ({}))) as { error?: string };
+    setSending(false);
+    if (!res.ok) {
+      setError(data.error ?? "L'envoi a échoué.");
+      return;
+    }
+    onSent(to.trim(), subject.trim());
+  }
+
+  return (
+    <div className="mt-3 space-y-2 rounded-lg bg-paper p-3">
+      <input
+        value={to}
+        onChange={(e) => setTo(e.target.value)}
+        placeholder="Adresse e-mail de l'entreprise (ex. contact@...)"
+        className="w-full rounded-lg border border-line bg-white px-3 py-2 text-sm"
+      />
+      <input
+        value={subject}
+        onChange={(e) => setSubject(e.target.value)}
+        className="w-full rounded-lg border border-line bg-white px-3 py-2 text-sm"
+      />
+      <textarea
+        value={body}
+        onChange={(e) => setBody(e.target.value)}
+        rows={8}
+        className="w-full rounded-lg border border-line bg-white px-3 py-2 text-sm"
+      />
+      <p className="text-xs text-muted">
+        Une mention de désinscription (« répondez STOP ») est ajoutée automatiquement en bas du message.
+      </p>
+      {error && <p className="text-sm text-red-700">{error}</p>}
+      <button
+        type="button"
+        onClick={send}
+        disabled={sending || !to.trim() || !subject.trim() || !body.trim()}
+        className="rounded-lg bg-accent px-4 py-2 text-sm font-bold text-white disabled:opacity-40"
+      >
+        {sending ? "Envoi…" : "Envoyer maintenant"}
+      </button>
+    </div>
   );
 }
