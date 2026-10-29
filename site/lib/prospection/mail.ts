@@ -5,8 +5,8 @@
  */
 import { EMAIL, PHONE_DISPLAY, SITE_URL } from "@/lib/site-content";
 
-/** Signature en bas du message. À remplacer par le nom de l'expéditeur si besoin. */
-export const SIGNATURE_NAME = "L'équipe ONE CONNEXION";
+/** Signature en bas du message : Keisha (propositions commerciales et administratif). */
+export const SIGNATURE_NAME = "Keisha";
 
 const ORDER_URL = `${SITE_URL}/#commander`;
 const ACCOUNT_URL = `${SITE_URL}/inscription`;
@@ -30,7 +30,9 @@ Commander en 2 minutes : ${ORDER_URL}
 Créer un compte entreprise : ${ACCOUNT_URL}
 
 ${SIGNATURE_NAME}
-ONE CONNEXION · ${PHONE_DISPLAY} · ${EMAIL}
+ONE CONNEXION
+Commandes et urgences : ${PHONE_DISPLAY}
+Propositions commerciales et administratif : ${EMAIL}
 
 —
 Vous recevez ce message car votre entreprise exerce une activité en lien avec nos services.
@@ -48,7 +50,9 @@ ${button(ACCOUNT_URL, "Créer un compte entreprise", false)}
 </td></tr>
 <tr><td style="padding:0 28px 28px 28px;font-size:14px;line-height:1.6;color:#4A4845;">
 <strong style="color:#0E0F10;">${esc(SIGNATURE_NAME)}</strong><br>
-ONE CONNEXION · ${PHONE_DISPLAY} · <a href="mailto:${EMAIL}" style="color:#ed5518;">${EMAIL}</a><br>
+ONE CONNEXION<br>
+Commandes et urgences : ${PHONE_DISPLAY}<br>
+Propositions commerciales et administratif : <a href="mailto:${EMAIL}" style="color:#ed5518;">${EMAIL}</a><br>
 5 Square Nungesser, 94160 Saint-Mandé
 </td></tr>
 <tr><td style="padding:16px 28px;border-top:1px solid #dfdcd6;font-size:12px;line-height:1.5;color:#8C8882;">
