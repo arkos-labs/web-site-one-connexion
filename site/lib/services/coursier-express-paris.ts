@@ -99,7 +99,7 @@ export const coursierExpressParis: Service = {
   ],
 
   coverage:
-    "Une course express coûte 42 € TTC en urgent (1 h 30) et 56 € TTC en formule Super (1 h) dans Paris, puis, dans les Hauts-de-Seine, la Seine-Saint-Denis et le Val-de-Marne, les mêmes prix jusqu'à 8 km et 3 € ou 4 € TTC par km au-delà. En grande couronne (77, 78, 91, 95), le prix suit la distance depuis Paris : dès 90 € et 120 € TTC.",
+    "Une course express coûte 42 € TTC en urgent (1 h 30) et 56 € TTC en formule Super (1 h) dans Paris, puis 58,50 € et 78 € TTC dans les Hauts-de-Seine, la Seine-Saint-Denis et le Val-de-Marne jusqu'à 8 km, et 3 € ou 4 € TTC par km au-delà. En grande couronne (77, 78, 91, 95), le prix suit la distance depuis Paris : dès 90 € et 120 € TTC.",
 
   pricing: {
     title: "Prix d’un coursier express à Paris",
@@ -126,7 +126,7 @@ export const coursierExpressParis: Service = {
     {
       question: "Quel est le prix d’un coursier express à Paris ?",
       answer:
-        "Une course express démarre à 42 € TTC en urgent (1 h 30) et 56 € TTC en formule Super (1 h) dans Paris comme en petite couronne jusqu'à 8 km (puis 3 € ou 4 € TTC par km). Le prix est affiché avant de commander, détail sur la page tarifs.",
+        "Une course express démarre à 42 € TTC en urgent (1 h 30) et 56 € TTC en formule Super (1 h) dans Paris, 58,50 € et 78 € TTC en petite couronne jusqu'à 8 km (puis 3 € ou 4 € TTC par km). Le prix est affiché avant de commander, détail sur la page tarifs.",
     },
     {
       question: "Quelle différence entre course immédiate et course planifiée ?",

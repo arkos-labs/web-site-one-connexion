@@ -162,7 +162,7 @@ export default function ZonesPage() {
               {
                 zone: "Petite Couronne",
                 dept: "92, 93, 94",
-                budget: "Dès 28 € TTC, puis 2 €/km au-delà de 8 km",
+                budget: "39 € TTC, puis 2 €/km au-delà de 8 km",
                 delai: "moins de 45 min enlèvement",
                 ideal: "Transport médical, logistique B2B, multisite parisiens",
                 exemple: "Enlever prélèvements biologiques Vitry et livrer Créteil en moins de 1h"
@@ -170,7 +170,7 @@ export default function ZonesPage() {
               {
                 zone: "La Défense & Hauts-de-Seine",
                 dept: "92",
-                budget: "Dès 28 € TTC, puis 2 €/km au-delà de 8 km",
+                budget: "39 € TTC, puis 2 €/km au-delà de 8 km",
                 delai: "moins de 30 min enlèvement intra-Défense",
                 ideal: "Livraisons inter-tours, documents confidentiels, démarches RH",
                 exemple: "Distribuer dossier candidature entre tours de La Défense"

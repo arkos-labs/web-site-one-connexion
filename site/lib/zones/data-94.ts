@@ -92,7 +92,7 @@ export const ZONES_94: Zone[] = [
       },
       {
         q: "Combien coûte une course au départ de Saint-Mandé ?",
-        a: "Saint-Mandé est en petite couronne : à partir de {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h) jusqu’à 8 km de route, puis 2 € (Normal) à 4 € (Super) TTC par km. Vers Paris 12e, tout proche, la course reste à {normal} € TTC en normal.",
+        a: "Saint-Mandé est en petite couronne : à partir de {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h) jusqu’à 8 km de route, puis 2 € (Normal) à 4 € (Super) TTC par km. Vers Paris 12e, tout proche, la course est à {normal} € TTC en normal.",
       },
       {
         q: "Peut-on ouvrir un compte entreprise depuis Saint-Mandé ?",
