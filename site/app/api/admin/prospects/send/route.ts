@@ -11,11 +11,12 @@ export async function POST(req: Request) {
   const denied = await requireAdmin();
   if (denied) return denied;
 
-  const { id, to, subject, body } = await req.json().catch(() => ({}));
+  const { id, to, subject, body, contact } = await req.json().catch(() => ({}));
   if (typeof id !== "string" || !UUID.test(id)) return NextResponse.json({ error: "Requête invalide." }, { status: 400 });
   if (typeof to !== "string" || !EMAIL_RE.test(to.trim())) return NextResponse.json({ error: "Adresse e-mail invalide." }, { status: 400 });
   if (typeof subject !== "string" || !subject.trim() || subject.length > 150) return NextResponse.json({ error: "Objet invalide." }, { status: 400 });
   if (typeof body !== "string" || !body.trim() || body.length > 4000) return NextResponse.json({ error: "Message invalide." }, { status: 400 });
+  if (contact !== undefined && (typeof contact !== "string" || contact.length > 60)) return NextResponse.json({ error: "Nom du contact invalide." }, { status: 400 });
 
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) return NextResponse.json({ error: "Envoi non configuré (RESEND_API_KEY manquante)." }, { status: 500 });
@@ -29,7 +30,7 @@ export async function POST(req: Request) {
       to: [to.trim()],
       reply_to: EMAIL,
       subject: subject.trim(),
-      ...buildProspectMail(body),
+      ...buildProspectMail(body, typeof contact === "string" ? contact : undefined),
     }),
   });
   if (!res.ok) {

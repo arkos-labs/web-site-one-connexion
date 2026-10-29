@@ -207,11 +207,10 @@ export default function AdminProspectionPage() {
 
 function MailForm({ prospect, onSent }: { prospect: Prospect; onSent: (to: string, subject: string) => void }) {
   const [to, setTo] = useState("");
-  const [subject, setSubject] = useState(`Coursiers à ${prospect.city ?? "Paris"} pour ${prospect.name}`);
+  const [contact, setContact] = useState("");
+  const [subject, setSubject] = useState(`Livraisons urgentes à ${prospect.city ?? "Paris"}`);
   const [body, setBody] = useState(
-    `Bonjour,
-
-Une livraison urgente à faire à ${prospect.city ?? "Paris"} ? ${prospect.need ?? ""}
+    `Une livraison urgente à faire à ${prospect.city ?? "Paris"} ? ${prospect.need ?? ""}
 
 Avec ONE CONNEXION, un coursier vient chercher votre envoi en moins de 45 minutes à Paris et en petite couronne, et le remet en main propre, avec preuve de remise.
 
@@ -226,7 +225,7 @@ Le prix est affiché avant de commander : 28 € TTC dans Paris, 39 € TTC en p
     const res = await fetch("/api/admin/prospects/send", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: prospect.id, to, subject, body }),
+      body: JSON.stringify({ id: prospect.id, to, subject, body, contact }),
     });
     const data = (await res.json().catch(() => ({}))) as { error?: string };
     setSending(false);
@@ -243,6 +242,12 @@ Le prix est affiché avant de commander : 28 € TTC dans Paris, 39 € TTC en p
         value={to}
         onChange={(e) => setTo(e.target.value)}
         placeholder="Adresse e-mail de l'entreprise (ex. contact@...)"
+        className="w-full rounded-lg border border-line bg-white px-3 py-2 text-sm"
+      />
+      <input
+        value={contact}
+        onChange={(e) => setContact(e.target.value)}
+        placeholder="Civilité et nom du contact (facultatif, ex. Madame Duval)"
         className="w-full rounded-lg border border-line bg-white px-3 py-2 text-sm"
       />
       <input

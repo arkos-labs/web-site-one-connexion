@@ -19,8 +19,9 @@ const button = (href: string, label: string, primary: boolean) =>
     primary ? "background:#ed5518;color:#ffffff;" : "background:#ffffff;color:#0E0F10;border:2px solid #0E0F10;"
   }">${label}</a>`;
 
-export function buildProspectMail(body: string): { text: string; html: string } {
-  const paragraphs = body.trim().split(/\n{2,}/).map((p) => p.trim()).filter(Boolean);
+export function buildProspectMail(body: string, contact?: string): { text: string; html: string } {
+  const greeting = contact?.trim() ? `Bonjour ${contact.trim()},` : "Bonjour,";
+  const paragraphs = [greeting, ...body.trim().split(/\n{2,}/).map((p) => p.trim()).filter(Boolean)];
 
   const textBody = paragraphs.join("\n\n");
   const text = `${textBody}
