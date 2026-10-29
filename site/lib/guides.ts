@@ -178,13 +178,13 @@ export const GUIDES: Guide[] = [
       {
         heading: "Les tarifs par zone et par délai",
         paragraphs: [
-          "Voici la grille de ONE CONNEXION pour une course en Île-de-France. Quand le trajet traverse deux zones, la zone la plus éloignée s'applique. En petite couronne, le prix suit les kilomètres : le prix de Paris jusqu'à 8 km, puis un prix par km.",
+          "Voici la grille de ONE CONNEXION pour une course en Île-de-France. Quand le trajet traverse deux zones, la zone la plus éloignée s'applique. En petite couronne, le prix est fixe jusqu'à 8 km, puis s'ajoute un prix par km.",
         ],
         table: {
           head: ["Zone", "Normal 3 h", "Urgent 1 h 30", "Super 1 h"],
           rows: [
             ["Paris (75)", "28 €", "42 €", "56 €"],
-            ["Petite couronne (92, 93, 94)", "28 € + 2 €/km au-delà de 8 km", "42 € + 3 €/km", "56 € + 4 €/km"],
+            ["Petite couronne (92, 93, 94)", "39 € + 2 €/km au-delà de 8 km", "58,50 € + 3 €/km", "78 € + 4 €/km"],
             ["Grande couronne (77, 78, 91, 95)", "dès 60 €", "dès 90 €", "dès 120 €"],
           ],
           note: "Tarifs TTC par course, TVA 20 % comprise. Le prix exact s'affiche avant de valider la commande.",
@@ -308,7 +308,7 @@ export const GUIDES: Guide[] = [
           head: ["Zone", "Normal 3 h", "Urgent 1 h 30", "Super 1 h"],
           rows: [
             ["Paris (75)", "28 €", "42 €", "56 €"],
-            ["Petite couronne (92, 93, 94)", "28 € + 2 €/km au-delà de 8 km", "42 € + 3 €/km", "56 € + 4 €/km"],
+            ["Petite couronne (92, 93, 94)", "39 € + 2 €/km au-delà de 8 km", "58,50 € + 3 €/km", "78 € + 4 €/km"],
             ["Grande couronne (77, 78, 91, 95)", "selon la distance", "selon la distance", "selon la distance"],
           ],
           note: "Tarifs TTC par course, TVA 20 % comprise. Le prix exact s'affiche avant de valider la commande.",

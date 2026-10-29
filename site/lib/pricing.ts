@@ -9,8 +9,8 @@ export type ServiceLevel = 'navette' | 'standard' | 'urgent' | 'flash';
 // + 3 000 € de bénéfice visé, sur 180 h roulées par mois → 42,89 € HT de l'heure ; véhicule
 // remboursé en indemnités kilométriques (barème 2026, 125 cm³) : 0,248 € par km.
 // Paris : course de 30 min, approche comprise, 8 km → 28 € TTC.
-// Petite couronne (92, 93, 94) : prix au km. Les 8 premiers km (une course dans Paris) au prix de Paris,
-// puis 2 € TTC par km de route entre l'enlèvement et la livraison (Saint-Mandé → Paris 12 : 28 €).
+// Petite couronne (92, 93, 94) : 39 € TTC fixe jusqu'à 8 km de route entre l'enlèvement et la livraison,
+// puis 2 € TTC par km en plus (Saint-Mandé → Paris 12 : 39 € ; 15 km : 53 €).
 // Grande couronne (zone 2) : prix selon la distance depuis Paris, retour à vide compris.
 // Les zones 3 et 4 (hors Île-de-France, adresse introuvable) ne sont pas desservies.
 // La navette régulière est sur devis. « navette » reste le délai d'une course programmée (date et heure
@@ -22,13 +22,14 @@ const PRICING_GRID = {
   flash: [56.00, 0, 0, 192.00, 218.40]
 };
 
-/** Petite couronne : km compris dans le prix de base, puis prix TTC de chaque km en plus (délai Normal). */
+/** Petite couronne (délai Normal) : prix fixe TTC, km compris, puis prix TTC de chaque km en plus. */
+export const PC_BASE_TTC = 39;
 export const PC_INCLUDED_KM = 8;
 export const PC_KM_TTC = 2;
 
-/** Prix Normal TTC d'une course petite couronne de `km` par la route : 28 € jusqu'à 8 km, puis 2 € par km. */
+/** Prix Normal TTC d'une course petite couronne de `km` par la route : 39 € jusqu'à 8 km, puis 2 € par km. */
 function petiteCouronneTTC(km: number): number {
-  return PRICING_GRID.standard[0] + Math.max(0, km - PC_INCLUDED_KM) * PC_KM_TTC;
+  return PC_BASE_TTC + Math.max(0, km - PC_INCLUDED_KM) * PC_KM_TTC;
 }
 
 /** Prix plancher de la grande couronne (Normal), inchangé. */
@@ -133,7 +134,7 @@ export function getZoneFromDepartment(dept: string | null): Zone {
 
 /**
  * Prix TTC d'une formule pour une zone (0 Paris, 1 petite couronne, 2 grande couronne), pour l'affichage.
- * Petite couronne : prix d'appel (« dès »), une course de 8 km au plus. Grande couronne : prix d'appel,
+ * Petite couronne : prix fixe jusqu'à 8 km (« dès »). Grande couronne : prix d'appel,
  * celui de la commune la plus proche de Paris.
  */
 export function gridPrice(service: ServiceLevel, zone: Zone): number {
