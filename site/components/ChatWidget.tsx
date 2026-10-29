@@ -83,13 +83,9 @@ export default function ChatWidget() {
     const withUser = [...messages, { role: "user" as const, content: text }];
     setMessages(withUser);
 
-    // Réponse courte à une question du parcours (« pro », « particulier »…) : immédiate, sans IA.
+    // Toute question écrite part à l'assistant (réponse détaillée). Sans clé IA côté serveur, il répond
+    // « fallback » et on affiche le parcours guidé le plus proche.
     const local = matchStep(text);
-    if (local && (lastBot?.step === "type" || text.split(/\s+/).length <= 4)) {
-      setMessages([...withUser, stepMsg(local)]);
-      return;
-    }
-
     setLoading(true);
     let reply: Msg;
     try {
