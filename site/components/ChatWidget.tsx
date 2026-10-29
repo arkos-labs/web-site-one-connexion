@@ -59,9 +59,15 @@ export default function ChatWidget() {
   const aboveActionBar = !ACTION_BAR_HIDDEN.test(pathname);
   const lastBot = [...messages].reverse().find((m) => m.role === "assistant");
 
-  function choose(c: Choice) {
+  async function choose(c: Choice) {
     if ("step" in c) {
-      setMessages((m) => [...m, { role: "user", content: c.label }, stepMsg(c.step)]);
+      // Même effet « il écrit… » que pour une question écrite : la réponse arrive après un court délai.
+      const step = stepMsg(c.step);
+      setMessages((m) => [...m, { role: "user", content: c.label }]);
+      setLoading(true);
+      await new Promise((resolve) => setTimeout(resolve, typingMs(step.content)));
+      setMessages((m) => [...m, step]);
+      setLoading(false);
     } else if ("href" in c) {
       setOpen(false);
       router.push(c.href);

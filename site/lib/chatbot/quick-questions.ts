@@ -43,7 +43,7 @@ export const STEPS: Record<StepId, { text: string; choices: Choice[] }> = {
     ],
   },
   type: {
-    text: "Bienvenue ! Pour vous expliquer la commande et la facturation, vous êtes :",
+    text: "Vous êtes plutôt professionnel ou particulier ? La commande et la facturation ne sont pas les mêmes, je vous explique selon votre cas.",
     choices: [
       { label: "Professionnel (entreprise)", step: "pro" },
       { label: "Particulier", step: "particulier" },
