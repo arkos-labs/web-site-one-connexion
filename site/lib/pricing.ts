@@ -9,16 +9,31 @@ export type ServiceLevel = 'navette' | 'standard' | 'urgent' | 'flash';
 // + 3 000 € de bénéfice visé, sur 180 h roulées par mois → 42,89 € HT de l'heure ; véhicule
 // remboursé en indemnités kilométriques (barème 2026, 125 cm³) : 0,248 € par km.
 // Paris : course de 30 min, approche comprise, 8 km → 28 € TTC.
-// Petite couronne : 1 h environ avec un retour partiel → 59 € TTC.
+// Petite couronne (92, 93, 94) : 39 € TTC fixe jusqu'à 8 km de route entre l'enlèvement et la livraison,
+// puis 2 € TTC par km en plus (Saint-Mandé → Paris 12 : 39 € ; 15 km : 53 €).
 // Grande couronne (zone 2) : prix selon la distance depuis Paris, retour à vide compris.
 // Les zones 3 et 4 (hors Île-de-France, adresse introuvable) ne sont pas desservies.
 // La navette régulière est sur devis. « navette » reste le délai d'une course programmée (date et heure
 // choisies au formulaire) : elle se paie au tarif Normal.
+// Zones 1 et 2 : pas de prix fixe (au km pour la petite couronne, selon la distance pour la grande couronne).
 const PRICING_GRID = {
-  standard: [28.00, 59.00, 0, 96.00, 109.20],
-  urgent: [42.00, 88.50, 0, 144.00, 163.80],
-  flash: [56.00, 118.00, 0, 192.00, 218.40]
+  standard: [28.00, 0, 0, 96.00, 109.20],
+  urgent: [42.00, 0, 0, 144.00, 163.80],
+  flash: [56.00, 0, 0, 192.00, 218.40]
 };
+
+/** Petite couronne (délai Normal) : prix fixe TTC, km compris, puis prix TTC de chaque km en plus. */
+export const PC_BASE_TTC = 39;
+export const PC_INCLUDED_KM = 8;
+export const PC_KM_TTC = 2;
+
+/** Prix Normal TTC d'une course petite couronne de `km` par la route : 39 € jusqu'à 8 km, puis 2 € par km. */
+function petiteCouronneTTC(km: number): number {
+  return PC_BASE_TTC + Math.max(0, km - PC_INCLUDED_KM) * PC_KM_TTC;
+}
+
+/** Prix plancher de la grande couronne (Normal), inchangé. */
+const GC_MIN_TTC = 59;
 
 /** Majoration par délai, appliquée au prix Normal de la grande couronne (comme sur la grille Paris). */
 const DELAY_FACTOR: Record<ServiceLevel, number> = { navette: 1, standard: 1, urgent: 1.5, flash: 2 };
@@ -31,11 +46,11 @@ const GC_KM_HT = 0.248;
 const GC_SPEED_KMH = 50;
 const GC_FIXED_HOURS = 20 / 60;
 
-/** Prix Normal TTC d'une course grande couronne à `km` de Paris, jamais sous le prix petite couronne. */
+/** Prix Normal TTC d'une course grande couronne à `km` de Paris, jamais sous 59 €. */
 function grandeCouronneTTC(km: number): number {
   const roundTrip = 2 * km;
   const ht = (roundTrip / GC_SPEED_KMH + GC_FIXED_HOURS) * GC_HOURLY_HT + roundTrip * GC_KM_HT;
-  return Math.max(PRICING_GRID.standard[1], Math.round(ht * 1.2));
+  return Math.max(GC_MIN_TTC, Math.round(ht * 1.2));
 }
 
 /** Prix d'appel de la grande couronne : la commune la plus proche de Paris. */
@@ -119,14 +134,26 @@ export function getZoneFromDepartment(dept: string | null): Zone {
 
 /**
  * Prix TTC d'une formule pour une zone (0 Paris, 1 petite couronne, 2 grande couronne), pour l'affichage.
- * Grande couronne : prix d'appel (« dès »), celui de la commune la plus proche de Paris.
+ * Petite couronne : prix fixe jusqu'à 8 km (« dès »). Grande couronne : prix d'appel,
+ * celui de la commune la plus proche de Paris.
  */
 export function gridPrice(service: ServiceLevel, zone: Zone): number {
+  if (zone === 1) return roundHalf(petiteCouronneTTC(0) * DELAY_FACTOR[service]);
   if (zone === 2) return grandeCouronneTTC(GC_FROM_KM) * DELAY_FACTOR[service];
   return PRICING_GRID[gridLevel(service)][zone];
 }
 
-/** Prix TTC d'une course entre Paris et `address` (une commune suffit : « Meaux 77 », « Cergy »). */
+const roundHalf = (n: number) => Math.round(n * 2) / 2;
+
+/** Petite couronne : prix TTC de chaque km au-delà de 8 km, selon le délai (2 €, 3 €, 4 €). */
+export function pcKmPrice(service: ServiceLevel): number {
+  return PC_KM_TTC * DELAY_FACTOR[service];
+}
+
+/**
+ * Prix TTC d'une course entre Paris et `address` (une commune suffit : « Meaux 77 », « Cergy »).
+ * Petite couronne : prix d'appel (« dès »), le prix exact dépend des km.
+ */
 export function priceFromParis(address: string, service: ServiceLevel): number {
   return calculatePrice("Paris 75001", address, service);
 }
@@ -140,7 +167,17 @@ export function isServedAddress(address: string): boolean {
   return !!dept && SERVED_DEPARTMENTS.includes(dept);
 }
 
-export function calculatePrice(pickup: string, dropoff: string, service: ServiceLevel): number {
+/** La course passe par la petite couronne sans aller en grande couronne : son prix dépend des km. */
+export function isPerKmRoute(pickup: string, dropoff: string): boolean {
+  const zones = [pickup, dropoff].map((a) => getZoneFromDepartment(getDepartmentFromAddress(a)));
+  return Math.max(...zones) === 1;
+}
+
+/**
+ * Prix TTC d'une course de `pickup` à `dropoff`. `km` : distance par la route entre les deux adresses
+ * (lib/route-distance.ts), utilisée en petite couronne ; sans elle, prix d'appel (8 km).
+ */
+export function calculatePrice(pickup: string, dropoff: string, service: ServiceLevel, km?: number): number {
   const deptPickup = getDepartmentFromAddress(pickup);
   const deptDropoff = getDepartmentFromAddress(dropoff);
 
@@ -158,6 +195,8 @@ export function calculatePrice(pickup: string, dropoff: string, service: Service
     );
     return grandeCouronneTTC(km) * DELAY_FACTOR[service];
   }
+
+  if (maxZone === 1) return roundHalf(petiteCouronneTTC(km ?? PC_INCLUDED_KM) * DELAY_FACTOR[service]);
 
   return PRICING_GRID[gridLevel(service)][maxZone];
 }
@@ -184,10 +223,11 @@ export function extraStopPrice(from: string, to: string, km: number, service: Se
 
 /**
  * Prix TTC d'un itinéraire : enlèvement, puis livraisons dans l'ordre (la dernière est orders.dropoff_address).
- * `legKm[i]` = km entre la livraison i et la livraison i + 1 (voir lib/route-distance.ts).
+ * `legKm[i]` = km entre la livraison i et la livraison i + 1, `firstKm` = km entre l'enlèvement et la
+ * première livraison (petite couronne) ; voir lib/route-distance.ts.
  */
-export function calculateRoutePrice(pickup: string, deliveries: string[], service: ServiceLevel, legKm: number[]) {
-  const base = calculatePrice(pickup, deliveries[0], service);
+export function calculateRoutePrice(pickup: string, deliveries: string[], service: ServiceLevel, legKm: number[], firstKm?: number) {
+  const base = calculatePrice(pickup, deliveries[0], service, firstKm);
   const extras: ExtraStop[] = deliveries.slice(1).map((to, i) => {
     const from = deliveries[i];
     const km = Math.round((legKm[i] ?? 0) * 10) / 10;

@@ -5,11 +5,11 @@
  */
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { MapPin, Flag, Phone } from "lucide-react";
 import dynamic from "next/dynamic";
-import { calculatePrice, isServedAddress } from "@/lib/pricing";
+import { useRoutePrice } from "@/lib/use-route-price";
 import { formatEur } from "@/lib/price-display";
 import { PHONE_DISPLAY, PHONE_TEL } from "@/lib/site-content";
 
@@ -34,14 +34,8 @@ export default function Hero() {
   const [dropoff, setDropoff] = useState("");
 
   // Prix tout de suite, avant tout formulaire : le visiteur sait combien ça coûte. Formule la moins chère, avec la même grille que le formulaire de commande ; les autres délais s'y affichent.
-  const price = useMemo(() => {
-    if (!isServedAddress(pickup) || !isServedAddress(dropoff)) return null;
-    try {
-      return calculatePrice(pickup, dropoff, "standard");
-    } catch {
-      return null;
-    }
-  }, [pickup, dropoff]);
+  // Petite couronne : prix au km, calculé avec la distance par la route.
+  const price = useRoutePrice(pickup, dropoff, "standard");
 
   return (
     <section id="top" className="relative border-b border-white/10 bg-ink text-white">

@@ -178,13 +178,13 @@ export const GUIDES: Guide[] = [
       {
         heading: "Les tarifs par zone et par délai",
         paragraphs: [
-          "Voici la grille de ONE CONNEXION pour une course en Île-de-France. Quand le trajet traverse deux zones, la zone la plus éloignée s'applique : de Paris vers Nanterre, c'est le tarif petite couronne.",
+          "Voici la grille de ONE CONNEXION pour une course en Île-de-France. Quand le trajet traverse deux zones, la zone la plus éloignée s'applique. En petite couronne, le prix est fixe jusqu'à 8 km, puis s'ajoute un prix par km.",
         ],
         table: {
           head: ["Zone", "Normal 3 h", "Urgent 1 h 30", "Super 1 h"],
           rows: [
             ["Paris (75)", "28 €", "42 €", "56 €"],
-            ["Petite couronne (92, 93, 94)", "59 €", "88,50 €", "118 €"],
+            ["Petite couronne (92, 93, 94)", "39 € + 2 €/km au-delà de 8 km", "58,50 € + 3 €/km", "78 € + 4 €/km"],
             ["Grande couronne (77, 78, 91, 95)", "dès 60 €", "dès 90 €", "dès 120 €"],
           ],
           note: "Tarifs TTC par course, TVA 20 % comprise. Le prix exact s'affiche avant de valider la commande.",
@@ -302,13 +302,13 @@ export const GUIDES: Guide[] = [
       {
         heading: "Prix et délais en Île-de-France",
         paragraphs: [
-          "Le prix ne dépend ni du contenu ni du poids, jusqu'à 18 kg. Seuls comptent la zone la plus éloignée du trajet et le délai choisi. Le service fonctionne du lundi au samedi, de 9 h à 19 h.",
+          "Le prix ne dépend ni du contenu ni du poids, jusqu'à 18 kg. Seuls comptent la zone la plus éloignée du trajet, la distance en petite couronne et le délai choisi. Le service fonctionne du lundi au samedi, de 9 h à 19 h.",
         ],
         table: {
           head: ["Zone", "Normal 3 h", "Urgent 1 h 30", "Super 1 h"],
           rows: [
             ["Paris (75)", "28 €", "42 €", "56 €"],
-            ["Petite couronne (92, 93, 94)", "59 €", "88,50 €", "118 €"],
+            ["Petite couronne (92, 93, 94)", "39 € + 2 €/km au-delà de 8 km", "58,50 € + 3 €/km", "78 € + 4 €/km"],
             ["Grande couronne (77, 78, 91, 95)", "selon la distance", "selon la distance", "selon la distance"],
           ],
           note: "Tarifs TTC par course, TVA 20 % comprise. Le prix exact s'affiche avant de valider la commande.",
