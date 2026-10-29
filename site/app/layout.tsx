@@ -11,6 +11,7 @@ import Footer from "@/components/Footer";
 import OrderModalProvider from "@/components/OrderModalProvider";
 import CookieConsent from "@/components/CookieConsent";
 import MobileActionBar from "@/components/MobileActionBar";
+import ChatWidget from "@/components/ChatWidget";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import { SITE_URL } from "@/lib/site-content";
 import { Analytics } from "@vercel/analytics/next";
@@ -98,6 +99,7 @@ export default function RootLayout({
         <ClientShell>{children}</ClientShell>
         <Footer />
         <MobileActionBar />
+        <ChatWidget />
         <GoogleAnalytics />
         <CookieConsent />
         <Analytics />
