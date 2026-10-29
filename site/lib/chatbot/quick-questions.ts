@@ -54,8 +54,8 @@ export const STEPS: Record<StepId, { text: string; choices: Choice[] }> = {
       "Commander en tant que professionnel, en 3 étapes :\n" +
       "1. Cliquez sur « Commander », choisissez « Entreprise » et saisissez les adresses : le prix s'affiche tout de suite.\n" +
       "2. Indiquez vos coordonnées et votre SIRET (vérifié automatiquement).\n" +
-      "3. Choisissez le délai et le règlement.\n\n" +
-      "Facturation : vous pouvez régler dans les 30 jours, sur facture, par prélèvement ou par virement. La facture, avec la TVA détaillée, est envoyée par e-mail. Vous pouvez aussi payer tout de suite par carte.\n\n" +
+      "3. Choisissez le délai et validez.\n\n" +
+      "Facturation : règlement sous 30 jours, sur facture. La facture, avec la TVA détaillée, est envoyée par e-mail. Vous la réglez par prélèvement, par virement, ou par carte bancaire depuis la facture ou depuis votre espace client sur le site.\n\n" +
       "Ensuite, un dispatcheur vous contacte dans les 10 minutes et vous recevez un code de suivi. Avec un compte entreprise (ouverture immédiate), vous retrouvez toutes vos courses et factures, avec un tarif dégressif selon le volume.",
     choices: [ORDER, { label: "Créer mon compte entreprise", href: "/inscription" }, PRIX, CALLBACK],
   },
