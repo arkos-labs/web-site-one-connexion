@@ -3,8 +3,9 @@ import { createClient } from "@supabase/supabase-js";
 import { SECTORS, PROSPECT_DEPARTMENTS, searchCompanies, type Company, type Sector } from "@/lib/prospection/sirene";
 import { needPhrase } from "@/lib/prospection/need";
 
-// Chaque lundi : 10 nouvelles entreprises par secteur, jamais déjà listées ni déjà clientes.
-const PER_SECTOR = 10;
+// Chaque lundi : un seul secteur, en alternance (avocats, puis laboratoires, puis e-commerce…).
+// 15 nouvelles entreprises par semaine, jamais déjà listées ni déjà clientes.
+const PER_WEEK = 15;
 export const maxDuration = 300;
 
 export async function GET(req: Request) {
@@ -26,12 +27,13 @@ export async function GET(req: Request) {
   const offset = weekNumber(week) % PROSPECT_DEPARTMENTS.length; // on tourne d'un département à l'autre
   const rows: Record<string, unknown>[] = [];
 
-  for (const sector of SECTORS) {
+  const sector = SECTORS[weekNumber(week) % SECTORS.length];
+  {
     const picked: Company[] = [];
-    for (let i = 0; i < PROSPECT_DEPARTMENTS.length && picked.length < PER_SECTOR; i++) {
+    for (let i = 0; i < PROSPECT_DEPARTMENTS.length && picked.length < PER_WEEK; i++) {
       const dept = PROSPECT_DEPARTMENTS[(offset + i) % PROSPECT_DEPARTMENTS.length];
       for (const company of await searchCompanies(sector.naf, dept)) {
-        if (picked.length >= PER_SECTOR) break;
+        if (picked.length >= PER_WEEK) break;
         if (known.has(company.siret)) continue;
         known.add(company.siret);
         picked.push(company);
