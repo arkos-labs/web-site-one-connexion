@@ -1,12 +1,12 @@
 /**
  * lib/route-distance.ts
- * Distance entre deux adresses de livraison, pour le prix des adresses en plus (lib/pricing.ts).
+ * Distance entre deux adresses, pour le prix des courses en petite couronne et des adresses en plus (lib/pricing.ts).
  * Position de chaque adresse : Base Adresse Nationale. Distance par la route : itinéraire voiture le plus
  * court de l'IGN (Géoplateforme, gratuit, sans clé), arrondie à 0,1 km. Si l'IGN ne répond pas :
  * vol d'oiseau × 1,3. Même calcul côté formulaire et serveur.
  */
 import { joinNumberSuffix } from "./address-idf";
-import { calculateRoutePrice, type ServiceLevel } from "./pricing";
+import { calculateRoutePrice, isPerKmRoute, type ServiceLevel } from "./pricing";
 
 const ROAD_FACTOR = 1.3;
 /** Adresse introuvable ou service indisponible : distance d'une course dans Paris. */
@@ -82,10 +82,17 @@ export async function legDistancesKm(deliveries: string[]): Promise<number[]> {
   );
 }
 
-/** Prix complet d'une course à une ou plusieurs adresses de livraison (la dernière = dropoff). */
+/**
+ * Prix complet d'une course à une ou plusieurs adresses de livraison (la dernière = dropoff).
+ * Petite couronne : la distance de l'enlèvement à la première livraison fixe le prix de base.
+ */
 export async function priceRoute(pickup: string, deliveries: string[], service: ServiceLevel) {
-  const legKm = deliveries.length > 1 ? await legDistancesKm(deliveries) : [];
-  return calculateRoutePrice(pickup, deliveries, service, legKm);
+  const perKm = isPerKmRoute(pickup, deliveries[0]);
+  const [legKm, firstKm] = await Promise.all([
+    deliveries.length > 1 ? legDistancesKm(deliveries) : Promise.resolve([] as number[]),
+    perKm ? legDistancesKm([pickup, deliveries[0]]).then((km) => km[0]) : Promise.resolve(undefined),
+  ]);
+  return { ...calculateRoutePrice(pickup, deliveries, service, legKm, firstKm), firstKm };
 }
 
 /** Livraisons dans l'ordre d'une commande : étapes (orders.stops) puis adresse finale. */

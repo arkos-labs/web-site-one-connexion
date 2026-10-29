@@ -4,7 +4,7 @@
  * avec des questions construites sur ses données (département, prix réels de la grille, horaires),
  * en sautant tout sujet que la page traite déjà.
  */
-import { getZoneFromDepartment, gridPrice } from "@/lib/pricing";
+import { getZoneFromDepartment, gridPrice, pcKmPrice, PC_INCLUDED_KM } from "@/lib/pricing";
 import type { Zone, ZoneFaqItem } from "./types";
 
 const euro = (n: number) =>
@@ -27,7 +27,10 @@ export function withFaqComplements(zone: Zone, faq: ZoneFaqItem[]): ZoneFaqItem[
       topic: /prix|tarif|co[uû]t/,
       item: {
         q: `Quel est le prix d’une course depuis ${zone.name} ?`,
-        a: `${zone.name} (${dept}) est en ${ZONE_LABEL[z]} : ${normal} TTC en Normal (3 h), ${urgent} en Urgent (1 h 30) et ${flash} en Super (1 h), vers Paris ou une commune de la même zone. Le prix s’affiche avant de commander.`,
+        a:
+          z === 1
+            ? `${zone.name} (${dept}) est en petite couronne : le prix suit les kilomètres de route. ${normal} TTC en Normal (3 h), ${urgent} en Urgent (1 h 30) et ${flash} en Super (1 h) jusqu’à ${PC_INCLUDED_KM} km, puis ${euro(pcKmPrice("standard"))}, ${euro(pcKmPrice("urgent"))} ou ${euro(pcKmPrice("flash"))} TTC par km. Le prix exact s’affiche avant de commander.`
+            : `${zone.name} (${dept}) est en ${ZONE_LABEL[z]} : ${normal} TTC en Normal (3 h), ${urgent} en Urgent (1 h 30) et ${flash} en Super (1 h), vers Paris ou une commune de la même zone. Le prix s’affiche avant de commander.`,
       },
     },
     {

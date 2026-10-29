@@ -23,7 +23,7 @@ export const LOCAL_92: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Pouvez-vous déposer un acte au tribunal judiciaire de Nanterre ?", a: "Oui. L'acte part en course dédiée, avec remise en main propre et justificatif horodaté. Précisez le service et l'heure limite de dépôt." },
       { q: "Livrez-vous à l'université Paris Nanterre ?", a: "Oui. Le campus est vaste : indiquez le bâtiment, le service et un contact sur place pour que le coursier trouve l'accueil sans détour." },
-      { q: "Quel tarif pour Nanterre ?", a: "Nanterre relève de la petite couronne : à partir de {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h)." },
+      { q: "Quel tarif pour Nanterre ?", a: "Nanterre relève de la petite couronne : à partir de {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h) jusqu’à 8 km de route, puis 2 € (Normal) à 4 € (Super) TTC par km." },
     ],
   },
 
@@ -42,7 +42,7 @@ export const LOCAL_92: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Comment se passe une remise dans une tour de La Défense ?", a: "Le coursier se présente à l'accueil avec le nom du destinataire. Donnez-nous l'étage, l'entreprise et un contact direct pour qu'il soit annoncé et remette le pli à la bonne personne." },
       { q: "Livrez-vous les colis volumineux dans les tours ?", a: "Notre flotte est en deux-roues, avec un top-case de 18 kg maximum. Pour un volume plus important, appelez-nous avant de commander." },
-      { q: "Quel est le tarif à Courbevoie ?", a: "Courbevoie fait partie de la petite couronne : dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h)." },
+      { q: "Quel est le tarif à Courbevoie ?", a: "Courbevoie fait partie de la petite couronne : dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h) jusqu’à 8 km de route, puis 2 € (Normal) à 4 € (Super) TTC par km." },
     ],
   },
 
@@ -61,7 +61,7 @@ export const LOCAL_92: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Pouvez-vous livrer sur la dalle de La Défense à Puteaux ?", a: "Oui, à pied depuis le point de stationnement du coursier. Donnez le nom de la tour, l'accueil et un contact pour limiter l'attente." },
       { q: "Livrez-vous pendant un salon au CNIT ?", a: "Oui, avec le hall, le stand et le contact exposant. Les accès sont plus encadrés pendant les salons." },
-      { q: "Quel tarif à Puteaux ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h), comme pour toute la petite couronne." },
+      { q: "Quel tarif à Puteaux ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h) jusqu’à 8 km de route, puis 2 € (Normal) à 4 € (Super) TTC par km." },
     ],
   },
 
@@ -80,7 +80,7 @@ export const LOCAL_92: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Transportez-vous des prélèvements depuis ou vers l'hôpital Foch ?", a: "Oui, en course dédiée avec contenant isotherme sur demande. Le délai de stabilité fixé par le laboratoire détermine la faisabilité." },
       { q: "Desservez-vous le haut de Suresnes ?", a: "Oui, jusqu'au Mont-Valérien. Indiquez le numéro et un contact joignable : les rues en pente sont étroites." },
-      { q: "Combien coûte une course au départ de Suresnes ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h)." },
+      { q: "Combien coûte une course au départ de Suresnes ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h) jusqu’à 8 km de route, puis 2 € (Normal) à 4 € (Super) TTC par km." },
     ],
   },
 
@@ -99,7 +99,7 @@ export const LOCAL_92: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Livrez-vous dans les parcs d'activités de Rueil-Malmaison ?", a: "Oui. Donnez le nom du bâtiment, l'accueil et le contact du destinataire : l'accès aux sites d'entreprise est contrôlé." },
       { q: "Pouvez-vous relier Rueil-Malmaison à Paris le jour même ?", a: "Oui, en course immédiate ou planifiée, par l'A86 et la RN13. Nous confirmons le délai avant le départ." },
-      { q: "Quelle est la tarification ?", a: "Rueil-Malmaison est en petite couronne : dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h)." },
+      { q: "Quelle est la tarification ?", a: "Rueil-Malmaison est en petite couronne : dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h) jusqu’à 8 km de route, puis 2 € (Normal) à 4 € (Super) TTC par km." },
     ],
   },
 
@@ -118,7 +118,7 @@ export const LOCAL_92: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Pouvez-vous déposer un document au tribunal de Paris depuis Asnières ?", a: "Oui, en course dédiée. Indiquez le service et l'heure limite ; la remise est horodatée et nominative." },
       { q: "Livrez-vous le soir à Asnières ?", a: "Oui, jusqu'à 19h, du lundi au samedi, selon la disponibilité des pilotes au moment de la commande." },
-      { q: "Combien coûte une livraison depuis Asnières ?", a: "Asnières est en petite couronne : dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h)." },
+      { q: "Combien coûte une livraison depuis Asnières ?", a: "Asnières est en petite couronne : dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h) jusqu’à 8 km de route, puis 2 € (Normal) à 4 € (Super) TTC par km." },
     ],
   },
 
@@ -137,7 +137,7 @@ export const LOCAL_92: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Livrez-vous à l'hôpital Beaujon ?", a: "Oui, en précisant le service, le bâtiment et un contact. Pour un échantillon, indiquez aussi le délai de stabilité." },
       { q: "Pouvez-vous déposer un acte au tribunal de Paris depuis Clichy ?", a: "Oui. La course est dédiée, avec justificatif horodaté à annexer au dossier." },
-      { q: "Quel tarif pour Clichy ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h), comme dans toute la petite couronne." },
+      { q: "Quel tarif pour Clichy ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h) jusqu’à 8 km de route, puis 2 € (Normal) à 4 € (Super) TTC par km." },
     ],
   },
 
@@ -156,7 +156,7 @@ export const LOCAL_92: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Transportez-vous des prélèvements vers l'hôpital Louis-Mourier ?", a: "Oui, en course dédiée, avec contenant isotherme à la demande et service destinataire indiqué à la commande." },
       { q: "Livrez-vous les jours d'événements au stade Yves-du-Manoir ?", a: "Oui, en prévenant de l'événement : l'itinéraire et l'entrée de remise sont adaptés." },
-      { q: "Quelle est la tarification à Colombes ?", a: "Colombes est en petite couronne : dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h)." },
+      { q: "Quelle est la tarification à Colombes ?", a: "Colombes est en petite couronne : dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h) jusqu’à 8 km de route, puis 2 € (Normal) à 4 € (Super) TTC par km." },
     ],
   },
 
@@ -175,7 +175,7 @@ export const LOCAL_92: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Livrez-vous à l'intérieur du port de Gennevilliers ?", a: "Oui, avec le numéro de quai ou d'entrée et un contact sur place. Les accès au port sont contrôlés." },
       { q: "Pouvez-vous acheminer des documents douaniers ?", a: "Oui, en course dédiée, avec remise en main propre et heure consignée." },
-      { q: "Quel tarif à Gennevilliers ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h)." },
+      { q: "Quel tarif à Gennevilliers ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h) jusqu’à 8 km de route, puis 2 € (Normal) à 4 € (Super) TTC par km." },
     ],
   },
 
@@ -194,7 +194,7 @@ export const LOCAL_92: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Pouvez-vous transporter des œuvres légères pour le Salon de Montrouge ?", a: "Pour les pièces qui tiennent dans un top-case de 18 kg, oui. Donnez les dimensions à la commande pour que nous confirmions." },
       { q: "En combien de temps relie-t-on Montrouge à Paris 14e ?", a: "Les deux sont limitrophes : la course est courte, nous annonçons le délai précis à la confirmation." },
-      { q: "Quel est le tarif de Montrouge ?", a: "Montrouge est en petite couronne : dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h)." },
+      { q: "Quel est le tarif de Montrouge ?", a: "Montrouge est en petite couronne : dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h) jusqu’à 8 km de route, puis 2 € (Normal) à 4 € (Super) TTC par km." },
     ],
   },
 
@@ -213,7 +213,7 @@ export const LOCAL_92: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Livrez-vous à Malakoff en plein centre, près du métro ?", a: "Oui. Indiquez la rue et la station de métro la plus proche pour accélérer la remise." },
       { q: "Peut-on organiser des tournées régulières entre Malakoff et Paris ?", a: "Oui, sur créneaux fixes, avec des factures à 30 jours dans le cadre d'un compte entreprise." },
-      { q: "Quel tarif à Malakoff ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h), comme toute la petite couronne." },
+      { q: "Quel tarif à Malakoff ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h) jusqu’à 8 km de route, puis 2 € (Normal) à 4 € (Super) TTC par km." },
     ],
   },
 
@@ -232,7 +232,7 @@ export const LOCAL_92: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Livrez-vous au Parc des Expositions depuis Vanves ?", a: "Oui, en précisant le hall, le stand et le contact exposant. Les accès sont contrôlés pendant les salons." },
       { q: "Quel est le délai pour rejoindre Paris 15e ?", a: "Les deux sont limitrophes : la course est courte. Nous annonçons le délai exact à la confirmation." },
-      { q: "Combien coûte une course à Vanves ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h)." },
+      { q: "Combien coûte une course à Vanves ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h) jusqu’à 8 km de route, puis 2 € (Normal) à 4 € (Super) TTC par km." },
     ],
   },
 
@@ -251,7 +251,7 @@ export const LOCAL_92: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Transportez-vous des prélèvements vers les hôpitaux de Clamart ?", a: "Oui, en course dédiée, avec contenant isotherme sur demande. Le délai de stabilité fixé par le laboratoire commande la faisabilité." },
       { q: "Livrez-vous dans les quartiers boisés de Clamart ?", a: "Oui. Donnez l'adresse complète et un contact pour que le coursier trouve l'accès sans détour." },
-      { q: "Quel tarif à Clamart ?", a: "Clamart est en petite couronne : dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h)." },
+      { q: "Quel tarif à Clamart ?", a: "Clamart est en petite couronne : dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h) jusqu’à 8 km de route, puis 2 € (Normal) à 4 € (Super) TTC par km." },
     ],
   },
 
@@ -270,7 +270,7 @@ export const LOCAL_92: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Pouvez-vous livrer à l'intérieur d'un grand campus de bureaux ?", a: "Oui, à l'accueil désigné. Donnez le bâtiment, l'étage et un contact pour que le coursier soit attendu." },
       { q: "Quelle est la durée d'une course vers Paris depuis Châtillon ?", a: "La commune est limitrophe de Malakoff et proche de Paris 14e : nous confirmons le délai exact à la commande." },
-      { q: "Combien coûte une course à Châtillon ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h)." },
+      { q: "Combien coûte une course à Châtillon ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h) jusqu’à 8 km de route, puis 2 € (Normal) à 4 € (Super) TTC par km." },
     ],
   },
 
@@ -289,7 +289,7 @@ export const LOCAL_92: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Livrez-vous dans les zones d'activité de Bagneux ?", a: "Oui, avec le nom du bâtiment, l'entrée et le contact. L'heure limite de remise fixe le départ." },
       { q: "Pouvez-vous relier Bagneux à Paris le jour même ?", a: "Oui, en course planifiée ou immédiate. Nous annonçons le délai exact à la confirmation." },
-      { q: "Quel tarif pour Bagneux ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h)." },
+      { q: "Quel tarif pour Bagneux ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h) jusqu’à 8 km de route, puis 2 € (Normal) à 4 € (Super) TTC par km." },
     ],
   },
 
@@ -301,14 +301,14 @@ export const LOCAL_92: Record<string, LocalZoneContent> = {
     localGuide: {
       title: "Antony : à mi-chemin entre Paris, Orly et Saclay",
       paragraphs: [
-        "Antony se trouve entre Paris et le sud de l'Essonne. Pour les entreprises de la commune, les courses vont dans trois directions : Paris, Orly et Rungis, et le plateau de Saclay. La destination fixe le tarif : la petite couronne suit la grille standard, l’Essonne suit la distance depuis Paris : {normal@Massy 91} € TTC pour Massy, {normal@Saclay 91} € TTC pour Saclay.",
+        "Antony se trouve entre Paris et le sud de l'Essonne. Pour les entreprises de la commune, les courses vont dans trois directions : Paris, Orly et Rungis, et le plateau de Saclay. La destination fixe le tarif : la petite couronne se paie au km (28 € TTC jusqu’à 8 km, puis 2 € par km), l’Essonne suit la distance depuis Paris : {normal@Massy 91} € TTC pour Massy, {normal@Saclay 91} € TTC pour Saclay.",
         "L'hôpital privé d'Antony et les cabinets de la commune échangent des prélèvements et des dossiers avec des laboratoires voisins. Précisez le service, l'heure limite et la température de conservation lorsqu'elle s'applique.",
       ],
     },
     faq: [
       { q: "Livrez-vous vers Orly et Rungis depuis Antony ?", a: "Oui. Ces trajets sont proches ; selon la destination, ils relèvent de la grille petite couronne ou grande couronne." },
       { q: "Transportez-vous des prélèvements depuis l'hôpital privé d'Antony ?", a: "Oui, en course dédiée, avec contenant isotherme à la demande." },
-      { q: "Quel tarif à Antony ?", a: "Antony est en petite couronne : dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h)." },
+      { q: "Quel tarif à Antony ?", a: "Antony est en petite couronne : dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h) jusqu’à 8 km de route, puis 2 € (Normal) à 4 € (Super) TTC par km." },
     ],
   },
 
@@ -327,7 +327,7 @@ export const LOCAL_92: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Livrez-vous aux centres de recherche de Meudon ?", a: "Oui, à l'accueil désigné, avec nom du destinataire et service. Les sites de recherche contrôlent leurs accès." },
       { q: "Desservez-vous Meudon-la-Forêt ?", a: "Oui. Donnez l'adresse complète et un contact : le quartier est vaste." },
-      { q: "Quel est le tarif à Meudon ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h)." },
+      { q: "Quel est le tarif à Meudon ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h) jusqu’à 8 km de route, puis 2 € (Normal) à 4 € (Super) TTC par km." },
     ],
   },
 
@@ -346,7 +346,7 @@ export const LOCAL_92: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Pouvez-vous transporter une pièce de porcelaine ?", a: "Pour une pièce légère et bien emballée qui tient dans un top-case de 18 kg, oui. Au-delà ou pour un objet de valeur, contactez-nous avant." },
       { q: "Livrez-vous au musée national de la céramique ?", a: "Oui, à l'accueil ou à l'entrée de service indiquée, avec un contact sur place." },
-      { q: "Quel tarif pour Sèvres ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h)." },
+      { q: "Quel tarif pour Sèvres ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h) jusqu’à 8 km de route, puis 2 € (Normal) à 4 € (Super) TTC par km." },
     ],
   },
 
@@ -365,7 +365,7 @@ export const LOCAL_92: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Livrez-vous le jour de courses à l'hippodrome ?", a: "Oui, en prévenant de l'événement et en précisant l'entrée de remise." },
       { q: "Peut-on envoyer un pli à un cabinet de Saint-Cloud en main propre ?", a: "Oui. Le pli est remis au destinataire, avec son nom et l'heure consignés dans le justificatif." },
-      { q: "Quel tarif à Saint-Cloud ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h)." },
+      { q: "Quel tarif à Saint-Cloud ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h) jusqu’à 8 km de route, puis 2 € (Normal) à 4 € (Super) TTC par km." },
     ],
   },
 
@@ -384,7 +384,7 @@ export const LOCAL_92: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Livrez-vous sur les sites universitaires de Châtenay-Malabry ?", a: "Oui, avec le bâtiment, le laboratoire et un contact sur place." },
       { q: "Transportez-vous des échantillons vers la faculté de pharmacie ?", a: "Oui, en course dédiée, avec contenant isotherme à la demande." },
-      { q: "Quel tarif à Châtenay-Malabry ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h)." },
+      { q: "Quel tarif à Châtenay-Malabry ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h) jusqu’à 8 km de route, puis 2 € (Normal) à 4 € (Super) TTC par km." },
     ],
   },
 
@@ -403,7 +403,7 @@ export const LOCAL_92: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Pouvez-vous remettre un acte à une étude notariale de Sceaux ?", a: "Oui, en course dédiée, remis en main propre avec justificatif horodaté." },
       { q: "Livrez-vous au château de Sceaux ?", a: "Oui. Donnez l'entrée et un contact sur place pour un événement ou une exposition." },
-      { q: "Quel tarif à Sceaux ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h)." },
+      { q: "Quel tarif à Sceaux ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h) jusqu’à 8 km de route, puis 2 € (Normal) à 4 € (Super) TTC par km." },
     ],
   },
 
@@ -422,7 +422,7 @@ export const LOCAL_92: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Livrez-vous de part et d'autre de la voie ferrée à Bourg-la-Reine ?", a: "Oui. Précisez le côté de la voie et la rue : cela évite un détour." },
       { q: "Peut-on prévoir un passage quotidien depuis Bourg-la-Reine ?", a: "Oui, par tournées sur créneaux fixes, avec des factures à 30 jours." },
-      { q: "Quel est le tarif de Bourg-la-Reine ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h)." },
+      { q: "Quel est le tarif de Bourg-la-Reine ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h) jusqu’à 8 km de route, puis 2 € (Normal) à 4 € (Super) TTC par km." },
     ],
   },
 
@@ -441,7 +441,7 @@ export const LOCAL_92: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Livrez-vous au CEA de Fontenay-aux-Roses ?", a: "Oui, à l'accueil désigné, avec nom du destinataire, bâtiment et contact. L'accès dépend des règles du site." },
       { q: "Quel est le délai pour rejoindre Paris depuis Fontenay ?", a: "Nous confirmons le délai précis à la commande, selon l'heure et la destination." },
-      { q: "Quel tarif à Fontenay-aux-Roses ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h)." },
+      { q: "Quel tarif à Fontenay-aux-Roses ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h) jusqu’à 8 km de route, puis 2 € (Normal) à 4 € (Super) TTC par km." },
     ],
   },
 
@@ -460,7 +460,7 @@ export const LOCAL_92: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Transportez-vous des prélèvements depuis l'hôpital Marie-Lannelongue ?", a: "Oui, en course dédiée, avec contenant isotherme sur demande." },
       { q: "Le centre piéton du Plessis-Robinson est-il un problème ?", a: "Non : le coursier s'arrête en limite de zone piétonne. Indiquez le point de remise." },
-      { q: "Quel tarif au Plessis-Robinson ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h)." },
+      { q: "Quel tarif au Plessis-Robinson ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h) jusqu’à 8 km de route, puis 2 € (Normal) à 4 € (Super) TTC par km." },
     ],
   },
 
@@ -479,7 +479,7 @@ export const LOCAL_92: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Pouvez-vous livrer à La Défense depuis La Garenne-Colombes ?", a: "Oui. La course est courte ; précisez la tour, l'accueil et un contact." },
       { q: "Faites-vous des tournées régulières depuis La Garenne-Colombes ?", a: "Oui, avec un compte entreprise, sur créneaux fixes et des factures à 30 jours." },
-      { q: "Quel tarif ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h)." },
+      { q: "Quel tarif ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h) jusqu’à 8 km de route, puis 2 € (Normal) à 4 € (Super) TTC par km." },
     ],
   },
 };

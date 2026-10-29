@@ -22,7 +22,8 @@ import { createAnonClient } from "@/lib/supabase/anon";
 import { payWithSavedMethod } from "@/lib/saved-payment";
 import { AddressAutocomplete } from "@/components/AddressAutocomplete";
 import { checkIdfAddress } from "@/lib/address-idf";
-import { calculatePrice, splitTTC, isServedAddress, ServiceLevel } from "@/lib/pricing";
+import { splitTTC, isServedAddress, ServiceLevel } from "@/lib/pricing";
+import { useRoutePrice } from "@/lib/use-route-price";
 import UnservedAddressAlert, { useUnservedAddresses } from "@/components/UnservedAddressAlert";
 import LargeParcelAlert from "@/components/LargeParcelAlert";
 import { ORDER_NATURES, NATURE_DETAIL_MAX, natureLabel } from "@/lib/order-nature";
@@ -60,7 +61,6 @@ export default function OrderForm() {
   const [recipientName, setRecipientName] = useState("");
   const [scheduledDate, setScheduledDate] = useState("");
   const [scheduledTime, setScheduledTime] = useState("");
-  const [estimatedPrice, setEstimatedPrice] = useState<number | null>(null);
   // Adresse hors Paris / IDF : blocage immédiat, alerte après une courte pause de frappe.
   const outOfZone = [pickupAddress, dropoffAddress].some((a) => a.trim().length > 0 && !isServedAddress(a));
   const showZoneAlert = useUnservedAddresses([pickupAddress, dropoffAddress]);
@@ -170,14 +170,8 @@ export default function OrderForm() {
     if (!hasAccount && delai === 'navette') setDelai('standard');
   }, [hasAccount, delai]);
 
-  useEffect(() => {
-    // Pas de tarif hors Paris / Île-de-France.
-    if (pickupAddress && dropoffAddress && isServedAddress(pickupAddress) && isServedAddress(dropoffAddress)) {
-      setEstimatedPrice(calculatePrice(pickupAddress, dropoffAddress, delai as ServiceLevel));
-    } else {
-      setEstimatedPrice(null);
-    }
-  }, [pickupAddress, dropoffAddress, delai]);
+  // Pas de tarif hors Paris / Île-de-France ; petite couronne : prix au km (distance par la route).
+  const estimatedPrice = useRoutePrice(pickupAddress, dropoffAddress, delai as ServiceLevel);
 
   useEffect(() => {
     const search = window.location.search;
