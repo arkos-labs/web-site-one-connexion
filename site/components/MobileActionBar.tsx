@@ -9,11 +9,11 @@ import { Phone } from "lucide-react";
 import { PHONE_TEL } from "@/lib/site-content";
 
 // Espace client, admin et parcours de commande : pas de barre.
-const HIDDEN = /^\/(admin|dashboard|telegram|commande|suivre|connexion|inscription|mot-de-passe-oublie|reinitialiser-mot-de-passe)(\/|$)/;
+export const ACTION_BAR_HIDDEN = /^\/(admin|dashboard|telegram|commande|suivre|connexion|inscription|mot-de-passe-oublie|reinitialiser-mot-de-passe)(\/|$)/;
 
 export default function MobileActionBar() {
   const pathname = usePathname();
-  if (HIDDEN.test(pathname)) return null;
+  if (ACTION_BAR_HIDDEN.test(pathname)) return null;
 
   return (
     <>
