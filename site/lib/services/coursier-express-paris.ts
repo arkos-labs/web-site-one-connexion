@@ -19,7 +19,7 @@ export const coursierExpressParis: Service = {
   seo: {
     title: "Coursier express Paris - dès 42 € TTC",
     description:
-      "Coursier express à Paris : enlèvement en moins de 45 minutes, course dédiée en moto ou scooter, suivi en ligne, du lundi au samedi. Prix coursier express Paris : dès 42 € TTC en urgent (1 h 30), 42 € TTC en formule Super (1 h).",
+      "Coursier express à Paris : enlèvement en moins de 45 minutes, course dédiée en moto ou scooter, suivi en ligne, du lundi au samedi. Prix coursier express Paris : dès 42 € TTC en urgent (1 h 30), 56 € TTC en formule Super (1 h).",
     keywords: [
       "coursier express Paris",
       "coursier paris express",
@@ -34,7 +34,7 @@ export const coursierExpressParis: Service = {
   h1: "Coursier express à Paris : enlèvement en moins de 45 minutes",
 
   intro:
-    "Quand un pli, un colis ou une pièce doit partir maintenant, One Connexion envoie un coursier en deux-roues en course dédiée : un enlèvement, un trajet direct, une remise horodatée. Paris intra-muros et Île-de-France, du lundi au samedi de 9h à 19h.",
+    "Quand un pli, un colis ou une pièce doit partir maintenant, One Connexion envoie un coursier en deux-roues en course dédiée : un enlèvement, un trajet direct, une remise horodatée. Intramuros et Île-de-France, du lundi au samedi de 9h à 19h.",
 
   stats: [
     { value: "< 45 min", label: "Prise en charge" },
@@ -46,7 +46,7 @@ export const coursierExpressParis: Service = {
     title: "Ce qui fait une vraie course express",
     paragraphs: [
       "Une livraison express n’a de sens que si le coursier part tout de suite et va directement à destination. Sans regroupement avec d’autres colis ni passage par un centre de tri, le délai annoncé est le délai réel.",
-      "À Paris, le deux-roues est le moyen le plus fiable pour tenir un créneau serré : il passe là où un utilitaire reste bloqué. Nos scooters et motos assurent les courses intra-muros, et les motos routières les trajets vers la banlieue, La Défense, Roissy ou Orly.",
+      "En intramuros, le deux-roues est le moyen le plus fiable pour tenir un créneau serré : il passe là où un utilitaire reste bloqué. Nos scooters et motos assurent les courses intra-muros, et les motos routières les trajets vers la banlieue, La Défense, Roissy ou Orly.",
       "Avant d’engager la course, nous confirmons la faisabilité et le prix. Vous savez à quelle heure le coursier arrive, et vous suivez l’avancement de la course en ligne jusqu’à la remise.",
     ],
   },
@@ -107,7 +107,7 @@ export const coursierExpressParis: Service = {
       "Une course express part dès la confirmation et va directement à destination. Les formules Urgent (1 h 30) et Super (1 h) sont faites pour ça ; le prix ne dépend que de la zone la plus éloignée du trajet.",
     recommended: ["urgent", "flash"],
     note:
-      "Dans Paris, une course Super coûte 56 € TTC, livrée sous 1 h. Si votre délai est plus large, la formule Normale (3 h) revient deux fois moins cher.",
+      "En intramuros, une course Super coûte 56 € TTC, livrée sous 1 h. Si votre délai est plus large, la formule Normale (3 h) revient deux fois moins cher.",
   },
 
   faqTitle: "Vos questions sur le coursier express.",
@@ -121,7 +121,7 @@ export const coursierExpressParis: Service = {
     {
       question: "En combien de temps un coursier express vient-il chercher mon colis ?",
       answer:
-        "L’enlèvement se fait en moins de 45 minutes dans Paris, sous réserve de disponibilité au moment de la commande. Nous confirmons le délai avant d’engager la course.",
+        "L’enlèvement se fait en moins de 45 minutes en intramuros, sous réserve de disponibilité au moment de la commande. Nous confirmons le délai avant d’engager la course.",
     },
     {
       question: "Quel est le prix d’un coursier express à Paris ?",
@@ -131,7 +131,7 @@ export const coursierExpressParis: Service = {
     {
       question: "Quelle différence entre course immédiate et course planifiée ?",
       answer:
-        "La course Super part dans l’heure. La course normale, livrée sous 3 h, démarre à 28 € TTC dans Paris.",
+        "La course Super part dans l’heure. La course normale, livrée sous 3 h, démarre à 28 € TTC en intramuros.",
     },
     {
       question: "Livrez-vous en dehors de Paris ?",

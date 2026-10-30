@@ -33,7 +33,7 @@ export const coursierMotoParis: Service = {
   h1: "Coursier moto et scooter à Paris : livraison express en deux-roues",
 
   intro:
-    "One Connexion livre à Paris et en Île-de-France avec une flotte de scooters et de motos routières équipées pour un usage professionnel. Le deux-roues passe dans la circulation là où un utilitaire reste bloqué : c’est ce qui permet de tenir des délais courts.",
+    "One Connexion livre dans la capitale et en Île-de-France avec une flotte de scooters et de motos routières équipées pour un usage professionnel. Le deux-roues passe dans la circulation là où un utilitaire reste bloqué : c’est ce qui permet de tenir des délais courts.",
 
   stats: [
     { value: "Dès 28 € TTC", label: "Course normale Paris (3 h)" },
@@ -44,8 +44,8 @@ export const coursierMotoParis: Service = {
   context: {
     title: "Pourquoi un coursier moto plutôt qu’un utilitaire",
     paragraphs: [
-      "Dans Paris, la circulation décide du délai. Un scooter ou une moto traverse la ville sans dépendre des embouteillages, et reste disponible pour une course dédiée plutôt qu’une tournée avec plusieurs arrêts.",
-      "Nos scooters électriques et 125cc circulent dans les rues les plus denses de Paris sans être limités par les restrictions ZFE. Nos motos routières de 300 à 600cc gardent une bonne vitesse sur les rocades et les axes rapides.",
+      "En ville, la circulation décide du délai. Un scooter ou une moto traverse la ville sans dépendre des embouteillages, et reste disponible pour une course dédiée plutôt qu’une tournée avec plusieurs arrêts.",
+      "Nos scooters électriques et 125cc circulent dans les rues les plus denses de la capitale sans être limités par les restrictions ZFE. Nos motos routières de 300 à 600cc gardent une bonne vitesse sur les rocades et les axes rapides.",
       "Chaque véhicule est équipé d’un top-case verrouillé et étanche, jusqu’à 18 kg. Les colis volumineux ou lourds ne conviennent pas à ce mode de transport : dites-nous ce que vous envoyez, nous confirmons la faisabilité avant d’engager la course.",
     ],
   },
@@ -125,7 +125,7 @@ export const coursierMotoParis: Service = {
     {
       question: "Scooter ou moto : lequel est utilisé ?",
       answer:
-        "Les scooters électriques et 125cc assurent les courses dans Paris. Les motos routières de 300 à 600cc sont utilisées pour la banlieue, les rocades et les trajets vers La Défense, Roissy ou Orly.",
+        "Les scooters électriques et 125cc assurent les courses intramuros. Les motos routières de 300 à 600cc sont utilisées pour la banlieue, les rocades et les trajets vers La Défense, Roissy ou Orly.",
     },
     {
       question: "Le coursier moto est-il plus rapide qu’un utilitaire ?",
@@ -135,7 +135,7 @@ export const coursierMotoParis: Service = {
     {
       question: "En combien de temps le coursier vient-il chercher mon colis ?",
       answer:
-        "Dans Paris, la moto est généralement chez vous en moins de 45 minutes ; le délai exact vous est annoncé à la confirmation.",
+        "En intramuros, la moto est généralement chez vous en moins de 45 minutes ; le délai exact vous est annoncé à la confirmation.",
     },
     {
       question: "Intervenez-vous le week-end ?",
