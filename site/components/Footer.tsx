@@ -19,14 +19,11 @@ const NAV_LINKS = [
   { label: "Notre méthode", href: "/methode" },
   { label: "Flotte & couverture", href: "/flotte" },
   { label: "Tarifs", href: "/tarifs" },
-  { label: "Coursier express Paris", href: "/services/coursier-express-paris" },
-  { label: "Coursier moto Paris", href: "/services/coursier-moto-paris" },
   { label: "Guides pratiques", href: "/guides" },
   { label: "Contact", href: "/contact" },
 ];
 
 const BOTTOM_LINKS = [
-  { label: "Zones desservies", href: "/zones" },
   { label: "Mentions légales", href: "/mentions-legales" },
   { label: "CGV", href: "/cgv" },
   { label: "Confidentialité", href: "/politique-de-confidentialite" },
@@ -68,15 +65,11 @@ function getTagline(pathname: string): string {
 const SECTEUR_LINKS = [
   { label: "Cabinets juridiques", href: "/secteurs#juridique" },
   { label: "Laboratoires & médical", href: "/secteurs#medical" },
-  { label: "E-commerce & retail", href: "/secteurs#ecommerce" },
-  { label: "Corporate & agences", href: "/secteurs#corporate" },
-  { label: "Événementiel", href: "/secteurs#evenementiel" },
   { label: "Grands comptes", href: "/services/compte-entreprise" },
 ];
 
 const ZONE_LINKS = [
   { label: "Paris intramuros (75)", href: "/zones/paris" },
-  { label: "La Défense & 92", href: "/zones/la-defense" },
   { label: "Petite couronne (92/93/94)", href: "/zones/petite-couronne" },
   { label: "Grande couronne (77/78/91/95)", href: "/zones/grande-couronne" },
   { label: "Toutes les villes desservies", href: "/zones" },
