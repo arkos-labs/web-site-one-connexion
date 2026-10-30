@@ -585,14 +585,18 @@ const PETITE_COURONNE = new Set(["92", "93", "94", "77", "78", "91", "95"]); // 
  * (18/10/2026) : la grande couronne (77, 78, 91, 95), avec son contenu et 5 questions de FAQ.
  */
 export function isZoneIndexed(zone: Zone): boolean {
-  return true; // Index toutes les zones - elles ont toutes du contenu substantiel
+  // Seuls les 20 arrondissements de Paris sont indexés (contenu rédigé à la main, unique).
+  // Les communes de petite et grande couronne restent accessibles, en noindex et hors sitemap :
+  // leurs textes se répètent d'une ville à l'autre et ont fait chuter le site dans Google (oct. 2026).
+  return zone.category === "paris";
 }
 
 export const INDEXED_ZONE_SLUGS = ZONES.filter(isZoneIndexed).map((z) => z.slug);
 
 /** Communes indexables d'un département (préfixe du code postal : "92", "93", "94"), triées par nom. */
 export function getIndexedZonesByDept(dept: string): Zone[] {
-  return ZONES.filter((z) => z.category !== "paris" && z.dept.startsWith(dept) && isZoneIndexed(z))
+  // Liens de maillage vers toutes les communes du département (indexées ou non).
+  return ZONES.filter((z) => z.category !== "paris" && z.dept.startsWith(dept))
     .sort((a, b) => a.name.localeCompare(b.name, "fr"));
 }
 
