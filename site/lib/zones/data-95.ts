@@ -33,7 +33,7 @@ export const ZONES_95: Zone[] = [
     fullName: "Argenteuil - Val-d'Oise",
     category: "hauts-de-seine",
     landmarks: ["Seine", "Paris 17e (proche via pont)", "A15", "Zone industrielle"],
-    intro: "Argenteuil est la plus grande ville du Val-d'Oise et borde la Seine face au 17e arrondissement. Son tissu industriel, ses PME et ses services génèrent des besoins logistiques intenses entre Argenteuil et Paris.",
+    intro: "Argenteuil est la plus grande ville du Val-d'Oise et borde la Seine face au 17e arrondissement. Son tissu industriel, ses PME et ses services génèrent des besoins logistiques intenses entre Argenteuil et la capitale.",
     logisticsContext: "Argenteuil est à 20 minutes de Paris 17e via l'A15. Nos coursiers relient Argenteuil aux zones d'affaires parisiennes rapidement.",
     sectorExamples: {
       juridique: "Transport entre les cabinets d'Argenteuil et les juridictions de Paris et de Pontoise.",

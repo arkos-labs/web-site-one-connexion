@@ -13,7 +13,7 @@ export const ZONES_94: Zone[] = [
     sectorExamples: {
       juridique: "Dépôt d'actes et transmission de pièces entre les cabinets et études du centre de Vincennes, le Tribunal judiciaire de Créteil et les juridictions parisiennes, avec remise en main propre.",
       medical: "Acheminement de prélèvements depuis les cabinets médicaux, centres d'imagerie et professions paramédicales du centre-ville vers les laboratoires d'analyses, contenant isotherme sur demande.",
-      ecommerce: "Livraison le jour même pour les commerçants de la rue du Midi et les vendeurs en ligne installés à Vincennes, vers Paris et la petite couronne.",
+      ecommerce: "Livraison le jour même pour les commerçants de la rue du Midi et les vendeurs en ligne installés à Vincennes, vers la capitale et la petite couronne.",
       corporate: "Navettes entre les agences et sociétés de services de Vincennes et leurs clients du 12e, de Bastille ou de La Défense, avec preuve de remise horodatée.",
       evenementiel: "Matériel, documents et accréditations pour les événements professionnels organisés au château et autour du bois de Vincennes.",
       grandsComptes: "Compte entreprise pour les cabinets et sociétés de Vincennes : facture à 30 jours.",
