@@ -5,11 +5,12 @@
  */
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { MapPin, Flag, Phone } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useRoutePrice } from "@/lib/use-route-price";
+import { trackEvent } from "@/lib/track-event";
 import { formatEur } from "@/lib/price-display";
 import { PHONE_DISPLAY, PHONE_TEL } from "@/lib/site-content";
 
@@ -32,6 +33,21 @@ const openOrder = (detail?: { pickup: string; dropoff: string }) =>
 export default function Hero() {
   const [pickup, setPickup] = useState("");
   const [dropoff, setDropoff] = useState("");
+
+  // Première saisie de chaque adresse dans la barre du haut (une fois par visiteur) : cf. lib/track-event.
+  const addressTracked = useRef({ pickup: false, dropoff: false });
+  useEffect(() => {
+    if (pickup.trim() && !addressTracked.current.pickup) {
+      addressTracked.current.pickup = true;
+      trackEvent("order_address_pickup");
+    }
+  }, [pickup]);
+  useEffect(() => {
+    if (dropoff.trim() && !addressTracked.current.dropoff) {
+      addressTracked.current.dropoff = true;
+      trackEvent("order_address_dropoff");
+    }
+  }, [dropoff]);
 
   // Prix tout de suite, avant tout formulaire : le visiteur sait combien ça coûte. Formule la moins chère, avec la même grille que le formulaire de commande ; les autres délais s'y affichent.
   // Petite couronne : prix au km, calculé avec la distance par la route.
