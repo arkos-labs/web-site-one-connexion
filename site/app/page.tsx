@@ -4,7 +4,6 @@ import OrderForm from "@/components/sections/OrderForm";
 import Contact from "@/components/sections/Contact";
 import Faq from "@/components/sections/Faq";
 import JsonLd from "@/components/JsonLd";
-import DeptCards from "@/components/sections/DeptCards";
 import Services from "@/components/sections/Services";
 import TrustStrip from "@/components/sections/TrustStrip";
 import Link from "next/link";
@@ -100,7 +99,11 @@ export default function Home() {
           chaque ville a sa page avec ses délais et ses particularités. La{" "}
           <Link href="/zones/grande-couronne" className="text-ink underline underline-offset-2">grande couronne</Link> est aussi desservie.
         </p>
-        <DeptCards depts={["92", "93", "94"]} />
+        <div className="flex flex-wrap gap-x-6 gap-y-3 text-[15px] font-semibold">
+          <Link href="/zones/petite-couronne" className="text-ink underline underline-offset-2">Petite couronne (92, 93, 94)</Link>
+          <Link href="/zones/grande-couronne" className="text-ink underline underline-offset-2">Grande couronne (77, 78, 91, 95)</Link>
+          <Link href="/zones" className="text-ink underline underline-offset-2">Toutes les villes desservies</Link>
+        </div>
         <div className="mt-6 rounded-xl bg-ink px-6 py-6 text-white sm:px-8">
           <div>
             <p className="text-[19px] font-bold leading-tight">Votre ville n’est pas dans la liste ? On y livre aussi.</p>

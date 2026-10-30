@@ -14,7 +14,6 @@ import ServiceRelated from "@/components/services/ServiceRelated";
 import ServiceSteps from "@/components/services/ServiceSteps";
 import ServiceUseCases from "@/components/services/ServiceUseCases";
 import ServicePricing from "@/components/services/ServicePricing";
-import CityLinks from "@/components/sections/CityLinks";
 import { SERVICE_SLUGS, getService } from "@/lib/services";
 import { GUIDES } from "@/lib/guides";
 import { SITE_URL } from "@/lib/site-content";
@@ -232,10 +231,15 @@ export default async function ServicePage({
           </h2>
           <p className="mb-9 max-w-[62ch] text-[15px] leading-[1.6] text-muted">
             Nous intervenons dans les 20 arrondissements de{" "}
-            <Link href="/zones/paris" className="text-ink underline underline-offset-2">Paris</Link> et dans les villes ci-dessous.
-            Chaque page de ville détaille les délais et les particularités d’accès.
+            <Link href="/zones/paris" className="text-ink underline underline-offset-2">Paris</Link>, dans la{" "}
+            <Link href="/zones/petite-couronne" className="text-ink underline underline-offset-2">petite couronne</Link>{" "}
+            et en grande couronne. Chaque page de ville détaille les délais et les particularités d’accès.
           </p>
-          <CityLinks depts={["92", "93", "94"]} />
+          <div className="flex flex-wrap gap-x-6 gap-y-3 text-[15px] font-semibold">
+            <Link href="/zones/petite-couronne" className="text-ink underline underline-offset-2">Petite couronne (92, 93, 94)</Link>
+            <Link href="/zones/grande-couronne" className="text-ink underline underline-offset-2">Grande couronne (77, 78, 91, 95)</Link>
+            <Link href="/zones" className="text-ink underline underline-offset-2">Toutes les villes desservies</Link>
+          </div>
         </section>
 
         <section className="py-[72px]">
