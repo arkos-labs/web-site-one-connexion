@@ -30,6 +30,7 @@ import { ORDER_NATURES, NATURE_DETAIL_MAX, natureLabel } from "@/lib/order-natur
 import { notifyNewOrder } from "@/lib/notify-new-order";
 import GuestAccountBox from "@/components/GuestAccountBox";
 import { saveOrderDraft, loadOrderDraft, clearOrderDraft, checkoutSessionIdFromUrl, cameBackFromCheckout, abandonCheckout } from "@/lib/order-draft";
+import { trackEvent } from "@/lib/track-event";
 
 // Tarifs TTC (TVA 20 % comprise) pour tous les clients.
 const eur = (n: number) => `${n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`;
@@ -40,6 +41,12 @@ export default function OrderForm() {
   const [submitting, setSubmitting] = useState(false);
   const [trackingCode, setTrackingCode] = useState<string | null>(null);
   const [formError, setFormError] = useState("");
+
+  // Parcours visiteur (cf. lib/track-event) : ouverture, étape atteinte, erreur, envoi, Stripe.
+  useEffect(() => { trackEvent("order_open"); }, []);
+  useEffect(() => { trackEvent("order_step", { step }); }, [step]);
+  useEffect(() => { if (formError) trackEvent("order_error", { step, detail: formError }); }, [formError, step]);
+  useEffect(() => { if (submitted) trackEvent("order_submitted"); }, [submitted]);
   const [checkingAddress, setCheckingAddress] = useState(false);
 
   // Form state
@@ -267,6 +274,7 @@ export default function OrderForm() {
     if (nature === "autre" && !natureDetail.trim()) { setFormError("Précisez ce que vous envoyez."); return; }
 
     setSubmitting(true);
+    trackEvent("order_submit");
 
     let { data: { user } } = await supabase.auth.getUser();
     // Connecté à un compte, mais la commande est passée avec un autre e-mail (autre client, autre
@@ -381,6 +389,7 @@ export default function OrderForm() {
             siret, raisonSociale, adresseFacturation, tva, paymentMode, debitMethod,
           },
         });
+        trackEvent("order_checkout");
         window.location.href = data.url;
       } else {
         throw new Error(data.error || "Erreur inconnue");
