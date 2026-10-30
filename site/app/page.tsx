@@ -8,6 +8,7 @@ import DeptCards from "@/components/sections/DeptCards";
 import TrustStrip from "@/components/sections/TrustStrip";
 import Link from "next/link";
 import { LEGAL, PHONE_TEL, EMAIL, SITE_URL, MAPS_URL } from "@/lib/site-content";
+import { getZonesByCategory } from "@/lib/zones/data";
 
 const organizationSchema = {
   "@context": "https://schema.org",
@@ -85,6 +86,29 @@ export default function Home() {
       <About />
       <OrderForm />
       <Faq />
+      <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[88px]">
+        <div className="mb-3 flex items-center gap-3 font-mono text-[10px] tracking-[0.16em] text-accent uppercase">
+          <span className="h-px w-6 bg-accent" />
+          Coursier Paris
+        </div>
+        <h2 className="mb-4 max-w-[26ch] text-balance text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
+          Livraison express dans les 20 arrondissements de Paris.
+        </h2>
+        <p className="mb-8 max-w-[62ch] text-[15px] leading-[1.6] text-muted">
+          Tarif dès 28 € TTC en normal, enlèvement en moins de 45 minutes, course dédiée et remise horodatée.{" "}
+          <Link href="/zones/paris" className="text-ink underline underline-offset-2">Voir la page Coursier Paris</Link> ou{" "}
+          <Link href="/tarifs" className="text-ink underline underline-offset-2">le détail des tarifs</Link>.
+        </p>
+        <ul className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-5">
+          {getZonesByCategory("paris").map((z) => (
+            <li key={z.slug}>
+              <Link href={`/zones/${z.slug}`} className="block rounded-lg border border-gray-100 bg-white px-4 py-3 text-[14px] font-medium text-ink transition-colors hover:border-accent/30 hover:text-accent-dark">
+                {z.name}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
       <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[88px]">
         <div className="mb-3 flex items-center gap-3 font-mono text-[10px] tracking-[0.16em] text-accent uppercase">
           <span className="h-px w-6 bg-accent" />

@@ -11,9 +11,9 @@ import { SERVICES } from "@/lib/services";
 import { Clock, MapPin, Zap, Shield } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: { absolute: "Coursier Paris : livraison express dès 28 € TTC" },
+  title: { absolute: "Tarif coursier Paris : dès 28 € TTC" },
   description:
-    "Coursier Paris : commander une livraison express dès 28€, enlèvement < 45 min. 1h, 3h ou normal. Tous les arrondissements, suivi GPS, remise horodatée.",
+    "Tarif coursier Paris dès 28 € TTC en normal, 42 € en urgent. Livraison express dans les 20 arrondissements, enlèvement en moins de 45 min, remise horodatée.",
   alternates: { canonical: "/zones/paris" },
   openGraph: {
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION - Coursier B2B Paris & Île-de-France" }],

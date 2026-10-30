@@ -169,9 +169,9 @@ export const GUIDES: Guide[] = [
   {
     slug: "prix-coursier-express-paris",
     title: "Prix d'un coursier express à Paris : ce qui fait varier le tarif",
-    seoTitle: "Prix d'un coursier express à Paris : guide",
+    seoTitle: "Tarif coursier Paris : prix et critères",
     description:
-      "Distance, délai, nature du transport, volume : les critères qui déterminent le prix d'un coursier express à Paris et en Île-de-France, et comment connaître le prix avant de commander.",
+      "Tarif d'un coursier à Paris : distance, délai, zone et volume. Comment connaître le prix avant de commander.",
     intro:
       "Il n'existe pas de prix unique pour un coursier : la même course peut varier selon quelques critères précis. Les connaître permet de comparer des offres sur des bases identiques.",
     sections: [
