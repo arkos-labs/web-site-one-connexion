@@ -43,7 +43,7 @@ const breadcrumbSchema = {
 const FAQ = [
   {
     q: "Quel est le prix d'un coursier à Paris ?",
-    a: "À Paris intramuros, une course normale sous 3 h démarre à 28 € TTC, une course urgente sous 1 h 30 à 42 € TTC et une course Super sous 1 h à 56 € TTC.",
+    a: "En intramuros, une course normale sous 3 h démarre à 28 € TTC, une course urgente sous 1 h 30 à 42 € TTC et une course Super sous 1 h à 56 € TTC.",
   },
   {
     q: "Quel est le tarif d'un coursier en petite couronne ?",
@@ -51,11 +51,11 @@ const FAQ = [
   },
   {
     q: "Combien coûte un coursier moto à Paris ?",
-    a: "Une course en moto dans Paris intramuros démarre à 28 € TTC en normal 3 h et 56 € TTC en formule Super (enlèvement et livraison sous 1 h).",
+    a: "Une course en moto en intramuros démarre à 28 € TTC en normal 3 h et 56 € TTC en formule Super (enlèvement et livraison sous 1 h).",
   },
   {
     q: "Quel est le prix d'un coursier express à Paris ?",
-    a: "Une course express dans Paris se facture 42 € TTC en urgent (1 h 30) ou 56 € TTC en formule Super (1 h). En petite couronne : 88,50 € TTC ou 118 € TTC.",
+    a: "Une course express en intramuros se facture 42 € TTC en urgent (1 h 30) ou 56 € TTC en formule Super (1 h). En petite couronne : 88,50 € TTC ou 118 € TTC.",
   },
   {
     q: "Quel est le tarif d'un coursier en banlieue de Paris ?",
@@ -63,7 +63,7 @@ const FAQ = [
   },
   {
     q: "Combien coûte un coursier en Île-de-France ?",
-    a: "Le tarif d'un coursier en Île-de-France part de 28 € TTC (Paris, délai 3 h). En petite couronne, comptez 59 € TTC. En grande couronne, le prix suit la distance depuis Paris : 76 € TTC pour Versailles, 158 € TTC pour Meaux, en délai 3 h. Le délai Urgent coûte 1,5 fois le prix Normal, le Super 2 fois.",
+    a: "Le tarif d'un coursier en Île-de-France part de 28 € TTC (intramuros, délai 3 h). En petite couronne, comptez 59 € TTC. En grande couronne, le prix suit la distance depuis Paris : 76 € TTC pour Versailles, 158 € TTC pour Meaux, en délai 3 h. Le délai Urgent coûte 1,5 fois le prix Normal, le Super 2 fois.",
   },
   {
     q: "Le prix d'un coursier pour un pli confidentiel ou un transport médical est-il différent ?",
@@ -171,7 +171,7 @@ export default function TarifsPage() {
             Tarifs coursier B2B : dès 28 € TTC la course.
           </h1>
           <p className="max-w-[58ch] text-pretty text-[17px] leading-[1.6] text-white/66">
-            Course moto dès 28 € TTC dans Paris en
+            Course moto dès 28 € TTC en intramuros, en
             normal 3 h, 56 € TTC en formule Super 1 h. Voici la grille par zone
             et par délai, et ce qui fait varier le prix d'un coursier.
           </p>
@@ -181,7 +181,7 @@ export default function TarifsPage() {
       {/* ── Facteurs de prix ── */}
       <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
         <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
-          Prix coursier Paris : ce qui compte
+          Prix d'un coursier : ce qui compte
         </div>
         <h2 className="mb-14 max-w-[24ch] text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
           Comment se calcule le prix d'une course.
