@@ -32,3 +32,19 @@ group by event_date, event, step
 order by event_date desc, event, step;
 
 revoke all on public.site_funnel_daily from anon, authenticated;
+
+-- Résumé du jour pour le tableau de bord Telegram : visiteurs distincts par événement, étape et message.
+create or replace function public.site_funnel_stats(p_date date)
+returns table (event text, step smallint, detail text, visiteurs integer)
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select event, step, detail, count(distinct visitor_hash)::int
+  from public.site_events
+  where event_date = p_date
+  group by event, step, detail;
+$$;
+
+revoke execute on function public.site_funnel_stats(date) from public, anon, authenticated;
