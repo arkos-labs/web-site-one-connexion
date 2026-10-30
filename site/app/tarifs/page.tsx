@@ -16,9 +16,9 @@ const euro = (n: number) =>
   `${n.toLocaleString("fr-FR", { minimumFractionDigits: Number.isInteger(n) ? 0 : 2, maximumFractionDigits: 2 })} €`;
 
 export const metadata: Metadata = {
-  title: "Prix coursier Paris : dès 28 € TTC",
+  title: "Tarif coursier Paris : dès 28 € TTC",
   description:
-    "Tarifs coursier : dès 28€ à Paris, 39€ en petite couronne (puis 2€/km au-delà de 8 km). Grille par zone, prix affiché avant de commander. Compte entreprise 30j.",
+    "Tarif coursier à Paris dès 28 € TTC, 39 € en petite couronne puis 2 €/km au-delà de 8 km. Prix affiché avant commande. Compte entreprise, facture à 30 jours.",
   alternates: { canonical: "/tarifs" },
   openGraph: {
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION - Coursier B2B Paris & Île-de-France" }],
