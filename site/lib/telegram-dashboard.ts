@@ -60,6 +60,7 @@ export type Parcours = {
   stripe: number;
   commandes: number;
   blocages: { message: string; visiteurs: number }[];
+  pages: { path: string; visiteurs: number }[];
 };
 
 type FunnelRow = { event: string; step: number | null; detail: string | null; visiteurs: number };
@@ -82,7 +83,14 @@ async function fetchParcours(today: string): Promise<Parcours | null> {
     .sort((a, b) => b.visiteurs - a.visiteurs)
     .slice(0, 3);
 
+  const pages = rows
+    .filter((r) => r.event === "page_view" && r.detail)
+    .map((r) => ({ path: r.detail!, visiteurs: r.visiteurs }))
+    .sort((a, b) => b.visiteurs - a.visiteurs)
+    .slice(0, 5);
+
   return {
+    pages,
     ouverts: visiteurs("order_open"),
     etape2: visiteurs("order_step", 2),
     etape3: visiteurs("order_step", 3),
@@ -178,13 +186,18 @@ export function renderDashboard(k: Kpis, now = new Date()) {
 }
 
 function renderParcours(p: Parcours | null): string[] {
-  if (!p || p.ouverts === 0) return [];
-  const lignes = [
-    "",
-    "🧭 <b>Parcours commande</b> (aujourd'hui)",
-    `   Formulaire ouvert : <b>${p.ouverts}</b> → étape 2 : <b>${p.etape2}</b> → étape 3 : <b>${p.etape3}</b>`,
-    `   Envoyé : <b>${p.envois}</b> · Stripe : <b>${p.stripe}</b> · Commandes : <b>${p.commandes}</b>`,
-  ];
+  if (!p || (p.ouverts === 0 && p.pages.length === 0)) return [];
+  const lignes = [""];
+  if (p.pages.length) {
+    lignes.push(`📄 Pages vues (visiteurs) : ${p.pages.map((g) => `${escapeHtml(g.path)} <b>${g.visiteurs}</b>`).join(" · ")}`);
+  }
+  if (p.ouverts > 0) {
+    lignes.push(
+      "🧭 <b>Parcours commande</b> (aujourd'hui)",
+      `   Formulaire ouvert : <b>${p.ouverts}</b> → étape 2 : <b>${p.etape2}</b> → étape 3 : <b>${p.etape3}</b>`,
+      `   Envoyé : <b>${p.envois}</b> · Stripe : <b>${p.stripe}</b> · Commandes : <b>${p.commandes}</b>`
+    );
+  }
   if (p.blocages.length) {
     lignes.push(`   ⚠️ Blocages : ${p.blocages.map((b) => `${escapeHtml(b.message)} (${b.visiteurs})`).join(" · ")}`);
   }
