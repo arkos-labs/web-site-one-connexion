@@ -60,9 +60,9 @@ const ZONES = [
   {
     dept: "77",
     name: "Seine-et-Marne",
-    desc: "Melun, Marne-la-Vallée, Meaux - dès 76 € TTC selon la distance.",
+    desc: "Melun, Marne-la-Vallée, Meaux - dès 59 € TTC selon la distance.",
     href: "/zones/grande-couronne",
-    tag: "Dès 76 € TTC",
+    tag: "Dès 59 € TTC",
     tagColor: "bg-amber-100 text-amber-700",
   },
   {

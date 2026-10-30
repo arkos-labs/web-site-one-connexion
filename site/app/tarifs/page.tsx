@@ -47,7 +47,7 @@ const FAQ = [
   },
   {
     q: "Quel est le tarif d'un coursier en petite couronne ?",
-    a: "En petite couronne (92, 93, 94), le prix suit les kilomètres parcourus : 39 € TTC jusqu'à 8 km, puis 2 € TTC par km en normal ; 58,50 € puis 3 € par km en urgent ; 78 € puis 4 € par km en Super. Une course de 15 km coûte 53 € TTC en normal. En grande couronne (77, 78, 91, 95), le prix suit la distance depuis Paris : 76 € TTC pour Versailles, 158 € TTC pour Meaux en normal.",
+    a: "En petite couronne (92, 93, 94), le prix suit les kilomètres parcourus : 39 € TTC jusqu'à 8 km, puis 2 € TTC par km en normal ; 58,50 € puis 3 € par km en urgent ; 78 € puis 4 € par km en Super. Une course de 15 km coûte 53 € TTC en normal. En grande couronne (77, 78, 91, 95), le prix suit la distance depuis Paris : 70 € TTC pour Versailles, 139 € TTC pour Meaux en normal.",
   },
   {
     q: "Combien coûte un coursier moto à Paris ?",
@@ -63,7 +63,7 @@ const FAQ = [
   },
   {
     q: "Combien coûte un coursier en Île-de-France ?",
-    a: "Le tarif d'un coursier en Île-de-France part de 28 € TTC (Paris, délai 3 h). En petite couronne, 39 € TTC jusqu'à 8 km puis 2 € TTC par km. En grande couronne, le prix suit la distance depuis Paris : 76 € TTC pour Versailles, 158 € TTC pour Meaux, en délai 3 h. Le délai Urgent coûte 1,5 fois le prix Normal, le Super 2 fois.",
+    a: "Le tarif d'un coursier en Île-de-France part de 28 € TTC (Paris, délai 3 h). En petite couronne, 39 € TTC jusqu'à 8 km puis 2 € TTC par km. En grande couronne, le prix suit la distance depuis Paris : 70 € TTC pour Versailles, 139 € TTC pour Meaux, en délai 3 h. Le délai Urgent coûte 1,5 fois le prix Normal, le Super 2 fois.",
   },
   {
     q: "Le prix d'un coursier pour un pli confidentiel ou un transport médical est-il différent ?",
@@ -280,7 +280,7 @@ export default function TarifsPage() {
           puis 2 € TTC par km en Normal (3 € en Urgent, 4 € en Super). Saint-Mandé
           vers Paris 12e : 39 € TTC. En grande
           couronne, le prix suit la distance depuis Paris, retour du coursier
-          compris : 76 € TTC pour Versailles, 158 € TTC pour Meaux en Normal.
+          compris : 70 € TTC pour Versailles, 139 € TTC pour Meaux en Normal.
           Le prix exact s&apos;affiche avant de valider votre commande.
         </p>
         <div className="overflow-x-auto">
