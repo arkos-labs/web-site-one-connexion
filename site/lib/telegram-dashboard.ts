@@ -61,6 +61,7 @@ export type Parcours = {
   commandes: number;
   blocages: { message: string; visiteurs: number }[];
   pages: { path: string; visiteurs: number }[];
+  adresses: { enlevement: number; livraison: number };
 };
 
 type FunnelRow = { event: string; step: number | null; detail: string | null; visiteurs: number };
@@ -91,6 +92,7 @@ async function fetchParcours(today: string): Promise<Parcours | null> {
 
   return {
     pages,
+    adresses: { enlevement: visiteurs("order_address_pickup"), livraison: visiteurs("order_address_dropoff") },
     ouverts: visiteurs("order_open"),
     etape2: visiteurs("order_step", 2),
     etape3: visiteurs("order_step", 3),
@@ -195,6 +197,7 @@ function renderParcours(p: Parcours | null): string[] {
     lignes.push(
       "🧭 <b>Parcours commande</b> (aujourd'hui)",
       `   Formulaire ouvert : <b>${p.ouverts}</b> → étape 2 : <b>${p.etape2}</b> → étape 3 : <b>${p.etape3}</b>`,
+      `   Adresses saisies : enlèvement <b>${p.adresses.enlevement}</b> · livraison <b>${p.adresses.livraison}</b>`,
       `   Envoyé : <b>${p.envois}</b> · Stripe : <b>${p.stripe}</b> · Commandes : <b>${p.commandes}</b>`
     );
   }

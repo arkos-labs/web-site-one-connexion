@@ -68,6 +68,21 @@ export default function OrderForm() {
   const [recipientName, setRecipientName] = useState("");
   const [scheduledDate, setScheduledDate] = useState("");
   const [scheduledTime, setScheduledTime] = useState("");
+
+  // Première saisie de chaque adresse (une fois par visiteur et par formulaire) : cf. lib/track-event.
+  const addressTracked = useRef({ pickup: false, dropoff: false });
+  useEffect(() => {
+    if (pickupAddress.trim() && !addressTracked.current.pickup) {
+      addressTracked.current.pickup = true;
+      trackEvent("order_address_pickup");
+    }
+  }, [pickupAddress]);
+  useEffect(() => {
+    if (dropoffAddress.trim() && !addressTracked.current.dropoff) {
+      addressTracked.current.dropoff = true;
+      trackEvent("order_address_dropoff");
+    }
+  }, [dropoffAddress]);
   // Adresse hors Paris / IDF : blocage immédiat, alerte après une courte pause de frappe.
   const outOfZone = [pickupAddress, dropoffAddress].some((a) => a.trim().length > 0 && !isServedAddress(a));
   const showZoneAlert = useUnservedAddresses([pickupAddress, dropoffAddress]);

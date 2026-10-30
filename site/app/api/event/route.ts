@@ -6,6 +6,8 @@ const EVENTS = new Set([
   "order_open",        // formulaire de commande affiché
   "order_step",        // étape atteinte (step = 1, 2 ou 3)
   "order_error",       // message de validation affiché (detail = message fixe)
+  "order_address_pickup",   // adresse d'enlèvement saisie pour la première fois
+  "order_address_dropoff",  // adresse de livraison saisie pour la première fois
   "order_submit",      // envoi lancé (passé la validation)
   "order_checkout",    // redirection vers Stripe
   "order_submitted",   // commande enregistrée (virement, ou paiement à 1 clic)
