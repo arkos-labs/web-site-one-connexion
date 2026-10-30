@@ -50,7 +50,7 @@ export default function Hero() {
         muted
         playsInline
         preload="auto"
-        poster="/hero-poster.webp"
+        poster="/hero-poster.jpg"
         fetchPriority="high"
         aria-hidden="true"
         className="absolute inset-0 w-full h-full object-cover object-[center_60%] z-0"
@@ -64,7 +64,7 @@ export default function Hero() {
             <h1 className="mb-3 text-balance text-[clamp(36px,5vw,64px)] font-bold leading-[1.05] tracking-[-0.035em]">
               Coursier B2B à Paris et en Île-de-France
             </h1>
-            <p className="mb-4 text-[clamp(18px,2.2vw,24px)] font-semibold text-accent">
+            <p className="mb-4 border-l-2 border-accent pl-3 text-[clamp(18px,2.2vw,24px)] font-semibold text-white">
               Le dernier kilomètre, tenu à l&rsquo;heure.
             </p>
             <p className="mb-6 max-w-[56ch] text-pretty text-[16px] leading-[1.6] text-white/66">
