@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { visitorHash } from "@/lib/visitor-hash";
+import { refreshPinnedDashboard } from "@/lib/telegram-dashboard";
 
 // Événements autorisés : toute autre valeur est refusée.
 const EVENTS = new Set([
@@ -44,5 +45,8 @@ export async function POST(req: Request) {
     detail,
   });
   if (error) console.error("Event tracking failed:", error.message);
+
+  // Sans cela, le tableau Telegram ne se met à jour qu'à la prochaine page vue.
+  await refreshPinnedDashboard().catch((err) => console.error("Telegram dashboard refresh failed:", err));
   return new Response(null, { status: 204 });
 }
