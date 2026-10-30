@@ -100,7 +100,7 @@ export const compteEntreprise: Service = {
   ],
 
   coverage:
-    "Le compte entreprise couvre toutes nos prestations à Paris et en Île-de-France, chacune au tarif de sa zone : plis confidentiels, transport médical, livraison e-commerce, courses événementielles et tournées régulières.",
+    "Le compte entreprise couvre toutes nos prestations dans la capitale et en Île-de-France, chacune au tarif de sa zone : plis confidentiels, transport médical, livraison e-commerce, courses événementielles et tournées régulières.",
 
   pricing: {
     title: "Les tarifs avec un compte entreprise",
