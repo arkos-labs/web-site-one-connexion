@@ -5,6 +5,7 @@ import Contact from "@/components/sections/Contact";
 import Faq from "@/components/sections/Faq";
 import JsonLd from "@/components/JsonLd";
 import DeptCards from "@/components/sections/DeptCards";
+import Services from "@/components/sections/Services";
 import TrustStrip from "@/components/sections/TrustStrip";
 import Link from "next/link";
 import { LEGAL, PHONE_TEL, EMAIL, SITE_URL, MAPS_URL } from "@/lib/site-content";
@@ -83,6 +84,7 @@ export default function Home() {
       <Hero />
       <TrustStrip />
       <About />
+      <Services />
       <OrderForm />
       <Faq />
       <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[88px]">
@@ -91,7 +93,7 @@ export default function Home() {
           Villes desservies
         </div>
         <h2 className="mb-4 max-w-[26ch] text-balance text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-          Coursier dans toute la petite couronne.
+          Livraison dans toute la petite couronne.
         </h2>
         <p className="mb-10 max-w-[62ch] text-[15px] leading-[1.6] text-muted">
           En plus des 20 arrondissements de <Link href="/zones/paris" className="text-ink underline underline-offset-2">Paris</Link>,

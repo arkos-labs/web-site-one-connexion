@@ -81,7 +81,7 @@ export default function ZonePetiteCouronne() {
             Zone couverte · 92 / 93 / 94
           </div>
           <h1 className="mb-6 max-w-[22ch] text-balance text-[clamp(36px,5vw,64px)] font-bold leading-[1.05] tracking-[-0.035em]">
-            Coursier express dans toute la petite couronne parisienne.
+            Livraison express dans toute la petite couronne.
           </h1>
           <p className="max-w-[58ch] text-pretty text-[17px] leading-[1.6] text-white/66">
             One Connexion dessert les trois départements de petite couronne -

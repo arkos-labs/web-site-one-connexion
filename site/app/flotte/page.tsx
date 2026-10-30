@@ -82,7 +82,7 @@ export default function FlottePage() {
             Flotte &amp; Couverture
           </div>
           <h1 className="mb-6 max-w-[18ch] text-[clamp(36px,5vw,64px)] font-bold leading-[1.1] tracking-[-0.03em]">
-            Une flotte dédiée à l'urgence.
+            Une flotte de deux-roues dédiée aux livraisons urgentes.
           </h1>
           <p className="max-w-[55ch] text-[17px] leading-[1.65] text-white/65">
             Une flotte de coursiers deux-roues sur Paris et toute l'Île-de-France. Chaque livraison est horodatée, avec une preuve de remise.

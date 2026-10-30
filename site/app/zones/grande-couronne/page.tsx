@@ -75,7 +75,7 @@ export default function ZoneGrandeCouronne() {
             Zone couverte · 77 / 78 / 91 / 95
           </div>
           <h1 className="mb-6 max-w-[22ch] text-balance text-[clamp(36px,5vw,64px)] font-bold leading-[1.05] tracking-[-0.035em]">
-            Coursier express en grande couronne.
+            Livraison express en grande couronne.
           </h1>
           <p className="max-w-[58ch] text-pretty text-[17px] leading-[1.6] text-white/66">
             Seine-et-Marne, Yvelines, Essonne et Val-d’Oise : un coursier vient chercher votre pli

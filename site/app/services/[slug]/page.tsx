@@ -228,7 +228,7 @@ export default async function ServicePage({
             Villes desservies
           </div>
           <h2 className="mb-4 max-w-[28ch] text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-            Nos coursiers à Paris et dans la petite couronne
+            Nos coursiers en intramuros et en petite couronne
           </h2>
           <p className="mb-9 max-w-[62ch] text-[15px] leading-[1.6] text-muted">
             Nous intervenons dans les 20 arrondissements de{" "}

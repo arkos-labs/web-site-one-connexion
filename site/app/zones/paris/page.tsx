@@ -116,10 +116,10 @@ export default function ZoneParis() {
             Zone couverte · Paris 75
           </div>
           <h1 className="mb-6 max-w-[20ch] text-balance text-[clamp(36px,5vw,64px)] font-bold leading-[1.05] tracking-[-0.035em]">
-            Coursier Paris : livraison express dans les 20 arrondissements.
+            Livraison express dans les 20 arrondissements de Paris.
           </h1>
           <p className="max-w-[58ch] text-pretty text-[17px] leading-[1.6] text-white/66">
-            Coursier à Paris en moto et scooter, dès 28 € TTC la course
+            Coursier en moto et scooter, dès 28 € TTC la course
             (voir notre{" "}
             <Link href="/services/coursier-moto-paris" className="text-white underline decoration-accent underline-offset-4 hover:text-accent">
               coursier moto Paris
@@ -139,7 +139,7 @@ export default function ZoneParis() {
               href="/tarifs"
               className="rounded-[2px] border border-white/22 px-[26px] py-[15px] text-[15px] font-semibold text-white hover:border-white"
             >
-              Prix coursier Paris
+              Voir les tarifs
             </Link>
           </div>
         </div>
@@ -181,10 +181,10 @@ export default function ZoneParis() {
       {/* ── Tarif ── */}
       <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
         <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
-          Tarif coursier Paris
+          Tarif par délai
         </div>
         <h2 className="mb-4 max-w-[28ch] text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-          Prix d&apos;une course dans Paris : dès 28 € TTC.
+          Prix d&apos;une course intramuros : dès 28 € TTC.
         </h2>
         <p className="mb-10 max-w-[60ch] text-[15.5px] leading-[1.7] text-muted">
           Le tarif est le même dans les 20 arrondissements. Seul le délai change
@@ -227,7 +227,7 @@ export default function ZoneParis() {
       <section className="bg-paper">
         <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
           <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
-            Pourquoi choisir One Connexion à Paris
+            Pourquoi choisir One Connexion en intramuros
           </div>
           <h2 className="mb-14 max-w-[24ch] text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
             Conçu pour la densité parisienne.
@@ -304,7 +304,7 @@ export default function ZoneParis() {
           Défis & Solutions
         </div>
         <h2 className="mb-8 max-w-[30ch] text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-          Livraison express à Paris : défis uniques, solutions dédiées
+          Livraison express en intramuros : défis uniques, solutions dédiées
         </h2>
         <div className="grid gap-6 md:grid-cols-2 text-[15px] leading-[1.7]">
           <div>
@@ -418,7 +418,7 @@ export default function ZoneParis() {
           <div className="mb-10 text-center">
             <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">Foire Aux Questions</div>
             <h2 className="text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-              Livrer à Paris : vos questions fréquentes
+              Vos questions fréquentes sur la livraison intramuros
             </h2>
           </div>
           <div className="flex flex-col gap-4">
@@ -438,7 +438,7 @@ export default function ZoneParis() {
           <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
             <div>
               <h2 className="mb-3 text-[clamp(24px,3vw,36px)] font-bold leading-[1.2] tracking-[-0.02em]">
-                Une course à Paris maintenant ?
+                Une course maintenant ?
               </h2>
               <p className="text-[15px] text-white/60">Dispatch en moins de 2 minutes, du lundi au samedi de 9h à 19h.</p>
             </div>

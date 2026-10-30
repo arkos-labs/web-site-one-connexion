@@ -60,7 +60,7 @@ export default function MethodePage() {
         <div className="absolute inset-0 bg-ink/85"></div>
         <div className="relative mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pt-20 pb-16">
           <h1 className="mb-6 text-[clamp(40px,5vw,64px)] font-bold leading-[1.1] tracking-[-0.03em]">
-            Coursier méthode
+            Notre méthode de coursier B2B, étape par étape
           </h1>
           <p className="max-w-[60ch] text-[17px] leading-[1.6] text-white/70">
             Chez One Connexion, nous croyons que la transparence et la fiabilité sont les clés d'une livraison réussie. 

@@ -26,7 +26,7 @@ export default function GuidesPage() {
         <section className="bg-ink text-white">
           <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pt-20 pb-16">
             <h1 className="mb-6 text-[clamp(36px,5vw,60px)] font-bold leading-[1.1] tracking-[-0.03em]">
-              Guides pratiques
+              Guides pratiques du coursier B2B
             </h1>
             <p className="max-w-[60ch] text-[17px] leading-[1.6] text-white/70">
               Ce qu'il faut savoir avant de confier un envoi urgent à un coursier : préparer un pli,

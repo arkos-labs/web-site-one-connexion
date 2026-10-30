@@ -62,7 +62,7 @@ export default function Faq() {
         Questions fréquentes
       </div>
       <h2 className="mb-8 max-w-[720px] text-[clamp(28px,3vw,40px)] font-bold leading-[1.1] tracking-[-0.03em]">
-        Coursier B2B à Paris : les réponses avant votre première course.
+        Les réponses avant votre première course.
       </h2>
       <div className="max-w-[860px] divide-y divide-line border-y border-line">
         {FAQ.map(({ q, a }) => (
