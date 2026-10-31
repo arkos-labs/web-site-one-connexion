@@ -39,12 +39,11 @@ const ibmPlexMono = IBM_Plex_Mono({
   weight: ["400", "500"],
 });
 
-// Sur téléphone, la page ne se zoome pas : ni en pinçant, ni quand on touche un champ du formulaire.
+// Zoom libre (accessibilité). Le zoom automatique d'iPhone sur les champs est évité par la taille
+// de police des champs (16 px sur téléphone, voir globals.css).
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
 };
 
 export const metadata: Metadata = {
@@ -55,7 +54,7 @@ export const metadata: Metadata = {
   },
   alternates: { canonical: "/" },
   description:
-    "One Connexion opère les livraisons urgentes des cabinets juridiques, laboratoires et e-commerçants d'Île-de-France. Flotte deux-roues, traçabilité complète.",
+    "Coursier B2B à Paris et en Île-de-France : plis urgents, transport médical, e-commerce. Course dédiée en deux-roues, suivi en ligne, prix affiché.",
   openGraph: {
     title: "ONE CONNEXION - Coursier B2B, Paris & Île-de-France",
     description:

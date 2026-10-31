@@ -4,7 +4,7 @@ import { LEGAL, EMAIL } from "@/lib/site-content";
 export const metadata: Metadata = {
   title: "Conditions Générales de Vente",
   description:
-    "Conditions générales de vente de ONE CONNEXION : commande, prix, paiement, délais de livraison, responsabilité et réclamations pour vos courses à Paris et en Île-de-France.",
+    "Conditions générales de vente de ONE CONNEXION : commande, prix, paiement, délais, responsabilité et réclamations pour vos courses en Île-de-France.",
   alternates: { canonical: "/cgv" },
   robots: { index: true, follow: true },
 };

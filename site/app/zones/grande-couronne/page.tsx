@@ -19,7 +19,7 @@ const euro = (n: number) =>
 export const metadata: Metadata = {
   title: "Coursier grande couronne 77, 78, 91, 95",
   description:
-    "Coursier en grande couronne : Seine-et-Marne (77), Yvelines (78), Essonne (91), Val-d'Oise (95). Course directe vers Paris ou la banlieue, dès 60 € TTC selon la distance, du lundi au samedi.",
+    "Coursier en Seine-et-Marne, Yvelines, Essonne et Val-d'Oise. Course directe vers Paris ou la banlieue, dès 60 € TTC selon la distance.",
   alternates: { canonical: "/zones/grande-couronne" },
   openGraph: {
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION - Coursier B2B Paris & Île-de-France" }],

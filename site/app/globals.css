@@ -50,6 +50,17 @@
   }
 }
 
+/* Sur téléphone, champs en 16 px : iPhone ne zoome plus automatiquement quand on touche un champ,
+   ce qui permet de laisser le zoom libre (accessibilité). Hors layer exprès, pour passer devant
+   les tailles Tailwind (text-[14px]…) des champs. */
+@media (max-width: 767px) {
+  input:not([type="checkbox"]):not([type="radio"]),
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
+
 @layer base {
   html {
     scroll-behavior: auto; /* Lenis prend le relais */

@@ -16,7 +16,7 @@ import { MapPin } from "lucide-react";
 export const metadata: Metadata = {
   title: "Coursier petite couronne 92, 93, 94",
   description:
-    "Livraison express banlieue : commander en petite couronne (92, 93, 94) dès 39€ TTC, puis 2€/km au-delà de 8 km. Enlèvement < 45 min, course dédiée, suivi GPS, remise certifiée.",
+    "Coursier en petite couronne (92, 93, 94) dès 39 € TTC jusqu'à 8 km, puis 2 € par km. Enlèvement en moins de 45 min, course dédiée, suivi en ligne.",
   alternates: { canonical: "/zones/petite-couronne" },
   openGraph: {
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION - Coursier B2B Paris & Île-de-France" }],
