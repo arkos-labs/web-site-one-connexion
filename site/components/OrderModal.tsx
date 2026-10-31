@@ -17,6 +17,7 @@ import UnservedAddressAlert, { useUnservedAddresses } from "@/components/Unserve
 import LargeParcelAlert from "@/components/LargeParcelAlert";
 import { notifyNewOrder } from "@/lib/notify-new-order";
 import GuestAccountBox from "@/components/GuestAccountBox";
+import DeferredPaymentNote from "@/components/DeferredPaymentNote";
 import { saveOrderDraft, loadOrderDraft, clearOrderDraft, checkoutSessionIdFromUrl } from "@/lib/order-draft";
 import { ORDER_NATURES, NATURE_DETAIL_MAX, natureLabel } from "@/lib/order-nature";
 
@@ -392,7 +393,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
               </p>
               {clientType === "entreprise" && paymentMode === "fin_de_mois" && debitMethod === "virement" && (
                 <p className="mb-4 text-sm text-muted">
-                  La facture avec les coordonnées bancaires a été envoyée à <strong>{contactEmail}</strong>. À régler sous 30 jours, par virement ou par carte depuis la facture.
+                  <strong>Rien à payer aujourd&apos;hui.</strong> La facture avec nos coordonnées bancaires a été envoyée à <strong>{contactEmail}</strong>. À régler sous 30 jours, par virement ou par carte depuis la facture.
                 </p>
               )}
               {trackingCode && (
@@ -727,6 +728,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                                 </button>
                               ))}
                             </div>
+                            <DeferredPaymentNote method={debitMethod} />
                           </div>
                         )}
                       </div>
@@ -812,7 +814,11 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                       disabled={submitting || checkingAddress || outOfZone}
                       className="ml-auto flex items-center gap-2 rounded-lg bg-accent px-6 py-2.5 text-sm font-bold text-white hover:bg-accent-dark transition-colors disabled:opacity-60"
                     >
-                      {submitting ? "Redirection…" : step < 3 ? "Étape suivante" : "Commander"}
+                      {submitting
+                        ? (clientType === "entreprise" && paymentMode === "fin_de_mois" && debitMethod === "virement" ? "Envoi…" : "Redirection…")
+                        : step < 3
+                          ? "Étape suivante"
+                          : clientType === "entreprise" && paymentMode === "fin_de_mois" ? "Valider la commande" : "Commander"}
                       {!submitting && (step < 3 ? <ChevronRight size={16} /> : <CheckCircle2 size={16} />)}
                     </button>
                   </div>

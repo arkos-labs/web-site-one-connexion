@@ -139,10 +139,10 @@ export default function GuestAccountBox({ trackingCode }: { trackingCode: string
 
   return (
     <form onSubmit={follow} className="mb-6 rounded-xl border border-orange-100 bg-orange-50/60 p-4 text-left">
-      <p className="text-sm font-bold text-ink">Votre compte a été créé</p>
+      <p className="text-sm font-bold text-ink">Suivez votre course en direct</p>
       <p className="mt-1 text-sm text-gray-600">
-        Il est rattaché à <strong>{state.email}</strong> et vous permet de suivre votre course en direct.
-        Choisissez un mot de passe pour vous y connecter plus tard.
+        Un espace client a été ouvert avec <strong>{state.email}</strong>. Choisissez un mot de passe pour
+        suivre la course et retrouver vos factures.
       </p>
       <input
         type="password"
