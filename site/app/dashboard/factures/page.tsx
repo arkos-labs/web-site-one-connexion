@@ -76,7 +76,7 @@ export default function FacturesPage() {
         // course livrée, ou dès la commande pour un virement (la facture est partie avec l'IBAN).
         const { data: orders } = await supabase
           .from("orders")
-          .select("id, tracking_code, created_at, delivered_at, status, price_estimate, amount_due, billing_status, stripe_invoice_id")
+          .select("id, tracking_code, created_at, delivered_at, status, price_estimate, amount_due, billing_status, stripe_invoice_id, payment_due_date")
           .eq("user_id", user.id)
           .or(CLIENT_VISIBLE_ORDERS)
           .not("stripe_invoice_id", "is", null)
@@ -111,6 +111,7 @@ export default function FacturesPage() {
           courses: (r.invoice_items?.[0]?.count ?? 0) as number,
           navettes: 0,
           status: r.status as string,
+          dueDate: null as string | null,
         })),
         ...orderRows.map((o) => ({
           id: o.id as string,
@@ -122,6 +123,7 @@ export default function FacturesPage() {
           courses: 1,
           navettes: 0,
           status: o.billing_status === "paye" ? "payee" : o.billing_status === "rembourse" ? "rembourse" : o.billing_status === "echec" ? "echec" : "emise",
+          dueDate: (o.payment_due_date as string | null) ?? null,
         })),
       ].sort((a, b) => new Date(b.sortAt).getTime() - new Date(a.sortAt).getTime()),
     [rows, orderRows]
@@ -144,7 +146,7 @@ export default function FacturesPage() {
       .filter(Boolean)
       .join(" + ");
 
-  const Status = ({ status }: { status: string }) =>
+  const Status = ({ status, dueDate }: { status: string; dueDate?: string | null }) =>
     status === "payee" ? (
       <StatusPill tone="green">Réglée</StatusPill>
     ) : status === "rembourse" ? (
@@ -154,7 +156,11 @@ export default function FacturesPage() {
     ) : ["en_cours", "emission", "envoi", "retenue"].includes(status) ? (
       <StatusPill tone="blue">En cours d&apos;émission</StatusPill>
     ) : (
-      <StatusPill tone="orange">À régler</StatusPill>
+      <StatusPill tone="orange">
+        {dueDate
+          ? `À régler avant le ${new Date(`${dueDate}T00:00:00`).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}`
+          : "À régler"}
+      </StatusPill>
     );
 
   return (
@@ -257,7 +263,7 @@ export default function FacturesPage() {
                     <div className="text-sm font-extrabold text-ink">{eur(invoice.amount)} TTC</div>
                     <div className="text-[11px] font-medium text-muted">{eur(htOf(invoice.amount))} HT</div>
                   </td>
-                  <td className={`${TD} whitespace-nowrap`}><Status status={invoice.status} /></td>
+                  <td className={`${TD} whitespace-nowrap`}><Status status={invoice.status} dueDate={invoice.dueDate} /></td>
                   <td className={`${TD} text-right`}>
                     <ChevronRight size={18} className="text-label transition-transform group-hover:translate-x-0.5 group-hover:text-ink" />
                   </td>
@@ -272,7 +278,7 @@ export default function FacturesPage() {
                 <Link href={invoice.href} className="flex flex-col gap-2 px-5 py-4 text-ink hover:bg-paper-card hover:text-ink">
                   <div className="flex items-center justify-between gap-3">
                     <span className="font-mono text-[13px] font-bold">{invoice.number}</span>
-                    <Status status={invoice.status} />
+                    <Status status={invoice.status} dueDate={invoice.dueDate} />
                   </div>
                   <div className="flex items-baseline justify-between gap-3">
                     <span className="text-xs capitalize text-muted">{invoice.date} · {volume(invoice)}</span>
