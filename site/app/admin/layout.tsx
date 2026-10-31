@@ -7,6 +7,7 @@ import { LogOut, ShieldCheck } from "lucide-react";
 import { ADMIN_NAV_ITEMS } from "@/lib/admin-nav";
 import { createClient } from "@/lib/supabase/client";
 import { PHONE_TEL } from "@/lib/site-content";
+import { isRevenueOrder } from "@/lib/revenue";
 
 export default function AdminLayout({
   children,
@@ -25,10 +26,12 @@ export default function AdminLayout({
       const todayId = WEEKDAY_IDS[new Date().getDay()];
 
       const [orders, navettes] = await Promise.all([
-        supabase.from("orders").select("id", { count: "exact", head: true }).is("driver_id", null).in("status", ["en_attente", "confirmee"]),
+        supabase.from("orders").select("id, payment_mode, billing_status, source").is("driver_id", null).in("status", ["en_attente", "confirmee"]),
         supabase.from("navettes").select("id", { count: "exact", head: true }).eq("status", "active").contains("days_of_week", [todayId]).or(`driver_id.is.null,last_dispatch_date.is.null,last_dispatch_date.neq.${todayIso}`),
       ]);
-      setPendingCount((orders.count ?? 0) + (navettes.count ?? 0));
+      // Badge : commandes payables seulement (même règle que le tableau de bord, lib/revenue.ts).
+      const payableOrders = (orders.data ?? []).filter(isRevenueOrder).length;
+      setPendingCount(payableOrders + (navettes.count ?? 0));
     };
     loadPendingCount();
     // eslint-disable-next-line react-hooks/exhaustive-deps
