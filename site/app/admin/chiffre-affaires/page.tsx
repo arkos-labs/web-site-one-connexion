@@ -47,26 +47,33 @@ type Billable = {
   amount: number;
   /** Commande livrée et payée (null pour une navette). */
   paid: boolean | null;
+  clientKind: "Pro" | "Particulier" | null;
 };
 
+/** Début de la période : aujourd'hui 0 h, lundi de la semaine, 1er du mois, 1er janvier. */
 function periodStart(period: Period, ref = new Date()): Date {
   const d = new Date(ref);
   d.setHours(0, 0, 0, 0);
-  if (period === "semaine") d.setDate(d.getDate() - d.getDay());
+  if (period === "semaine") d.setDate(d.getDate() - ((d.getDay() + 6) % 7));
   if (period === "mois") d.setDate(1);
   if (period === "annee") { d.setMonth(0); d.setDate(1); }
   return d;
 }
 
-function previousPeriodRange(period: Period): [Date, Date] {
-  const end = periodStart(period);
-  const start = new Date(end);
-  if (period === "jour") start.setDate(start.getDate() - 1);
-  if (period === "semaine") start.setDate(start.getDate() - 7);
-  if (period === "mois") start.setMonth(start.getMonth() - 1);
-  if (period === "annee") start.setFullYear(start.getFullYear() - 1);
-  return [start, end];
+/** Fin de la période (exclue) : demain 0 h, lundi suivant, 1er du mois suivant, 1er janvier suivant. */
+function periodEnd(period: Period, ref = new Date()): Date {
+  const d = periodStart(period, ref);
+  if (period === "jour") d.setDate(d.getDate() + 1);
+  if (period === "semaine") d.setDate(d.getDate() + 7);
+  if (period === "mois") d.setMonth(d.getMonth() + 1);
+  if (period === "annee") d.setFullYear(d.getFullYear() + 1);
+  return d;
 }
+
+const inPeriod = (date: string, period: Period) => {
+  const d = new Date(date);
+  return d >= periodStart(period) && d < periodEnd(period);
+};
 
 const PERIOD_LABEL: Record<Period, string> = {
   jour: "Aujourd'hui",
@@ -147,6 +154,7 @@ function AdminChiffreAffairesPageInner() {
       status: o.status,
       amount: normalizeOrderPriceTTC(o.price_estimate, o.pickup_address, o.dropoff_address, o.delai) ?? 0,
       paid: o.billing_status === "paye",
+      clientKind: o.client_type === "entreprise" ? "Pro" : "Particulier",
     }));
 
     // Une navette récurrente n'a qu'un seul enregistrement (pas d'historique
@@ -163,6 +171,7 @@ function AdminChiffreAffairesPageInner() {
       status: "active",
       amount: n.estimated_price ?? 0,
       paid: null,
+      clientKind: "Pro",
     }));
 
     setBillables(
@@ -196,10 +205,8 @@ function AdminChiffreAffairesPageInner() {
     [billables]
   );
 
-  const current = revenueSince(periodStart(period));
-  const [prevStart, prevEnd] = previousPeriodRange(period);
-  const previous = revenueSince(prevStart, prevEnd);
-  const variation = previous > 0 ? Math.round(((current - previous) / previous) * 100) : null;
+  const current = revenueSince(periodStart(period), periodEnd(period));
+  const currentCount = countSince(periodStart(period), periodEnd(period));
 
   const ordersTotal = billables.filter((b) => b.type === "commande").reduce((sum, b) => sum + b.amount, 0);
   const totalWithNavettes = ordersTotal + navettesEstimate;
@@ -230,22 +237,19 @@ function AdminChiffreAffairesPageInner() {
 
   const maxMonthly = Math.max(1, ...monthlySeries.map((m) => m.commandes + m.navettes));
 
-  // Liste du bas : toutes les courses du mois en cours (quelle que soit la période choisie au-dessus).
-  const monthRows = useMemo(() => {
-    const start = periodStart("mois");
-    return billables.filter((b) => new Date(b.date) >= start);
-  }, [billables]);
+  // Liste du bas : toutes les courses de la période choisie dans la barre de filtre.
+  const periodRows = useMemo(() => billables.filter((b) => inPeriod(b.date, period)), [billables, period]);
 
   const exportCsv = () => {
-    const start = periodStart(period);
-    const rows = billables.filter((b) => new Date(b.date) >= start);
-    const header = ["Date", "Type", "Référence", "Client", "Trajet", "Statut", "Montant HT", "Montant TTC"];
+    const rows = periodRows;
+    const header = ["Date", "Type", "Référence", "Client", "Type client", "Trajet", "Statut", "Montant HT", "Montant TTC"];
     const lines = rows.map((b) =>
       [
         new Date(b.date).toLocaleString("fr-FR"),
         b.type === "navette" ? "Navette" : "Course",
         b.label,
         b.client,
+        b.clientKind ?? "",
         b.route.replace(" → ", " -> "),
         b.status,
         htOf(b.amount).toFixed(2),
@@ -307,7 +311,7 @@ function AdminChiffreAffairesPageInner() {
           label={PERIOD_LABEL[period]}
           value={`${current.toFixed(2)} € TTC`}
           ht={`${htOf(current).toFixed(2)} €`}
-          sub={`${countSince(periodStart(period))} course${countSince(periodStart(period)) > 1 ? "s" : ""}`}
+          sub={`${currentCount} course${currentCount > 1 ? "s" : ""}`}
           accent
         />
       </div>
@@ -389,8 +393,12 @@ function AdminChiffreAffairesPageInner() {
 
       <div className="flex flex-col rounded-2xl border border-line bg-white shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
         <div className="border-b border-line p-5">
-          <h2 className="text-[15px] font-bold text-ink">Dernières opérations facturables</h2>
-          <p className="mt-0.5 text-[12.5px] font-medium text-muted">Courses et navettes actives, montants non annulés.</p>
+          <h2 className="text-[15px] font-bold text-ink">Courses · {PERIOD_LABEL[period]}</h2>
+          <p className="mt-0.5 text-[12.5px] font-medium text-muted">
+            {periodStart(period).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })} au{" "}
+            {new Date(periodEnd(period).getTime() - 86400000).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}
+            {" "}· pros et particuliers payés, hors annulées et échouées.
+          </p>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-[13px]">
@@ -405,7 +413,7 @@ function AdminChiffreAffairesPageInner() {
               </tr>
             </thead>
             <tbody>
-              {monthRows.slice(0, 50).map((b) => (
+              {periodRows.slice(0, 100).map((b) => (
                 <tr key={b.key} className="border-b border-line last:border-0">
                   <td className="p-4">
                     <div className="flex items-center gap-2">
@@ -418,7 +426,14 @@ function AdminChiffreAffairesPageInner() {
                       {new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }).format(new Date(b.date))}
                     </div>
                   </td>
-                  <td className="p-4 font-semibold text-ink">{b.client}</td>
+                  <td className="p-4">
+                    <div className="font-semibold text-ink">{b.client}</div>
+                    {b.clientKind && (
+                      <span className={`mt-1 inline-block rounded-full px-2 py-0.5 text-[10.5px] font-bold ${b.clientKind === "Pro" ? "bg-violet-50 text-violet-700" : "bg-sky-50 text-sky-700"}`}>
+                        {b.clientKind}
+                      </span>
+                    )}
+                  </td>
                   <td className="p-4 text-muted">{b.route}</td>
                   <td className="p-4">
                     {b.type === "commande" && (b.status === "livree" || b.status === "delivered") ? (
@@ -435,15 +450,15 @@ function AdminChiffreAffairesPageInner() {
                   <td className="p-4 text-right font-bold text-ink tabular-nums">{b.amount.toFixed(2)} €</td>
                 </tr>
               ))}
-              {monthRows.length === 0 && (
-                <tr><td colSpan={6} className="p-6 text-center text-[13px] font-medium text-muted">Aucune course ce mois-ci.</td></tr>
+              {periodRows.length === 0 && (
+                <tr><td colSpan={6} className="p-6 text-center text-[13px] font-medium text-muted">Aucune course sur cette période.</td></tr>
               )}
             </tbody>
           </table>
         </div>
-        {monthRows.length > 50 && (
+        {periodRows.length > 100 && (
           <div className="border-t border-line p-4 text-center text-[12.5px] font-medium text-muted">
-            Affichage de 50 sur {monthRows.length} courses de ce mois, l&apos;export CSV donne le détail complet.
+            Affichage de 100 sur {periodRows.length} courses, l&apos;export CSV donne le détail complet.
           </div>
         )}
       </div>
