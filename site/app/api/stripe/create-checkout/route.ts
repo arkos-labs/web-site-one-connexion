@@ -137,7 +137,7 @@ export async function POST(req: Request) {
     const admin = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
     const { data: ord } = await admin
       .from('orders')
-      .select('id, client_type, contact_name, contact_email, raison_sociale, adresse_facturation, siret, tva_number, stops')
+      .select('id, client_type, contact_name, contact_email, raison_sociale, adresse_facturation, siret, tva_number, stops, return_trip')
       .eq('tracking_code', orderId)
       .maybeSingle();
 
@@ -149,7 +149,7 @@ export async function POST(req: Request) {
     if (service === 'flash' && deliveries.length > MAX_FLASH_DELIVERIES) {
       return NextResponse.json({ error: `En Super 1 h, ${MAX_FLASH_DELIVERIES} adresses de livraison au maximum.` }, { status: 400 });
     }
-    const { total: price } = await priceRoute(pickupAddress, deliveries, service as ServiceLevel);
+    const { total: price } = await priceRoute(pickupAddress, deliveries, service as ServiceLevel, !!ord?.return_trip);
     // Stripe takes amounts in cents
     const unitAmount = Math.round(price * 100);
     const pro = clientType === 'entreprise' && ord?.client_type === 'entreprise' && !!ord?.siret;

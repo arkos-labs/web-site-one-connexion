@@ -32,7 +32,7 @@ export async function POST(req: Request) {
     const admin = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
     const { data: order } = await admin
       .from('orders')
-      .select('id, user_id, created_at, status, payment_mode, billing_status, pickup_address, dropoff_address, stops, delai, client_type, siret')
+      .select('id, user_id, created_at, status, payment_mode, billing_status, pickup_address, dropoff_address, stops, delai, client_type, siret, return_trip')
       .eq('tracking_code', trackingCode)
       .maybeSingle();
     if (!order || order.user_id !== user.id || order.payment_mode || order.billing_status === 'paye'
@@ -57,7 +57,7 @@ export async function POST(req: Request) {
     if (!pro && (deferred || saved.method.type !== 'card')) return NextResponse.json({ fallback: true });
 
     // Course A → B, plus chaque adresse de livraison en plus (lib/pricing.ts).
-    const { total: price } = await priceRoute(order.pickup_address, deliveries, (order.delai || 'standard') as ServiceLevel);
+    const { total: price } = await priceRoute(order.pickup_address, deliveries, (order.delai || 'standard') as ServiceLevel, !!order.return_trip);
     const common = { amount_due: price, stripe_customer_id: customerId, stripe_payment_method_id: saved.method.id };
 
     if (deferred) {

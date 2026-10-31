@@ -86,13 +86,15 @@ export async function legDistancesKm(deliveries: string[]): Promise<number[]> {
  * Prix complet d'une course à une ou plusieurs adresses de livraison (la dernière = dropoff).
  * Petite couronne : la distance de l'enlèvement à la première livraison fixe le prix de base.
  */
-export async function priceRoute(pickup: string, deliveries: string[], service: ServiceLevel) {
+export async function priceRoute(pickup: string, deliveries: string[], service: ServiceLevel, returnTrip = false) {
   const perKm = isPerKmRoute(pickup, deliveries[0]);
-  const [legKm, firstKm] = await Promise.all([
+  const lastStop = deliveries[deliveries.length - 1];
+  const [legKm, firstKm, returnKm] = await Promise.all([
     deliveries.length > 1 ? legDistancesKm(deliveries) : Promise.resolve([] as number[]),
     perKm ? legDistancesKm([pickup, deliveries[0]]).then((km) => km[0]) : Promise.resolve(undefined),
+    returnTrip && deliveries.length > 1 ? legDistancesKm([lastStop, pickup]).then((km) => km[0]) : Promise.resolve(undefined),
   ]);
-  return { ...calculateRoutePrice(pickup, deliveries, service, legKm, firstKm), firstKm };
+  return { ...calculateRoutePrice(pickup, deliveries, service, legKm, firstKm, returnTrip, returnKm), firstKm };
 }
 
 /** Livraisons dans l'ordre d'une commande : étapes (orders.stops) puis adresse finale. */

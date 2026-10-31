@@ -6,22 +6,31 @@
  * distance par la route, après une courte pause de saisie ; null pendant le calcul.
  */
 import { useEffect, useState } from "react";
-import { calculatePrice, isPerKmRoute, isServedAddress, type ServiceLevel } from "@/lib/pricing";
+import { calculatePrice, isPerKmRoute, isServedAddress, returnPrice, type ServiceLevel } from "@/lib/pricing";
 import { priceRoute } from "@/lib/route-distance";
 
 const DEBOUNCE_MS = 400;
 
-export function useRoutePrice(pickup: string, dropoff: string, service: ServiceLevel | ""): number | null {
+export function useRoutePrice(
+  pickup: string,
+  dropoff: string,
+  service: ServiceLevel | "",
+  returnTrip = false,
+  stops: string[] = []
+): number | null {
   const [price, setPrice] = useState<number | null>(null);
   const level = (service || "standard") as ServiceLevel;
-  const served = !!pickup && !!dropoff && isServedAddress(pickup) && isServedAddress(dropoff);
-  const perKm = served && isPerKmRoute(pickup, dropoff);
+  const filledStops = stops.map((s) => s.trim()).filter(Boolean);
+  const deliveries = [...filledStops, dropoff];
+  const served = !!pickup && !!dropoff && deliveries.every(isServedAddress) && isServedAddress(pickup);
+  const perKm = served && (filledStops.length > 0 || isPerKmRoute(pickup, dropoff));
+  const key = deliveries.join("|");
 
   useEffect(() => {
     if (!perKm) return;
     let live = true;
     const timer = setTimeout(() => {
-      priceRoute(pickup, [dropoff], level)
+      priceRoute(pickup, deliveries, level, returnTrip)
         .then((r) => live && setPrice(r.total))
         .catch(() => live && setPrice(null));
     }, DEBOUNCE_MS);
@@ -30,9 +39,13 @@ export function useRoutePrice(pickup: string, dropoff: string, service: ServiceL
       clearTimeout(timer);
       setPrice(null);
     };
-  }, [perKm, pickup, dropoff, level]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [perKm, pickup, key, level, returnTrip]);
 
   if (!served) return null;
-  if (!perKm) return calculatePrice(pickup, dropoff, level);
+  if (!perKm) {
+    const base = calculatePrice(pickup, dropoff, level);
+    return returnTrip ? base + returnPrice(calculatePrice(dropoff, pickup, level)) : base;
+  }
   return price;
 }

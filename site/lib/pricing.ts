@@ -226,13 +226,36 @@ export function extraStopPrice(from: string, to: string, km: number, service: Se
  * `legKm[i]` = km entre la livraison i et la livraison i + 1, `firstKm` = km entre l'enlèvement et la
  * première livraison (petite couronne) ; voir lib/route-distance.ts.
  */
-export function calculateRoutePrice(pickup: string, deliveries: string[], service: ServiceLevel, legKm: number[], firstKm?: number) {
+export function calculateRoutePrice(
+  pickup: string,
+  deliveries: string[],
+  service: ServiceLevel,
+  legKm: number[],
+  firstKm?: number,
+  returnTrip = false,
+  returnKm?: number
+) {
   const base = calculatePrice(pickup, deliveries[0], service, firstKm);
   const extras: ExtraStop[] = deliveries.slice(1).map((to, i) => {
     const from = deliveries[i];
     const km = Math.round((legKm[i] ?? 0) * 10) / 10;
     return { from, to, km, price: extraStopPrice(from, to, km, service) };
   });
-  const total = Math.round((base + extras.reduce((s, e) => s + e.price, 0)) * 100) / 100;
-  return { base, extras, total };
+  // Retour : de la dernière livraison jusqu'au point de départ, facturé 40 % de ce trajet.
+  const lastStop = deliveries[deliveries.length - 1];
+  const returnFee = returnTrip
+    ? returnPrice(calculatePrice(lastStop, pickup, service, deliveries.length > 1 ? returnKm : firstKm))
+    : 0;
+  const total = Math.round((base + extras.reduce((s, e) => s + e.price, 0) + returnFee) * 100) / 100;
+  return { base, extras, returnFee, total };
+}
+
+/* ── Retour à l'expéditeur ──────────────────────────────────────────────────────────────────────
+ * Le coursier est déjà sur place : le retour ne coûte que 40 % du prix de la course aller.
+ */
+export const RETURN_RATE = 0.4;
+
+/** Prix TTC du retour, arrondi au centime, pour une course aller à `base` € TTC. */
+export function returnPrice(base: number): number {
+  return Math.round(base * RETURN_RATE * 100) / 100;
 }
