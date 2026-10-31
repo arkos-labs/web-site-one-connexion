@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useLayoutEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { MapPin } from "lucide-react";
 import { joinNumberSuffix } from "@/lib/address-idf";
 
@@ -24,6 +25,12 @@ export function AddressAutocomplete({
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLUListElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  // Liste affichée par-dessus la page (portail) : elle ne fait jamais défiler la fenêtre qui contient le champ.
+  const [pos, setPos] = useState<React.CSSProperties | null>(null);
+  // Dans une fenêtre (dialog), la liste y reste : hors de la fenêtre, le verrou de défilement bloque la molette.
+  const [portalTarget, setPortalTarget] = useState<Element | null>(null);
   const isSelectingRef = useRef(false);
   const isTypingRef = useRef(false);
 
@@ -38,13 +45,40 @@ export function AddressAutocomplete({
   useEffect(() => {
     // Clic en dehors pour fermer le dropdown
     function handleClickOutside(event: MouseEvent) {
-      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
+      const target = event.target as Node;
+      if (wrapperRef.current?.contains(target) || listRef.current?.contains(target)) return;
+      setIsOpen(false);
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  // Sous le champ, la liste défile dans la place restante ; au-dessus seulement s'il reste moins de 120 px.
+  useLayoutEffect(() => {
+    if (!isOpen) return;
+    setPortalTarget(inputRef.current?.closest('[role="dialog"]') ?? document.body);
+    const place = () => {
+      const r = inputRef.current?.getBoundingClientRect();
+      if (!r) return;
+      const below = window.innerHeight - r.bottom - 8;
+      const above = r.top - 8;
+      const down = below >= 120 || below >= above;
+      setPos({
+        position: "fixed",
+        left: r.left,
+        width: r.width,
+        maxHeight: Math.min(320, down ? below : above),
+        ...(down ? { top: r.bottom + 4 } : { bottom: window.innerHeight - r.top + 4 }),
+      });
+    };
+    place();
+    window.addEventListener("resize", place);
+    window.addEventListener("scroll", place, true);
+    return () => {
+      window.removeEventListener("resize", place);
+      window.removeEventListener("scroll", place, true);
+    };
+  }, [isOpen, suggestions.length]);
 
   useEffect(() => {
     const fetchAddresses = async () => {
@@ -129,6 +163,7 @@ export function AddressAutocomplete({
   return (
     <div ref={wrapperRef} className="relative w-full">
       <input
+        ref={inputRef}
         type="text"
         value={query}
         onChange={(e) => {
@@ -144,8 +179,8 @@ export function AddressAutocomplete({
         required={required}
       />
       
-      {isOpen && suggestions.length > 0 && (
-        <ul className="absolute left-0 right-0 z-[9999] mt-1 max-h-[500px] overflow-auto rounded-xl border border-line bg-white py-1 shadow-2xl">
+      {isOpen && suggestions.length > 0 && pos && portalTarget && createPortal(
+        <ul ref={listRef} style={pos} className="z-[9999] overflow-auto rounded-xl border border-line bg-white py-1 text-left shadow-2xl [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {suggestions.map((feature) => (
             <li
               key={feature.properties.id}
@@ -163,7 +198,8 @@ export function AddressAutocomplete({
               </div>
             </li>
           ))}
-        </ul>
+        </ul>,
+        portalTarget
       )}
     </div>
   );

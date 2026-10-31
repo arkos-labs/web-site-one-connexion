@@ -10,15 +10,15 @@ export const livraisonEcommerce: Service = {
 
   card: {
     tag: "03 - E-commerce",
-    title: "Livraison le jour même",
-    body: "Votre client commande le matin, il est livré le soir. On récupère le colis en boutique ou en entrepôt, et on le livre dans la journée à Paris et en petite couronne, sur le créneau qu'il a choisi.",
-    note: "Livré le jour même",
+    title: "Livraison programmée ou urgente",
+    body: "Vous programmez une livraison plusieurs jours à l'avance. Ou vous êtes pressé : un coursier vient chercher le colis sur le lieu d'enlèvement et le livre dans l'heure, dans les 3 heures ou dans la journée, à Paris et en petite couronne.",
+    note: "Programmée ou urgente",
   },
 
   seo: {
     title: "Coursier jour : livraison same-day pour l'e-commerce",
     description:
-      "Coursier jour : collecte en boutique ou entrepôt, livraison le jour même à Paris et en petite couronne. Créneau choisi, suivi en ligne, preuve de livraison.",
+      "Livraison programmée ou urgente à Paris et en petite couronne : enlèvement sur le lieu de départ, livraison dans l'heure, dans les 3 heures ou dans la journée. Suivi en ligne, preuve de livraison.",
     keywords: [
       "livraison jour même Paris",
       "coursier e-commerce Paris",
@@ -28,10 +28,10 @@ export const livraisonEcommerce: Service = {
     ],
   },
 
-  h1: "Coursier jour",
+  h1: "Livraison programmée ou urgente",
 
   intro:
-    "Vos clients commandent le matin et reçoivent avant le dîner. One Connexion collecte en boutique ou en entrepôt et livre dans la journée dans la capitale et la petite couronne, avec un créneau choisi par le destinataire.",
+    "Vos clients peuvent prendre rendez-vous plusieurs jours à l’avance. Ou être livrés en urgence : dans l’heure, dans les 3 heures ou dans la journée. One Connexion vient chercher le colis sur le lieu d’enlèvement et le livre dans la capitale et la petite couronne.",
 
   stats: [
     { value: "Jour même", label: "Délai de livraison" },
@@ -44,22 +44,22 @@ export const livraisonEcommerce: Service = {
     paragraphs: [
       "Le transporteur est invisible tant que tout va bien. Dès qu’une livraison échoue, c’est votre marque que le client tient pour responsable, votre service client qui absorbe la réclamation, et votre note qui en porte la trace. Le dernier kilomètre est le seul moment physique de la relation : il vaut mieux qu’il soit tenu.",
       "L’échec de livraison est le premier poste de coût caché du secteur. Un destinataire absent, c’est une seconde présentation, un colis qui dort quelque part, et un client qui ne comprend pas. Laisser le destinataire choisir son créneau supprime la cause à la racine plutôt que d’en traiter les conséquences.",
-      "La livraison le jour même change par ailleurs la nature de l’argument commercial. Ce n’est plus une option de confort en fin de tunnel : c’est ce qui permet de vendre à quelqu’un qui hésitait à traverser la ville pour l’acheter en boutique.",
+      "Avoir les deux options change l’argument commercial. Une livraison programmée rassure le client qui planifie, une livraison urgente sauve la vente de celui qui hésitait à traverser la ville pour acheter en boutique.",
     ],
   },
 
   steps: [
     {
       title: "Collecte",
-      body: "Enlèvement en boutique, en entrepôt ou en point de stockage, sur créneau fixe ou à la demande selon votre volume.",
+      body: "Enlèvement sur le lieu de départ, à l’heure prévue ou dès l’appel, selon le type de livraison choisi.",
     },
     {
       title: "Créneau avec le destinataire",
-      body: "Le créneau de réception est choisi par le destinataire, ce qui supprime la première cause d’échec de livraison.",
+      body: "Le créneau de réception est choisi à l’avance par le destinataire. C’est la première cause d’échec de livraison qui disparaît.",
     },
     {
-      title: "Livraison dans la journée",
-      body: "Course directe dans la capitale et la petite couronne. Le deux-roues n’attend ni les bouchons ni les restrictions de circulation.",
+      title: "Livraison sur le créneau",
+      body: "Course directe dans la capitale et la petite couronne, à l’heure réservée. Le deux-roues n’attend ni les bouchons ni les restrictions de circulation.",
     },
     {
       title: "Remise et preuve",
@@ -72,8 +72,8 @@ export const livraisonEcommerce: Service = {
   ],
 
   included: [
-    "Collecte en boutique, entrepôt ou point de stockage",
-    "Créneau de réception choisi par le destinataire",
+    "Enlèvement sur le lieu de départ",
+    "Livraison programmée plusieurs jours à l’avance, ou urgente dans l’heure, dans les 3 heures ou dans la journée",
     "Livraison le jour même en intramuros et petite couronne",
     "Suivi de chaque course en ligne",
     "Preuve de livraison horodatée et archivée",
@@ -100,15 +100,15 @@ export const livraisonEcommerce: Service = {
     "Intramuros et petite couronne (92, 93, 94) au tarif standard. Roissy, Orly et la grande couronne au tarif de leur zone. Les collectes récurrentes s’organisent sur créneaux fixes convenus à l’avance.",
 
   pricing: {
-    title: "Tarif d’une livraison e-commerce le jour même",
+    title: "Tarif d’une livraison e-commerce, programmée ou urgente",
     intro:
-      "Pour livrer un client le jour même dans la capitale ou en Île-de-France, la formule Normale (3 h) suffit le plus souvent. Le colis voyage seul, sans tournée partagée, et le prix est connu avant l’envoi.",
+      "Pour une livraison urgente dans l’heure, la formule Super (1 h) s’applique ; dans 1 h 30, la formule Urgent ; dans les 3 heures ou dans la journée, la formule Normale (3 h). Pour une livraison programmée, le prix est connu avant l’envoi.",
     recommended: ["standard"],
     note:
       "Vous expédiez chaque semaine ? Avec un compte entreprise, vos livraisons sont facturées à 30 jours, avec un tarif dégressif selon le volume.",
   },
 
-  faqTitle: "Vos questions sur la livraison le jour même.",
+  faqTitle: "Vos questions sur la livraison à créneau.",
 
   faq: [
     {
@@ -122,9 +122,9 @@ export const livraisonEcommerce: Service = {
         "18 kg par course, dans un top-case de 60 × 40 cm. Au-delà, la commande est répartie sur plusieurs courses : nous le signalons au moment de la commande.",
     },
     {
-      question: "Gérez-vous les retours ?",
+      question: "Peut-on réserver une livraison plusieurs jours à l’avance ?",
       answer:
-        "Oui, sur le même principe qu’une livraison : enlèvement chez le client et retour vers votre boutique ou votre entrepôt, avec preuve d’enlèvement.",
+        "Oui. Vous pouvez programmer une livraison plusieurs jours à l’avance. Pour une livraison urgente le jour même, la commande se passe avant l’heure limite.",
     },
     {
       question: "Combien coûte une livraison le jour même ?",

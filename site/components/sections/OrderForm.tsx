@@ -58,6 +58,7 @@ export default function OrderForm() {
   const [delai, setDelai] = useState('standard');
   const [pickupAddress, setPickupAddress] = useState("");
   const [dropoffAddress, setDropoffAddress] = useState("");
+  const [returnTrip, setReturnTrip] = useState(false);
   const [contactName, setContactName] = useState(""); // nom de la société (pro)
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -194,7 +195,11 @@ export default function OrderForm() {
   }, [hasAccount, delai]);
 
   // Pas de tarif hors Paris / Île-de-France ; petite couronne : prix au km (distance par la route).
-  const estimatedPrice = useRoutePrice(pickupAddress, dropoffAddress, delai as ServiceLevel);
+  const estimatedPrice = useRoutePrice(pickupAddress, dropoffAddress, delai as ServiceLevel, returnTrip);
+  // Prix de chaque délai affiché sur les boutons, dès que les adresses sont saisies.
+  const priceNormal = useRoutePrice(pickupAddress, dropoffAddress, 'standard', returnTrip);
+  const priceUrgent = useRoutePrice(pickupAddress, dropoffAddress, 'urgent', returnTrip);
+  const priceFlash = useRoutePrice(pickupAddress, dropoffAddress, 'flash', returnTrip);
 
   useEffect(() => {
     const search = window.location.search;
@@ -337,6 +342,7 @@ export default function OrderForm() {
         contact_phone: contactPhone.trim(),
         status: "en_attente",
         price_estimate: estimatedPrice,
+        return_trip: returnTrip,
         client_type: clientType,
         source: "page_publique",
         siret: clientType === 'entreprise' ? siret : null,
@@ -583,6 +589,21 @@ export default function OrderForm() {
 
                     {showZoneAlert && <UnservedAddressAlert className="mt-6" />}
 
+                    <label className="mt-6 flex cursor-pointer items-start gap-3 rounded-2xl border border-gray-200 px-5 py-4">
+                      <input
+                        type="checkbox"
+                        checked={returnTrip}
+                        onChange={(e) => setReturnTrip(e.target.checked)}
+                        className="mt-1 h-4 w-4 accent-[#ed5518]"
+                      />
+                      <span>
+                        <span className="block text-sm font-bold text-gray-900">Retour à l’adresse d’enlèvement</span>
+                        <span className="block text-xs text-gray-500">
+                          À cocher seulement si le colis doit revenir à l’adresse d’enlèvement, par exemple si le destinataire est absent ou refuse le colis. Le coursier repart alors de la dernière adresse de livraison jusqu’à l’adresse d’enlèvement. Ce trajet est facturé 40 % de son prix, en plus de la course. Sans cette case, la course s’arrête à la dernière livraison.
+                        </span>
+                      </span>
+                    </label>
+
                     {estimatedPrice !== null && (
                       <div className="mt-8 flex items-center justify-between rounded-2xl border border-orange-100 bg-orange-50/60 px-5 py-4">
                         <div>
@@ -796,20 +817,23 @@ export default function OrderForm() {
                         <div className="flex flex-wrap gap-3">
                           <button type="button" onClick={() => setDelai('standard')} className={`flex items-center gap-2 px-5 py-3 rounded-xl transition-all ${delai === 'standard' ? 'bg-[#ed5518] text-white shadow-md shadow-accent/20' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
                             <Clock className="w-5 h-5" />
-                            <span className="font-semibold">NORMAL : 3h</span>
+                            <div className="flex flex-col text-left">
+                              <span className="font-semibold leading-tight">NORMAL : 3h</span>
+                              <span className="text-xs opacity-80">{priceNormal !== null ? `${eur(priceNormal)} TTC` : 'Saisissez les adresses'}</span>
+                            </div>
                           </button>
                           <button type="button" onClick={() => setDelai('urgent')} className={`flex items-center gap-2 px-5 py-3 rounded-xl transition-all ${delai === 'urgent' ? 'bg-[#ed5518] text-white shadow-md shadow-accent/20' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
                             <Zap className="w-5 h-5" />
                             <div className="flex flex-col text-left">
                               <span className="font-semibold leading-tight">URGENT : 1h30</span>
-                              <span className="text-xs opacity-80">+50% du tarif</span>
+                              <span className="text-xs opacity-80">{priceUrgent !== null ? `${eur(priceUrgent)} TTC` : '+50% du tarif'}</span>
                             </div>
                           </button>
                           <button type="button" onClick={() => setDelai('flash')} className={`flex items-center gap-2 px-5 py-3 rounded-xl transition-all ${delai === 'flash' ? 'bg-[#ed5518] text-white shadow-md shadow-accent/20' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
                             <Zap className="w-5 h-5 text-red-500" />
                             <div className="flex flex-col text-left">
                               <span className="font-semibold leading-tight">SUPER : 1h</span>
-                              <span className="text-xs opacity-80">+100% du tarif</span>
+                              <span className="text-xs opacity-80">{priceFlash !== null ? `${eur(priceFlash)} TTC` : '+100% du tarif'}</span>
                             </div>
                           </button>
                           {clientType === 'entreprise' && hasAccount && (

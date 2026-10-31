@@ -5,7 +5,7 @@
  * accessible depuis les CTA publics (Header, Hero, etc.)
  */
 import { useState, useEffect, useCallback } from "react";
-import { X, Package, Mail, Truck, Zap, Clock, Calendar, User, Building2, ChevronRight, ChevronLeft, CheckCircle2, CreditCard } from "lucide-react";
+import { X, Zap, Clock, User, Building2, ChevronRight, ChevronLeft, CheckCircle2, Check } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { createAnonClient } from "@/lib/supabase/anon";
 import { payWithSavedMethod } from "@/lib/saved-payment";
@@ -70,7 +70,15 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
   const supabase = createClient();
 
   // Pas de tarif hors Paris / Île-de-France ; petite couronne : prix au km (distance par la route).
-  const estimatedPrice = useRoutePrice(pickupAddress, dropoffAddress, delai as ServiceLevel);
+  const [returnTrip, setReturnTrip] = useState(false);
+  const [addressFocused, setAddressFocused] = useState(false);
+  // Arrêts intermédiaires, livrés avant l'adresse de livraison finale.
+  const [stops, setStops] = useState<string[]>([]);
+  const estimatedPrice = useRoutePrice(pickupAddress, dropoffAddress, delai as ServiceLevel, returnTrip, stops);
+  // Prix de chaque délai affiché sur les boutons, dès que les adresses sont saisies.
+  const priceNormal = useRoutePrice(pickupAddress, dropoffAddress, "standard", returnTrip, stops);
+  const priceUrgent = useRoutePrice(pickupAddress, dropoffAddress, "urgent", returnTrip, stops);
+  const priceFlash = useRoutePrice(pickupAddress, dropoffAddress, "flash", returnTrip, stops);
 
   // Reset quand la modal ouvre
   useEffect(() => {
@@ -144,6 +152,12 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
     }
   };
 
+  // Vérification automatique dès que les 14 chiffres du SIRET sont saisis.
+  useEffect(() => {
+    if (siret.length === 14 && !tva) validateSiretHandler();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [siret]);
+
   // Ferme avec Escape
   const handleKey = useCallback((e: KeyboardEvent) => {
     if (e.key === "Escape") onClose();
@@ -204,11 +218,6 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
         setFormError("Renseignez une adresse email valide.");
         return;
       }
-      // Les factures des pros partent par email : une faute de frappe et elles n'arrivent jamais.
-      if (clientType === "entreprise" && contactEmail.trim().toLowerCase() !== contactEmailConfirm.trim().toLowerCase()) {
-        setFormError("Les deux adresses email ne correspondent pas.");
-        return;
-      }
 
       // Validation B2B si professionnel
       if (clientType === "entreprise") {
@@ -258,7 +267,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
         tracking_code: trackingCode,
         pickup_address: pickupAddress.trim(),
         dropoff_address: dropoffAddress.trim(),
-        stops: [],
+        stops: stops.map((s) => s.trim()).filter(Boolean).map((address) => ({ address })),
         format,
         nature,
         nature_detail: nature === "autre" ? natureDetail.trim() : null,
@@ -269,6 +278,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
         contact_phone: contactPhone.trim(),
         status: "en_attente",
         price_estimate: estimatedPrice,
+        return_trip: returnTrip,
         client_type: clientType,
         source: "page_publique",
         // Données B2B
@@ -356,24 +366,42 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
 
       {/* Conteneur de défilement natif */}
       <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
-        <div className="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+        <div className="flex min-h-full items-center justify-center p-2 text-center sm:p-0">
 
           {/* Panneau principal */}
-          <div className="relative transform rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-8 w-full max-w-3xl flex flex-col max-h-[95dvh] sm:max-h-[90vh] overflow-hidden">
+          <div className="relative transform rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-3 w-full max-w-3xl flex flex-col max-h-[95dvh] sm:max-h-[96dvh] overflow-hidden">
 
             {/* Header (Fixe) */}
-            <div className="flex items-center justify-between border-b border-gray-100 bg-white px-6 py-4 shrink-0">
-              <div>
-                <p className="text-[11px] font-bold uppercase tracking-widest text-accent">Commander une course</p>
-                <h2 className="text-lg font-extrabold text-ink">Course express Paris &amp; IDF</h2>
+            <div className="flex flex-col gap-2 border-b border-gray-100 bg-white px-6 py-2 shrink-0">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-[11px] font-bold uppercase tracking-widest text-accent">Commander une course</p>
+                  <h2 className="text-base font-extrabold text-ink">Course express Paris &amp; IDF</h2>
+                </div>
+                <button
+                  onClick={onClose}
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700"
+                  aria-label="Fermer"
+                >
+                  <X size={20} />
+                </button>
               </div>
-              <button
-                onClick={onClose}
-                className="flex h-9 w-9 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700"
-                aria-label="Fermer"
-              >
-                <X size={20} />
-              </button>
+              {/* Stepper */}
+              <div className="relative flex items-center justify-between px-2">
+                <div className="absolute left-2 right-2 top-1/2 -translate-y-1/2 h-1 rounded-full bg-gray-100" />
+                <div
+                  className="absolute left-2 top-1/2 -translate-y-1/2 h-1 rounded-full bg-accent transition-all duration-500"
+                  style={{ width: `calc((100% - 1rem) * ${(step - 1) / 2})` }}
+                />
+                {[1, 2, 3].map((s) => (
+                  <div
+                    key={s}
+                    className={`relative z-10 flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold transition-colors ${step >= s ? "bg-accent text-white" : "bg-gray-100 text-gray-400"}`}
+                  >
+                    {step > s ? <CheckCircle2 size={14} /> : s}
+                  </div>
+                ))}
+              </div>
             </div>
 
             {/* Contenu (2 colonnes) */}
@@ -381,7 +409,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
               
               {/* Colonne Gauche (Formulaire) */}
               <div className="flex-1 flex flex-col min-h-0 md:border-r border-gray-100">
-                <div className="flex-1 overflow-y-auto px-6 py-6 pb-32">
+                <div className="flex-1 overflow-y-auto px-6 pt-2 pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {submitted ? (
             <div className="py-12 text-center">
               <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-green-50 text-emerald-500">
@@ -420,28 +448,112 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
             </div>
           ) : (
             <>
-              {/* Stepper */}
-              <div className="mb-8 flex items-center justify-between relative">
-                <div className="absolute left-0 top-1/2 -translate-y-1/2 h-1 w-full rounded-full bg-gray-100" />
-                <div
-                  className="absolute left-0 top-1/2 -translate-y-1/2 h-1 rounded-full bg-accent transition-all duration-500"
-                  style={{ width: `${((step - 1) / 2) * 100}%` }}
-                />
-                {[1, 2, 3].map((s) => (
-                  <div
-                    key={s}
-                    className={`relative z-10 flex h-9 w-9 items-center justify-center rounded-full text-sm font-bold transition-colors ${step >= s ? "bg-accent text-white" : "bg-gray-100 text-gray-400"}`}
-                  >
-                    {step > s ? <CheckCircle2 size={16} /> : s}
-                  </div>
-                ))}
-              </div>
-
               <form onSubmit={handleSubmit} className="flex flex-col gap-6">
                 {/* Étape 1 : Itinéraire */}
                 {step === 1 && (
-                  <div className="flex flex-col gap-5">
-                    {/* Entreprise / Particulier */}
+                  <div className="flex flex-col gap-4">
+
+                    <div>
+                      <div className="mb-3 flex items-center justify-between gap-3">
+                        <span className="text-xs font-bold uppercase tracking-wider text-ink">Délai de prise en charge</span>
+                        <span className="rounded-md bg-orange-50 px-2 py-0.5 text-[11px] font-semibold text-orange-700">Garantie ponctualité</span>
+                      </div>
+                      <div className="grid grid-cols-3 gap-2">
+                        {[
+                          { id: 'standard', label: 'Normal : 3h', price: priceNormal, fallback: 'Saisissez les adresses', Icon: Clock },
+                          { id: 'urgent', label: 'Urgent : 1h30', price: priceUrgent, fallback: '+50% du tarif', Icon: Zap },
+                          { id: 'flash', label: 'Super : 1h', price: priceFlash, fallback: '+100% du tarif', Icon: Zap },
+                        ].map(({ id, label, price, fallback, Icon }) => (
+                          <button
+                            key={id}
+                            type="button"
+                            onClick={() => setDelai(id)}
+                            className={`relative flex flex-col items-center gap-1 rounded-xl border-2 px-2 py-3 text-center transition-all ${delai === id ? 'border-accent bg-accent text-white' : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'}`}
+                          >
+                            {id === 'flash' && (
+                              <span className="absolute -top-2 rounded bg-yellow-400 px-1.5 text-[9px] font-bold text-gray-900">EXPRESS</span>
+                            )}
+                            <span className={`flex h-8 w-8 items-center justify-center rounded-full ${delai === id ? 'bg-white/20' : 'bg-gray-100'}`}>
+                              <Icon size={16} />
+                            </span>
+                            <span className="text-xs font-bold uppercase leading-tight">{label}</span>
+                            <span className="text-sm font-bold">
+                              {price !== null ? `${price.toFixed(2).replace('.', ',')} €` : fallback}
+                              {price !== null && <span className="ml-1 text-[10px] font-normal opacity-80">TTC</span>}
+                            </span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Adresse enlèvement */}
+                    <div className="relative pl-8" onFocus={() => setAddressFocused(true)} onBlur={() => setAddressFocused(false)}>
+                      <div className="absolute left-0 top-1.5 flex h-5 w-5 items-center justify-center rounded-full border-[3px] border-emerald-500 bg-white">
+                        <div className="h-2 w-2 rounded-full bg-emerald-500" />
+                      </div>
+                      <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">
+                        Adresse d'enlèvement <span className="text-accent">*</span>
+                      </label>
+                      <AddressAutocomplete
+                        value={pickupAddress}
+                        onChange={setPickupAddress}
+                        placeholder="Rue, ville..."
+                        required
+                        className="w-full rounded-xl border border-line bg-[#FAFAFA] px-4 py-2 text-sm font-semibold text-ink focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+                      />
+                    </div>
+
+                    {stops.map((stop, i) => (
+                      <div key={i} className="relative pl-8">
+                        <div className="absolute left-0 top-1.5 h-5 w-5 rounded-full border-[3px] border-gray-400 bg-white" />
+                        <div className="mb-1.5 flex items-center justify-between">
+                          <label className="block text-xs font-bold uppercase tracking-wider text-gray-600">Arrêt {i + 1}</label>
+                          <button type="button" onClick={() => setStops(stops.filter((_, j) => j !== i))} className="text-xs font-semibold text-gray-500 hover:text-red-600">Retirer</button>
+                        </div>
+                        <AddressAutocomplete
+                          value={stop}
+                          onChange={(v) => setStops(stops.map((s, j) => (j === i ? v : s)))}
+                          placeholder="Adresse de l’arrêt"
+                          className="w-full rounded-xl border border-line bg-[#FAFAFA] px-4 py-2 text-sm font-semibold text-ink focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+                        />
+                      </div>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={() => setStops([...stops, ""])}
+                      disabled={delai === "flash" && stops.length >= 1}
+                      className="self-start pl-8 text-sm font-semibold text-accent hover:underline disabled:cursor-not-allowed disabled:text-gray-400 disabled:no-underline"
+                    >
+                      + Ajouter un arrêt
+                    </button>
+                    {delai === "flash" && stops.length >= 1 && (
+                      <p className="pl-8 text-xs text-gray-500">En Super 1 h, 2 adresses de livraison au maximum : l’arrêt et la livraison finale.</p>
+                    )}
+
+                    {/* Adresse livraison */}
+                    <div className="relative pl-8" onFocus={() => setAddressFocused(true)} onBlur={() => setAddressFocused(false)}>
+                      <div className="absolute left-0 top-1.5 flex h-5 w-5 items-center justify-center rounded-full border-[3px] border-accent bg-white">
+                        <div className="h-2 w-2 rounded-full bg-accent" />
+                      </div>
+                      <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">
+                        Adresse de livraison <span className="text-accent">*</span>
+                      </label>
+                      <AddressAutocomplete
+                        value={dropoffAddress}
+                        onChange={setDropoffAddress}
+                        placeholder="Rue, ville..."
+                        required
+                        className="w-full rounded-xl border border-line bg-[#FAFAFA] px-4 py-2 text-sm font-semibold text-ink focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+                      />
+                    </div>
+                    {/* Pas d'alerte pendant la saisie : seule la liste d'adresses bouge. */}
+                    {showZoneAlert && !addressFocused && <UnservedAddressAlert />}
+                  </div>
+                )}
+
+                {/* Étape 2 : Contact */}
+                {step === 2 && (
+                  <div className="flex flex-col gap-3">
                     <div className="flex rounded-xl bg-gray-100 p-1">
                       {(["entreprise", "particulier"] as const).map((t) => (
                         <button
@@ -455,69 +567,18 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                         </button>
                       ))}
                     </div>
-
-                    {clientType === "particulier" && (
-                      <div className="flex gap-3 rounded-xl border border-orange-100 bg-orange-50 p-4 text-sm text-orange-800">
-                        <CreditCard size={18} className="mt-0.5 shrink-0 text-accent" />
-                        <div>
-                          <p className="font-bold text-orange-900 mb-1">Paiement direct sécurisé</p>
-                          <p>En tant que particulier, le règlement s'effectue par carte bancaire avant la prise en charge de votre course. Vous serez redirigé vers notre partenaire Stripe pour un paiement 100% sécurisé.</p>
-                        </div>
-                      </div>
-                    )}
-                    {clientType === "entreprise" && (
-                      <div className="flex gap-3 rounded-xl border border-blue-100 bg-blue-50 p-4 text-sm text-blue-800">
-                        <CreditCard size={18} className="mt-0.5 shrink-0 text-blue-600" />
-                        <div>
-                          <p className="font-bold text-blue-900 mb-1">Règlements</p>
-                          <p>Carte bancaire, prélèvement ou virement : le mode de règlement se choisit à la dernière étape. Paiement sécurisé par Stripe.</p>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Adresse enlèvement */}
-                    <div className="relative pl-8">
-                      <div className="absolute left-0 top-1.5 flex h-5 w-5 items-center justify-center rounded-full border-[3px] border-emerald-500 bg-white">
-                        <div className="h-2 w-2 rounded-full bg-emerald-500" />
-                      </div>
-                      <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">
-                        Adresse d'enlèvement <span className="text-accent">*</span>
-                      </label>
-                      <AddressAutocomplete 
-                        value={pickupAddress} 
-                        onChange={setPickupAddress} 
-                        placeholder="Rue, ville..." 
-                        required 
-                      />
-                    </div>
-
-                    {/* Adresse livraison */}
-                    <div className="relative pl-8">
-                      <div className="absolute left-0 top-1.5 flex h-5 w-5 items-center justify-center rounded-full border-[3px] border-accent bg-white">
-                        <div className="h-2 w-2 rounded-full bg-accent" />
-                      </div>
-                      <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">
-                        Adresse de livraison <span className="text-accent">*</span>
-                      </label>
-                      <AddressAutocomplete 
-                        value={dropoffAddress} 
-                        onChange={setDropoffAddress} 
-                        placeholder="Rue, ville..." 
-                        required 
-                      />
-                    </div>
-                    {showZoneAlert && <UnservedAddressAlert />}
-                  </div>
-                )}
-
-                {/* Étape 2 : Contact */}
-                {step === 2 && (
-                  <div className="flex flex-col gap-5">
                     <div className="flex items-center gap-3 font-bold text-ink">
                       <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/10"><User size={16} className="text-accent" /></div>
                       Vos informations
                     </div>
-                    <div className="flex flex-col gap-4">
+                    {clientType === "particulier" && (
+                      <p className="rounded-xl border border-orange-100 bg-orange-50 px-4 py-3 text-sm text-orange-800">Paiement par carte, sécurisé par Stripe, avant la prise en charge.</p>
+                    )}
+                    {clientType === "entreprise" && (
+                      <p className="rounded-xl border border-blue-100 bg-blue-50 px-4 py-3 text-sm text-blue-800">Pros : paiement par carte immédiat, ou sur facture à 30 jours. Choix à la dernière étape.</p>
+                    )}
+                    <div className="flex flex-col gap-2.5">
+                      <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
                       {clientType === "entreprise" && (
                         <div>
                           <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">SIRET <span className="text-accent">*</span></label>
@@ -525,58 +586,54 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                             <input
                               type="text"
                               value={siret}
-                              onChange={(e) => { setSiret(e.target.value.replace(/\D/g, "").slice(0, 14)); setTva(""); }}
+                              onChange={(e) => { setSiret(e.target.value.replace(/\D/g, "").slice(0, 14)); setTva(""); setAdresseFacturation(""); setContactName(""); setRaisonSociale(""); }}
                               maxLength={14}
                               placeholder="14 chiffres"
-                              className="flex-1 rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
+                              className="w-44 shrink-0 rounded-xl border border-gray-200 bg-gray-50 px-4 py-2 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
                             />
-                            <button
-                              type="button"
-                              onClick={validateSiretHandler}
-                              disabled={validatingSiret || !siret}
-                              className="rounded-xl bg-accent px-4 py-3 text-sm font-bold text-white hover:bg-accent-dark disabled:opacity-60 whitespace-nowrap"
-                            >
-                              {validatingSiret ? "..." : "Vérifier"}
-                            </button>
+                            {validatingSiret && (
+                              <span className="flex items-center whitespace-nowrap px-2 text-xs text-gray-500">Vérification…</span>
+                            )}
                           </div>
                           {tva && (
-                            <div className="mt-2 flex flex-col gap-1 rounded-lg bg-green-100 p-3 text-green-900 text-sm">
-                              <span className="font-bold">✓ {raisonSociale || "Société vérifiée"}</span>
-                              <span>TVA : {tva}</span>
-                            </div>
+                            <span className="mt-2 inline-flex rounded-lg border border-green-200 bg-green-50 px-3 py-1.5 text-xs font-semibold text-green-900">
+                              ✓ TVA : {tva}
+                            </span>
                           )}
                         </div>
                       )}
                       {clientType === "entreprise" && (
                         <div>
                           <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">Nom de la société <span className="text-accent">*</span></label>
-                          <input type="text" required value={contactName} onChange={(e) => setContactName(e.target.value)} placeholder="Acme Corp" className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30" />
+                          {/* Nom officiel du SIRET (Sirene), non modifiable. */}
+                          <input type="text" required readOnly value={contactName} placeholder="Rempli depuis le SIRET" className="w-full cursor-not-allowed rounded-xl border border-gray-200 bg-gray-100 px-4 py-2 text-sm text-gray-700 focus:outline-none" />
                         </div>
                       )}
-                      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                      </div>
+                      {clientType === "entreprise" && (
+                        <div>
+                          <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">Adresse de facturation <span className="text-accent">*</span></label>
+                          {/* Adresse officielle du SIRET (Sirene), non modifiable : évite une facture adressée ailleurs. */}
+                          <input
+                            type="text"
+                            value={adresseFacturation}
+                            readOnly
+                            placeholder="Remplie automatiquement depuis le SIRET"
+                            className="w-full cursor-not-allowed rounded-xl border border-gray-200 bg-gray-100 px-4 py-2 text-sm text-gray-700 focus:outline-none"
+                          />
+                        </div>
+                      )}
+                      <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
                         <div>
                           <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">Prénom <span className="text-accent">*</span></label>
-                          <input type="text" required value={firstName} onChange={(e) => setFirstName(e.target.value)} autoComplete="given-name" placeholder="Jean" className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30" />
+                          <input type="text" required value={firstName} onChange={(e) => setFirstName(e.target.value)} autoComplete="given-name" placeholder="Jean" className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30" />
                         </div>
                         <div>
                           <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">Nom <span className="text-accent">*</span></label>
-                          <input type="text" required value={lastName} onChange={(e) => setLastName(e.target.value)} autoComplete="family-name" placeholder="Dupont" className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30" />
+                          <input type="text" required value={lastName} onChange={(e) => setLastName(e.target.value)} autoComplete="family-name" placeholder="Dupont" className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30" />
                         </div>
                       </div>
-                      {clientType === "entreprise" && (
-                        <>
-                          <div>
-                            <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">Adresse de facturation <span className="text-accent">*</span></label>
-                            <input
-                              type="text"
-                              value={adresseFacturation}
-                              onChange={(e) => setAdresseFacturation(e.target.value)}
-                              placeholder="Adresse de facturation"
-                              className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
-                            />
-                          </div>
-                        </>
-                      )}
+                      <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
                       <div>
                         <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">Téléphone<span className="text-accent">*</span></label>
                         <input
@@ -587,19 +644,14 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                           placeholder="06 12 34 56 78 ou +33 6 12 34 56 78"
                           pattern="^(0[1-9]|(\+33)[1-9])[0-9 ]{8,9}$"
                           title="Numéro français valide : 06 12 34 56 78 ou +33 6 12 34 56 78"
-                          className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
+                          className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
                         />
                       </div>
                       <div>
                         <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">Email <span className="text-accent">*</span></label>
-                        <input type="email" required value={contactEmail} onChange={(e) => setContactEmail(e.target.value)} placeholder="contact@societe.fr" className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30" />
+                        <input type="email" required value={contactEmail} onChange={(e) => setContactEmail(e.target.value)} placeholder="contact@societe.fr" className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30" />
                       </div>
-                      {clientType === "entreprise" && (
-                        <div>
-                          <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">Confirmez l'email <span className="text-accent">*</span></label>
-                          <input type="email" required value={contactEmailConfirm} onChange={(e) => setContactEmailConfirm(e.target.value)} onPaste={(e) => e.preventDefault()} autoComplete="off" placeholder="Retapez votre email (vos factures y seront envoyées)" className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30" />
-                        </div>
-                      )}
+                      </div>
                     </div>
 
                   </div>
@@ -607,21 +659,23 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
 
                 {/* Étape 3 : Colis & délai */}
                 {step === 3 && (
-                  <div className="flex flex-col gap-6">
+                  <div className="flex flex-col gap-4">
                     <div>
-                      <label className="mb-1 block text-sm font-bold text-ink">Que voulez-vous envoyer ? <span className="text-accent">*</span></label>
-                      <p className="mb-3 text-xs text-gray-500">Pour préparer le coursier. Le prix reste le même.</p>
-                      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-                        {ORDER_NATURES.map(({ id, label, Icon }) => (
+                      <div className="mb-2 flex items-baseline justify-between gap-3">
+                        <label className="text-xs font-bold uppercase tracking-wider text-ink">Que voulez-vous envoyer ? <span className="text-accent">*</span></label>
+                        <span className="text-[11px] text-gray-400">Pour préparer le coursier. Même tarif.</span>
+                      </div>
+                      <div className="flex flex-wrap gap-1.5">
+                        {ORDER_NATURES.map(({ id, label }) => (
                           <button
                             key={id}
                             type="button"
                             onClick={() => { setNature(id); setFormError(""); }}
                             aria-pressed={nature === id}
-                            className={`flex items-center gap-2 rounded-xl border-2 px-3 py-2.5 text-left transition-all ${nature === id ? "border-accent bg-accent/5" : "border-gray-100 bg-white hover:border-gray-200"}`}
+                            className={`flex items-center gap-1 rounded-lg border px-3 py-1.5 text-sm transition-all ${nature === id ? "border-accent bg-accent/5 font-semibold text-accent" : "border-gray-200 bg-white text-gray-700 hover:border-gray-300"}`}
                           >
-                            <Icon size={18} className={`shrink-0 ${nature === id ? "text-accent" : "text-gray-400"}`} />
-                            <span className={`text-xs font-bold ${nature === id ? "text-accent" : "text-gray-700"}`}>{label}</span>
+                            {nature === id && <Check size={14} />}
+                            {label}
                           </button>
                         ))}
                       </div>
@@ -634,87 +688,64 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                           autoFocus
                           placeholder="Précisez ce que vous envoyez (ex. : clés, maquette, pièce détachée…)"
                           aria-label="Précisez ce que vous envoyez"
-                          className="mt-2 w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
+                          className="mt-2 w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
                         />
                       )}
                     </div>
 
                     <div>
-                      <label className="mb-3 block text-sm font-bold text-ink">Format du courrier</label>
+                      <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-ink">Format du courrier <span className="text-accent">*</span></label>
                       <div className="grid grid-cols-3 gap-2">
                         {[
-                          { id: "doc", label: "Pli / Doc", sub: "< 1 kg", Icon: Mail },
-                          { id: "petit", label: "Petit colis", sub: "1–10 kg", Icon: Package },
-                          { id: "volumineux", label: "Volumineux", sub: "10–18 kg ou encombrant", Icon: Truck },
-                        ].map(({ id, label, sub, Icon }) => (
+                          { id: "doc", label: "Pli / Doc", sub: "< 1 kg" },
+                          { id: "petit", label: "Petit colis", sub: "1–10 kg" },
+                          { id: "volumineux", label: "Volumineux", sub: "10–18 kg / encombrant" },
+                        ].map(({ id, label, sub }) => (
                           <button
                             key={id}
                             type="button"
                             onClick={() => setFormat(id)}
-                            className={`flex flex-col items-center rounded-xl border-2 p-3 text-center transition-all ${format === id ? "border-accent bg-accent/5" : "border-gray-100 bg-white hover:border-gray-200"}`}
+                            className={`relative flex flex-col items-start rounded-xl border-2 px-3 py-2 text-left transition-all ${format === id ? "border-accent bg-accent/5" : "border-gray-200 bg-white hover:border-gray-300"}`}
                           >
-                            <Icon size={20} className={`mb-1 ${format === id ? "text-accent" : "text-gray-400"}`} />
-                            <span className={`text-xs font-bold ${format === id ? "text-accent" : "text-gray-700"}`}>{label}</span>
-                            <span className={`text-[10px] ${format === id ? "text-accent/70" : "text-gray-400"}`}>{sub}</span>
+                            {format === id && <Check size={14} className="absolute right-2 top-2 text-accent" />}
+                            <span className={`text-sm font-semibold ${format === id ? "text-accent" : "text-gray-800"}`}>{label}</span>
+                            <span className={`text-[11px] ${format === id ? "text-accent/70" : "text-gray-400"}`}>{sub}</span>
                           </button>
                         ))}
                       </div>
-                      {format === "volumineux" && <LargeParcelAlert className="mt-3" />}
-                    </div>
-
-                    <div>
-                      <label className="mb-3 block text-sm font-bold text-ink">Délai de prise en charge</label>
-                      <div className="flex flex-col gap-2">
-                        <button type="button" onClick={() => setDelai('standard')} className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${delai === 'standard' ? 'bg-accent text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
-                          <Clock size={16} /> <span>NORMAL : 3h</span>
-                        </button>
-                        <button type="button" onClick={() => setDelai('urgent')} className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${delai === 'urgent' ? 'bg-accent text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
-                          <Zap size={16} /> 
-                          <div className="flex flex-col text-left">
-                            <span className="leading-tight">URGENT : 1h30</span>
-                            <span className="text-[10px] opacity-80">+50% du tarif</span>
-                          </div>
-                        </button>
-                        <button type="button" onClick={() => setDelai('flash')} className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${delai === 'flash' ? 'bg-accent text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
-                          <Zap size={16} className={delai === 'flash' ? "text-white" : "text-red-500"} /> 
-                          <div className="flex flex-col text-left">
-                            <span className="leading-tight">SUPER : 1h</span>
-                            <span className="text-[10px] opacity-80">+100% du tarif</span>
-                          </div>
-                        </button>
-                      </div>
+                      {format === "volumineux" && <LargeParcelAlert className="mt-2" />}
                     </div>
 
                     {clientType === "entreprise" && (
                       <div>
-                        <label className="mb-3 block text-sm font-bold text-ink">Mode de règlement</label>
-                        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                        <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-ink">Mode de règlement <span className="text-accent">*</span></label>
+                        <div className="grid grid-cols-2 gap-2">
                           {([
-                            { id: "carte", label: "Carte bancaire", sub: "", Icon: CreditCard },
-                            { id: "fin_de_mois", label: "Dans les 30 jours", sub: "Règlement sur facture", Icon: Calendar },
-                          ] as const).map(({ id, label, sub, Icon }) => (
+                            { id: "carte", label: "Carte bancaire", sub: "Paiement immédiat" },
+                            { id: "fin_de_mois", label: "Facture sous 30 jours", sub: "Règlement différé" },
+                          ] as const).map(({ id, label, sub }) => (
                             <button
                               key={id}
                               type="button"
                               onClick={() => setPaymentMode(id)}
                               aria-pressed={paymentMode === id}
-                              className={`flex items-center gap-3 rounded-xl border-2 p-3 text-left transition-all ${paymentMode === id ? "border-accent bg-accent/5" : "border-gray-100 bg-white hover:border-gray-200"}`}
+                              className={`flex flex-col items-center rounded-xl border-2 px-3 py-2.5 text-center transition-all ${paymentMode === id ? "border-accent bg-accent/5" : "border-gray-200 bg-white hover:border-gray-300"}`}
                             >
-                              <Icon size={20} className={`shrink-0 ${paymentMode === id ? "text-accent" : "text-gray-400"}`} />
-                              <div className="flex flex-col">
-                                <span className={`text-sm font-bold ${paymentMode === id ? "text-accent" : "text-gray-700"}`}>{label}</span>
-                                {sub && <span className={`text-[11px] ${paymentMode === id ? "text-accent/70" : "text-gray-400"}`}>{sub}</span>}
-                              </div>
+                              <span className={`flex items-center gap-1 text-sm font-semibold ${paymentMode === id ? "text-accent" : "text-gray-700"}`}>
+                                {label}
+                                {paymentMode === id && <Check size={14} />}
+                              </span>
+                              <span className={`text-[11px] ${paymentMode === id ? "text-accent/70" : "text-gray-400"}`}>{sub}</span>
                             </button>
                           ))}
                         </div>
 
                         {paymentMode === "fin_de_mois" && (
-                          <div className="mt-3">
-                            <p className="mb-2 text-xs font-bold uppercase tracking-wider text-gray-600">Réglé par</p>
-                            <div className="flex rounded-xl bg-gray-100 p-1">
+                          <div className="mt-2">
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs text-gray-600">Réglé par :</span>
                               {([
-                                { id: "sepa", label: "Prélèvement" },
+                                { id: "sepa", label: "Prélèvement SEPA" },
                                 { id: "virement", label: "Virement" },
                               ] as const).map(({ id, label }) => (
                                 <button
@@ -722,8 +753,9 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                                   type="button"
                                   onClick={() => setDebitMethod(id)}
                                   aria-pressed={debitMethod === id}
-                                  className={`flex flex-1 items-center justify-center rounded-lg py-2 text-sm font-bold transition-all ${debitMethod === id ? "bg-white text-ink shadow-sm" : "text-gray-500 hover:text-gray-700"}`}
+                                  className={`flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold transition-all ${debitMethod === id ? "bg-accent text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}
                                 >
+                                  {debitMethod === id && <Check size={12} />}
                                   {label}
                                 </button>
                               ))}
@@ -735,8 +767,8 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                     )}
 
                     <div>
-                      <label className="mb-1.5 block text-sm font-bold text-ink">Consignes au coursier</label>
-                      <textarea rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Ex: Colis à l'accueil, demander M. Martin…" className="w-full resize-none rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none" />
+                      <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-ink">Consignes au coursier <span className="font-normal normal-case text-gray-400">(optionnel)</span></label>
+                      <input type="text" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Ex : code 4821B, bâtiment C, 3e étage" className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30" />
                     </div>
 
                     {/* Récapitulatif Prix (Mobile Uniquement) */}
@@ -768,6 +800,12 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                           <span>Délai :</span>
                           <span className="font-medium text-gray-900">{delai === 'standard' ? 'Normal' : delai === 'urgent' ? 'Urgent' : 'Super'}</span>
                         </div>
+                        {returnTrip && (
+                          <div className="flex justify-between">
+                            <span>Retour à l’adresse d’enlèvement :</span>
+                            <span className="font-medium text-gray-900">oui (40 % de la course)</span>
+                          </div>
+                        )}
                       </div>
                       <div className="border-t border-orange-200/60 pt-4 flex items-end justify-between">
                         <div>
@@ -827,13 +865,36 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
 
               {/* Récapitulatif (Droite - Desktop Uniquement) */}
               <div className="hidden md:flex w-[300px] bg-gray-50 p-6 flex-col shrink-0 overflow-y-auto">
-                <h3 className="text-sm font-bold text-gray-800 mb-6 flex items-center gap-2">
+                <h3 className="text-sm font-bold text-gray-800 mb-3 flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-[#ed5518]" />
                   Récapitulatif de votre commande
                 </h3>
-                
-                <div className="flex-1 space-y-4 text-[14px] text-gray-600">
-                  <div className="flex flex-col gap-1 border-b border-gray-200 pb-3">
+
+                <label className="mb-3 flex cursor-pointer items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-1.5">
+                  <input
+                    type="checkbox"
+                    checked={returnTrip}
+                    onChange={(e) => setReturnTrip(e.target.checked)}
+                    className="h-4 w-4 accent-[#ed5518]"
+                  />
+                  <span className="text-xs font-bold text-gray-900">Retour à l’adresse d’enlèvement (40 %)</span>
+                </label>
+
+                <div className="mb-3 border-b border-gray-200 pb-3">
+                  <div className="text-[11px] font-bold uppercase tracking-wider text-orange-600 mb-1">Tarif estimé</div>
+                  <div className="whitespace-nowrap text-3xl font-extrabold text-[#ed5518]">
+                    {prices ? `${eur(prices.ttc)} TTC` : "-- €"}
+                  </div>
+                  {prices && (
+                    <div className="text-xs font-semibold text-gray-500">
+                      dont TVA {eur(prices.tva)} ({eur(prices.ht)} HT)
+                    </div>
+                  )}
+                  <div className="mt-1 text-[10px] text-gray-500">{clientType === "entreprise" && paymentMode === "fin_de_mois" ? (debitMethod === "virement" ? "Virement sous 30 jours" : "Prélèvement sous 30 jours") : "Règlement sécurisé par carte"}</div>
+                </div>
+
+                <div className="flex-1 space-y-1.5 text-[13px] text-gray-600">
+                  <div className="flex flex-col gap-0.5 border-b border-gray-200 pb-2">
                     <span className="text-xs font-semibold uppercase text-gray-400">Départ</span>
                     <span className="font-medium text-gray-900">{pickupAddress || "À renseigner"}</span>
                   </div>
@@ -842,7 +903,21 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                     <span className="text-xs font-semibold uppercase text-gray-400">Arrivée</span>
                     <span className="font-medium text-gray-900">{dropoffAddress || "À renseigner"}</span>
                   </div>
-                  
+
+                  {stops.filter((s) => s.trim()).map((s, i) => (
+                    <div key={i} className="flex flex-col gap-1 border-b border-gray-200 pb-3">
+                      <span className="text-xs font-semibold uppercase text-gray-400">Arrêt {i + 1}</span>
+                      <span className="font-medium text-gray-900">{s}</span>
+                    </div>
+                  ))}
+
+                  {returnTrip && (
+                    <div className="flex flex-col gap-1 border-b border-gray-200 pb-3">
+                      <span className="text-xs font-semibold uppercase text-gray-400">Retour</span>
+                      <span className="font-medium text-gray-900">À l’adresse d’enlèvement (40 % de la course)</span>
+                    </div>
+                  )}
+
                   {nature && (
                     <div className="flex flex-col gap-1 border-b border-gray-200 pb-3">
                       <span className="text-xs font-semibold uppercase text-gray-400">Envoi</span>
@@ -860,24 +935,6 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                   </div>
                 </div>
                 
-                <div className="mt-8 pt-6 border-t border-gray-200">
-                  <div className="flex flex-col gap-2">
-                    <div>
-                      <div className="text-[11px] font-bold uppercase tracking-wider text-orange-600 mb-1">Tarif estimé</div>
-                      <div className="text-[10px] text-gray-500">{clientType === "entreprise" && paymentMode === "fin_de_mois" ? (debitMethod === "virement" ? "Virement sous 30 jours" : "Prélèvement sous 30 jours") : "Règlement sécurisé par carte"}</div>
-                    </div>
-                    <div>
-                      <div className="whitespace-nowrap text-3xl font-extrabold text-[#ed5518]">
-                        {prices ? `${eur(prices.ttc)} TTC` : "-- €"}
-                      </div>
-                      {prices && (
-                        <div className="text-xs font-semibold text-gray-500">
-                          dont TVA {eur(prices.tva)} ({eur(prices.ht)} HT)
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
               </div>
 
             </div>
