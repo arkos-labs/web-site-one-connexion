@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 import { AdminPage } from "@/components/dashboard/ui";
 import { Calendar, Download } from "lucide-react";
 import { normalizeOrderPriceTTC } from "@/lib/price-display";
+import { isRevenueOrder } from "@/lib/revenue";
 
 type Period = "jour" | "semaine" | "mois" | "annee";
 
@@ -18,6 +19,9 @@ type OrderRow = {
   pickup_address: string;
   dropoff_address: string;
   user_id: string | null;
+  payment_mode: string | null;
+  billing_status: string | null;
+  source: string | null;
 };
 
 type NavetteRow = {
@@ -110,7 +114,7 @@ function AdminChiffreAffairesPageInner() {
     const [{ data: orderRows }, { data: navetteRows }, { data: profileRows }, { data: clientRows }] = await Promise.all([
       supabase
         .from("orders")
-        .select("price_estimate, delai, status, created_at, tracking_code, pickup_address, dropoff_address, user_id")
+        .select("price_estimate, delai, status, created_at, tracking_code, pickup_address, dropoff_address, user_id, payment_mode, billing_status, source")
         .neq("status", "annulee")
         .order("created_at", { ascending: false }),
       supabase
@@ -130,7 +134,7 @@ function AdminChiffreAffairesPageInner() {
       return p?.company || p?.full_name || "Client particulier";
     };
 
-    const orderBillables: Billable[] = ((orderRows ?? []) as OrderRow[]).map((o, i) => ({
+    const orderBillables: Billable[] = ((orderRows ?? []) as OrderRow[]).filter(isRevenueOrder).map((o, i) => ({
       key: `order-${i}`,
       type: "commande",
       date: o.created_at,

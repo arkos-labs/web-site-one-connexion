@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { htOf, normalizeOrderPriceTTC } from "@/lib/price-display";
+import { isRevenueOrder } from "@/lib/revenue";
 import { AdminPage } from "@/components/dashboard/ui";
 import { AlertTriangle, ArrowRight, Clock, Euro, Package, Plus, Truck, Users } from "lucide-react";
 
@@ -79,7 +80,7 @@ export default function AdminOverviewPage() {
     startOfDay.setHours(0, 0, 0, 0);
 
     const [ordersToday, ordersEnCours, navettesPendingCount, ordersAwaitingCount, ordersAwaiting, navettesPending, driversData] = await Promise.all([
-      supabase.from("orders").select("price_estimate, pickup_address, dropoff_address, delai, status").gte("created_at", startOfDay.toISOString()).neq("status", "annulee"),
+      supabase.from("orders").select("price_estimate, pickup_address, dropoff_address, delai, status, payment_mode, billing_status, source").gte("created_at", startOfDay.toISOString()).neq("status", "annulee"),
       supabase.from("orders").select("id", { count: "exact", head: true }).eq("status", "en_cours"),
       supabase
         .from("navettes")
@@ -105,7 +106,8 @@ export default function AdminOverviewPage() {
       supabase.from("drivers").select("id, name, phone, vehicle, status").order("name"),
     ]);
 
-    const todayRows = ordersToday.data ?? [];
+    // CA du jour : pros à 30 jours et particuliers payés (règle dans lib/revenue.ts).
+    const todayRows = (ordersToday.data ?? []).filter(isRevenueOrder);
     const caJour = todayRows.reduce((sum, o) => sum + (normalizeOrderPriceTTC(o.price_estimate, o.pickup_address, o.dropoff_address, o.delai) ?? 0), 0);
 
     const orderRows = ordersAwaiting.data ?? [];
