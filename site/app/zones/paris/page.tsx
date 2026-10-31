@@ -11,14 +11,14 @@ import { SERVICES } from "@/lib/services";
 import { Clock, MapPin, Zap, Shield } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: { absolute: "Tarif coursier Paris : dès 28 € TTC" },
+  title: { absolute: "Coursier Paris : prix dès 28 € TTC | ONE CONNEXION" },
   description:
-    "Tarif coursier Paris dès 28 € TTC en normal, 42 € en urgent. Livraison express dans les 20 arrondissements, enlèvement en moins de 45 min, remise horodatée.",
+    "Coursier à Paris : 28 € TTC en 3 h, 42 € en 1 h 30, 56 € en 1 h. Même prix dans les 20 arrondissements, enlèvement en moins de 45 min, remise horodatée.",
   alternates: { canonical: "/zones/paris" },
   openGraph: {
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION - Coursier B2B Paris & Île-de-France" }],
-    title: "Coursier Paris : livraison express - ONE CONNEXION",
-    description: "Livraison express dans tout Paris (75). Course dédiée, sans regroupement, remise en main propre.",
+    title: "Coursier Paris : prix dès 28 € TTC | ONE CONNEXION",
+    description: "Coursier à Paris : 28 € TTC en 3 h, 42 € en 1 h 30, 56 € en 1 h. Même prix dans les 20 arrondissements, enlèvement en moins de 45 min, remise horodatée.",
     url: "/zones/paris",
     type: "website",
     locale: "fr_FR",
@@ -57,7 +57,7 @@ const FAQ_PARIS = [
   },
   {
     q: "Comment gérez-vous la circulation parisienne (ZFE, embouteillages) ?",
-    a: "Notre flotte est majoritairement composée de deux-roues et de véhicules récents répondant aux normes Crit'Air. Nos coursiers expérimentés connaissent les meilleurs itinéraires pour éviter les axes engorgés.",
+    a: "Nos coursiers circulent en deux-roues, ce qui leur permet de passer entre les files et d'éviter les axes bloqués. Ils connaissent Paris et adaptent leur trajet en fonction de la circulation du moment.",
   },
   {
     q: "Quels sont les horaires d'enlèvement à Paris intramuros ?",
@@ -65,7 +65,7 @@ const FAQ_PARIS = [
   },
   {
     q: "Livrez-vous aussi bien les particuliers que les entreprises ?",
-    a: "Notre service est principalement orienté B2B (plis confidentiels, médical, événementiel) mais nous assurons également la livraison du dernier kilomètre pour les commandes e-commerce premium destinées aux particuliers.",
+    a: "Nous travaillons surtout pour les entreprises (plis confidentiels, laboratoires, événementiel), mais un particulier peut aussi commander une course, avec un paiement par carte.",
   },
 ];
 
@@ -116,7 +116,7 @@ export default function ZoneParis() {
             Zone couverte · Paris 75
           </div>
           <h1 className="mb-6 max-w-[20ch] text-balance text-[clamp(36px,5vw,64px)] font-bold leading-[1.05] tracking-[-0.035em]">
-            Livraison express dans les 20 arrondissements de Paris.
+            Coursier à Paris : dès 28 € TTC la course.
           </h1>
           <p className="max-w-[58ch] text-pretty text-[17px] leading-[1.6] text-white/66">
             Coursier en moto et scooter, dès 28 € TTC la course
@@ -125,8 +125,8 @@ export default function ZoneParis() {
               coursier moto Paris
             </Link>
             ). One
-            Connexion couvre les 20 arrondissements avec sa flotte de deux-roues. Enlèvement en moins de 45 minutes, suivi de
-            chaque course en ligne, preuve de remise horodatée à chaque livraison.
+            Connexion couvre les 20 arrondissements avec sa flotte de deux-roues, au même prix partout. Enlèvement en moins de
+            45 minutes, suivi de chaque course en ligne, preuve de remise horodatée.
           </p>
           <div className="mt-10 flex flex-wrap gap-3">
             <a
@@ -234,9 +234,9 @@ export default function ZoneParis() {
           </h2>
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {[
-              { icon: Zap, title: "Scooters électriques & 125cc", desc: "Nos scooters naviguent dans les rues les plus denses sans subir les restrictions ZFE. Idéals pour les livraisons hyper-centre." },
-              { icon: Clock, title: "Enlèvement < 45 min", desc: "Le coursier le plus proche est dispatché dès la confirmation. Le temps de trajet moyen dans Paris intramuros est inférieur à 30 minutes." },
-              { icon: Shield, title: "Zone piétonne & accès restreint", desc: "Nos coursiers connaissent les accès réglementés (Marais, île de la Cité, quartier Latin). Aucune mission refusée pour cause de restriction." },
+              { icon: Zap, title: "Deux-roues, pas de camionnette", desc: "Nos coursiers circulent en moto et en scooter : ils passent là où une camionnette reste coincée, en plein centre comme dans les petites rues." },
+              { icon: Clock, title: "Enlèvement < 45 min", desc: "Le coursier le plus proche part dès la confirmation de la course, du lundi au samedi de 9 h à 19 h." },
+              { icon: Shield, title: "Accès compliqués", desc: "Digicode, accueil, bâtiment sur cour : nos coursiers ont l'habitude des adresses parisiennes, du Marais au quartier Latin." },
               { icon: MapPin, title: "Tous les sites judiciaires", desc: "Palais de Justice, Tribunal de Commerce, Conseil d'État, Cour de Cassation : tous couverts aux mêmes conditions tarifaires." },
             ].map(({ icon: Icon, title, desc }) => (
               <div key={title} className="flex flex-col gap-3">
@@ -256,13 +256,13 @@ export default function ZoneParis() {
         <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
           <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase text-center">Processus simple</div>
           <h2 className="mb-12 text-center text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-            Votre livraison dans la capitale en 3 étapes.
+            Votre course dans Paris en 3 étapes.
           </h2>
           <div className="grid gap-8 md:grid-cols-3">
             {[
               { num: "01", title: "Demande immédiate", desc: "Le prix s’affiche sur-le-champ pour n’importe quel arrondissement." },
               { num: "02", title: "Enlèvement express", desc: "Un coursier expérimenté se faufile dans le trafic parisien pour récupérer votre pli en moins de 45 minutes." },
-              { num: "03", title: "Preuve de livraison", desc: "Suivez le trajet en direct. Une fois le pli remis en main propre, recevez une notification instantanée à la livraison." }
+              { num: "03", title: "Preuve de remise", desc: "Vous suivez la course en ligne. Une fois le pli remis en main propre, vous recevez l'heure exacte et le nom du destinataire." }
             ].map((step) => (
               <div key={step.num} className="flex flex-col items-center text-center p-6 bg-white rounded-2xl border border-line shadow-sm">
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-accent text-[16px] font-bold text-white shadow-md">
@@ -304,56 +304,40 @@ export default function ZoneParis() {
           Défis & Solutions
         </div>
         <h2 className="mb-8 max-w-[30ch] text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-          Livraison express en intramuros : défis uniques, solutions dédiées
+          Une course dans Paris : ce qui complique, et comment on fait
         </h2>
         <div className="grid gap-6 md:grid-cols-2 text-[15px] leading-[1.7]">
           <div>
-            <h3 className="mb-4 font-bold text-ink">Défis de la livraison parisienne</h3>
+            <h3 className="mb-4 font-bold text-ink">Ce qui complique une course à Paris</h3>
             <ul className="space-y-3 text-muted">
               <li className="flex gap-3">
                 <span className="font-bold text-accent">-</span>
-                <span><strong>Zone à Faibles Émissions (ZFE) :</strong> accès limité pour véhicules non Crit'Air 2+</span>
+                <span><strong>Circulation :</strong> bouchons, travaux et voies fermées changent d'un jour à l'autre</span>
               </li>
               <li className="flex gap-3">
                 <span className="font-bold text-accent">-</span>
-                <span><strong>Circulation :</strong> 250 000 véhicules/jour sur le périphérique parisien</span>
+                <span><strong>Adresses difficiles :</strong> immeubles sans numéro visible, entrée sur cour, digicode</span>
               </li>
               <li className="flex gap-3">
                 <span className="font-bold text-accent">-</span>
-                <span><strong>Adresses complexes :</strong> immeubles haussmanniens sans numéro apparent, accès arrière</span>
-              </li>
-              <li className="flex gap-3">
-                <span className="font-bold text-accent">-</span>
-                <span><strong>Sécurité renforcée :</strong> vérification requise pour certains secteurs (gouvernement, ministères)</span>
-              </li>
-              <li className="flex gap-3">
-                <span className="font-bold text-accent">-</span>
-                <span><strong>Horaires restrictifs :</strong> livraisons impossibles avant 9h ou après 19h dans zones sensibles</span>
+                <span><strong>Accès contrôlés :</strong> tribunaux, ministères, sièges sociaux avec accueil ou contrôle d'identité</span>
               </li>
             </ul>
           </div>
           <div>
-            <h3 className="mb-4 font-bold text-ink">Comment nous résolvons ces défis</h3>
+            <h3 className="mb-4 font-bold text-ink">Comment on fait</h3>
             <ul className="space-y-3 text-muted">
               <li className="flex gap-3">
                 <span className="font-bold text-accent">✓</span>
-                <span><strong>Flotte Crit'Air 2+ :</strong> 100% conforme ZFE parisienne</span>
+                <span><strong>Deux-roues :</strong> moto et scooter, plus rapides qu'une voiture en plein centre</span>
               </li>
               <li className="flex gap-3">
                 <span className="font-bold text-accent">✓</span>
-                <span><strong>Coursiers locaux :</strong> connaissent les impasses, accès arrière, horaires de chaque zone</span>
+                <span><strong>Consignes notées :</strong> digicode, étage, nom à demander : vous les indiquez à la commande</span>
               </li>
               <li className="flex gap-3">
                 <span className="font-bold text-accent">✓</span>
-                <span><strong>GPS en temps réel :</strong> validation de chaque adresse avant remise</span>
-              </li>
-              <li className="flex gap-3">
-                <span className="font-bold text-accent">✓</span>
-                <span><strong>Expérience B2B :</strong> vérification de sécurité pour secteurs sensibles</span>
-              </li>
-              <li className="flex gap-3">
-                <span className="font-bold text-accent">✓</span>
-                <span><strong>Flexibilité horaire :</strong> livraisons possible en soirée selon zones</span>
+                <span><strong>Suivi en ligne :</strong> vous voyez où en est la course, et l'heure de remise est enregistrée</span>
               </li>
             </ul>
           </div>
@@ -389,12 +373,12 @@ export default function ZoneParis() {
               {
                 sector: "E-Commerce Premium",
                 zones: "15e, 8e",
-                desc: "Livraison du dernier km pour commandes premium. Plis publicitaires haut de gamme. Colis volumineux (moins de 30kg)."
+                desc: "Commandes à remettre le jour même ou sur rendez-vous. Colis jusqu'à 18 kg, transportés par un seul coursier."
               },
               {
                 sector: "Secteur Public",
                 zones: "4e, 1er",
-                desc: "Mails administratifs entre ministères. Dossiers de candidature urgents. Avis officiels."
+                desc: "Courriers administratifs, dossiers de candidature à déposer avant une échéance, documents officiels."
               },
               {
                 sector: "Événementiel",
@@ -418,7 +402,7 @@ export default function ZoneParis() {
           <div className="mb-10 text-center">
             <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">Foire Aux Questions</div>
             <h2 className="text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-              Vos questions fréquentes sur la livraison intramuros
+              Vos questions sur un coursier à Paris
             </h2>
           </div>
           <div className="flex flex-col gap-4">
