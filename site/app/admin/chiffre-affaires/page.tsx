@@ -19,6 +19,7 @@ type OrderRow = {
   pickup_address: string;
   dropoff_address: string;
   user_id: string | null;
+  client_type: string | null;
   payment_mode: string | null;
   billing_status: string | null;
   source: string | null;
@@ -44,6 +45,8 @@ type Billable = {
   route: string;
   status: string;
   amount: number;
+  /** Commande livrée et payée (null pour une navette). */
+  paid: boolean | null;
 };
 
 function periodStart(period: Period, ref = new Date()): Date {
@@ -114,7 +117,7 @@ function AdminChiffreAffairesPageInner() {
     const [{ data: orderRows }, { data: navetteRows }, { data: profileRows }, { data: clientRows }] = await Promise.all([
       supabase
         .from("orders")
-        .select("price_estimate, delai, status, created_at, tracking_code, pickup_address, dropoff_address, user_id, payment_mode, billing_status, source")
+        .select("price_estimate, delai, status, created_at, tracking_code, pickup_address, dropoff_address, user_id, client_type, payment_mode, billing_status, source")
         .neq("status", "annulee")
         .order("created_at", { ascending: false }),
       supabase
@@ -143,6 +146,7 @@ function AdminChiffreAffairesPageInner() {
       route: `${o.pickup_address} → ${o.dropoff_address}`,
       status: o.status,
       amount: normalizeOrderPriceTTC(o.price_estimate, o.pickup_address, o.dropoff_address, o.delai) ?? 0,
+      paid: o.billing_status === "paye",
     }));
 
     // Une navette récurrente n'a qu'un seul enregistrement (pas d'historique
@@ -158,6 +162,7 @@ function AdminChiffreAffairesPageInner() {
       route: `${n.pickup_address} → ${n.dropoff_address}`,
       status: "active",
       amount: n.estimated_price ?? 0,
+      paid: null,
     }));
 
     setBillables(
@@ -224,6 +229,12 @@ function AdminChiffreAffairesPageInner() {
   }, [billables]);
 
   const maxMonthly = Math.max(1, ...monthlySeries.map((m) => m.commandes + m.navettes));
+
+  // Liste du bas : toutes les courses du mois en cours (quelle que soit la période choisie au-dessus).
+  const monthRows = useMemo(() => {
+    const start = periodStart("mois");
+    return billables.filter((b) => new Date(b.date) >= start);
+  }, [billables]);
 
   const exportCsv = () => {
     const start = periodStart(period);
@@ -296,7 +307,7 @@ function AdminChiffreAffairesPageInner() {
           label={PERIOD_LABEL[period]}
           value={`${current.toFixed(2)} € TTC`}
           ht={`${htOf(current).toFixed(2)} €`}
-          sub={`${countSince(periodStart(period))} ligne${countSince(periodStart(period)) > 1 ? "s" : ""} facturable${countSince(periodStart(period)) > 1 ? "s" : ""}`}
+          sub={`${countSince(periodStart(period))} course${countSince(periodStart(period)) > 1 ? "s" : ""}`}
           accent
         />
       </div>
@@ -394,7 +405,7 @@ function AdminChiffreAffairesPageInner() {
               </tr>
             </thead>
             <tbody>
-              {billables.slice(0, 10).map((b) => (
+              {monthRows.slice(0, 50).map((b) => (
                 <tr key={b.key} className="border-b border-line last:border-0">
                   <td className="p-4">
                     <div className="flex items-center gap-2">
@@ -410,21 +421,29 @@ function AdminChiffreAffairesPageInner() {
                   <td className="p-4 font-semibold text-ink">{b.client}</td>
                   <td className="p-4 text-muted">{b.route}</td>
                   <td className="p-4">
-                    <span className="rounded-full bg-paper px-2 py-0.5 text-[11px] font-bold text-muted">{b.status}</span>
+                    {b.type === "commande" && (b.status === "livree" || b.status === "delivered") ? (
+                      b.paid ? (
+                        <span className="rounded-full bg-green-50 px-2 py-0.5 text-[11px] font-bold text-green-700">Livrée · Payée</span>
+                      ) : (
+                        <span className="rounded-full bg-red-50 px-2 py-0.5 text-[11px] font-bold text-red-700">Livrée · Pas encore payée</span>
+                      )
+                    ) : (
+                      <span className="rounded-full bg-paper px-2 py-0.5 text-[11px] font-bold text-muted">{b.status}</span>
+                    )}
                   </td>
                   <td className="p-4 text-right font-semibold text-muted tabular-nums">{htOf(b.amount).toFixed(2)} €</td>
                   <td className="p-4 text-right font-bold text-ink tabular-nums">{b.amount.toFixed(2)} €</td>
                 </tr>
               ))}
-              {billables.length === 0 && (
-                <tr><td colSpan={6} className="p-6 text-center text-[13px] font-medium text-muted">Aucune opération facturable pour l&apos;instant.</td></tr>
+              {monthRows.length === 0 && (
+                <tr><td colSpan={6} className="p-6 text-center text-[13px] font-medium text-muted">Aucune course ce mois-ci.</td></tr>
               )}
             </tbody>
           </table>
         </div>
-        {billables.length > 10 && (
+        {monthRows.length > 50 && (
           <div className="border-t border-line p-4 text-center text-[12.5px] font-medium text-muted">
-            Affichage de 10 sur {billables.length} opérations, affinez avec l&apos;export CSV pour le détail complet.
+            Affichage de 50 sur {monthRows.length} courses de ce mois, l&apos;export CSV donne le détail complet.
           </div>
         )}
       </div>
