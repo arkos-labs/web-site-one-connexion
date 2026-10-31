@@ -9,36 +9,36 @@ import { SITE_URL } from "@/lib/site-content";
 
 const FAQ = [
   {
-    q: "Quelles zones couvre ONE CONNEXION ?",
-    a: "Paris intramuros (1er au 20e arrondissement), La Défense, la petite couronne (92, 93, 94) et l'ensemble de l'Île-de-France. Roissy-CDG (95) et Orly (94) sont desservis au tarif de leur zone.",
+    q: "Quelles zones couvrez-vous ?",
+    a: "Tout Paris, les 20 arrondissements, La Défense, le 92, le 93, le 94, et le reste de l'Île-de-France. On va aussi à Roissy-CDG et à Orly, au tarif de leur zone.",
   },
   {
-    q: "En combien de temps un coursier vient-il enlever mon pli ?",
-    a: "Le coursier le plus proche est dispatché dès la confirmation de la course. L'enlèvement se fait en moins de 45 minutes à Paris intramuros et en petite couronne.",
+    q: "En combien de temps un coursier vient-il chercher mon pli ?",
+    a: "Dès que vous confirmez, on envoie le coursier le plus proche. À Paris et en petite couronne, il est chez vous en moins de 45 minutes.",
   },
   {
     q: "Quels sont vos horaires ?",
-    a: "Le service est ouvert du lundi au samedi, de 9h à 19h. Il est fermé le dimanche et les jours fériés. Pour une course en dehors de ces horaires, contactez-nous : nous étudions la demande au cas par cas.",
+    a: "Du lundi au samedi, de 9 h à 19 h. On est fermés le dimanche et les jours fériés. Besoin d'une course en dehors de ces horaires ? Appelez-nous, on regarde ce qu'on peut faire.",
   },
   {
     q: "Comment connaître le prix d’une course ?",
-    a: "Le prix s’affiche automatiquement dès que vous saisissez les adresses et le délai, avant de valider la commande. La zone et le délai déterminent le tarif.",
+    a: "Entrez les deux adresses et le délai : le prix s’affiche tout de suite, avant de commander. Il dépend seulement de la distance et du délai choisi, jamais de ce que vous envoyez.",
   },
   {
-    q: "Quels types de courses prenez-vous en charge ?",
-    a: "Plis confidentiels pour cabinets juridiques et notariaux, transport médical (prélèvements, échantillons), livraison e-commerce le jour même, tournées régulières et navettes inter-sites, transport événementiel et compte entreprise.",
+    q: "Quels types de courses prenez-vous ?",
+    a: "Des plis et actes pour les avocats, notaires et huissiers, des prélèvements pour les labos, des colis e-commerce à livrer le jour même, des navettes régulières entre vos sites, et du matériel pour vos salons et événements.",
   },
   {
-    q: "Ma course est-elle dédiée ou regroupée avec d'autres ?",
-    a: "Chaque course est dédiée : un coursier prend en charge votre envoi de l'enlèvement jusqu'à la remise, sans regroupement avec d'autres colis.",
+    q: "Ma course est-elle partagée avec d'autres ?",
+    a: "Non. Le coursier prend votre envoi et va directement à destination. Il ne transporte rien d'autre en même temps.",
   },
   {
     q: "Ai-je une preuve de livraison ?",
-    a: "Oui. Chaque remise est horodatée et rattachée au nom du destinataire, pour une preuve de livraison fiable.",
+    a: "Oui. À la livraison, vous recevez l'heure exacte de remise et le nom de la personne qui a réceptionné.",
   },
   {
     q: "Comment payer, et peut-on régler à 30 jours ?",
-    a: "Vous pouvez payer à la course (carte bancaire, Apple Pay, Google Pay, prélèvement SEPA) ou ouvrir un compte entreprise et régler ses factures sous 30 jours.",
+    a: "Vous pouvez payer chaque course par carte bancaire, Apple Pay ou Google Pay. Si vous êtes une entreprise, vous pouvez aussi régler sur facture, à 30 jours, par prélèvement ou par virement.",
   },
 ];
 
@@ -62,7 +62,7 @@ export default function Faq() {
         Questions fréquentes
       </div>
       <h2 className="mb-8 max-w-[720px] text-[clamp(28px,3vw,40px)] font-bold leading-[1.1] tracking-[-0.03em]">
-        Les réponses avant votre première course.
+        Vous vous posez sûrement ces questions.
       </h2>
       <div className="max-w-[860px] divide-y divide-line border-y border-line">
         {FAQ.map(({ q, a }) => (

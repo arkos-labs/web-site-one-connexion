@@ -10,17 +10,17 @@ export default function About() {
             Notre Entreprise
           </div>
           <h2 className="mb-8 text-[clamp(28px,3vw,40px)] font-bold leading-[1.1] tracking-[-0.03em]">
-            Société de coursiers experts à Paris et en Île-de-France.
+            Vos plis urgents, livrés par nos coursiers, pas par une appli.
           </h2>
           <p className="mb-6 text-[16.5px] leading-[1.65] text-muted">
-            Fondée sur l'exigence absolue de la ponctualité, <strong>One Connexion</strong> est un partenaire logistique pour vos livraisons urgentes à <strong>Paris (75)</strong> et en proche banlieue. En tant que <strong>coursier professionnel B2B</strong>, nous ne sommes pas une simple plateforme : nous opérons notre propre flotte de motos et scooters pour déjouer le trafic saturé de la capitale.
+            On est installés à <strong>Saint-Mandé</strong>, juste à côté du 12e. Quand vous nous appelez pour une course, ce n&apos;est pas un inconnu trouvé sur une appli qui vient chercher votre colis : c&apos;est un de nos coursiers, sur un de nos scooters. Il vient le chercher en <strong>moins de 45 minutes</strong>, il le porte directement à destination, sans faire d&apos;autres arrêts en route.
           </p>
           <p className="mb-8 text-[16.5px] leading-[1.65] text-muted">
-            Qu'il s'agisse d'un <strong>transport express de plis confidentiels</strong> dans le quartier d'affaires de <strong>La Défense (92)</strong>, d'une urgence vers les aéroports de <strong>Roissy-CDG ou Orly</strong>, ou d'une livraison <em>same-day</em> couvrant la petite couronne (<strong>Hauts-de-Seine, Seine-Saint-Denis, Val-de-Marne</strong>), notre infrastructure garantit une couverture géographique sans faille. Externaliser votre logistique du dernier kilomètre francilien avec nous, c'est choisir l'efficacité locale.
+            Un acte à déposer au <strong>tribunal</strong> avant la fermeture du greffe, un prélèvement à porter au <strong>labo</strong>, un contrat à faire signer à <strong>La Défense</strong> avant midi, un colis oublié à rapporter à <strong>Orly</strong> : c&apos;est notre quotidien. Vous voyez le prix avant de commander, vous suivez la course en ligne, et à l&apos;arrivée on vous envoie l&apos;heure exacte de remise et le nom de la personne qui a signé. Si vous êtes une entreprise, vous réglez sur facture, à 30 jours.
           </p>
-          
+
           <div className="flex flex-col gap-4">
-            {["Dispatcheurs basés au cœur de la capitale", "Couverture intégrale 75, 92, 93, 94", "Accès privilégié ZTL (Zones à Trafic Limité)"].map((item) => (
+            {["Un coursier chez vous en moins de 45 minutes", "Paris, 92, 93, 94 et toute l'Île-de-France", "Du lundi au samedi, de 9 h à 19 h"].map((item) => (
               <div key={item} className="flex items-center gap-3">
                 <CheckCircle2 className="h-5 w-5 text-accent shrink-0" />
                 <span className="font-semibold text-ink">{item}</span>

@@ -3,10 +3,10 @@ import type { Service } from "./types";
 export const transportEvenementiel: Service = {
   slug: "transport-evenementiel",
   card: {
-    tag: "Événementiel & RP",
-    title: "Logistique Événementielle",
-    body: "Livraison de prototypes, invitations VIP, cadeaux d'affaires et matériel avec une discrétion absolue.",
-    note: "Dédiée",
+    tag: "05 - Événementiel & RP",
+    title: "Salons et événements",
+    body: "Un prototype pour un salon, des invitations à remettre, un cadeau client, du matériel oublié pour un événement : on livre vite, et on reste discrets.",
+    note: "Course dédiée",
   },
   seo: {
     title: "Coursier logistique : événementiel et RP à Paris",

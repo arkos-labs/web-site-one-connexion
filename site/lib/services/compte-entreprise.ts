@@ -13,10 +13,10 @@ export const compteEntreprise: Service = {
   slug: "compte-entreprise",
 
   card: {
-    tag: "04 - Comptes entreprises",
-    title: "Suivi & facturation",
-    body: "Ouverture immédiate, un compte par collaborateur, service ou site, suivi de chaque course et factures à 30 jours.",
-    note: "Plusieurs comptes avec le même SIRET",
+    tag: "06 - Comptes entreprises",
+    title: "Compte entreprise",
+    body: "Vous ouvrez votre compte en deux minutes. Chaque service ou chaque site peut avoir le sien avec le même SIRET, vous suivez toutes vos courses au même endroit et vous payez sur facture à 30 jours.",
+    note: "Paiement à 30 jours",
   },
 
   seo: {

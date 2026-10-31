@@ -14,9 +14,9 @@ export const transportMedical: Service = {
 
   card: {
     tag: "02 - Santé & laboratoires",
-    title: "Transport médical",
-    body: "Prélèvements, pièces critiques et matériel technique. Contenants isothermes et relevés de température à la demande.",
-    note: "Course dédiée, sans regroupement",
+    title: "Prélèvements et labos",
+    body: "Prélèvements, échantillons, matériel de labo : on part tout de suite et on va droit au labo, sans détour. Si l'envoi doit rester au frais, on utilise un contenant isotherme.",
+    note: "Course dédiée, sans détour",
   },
 
   seo: {

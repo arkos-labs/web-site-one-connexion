@@ -10,9 +10,9 @@ export const livraisonEcommerce: Service = {
 
   card: {
     tag: "03 - E-commerce",
-    title: "Livraison jour même",
-    body: "Collecte en boutique ou en entrepôt, livraison dans la journée dans la capitale et en première couronne. Créneaux au choix du destinataire.",
-    note: "Tournées récurrentes possibles",
+    title: "Livraison le jour même",
+    body: "Votre client commande le matin, il est livré le soir. On récupère le colis en boutique ou en entrepôt, et on le livre dans la journée à Paris et en petite couronne, sur le créneau qu'il a choisi.",
+    note: "Livré le jour même",
   },
 
   seo: {

@@ -584,11 +584,14 @@ const PETITE_COURONNE = new Set(["92", "93", "94", "77", "78", "91", "95"]); // 
  * propre (guide local + FAQ). Vague 1 : Paris et la petite couronne. Vague 2
  * (18/10/2026) : la grande couronne (77, 78, 91, 95), avec son contenu et 5 questions de FAQ.
  */
+/** Villes réécrites à la main, avec un texte propre : elles retournent dans l'index une par une. */
+const REWRITTEN_CITY_SLUGS = new Set(["villejuif"]);
+
 export function isZoneIndexed(zone: Zone): boolean {
-  // Seuls les 20 arrondissements de Paris sont indexés (contenu rédigé à la main, unique).
-  // Les communes de petite et grande couronne restent accessibles, en noindex et hors sitemap :
-  // leurs textes se répètent d'une ville à l'autre et ont fait chuter le site dans Google (oct. 2026).
-  return zone.category === "paris";
+  // Les 20 arrondissements de Paris sont indexés (contenu rédigé à la main, unique).
+  // Les autres communes restent accessibles, en noindex et hors sitemap, tant que leur texte n'a pas
+  // été réécrit : ces textes se répétaient d'une ville à l'autre et ont fait chuter le site (oct. 2026).
+  return zone.category === "paris" || REWRITTEN_CITY_SLUGS.has(zone.slug);
 }
 
 export const INDEXED_ZONE_SLUGS = ZONES.filter(isZoneIndexed).map((z) => z.slug);

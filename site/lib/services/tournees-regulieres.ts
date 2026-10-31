@@ -3,10 +3,10 @@ import type { Service } from "./types";
 export const tourneesRegulieres: Service = {
   slug: "tournees-regulieres",
   card: {
-    tag: "Navettes & Tournées",
-    title: "Tournées régulières B2B",
-    body: "Externalisez vos navettes inter-sites, tournées de distribution ou collectes régulières avec un coursier dédié.",
-    note: "Sur-mesure",
+    tag: "04 - Navettes & tournées",
+    title: "Navettes entre vos sites",
+    body: "Le courrier entre vos agences, la collecte du soir, la tournée du lundi : on s'en occupe chaque semaine, avec le même coursier, aux mêmes horaires.",
+    note: "Sur devis",
   },
   seo: {
     title: "Tournées régulières et navettes coursier B2B Paris",

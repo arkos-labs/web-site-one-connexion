@@ -207,20 +207,18 @@ export const EXTRA_94: Record<string, ExtraZoneContent> = {
 
   villejuif: {
     cases: [
-      { title: "Un échantillon vers Gustave Roussy", body: "Un laboratoire de Paris envoie un échantillon à un service de l'institut. Le contenant est isotherme et le délai de stabilité respecté." },
-      { title: "Un dossier pour Paul-Brousse", body: "Un cabinet transmet un dossier à un service de l'hôpital. Le coursier le remet au secrétariat." },
-      { title: "Un consommable pour le Cancer Campus", body: "Une équipe de recherche reçoit un consommable d'un fournisseur du 13e. La course est dédiée." },
+      { title: "Un échantillon pour Gustave-Roussy", body: "Un labo parisien doit envoyer un échantillon avant midi. On le prend en charge dans un contenant isotherme et on le dépose directement au service." },
+      { title: "Un dossier pour Paul-Brousse", body: "Un cabinet médical envoie un dossier patient. Le coursier le remet en main propre au secrétariat du service." },
+      { title: "Un réactif pour le Cancer Campus", body: "Une équipe de recherche attend un consommable d'un fournisseur du 13e. Le coursier fait l'aller sans autre arrêt." },
     ],
     tips: [
-      "Pour les hôpitaux, donnez le service, le bâtiment et un contact.",
-      "Sur le campus, indiquez le laboratoire et l'équipe.",
-      "La ligne 7 est un repère pour situer l'adresse.",
-      "Pour un échantillon, précisez la température et le délai de stabilité.",
+      "À l'hôpital : le service, le bâtiment et un numéro joignable.",
+      "Sur le campus : le nom du labo et de l'équipe.",
+      "Pour un échantillon : la température et le temps qu'il peut tenir.",
     ],
     faq: [
-      { q: "Livrez-vous à Paris 13e depuis Villejuif ?", a: "Oui, les deux sont voisins." },
-      { q: "Quelle preuve de livraison recevons-nous ?", a: "Nom du destinataire, date, heure et lieu." },
-    ],
+      { q: "Livrez-vous à Paris 13e depuis Villejuif ?", a: "Oui, et c'est rapide : une dizaine de minutes en scooter." },
+      { q: "Quelle preuve de livraison recevons-nous ?", a: "Vous recevez le nom de la personne qui a réceptionné, la date, l'heure et le lieu de remise." },    ],
   },
 
   gentilly: {
