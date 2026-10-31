@@ -10,8 +10,8 @@ export const plisConfidentiels: Service = {
 
   card: {
     tag: "01 - Juridique & notarial",
-    title: "Plis confidentiels",
-    body: "Remise en main propre, chaîne de responsabilité documentée, coursiers dédiés aux cabinets et études.",
+    title: "Plis et actes juridiques",
+    body: "Votre pli ne passe que par une seule paire de mains, celle du coursier, jusqu'au destinataire. Au tribunal, chez un notaire ou chez un huissier, il le remet en main propre et vous recevez l'heure exacte du dépôt.",
     note: "Preuve de dépôt horodatée",
   },
 

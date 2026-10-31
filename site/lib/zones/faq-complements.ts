@@ -13,9 +13,11 @@ const euro = (n: number) =>
 const ZONE_LABEL = ["Paris", "la petite couronne", "la grande couronne", "l’Île-de-France", "l’Île-de-France"];
 
 export const MIN_FAQ = 5;
+/** Jamais plus de 5 questions par page : au-delà, la FAQ devient trop longue à lire. */
+export const MAX_FAQ = 5;
 
 export function withFaqComplements(zone: Zone, faq: ZoneFaqItem[]): ZoneFaqItem[] {
-  if (faq.length >= MIN_FAQ) return faq;
+  if (faq.length >= MIN_FAQ) return faq.slice(0, MAX_FAQ);
   const covered = faq.map((f) => f.q.toLowerCase()).join(" ");
   // zone.dept vaut parfois un code postal (« 91120 ») : les 2 premiers chiffres donnent le département.
   const dept = zone.dept.slice(0, 2);

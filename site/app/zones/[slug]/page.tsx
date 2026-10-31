@@ -210,7 +210,7 @@ export default async function ZonePage({ params }: Props) {
               </div>
 
               <h1 className="mb-6 text-balance text-[clamp(32px,5vw,60px)] font-bold leading-[1.05] tracking-[-0.035em]">
-                Coursier express<br />
+                Coursier express à<br />
                 <span style={{ color: "#ed5518" }}>{zone.name}</span>
               </h1>
 
@@ -235,26 +235,26 @@ export default async function ZonePage({ params }: Props) {
                 <div className="flex items-start gap-3">
                   <Clock size={14} className="mt-0.5 shrink-0 text-accent" />
                   <div>
-                    <div className="text-[13px] font-semibold text-white">Enlèvement &lt; 45 min</div>
-                    <div className="text-[11px] text-white/40">lun–sam, 9h–19h</div>
+                    <div className="text-[13px] font-semibold text-white">Un coursier chez vous en moins de 45 min</div>
+                    <div className="text-[11px] text-white/40">Du lundi au samedi, de 9 h à 19 h</div>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
                   <MapPin size={14} className="mt-0.5 shrink-0 text-accent" />
                   <div>
                     <div className="text-[13px] font-semibold text-white">
-                      {zone.distanceParis ?? "Paris & petite couronne"}
+                      {zone.distanceParis ?? "Paris et petite couronne"}
                     </div>
-                    <div className="text-[11px] text-white/40">Depuis notre siège Saint-Mandé</div>
+                    <div className="text-[11px] text-white/40">Distance calculée depuis Paris</div>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
                   <CheckCircle size={14} className="mt-0.5 shrink-0 text-accent" />
                   <div>
                     <div className="text-[13px] font-semibold text-white">
-                      Tarif {zone.pricingZone === "standard" ? "standard" : "grande couronne"}
+                      {zone.pricingZone === "standard" ? "Dès 28 € TTC la course" : "Prix selon la distance"}
                     </div>
-                    <div className="text-[11px] text-white/40">Paiement à la course ou à 30 jours</div>
+                    <div className="text-[11px] text-white/40">Par carte, ou sur facture à 30 jours pour les pros</div>
                   </div>
                 </div>
               </div>
@@ -375,16 +375,16 @@ export default async function ZonePage({ params }: Props) {
       {zone.showSectors === false && (
         <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[56px]">
           <h2 className="mb-6 text-[clamp(22px,2.5vw,30px)] font-bold tracking-tight text-ink">
-            Prestations disponibles {inZone}
+            Ce qu&apos;on peut faire pour vous {inZone}
           </h2>
           <div className="flex flex-wrap gap-3">
             {[
-              { href: "/services/plis-confidentiels", label: "Plis confidentiels" },
-              { href: "/services/transport-medical", label: "Transport médical" },
-              { href: "/services/livraison-e-commerce", label: "Livraison e-commerce" },
-              { href: "/services/tournees-regulieres", label: "Tournées régulières" },
+              { href: "/services/plis-confidentiels", label: "Plis et actes juridiques" },
+              { href: "/services/transport-medical", label: "Prélèvements et labos" },
+              { href: "/services/livraison-e-commerce", label: "Livraison le jour même" },
+              { href: "/services/tournees-regulieres", label: "Navettes entre vos sites" },
               { href: "/services/coursier-express-paris", label: "Coursier express" },
-              { href: "/tarifs", label: "Tarifs" },
+              { href: "/tarifs", label: "Nos tarifs" },
             ].map((s) => (
               <Link
                 key={s.href}
@@ -455,10 +455,10 @@ export default async function ZonePage({ params }: Props) {
             <div className="mb-8">
               <div className="mb-3 flex items-center gap-3 font-mono text-[10px] tracking-[0.16em] text-accent uppercase">
                 <span className="h-px w-6 bg-accent" />
-                Tissu économique local
+                Ils sont {inZone}
               </div>
               <h2 className="text-[clamp(20px,2.5vw,28px)] font-bold text-ink">
-                Acteurs présents {inZone}
+                Là où on livre le plus souvent
               </h2>
             </div>
             <div className="flex flex-wrap gap-3">
@@ -518,7 +518,7 @@ export default async function ZonePage({ params }: Props) {
             <span className="h-px w-6 bg-accent" />
           </div>
           <h2 className="text-[clamp(24px,3vw,36px)] font-bold tracking-tight text-ink">
-            Vos questions sur nos services {inZone}
+            Ce qu&apos;on nous demande souvent {inZone}
           </h2>
         </div>
         <div className="flex flex-col gap-4">
@@ -540,7 +540,7 @@ export default async function ZonePage({ params }: Props) {
                 Une course urgente {inZone} ?
               </h2>
               <p className="text-[16px] text-white/60 leading-[1.6]">
-                Appelez-nous ou décrivez votre besoin, nous intervenons dans les 45 minutes pour assurer la continuité de votre activité.
+                Appelez-nous ou commandez en ligne : un coursier est chez vous en moins de 45 minutes.
               </p>
             </div>
             <div className="flex flex-col gap-3 sm:flex-row">

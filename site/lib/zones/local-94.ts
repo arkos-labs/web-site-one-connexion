@@ -217,20 +217,20 @@ export const LOCAL_94: Record<string, LocalZoneContent> = {
 
   villejuif: {
     landmarks: ["Gustave Roussy", "Hôpital Paul-Brousse", "Cancer Campus", "Métro ligne 7 Villejuif", "Tramway T7", "A6"],
-    intro: "Villejuif est un pôle de cancérologie : l'institut Gustave-Roussy, l'hôpital Paul-Brousse et le Cancer Campus y sont installés. La ligne 7 du métro la relie directement à Paris 13e.",
-    logisticsContext: "Les établissements de santé de Villejuif sont à plusieurs minutes les uns des autres. La station Villejuif–Louis Aragon dessert le centre, Paul-Vaillant-Couturier et Léo-Lagrange les quartiers voisins. Le coursier doit connaître le bâtiment et l'entrée du service pour une remise sans attente.",
-    keyClients: ["Gustave Roussy", "Hôpital Paul-Brousse", "Laboratoires du Cancer Campus", "Cliniques et cabinets"],
+    intro: "À Villejuif, on livre surtout des hôpitaux et des labos : l'institut Gustave-Roussy, l'hôpital Paul-Brousse, les équipes du Cancer Campus. C'est à dix minutes du 13e, et on y va souvent.",
+    logisticsContext: "Les hôpitaux de Villejuif sont grands, et l'entrée principale n'est presque jamais la bonne. Nos coursiers savent par où passer pour arriver directement au service, sans tourner vingt minutes dans les couloirs.",
+    keyClients: ["Institut Gustave-Roussy", "Hôpital Paul-Brousse", "Labos du Cancer Campus", "Cliniques et cabinets médicaux"],
     localGuide: {
       title: "Villejuif : le pôle de cancérologie du Val-de-Marne",
       paragraphs: [
-        "Autour de Gustave Roussy, les laboratoires et services échangent des prélèvements, des échantillons et des documents cliniques. Pour chaque course, donnez le service destinataire, l'heure limite et, pour un échantillon, la température de conservation et le délai de stabilité.",
-        "Ces établissements sont de grands sites avec plusieurs bâtiments et accès contrôlés. Un colis adressé simplement à l'établissement ne suffit pas : indiquez le bâtiment, le laboratoire et un contact joignable. Le coursier est alors attendu à la bonne entrée.",
+        "Autour de Gustave-Roussy, les labos s'envoient des échantillons, des prélèvements et des dossiers toute la journée. Pour que tout se passe bien, on a besoin de trois choses : le service exact, l'heure limite, et pour un échantillon, à quelle température il doit voyager et combien de temps il tient.",
+        "Un colis adressé à « Gustave-Roussy » tout court, c'est un colis qui risque d'attendre à l'accueil. Donnez-nous le bâtiment, le labo et un numéro joignable : le coursier saura exactement où aller.",
       ],
     },
     faq: [
-      { q: "Transportez-vous des échantillons vers Gustave Roussy ?", a: "Oui, en course dédiée avec contenant isotherme à la demande. Le délai de stabilité fixé par le laboratoire commande la faisabilité." },
-      { q: "Livrez-vous à l'hôpital Paul-Brousse ?", a: "Oui. Précisez le service, le bâtiment et un contact." },
-      { q: "Quel tarif à Villejuif ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h) jusqu’à 8 km de route, puis 2 € (Normal) à 4 € (Super) TTC par km." },
+      { q: "Transportez-vous des échantillons vers Gustave-Roussy ?", a: "Oui. On le prend en course dédiée, avec un contenant isotherme si besoin. Dites-nous combien de temps l'échantillon peut tenir : on vous confirme qu'on peut livrer à temps." },
+      { q: "Livrez-vous à l'hôpital Paul-Brousse ?", a: "Oui, régulièrement. Donnez-nous le service, le bâtiment et un contact sur place." },
+      { q: "Quel tarif à Villejuif ?", a: "Jusqu'à 8 km, comptez {normal} € TTC livré sous 3 h, ou {super} € TTC livré sous 1 h. Au-delà, on ajoute 2 € à 4 € par km selon le délai." },
     ],
   },
 

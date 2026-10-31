@@ -16,13 +16,13 @@ export default function Services() {
             Prestations
           </div>
           <h2 className="text-[clamp(30px,3.4vw,44px)] font-bold leading-[1.08] tracking-[-0.03em]">
-            Quatre métiers, un même niveau d&rsquo;exigence.
+            Vos urgences, notre quotidien.
           </h2>
         </div>
         <p className="min-w-0 max-w-[52ch] text-pretty text-[16.5px] leading-[1.65] text-muted">
-          Juridique, santé, e-commerce : chaque secteur a ses contraintes
-          (confidentialité, température, créneau de réception). Le coursier
-          les connaît avant de partir.
+          Un pli d&rsquo;avocat ne se transporte pas comme un prélèvement sanguin
+          ou une commande e-commerce. Pour chaque type de course, nos coursiers
+          savent ce qu&rsquo;il faut faire avant même de démarrer le scooter.
         </p>
       </div>
 

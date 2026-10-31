@@ -93,12 +93,13 @@ export default function Home() {
           Coursier Paris
         </div>
         <h2 className="mb-4 max-w-[26ch] text-balance text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-          Livraison express dans les 20 arrondissements de Paris.
+          Un coursier dans votre arrondissement, en moins de 45 minutes.
         </h2>
         <p className="mb-8 max-w-[62ch] text-[15px] leading-[1.6] text-muted">
-          Tarif dès 28 € TTC en normal, enlèvement en moins de 45 minutes, course dédiée et remise horodatée.{" "}
-          <Link href="/zones/paris" className="text-ink underline underline-offset-2">Voir la page Coursier Paris</Link> ou{" "}
-          <Link href="/tarifs" className="text-ink underline underline-offset-2">le détail des tarifs</Link>.
+          Dans Paris, une course coûte 28 € TTC livrée sous 3 h. Plus pressé&nbsp;? Comptez 42 € pour 1 h 30, ou 56 € pour 1 h.
+          Choisissez votre arrondissement pour voir ce qu&apos;on y livre le plus souvent, ou{" "}
+          <Link href="/zones/paris" className="text-ink underline underline-offset-2">découvrez nos courses dans Paris</Link> et{" "}
+          <Link href="/tarifs" className="text-ink underline underline-offset-2">tous nos tarifs</Link>.
         </p>
         <ul className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-5">
           {getZonesByCategory("paris").map((z) => (
@@ -116,24 +117,24 @@ export default function Home() {
           Villes desservies
         </div>
         <h2 className="mb-4 max-w-[26ch] text-balance text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-          Livraison dans toute la petite couronne.
+          Hors de Paris aussi, on arrive vite.
         </h2>
         <p className="mb-10 max-w-[62ch] text-[15px] leading-[1.6] text-muted">
-          En plus des 20 arrondissements de <Link href="/zones/paris" className="text-ink underline underline-offset-2">Paris</Link>,
-          chaque ville a sa page avec ses délais et ses particularités. La{" "}
-          <Link href="/zones/grande-couronne" className="text-ink underline underline-offset-2">grande couronne</Link> est aussi desservie.
+          Nanterre, Saint-Denis, Montreuil, Boulogne, Créteil… En petite couronne, le coursier est chez vous en moins de
+          45 minutes, à partir de 39 € TTC. On va aussi plus loin, jusqu&apos;à Versailles, Cergy, Évry ou Meaux, au prix
+          calculé selon la distance.
         </p>
         <div className="flex flex-wrap gap-x-6 gap-y-3 text-[15px] font-semibold">
-          <Link href="/zones/petite-couronne" className="text-ink underline underline-offset-2">Petite couronne (92, 93, 94)</Link>
-          <Link href="/zones/grande-couronne" className="text-ink underline underline-offset-2">Grande couronne (77, 78, 91, 95)</Link>
-          <Link href="/zones" className="text-ink underline underline-offset-2">Toutes les villes desservies</Link>
+          <Link href="/zones/petite-couronne" className="text-ink underline underline-offset-2">Petite couronne : 92, 93, 94</Link>
+          <Link href="/zones/grande-couronne" className="text-ink underline underline-offset-2">Grande couronne : 77, 78, 91, 95</Link>
+          <Link href="/zones" className="text-ink underline underline-offset-2">Voir toutes nos villes</Link>
         </div>
         <div className="mt-6 rounded-xl bg-ink px-6 py-6 text-white sm:px-8">
           <div>
-            <p className="text-[19px] font-bold leading-tight">Votre ville n’est pas dans la liste ? On y livre aussi.</p>
+            <p className="text-[19px] font-bold leading-tight">Vous ne voyez pas votre ville ? Pas de souci.</p>
             <p className="mt-2 text-[14px] leading-[1.6] text-white/70">
-              Toute l’Île-de-France est desservie : Seine-et-Marne (77), Yvelines (78), Essonne (91) et Val-d’Oise (95).
-              Entrez vos adresses en haut de la page : votre prix s’affiche en quelques secondes.
+              On livre partout en Île-de-France, de la Seine-et-Marne aux Yvelines, de l’Essonne au Val-d’Oise.
+              Tapez vos deux adresses en haut de la page : vous avez votre prix en quelques secondes, sans créer de compte.
             </p>
           </div>
         </div>

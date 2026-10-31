@@ -75,13 +75,13 @@ export default function Hero() {
               Coursier B2B à Paris et en Île-de-France
             </h1>
             <p className="mb-4 border-l-2 border-accent pl-3 text-[clamp(18px,2.2vw,24px)] font-semibold text-white">
-              Le dernier kilomètre, tenu à l&rsquo;heure.
+              Votre pli part dans l&rsquo;heure, pas demain.
             </p>
             <p className="mb-6 max-w-[56ch] text-pretty text-[16px] leading-[1.6] text-white/66">
-              Plis, dossiers, colis&nbsp;: un coursier moto
-              les enlève en moins de 45&nbsp;minutes
-              et les livre sans détour, partout en Île-de-France. Prix affiché avant de commander,
-              suivi de chaque étape en ligne.
+              Un dossier à faire signer, un pli à déposer, un colis à livrer d&rsquo;urgence&nbsp;?
+              Un de nos coursiers passe le chercher en moins de 45&nbsp;minutes et le porte directement
+              à destination, sans autre arrêt en route. Vous voyez le prix avant de commander, et vous
+              suivez la course en direct.
             </p>
             
             <div className="mb-4 flex flex-wrap gap-3">
