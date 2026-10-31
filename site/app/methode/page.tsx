@@ -1,4 +1,4 @@
-import Methode from "@/components/sections/Methode";
+import Methode, { STEPS } from "@/components/sections/Methode";
 import Contact from "@/components/sections/Contact";
 import JsonLd from "@/components/JsonLd";
 import { ShieldCheck, Zap, PhoneCall, Smartphone } from "lucide-react";
@@ -10,9 +10,9 @@ export const metadata = {
   alternates: { canonical: "/methode" },
   openGraph: {
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION - Coursier B2B Paris & Île-de-France" }],
-    title: "Notre méthode de livraison express - ONE CONNEXION",
+    title: "Notre méthode de coursier B2B, étape par étape | ONE CONNEXION",
     description:
-      "Comment One Connexion opère vos courses urgentes : prise en charge, suivi en ligne, preuve de remise.",
+      "Commande, enlèvement en moins de 45 min, suivi en ligne, remise en main propre horodatée : comment chaque course est traitée à Paris et en IDF.",
     url: "/methode",
     type: "website",
     locale: "fr_FR",
@@ -51,10 +51,26 @@ const breadcrumbSchema = {
   ],
 };
 
+// Les 4 étapes affichées sur la page, décrites pour les moteurs et les assistants IA.
+const howToSchema = {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  name: "Commander une course express avec ONE CONNEXION",
+  description: "De la commande à la preuve de remise : comment une course est traitée à Paris et en Île-de-France.",
+  url: `${SITE_URL}/methode`,
+  step: STEPS.map((s, i) => ({
+    "@type": "HowToStep",
+    position: i + 1,
+    name: s.title,
+    text: s.body,
+  })),
+};
+
 export default function MethodePage() {
   return (
     <>
       <JsonLd data={breadcrumbSchema} />
+      <JsonLd data={howToSchema} />
     <main>
       <section className="relative bg-ink text-white" style={{ backgroundImage: "url('/images/methode-bg-opt.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <div className="absolute inset-0 bg-ink/85"></div>
