@@ -19,8 +19,8 @@ export function isRevenueOrder(o: RevenueOrder): boolean {
   if (o.billing_status === "echec") return false;
   if (o.source === "admin") return true;
   if (o.client_type === "entreprise" || o.payment_mode === "fin_de_mois") return o.billing_status !== "annule";
-  if (o.payment_mode === "carte") return o.billing_status === "paye";
-  return false;
+  // Particulier : compté une fois payé (le mode de paiement n'est pas toujours renseigné sur les paiements carte).
+  return o.billing_status === "paye";
 }
 
 /** Commande valide pour le compte « commandes » : ni annulée, ni échouée. */
