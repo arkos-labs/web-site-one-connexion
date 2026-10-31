@@ -88,13 +88,13 @@ export default function AdminOverviewPage() {
         .eq("status", "active")
         .contains("days_of_week", [todayId()])
         .or(`driver_id.is.null,last_dispatch_date.is.null,last_dispatch_date.neq.${todayDateStr()}`),
-      supabase.from("orders").select("id", { count: "exact", head: true }).eq("status", "en_attente"),
+      supabase.from("orders").select("id, payment_mode, billing_status, source").eq("status", "en_attente"),
       supabase
         .from("orders")
-        .select("id, tracking_code, pickup_address, dropoff_address, created_at, user_id")
+        .select("id, tracking_code, pickup_address, dropoff_address, created_at, user_id, payment_mode, billing_status, source")
         .eq("status", "en_attente")
         .order("created_at", { ascending: false })
-        .limit(5),
+        .limit(50),
       supabase
         .from("navettes")
         .select("id, name, pickup_address, dropoff_address, created_at")
@@ -110,7 +110,9 @@ export default function AdminOverviewPage() {
     const todayRows = (ordersToday.data ?? []).filter(isRevenueOrder);
     const caJour = todayRows.reduce((sum, o) => sum + (normalizeOrderPriceTTC(o.price_estimate, o.pickup_address, o.dropoff_address, o.delai) ?? 0), 0);
 
-    const orderRows = ordersAwaiting.data ?? [];
+    // Courses à accepter : seulement celles dont le paiement est passé ou facturable (règle dans lib/revenue.ts).
+    const awaitingPayable = (ordersAwaitingCount.data ?? []).filter(isRevenueOrder).length;
+    const orderRows = (ordersAwaiting.data ?? []).filter(isRevenueOrder).slice(0, 5);
     const userIds = [...new Set(orderRows.map((o) => o.user_id).filter(Boolean))];
     const [{ data: profileRows }, { data: clientRows }] = userIds.length
       ? await Promise.all([
@@ -157,7 +159,7 @@ export default function AdminOverviewPage() {
       chauffeursDispo: driverRows.filter((d) => d.status === "disponible").length,
       chauffeursEnCourse: driverRows.filter((d) => d.status === "en_course").length,
       navettesNonDispatchees: navettesPendingCount.count ?? pendingNavettes.length,
-      awaitingAcceptance: ordersAwaitingCount.count ?? orderRows.length,
+      awaitingAcceptance: awaitingPayable,
     });
     setPending(pendingOrders);
     setDrivers(driverRows as DriverRow[]);
