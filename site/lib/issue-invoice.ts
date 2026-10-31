@@ -224,7 +224,11 @@ export async function sendPreparedInvoice(
       return { invoice: claimed.invoice_number, ok: true, skipped: true, detail: 'déjà payée' };
     }
     await stripe.invoices.sendInvoice(invoice.id!);
-    await back('emise');
+    // Échéance : 30 jours après l'envoi de la facture au client.
+    await supabase
+      .from('invoices')
+      .update({ status: 'emise', due_date: parisDate(new Date(Date.now() + 30 * 86400000)) })
+      .eq('id', invoiceId);
 
     const { data: items } = await supabase.from('invoice_items').select('order_id').eq('invoice_id', invoiceId);
     const orderIds = (items ?? []).map((i) => i.order_id).filter(Boolean);
