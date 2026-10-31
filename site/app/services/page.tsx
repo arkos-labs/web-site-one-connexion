@@ -13,7 +13,7 @@ import { SITE_URL } from "@/lib/site-content";
 export const metadata: Metadata = {
   title: { absolute: "Prestations coursier B2B à Paris et en Île-de-France" },
   description:
-    "Services coursier B2B Île-de-France: plis confidentiels, transport médical, e-commerce, tournées régulières. Tarif fixe, traçabilité complète, 20+ ans d'expérience B2B Paris.",
+    "Coursier B2B en Île-de-France : plis confidentiels, transport médical, e-commerce, tournées régulières. Prix affiché avant de commander, suivi en ligne.",
   alternates: { canonical: "/services" },
   openGraph: {
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION - Coursier B2B Paris & Île-de-France" }],

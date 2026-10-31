@@ -11,9 +11,9 @@ import { SITE_URL } from "@/lib/site-content";
 import { Scale, Activity, ShoppingBag, Briefcase, Stethoscope, Building2 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Coursier secteurs : solutions par domaine d'activité",
+  title: "Coursier B2B par secteur d'activité",
   description:
-    "Coursier secteurs : One Connexion opère pour les cabinets juridiques, laboratoires, e-commerçants, agences et entreprises d'Île-de-France. Découvrez nos solutions par secteur.",
+    "Cabinets juridiques, laboratoires, e-commerçants, agences : une procédure de livraison adaptée à chaque secteur, à Paris et en Île-de-France.",
   alternates: { canonical: "/secteurs" },
   openGraph: {
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION - Coursier B2B Paris & Île-de-France" }],

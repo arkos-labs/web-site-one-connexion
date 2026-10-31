@@ -22,7 +22,7 @@ export const compteEntreprise: Service = {
   seo: {
     title: "Compte entreprise coursier - paiement à 30 jours",
     description:
-      "Compte coursier pour votre entreprise à Paris : ouverture immédiate en ligne, plusieurs comptes avec le même SIRET (un par service ou par site), suivi de chaque course et factures à régler sous 30 jours.",
+      "Compte coursier entreprise : ouverture immédiate en ligne, un compte par service ou par site avec le même SIRET, suivi des courses, factures à 30 jours.",
     keywords: [
       "compte coursier entreprise",
       "coursier paiement 30 jours",

@@ -9,9 +9,9 @@ import { SITE_URL } from "@/lib/site-content";
 import DeptCards from "@/components/sections/DeptCards";
 
 export const metadata: Metadata = {
-  title: { absolute: "Zones île-de-france : couverture complète de Paris et Île-de-France" },
+  title: { absolute: "Zones de livraison en Île-de-France | ONE CONNEXION" },
   description:
-    "Zones de couverture One Connexion : Paris, petite couronne, La Défense, grande couronne. Livraison express Île-de-France dès 28 euros. Tarifs fixes, traçabilité GPS, 6j/7 9h-19h.",
+    "Coursier à Paris, en petite et grande couronne et à La Défense. Enlèvement en moins de 45 min, du lundi au samedi, prix affiché avant de commander.",
   alternates: { canonical: "/zones" },
 };
 

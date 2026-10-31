@@ -13,7 +13,7 @@ import { MapPin } from "lucide-react";
 export const metadata: Metadata = {
   title: "Coursier La Défense & Hauts-de-Seine",
   description:
-    "Coursier moto dédié à La Défense, Nanterre, Neuilly, Boulogne-Billancourt et tout le 92. Enlèvement < 45 min, suivi en ligne. Prix affiché avant de commander.",
+    "Coursier moto à La Défense, Nanterre, Neuilly, Boulogne et dans tout le 92. Enlèvement en moins de 45 min, prix affiché avant de commander.",
   alternates: { canonical: "/zones/la-defense" },
   openGraph: {
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION - Coursier B2B Paris & Île-de-France" }],

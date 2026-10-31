@@ -19,7 +19,7 @@ export const coursierMotoParis: Service = {
   seo: {
     title: "Coursier moto et scooter Paris - dès 28 € TTC",
     description:
-      "Coursier moto et scooter à Paris : livraison express en deux-roues, top-case verrouillé, suivi en ligne, du lundi au samedi. Prix coursier moto Paris : dès 28 € TTC en normal (3 h), 56 € TTC en formule Super (1 h).",
+      "Coursier moto et scooter à Paris : livraison express en deux-roues, top-case verrouillé, suivi en ligne. Dès 28 € TTC en 3 h, 56 € TTC en 1 h.",
     keywords: [
       "coursier moto Paris",
       "coursier scooter Paris",

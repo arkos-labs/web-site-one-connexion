@@ -102,7 +102,7 @@ export const GUIDES: Guide[] = [
     title: "Transport de prélèvements médicaux : les points à anticiper",
     seoTitle: "Transport de prélèvements médicaux : guide",
     description:
-      "Ce qu'un laboratoire ou un cabinet doit anticiper pour faire transporter des prélèvements : conditionnement, délai de stabilité, température, remise et traçabilité.",
+      "Faire transporter des prélèvements : conditionnement, délai de stabilité, température, remise et traçabilité. Ce qu'un laboratoire doit anticiper.",
     intro:
       "Un prélèvement a un délai de stabilité : passé ce délai, l'analyse peut être compromise. Ce guide rappelle ce qu'il faut anticiper côté expéditeur pour qu'un coursier puisse acheminer un échantillon dans de bonnes conditions.",
     sections: [
@@ -255,7 +255,7 @@ export const GUIDES: Guide[] = [
     title: "Expédier du matériel de laboratoire en Île-de-France : préparer l'envoi",
     seoTitle: "Expédier du matériel de laboratoire : guide",
     description:
-      "Réactifs, consommables, pièce d'automate, instrument fragile : comment qualifier, emballer et faire transporter du matériel de laboratoire en Île-de-France, et à quel prix.",
+      "Réactifs, consommables, pièce d'automate, instrument fragile : comment emballer et faire transporter du matériel de laboratoire en IDF, et à quel prix.",
     intro:
       "Un laboratoire n'expédie pas seulement des prélèvements. Il fait aussi circuler des réactifs, des consommables, des pièces d'automates et des instruments entre ses sites, ses fournisseurs et ses partenaires. Chacun de ces envois a ses propres contraintes. Ce guide vous aide à les identifier avant de commander une course, pour que le colis arrive à temps et en bon état.",
     sections: [
@@ -351,7 +351,7 @@ export const GUIDES: Guide[] = [
     title: "Coursier entre Paris et la banlieue : zones, délais et prix",
     seoTitle: "Coursier Paris banlieue : zones et prix",
     description:
-      "Petite couronne, grande couronne, trajets de banlieue à banlieue : comment est calculé le prix d'un coursier entre Paris et la banlieue, quels délais choisir et comment préparer la course.",
+      "Coursier entre Paris et la banlieue : comment le prix est calculé en petite et grande couronne, quel délai choisir et comment préparer la course.",
     intro:
       "Envoyer un dossier de Paris à Nanterre, un colis de Montreuil à Créteil ou une pièce de Boulogne à Versailles : dès que la course sort de Paris, le prix et le délai ne se calculent plus de la même façon. Ce guide explique comment la banlieue est découpée, ce qui fait le prix d'une course et ce qu'il faut prévoir pour qu'elle arrive à l'heure.",
     sections: [

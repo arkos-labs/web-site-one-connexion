@@ -5,8 +5,8 @@ import { ShieldCheck, Zap, PhoneCall, Smartphone } from "lucide-react";
 import { SITE_URL } from "@/lib/site-content";
 
 export const metadata = {
-  title: { absolute: "Coursier méthode : processus transparent et fiable de livraison express" },
-  description: "Coursier méthode : processus transparent, traçabilité complète, remise en main propre. Découvrez notre processus de livraison express à Paris et en Île-de-France.",
+  title: { absolute: "Notre méthode de coursier B2B, étape par étape | ONE CONNEXION" },
+  description: "Commande, enlèvement en moins de 45 min, suivi en ligne, remise en main propre horodatée : comment chaque course est traitée à Paris et en IDF.",
   alternates: { canonical: "/methode" },
   openGraph: {
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION - Coursier B2B Paris & Île-de-France" }],
