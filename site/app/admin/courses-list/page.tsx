@@ -4,6 +4,7 @@ import React, { Suspense, useCallback, useEffect, useMemo, useState } from "reac
 import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { ADMIN_VISIBLE_ORDERS } from "@/lib/admin-order-filter";
+import { isRevenueOrder } from "@/lib/revenue";
 import { htOf, normalizeOrderPriceTTC } from "@/lib/price-display";
 import { AdminPage } from "@/components/dashboard/ui";
 import { useQueryParam } from "@/lib/use-query-state";
@@ -50,6 +51,7 @@ type Order = {
   stops: { address: string; contact_name?: string; contact_phone?: string }[] | null;
   point_progress: Record<string, { pickedUpAt?: string; deliveredAt?: string }> | null;
   billing_status?: string | null;
+  payment_mode?: string | null;
   source?: string | null;
 };
 
@@ -75,7 +77,7 @@ function CoursesListInner() {
   const load = useCallback(async () => {
     const { data: ordersData } = await supabase
       .from("orders")
-      .select("id, tracking_code, pickup_address, dropoff_address, status, price_estimate, created_at, user_id, driver_id, format, delai, contact_name, contact_phone, stops, point_progress, billing_status, source")
+      .select("id, tracking_code, pickup_address, dropoff_address, status, price_estimate, created_at, user_id, driver_id, format, delai, contact_name, contact_phone, stops, point_progress, billing_status, payment_mode, source")
       .or(ADMIN_VISIBLE_ORDERS)
       .order("created_at", { ascending: false });
 
@@ -115,13 +117,14 @@ function CoursesListInner() {
     load();
   };
 
-  const aAccepterCount = orders.filter((o) => o.status === "en_attente").length;
+  // À accepter : seulement les courses payées ou facturables (pas les commandes dont le paiement n'est pas passé).
+  const aAccepterCount = orders.filter((o) => o.status === "en_attente" && isRevenueOrder(o)).length;
   const termineesCount = orders.filter((o) => TERMINAL_STATUSES.includes(o.status)).length;
 
   const visible = useMemo(() => {
     const q = search.trim().toLowerCase();
     return orders.filter((o) => {
-      if (filter === "a_accepter" && o.status !== "en_attente") return false;
+      if (filter === "a_accepter" && (o.status !== "en_attente" || !isRevenueOrder(o))) return false;
       if (filter === "terminees" && !TERMINAL_STATUSES.includes(o.status)) return false;
       if (!q) return true;
       return (

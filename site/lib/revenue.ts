@@ -7,9 +7,9 @@
  * Tout le reste (pas de mode de paiement, paiement non abouti) n'est pas compté.
  */
 export type RevenueOrder = {
-  payment_mode: string | null;
-  billing_status: string | null;
-  source: string | null;
+  payment_mode?: string | null;
+  billing_status?: string | null;
+  source?: string | null;
 };
 
 export function isRevenueOrder(o: RevenueOrder): boolean {
