@@ -8,6 +8,7 @@ import { AdminPage } from "@/components/dashboard/ui";
 import { useQueryParam } from "@/lib/use-query-state";
 import { Briefcase, Building2, Calendar, Clock, Euro, Search, ShoppingBag, Users, Plus } from "lucide-react";
 import { CreateClientModal } from "@/components/admin/CreateClientModal";
+import { isCountedOrder, isRevenueOrder } from "@/lib/revenue";
 
 type ClientRow = {
   id: string;
@@ -51,9 +52,9 @@ function AdminClientsPageInner() {
     const [{ data: profilesData }, { data: clientsData }, { data: orders }, { data: navettes }, monthOrders] = await Promise.all([
       supabase.from("profiles").select("id, full_name, phone, created_at").eq("role", "client").order("created_at", { ascending: false }),
       supabase.from("clients").select("id, company_name"),
-      supabase.from("orders").select("user_id, price_estimate, pickup_address, dropoff_address, delai, status, client_type, contact_name, contact_email, contact_phone, created_at"),
+      supabase.from("orders").select("user_id, price_estimate, pickup_address, dropoff_address, delai, status, client_type, payment_mode, billing_status, source, contact_name, contact_email, contact_phone, created_at"),
       supabase.from("navettes").select("user_id").eq("status", "active"),
-      supabase.from("orders").select("id", { count: "exact", head: true }).gte("created_at", startOfMonth.toISOString()).neq("status", "annulee"),
+      supabase.from("orders").select("id, status, billing_status", { count: "exact" }).gte("created_at", startOfMonth.toISOString()),
     ]);
 
     const companyById = new Map((clientsData ?? []).map((c) => [c.id, c.company_name as string | null]));
@@ -61,11 +62,11 @@ function AdminClientsPageInner() {
 
     const rows: ClientRow[] = profiles.map((p) => {
       const own = (orders ?? []).filter((o) => o.user_id === p.id);
-      const revenue = own.filter((o) => o.status !== "annulee").reduce((sum, o) => sum + (normalizeOrderPriceTTC(o.price_estimate, o.pickup_address, o.dropoff_address, o.delai) ?? 0), 0);
+      const revenue = own.filter(isRevenueOrder).reduce((sum, o) => sum + (normalizeOrderPriceTTC(o.price_estimate, o.pickup_address, o.dropoff_address, o.delai) ?? 0), 0);
       const activeNavettes = (navettes ?? []).filter((n) => n.user_id === p.id).length;
       // La fiche société peut être vide : un client qui commande en tant qu'entreprise reste un pro.
       const company = p.company || (own.some((o: { client_type: string | null }) => o.client_type === "entreprise") ? "Entreprise" : null);
-      return { id: p.id, full_name: p.full_name, company, phone: p.phone, createdAt: p.created_at, ordersCount: own.length, revenue, activeNavettes };
+      return { id: p.id, full_name: p.full_name, company, phone: p.phone, createdAt: p.created_at, ordersCount: own.filter(isCountedOrder).length, revenue, activeNavettes };
     });
 
     // Clients de la page publique : pas de compte, seulement les coordonnées saisies sur la commande.
@@ -78,8 +79,8 @@ function AdminClientsPageInner() {
         full_name: null, company: null, phone: null,
         createdAt: o.created_at, ordersCount: 0, revenue: 0, activeNavettes: 0,
       };
-      g.ordersCount += 1;
-      if (o.status !== "annulee") g.revenue += normalizeOrderPriceTTC(o.price_estimate, o.pickup_address, o.dropoff_address, o.delai) ?? 0;
+      if (isCountedOrder(o)) g.ordersCount += 1;
+      if (isRevenueOrder(o)) g.revenue += normalizeOrderPriceTTC(o.price_estimate, o.pickup_address, o.dropoff_address, o.delai) ?? 0;
       if (o.client_type === "entreprise") g.pro = true;
       if (o.created_at < g.createdAt) g.createdAt = o.created_at;
       g.full_name = o.contact_name || g.full_name;
@@ -91,7 +92,7 @@ function AdminClientsPageInner() {
     ));
 
     setClients([...rows, ...guestRows].sort((a, b) => b.createdAt.localeCompare(a.createdAt)));
-    setOrdersThisMonth(monthOrders.count ?? 0);
+    setOrdersThisMonth((monthOrders.data ?? []).filter(isCountedOrder).length);
     setLastRefresh(new Date());
   }, [supabase]);
 
@@ -149,7 +150,7 @@ function AdminClientsPageInner() {
 
       <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         <StatCard icon={Users} label="Total clients" value={String(total)} sub={newThisMonth > 0 ? `+${newThisMonth} ce mois-ci` : "Portefeuille actif"} />
-        <StatCard icon={ShoppingBag} label="Commandes ce mois" value={String(ordersThisMonth)} sub="Toutes commandes non annulées" />
+        <StatCard icon={ShoppingBag} label="Commandes ce mois" value={String(ordersThisMonth)} sub="Hors annulées et échouées" />
         <StatCard icon={Euro} label="CA clients généré" value={`${totalRevenue.toFixed(2)} € TTC`} sub={`${htOf(totalRevenue).toFixed(2)} € HT · Cumul`} accent />
         <StatCard icon={Building2} label="Comptes entreprise" value={String(withCompany.length)} sub={total ? `${Math.round((withCompany.length / total) * 100)}% du portefeuille` : undefined} />
       </div>
@@ -295,7 +296,7 @@ function AdminClientsPageInner() {
               </li>
               <li className="flex gap-2">
                 <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-accent" />
-                Le CA généré exclut les courses annulées.
+                Le CA généré ne compte que les pros (paiement à 30 jours) et les particuliers payés. Les commandes annulées ou échouées ne sont pas comptées.
               </li>
             </ul>
           </div>
