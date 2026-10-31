@@ -366,10 +366,11 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
 
       {/* Conteneur de défilement natif */}
       <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
-        <div className="flex min-h-full items-center justify-center p-2 text-center sm:p-0">
+        <div className="flex min-h-full items-center justify-center p-0 text-center">
 
           {/* Panneau principal */}
-          <div className="relative transform rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-3 w-full max-w-3xl flex flex-col max-h-[95dvh] sm:max-h-[96dvh] overflow-hidden">
+          {/* Téléphone : plein écran, comme une page. Ordinateur : fenêtre centrée. */}
+          <div className="relative transform rounded-none sm:rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-3 w-full sm:max-w-3xl flex flex-col h-[100dvh] sm:h-auto max-h-[100dvh] sm:max-h-[96dvh] overflow-hidden">
 
             {/* Header (Fixe) */}
             <div className="flex flex-col gap-2 border-b border-gray-100 bg-white px-6 py-2 shrink-0">
@@ -460,9 +461,9 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                       </div>
                       <div className="grid grid-cols-3 gap-2">
                         {[
-                          { id: 'standard', label: 'Normal : 3h', price: priceNormal, fallback: 'Saisissez les adresses', Icon: Clock },
-                          { id: 'urgent', label: 'Urgent : 1h30', price: priceUrgent, fallback: '+50% du tarif', Icon: Zap },
-                          { id: 'flash', label: 'Super : 1h', price: priceFlash, fallback: '+100% du tarif', Icon: Zap },
+                          { id: 'standard', label: 'Normal : 3h', price: priceNormal, fallback: '—', Icon: Clock },
+                          { id: 'urgent', label: 'Urgent : 1h30', price: priceUrgent, fallback: '—', Icon: Zap },
+                          { id: 'flash', label: 'Super : 1h', price: priceFlash, fallback: '—', Icon: Zap },
                         ].map(({ id, label, price, fallback, Icon }) => (
                           <button
                             key={id}
@@ -548,6 +549,28 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                     </div>
                     {/* Pas d'alerte pendant la saisie : seule la liste d'adresses bouge. */}
                     {showZoneAlert && !addressFocused && <UnservedAddressAlert />}
+
+                    {/* Détail du prix (téléphone ; sur ordinateur il est dans le récapitulatif de droite) */}
+                    {prices && (
+                      <div className="rounded-2xl border border-gray-100 bg-gray-50 px-4 py-3 text-sm md:hidden">
+                        <div className="flex justify-between py-1">
+                          <span className="text-gray-500">Formule sélectionnée</span>
+                          <span className="font-semibold text-ink">{delai === 'standard' ? 'Normal (3h)' : delai === 'urgent' ? 'Urgent (1h30)' : 'Super (1h)'}</span>
+                        </div>
+                        <div className="flex justify-between py-1">
+                          <span className="text-gray-500">Sous-total HT</span>
+                          <span className="text-gray-700">{eur(prices.ht)}</span>
+                        </div>
+                        <div className="flex justify-between py-1">
+                          <span className="text-gray-500">TVA (20 %)</span>
+                          <span className="text-gray-700">{eur(prices.tva)}</span>
+                        </div>
+                        <div className="mt-1 flex items-baseline justify-between border-t border-gray-200 pt-2">
+                          <span className="font-bold text-ink">Total TTC</span>
+                          <span className="text-xl font-extrabold text-[#ed5518]">{eur(prices.ttc)}</span>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
 
@@ -578,7 +601,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                       <p className="rounded-xl border border-blue-100 bg-blue-50 px-4 py-3 text-sm text-blue-800">Pros : paiement par carte immédiat, ou sur facture à 30 jours. Choix à la dernière étape.</p>
                     )}
                     <div className="flex flex-col gap-2.5">
-                      <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+                      <div className="grid grid-cols-2 gap-2.5">
                       {clientType === "entreprise" && (
                         <div>
                           <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">SIRET <span className="text-accent">*</span></label>
@@ -623,7 +646,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                           />
                         </div>
                       )}
-                      <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+                      <div className="grid grid-cols-2 gap-2.5">
                         <div>
                           <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">Prénom <span className="text-accent">*</span></label>
                           <input type="text" required value={firstName} onChange={(e) => setFirstName(e.target.value)} autoComplete="given-name" placeholder="Jean" className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30" />
@@ -633,7 +656,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                           <input type="text" required value={lastName} onChange={(e) => setLastName(e.target.value)} autoComplete="family-name" placeholder="Dupont" className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30" />
                         </div>
                       </div>
-                      <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+                      <div className="grid grid-cols-2 gap-2.5">
                       <div>
                         <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">Téléphone<span className="text-accent">*</span></label>
                         <input
@@ -641,9 +664,9 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                           required
                           value={contactPhone}
                           inputMode="tel" maxLength={12} onChange={(e) => setContactPhone((e.target.value.trim().startsWith("+") ? "+" : "") + e.target.value.replace(/\D/g, "").slice(0, e.target.value.trim().startsWith("+") ? 11 : 10))}
-                          placeholder="06 12 34 56 78 ou +33 6 12 34 56 78"
+                          placeholder="06 12 34 56 78"
                           pattern="^(0[1-9]|(\+33)[1-9])[0-9 ]{8,9}$"
-                          title="Numéro français valide : 06 12 34 56 78 ou +33 6 12 34 56 78"
+                          title="Numéro français valide : 06 12 34 56 78"
                           className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
                         />
                       </div>
@@ -850,7 +873,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                       type="button"
                       onClick={handleSubmit}
                       disabled={submitting || checkingAddress || outOfZone}
-                      className="ml-auto flex items-center gap-2 rounded-lg bg-accent px-6 py-2.5 text-sm font-bold text-white hover:bg-accent-dark transition-colors disabled:opacity-60"
+                      className="ml-auto flex flex-1 items-center justify-center gap-2 rounded-xl bg-accent px-6 py-3 text-sm font-bold text-white hover:bg-accent-dark transition-colors disabled:opacity-60 sm:flex-none sm:rounded-lg sm:py-2.5"
                     >
                       {submitting
                         ? (clientType === "entreprise" && paymentMode === "fin_de_mois" && debitMethod === "virement" ? "Envoi…" : "Redirection…")
