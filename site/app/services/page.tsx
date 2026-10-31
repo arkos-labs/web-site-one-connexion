@@ -65,7 +65,7 @@ export default function ServicesIndexPage() {
           </div>
 
           <h1 className="mb-6 max-w-[20ch] text-balance text-[clamp(32px,4.4vw,58px)] font-bold leading-[1.05] tracking-[-0.035em]">
-            Nos prestations de coursier à Paris et en Île-de-France.
+            Nos prestations de transport urgent, en moto et en scooter.
           </h1>
 
           <p className="max-w-[58ch] text-pretty text-[17px] leading-[1.6] text-white/66">

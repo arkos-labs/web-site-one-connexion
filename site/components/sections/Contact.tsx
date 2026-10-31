@@ -11,7 +11,7 @@ export default function Contact() {
       <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] flex flex-col md:flex-row md:items-center justify-between gap-8">
         <div>
           <h2 className="mb-2 text-[clamp(28px,3.2vw,40px)] font-bold leading-[1.1] tracking-[-0.03em]">
-            Rejoignez nos clients.
+            Confiez-nous votre prochaine course.
           </h2>
           <p className="text-[16px] text-white/90">
             Ouvrez un compte entreprise en 2 minutes, sans engagement.

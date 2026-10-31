@@ -48,7 +48,7 @@ export default function ContactPage() {
             Assistance du lundi au samedi
           </div>
           <h1 className="mb-6 text-[clamp(2.5rem,5vw,4rem)] font-extrabold leading-[1.05] tracking-tight text-white">
-            Contactez <span className="text-accent">Nous</span>.
+            Parlons de vos <span className="text-accent">livraisons</span>.
           </h1>
           <p className="mx-auto max-w-2xl text-lg text-white/60 md:text-xl">
             Une urgence, une question sur nos services ou un besoin sur-mesure ? Notre équipe de régulation est à votre écoute pour vous apporter une solution immédiate.

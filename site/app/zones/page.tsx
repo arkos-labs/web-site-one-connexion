@@ -108,7 +108,7 @@ export default function ZonesPage() {
             Couverture géographique
           </div>
           <h1 className="mb-6 max-w-[20ch] text-balance text-[clamp(36px,5vw,64px)] font-bold leading-[1.05] tracking-[-0.035em]">
-            Zones île-de-france
+            Zones de livraison en Île-de-France
           </h1>
           <p className="max-w-[58ch] text-pretty text-[17px] leading-[1.6] text-white/66">
             Paris intramuros, petite couronne et grande couronne sont couverts

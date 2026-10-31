@@ -118,6 +118,12 @@ export default async function ZonePage({ params }: Props) {
   const zone = getZone(slug);
   if (!zone) notFound();
 
+  /* Arrondissements : « le 17e arrondissement » dans le texte, « Paris 17e » seulement dans le titre */
+  const isArrondissement = zone.slug.startsWith("paris-");
+  const arrNumber = zone.name.replace("Paris ", "");
+  const inZone = isArrondissement ? `dans le ${arrNumber} arrondissement` : `à ${zone.name}`;
+  const fromZone = isArrondissement ? `depuis le ${arrNumber} arrondissement` : `depuis ${zone.name}`;
+
   /* Schémas JSON-LD */
   const breadcrumbSchema = {
     "@context": "https://schema.org",
@@ -143,9 +149,9 @@ export default async function ZonePage({ params }: Props) {
 
   /* FAQ : propre à la zone si elle existe, sinon FAQ générique */
   const faqItems = withFaqComplements(zone, zone.faq ?? [
-    { q: `Quels sont les délais d'enlèvement à ${zone.name} ?`, a: `Pour toute urgence, un coursier intervient à ${zone.name} en moins de 45 minutes après validation de la commande, quel que soit le quartier.` },
-    { q: `Effectuez-vous des livraisons volumineuses depuis ${zone.name} ?`, a: "Notre flotte est composée de deux-roues (scooters et motos) : elle convient aux plis, colis et matériel léger. Pour un volume ou un gabarit important, contactez-nous avant de commander, nous vous dirons si nous pouvons le prendre en charge." },
-    { q: `Puis-je regrouper mes expéditions depuis ${zone.name} ?`, a: "Absolument. Nous proposons des tournées régulières et la création de comptes entreprise pour optimiser vos coûts logistiques au quotidien." },
+    { q: `Quels sont les délais d'enlèvement ${inZone} ?`, a: `Pour toute urgence, un coursier intervient ${inZone} en moins de 45 minutes après validation de la commande, quel que soit le quartier.` },
+    { q: `Effectuez-vous des livraisons volumineuses ${fromZone} ?`, a: "Notre flotte est composée de deux-roues (scooters et motos) : elle convient aux plis, colis et matériel léger. Pour un volume ou un gabarit important, contactez-nous avant de commander, nous vous dirons si nous pouvons le prendre en charge." },
+    { q: `Puis-je regrouper mes expéditions ${fromZone} ?`, a: "Absolument. Nous proposons des tournées régulières et la création de comptes entreprise pour optimiser vos coûts logistiques au quotidien." },
   ]);
 
   const faqSchema = faqItems.length
@@ -284,7 +290,7 @@ export default async function ZonePage({ params }: Props) {
                 Logistique locale
               </div>
               <h2 className="mb-4 text-[clamp(22px,2.5vw,30px)] font-bold tracking-tight text-ink">
-                Notre connaissance du terrain à {zone.name}
+                Notre connaissance du terrain {inZone}
               </h2>
               <p className="text-[15px] leading-[1.7] text-muted max-w-[60ch]">
                 {zone.logisticsContext}
@@ -336,7 +342,7 @@ export default async function ZonePage({ params }: Props) {
               Cas concrets
             </div>
             <h2 className="text-[clamp(22px,2.5vw,30px)] font-bold tracking-tight text-ink">
-              Trois courses typiques à {zone.name}
+              Trois courses typiques {inZone}
             </h2>
           </div>
           <div className="grid gap-6 md:grid-cols-3">
@@ -350,7 +356,7 @@ export default async function ZonePage({ params }: Props) {
           {zone.tips && zone.tips.length > 0 && (
             <div className="mt-12">
               <h2 className="mb-5 text-[clamp(20px,2.3vw,26px)] font-bold tracking-tight text-ink">
-                Avant de commander à {zone.name}
+                Avant de commander {inZone}
               </h2>
               <ul className="grid max-w-[78ch] gap-3">
                 {zone.tips.map((t) => (
@@ -369,7 +375,7 @@ export default async function ZonePage({ params }: Props) {
       {zone.showSectors === false && (
         <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[56px]">
           <h2 className="mb-6 text-[clamp(22px,2.5vw,30px)] font-bold tracking-tight text-ink">
-            Prestations disponibles à {zone.name}
+            Prestations disponibles {inZone}
           </h2>
           <div className="flex flex-wrap gap-3">
             {[
@@ -402,7 +408,7 @@ export default async function ZonePage({ params }: Props) {
             Tous secteurs
           </div>
           <h2 className="text-[clamp(24px,3vw,36px)] font-bold tracking-tight text-ink">
-            Nos solutions à {zone.name}, secteur par secteur
+            Nos solutions {inZone}, secteur par secteur
           </h2>
           <p className="mt-3 text-[15px] text-muted max-w-[58ch]">
             Chaque métier a ses contraintes. Nos procédures s&apos;adaptent à votre secteur,
@@ -452,7 +458,7 @@ export default async function ZonePage({ params }: Props) {
                 Tissu économique local
               </div>
               <h2 className="text-[clamp(20px,2.5vw,28px)] font-bold text-ink">
-                Acteurs présents à {zone.name}
+                Acteurs présents {inZone}
               </h2>
             </div>
             <div className="flex flex-wrap gap-3">
@@ -481,13 +487,13 @@ export default async function ZonePage({ params }: Props) {
               <span className="h-px w-6 bg-accent" />
             </div>
             <h2 className="text-[clamp(24px,3vw,36px)] font-bold tracking-tight text-ink">
-              Votre course à {zone.name} en 3 étapes
+              Votre course {inZone} en 3 étapes
             </h2>
           </div>
           <div className="grid gap-8 md:grid-cols-3">
             {[
               { num: "01", title: "Demande immédiate", desc: "Commandez en ligne ou par téléphone : le prix s’affiche avant de valider. Prix affiché avant de commander." },
-              { num: "02", title: "Enlèvement < 45 min", desc: `Un coursier spécialisé se présente à vos bureaux à ${zone.name} en moins de 45 minutes.` },
+              { num: "02", title: "Enlèvement < 45 min", desc: `Un coursier spécialisé se présente à vos bureaux ${inZone} en moins de 45 minutes.` },
               { num: "03", title: "Livraison & Suivi", desc: "Suivez l'avancement de votre course en ligne jusqu'à la remise, horodatée à la réception." }
             ].map((step) => (
               <div key={step.num} className="relative flex flex-col items-center text-center p-6 bg-white rounded-2xl border border-gray-100 shadow-sm">
@@ -512,7 +518,7 @@ export default async function ZonePage({ params }: Props) {
             <span className="h-px w-6 bg-accent" />
           </div>
           <h2 className="text-[clamp(24px,3vw,36px)] font-bold tracking-tight text-ink">
-            Vos questions sur nos services à {zone.name}
+            Vos questions sur nos services {inZone}
           </h2>
         </div>
         <div className="flex flex-col gap-4">
@@ -531,7 +537,7 @@ export default async function ZonePage({ params }: Props) {
           <div className="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
             <div className="max-w-[42ch]">
               <h2 className="mb-4 text-[clamp(28px,3vw,42px)] font-bold leading-[1.1] tracking-[-0.02em]">
-                Une course urgente à {zone.name} ?
+                Une course urgente {inZone} ?
               </h2>
               <p className="text-[16px] text-white/60 leading-[1.6]">
                 Appelez-nous ou décrivez votre besoin, nous intervenons dans les 45 minutes pour assurer la continuité de votre activité.

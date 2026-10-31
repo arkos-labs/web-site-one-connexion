@@ -86,7 +86,7 @@ export const GUIDES: Guide[] = [
       {
         question: "Combien coûte l’envoi d’un pli confidentiel dans Paris ?",
         answer:
-          "Comme toute course : 28 € TTC en Normal (3 h), 42 € en Urgent (1 h 30) et 56 € en Super (1 h) dans Paris. Le prix ne dépend pas du contenu du pli.",
+          "Comme toute course : 28 € TTC en Normal (3 h), 42 € en Urgent (1 h 30) et 56 € en Super (1 h) intramuros. Le prix ne dépend pas du contenu du pli.",
       },
       {
         question: "Le pli peut-il être regroupé avec d’autres envois ?",
@@ -160,7 +160,7 @@ export const GUIDES: Guide[] = [
       {
         question: "Combien coûte le transport d’un prélèvement ?",
         answer:
-          "Le prix d’une course classique, selon la zone et le délai : par exemple 56 € TTC en Super (1 h) dans Paris. Le contenant isotherme est compris.",
+          "Le prix d’une course classique, selon la zone et le délai : par exemple 56 € TTC en Super (1 h) intramuros. Le contenant isotherme est compris.",
       },
     ],
     service: { href: "/services/transport-medical", label: "Transport médical" },
@@ -199,7 +199,7 @@ export const GUIDES: Guide[] = [
       {
         heading: "Le délai demandé",
         paragraphs: [
-          "Plus le délai est court, plus la course coûte cher : à Paris, la même course passe de 28 € TTC en 3 h à 56 € TTC en 1 h. Une navette régulière, avec un passage programmé, est en général la formule la plus économique pour des besoins répétés.",
+          "Plus le délai est court, plus la course coûte cher : en intramuros, la même course passe de 28 € TTC en 3 h à 56 € TTC en 1 h. Une navette régulière, avec un passage programmé, est en général la formule la plus économique pour des besoins répétés.",
         ],
       },
       {
@@ -229,7 +229,7 @@ export const GUIDES: Guide[] = [
       {
         question: "Une course urgente est-elle plus chère ?",
         answer:
-          "Oui : un délai de 1 h coûte le double d'un délai de 3 h (56 € TTC contre 28 € TTC dans Paris). Un créneau plus large réduit le tarif.",
+          "Oui : un délai de 1 h coûte le double d'un délai de 3 h (56 € TTC contre 28 € TTC intramuros). Un créneau plus large réduit le tarif.",
       },
       {
         question: "Le prix change-t-il selon le poids ou le contenu ?",
@@ -335,7 +335,7 @@ export const GUIDES: Guide[] = [
       {
         question: "Une pièce d'automate peut-elle être livrée le jour même ?",
         answer:
-          "Oui, du lundi au samedi entre 9 h et 19 h. En course Super, la livraison se fait en 1 h, par exemple pour 56 € TTC dans Paris. Le coursier passe en moins de 45 minutes.",
+          "Oui, du lundi au samedi entre 9 h et 19 h. En course Super, la livraison se fait en 1 h, par exemple pour 56 € TTC intramuros. Le coursier passe en moins de 45 minutes.",
       },
       {
         question: "Comment ouvrir un compte pour les envois du laboratoire ?",

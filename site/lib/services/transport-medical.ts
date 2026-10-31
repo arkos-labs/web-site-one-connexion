@@ -108,7 +108,7 @@ export const transportMedical: Service = {
   ],
 
   coverage:
-    "Paris intra-muros et petite couronne (92, 93, 94) au tarif standard. Roissy, Orly et la grande couronne au tarif de leur zone. Laboratoires, cliniques et plateaux techniques d’Île-de-France desservis aux mêmes conditions.",
+    "Intramuros et petite couronne (92, 93, 94) au tarif standard. Roissy, Orly et la grande couronne au tarif de leur zone. Laboratoires, cliniques et plateaux techniques d’Île-de-France desservis aux mêmes conditions.",
 
   pricing: {
     title: "Tarif d’un coursier médical",
@@ -135,7 +135,7 @@ export const transportMedical: Service = {
     {
       question: "Quel est le prix d’un coursier médical à Paris ?",
       answer:
-        "Le transport médical est facturé au tarif standard de la zone : à partir de 28 € TTC dans Paris (3 h), 42 € TTC en urgent et 56 € TTC en formule Super (1 h), et en petite couronne 39 €, 58,50 € ou 78 € TTC jusqu'à 8 km, puis 2 € à 4 € TTC par km selon le délai. Le prix est affiché avant de commander, détail sur la page tarifs.",
+        "Le transport médical est facturé au tarif standard de la zone : à partir de 28 € TTC en intramuros (3 h), 42 € TTC en urgent et 56 € TTC en formule Super (1 h), et en petite couronne 39 €, 58,50 € ou 78 € TTC jusqu'à 8 km, puis 2 € à 4 € TTC par km selon le délai. Le prix est affiché avant de commander, détail sur la page tarifs.",
     },
     {
       question: "Assurez-vous le transport entre laboratoires et vers un plateau technique ?",

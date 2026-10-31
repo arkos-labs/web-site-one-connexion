@@ -5,8 +5,7 @@
  */
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { MapPin, Flag, Phone } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useRoutePrice } from "@/lib/use-route-price";
@@ -61,7 +60,7 @@ export default function Hero() {
         muted
         playsInline
         preload="auto"
-        poster="/hero-poster.webp"
+        poster="/hero-poster.jpg"
         fetchPriority="high"
         aria-hidden="true"
         className="absolute inset-0 w-full h-full object-cover object-[center_60%] z-0"
@@ -72,17 +71,14 @@ export default function Hero() {
       <div className="relative z-30 mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)]">
         <div className="pt-8">
           <div className="min-w-0">
-            <div className="mb-4 inline-block rounded-full bg-black/40 backdrop-blur-sm px-3 py-1 font-mono text-[11px] tracking-[0.16em] text-accent uppercase border border-white/10 shadow-lg">
-              Coursier B2B · Paris &amp; Île-de-France
-            </div>
-            <h1 className="mb-4 text-balance text-[clamp(36px,5vw,64px)] font-bold leading-[1.05] tracking-[-0.035em]">
-              Le dernier kilomètre, tenu à l&rsquo;heure.
+            <h1 className="mb-3 text-balance text-[clamp(36px,5vw,64px)] font-bold leading-[1.05] tracking-[-0.035em]">
+              Coursier B2B à Paris et en Île-de-France
             </h1>
+            <p className="mb-4 border-l-2 border-accent pl-3 text-[clamp(18px,2.2vw,24px)] font-semibold text-white">
+              Le dernier kilomètre, tenu à l&rsquo;heure.
+            </p>
             <p className="mb-6 max-w-[56ch] text-pretty text-[16px] leading-[1.6] text-white/66">
-              Plis, dossiers, colis&nbsp;: un{" "}
-              <Link href="/services/coursier-moto-paris" className="text-white underline decoration-accent underline-offset-4 hover:text-accent">
-                coursier moto
-              </Link>{" "}
+              Plis, dossiers, colis&nbsp;: un coursier moto
               les enlève en moins de 45&nbsp;minutes
               et les livre sans détour, partout en Île-de-France. Prix affiché avant de commander,
               suivi de chaque étape en ligne.

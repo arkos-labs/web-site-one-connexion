@@ -11,7 +11,7 @@ export const livraisonEcommerce: Service = {
   card: {
     tag: "03 - E-commerce",
     title: "Livraison jour même",
-    body: "Collecte en boutique ou en entrepôt, livraison dans la journée sur Paris et première couronne. Créneaux au choix du destinataire.",
+    body: "Collecte en boutique ou en entrepôt, livraison dans la journée dans la capitale et en première couronne. Créneaux au choix du destinataire.",
     note: "Tournées récurrentes possibles",
   },
 
@@ -31,7 +31,7 @@ export const livraisonEcommerce: Service = {
   h1: "Coursier jour",
 
   intro:
-    "Vos clients commandent le matin et reçoivent avant le dîner. One Connexion collecte en boutique ou en entrepôt et livre dans la journée sur Paris et la petite couronne, avec un créneau choisi par le destinataire.",
+    "Vos clients commandent le matin et reçoivent avant le dîner. One Connexion collecte en boutique ou en entrepôt et livre dans la journée dans la capitale et la petite couronne, avec un créneau choisi par le destinataire.",
 
   stats: [
     { value: "Jour même", label: "Délai de livraison" },
@@ -59,7 +59,7 @@ export const livraisonEcommerce: Service = {
     },
     {
       title: "Livraison dans la journée",
-      body: "Course directe sur Paris et la petite couronne. Le deux-roues n’attend ni les bouchons ni les restrictions de circulation.",
+      body: "Course directe dans la capitale et la petite couronne. Le deux-roues n’attend ni les bouchons ni les restrictions de circulation.",
     },
     {
       title: "Remise et preuve",
@@ -74,7 +74,7 @@ export const livraisonEcommerce: Service = {
   included: [
     "Collecte en boutique, entrepôt ou point de stockage",
     "Créneau de réception choisi par le destinataire",
-    "Livraison le jour même sur Paris et petite couronne",
+    "Livraison le jour même en intramuros et petite couronne",
     "Suivi de chaque course en ligne",
     "Preuve de livraison horodatée et archivée",
     "Consigne de repli définie à l’avance en cas d’absence",
@@ -97,12 +97,12 @@ export const livraisonEcommerce: Service = {
   ],
 
   coverage:
-    "Paris intra-muros et petite couronne (92, 93, 94) au tarif standard. Roissy, Orly et la grande couronne au tarif de leur zone. Les collectes récurrentes s’organisent sur créneaux fixes convenus à l’avance.",
+    "Intramuros et petite couronne (92, 93, 94) au tarif standard. Roissy, Orly et la grande couronne au tarif de leur zone. Les collectes récurrentes s’organisent sur créneaux fixes convenus à l’avance.",
 
   pricing: {
     title: "Tarif d’une livraison e-commerce le jour même",
     intro:
-      "Pour livrer un client le jour même dans Paris ou en Île-de-France, la formule Normale (3 h) suffit le plus souvent. Le colis voyage seul, sans tournée partagée, et le prix est connu avant l’envoi.",
+      "Pour livrer un client le jour même dans la capitale ou en Île-de-France, la formule Normale (3 h) suffit le plus souvent. Le colis voyage seul, sans tournée partagée, et le prix est connu avant l’envoi.",
     recommended: ["standard"],
     note:
       "Vous expédiez chaque semaine ? Avec un compte entreprise, vos livraisons sont facturées à 30 jours, avec un tarif dégressif selon le volume.",
@@ -129,7 +129,7 @@ export const livraisonEcommerce: Service = {
     {
       question: "Combien coûte une livraison le jour même ?",
       answer:
-        "Dans Paris, 28 € TTC en Normal (livré sous 3 h) ; vers la petite couronne, 39 € TTC jusqu'à 8 km puis 2 € TTC par km. Le prix est le même quel que soit le colis, dans la limite de 18 kg.",
+        "En intramuros, 28 € TTC en Normal (livré sous 3 h) ; vers la petite couronne, 39 € TTC jusqu'à 8 km puis 2 € TTC par km. Le prix est le même quel que soit le colis, dans la limite de 18 kg.",
     },
     {
       question: "Jusqu’à quelle heure commander pour livrer le jour même ?",

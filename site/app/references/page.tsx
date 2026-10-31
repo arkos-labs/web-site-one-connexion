@@ -75,7 +75,7 @@ export default function ReferencesPage() {
             Références &amp; Clients
           </div>
           <h1 className="mb-6 max-w-[20ch] text-[clamp(36px,5vw,64px)] font-bold leading-[1.1] tracking-[-0.03em]">
-            Ceux qui nous font confiance.
+            Les entreprises qui nous confient leurs livraisons.
           </h1>
           <p className="max-w-[55ch] text-[17px] leading-[1.65] text-white/65">
             Cabinets d'avocats, laboratoires, agences et e-commerçants font confiance à One Connexion pour leurs livraisons les plus critiques en Île-de-France.

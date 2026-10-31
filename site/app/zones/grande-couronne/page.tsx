@@ -42,7 +42,7 @@ const breadcrumbSchema = {
 };
 
 const FAQ = [
-  { q: "Quel est le prix d’une course en grande couronne ?", a: "En grande couronne, le prix suit la distance entre Paris et l’adresse la plus éloignée du trajet, retour du coursier compris. En délai Normal (3 h) : 70 € TTC pour Versailles, 91 € pour Évry, 113 € pour Cergy, 139 € pour Meaux. L’Urgent (1 h 30) coûte 1,5 fois ce prix, le Super (1 h) 2 fois." },
+  { q: "Quel est le prix d’une course en grande couronne ?", a: "En grande couronne, le prix suit la distance entre Paris et l’adresse la plus éloignée du trajet, retour du coursier compris. En délai Normal (3 h) : 70 € TTC pour Versailles, 91 € pour Évry, 118 € pour Cergy, 145 € pour Meaux. L’Urgent (1 h 30) coûte 1,5 fois ce prix, le Super (1 h) 2 fois." },
   { q: "Faites-vous les trajets entre la grande couronne et Paris ?", a: "Oui, dans les deux sens, et aussi vers la petite couronne ou une autre commune de grande couronne. Le coursier va directement de l’enlèvement à la remise." },
   { q: "Quel poids peut-on vous confier ?", a: "Jusqu’à 18 kg, dans le top-case d’un deux-roues. Au-delà de 10 kg, ou pour un colis encombrant, appelez-nous avant de commander." },
   { q: "Quels sont vos horaires en grande couronne ?", a: "Du lundi au samedi, de 9h à 19h, comme à Paris. Nous sommes fermés le dimanche et les jours fériés." },
@@ -75,7 +75,7 @@ export default function ZoneGrandeCouronne() {
             Zone couverte · 77 / 78 / 91 / 95
           </div>
           <h1 className="mb-6 max-w-[22ch] text-balance text-[clamp(36px,5vw,64px)] font-bold leading-[1.05] tracking-[-0.035em]">
-            Coursier express en grande couronne.
+            Livraison express en grande couronne.
           </h1>
           <p className="max-w-[58ch] text-pretty text-[17px] leading-[1.6] text-white/66">
             Seine-et-Marne, Yvelines, Essonne et Val-d’Oise : un coursier vient chercher votre pli

@@ -19,14 +19,11 @@ const NAV_LINKS = [
   { label: "Notre méthode", href: "/methode" },
   { label: "Flotte & couverture", href: "/flotte" },
   { label: "Tarifs", href: "/tarifs" },
-  { label: "Coursier express Paris", href: "/services/coursier-express-paris" },
-  { label: "Coursier moto Paris", href: "/services/coursier-moto-paris" },
   { label: "Guides pratiques", href: "/guides" },
   { label: "Contact", href: "/contact" },
 ];
 
 const BOTTOM_LINKS = [
-  { label: "Zones desservies", href: "/zones" },
   { label: "Mentions légales", href: "/mentions-legales" },
   { label: "CGV", href: "/cgv" },
   { label: "Confidentialité", href: "/politique-de-confidentialite" },
@@ -68,50 +65,14 @@ function getTagline(pathname: string): string {
 const SECTEUR_LINKS = [
   { label: "Cabinets juridiques", href: "/secteurs#juridique" },
   { label: "Laboratoires & médical", href: "/secteurs#medical" },
-  { label: "E-commerce & retail", href: "/secteurs#ecommerce" },
-  { label: "Corporate & agences", href: "/secteurs#corporate" },
-  { label: "Événementiel", href: "/secteurs#evenementiel" },
   { label: "Grands comptes", href: "/services/compte-entreprise" },
 ];
 
 const ZONE_LINKS = [
   { label: "Paris intramuros (75)", href: "/zones/paris" },
-  { label: "La Défense & 92", href: "/zones/la-defense" },
   { label: "Petite couronne (92/93/94)", href: "/zones/petite-couronne" },
   { label: "Grande couronne (77/78/91/95)", href: "/zones/grande-couronne" },
   { label: "Toutes les villes desservies", href: "/zones" },
-];
-
-const EXPRESS = "/services/coursier-express-paris";
-const MOTO = "/services/coursier-moto-paris";
-const MEDICAL = "/services/transport-medical";
-
-const TRANSPORT_TAGS = [
-  { label: "Transport express", href: EXPRESS },
-  { label: "Coursiers", href: EXPRESS },
-  { label: "Transport de colis", href: EXPRESS },
-  { label: "Transport de marchandises", href: EXPRESS },
-  { label: "Coursier express", href: EXPRESS },
-  { label: "Transitaire en douane", href: "/services" },
-  { label: "Affrètement", href: "/services" },
-  { label: "Coursier moto", href: MOTO },
-  { label: "Coursier scooter", href: MOTO },
-  { label: "Livraison de colis", href: EXPRESS },
-  { label: "Affrètement routier", href: "/services" },
-  { label: "Colis express", href: EXPRESS },
-  { label: "Courrier express", href: EXPRESS },
-  { label: "Course régionale", href: "/zones" },
-  { label: "Coursier médical", href: MEDICAL },
-  { label: "Enlèvement de colis", href: EXPRESS },
-  { label: "Expédition", href: EXPRESS },
-  { label: "Livraison de pharmacie", href: MEDICAL },
-  { label: "Livraison sous 24h", href: EXPRESS },
-  { label: "Transport colis lourd", href: "/services" },
-  { label: "Transport colis léger", href: EXPRESS },
-  { label: "Transport colis volumineux", href: "/services" },
-  { label: "Transport d'objet fragile", href: "/services" },
-  { label: "Transport d'oeuvre d'art", href: "/services" },
-  { label: "Transport à la demande", href: EXPRESS },
 ];
 
 function ColLabel({ children }: { children: React.ReactNode }) {
@@ -249,22 +210,6 @@ export default function Footer() {
             </Link>
           </div>
 
-        </div>
-      </div>
-
-      {/* Nos prestations de transport (mots-clés visibles) : ordinateur seulement, trop long sur téléphone */}
-      <div className="hidden md:block" style={{ borderTop: "1px solid rgba(244,242,238,0.06)" }}>
-        <div className="mx-auto px-[clamp(20px,4vw,32px)] py-4" style={{ maxWidth: "1240px" }}>
-          <h2 className="sr-only">Nos prestations de transport</h2>
-          <ul className="flex flex-wrap gap-x-3 gap-y-1">
-            {TRANSPORT_TAGS.map((t) => (
-              <li key={t.label}>
-                <Link href={t.href} className="text-[10px] transition-colors hover:!text-[rgba(244,242,238,0.5)]" style={{ color: "rgba(244,242,238,0.2)" }}>
-                  {t.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
         </div>
       </div>
 

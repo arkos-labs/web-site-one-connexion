@@ -43,7 +43,7 @@ export const tourneesRegulieres: Service = {
     { title: "Réassort de boutiques", body: "Distribution régulière de stocks légers depuis un entrepôt francilien vers vos différents points de vente en centre-ville." },
     { title: "Collecte de prélèvements", body: "Passage chaque fin de matinée dans plusieurs cabinets médicaux du même secteur pour récupérer les prélèvements et les déposer ensemble au laboratoire." },
   ],
-  coverage: "Les tournées couvrent Paris et toute l’Île-de-France : sièges et agences parisiennes, zones d’activité de petite couronne (La Défense, Saint-Denis, Rungis) et sites de grande couronne. Un même circuit peut relier plusieurs départements.",
+  coverage: "Les tournées couvrent la capitale et toute l’Île-de-France : sièges et agences parisiennes, zones d’activité de petite couronne (La Défense, Saint-Denis, Rungis) et sites de grande couronne. Un même circuit peut relier plusieurs départements.",
   pricing: {
     title: "Tarif d’une tournée régulière",
     intro:

@@ -99,7 +99,7 @@ export const plisConfidentiels: Service = {
   ],
 
   coverage:
-    "Paris intra-muros et petite couronne (92, 93, 94) au tarif standard. Roissy, Orly et la grande couronne au tarif de leur zone. Les palais de justice, greffes et études d’Île-de-France sont desservis aux mêmes conditions.",
+    "Intramuros et petite couronne (92, 93, 94) au tarif standard. Roissy, Orly et la grande couronne au tarif de leur zone. Les palais de justice, greffes et études d’Île-de-France sont desservis aux mêmes conditions.",
 
   pricing: {
     title: "Tarif d’un pli confidentiel",
