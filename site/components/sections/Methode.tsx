@@ -2,7 +2,7 @@
  * components/sections/Methode.tsx
  * "Méthode" — les quatre étapes, de l'appel à la preuve de livraison.
  */
-const STEPS = [
+export const STEPS = [
   {
     step: "ÉTAPE 01",
     title: "Commande en 2 minutes",
