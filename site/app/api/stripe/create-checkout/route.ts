@@ -212,7 +212,7 @@ export async function POST(req: Request) {
         if (isSepa && String(err?.message).includes('sepa_debit')) {
           await stripe.customers.del(customer.id).catch(() => {});
           return NextResponse.json(
-            { error: "Le prélèvement par RIB n'est pas encore disponible. Choisissez le prélèvement par carte." },
+            { error: "Le prélèvement par RIB n'est pas encore disponible. Choisissez le virement." },
             { status: 400 }
           );
         }

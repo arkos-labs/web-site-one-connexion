@@ -29,6 +29,7 @@ import LargeParcelAlert from "@/components/LargeParcelAlert";
 import { ORDER_NATURES, NATURE_DETAIL_MAX, natureLabel } from "@/lib/order-nature";
 import { notifyNewOrder } from "@/lib/notify-new-order";
 import GuestAccountBox from "@/components/GuestAccountBox";
+import DeferredPaymentNote from "@/components/DeferredPaymentNote";
 import { saveOrderDraft, loadOrderDraft, clearOrderDraft, checkoutSessionIdFromUrl, cameBackFromCheckout, abandonCheckout } from "@/lib/order-draft";
 import { trackEvent } from "@/lib/track-event";
 
@@ -448,7 +449,7 @@ export default function OrderForm() {
               </p>
               {clientType === 'entreprise' && paymentMode === 'fin_de_mois' && debitMethod === 'virement' && (
                 <p className="text-gray-500 mb-6 max-w-md mx-auto">
-                  La facture avec les coordonnées bancaires a été envoyée à <strong>{contactEmail}</strong>. À régler sous 30 jours, par virement ou par carte depuis la facture.
+                  <strong>Rien à payer aujourd&apos;hui.</strong> La facture avec nos coordonnées bancaires a été envoyée à <strong>{contactEmail}</strong>. À régler sous 30 jours, par virement ou par carte depuis la facture.
                 </p>
               )}
               {trackingCode && (
@@ -876,6 +877,7 @@ export default function OrderForm() {
                                   </button>
                                 ))}
                               </div>
+                              <DeferredPaymentNote method={debitMethod} />
                             </div>
                           )}
                         </div>
@@ -963,10 +965,12 @@ export default function OrderForm() {
                     className="flex items-center gap-2 bg-black text-white px-8 py-3.5 rounded-xl font-bold hover:bg-gray-800 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 ml-auto disabled:opacity-60"
                   >
                     {submitting
-                      ? 'Redirection paiement…'
+                      ? (clientType === 'entreprise' && paymentMode === 'fin_de_mois' && debitMethod === 'virement' ? 'Envoi de la commande…' : 'Redirection paiement…')
                       : step < 3
                         ? 'Étape suivante'
-                        : 'Commander la course'
+                        : clientType === 'entreprise' && paymentMode === 'fin_de_mois'
+                          ? 'Valider la commande'
+                          : 'Commander la course'
                     }
                     {!submitting && (step < 3 ? (
                       <ChevronRight className="w-5 h-5" />

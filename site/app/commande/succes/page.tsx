@@ -27,7 +27,7 @@ function OrderSuccessContent() {
         </h1>
         
         <p className="text-gray-500 text-lg mb-6">
-          Votre paiement a bien été traité (ou votre carte enregistrée). Un dispatcheur va vous contacter dans les 10 prochaines minutes pour confirmer l'enlèvement.
+          Votre paiement est validé, ou votre RIB est enregistré pour le règlement à 30 jours. Un dispatcheur va vous contacter dans les 10 prochaines minutes pour confirmer l'enlèvement.
         </p>
 
         {orderId && (
