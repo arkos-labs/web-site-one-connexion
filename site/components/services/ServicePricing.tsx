@@ -4,7 +4,7 @@
  * avec ses formules conseillées et son conseil propre.
  */
 import Link from "next/link";
-import { gridPrice, splitTTC, type Zone } from "@/lib/pricing";
+import { gridPrice, pcKmPrice, PC_INCLUDED_KM, splitTTC, type Zone } from "@/lib/pricing";
 import type { ServicePricing as Pricing } from "@/lib/services/types";
 
 const ZONES: { zone: Zone; label: string; dept: string }[] = [
@@ -70,8 +70,9 @@ export default function ServicePricing({ pricing }: { pricing: Pricing }) {
                   const highlight = pricing.recommended.includes(c);
                   return (
                     <td key={c} className={`py-4 pr-6 ${highlight ? "" : "opacity-60"}`}>
-                      <div className="font-semibold text-ink">{zone === 2 ? `dès ${euro(ttc)}` : euro(ttc)} TTC</div>
+                      <div className="font-semibold text-ink">{zone !== 0 ? `dès ${euro(ttc)}` : euro(ttc)} TTC</div>
                       <div className="text-[12px] text-muted">{euro(splitTTC(ttc).ht)} HT</div>
+                      {zone === 1 && <div className="text-[12px] font-medium text-accent-dark">+ {euro(pcKmPrice(c))} TTC/km au-delà de {PC_INCLUDED_KM} km</div>}
                     </td>
                   );
                 })}

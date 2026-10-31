@@ -197,7 +197,7 @@ export const EXTRA_93: Record<string, ExtraZoneContent> = {
       "Sur un salon, donnez le hall, le stand et le contact exposant.",
       "Les jours de montage et démontage, les accès sont saturés : planifiez avec une marge.",
       "Le RER B Parc des Expositions est un repère pour les visiteurs, pas pour la livraison.",
-      "Le tarif est de {normal} € TTC en normal (3 h), {urgent} € TTC en urgent et {super} € TTC en formule Super.",
+      "Le tarif suit la distance : {normal} € TTC jusqu’à 8 km de route, puis 2 € TTC par km en normal (3 € en urgent, 4 € en Super). Le prix exact s’affiche avant de commander.",
     ],
     faq: [
       { q: "Pouvez-vous livrer un stand le matin du premier jour ?", a: "Oui, en planifiant le créneau à l'avance. Nous confirmons la faisabilité." },
@@ -215,7 +215,7 @@ export const EXTRA_93: Record<string, ExtraZoneContent> = {
       "Donnez le terminal ou la zone de fret, le bureau et un contact sur place.",
       "Les contrôles d'accès de l'aéroport allongent le temps de remise.",
       "Un vol qui part ne se rattrape pas : indiquez l'heure limite exacte.",
-      "Le tarif est de {normal} € TTC en normal (3 h), {urgent} € TTC en urgent et {super} € TTC en formule Super.",
+      "Le tarif suit la distance : {normal} € TTC jusqu’à 8 km de route, puis 2 € TTC par km en normal (3 € en urgent, 4 € en Super). Le prix exact s’affiche avant de commander.",
     ],
     faq: [
       { q: "Pouvez-vous livrer dans un terminal de Roissy ?", a: "Oui, avec le terminal, la porte et un contact. L'accès est contrôlé." },

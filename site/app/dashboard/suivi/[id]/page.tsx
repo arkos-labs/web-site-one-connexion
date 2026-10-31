@@ -8,6 +8,7 @@ import { natureLabel } from "@/lib/order-nature";
 import { ClientAnomalies, useMissionAnomalies } from "@/components/admin/mission-anomalies";
 import { PageShell, DetailBody, Panel, InfoRow, Fact, NoteBox, StatusPill, ErrorState, LoadingState } from "@/components/dashboard/ui";
 import { normalizeOrderPriceTTC } from "@/lib/price-display";
+import { CLIENT_VISIBLE_ORDERS } from "@/lib/admin-order-filter";
 
 const STATUS_LABELS: Record<string, string> = {
   en_attente: "En attente",
@@ -107,6 +108,7 @@ export default function DeliveryDetailsPage() {
           .from("orders")
           .select("*")
           .eq("id", id)
+          .or(CLIENT_VISIBLE_ORDERS)
           .maybeSingle();
 
         if (!isMounted) return;

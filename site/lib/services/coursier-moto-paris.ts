@@ -98,7 +98,7 @@ export const coursierMotoParis: Service = {
   ],
 
   coverage:
-    "Les 20 arrondissements de Paris dès 28 € TTC, puis les Hauts-de-Seine, la Seine-Saint-Denis et le Val-de-Marne dès 59 € TTC, et la grande couronne (77, 78, 91, 95) dès 60 € TTC selon la distance.",
+    "Les 20 arrondissements de Paris dès 28 € TTC, puis les Hauts-de-Seine, la Seine-Saint-Denis et le Val-de-Marne dès 39 € TTC (puis 2 € par km au-delà de 8 km), et la grande couronne (77, 78, 91, 95) dès 60 € TTC selon la distance.",
 
   pricing: {
     title: "Prix d’un coursier moto à Paris",
@@ -115,7 +115,7 @@ export const coursierMotoParis: Service = {
     {
       question: "Combien coûte un coursier moto à Paris ?",
       answer:
-        "Une course en moto ou scooter démarre à 28 € TTC en normal (3 h), 42 € TTC en urgent (1 h 30) et 56 € TTC en formule Super (1 h) dans Paris. En petite couronne : 59 €, 88,50 € et 118 € TTC. Le prix est affiché avant de commander.",
+        "Une course en moto ou scooter démarre à 28 € TTC en normal (3 h), 42 € TTC en urgent (1 h 30) et 56 € TTC en formule Super (1 h) dans Paris. En petite couronne : 39 €, 58,50 € et 78 € TTC jusqu'à 8 km, puis 2 €, 3 € ou 4 € TTC par km selon le délai. Le prix est affiché avant de commander.",
     },
     {
       question: "Quels types de colis un coursier moto peut-il transporter ?",

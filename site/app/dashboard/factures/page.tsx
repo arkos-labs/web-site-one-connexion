@@ -8,6 +8,7 @@ import { createClient } from "@/lib/supabase/client";
 import { fetchSavedMethod, type SavedMethod } from "@/lib/saved-payment";
 import { PageShell, SearchInput, KpiStrip, StatusPill, EmptyState, LoadingState, TH, TD, BTN_PRIMARY, BTN_ACCENT } from "@/components/dashboard/ui";
 import { formatEur, htOf, normalizeOrderPriceTTC } from "@/lib/price-display";
+import { CLIENT_VISIBLE_ORDERS } from "@/lib/admin-order-filter";
 
 const eur = (n: number) => `${formatEur(n)} €`;
 
@@ -77,6 +78,7 @@ export default function FacturesPage() {
           .from("orders")
           .select("id, tracking_code, created_at, delivered_at, status, price_estimate, amount_due, billing_status, stripe_invoice_id")
           .eq("user_id", user.id)
+          .or(CLIENT_VISIBLE_ORDERS)
           .not("stripe_invoice_id", "is", null)
           .order("created_at", { ascending: false });
         setOrderRows(

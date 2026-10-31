@@ -39,7 +39,7 @@ export const ZONES_94: Zone[] = [
       },
       {
         q: "Quel est le prix d'un coursier à Vincennes ?",
-        a: "Vincennes relève du tarif petite couronne : à partir de {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h). Le prix exact dépend de la destination et du délai, et s’affiche avant de commander.",
+        a: "Vincennes est en petite couronne : à partir de {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h) jusqu’à 8 km de route, puis 2 € (Normal) à 4 € (Super) TTC par km. Le prix exact dépend de la destination et du délai, et s’affiche avant de commander.",
       },
       {
         q: "Pouvez-vous porter des actes de Vincennes au tribunal de Créteil ?",
@@ -92,7 +92,7 @@ export const ZONES_94: Zone[] = [
       },
       {
         q: "Combien coûte une course au départ de Saint-Mandé ?",
-        a: "Saint-Mandé relève du tarif petite couronne : à partir de {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h). Pour un trajet vers Paris, la grille de la page tarifs donne les fourchettes par zone.",
+        a: "Saint-Mandé est en petite couronne : à partir de {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h) jusqu’à 8 km de route, puis 2 € (Normal) à 4 € (Super) TTC par km. Vers Paris 12e, tout proche, la course est à {normal} € TTC en normal.",
       },
       {
         q: "Peut-on ouvrir un compte entreprise depuis Saint-Mandé ?",

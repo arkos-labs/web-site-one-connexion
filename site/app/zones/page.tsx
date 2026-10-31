@@ -60,9 +60,9 @@ const ZONES = [
   {
     dept: "77",
     name: "Seine-et-Marne",
-    desc: "Melun, Marne-la-Vallée, Meaux - dès 76 € TTC selon la distance.",
+    desc: "Melun, Marne-la-Vallée, Meaux - dès 59 € TTC selon la distance.",
     href: "/zones/grande-couronne",
-    tag: "Dès 76 € TTC",
+    tag: "Dès 59 € TTC",
     tagColor: "bg-amber-100 text-amber-700",
   },
   {
@@ -162,7 +162,7 @@ export default function ZonesPage() {
               {
                 zone: "Petite Couronne",
                 dept: "92, 93, 94",
-                budget: "59 euros TTC (course dédiée)",
+                budget: "39 € TTC, puis 2 €/km au-delà de 8 km",
                 delai: "moins de 45 min enlèvement",
                 ideal: "Transport médical, logistique B2B, multisite parisiens",
                 exemple: "Enlever prélèvements biologiques Vitry et livrer Créteil en moins de 1h"
@@ -170,7 +170,7 @@ export default function ZonesPage() {
               {
                 zone: "La Défense & Hauts-de-Seine",
                 dept: "92",
-                budget: "A partir de 59 euros TTC",
+                budget: "39 € TTC, puis 2 €/km au-delà de 8 km",
                 delai: "moins de 30 min enlèvement intra-Défense",
                 ideal: "Livraisons inter-tours, documents confidentiels, démarches RH",
                 exemple: "Distribuer dossier candidature entre tours de La Défense"

@@ -64,7 +64,7 @@ const ZONES = [
   { dept: "92", name: "Hauts-de-Seine", detail: "Boulogne, Nanterre, Neuilly, Levallois…" },
   { dept: "93", name: "Seine-Saint-Denis", detail: "Saint-Denis, Montreuil, Pantin…" },
   { dept: "94", name: "Val-de-Marne", detail: "Vincennes, Créteil, Ivry…" },
-  { dept: "77", name: "Seine-et-Marne", detail: "Chelles, Melun, Meaux - dès 76 € TTC" },
+  { dept: "77", name: "Seine-et-Marne", detail: "Chelles, Melun, Meaux - dès 59 € TTC" },
   { dept: "78", name: "Yvelines", detail: "Versailles, Saint-Quentin - dès 62 € TTC" },
   { dept: "91", name: "Essonne", detail: "Évry, Massy - dès 62 € TTC" },
   { dept: "95", name: "Val-d'Oise", detail: "Cergy, Argenteuil - dès 60 € TTC" },

@@ -5,10 +5,11 @@
  */
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { MapPin, Flag, Phone } from "lucide-react";
 import dynamic from "next/dynamic";
-import { calculatePrice, isServedAddress } from "@/lib/pricing";
+import { useRoutePrice } from "@/lib/use-route-price";
+import { trackEvent } from "@/lib/track-event";
 import { formatEur } from "@/lib/price-display";
 import { PHONE_DISPLAY, PHONE_TEL } from "@/lib/site-content";
 
@@ -32,15 +33,24 @@ export default function Hero() {
   const [pickup, setPickup] = useState("");
   const [dropoff, setDropoff] = useState("");
 
-  // Prix tout de suite, avant tout formulaire : le visiteur sait combien ça coûte. Formule la moins chère, avec la même grille que le formulaire de commande ; les autres délais s'y affichent.
-  const price = useMemo(() => {
-    if (!isServedAddress(pickup) || !isServedAddress(dropoff)) return null;
-    try {
-      return calculatePrice(pickup, dropoff, "standard");
-    } catch {
-      return null;
+  // Première saisie de chaque adresse dans la barre du haut (une fois par visiteur) : cf. lib/track-event.
+  const addressTracked = useRef({ pickup: false, dropoff: false });
+  useEffect(() => {
+    if (pickup.trim() && !addressTracked.current.pickup) {
+      addressTracked.current.pickup = true;
+      trackEvent("order_address_pickup");
     }
-  }, [pickup, dropoff]);
+  }, [pickup]);
+  useEffect(() => {
+    if (dropoff.trim() && !addressTracked.current.dropoff) {
+      addressTracked.current.dropoff = true;
+      trackEvent("order_address_dropoff");
+    }
+  }, [dropoff]);
+
+  // Prix tout de suite, avant tout formulaire : le visiteur sait combien ça coûte. Formule la moins chère, avec la même grille que le formulaire de commande ; les autres délais s'y affichent.
+  // Petite couronne : prix au km, calculé avec la distance par la route.
+  const price = useRoutePrice(pickup, dropoff, "standard");
 
   return (
     <section id="top" className="relative border-b border-white/10 bg-ink text-white">

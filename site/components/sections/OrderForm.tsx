@@ -22,13 +22,15 @@ import { createAnonClient } from "@/lib/supabase/anon";
 import { payWithSavedMethod } from "@/lib/saved-payment";
 import { AddressAutocomplete } from "@/components/AddressAutocomplete";
 import { checkIdfAddress } from "@/lib/address-idf";
-import { calculatePrice, splitTTC, isServedAddress, ServiceLevel } from "@/lib/pricing";
+import { splitTTC, isServedAddress, ServiceLevel } from "@/lib/pricing";
+import { useRoutePrice } from "@/lib/use-route-price";
 import UnservedAddressAlert, { useUnservedAddresses } from "@/components/UnservedAddressAlert";
 import LargeParcelAlert from "@/components/LargeParcelAlert";
 import { ORDER_NATURES, NATURE_DETAIL_MAX, natureLabel } from "@/lib/order-nature";
 import { notifyNewOrder } from "@/lib/notify-new-order";
 import GuestAccountBox from "@/components/GuestAccountBox";
 import { saveOrderDraft, loadOrderDraft, clearOrderDraft, checkoutSessionIdFromUrl, cameBackFromCheckout, abandonCheckout } from "@/lib/order-draft";
+import { trackEvent } from "@/lib/track-event";
 
 // Tarifs TTC (TVA 20 % comprise) pour tous les clients.
 const eur = (n: number) => `${n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`;
@@ -39,6 +41,12 @@ export default function OrderForm() {
   const [submitting, setSubmitting] = useState(false);
   const [trackingCode, setTrackingCode] = useState<string | null>(null);
   const [formError, setFormError] = useState("");
+
+  // Parcours visiteur (cf. lib/track-event) : ouverture, étape atteinte, erreur, envoi, Stripe.
+  useEffect(() => { trackEvent("order_open"); }, []);
+  useEffect(() => { trackEvent("order_step", { step }); }, [step]);
+  useEffect(() => { if (formError) trackEvent("order_error", { step, detail: formError }); }, [formError, step]);
+  useEffect(() => { if (submitted) trackEvent("order_submitted"); }, [submitted]);
   const [checkingAddress, setCheckingAddress] = useState(false);
 
   // Form state
@@ -60,7 +68,21 @@ export default function OrderForm() {
   const [recipientName, setRecipientName] = useState("");
   const [scheduledDate, setScheduledDate] = useState("");
   const [scheduledTime, setScheduledTime] = useState("");
-  const [estimatedPrice, setEstimatedPrice] = useState<number | null>(null);
+
+  // Première saisie de chaque adresse (une fois par visiteur et par formulaire) : cf. lib/track-event.
+  const addressTracked = useRef({ pickup: false, dropoff: false });
+  useEffect(() => {
+    if (pickupAddress.trim() && !addressTracked.current.pickup) {
+      addressTracked.current.pickup = true;
+      trackEvent("order_address_pickup");
+    }
+  }, [pickupAddress]);
+  useEffect(() => {
+    if (dropoffAddress.trim() && !addressTracked.current.dropoff) {
+      addressTracked.current.dropoff = true;
+      trackEvent("order_address_dropoff");
+    }
+  }, [dropoffAddress]);
   // Adresse hors Paris / IDF : blocage immédiat, alerte après une courte pause de frappe.
   const outOfZone = [pickupAddress, dropoffAddress].some((a) => a.trim().length > 0 && !isServedAddress(a));
   const showZoneAlert = useUnservedAddresses([pickupAddress, dropoffAddress]);
@@ -170,14 +192,8 @@ export default function OrderForm() {
     if (!hasAccount && delai === 'navette') setDelai('standard');
   }, [hasAccount, delai]);
 
-  useEffect(() => {
-    // Pas de tarif hors Paris / Île-de-France.
-    if (pickupAddress && dropoffAddress && isServedAddress(pickupAddress) && isServedAddress(dropoffAddress)) {
-      setEstimatedPrice(calculatePrice(pickupAddress, dropoffAddress, delai as ServiceLevel));
-    } else {
-      setEstimatedPrice(null);
-    }
-  }, [pickupAddress, dropoffAddress, delai]);
+  // Pas de tarif hors Paris / Île-de-France ; petite couronne : prix au km (distance par la route).
+  const estimatedPrice = useRoutePrice(pickupAddress, dropoffAddress, delai as ServiceLevel);
 
   useEffect(() => {
     const search = window.location.search;
@@ -273,6 +289,7 @@ export default function OrderForm() {
     if (nature === "autre" && !natureDetail.trim()) { setFormError("Précisez ce que vous envoyez."); return; }
 
     setSubmitting(true);
+    trackEvent("order_submit");
 
     let { data: { user } } = await supabase.auth.getUser();
     // Connecté à un compte, mais la commande est passée avec un autre e-mail (autre client, autre
@@ -387,6 +404,7 @@ export default function OrderForm() {
             siret, raisonSociale, adresseFacturation, tva, paymentMode, debitMethod,
           },
         });
+        trackEvent("order_checkout");
         window.location.href = data.url;
       } else {
         throw new Error(data.error || "Erreur inconnue");

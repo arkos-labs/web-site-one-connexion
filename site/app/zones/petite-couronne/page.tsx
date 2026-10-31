@@ -16,7 +16,7 @@ import { MapPin } from "lucide-react";
 export const metadata: Metadata = {
   title: "Coursier petite couronne 92, 93, 94",
   description:
-    "Livraison express banlieue : commander en petite couronne (92, 93, 94) dès 59€ TTC. Enlèvement < 45 min, course dédiée, suivi GPS, remise certifiée.",
+    "Livraison express banlieue : commander en petite couronne (92, 93, 94) dès 39€ TTC, puis 2€/km au-delà de 8 km. Enlèvement < 45 min, course dédiée, suivi GPS, remise certifiée.",
   alternates: { canonical: "/zones/petite-couronne" },
   openGraph: {
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION - Coursier B2B Paris & Île-de-France" }],
@@ -86,7 +86,7 @@ export default function ZonePetiteCouronne() {
           <p className="max-w-[58ch] text-pretty text-[17px] leading-[1.6] text-white/66">
             One Connexion dessert les trois départements de petite couronne -
             Hauts-de-Seine (92), Seine-Saint-Denis (93) et Val-de-Marne (94) -
-            aux mêmes conditions tarifaires et avec la même exigence opérationnelle.
+            avec la même exigence opérationnelle, et un prix au kilomètre.
           </p>
           <div className="mt-10 flex flex-wrap gap-3">
             <a href="/#commander" className="rounded-[2px] bg-accent px-[26px] py-[15px] text-[15px] font-semibold text-white hover:bg-accent-dark">
@@ -249,7 +249,7 @@ export default function ZonePetiteCouronne() {
           {[
             { label: "Distance moyenne", value: "12-18 km", desc: "Du centre de Paris" },
             { label: "Temps d'intervention", value: "moins de 45 min", desc: "Enlèvement garanti" },
-            { label: "Coût", value: "59 euros TTC", desc: "Même prix dans les 92, 93 et 94" }
+            { label: "Coût", value: "39 € TTC", desc: "Jusqu’à 8 km, puis 2 € par km (Normal)" }
           ].map((item) => (
             <div key={item.label} className="rounded-xl border border-line bg-paper-card p-6 text-center">
               <div className="mb-2 font-mono text-[10px] tracking-[0.1em] text-label uppercase">{item.label}</div>
@@ -279,7 +279,7 @@ export default function ZonePetiteCouronne() {
                 <td className="p-2.5 sm:p-4 font-medium text-ink">Petite couronne</td>
                 <td className="p-2.5 sm:p-4 text-center text-accent font-bold">12-20 km</td>
                 <td className="p-2.5 sm:p-4 text-center text-accent font-bold">moins de 45 min</td>
-                <td className="p-2.5 sm:p-4 text-center text-accent font-bold">59 euros</td>
+                <td className="p-2.5 sm:p-4 text-center text-accent font-bold">39 € + 2 €/km au-delà de 8 km</td>
               </tr>
               <tr>
                 <td className="p-2.5 sm:p-4 font-medium text-ink">Grande couronne</td>
@@ -338,7 +338,7 @@ export default function ZonePetiteCouronne() {
           <div className="flex flex-col gap-4">
             {[
               { q: "Couvrez-vous vraiment toute la petite couronne ?", a: "Oui, notre flotte est répartie de manière optimale pour couvrir l'intégralité des Hauts-de-Seine (92), de la Seine-Saint-Denis (93) et du Val-de-Marne (94)." },
-              { q: "Le tarif est-il plus élevé pour la banlieue ?", a: "Le tarif dépend de la zone la plus éloignée du trajet, pas des kilomètres : en petite couronne (92, 93, 94), une course coûte 59 € TTC en Normal (3 h), contre 28 € dans Paris." },
+              { q: "Le tarif est-il plus élevé pour la banlieue ?", a: "Oui : en petite couronne (92, 93, 94), une course coûte 39 € TTC en Normal (3 h) jusqu'à 8 km de route, contre 28 € dans Paris, puis 2 € TTC par km en plus. Saint-Mandé vers Paris 12e : 39 € ; une course de 15 km : 53 €." },
               { q: "Pouvez-vous transporter des colis lourds ou volumineux ?", a: "Notre flotte est composée de deux-roues (scooters et motos) : elle convient aux plis, colis et matériel léger. Pour un volume ou un gabarit important, contactez-nous avant de commander, nous vous dirons si nous pouvons le prendre en charge." },
               { q: "Quels sont vos horaires en petite couronne ?", a: "Du lundi au samedi, de 9h à 19h, dans les trois départements. Nous sommes fermés le dimanche et les jours fériés." },
               { q: "Combien de temps pour un enlèvement en banlieue ?", a: "Un coursier vient chercher le colis en moins de 45 minutes après la confirmation de la course, puis le livre directement, sans détour." }

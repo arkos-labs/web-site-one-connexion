@@ -21,7 +21,7 @@ export const LOCAL_93: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Livrez-vous dans le quartier des grossistes d'Aubervilliers ?", a: "Oui. Donnez le nom de la cour, le bâtiment et l'étage pour que le coursier entre sans chercher." },
       { q: "Pouvez-vous livrer au campus Condorcet ?", a: "Oui, avec le bâtiment, le service et un contact sur place." },
-      { q: "Quel tarif à Aubervilliers ?", a: "Aubervilliers est en petite couronne : dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h)." },
+      { q: "Quel tarif à Aubervilliers ?", a: "Aubervilliers est en petite couronne : dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h) jusqu’à 8 km de route, puis 2 € (Normal) à 4 € (Super) TTC par km." },
     ],
   },
 
@@ -40,7 +40,7 @@ export const LOCAL_93: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Livrez-vous dans les anciens sites industriels reconvertis ?", a: "Oui. Précisez le nom de l'entreprise, le bâtiment et l'étage : l'accueil est souvent partagé." },
       { q: "Pouvez-vous transporter des échantillons ou des maquettes ?", a: "Pour des pièces légères et protégées, oui, jusqu'à 18 kg. Au-delà, appelez-nous avant de commander." },
-      { q: "Quel est le tarif de Pantin ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h)." },
+      { q: "Quel est le tarif de Pantin ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h) jusqu’à 8 km de route, puis 2 € (Normal) à 4 € (Super) TTC par km." },
     ],
   },
 
@@ -59,7 +59,7 @@ export const LOCAL_93: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Livrez-vous aux stands du marché aux puces ?", a: "Oui. Donnez l'allée, le stand et un contact : la circulation est restreinte les jours d'affluence." },
       { q: "Pouvez-vous transporter un objet de valeur ?", a: "Pour un objet qui tient dans un top-case de 18 kg, avec remise en main propre. Pour une pièce plus grande ou de forte valeur, appelez-nous." },
-      { q: "Quel tarif à Saint-Ouen ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h)." },
+      { q: "Quel tarif à Saint-Ouen ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h) jusqu’à 8 km de route, puis 2 € (Normal) à 4 € (Super) TTC par km." },
     ],
   },
 
@@ -78,7 +78,7 @@ export const LOCAL_93: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Pouvez-vous déposer un acte au tribunal de Bobigny ?", a: "Oui. Course dédiée, remise en main propre et justificatif horodaté. Indiquez le service et l'heure limite de dépôt." },
       { q: "Transportez-vous des prélèvements vers l'hôpital Avicenne ?", a: "Oui, avec contenant isotherme à la demande et service destinataire précisé à la commande." },
-      { q: "Quel tarif à Bobigny ?", a: "Bobigny est en petite couronne : dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h)." },
+      { q: "Quel tarif à Bobigny ?", a: "Bobigny est en petite couronne : dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h) jusqu’à 8 km de route, puis 2 € (Normal) à 4 € (Super) TTC par km." },
     ],
   },
 
@@ -97,7 +97,7 @@ export const LOCAL_93: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Livrez-vous dans les zones d'activité de Drancy ?", a: "Oui, avec le nom de la société, le bâtiment et un contact au quai." },
       { q: "Pouvez-vous livrer au Mémorial de la Shoah de Drancy ?", a: "Oui, avec le nom du destinataire et un contact : les accès sont encadrés." },
-      { q: "Quel tarif à Drancy ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h)." },
+      { q: "Quel tarif à Drancy ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h) jusqu’à 8 km de route, puis 2 € (Normal) à 4 € (Super) TTC par km." },
     ],
   },
 
@@ -116,7 +116,7 @@ export const LOCAL_93: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Transportez-vous des prélèvements vers l'hôpital Robert-Ballanger ?", a: "Oui, en course dédiée, avec contenant isotherme à la demande." },
       { q: "Livrez-vous vers l'aéroport de Roissy depuis Aulnay ?", a: "Oui, {normal@Roissy-en-France 95} € TTC en normal. Précisez l'heure et le terminal ou la zone de fret." },
-      { q: "Quel tarif à Aulnay-sous-Bois ?", a: "Aulnay est en petite couronne : dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h)." },
+      { q: "Quel tarif à Aulnay-sous-Bois ?", a: "Aulnay est en petite couronne : dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h) jusqu’à 8 km de route, puis 2 € (Normal) à 4 € (Super) TTC par km." },
     ],
   },
 
@@ -135,7 +135,7 @@ export const LOCAL_93: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Livrez-vous à l'hôpital Jean-Verdier ?", a: "Oui, en course dédiée. Précisez le service et, pour un prélèvement, la contrainte de température." },
       { q: "Desservez-vous les adresses en cour le long du canal ?", a: "Oui. Donnez le code du portail ou un numéro joignable." },
-      { q: "Quel tarif à Bondy ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h)." },
+      { q: "Quel tarif à Bondy ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h) jusqu’à 8 km de route, puis 2 € (Normal) à 4 € (Super) TTC par km." },
     ],
   },
 
@@ -154,7 +154,7 @@ export const LOCAL_93: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Livrez-vous dans un magasin de Rosny 2 ?", a: "Oui. Indiquez l'enseigne, le numéro de lot et un contact : l'entrée de service est distincte de l'entrée public." },
       { q: "Peut-on prévoir un passage régulier pour un magasin ?", a: "Oui, par tournées à créneaux fixes avec un compte entreprise." },
-      { q: "Quel tarif à Rosny-sous-Bois ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h)." },
+      { q: "Quel tarif à Rosny-sous-Bois ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h) jusqu’à 8 km de route, puis 2 € (Normal) à 4 € (Super) TTC par km." },
     ],
   },
 
@@ -173,7 +173,7 @@ export const LOCAL_93: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Pouvez-vous livrer sur un plateau de tournage à Épinay ?", a: "Oui. Donnez la production, le plateau et le contact régie." },
       { q: "Transportez-vous des supports de stockage ou des accessoires ?", a: "Oui, pour des pièces légères et protégées, dans la limite de 18 kg." },
-      { q: "Quel tarif à Épinay-sur-Seine ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h)." },
+      { q: "Quel tarif à Épinay-sur-Seine ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h) jusqu’à 8 km de route, puis 2 € (Normal) à 4 € (Super) TTC par km." },
     ],
   },
 
@@ -192,7 +192,7 @@ export const LOCAL_93: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Livrez-vous de chaque côté des voies à Noisy-le-Sec ?", a: "Oui. Donnez la rue transversale et le côté de la voie ferrée." },
       { q: "Pouvez-vous transporter des documents de transport ou des pièces de rechange ?", a: "Oui, en course dédiée, avec remise en main propre." },
-      { q: "Quel tarif à Noisy-le-Sec ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h)." },
+      { q: "Quel tarif à Noisy-le-Sec ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h) jusqu’à 8 km de route, puis 2 € (Normal) à 4 € (Super) TTC par km." },
     ],
   },
 
@@ -211,7 +211,7 @@ export const LOCAL_93: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Pouvez-vous livrer un stand en plein salon ?", a: "Oui, avec le hall, le stand et un contact. Les accès exposants sont contrôlés." },
       { q: "Livrez-vous les jours de montage et de démontage ?", a: "Oui, en planifiant le créneau et la porte d'entrée à l'avance." },
-      { q: "Quel est le tarif pour Villepinte ?", a: "Villepinte est en Seine-Saint-Denis, au tarif de la petite couronne : {normal} € TTC en normal (3 h), {urgent} € TTC en urgent et {super} € TTC en formule Super." },
+      { q: "Quel est le tarif pour Villepinte ?", a: "Villepinte est en Seine-Saint-Denis, en petite couronne : le prix suit la distance, {normal} € TTC jusqu’à 8 km de route, puis 2 € TTC par km en normal (3 € en urgent, 4 € en Super). Le prix exact s’affiche avant de commander." },
     ],
   },
 
@@ -230,7 +230,7 @@ export const LOCAL_93: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Livrez-vous dans la zone de fret de Roissy ?", a: "Oui, avec le nom de la zone, le quai et un contact. Les accès sont contrôlés." },
       { q: "Pouvez-vous respecter l'heure d'un vol ?", a: "Nous confirmons la faisabilité avant le départ. Indiquez l'heure limite exacte et le point de remise." },
-      { q: "Quel tarif pour Tremblay-en-France ?", a: "{normal} € TTC en normal, au tarif de la petite couronne : la commune est en Seine-Saint-Denis. Réponse en moins de 2 heures." },
+      { q: "Quel tarif pour Tremblay-en-France ?", a: "La commune est en Seine-Saint-Denis, en petite couronne : le prix suit la distance, {normal} € TTC jusqu’à 8 km de route, puis 2 € TTC par km en normal (3 € en urgent, 4 € en Super). Le prix exact s’affiche avant de commander." },
     ],
   },
 
@@ -249,7 +249,7 @@ export const LOCAL_93: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Livrez-vous dans les zones d'activité du Blanc-Mesnil ?", a: "Oui, avec le nom du bâtiment, le quai et un contact." },
       { q: "Peut-on prévoir une tournée régulière ?", a: "Oui, avec un compte entreprise, sur créneaux fixes et des factures à 30 jours." },
-      { q: "Quel tarif au Blanc-Mesnil ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h)." },
+      { q: "Quel tarif au Blanc-Mesnil ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h) jusqu’à 8 km de route, puis 2 € (Normal) à 4 € (Super) TTC par km." },
     ],
   },
 
@@ -268,7 +268,7 @@ export const LOCAL_93: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Transportez-vous des prélèvements depuis un cabinet de Gagny ?", a: "Oui, en course dédiée, avec contenant isotherme à la demande et délai de stabilité à indiquer." },
       { q: "Livrez-vous dans les impasses et allées privées ?", a: "Oui. Donnez le code et un contact joignable." },
-      { q: "Quel tarif à Gagny ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h)." },
+      { q: "Quel tarif à Gagny ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h) jusqu’à 8 km de route, puis 2 € (Normal) à 4 € (Super) TTC par km." },
     ],
   },
 
@@ -287,7 +287,7 @@ export const LOCAL_93: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Livrez-vous à l'hôpital de Ville-Évrard ou à Maison-Blanche ?", a: "Oui. Précisez le pavillon, le service et un contact : les domaines sont vastes." },
       { q: "Desservez-vous les bords de Marne ?", a: "Oui, comme le reste de la commune." },
-      { q: "Quel tarif à Neuilly-sur-Marne ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h)." },
+      { q: "Quel tarif à Neuilly-sur-Marne ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h) jusqu’à 8 km de route, puis 2 € (Normal) à 4 € (Super) TTC par km." },
     ],
   },
 
@@ -306,7 +306,7 @@ export const LOCAL_93: Record<string, LocalZoneContent> = {
     faq: [
       { q: "Livrez-vous dans les quartiers pavillonnaires de Livry-Gargan ?", a: "Oui. Donnez le numéro, le code éventuel et un contact joignable." },
       { q: "Transportez-vous des prélèvements vers l'hôpital de Montfermeil ?", a: "Oui, en course dédiée, avec contenant isotherme à la demande." },
-      { q: "Quel tarif à Livry-Gargan ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h)." },
+      { q: "Quel tarif à Livry-Gargan ?", a: "Dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h) jusqu’à 8 km de route, puis 2 € (Normal) à 4 € (Super) TTC par km." },
     ],
   },
 };

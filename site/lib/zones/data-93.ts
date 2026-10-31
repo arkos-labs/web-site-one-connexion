@@ -39,7 +39,7 @@ export const ZONES_93: Zone[] = [
       },
       {
         q: "Quel est le prix d'une livraison à Montreuil ?",
-        a: "Montreuil relève du tarif petite couronne : à partir de {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h). Le prix dépend seulement de la destination et du délai, quel que soit le colis. Prix affiché avant de commander.",
+        a: "Montreuil est en petite couronne : à partir de {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h) jusqu’à 8 km de route, puis 2 € (Normal) à 4 € (Super) TTC par km. Le prix dépend de la distance et du délai, quel que soit le colis. Prix affiché avant de commander.",
       },
       {
         q: "Pouvez-vous transporter des maquettes ou du matériel de tournage ?",

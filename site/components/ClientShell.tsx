@@ -53,7 +53,12 @@ export default function ClientShell({ children }: { children: React.ReactNode })
   // Compteur de visites du site public (sans cookie) pour le tableau de bord Telegram.
   useEffect(() => {
     if (/^\/(admin|dashboard|telegram)(\/|$)/.test(pathname)) return;
-    fetch("/api/visit", { method: "POST", keepalive: true }).catch(() => {});
+    fetch("/api/visit", {
+      method: "POST",
+      keepalive: true,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ path: pathname }),
+    }).catch(() => {});
   }, [pathname]);
 
   return <main>{children}</main>;

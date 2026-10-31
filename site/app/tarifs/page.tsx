@@ -9,16 +9,16 @@ import Link from "next/link";
 import JsonLd from "@/components/JsonLd";
 import { SITE_URL, PHONE_DISPLAY, PHONE_TEL } from "@/lib/site-content";
 import { CheckCircle2, Clock, MapPin, Shield } from "lucide-react";
-import { gridPrice, splitTTC, type Zone } from "@/lib/pricing";
+import { gridPrice, pcKmPrice, PC_INCLUDED_KM, splitTTC, type Zone } from "@/lib/pricing";
 
 // 31,5 → « 31,50 € », 42 → « 42 € »
 const euro = (n: number) =>
   `${n.toLocaleString("fr-FR", { minimumFractionDigits: Number.isInteger(n) ? 0 : 2, maximumFractionDigits: 2 })} €`;
 
 export const metadata: Metadata = {
-  title: "Prix coursier Paris : dès 28 € TTC",
+  title: "Tarif coursier Paris : dès 28 € TTC",
   description:
-    "Tarifs coursier : dès 28€ à Paris, 59€ petite couronne. Voir la grille tarifaire par zone, prix affiché avant de commander. Compte entreprise 30j.",
+    "Tarif coursier à Paris dès 28 € TTC, 39 € en petite couronne puis 2 €/km au-delà de 8 km. Prix affiché avant commande. Compte entreprise, facture à 30 jours.",
   alternates: { canonical: "/tarifs" },
   openGraph: {
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION - Coursier B2B Paris & Île-de-France" }],
@@ -47,7 +47,7 @@ const FAQ = [
   },
   {
     q: "Quel est le tarif d'un coursier en petite couronne ?",
-    a: "En petite couronne (92, 93, 94), le tarif est de 59 € TTC en normal, 88,50 € TTC en urgent et 118 € TTC en formule Super. En grande couronne (77, 78, 91, 95), le prix suit la distance depuis Paris : 76 € TTC pour Versailles, 158 € TTC pour Meaux en normal.",
+    a: "En petite couronne (92, 93, 94), le prix suit les kilomètres parcourus : 39 € TTC jusqu'à 8 km, puis 2 € TTC par km en normal ; 58,50 € puis 3 € par km en urgent ; 78 € puis 4 € par km en Super. Une course de 15 km coûte 53 € TTC en normal. En grande couronne (77, 78, 91, 95), le prix suit la distance depuis Paris : 70 € TTC pour Versailles, 139 € TTC pour Meaux en normal.",
   },
   {
     q: "Combien coûte un coursier moto à Paris ?",
@@ -55,15 +55,15 @@ const FAQ = [
   },
   {
     q: "Quel est le prix d'un coursier express à Paris ?",
-    a: "Une course express en intramuros se facture 42 € TTC en urgent (1 h 30) ou 56 € TTC en formule Super (1 h). En petite couronne : 88,50 € TTC ou 118 € TTC.",
+    a: "Une course express en intramuros se facture 42 € TTC en urgent (1 h 30) ou 56 € TTC en formule Super (1 h). En petite couronne : 58,50 € TTC en urgent et 78 € TTC en Super jusqu'à 8 km, puis 3 € ou 4 € TTC par km.",
   },
   {
     q: "Quel est le tarif d'un coursier en banlieue de Paris ?",
-    a: "En banlieue proche (92, 93, 94), comptez 59 € TTC en normal, 88,50 € TTC en urgent et 118 € TTC en formule Super. Plus loin en Île-de-France (77, 78, 91, 95), le prix suit la distance depuis Paris, dès 60 € TTC en normal.",
+    a: "En banlieue proche (92, 93, 94), comptez 39 € TTC jusqu'à 8 km, puis 2 € TTC par km en normal : par exemple 53 € TTC pour 15 km. Plus loin en Île-de-France (77, 78, 91, 95), le prix suit la distance depuis Paris, dès 59 € TTC en normal.",
   },
   {
     q: "Combien coûte un coursier en Île-de-France ?",
-    a: "Le tarif d'un coursier en Île-de-France part de 28 € TTC (intramuros, délai 3 h). En petite couronne, comptez 59 € TTC. En grande couronne, le prix suit la distance depuis Paris : 76 € TTC pour Versailles, 158 € TTC pour Meaux, en délai 3 h. Le délai Urgent coûte 1,5 fois le prix Normal, le Super 2 fois.",
+    a: "Le tarif d'un coursier en Île-de-France part de 28 € TTC (intramuros, délai 3 h). En petite couronne, 39 € TTC jusqu'à 8 km puis 2 € TTC par km. En grande couronne, le prix suit la distance depuis Paris : 70 € TTC pour Versailles, 139 € TTC pour Meaux, en délai 3 h. Le délai Urgent coûte 1,5 fois le prix Normal, le Super 2 fois.",
   },
   {
     q: "Le prix d'un coursier pour un pli confidentiel ou un transport médical est-il différent ?",
@@ -275,10 +275,12 @@ export default function TarifsPage() {
           Tarif d&apos;une course selon la zone et le délai.
         </h2>
         <p className="mb-10 max-w-[60ch] text-[15.5px] leading-[1.7] text-muted">
-          Quand le trajet traverse deux zones, on applique la plus éloignée :
-          Paris vers Nanterre est facturé au tarif petite couronne. En grande
+          En petite couronne (92, 93, 94), le prix suit les kilomètres de route
+          entre l&apos;enlèvement et la livraison : 39 € TTC fixe jusqu&apos;à 8 km,
+          puis 2 € TTC par km en Normal (3 € en Urgent, 4 € en Super). Saint-Mandé
+          vers Paris 12e : 39 € TTC. En grande
           couronne, le prix suit la distance depuis Paris, retour du coursier
-          compris : 76 € TTC pour Versailles, 158 € TTC pour Meaux en Normal.
+          compris : 70 € TTC pour Versailles, 139 € TTC pour Meaux en Normal.
           Le prix exact s&apos;affiche avant de valider votre commande.
         </p>
         <div className="overflow-x-auto">
@@ -297,7 +299,7 @@ export default function TarifsPage() {
                 { zone: "Paris", dept: "75", z: 0 },
                 { zone: "Petite couronne", dept: "92, 93, 94", z: 1 },
                 { zone: "Grande couronne", dept: "77, 78, 91, 95", z: 2 },
-              ].map(({ z, ...row }) => ({ ...row, from: z === 2, prix: (["standard", "urgent", "flash"] as const).map((s) => gridPrice(s, z as Zone)) })).map((row) => (
+              ].map(({ z, ...row }) => ({ ...row, z, from: z !== 0, prix: (["standard", "urgent", "flash"] as const).map((s) => gridPrice(s, z as Zone)) })).map((row) => (
                 <tr key={row.zone}>
                   <td className="py-4 pr-6 font-medium text-ink">{row.zone}</td>
                   <td className="py-4 pr-6 font-mono text-[13px] text-muted">{row.dept}</td>
@@ -305,6 +307,11 @@ export default function TarifsPage() {
                     <td key={i} className={`py-4 ${i < 2 ? "pr-6" : ""}`}>
                       <div className="font-semibold text-ink">{row.from ? "dès " : ""}{euro(p)} TTC</div>
                       <div className="text-[12px] text-muted">{euro(splitTTC(p).ht)} HT</div>
+                      {row.z === 1 && (
+                        <div className="text-[12px] font-medium text-accent-dark">
+                          + {euro(pcKmPrice((["standard", "urgent", "flash"] as const)[i]))} TTC/km au-delà de {PC_INCLUDED_KM} km
+                        </div>
+                      )}
                     </td>
                   ))}
                 </tr>

@@ -1,21 +1,20 @@
-import { createHash } from "node:crypto";
 import { createClient } from "@supabase/supabase-js";
 import { refreshPinnedDashboard } from "@/lib/telegram-dashboard";
+import { visitorHash } from "@/lib/visitor-hash";
 
-const BOT_UA = /bot|crawl|spider|slurp|preview|lighthouse|headless|curl|wget|python|axios/i;
-
-const parisDate = () =>
-  new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Paris", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
+// Adresse d'une page publique : chemin seul, sans paramètres ni espace admin.
+const cleanPath = (value: unknown) => {
+  if (typeof value !== "string" || value.length > 120) return null;
+  if (!/^\/[a-z0-9\/_-]*$/i.test(value)) return null;
+  if (/^\/(admin|dashboard|telegram)(\/|$)/.test(value)) return null;
+  return value;
+};
 
 // Compte une page vue du site public, sans cookie (cf. migration site_visits).
 export async function POST(req: Request) {
-  const ua = req.headers.get("user-agent") ?? "";
-  if (!ua || BOT_UA.test(ua)) return new Response(null, { status: 204 });
-
-  const ip = (req.headers.get("x-forwarded-for") ?? "").split(",")[0].trim() || req.headers.get("x-real-ip") || "";
-  const date = parisDate();
-  const salt = process.env.SUPABASE_SERVICE_ROLE_KEY ?? "";
-  const hash = createHash("sha256").update(`${date}|${ip}|${ua}|${salt}`).digest("hex").slice(0, 32);
+  const visitor = visitorHash(req);
+  if (!visitor) return new Response(null, { status: 204 });
+  const { date, hash } = visitor;
 
   const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, {
     auth: { persistSession: false },
@@ -24,6 +23,12 @@ export async function POST(req: Request) {
   if (error) {
     console.error("Visit tracking failed:", error.message);
     return new Response(null, { status: 204 });
+  }
+
+  // Page vue détaillée (adresse de la page) pour le parcours : cf. lib/telegram-dashboard.ts.
+  const path = await req.json().then((b: { path?: unknown }) => cleanPath(b.path)).catch(() => null);
+  if (path) {
+    await supabase.from("site_events").insert({ event_date: date, visitor_hash: hash, event: "page_view", path, detail: path });
   }
 
   // Chaque page vue met à jour visites + pages vues du tableau épinglé (édition silencieuse).

@@ -47,8 +47,61 @@ export type Kpis = {
   messagesNonTraites: number;
   visitesJour: number;
   pagesVuesJour: number;
+  parcours: Parcours | null;
   derniereCourse: { createdAt: string; pickup: string | null; dropoff: string | null } | null;
 };
+
+/** Entonnoir du formulaire de commande, en visiteurs distincts du jour (cf. migration site_events). */
+export type Parcours = {
+  ouverts: number;
+  etape2: number;
+  etape3: number;
+  envois: number;
+  stripe: number;
+  commandes: number;
+  blocages: { message: string; visiteurs: number }[];
+  pages: { path: string; visiteurs: number }[];
+  adresses: { enlevement: number; livraison: number };
+};
+
+type FunnelRow = { event: string; step: number | null; detail: string | null; visiteurs: number };
+
+// Renvoie null (et non une erreur) tant que la migration site_events n'est pas appliquée :
+// le tableau de bord reste affiché avec ses chiffres habituels.
+async function fetchParcours(today: string): Promise<Parcours | null> {
+  const { data, error } = await adminClient().rpc("site_funnel_stats", { p_date: today });
+  if (error || !data) return null;
+  const rows = data as FunnelRow[];
+
+  const visiteurs = (event: string, step?: number) =>
+    rows
+      .filter((r) => r.event === event && (step === undefined || r.step === step))
+      .reduce((max, r) => Math.max(max, r.visiteurs), 0);
+
+  const blocages = rows
+    .filter((r) => r.event === "order_error" && r.detail)
+    .map((r) => ({ message: r.detail!, visiteurs: r.visiteurs }))
+    .sort((a, b) => b.visiteurs - a.visiteurs)
+    .slice(0, 3);
+
+  const pages = rows
+    .filter((r) => r.event === "page_view" && r.detail)
+    .map((r) => ({ path: r.detail!, visiteurs: r.visiteurs }))
+    .sort((a, b) => b.visiteurs - a.visiteurs)
+    .slice(0, 5);
+
+  return {
+    pages,
+    adresses: { enlevement: visiteurs("order_address_pickup"), livraison: visiteurs("order_address_dropoff") },
+    ouverts: visiteurs("order_open"),
+    etape2: visiteurs("order_step", 2),
+    etape3: visiteurs("order_step", 3),
+    envois: visiteurs("order_submit"),
+    stripe: visiteurs("order_checkout"),
+    commandes: visiteurs("order_submitted"),
+    blocages,
+  };
+}
 
 export async function fetchKpis(): Promise<Kpis> {
   const supabase = adminClient();
@@ -84,6 +137,8 @@ export async function fetchKpis(): Promise<Kpis> {
     supabase.rpc("site_visit_stats", { p_date: today }).single<{ visites: number; pages: number }>(),
   ]);
 
+  const parcours = await fetchParcours(today);
+
   // Mieux vaut ne pas éditer le message que d'afficher des zéros trompeurs.
   const failed = [ordersToday, enAttente, enCours, navettes, drivers, inscriptions, messages, derniere, visites].find((r) => r.error);
   if (failed?.error) throw new Error(`KPI Supabase: ${failed.error.message}`);
@@ -105,6 +160,7 @@ export async function fetchKpis(): Promise<Kpis> {
     messagesNonTraites: messages.count ?? 0,
     visitesJour: visites.data?.visites ?? 0,
     pagesVuesJour: visites.data?.pages ?? 0,
+    parcours,
     derniereCourse: derniere.data
       ? { createdAt: derniere.data.created_at, pickup: derniere.data.pickup_address, dropoff: derniere.data.dropoff_address }
       : null,
@@ -123,11 +179,32 @@ export function renderDashboard(k: Kpis, now = new Date()) {
     `📦 Courses : <b>${k.coursesJour}</b>${k.enAttente ? ` (⏳ ${k.enAttente} en attente)` : ""}`,
     `🆕 Inscriptions : <b>${k.inscriptionsJour}</b>`,
     `👥 Visites du site : <b>${k.visitesJour}</b> (${k.pagesVuesJour} pages vues)`,
+    ...renderParcours(k.parcours),
     "",
     c
       ? `🚗 Dernière course · <b>${parisTime(new Date(c.createdAt))}</b>\n${escapeHtml(c.pickup ?? "?")} → ${escapeHtml(c.dropoff ?? "?")}`
       : "🚗 Aucune course aujourd'hui",
   ].join("\n");
+}
+
+function renderParcours(p: Parcours | null): string[] {
+  if (!p || (p.ouverts === 0 && p.pages.length === 0)) return [];
+  const lignes = [""];
+  if (p.pages.length) {
+    lignes.push(`📄 Pages vues (visiteurs) : ${p.pages.map((g) => `${escapeHtml(g.path)} <b>${g.visiteurs}</b>`).join(" · ")}`);
+  }
+  if (p.ouverts > 0) {
+    lignes.push(
+      "🧭 <b>Parcours commande</b> (aujourd'hui)",
+      `   Formulaire ouvert : <b>${p.ouverts}</b> → étape 2 : <b>${p.etape2}</b> → étape 3 : <b>${p.etape3}</b>`,
+      `   Adresses saisies : enlèvement <b>${p.adresses.enlevement}</b> · livraison <b>${p.adresses.livraison}</b>`,
+      `   Envoyé : <b>${p.envois}</b> · Stripe : <b>${p.stripe}</b> · Commandes : <b>${p.commandes}</b>`
+    );
+  }
+  if (p.blocages.length) {
+    lignes.push(`   ⚠️ Blocages : ${p.blocages.map((b) => `${escapeHtml(b.message)} (${b.visiteurs})`).join(" · ")}`);
+  }
+  return lignes;
 }
 
 const KEYBOARD: InlineKeyboard = {

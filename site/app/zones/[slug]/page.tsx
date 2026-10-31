@@ -190,6 +190,12 @@ export default async function ZonePage({ params }: Props) {
             <ChevronRight size={10} className="text-white/25" />
             <Link href="/zones" className="hover:text-white transition-colors">Zones</Link>
             <ChevronRight size={10} className="text-white/25" />
+            {zone.category === "paris" && (
+              <>
+                <Link href="/zones/paris" className="hover:text-white transition-colors">Paris</Link>
+                <ChevronRight size={10} className="text-white/25" />
+              </>
+            )}
             <span className="text-white/70">{zone.fullName}</span>
           </nav>
 
