@@ -57,26 +57,39 @@ export function AddressAutocomplete({
   useLayoutEffect(() => {
     if (!isOpen) return;
     setPortalTarget(inputRef.current?.closest('[role="dialog"]') ?? document.body);
+    // Hauteur réellement visible : sur iPhone, le clavier réduit la zone visible sans changer innerHeight.
+    const visibleBottom = () => window.visualViewport ? window.visualViewport.offsetTop + window.visualViewport.height : window.innerHeight;
+    let retry: ReturnType<typeof setTimeout> | undefined;
     const place = () => {
-      const r = inputRef.current?.getBoundingClientRect();
-      if (!r) return;
-      const below = window.innerHeight - r.bottom - 8;
-      const above = r.top - 8;
-      const down = below >= 120 || below >= above;
+      const input = inputRef.current;
+      if (!input) return;
+      const r = input.getBoundingClientRect();
+      const bottom = visibleBottom();
+      const below = bottom - r.bottom - 8;
+      if (below < 160) {
+        // Pas la place dessous (clavier) : on remonte le champ puis on recalcule.
+        input.scrollIntoView({ block: "center" });
+        clearTimeout(retry);
+        retry = setTimeout(place, 350);
+        return;
+      }
       setPos({
         position: "fixed",
         left: r.left,
         width: r.width,
-        maxHeight: Math.min(320, down ? below : above),
-        ...(down ? { top: r.bottom + 4 } : { bottom: window.innerHeight - r.top + 4 }),
+        maxHeight: Math.min(320, below),
+        top: r.bottom + 4,
       });
     };
     place();
     window.addEventListener("resize", place);
     window.addEventListener("scroll", place, true);
+    window.visualViewport?.addEventListener("resize", place);
     return () => {
+      clearTimeout(retry);
       window.removeEventListener("resize", place);
       window.removeEventListener("scroll", place, true);
+      window.visualViewport?.removeEventListener("resize", place);
     };
   }, [isOpen, suggestions.length]);
 
