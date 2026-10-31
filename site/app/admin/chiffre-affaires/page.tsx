@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 import { AdminPage } from "@/components/dashboard/ui";
 import { Calendar, Download } from "lucide-react";
 import { normalizeOrderPriceTTC } from "@/lib/price-display";
+import { isRevenueOrder } from "@/lib/revenue";
 
 type Period = "jour" | "semaine" | "mois" | "annee";
 
@@ -18,12 +19,10 @@ type OrderRow = {
   pickup_address: string;
   dropoff_address: string;
   user_id: string | null;
+  payment_mode: string | null;
   billing_status: string | null;
   source: string | null;
 };
-
-/** Une course compte dans le CA seulement une fois payée (les courses admin sont saisies à la main, comme dans courses-list). */
-const isCollected = (o: Pick<OrderRow, "billing_status" | "source">) => o.billing_status === "paye" || o.source === "admin";
 
 type NavetteRow = {
   name: string;
@@ -115,7 +114,7 @@ function AdminChiffreAffairesPageInner() {
     const [{ data: orderRows }, { data: navetteRows }, { data: profileRows }, { data: clientRows }] = await Promise.all([
       supabase
         .from("orders")
-        .select("price_estimate, delai, status, created_at, tracking_code, pickup_address, dropoff_address, user_id, billing_status, source")
+        .select("price_estimate, delai, status, created_at, tracking_code, pickup_address, dropoff_address, user_id, payment_mode, billing_status, source")
         .neq("status", "annulee")
         .order("created_at", { ascending: false }),
       supabase
@@ -135,7 +134,7 @@ function AdminChiffreAffairesPageInner() {
       return p?.company || p?.full_name || "Client particulier";
     };
 
-    const orderBillables: Billable[] = ((orderRows ?? []) as OrderRow[]).filter(isCollected).map((o, i) => ({
+    const orderBillables: Billable[] = ((orderRows ?? []) as OrderRow[]).filter(isRevenueOrder).map((o, i) => ({
       key: `order-${i}`,
       type: "commande",
       date: o.created_at,
