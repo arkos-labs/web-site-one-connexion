@@ -33,9 +33,10 @@ export default function About() {
           <Image
             src="/images/about-coursier-opt.jpg"
             alt="Coursier B2B professionnel à Paris"
-            fill
+            width={1000}
+            height={746}
             sizes="(min-width: 1024px) 40vw, (min-width: 768px) 50vw, 100vw"
-            className="object-cover"
+            className="h-full w-full object-cover"
           />
         </div>
       </div>
