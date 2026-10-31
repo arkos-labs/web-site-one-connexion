@@ -79,7 +79,7 @@ export default function AdminOverviewPage() {
     startOfDay.setHours(0, 0, 0, 0);
 
     const [ordersToday, ordersEnCours, navettesPendingCount, ordersAwaitingCount, ordersAwaiting, navettesPending, driversData] = await Promise.all([
-      supabase.from("orders").select("price_estimate, pickup_address, dropoff_address, delai, status").gte("created_at", startOfDay.toISOString()).neq("status", "annulee"),
+      supabase.from("orders").select("price_estimate, pickup_address, dropoff_address, delai, status, billing_status, source").gte("created_at", startOfDay.toISOString()).neq("status", "annulee"),
       supabase.from("orders").select("id", { count: "exact", head: true }).eq("status", "en_cours"),
       supabase
         .from("navettes")
@@ -105,7 +105,8 @@ export default function AdminOverviewPage() {
       supabase.from("drivers").select("id, name, phone, vehicle, status").order("name"),
     ]);
 
-    const todayRows = ordersToday.data ?? [];
+    // CA du jour : seulement les courses payées (ou saisies par l'admin, comme sur la page chiffre d'affaires).
+    const todayRows = (ordersToday.data ?? []).filter((o) => o.billing_status === "paye" || o.source === "admin");
     const caJour = todayRows.reduce((sum, o) => sum + (normalizeOrderPriceTTC(o.price_estimate, o.pickup_address, o.dropoff_address, o.delai) ?? 0), 0);
 
     const orderRows = ordersAwaiting.data ?? [];
