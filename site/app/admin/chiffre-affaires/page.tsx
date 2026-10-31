@@ -291,7 +291,7 @@ function AdminChiffreAffairesPageInner() {
         ))}
       </div>
 
-      <div className="grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-3 [&>:last-child:nth-child(odd)]:col-span-2 sm:[&>:last-child:nth-child(odd)]:col-span-1">
+      <div className="grid grid-cols-1 gap-3 sm:gap-4">
         <StatCard
           label={PERIOD_LABEL[period]}
           value={`${current.toFixed(2)} € TTC`}
@@ -299,13 +299,6 @@ function AdminChiffreAffairesPageInner() {
           sub={`${countSince(periodStart(period))} ligne${countSince(periodStart(period)) > 1 ? "s" : ""} facturable${countSince(periodStart(period)) > 1 ? "s" : ""}`}
           accent
         />
-        <StatCard
-          label="Période précédente"
-          value={`${previous.toFixed(2)} € TTC`}
-          ht={`${htOf(previous).toFixed(2)} €`}
-          sub={variation !== null ? `${variation >= 0 ? "+" : ""}${variation}% vs actuelle` : "Pas de données comparables"}
-        />
-        <StatCard label="Cumul historique" value={`${totalWithNavettes.toFixed(2)} € TTC`} ht={`${htOf(totalWithNavettes).toFixed(2)} €`} sub="Courses + navettes actives" />
       </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)] [&>*]:min-w-0">
