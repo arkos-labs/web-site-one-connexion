@@ -31,6 +31,8 @@ export function AddressAutocomplete({
   const [pos, setPos] = useState<React.CSSProperties | null>(null);
   // Dans une fenêtre (dialog), la liste y reste : hors de la fenêtre, le verrou de défilement bloque la molette.
   const [portalTarget, setPortalTarget] = useState<Element | null>(null);
+  // Téléphone : liste attachée sous le champ (elle suit le champ quand le clavier fait défiler la page).
+  const [inline, setInline] = useState(false);
   const isSelectingRef = useRef(false);
   const isTypingRef = useRef(false);
 
@@ -56,6 +58,13 @@ export function AddressAutocomplete({
   // Sous le champ, la liste défile dans la place restante ; au-dessus seulement s'il reste moins de 120 px.
   useLayoutEffect(() => {
     if (!isOpen) return;
+    if (window.matchMedia("(max-width: 767px), (pointer: coarse)").matches) {
+      setInline(true);
+      // Le champ en haut de l'écran : la liste a la place de s'afficher dessous, au-dessus du clavier.
+      inputRef.current?.scrollIntoView({ block: "start", behavior: "smooth" });
+      return;
+    }
+    setInline(false);
     setPortalTarget(inputRef.current?.closest('[role="dialog"]') ?? document.body);
     // Hauteur réellement visible : sur iPhone, le clavier réduit la zone visible sans changer innerHeight.
     const visibleBottom = () => window.visualViewport ? window.visualViewport.offsetTop + window.visualViewport.height : window.innerHeight;
@@ -192,8 +201,13 @@ export function AddressAutocomplete({
         required={required}
       />
       
-      {isOpen && suggestions.length > 0 && pos && portalTarget && createPortal(
-        <ul ref={listRef} style={pos} className="z-[9999] overflow-auto rounded-xl border border-line bg-white py-1 text-left shadow-2xl [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      {isOpen && suggestions.length > 0 && (inline || (pos && portalTarget)) && (() => {
+        const list = (
+        <ul
+          ref={listRef}
+          style={inline ? undefined : pos ?? undefined}
+          className={`z-[9999] overflow-auto rounded-xl border border-line bg-white py-1 text-left shadow-2xl [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${inline ? "absolute left-0 right-0 top-full mt-1 max-h-[40vh]" : ""}`}
+        >
           {suggestions.map((feature) => (
             <li
               key={feature.properties.id}
@@ -211,9 +225,10 @@ export function AddressAutocomplete({
               </div>
             </li>
           ))}
-        </ul>,
-        portalTarget
-      )}
+        </ul>
+        );
+        return inline ? list : createPortal(list, portalTarget!);
+      })()}
     </div>
   );
 }
