@@ -27,6 +27,8 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   // Des erreurs de typage préexistantes (Supabase, zod, admin) bloqueraient le build.
   typescript: { ignoreBuildErrors: true },
+  // Tests en local depuis un téléphone sur le même Wi-Fi (serveur de dev uniquement).
+  allowedDevOrigins: ["192.168.1.22"],
   async headers() {
     return [
       { source: "/:path*", headers: securityHeaders },
