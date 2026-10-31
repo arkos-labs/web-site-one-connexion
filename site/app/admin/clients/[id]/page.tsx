@@ -115,6 +115,7 @@ type Invoice = {
   status: string;
   url: string | null;
   pdf: string | null;
+  dueDate: string | null;
 };
 
 function initialsOf(name: string) {
@@ -205,7 +206,7 @@ export default function AdminClientDetailPage() {
       supabase.from("addresses").select("id, label, address, is_default, contact_name, contact_phone").eq("user_id", clientId),
       supabase
         .from("invoices")
-        .select("id, invoice_number, billing_period_start, status, total_amount, hosted_invoice_url, pdf_url, invoice_items(order_id)")
+        .select("id, invoice_number, billing_period_start, status, total_amount, hosted_invoice_url, pdf_url, due_date, invoice_items(order_id)")
         .eq("client_id", clientId)
         .order("billing_period_start", { ascending: false }),
     ]);
@@ -243,6 +244,7 @@ export default function AdminClientDetailPage() {
         status: r.status,
         url: r.hosted_invoice_url,
         pdf: r.pdf_url,
+        dueDate: r.due_date ?? null,
       }))
     );
     setLoading(false);
@@ -498,7 +500,7 @@ export default function AdminClientDetailPage() {
                       </span>
                     ) : (
                       <span className="flex items-center gap-1.5 rounded-full bg-orange-50 px-2.5 py-1 text-[11px] font-bold text-orange-700">
-                        <Clock size={12} /> À régler
+                        <Clock size={12} /> {inv.dueDate ? `À régler avant le ${shortDate(inv.dueDate)}` : "À régler"}
                       </span>
                     )}
                   </div>
