@@ -164,8 +164,12 @@ export async function deliverOrderInvoice(supabase: SupabaseClient, stripe: Stri
         // Déjà encaissée à la commande (Stripe Checkout) : facture acquittée, sans nouveau débit.
         invoice = await stripe.invoices.pay(invoice.id!, { paid_out_of_band: true });
       }
+      // Date limite affichée à l'admin et au client : celle de la facture Stripe, sinon 30 jours.
+      const dueIso = invoice.due_date
+        ? new Date(invoice.due_date * 1000).toISOString().slice(0, 10)
+        : new Date(Date.now() + 30 * 86400000).toISOString().slice(0, 10);
       await supabase.from('orders')
-        .update(unpaid ? { stripe_invoice_id: invoice.id, billing_status: 'a_regler', amount_due: amount } : { stripe_invoice_id: invoice.id })
+        .update(unpaid ? { stripe_invoice_id: invoice.id, billing_status: 'a_regler', amount_due: amount, payment_due_date: dueIso } : { stripe_invoice_id: invoice.id })
         .eq('id', o.id);
     } else if (invoice.status === 'draft') {
       invoice = await stripe.invoices.finalizeInvoice(invoice.id!, { auto_advance: false });
