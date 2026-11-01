@@ -6,6 +6,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import JsonLd from "@/components/JsonLd";
+import TrustBlock from "@/components/TrustBlock";
 import { SITE_URL, PHONE_TEL, PHONE_DISPLAY } from "@/lib/site-content";
 import { SERVICES } from "@/lib/services";
 import { getZone } from "@/lib/zones/data";
@@ -248,6 +249,7 @@ export default function ZonelaDefense() {
           </div>
         </div>
       </section>
+      <TrustBlock />
     </>
   );
 }

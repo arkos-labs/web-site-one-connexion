@@ -210,7 +210,7 @@ export const GUIDES: Guide[] = [
         heading: "Distance, délai et horaire : ce qui change le prix",
         paragraphs: [
           "Le point de départ et le point d'arrivée fixent la zone : Paris intramuros, petite couronne ou grande couronne. Quand le trajet traverse deux zones, la zone la plus éloignée s'applique, et plus elle est éloignée de Paris, plus le prix de base augmente.",
-          "Plus le délai est court, plus la course coûte cher : en intramuros, la même course passe de 28 € TTC en 3 h à 56 € TTC en 1 h. L'horaire compte aussi : une course programmée à l'avance laisse un créneau plus large qu'une course immédiate, et une navette régulière, avec un passage fixé, est en général la formule la plus économique pour des besoins répétés.",
+          "Plus le délai est court, plus la course coûte cher : en intramuros, la même course coûte le double livrée en 1 h plutôt qu'en 3 h. L'horaire compte aussi : une course programmée à l'avance laisse un créneau plus large qu'une course immédiate, et une navette régulière, avec un passage fixé, est en général la formule la plus économique pour des besoins répétés.",
         ],
       },
       {
@@ -241,7 +241,7 @@ export const GUIDES: Guide[] = [
       {
         question: "Une course urgente est-elle plus chère ?",
         answer:
-          "Oui : un délai de 1 h coûte le double d'un délai de 3 h (56 € TTC contre 28 € TTC intramuros). Un créneau plus large réduit le prix.",
+          "Oui : un délai de 1 h coûte le double d'un délai de 3 h. Un créneau plus large réduit le prix.",
       },
       {
         question: "Le prix change-t-il selon le poids ou le contenu ?",

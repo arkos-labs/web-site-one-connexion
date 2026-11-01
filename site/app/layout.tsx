@@ -55,20 +55,17 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
   description:
     "Coursier B2B à Paris et en Île-de-France : plis urgents, transport médical, e-commerce. Course dédiée en deux-roues, suivi en ligne, prix affiché.",
+  // Titre et description repris du title et de la meta de chaque page.
   openGraph: {
-    title: "ONE CONNEXION - Coursier B2B, Paris & Île-de-France",
-    description:
-      "Le dernier kilomètre, tenu à l'heure. Flotte deux-roues, traçabilité complète, 100% Marchandise assurée.",
     type: "website",
     locale: "fr_FR",
     siteName: "ONE CONNEXION",
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION - Coursier B2B Paris & Île-de-France" }],
   },
+  // Pas de titre ni de description ici : Next les reprend de l'og:title et de
+  // l'og:description de chaque page (sinon, toutes les pages partageaient ce texte).
   twitter: {
     card: "summary_large_image",
-    title: "ONE CONNEXION - Coursier B2B, Paris & Île-de-France",
-    description:
-      "Le dernier kilomètre, tenu à l'heure. Flotte deux-roues, traçabilité complète, 100% Marchandise assurée.",
     images: ["/og-image.jpg"],
   },
   robots: { index: true, follow: true },

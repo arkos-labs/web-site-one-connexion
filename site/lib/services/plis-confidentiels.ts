@@ -15,6 +15,8 @@ export const plisConfidentiels: Service = {
     note: "Preuve de dépôt horodatée",
   },
 
+  serviceType: "Transport de plis confidentiels",
+
   seo: {
     title: "Pli confidentiel : transport sécurisé à Paris et en Île-de-France",
     description:
