@@ -36,6 +36,9 @@ export type Service = {
   /** Carte affichée sur la homepage et sur l'index /services. */
   card: { tag: string; title: string; body: string; note: string };
 
+  /** Valeur schema.org « serviceType » ; à défaut, l'étiquette de la carte. */
+  serviceType?: string;
+
   /** Métadonnées de référencement. */
   seo: { title: string; description: string; keywords: string[] };
 

@@ -12,6 +12,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import JsonLd from "@/components/JsonLd";
+import TrustBlock from "@/components/TrustBlock";
 import InlineLinks from "@/components/InlineLinks";
 import ServiceCta from "@/components/services/ServiceCta";
 import ServiceFaq from "@/components/services/ServiceFaq";
@@ -27,6 +28,9 @@ import { GUIDES } from "@/lib/guides";
 import { SITE_URL } from "@/lib/site-content";
 
 type Params = { slug: string };
+
+/** Pages hors du périmètre des corrections SEO : laissées telles quelles. */
+const UNTOUCHED_SERVICES = new Set(["tournees-regulieres", "transport-evenementiel"]);
 
 export function generateStaticParams(): Params[] {
   return SERVICE_SLUGS.map((slug) => ({ slug }));
@@ -88,7 +92,7 @@ export default async function ServicePage({
     "@type": "Service",
     name: service.card.title,
     description: service.seo.description,
-    serviceType: service.card.tag,
+    serviceType: service.serviceType ?? service.card.tag,
     areaServed: { "@type": "AdministrativeArea", name: "Île-de-France" },
     provider: { "@id": `${SITE_URL}/#organization` },
     url: pageUrl,
@@ -319,6 +323,7 @@ export default async function ServicePage({
       </div>
 
       <ServiceCta serviceTitle={service.card.title} outline={outline?.cta} />
+      {!UNTOUCHED_SERVICES.has(service.slug) && <TrustBlock />}
     </>
   );
 }

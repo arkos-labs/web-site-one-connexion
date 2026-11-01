@@ -10,6 +10,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import JsonLd from "@/components/JsonLd";
+import TrustBlock from "@/components/TrustBlock";
 import { SITE_URL, PHONE_DISPLAY, PHONE_TEL, EMAIL } from "@/lib/site-content";
 import { ZONES, getZone, isZoneIndexed } from "@/lib/zones/data";
 import { withFaqComplements } from "@/lib/zones/faq-complements";
@@ -133,6 +134,7 @@ export default async function ZonePage({ params }: Props) {
         <JsonLd data={serviceSchema} />
         {faqSchema && <JsonLd data={faqSchema} />}
         <PlannedZonePage zone={zone} plan={plan} faqItems={faqItems} related={related} />
+        <TrustBlock />
       </>
     );
   }
@@ -560,6 +562,7 @@ export default async function ZonePage({ params }: Props) {
           </div>
         </section>
       )}
+      <TrustBlock />
     </>
   );
 }

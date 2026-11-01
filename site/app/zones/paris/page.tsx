@@ -7,8 +7,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import JsonLd from "@/components/JsonLd";
+import TrustBlock from "@/components/TrustBlock";
 import { SITE_URL, PHONE_TEL, PHONE_DISPLAY } from "@/lib/site-content";
-import { SERVICES } from "@/lib/services";
 import { Clock, MapPin, Zap, Shield } from "lucide-react";
 
 const TITLE = "Coursier Paris : courses dédiées dans tous les arrondissements";
@@ -195,26 +195,14 @@ export default function ZoneParis() {
       <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
         <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">Nos prestations parisiennes</div>
         <h2 className={`mb-4 ${H2}`}>Ce que nous transportons à Paris</h2>
-        <p className="mb-10 max-w-[62ch] text-[15.5px] leading-[1.7] text-muted">
+        {/* Les cartes des prestations sont retirées de cette page : elles reprenaient
+            express, banlieue et un second lien vers les plis confidentiels. */}
+        <p className="max-w-[62ch] text-[15.5px] leading-[1.7] text-muted">
           Actes et contrats pour les cabinets, prélèvements pour les
           laboratoires, commandes pour les boutiques : chaque envoi part seul,
           avec son coursier. Pour les documents sensibles, voyez notre{" "}
           <Link href="/services/plis-confidentiels" className={LINK}>transport de plis confidentiels</Link>.
         </p>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {SERVICES.map((s) => (
-            <Link
-              key={s.slug}
-              href={`/services/${s.slug}`}
-              className="flex flex-col gap-2 rounded-xl border border-line bg-paper-card p-6 hover:border-ink transition-colors"
-            >
-              <div className="font-mono text-[10px] tracking-[0.14em] text-label uppercase">{s.card.tag}</div>
-              <h3 className="font-bold tracking-[-0.01em]">{s.card.title}</h3>
-              <p className="text-[13.5px] leading-[1.55] text-muted flex-1">{s.card.body}</p>
-              <div className="mt-4 font-mono text-[10px] tracking-[0.1em] text-accent-dark uppercase">Voir →</div>
-            </Link>
-          ))}
-        </div>
       </section>
 
       {/* ── Secteurs parisiens (sans H2 : hors plan) ── */}
@@ -273,7 +261,7 @@ export default function ZoneParis() {
         <h2 className={`mb-12 text-center ${H2}`}>Comment se déroule une course</h2>
         <div className="grid gap-8 md:grid-cols-3">
           {[
-            { num: "01", title: "Demande immédiate", desc: "Le prix s’affiche sur-le-champ pour n’importe quel arrondissement." },
+            { num: "01", title: "Demande immédiate", desc: "Vous commandez en ligne ou par téléphone, pour n’importe quel arrondissement." },
             { num: "02", title: "Enlèvement", desc: "Un coursier se faufile dans le trafic parisien pour récupérer votre pli en moins de 45 minutes." },
             { num: "03", title: "Preuve de remise", desc: "Vous suivez la course en ligne. Une fois le pli remis en main propre, vous recevez l'heure exacte et le nom du destinataire." }
           ].map((step) => (
@@ -334,9 +322,8 @@ export default function ZoneParis() {
             <Link href="/zones/petite-couronne" className={LINK}>coursier en petite couronne</Link>.
             Pour un envoi qui ne peut pas attendre, notre{" "}
             <Link href="/services/coursier-express-paris" className={LINK}>coursier express Paris</Link>{" "}
-            part dès la confirmation. Le{" "}
-            <Link href="/tarifs" className={LINK}>tarif coursier Paris</Link>{" "}
-            détaille le prix de chaque course.
+            part dès la confirmation. Voir aussi notre{" "}
+            <Link href="/tarifs" className={LINK}>tarif coursier Paris</Link>.
           </p>
         </div>
       </section>
@@ -378,6 +365,7 @@ export default function ZoneParis() {
           </div>
         </div>
       </section>
+      <TrustBlock />
     </>
   );
 }

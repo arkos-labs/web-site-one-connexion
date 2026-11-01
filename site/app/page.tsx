@@ -83,6 +83,11 @@ const organizationSchema = {
   priceRange: "€€",
   vatID: LEGAL.tva,
   taxID: LEGAL.siren,
+  identifier: {
+    "@type": "PropertyValue",
+    name: "SIRET",
+    value: LEGAL.siret,
+  },
   foundingDate: LEGAL.dateCreationISO,
   description:
     "Coursier B2B spécialisé à Paris et en Île-de-France : plis confidentiels, transport médical, livraison e-commerce et tournées régulières. Flotte deux-roues, traçabilité complète, 100% Marchandise assurée.",

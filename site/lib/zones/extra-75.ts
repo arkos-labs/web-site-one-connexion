@@ -200,7 +200,6 @@ export const EXTRA_75: Record<string, ExtraZoneContent> = {
       "Entre Bastille et Nation, une course immédiate suffit presque toujours.",
     ],
     faq: [
-      { q: "Livrez-vous à Bastille le soir ?", a: "Oui jusqu'à 19h, du lundi au samedi, sous réserve de disponibilité." },
       { q: "Quel poids maximum pour un colis ?", a: "18 kg dans le top-case." },
     ],
   },
