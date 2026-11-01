@@ -433,9 +433,10 @@ export default function OrderForm() {
     <section id="commander" className="border-y border-line bg-[#F8F9FA]">
       <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-10">
         <div className="mb-14 text-center">
-          <h2 className="text-[clamp(28px,3vw,40px)] font-bold leading-[1.1] tracking-[-0.03em] text-gray-900">
+          {/* Pas de H2 : le plan de l'accueil compte exactement quatre H2. */}
+          <p className="text-[clamp(28px,3vw,40px)] font-bold leading-[1.1] tracking-[-0.03em] text-gray-900">
             Commander une course.
-          </h2>
+          </p>
           <p className="mt-4 text-[16.5px] text-gray-500 max-w-xl mx-auto">
             Service de coursier express. Remplissez ce formulaire pour une estimation et une prise en charge rapide.
           </p>

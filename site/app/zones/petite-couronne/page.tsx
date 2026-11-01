@@ -1,6 +1,7 @@
 /**
  * app/zones/petite-couronne/page.tsx
- * Page locale "Coursier petite couronne Paris (92/93/94)".
+ * Page locale petite couronne (92/93/94). Requête visée : « coursier banlieue Paris ».
+ * Le guide /guides/coursier-paris-banlieue explique la méthode ; les prix vivent sur /tarifs.
  */
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -13,15 +14,20 @@ const slugOf = (v: string) =>
   v.replace(" (limite)", "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/\s+/g, "-").replace(/[^\w\-]+/g, "").replace(/\-\-+/g, "-").replace(/^-+/, "").replace(/-+$/, "");
 import { MapPin } from "lucide-react";
 
+const TITLE = "Coursier banlieue Paris : courses en petite couronne";
+const DESCRIPTION =
+  "Coursier en banlieue parisienne : courses dédiées vers et depuis la petite couronne, pour les entreprises qui ont besoin d'un envoi suivi.";
+const H2 = "text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]";
+const LINK = "font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark";
+
 export const metadata: Metadata = {
-  title: "Coursier petite couronne 92, 93, 94",
-  description:
-    "Coursier en petite couronne (92, 93, 94) dès 39 € TTC jusqu'à 8 km, puis 2 € par km. Enlèvement en moins de 45 min, course dédiée, suivi en ligne.",
+  title: { absolute: TITLE },
+  description: DESCRIPTION,
   alternates: { canonical: "/zones/petite-couronne" },
   openGraph: {
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION - Coursier B2B Paris & Île-de-France" }],
-    title: "Coursier petite couronne - Hauts-de-Seine, Seine-Saint-Denis, Val-de-Marne | ONE CONNEXION",
-    description: "Livraison urgente B2B dans les 3 départements de petite couronne parisienne. Course dédiée, traçabilité complète.",
+    title: TITLE,
+    description: DESCRIPTION,
     url: "/zones/petite-couronne",
     type: "website",
     locale: "fr_FR",
@@ -81,20 +87,17 @@ export default function ZonePetiteCouronne() {
             Zone couverte · 92 / 93 / 94
           </div>
           <h1 className="mb-6 max-w-[22ch] text-balance text-[clamp(36px,5vw,64px)] font-bold leading-[1.05] tracking-[-0.035em]">
-            Livraison express dans toute la petite couronne.
+            Coursier banlieue Paris : la petite couronne couverte
           </h1>
           <p className="max-w-[58ch] text-pretty text-[17px] leading-[1.6] text-white/66">
             One Connexion dessert les trois départements de petite couronne -
             Hauts-de-Seine (92), Seine-Saint-Denis (93) et Val-de-Marne (94) -
-            avec la même exigence opérationnelle, et un prix au kilomètre.
+            avec le même dispatch et une course dédiée pour chaque envoi.
           </p>
           <div className="mt-10 flex flex-wrap gap-3">
             <a href="/#commander" className="rounded-[2px] bg-accent px-[26px] py-[15px] text-[15px] font-semibold text-white hover:bg-accent-dark">
               Commander une course
             </a>
-            <Link href="/tarifs" className="rounded-[2px] border border-white/22 px-[26px] py-[15px] text-[15px] font-semibold text-white hover:border-white">
-              Voir les tarifs
-            </Link>
           </div>
         </div>
         <div className="border-t border-white/10">
@@ -116,9 +119,7 @@ export default function ZonePetiteCouronne() {
       {/* ── Départements ── */}
       <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
         <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">Couverture détaillée</div>
-        <h2 className="mb-12 text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-          Trois départements, une couverture sans rupture.
-        </h2>
+        <h2 className={`mb-12 ${H2}`}>Les communes desservies en petite couronne</h2>
         <div className="grid gap-6 lg:grid-cols-3">
           {DEPTS.map((d) => (
             <div key={d.dept} className={`rounded-2xl border p-6 ${d.color}`}>
@@ -128,7 +129,7 @@ export default function ZonePetiteCouronne() {
                 </div>
                 <div>
                   <div className="font-bold text-ink">{d.name}</div>
-                  <div className="text-[12px] text-muted">Tarif standard · prix immédiat</div>
+                  <div className="text-[12px] text-muted">Course dédiée · suivi en ligne</div>
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-1.5">
@@ -169,9 +170,7 @@ export default function ZonePetiteCouronne() {
       <section className="bg-paper">
         <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
           <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">Avantages</div>
-          <h2 className="mb-8 max-w-[24ch] text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-            Un seul prestataire pour Paris et la banlieue.
-          </h2>
+          <h2 className={`mb-8 max-w-[24ch] ${H2}`}>Courses depuis et vers Paris</h2>
           <div className="grid gap-8 md:grid-cols-2 text-[15.5px] leading-[1.7] text-muted">
             <p>
               De nombreuses entreprises parisiennes ont des clients, des partenaires ou des sites
@@ -184,33 +183,9 @@ export default function ZonePetiteCouronne() {
               Notre siège est implanté à Saint-Mandé (94160), ce qui nous place au cœur de la
               petite couronne Est. Cette position géographique nous permet d'intervenir rapidement
               dans le Val-de-Marne et d'accéder à Paris intramuros comme aux autres départements
-              de petite couronne en moins de 30 minutes.
+              de petite couronne en moins de 30 minutes. Dans Paris même, voyez notre page{" "}
+              <Link href="/zones/paris" className={LINK}>coursier Paris</Link>.
             </p>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Comment ça marche ── */}
-      <section className="bg-paper border-t border-gray-100">
-        <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
-          <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase text-center">Processus simple</div>
-          <h2 className="mb-12 text-center text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-            Votre livraison express en 3 étapes.
-          </h2>
-          <div className="grid gap-8 md:grid-cols-3">
-            {[
-              { num: "01", title: "Demande immédiate", desc: "Un simple appel ou un formulaire en ligne suffit : le prix s’affiche immédiatement pour n’importe quelle ville du 92, 93 ou 94." },
-              { num: "02", title: "Prise en charge < 45 min", desc: "Peu importe votre emplacement en petite couronne, notre maillage garantit l'arrivée d'un coursier en moins de 45 minutes." },
-              { num: "03", title: "Livraison & Suivi", desc: "L'avancement de chaque course est visible en ligne. Une preuve de remise horodatée est disponible dès la livraison." }
-            ].map((step) => (
-              <div key={step.num} className="flex flex-col items-center text-center p-6 bg-white rounded-2xl border border-line shadow-sm">
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-accent text-[16px] font-bold text-white shadow-md">
-                  {step.num}
-                </div>
-                <h3 className="mb-3 text-[18px] font-bold text-ink">{step.title}</h3>
-                <p className="text-[14.5px] leading-[1.6] text-muted">{step.desc}</p>
-              </div>
-            ))}
           </div>
         </div>
       </section>
@@ -218,9 +193,7 @@ export default function ZonePetiteCouronne() {
       {/* ── Prestations ── */}
       <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
         <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">Nos prestations</div>
-        <h2 className="mb-10 text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-          Toutes les missions en petite couronne.
-        </h2>
+        <h2 className={`mb-10 ${H2}`}>Ce que nous transportons</h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {SERVICES.map((s) => (
             <Link
@@ -237,67 +210,10 @@ export default function ZonePetiteCouronne() {
         </div>
       </section>
 
-      {/* ── Avantages petite couronne ── */}
-      <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
-        <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
-          Avantage géographique
-        </div>
-        <h2 className="mb-10 max-w-[30ch] text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-          Pourquoi choisir la petite couronne pour vos livraisons
-        </h2>
-        <div className="mb-12 grid gap-6 md:grid-cols-3">
-          {[
-            { label: "Distance moyenne", value: "12-18 km", desc: "Du centre de Paris" },
-            { label: "Temps d'intervention", value: "moins de 45 min", desc: "Enlèvement garanti" },
-            { label: "Coût", value: "39 € TTC", desc: "Jusqu’à 8 km, puis 2 € par km (Normal)" }
-          ].map((item) => (
-            <div key={item.label} className="rounded-xl border border-line bg-paper-card p-6 text-center">
-              <div className="mb-2 font-mono text-[10px] tracking-[0.1em] text-label uppercase">{item.label}</div>
-              <div className="mb-3 text-[28px] font-bold text-accent">{item.value}</div>
-              <p className="text-[13.5px] text-muted">{item.desc}</p>
-            </div>
-          ))}
-        </div>
-        <div className="rounded-xl border border-line bg-white overflow-x-auto">
-          <table className="w-full text-[14px] sm:text-base">
-            <thead>
-              <tr className="border-b border-line bg-paper">
-                <th className="p-2.5 sm:p-4 text-left font-bold text-ink">Zone</th>
-                <th className="p-2.5 sm:p-4 text-center font-bold text-ink">Distance</th>
-                <th className="p-2.5 sm:p-4 text-center font-bold text-ink">Enlèvement</th>
-                <th className="p-2.5 sm:p-4 text-center font-bold text-ink">Tarif</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-line">
-              <tr>
-                <td className="p-2.5 sm:p-4 font-medium text-ink">Paris intramuros</td>
-                <td className="p-2.5 sm:p-4 text-center text-muted">0-10 km</td>
-                <td className="p-2.5 sm:p-4 text-center text-muted">moins de 30 min</td>
-                <td className="p-2.5 sm:p-4 text-center text-muted">28-56 euros</td>
-              </tr>
-              <tr>
-                <td className="p-2.5 sm:p-4 font-medium text-ink">Petite couronne</td>
-                <td className="p-2.5 sm:p-4 text-center text-accent font-bold">12-20 km</td>
-                <td className="p-2.5 sm:p-4 text-center text-accent font-bold">moins de 45 min</td>
-                <td className="p-2.5 sm:p-4 text-center text-accent font-bold">39 € + 2 €/km au-delà de 8 km</td>
-              </tr>
-              <tr>
-                <td className="p-2.5 sm:p-4 font-medium text-ink">Grande couronne</td>
-                <td className="p-2.5 sm:p-4 text-center text-muted">25-50 km</td>
-                <td className="p-2.5 sm:p-4 text-center text-muted">60-90 min</td>
-                <td className="p-2.5 sm:p-4 text-center text-muted">84-150 euros</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      {/* ── Industries petite couronne ── */}
+      {/* ── Industries petite couronne (sans H2 : hors plan) ── */}
       <section className="bg-paper">
         <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
-          <h2 className="mb-10 text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-            Industries principales en petite couronne
-          </h2>
+          <p className={`mb-10 ${H2}`}>Industries principales en petite couronne</p>
           <div className="grid gap-6 md:grid-cols-2">
             {[
               {
@@ -326,19 +242,43 @@ export default function ZonePetiteCouronne() {
         </div>
       </section>
 
-      {/* ── FAQ ── */}
+      {/* ── Organiser une course ── */}
+      <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
+        <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase text-center">Processus simple</div>
+        <h2 className={`mb-12 text-center ${H2}`}>Organiser une course en banlieue</h2>
+        <div className="grid gap-8 md:grid-cols-3">
+          {[
+            { num: "01", title: "Demande immédiate", desc: "Un simple appel ou un formulaire en ligne suffit : le prix s’affiche immédiatement pour n’importe quelle ville du 92, 93 ou 94." },
+            { num: "02", title: "Prise en charge < 45 min", desc: "Peu importe votre emplacement en petite couronne, un coursier arrive en moins de 45 minutes." },
+            { num: "03", title: "Livraison & Suivi", desc: "L'avancement de chaque course est visible en ligne. Une preuve de remise horodatée est disponible dès la livraison." }
+          ].map((step) => (
+            <div key={step.num} className="flex flex-col items-center text-center p-6 bg-white rounded-2xl border border-line shadow-sm">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-accent text-[16px] font-bold text-white shadow-md">
+                {step.num}
+              </div>
+              <h3 className="mb-3 text-[18px] font-bold text-ink">{step.title}</h3>
+              <p className="text-[14.5px] leading-[1.6] text-muted">{step.desc}</p>
+            </div>
+          ))}
+        </div>
+        <p className="mx-auto mt-10 max-w-[66ch] text-center text-[15px] leading-[1.7] text-muted">
+          Le prix de chaque course suit notre{" "}
+          <Link href="/tarifs" className={LINK}>grille tarifaire</Link>. Plus loin
+          de Paris, voyez notre page{" "}
+          <Link href="/zones/grande-couronne" className={LINK}>coursier grand Paris</Link>.
+        </p>
+      </section>
+
+      {/* ── FAQ (sans H2 : hors plan) ── */}
       <section className="bg-paper border-t border-line">
         <div className="mx-auto max-w-[800px] px-[clamp(20px,4vw,28px)] py-[72px]">
           <div className="mb-10 text-center">
             <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">Foire Aux Questions</div>
-            <h2 className="text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-              Vos questions sur la livraison en banlieue parisienne
-            </h2>
+            <p className={H2}>Vos questions sur la livraison en banlieue parisienne</p>
           </div>
           <div className="flex flex-col gap-4">
             {[
               { q: "Couvrez-vous vraiment toute la petite couronne ?", a: "Oui, notre flotte est répartie de manière optimale pour couvrir l'intégralité des Hauts-de-Seine (92), de la Seine-Saint-Denis (93) et du Val-de-Marne (94)." },
-              { q: "Le tarif est-il plus élevé pour la banlieue ?", a: "Oui : en petite couronne (92, 93, 94), une course coûte 39 € TTC en Normal (3 h) jusqu'à 8 km de route, contre 28 € dans Paris, puis 2 € TTC par km en plus. Saint-Mandé vers Paris 12e : 39 € ; une course de 15 km : 53 €." },
               { q: "Pouvez-vous transporter des colis lourds ou volumineux ?", a: "Notre flotte est composée de deux-roues (scooters et motos) : elle convient aux plis, colis et matériel léger. Pour un volume ou un gabarit important, contactez-nous avant de commander, nous vous dirons si nous pouvons le prendre en charge." },
               { q: "Quels sont vos horaires en petite couronne ?", a: "Du lundi au samedi, de 9h à 19h, dans les trois départements. Nous sommes fermés le dimanche et les jours fériés." },
               { q: "Combien de temps pour un enlèvement en banlieue ?", a: "Un coursier vient chercher le colis en moins de 45 minutes après la confirmation de la course, puis le livre directement, sans détour." }
@@ -374,9 +314,9 @@ export default function ZonePetiteCouronne() {
         <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-20">
           <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
             <div>
-              <h2 className="mb-3 text-[clamp(24px,3vw,36px)] font-bold leading-[1.2] tracking-[-0.02em]">
+              <p className="mb-3 text-[clamp(24px,3vw,36px)] font-bold leading-[1.2] tracking-[-0.02em]">
                 Une course en petite couronne maintenant ?
-              </h2>
+              </p>
               <p className="text-[15px] text-white/60">Dispatch en moins de 2 minutes, du lundi au samedi de 9h à 19h.</p>
             </div>
             <a href={`tel:${PHONE_TEL}`} className="rounded-[4px] bg-accent px-8 py-4 text-center text-[15px] font-bold text-white hover:bg-accent-dark">

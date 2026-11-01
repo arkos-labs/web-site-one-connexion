@@ -1,6 +1,7 @@
 /**
  * app/zones/la-defense/page.tsx
- * Page locale "Coursier La Défense & Hauts-de-Seine (92)".
+ * Page locale La Défense. Requête visée : « coursier La Défense ».
+ * Pas de prix sur cette page : ils vivent sur /tarifs.
  */
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -10,15 +11,18 @@ import { SERVICES } from "@/lib/services";
 import { getZone } from "@/lib/zones/data";
 import { MapPin } from "lucide-react";
 
+const TITLE = "Coursier La Défense : courses pour les entreprises du quartier";
+const DESCRIPTION =
+  "Coursier à La Défense pour vos plis, documents et colis professionnels : une course dédiée dans le quartier d'affaires, avec suivi de l'envoi.";
+
 export const metadata: Metadata = {
-  title: "Coursier La Défense & Hauts-de-Seine",
-  description:
-    "Coursier moto à La Défense, Nanterre, Neuilly, Boulogne et dans tout le 92. Enlèvement en moins de 45 min, prix affiché avant de commander.",
+  title: { absolute: TITLE },
+  description: DESCRIPTION,
   alternates: { canonical: "/zones/la-defense" },
   openGraph: {
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION - Coursier B2B Paris & Île-de-France" }],
-    title: "Coursier La Défense & Hauts-de-Seine - ONE CONNEXION",
-    description: "Livraison express professionnelle à La Défense et dans tout le 92. Course dédiée, sans regroupement.",
+    title: TITLE,
+    description: DESCRIPTION,
     url: "/zones/la-defense",
     type: "website",
     locale: "fr_FR",
@@ -43,11 +47,14 @@ const VILLES = [
 ];
 
 const STATS = [
-  { value: "< 45 min", label: "Prise en charge" },
   { value: "< 45 min", label: "Enlèvement" },
+  { value: "1 course", label: "Un envoi, sans regroupement" },
   { value: "6j/7", label: "Lun–sam, 9h – 19h" },
   { value: "92", label: "Dépt. couvert" },
 ];
+
+const H2 = "text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]";
+const LINK = "font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark";
 
 export default function ZonelaDefense() {
   return (
@@ -68,12 +75,13 @@ export default function ZonelaDefense() {
             Zone couverte · Hauts-de-Seine 92
           </div>
           <h1 className="mb-6 max-w-[22ch] text-balance text-[clamp(36px,5vw,64px)] font-bold leading-[1.05] tracking-[-0.035em]">
-            Coursier express à La Défense et dans les Hauts-de-Seine.
+            Coursier La Défense : une course dédiée dans le quartier d&apos;affaires
           </h1>
           <p className="max-w-[58ch] text-pretty text-[17px] leading-[1.6] text-white/66">
             La Défense concentre une densité exceptionnelle de sièges sociaux, de
-            directions juridiques et de cabinets de conseil. One Connexion intervient
-            dans tout le 92 avec le même niveau d'exigence qu'à Paris intramuros.
+            directions juridiques et de cabinets de conseil. One Connexion y
+            envoie un coursier par envoi, qui va directement de l&apos;enlèvement
+            à la remise.
           </p>
           <div className="mt-10 flex flex-wrap gap-3">
             <a
@@ -82,12 +90,6 @@ export default function ZonelaDefense() {
             >
               Commander une course
             </a>
-            <Link
-              href="/tarifs"
-              className="rounded-[2px] border border-white/22 px-[26px] py-[15px] text-[15px] font-semibold text-white hover:border-white"
-            >
-              Voir les tarifs
-            </Link>
           </div>
         </div>
         <div className="border-t border-white/10">
@@ -102,45 +104,17 @@ export default function ZonelaDefense() {
         </div>
       </section>
 
-      {/* ── Villes couvertes ── */}
-      <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
-        <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">Couverture 92</div>
-        <h2 className="mb-10 text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-          Tout le département Hauts-de-Seine.
-        </h2>
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-          {VILLES.map((v) => {
-            const slug = v.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '-').replace(/[^\w\-]+/g, '').replace(/\-\-+/g, '-').replace(/^-+/, '').replace(/-+$/, '');
-            const inner = (
-              <>
-                <MapPin size={12} className="shrink-0 text-accent" />
-                <span className="text-[13px] text-muted hover:text-ink">{v}</span>
-              </>
-            );
-            const box = "flex items-center gap-2 rounded-lg border border-line bg-paper-card px-3 py-2.5";
-            // Lien uniquement si la ville a une page dédiée (sinon 404).
-            return slug === "la-defense" || getZone(slug) ? (
-              <Link key={v} href={`/zones/${slug}`} className={`${box} transition-colors hover:border-accent`}>{inner}</Link>
-            ) : (
-              <div key={v} className={box}>{inner}</div>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* ── Contexte La Défense ── */}
+      {/* ── 1. Tours et adresses ── */}
       <section className="bg-paper">
         <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
           <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">Particularités du secteur</div>
-          <h2 className="mb-8 max-w-[24ch] text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-            La Défense, un territoire logistique à part.
-          </h2>
+          <h2 className={`mb-8 max-w-[24ch] ${H2}`}>Les tours et adresses desservies</h2>
           <div className="grid gap-8 md:grid-cols-2 text-[15.5px] leading-[1.7] text-muted">
             <p>
-              Le quartier d'affaires de La Défense regroupe les sièges de nombreuses multinationales, des
+              Le quartier d&apos;affaires de La Défense regroupe les sièges de nombreuses multinationales, des
               cabinets juridiques de grande taille et des directions financières soumises à des délais
-              contractuels stricts. Les livraisons y exigent souvent une procédure d'accueil spécifique
-              (badge, interlocuteur désigné) que nos coursiers anticipent à chaque mission.
+              contractuels stricts. Les livraisons dans les tours exigent souvent une procédure d&apos;accueil
+              spécifique (badge, interlocuteur désigné) que nos coursiers anticipent à chaque mission.
             </p>
             <p>
               Les motos routières de notre flotte (300–600cc) sont adaptées aux axes autoroutiers
@@ -149,40 +123,41 @@ export default function ZonelaDefense() {
               dehors des pointes de trafic.
             </p>
           </div>
-        </div>
-      </section>
 
-      {/* ── Comment ça marche ── */}
-      <section className="bg-paper border-t border-gray-100">
-        <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
-          <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase text-center">Processus simple</div>
-          <h2 className="mb-12 text-center text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-            Votre livraison dans le 92 en 3 étapes.
-          </h2>
-          <div className="grid gap-8 md:grid-cols-3">
-            {[
-              { num: "01", title: "Demande immédiate", desc: "Contactez-nous par téléphone ou formulaire. Le prix s’affiche instantanément pour les courses express dans le 92." },
-              { num: "02", title: "Prise en charge rapide", desc: "Un coursier dédié se présente à l'adresse indiquée (La Défense, Nanterre, etc.) en moins de 45 minutes." },
-              { num: "03", title: "Suivi & Confirmation", desc: "Suivez l'avancement de votre course en ligne et retrouvez la preuve de remise une fois le pli remis en main propre." }
-            ].map((step) => (
-              <div key={step.num} className="flex flex-col items-center text-center p-6 bg-white rounded-2xl border border-line shadow-sm">
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-accent text-[16px] font-bold text-white shadow-md">
-                  {step.num}
-                </div>
-                <h3 className="mb-3 text-[18px] font-bold text-ink">{step.title}</h3>
-                <p className="text-[14.5px] leading-[1.6] text-muted">{step.desc}</p>
-              </div>
-            ))}
+          <p className="mb-6 mt-14 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
+            Le quartier et les communes voisines
+          </p>
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+            {VILLES.map((v) => {
+              const slug = v.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/\s+/g, '-').replace(/[^\w\-]+/g, '').replace(/\-\-+/g, '-').replace(/^-+/, '').replace(/-+$/, '');
+              const inner = (
+                <>
+                  <MapPin size={12} className="shrink-0 text-accent" />
+                  <span className="text-[13px] text-muted hover:text-ink">{v}</span>
+                </>
+              );
+              const box = "flex items-center gap-2 rounded-lg border border-line bg-white px-3 py-2.5";
+              // Lien uniquement si la ville a une page dédiée (sinon 404).
+              return slug !== "la-defense" && getZone(slug) ? (
+                <Link key={v} href={`/zones/${slug}`} className={`${box} transition-colors hover:border-accent`}>{inner}</Link>
+              ) : (
+                <div key={v} className={box}>{inner}</div>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* ── Prestations ── */}
+      {/* ── 2. Ce que nous transportons ── */}
       <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
         <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">Nos prestations dans le 92</div>
-        <h2 className="mb-10 text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-          Toutes les missions, au même niveau d'exigence.
-        </h2>
+        <h2 className={`mb-4 ${H2}`}>Ce que nous transportons à La Défense</h2>
+        <p className="mb-10 max-w-[62ch] text-[15.5px] leading-[1.7] text-muted">
+          Contrats, dossiers entre sièges, pièces pour une direction juridique :
+          un document sensible part en{" "}
+          <Link href="/services/plis-confidentiels" className={LINK}>pli confidentiel</Link>,
+          remis en main propre.
+        </p>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {SERVICES.map((s) => (
             <Link
@@ -199,21 +174,53 @@ export default function ZonelaDefense() {
         </div>
       </section>
 
-      {/* ── FAQ ── */}
+      {/* ── 3. Organiser une course ── */}
+      <section className="bg-paper border-t border-gray-100">
+        <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
+          <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase text-center">Processus simple</div>
+          <h2 className={`mb-12 text-center ${H2}`}>Organiser une course depuis le quartier</h2>
+          <div className="grid gap-8 md:grid-cols-3">
+            {[
+              { num: "01", title: "Demande immédiate", desc: "Contactez-nous par téléphone ou par le formulaire, avec la tour, l'étage et le nom du destinataire." },
+              { num: "02", title: "Prise en charge rapide", desc: "Un coursier dédié se présente à l'adresse indiquée (La Défense, Nanterre, etc.) en moins de 45 minutes." },
+              { num: "03", title: "Suivi & Confirmation", desc: "Suivez l'avancement de votre course en ligne et retrouvez la preuve de remise une fois le pli remis en main propre." }
+            ].map((step) => (
+              <div key={step.num} className="flex flex-col items-center text-center p-6 bg-white rounded-2xl border border-line shadow-sm">
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-accent text-[16px] font-bold text-white shadow-md">
+                  {step.num}
+                </div>
+                <h3 className="mb-3 text-[18px] font-bold text-ink">{step.title}</h3>
+                <p className="text-[14.5px] leading-[1.6] text-muted">{step.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── 4. La Défense et l'Île-de-France ── */}
+      <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
+        <h2 className={`mb-6 max-w-[28ch] ${H2}`}>La Défense et le reste de l&apos;Île-de-France</h2>
+        <p className="max-w-[66ch] text-[15.5px] leading-[1.7] text-muted">
+          Depuis La Défense, nos courses rejoignent toute l&apos;Île-de-France, en
+          course dédiée. Pour vos envois dans la capitale, voyez notre page{" "}
+          <Link href="/zones/paris" className={LINK}>coursier Paris</Link>. Pour des
+          courses régulières depuis vos bureaux,{" "}
+          <Link href="/contact" className={LINK}>demander un devis</Link>.
+        </p>
+      </section>
+
+      {/* ── FAQ (sans H2 : hors plan) ── */}
       <section className="bg-paper border-t border-line">
         <div className="mx-auto max-w-[800px] px-[clamp(20px,4vw,28px)] py-[72px]">
           <div className="mb-10 text-center">
             <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">Foire Aux Questions</div>
-            <h2 className="text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-              Vos questions sur la livraison à La Défense
-            </h2>
+            <p className={H2}>Vos questions sur la livraison à La Défense</p>
           </div>
           <div className="flex flex-col gap-4">
             {[
               { q: "Quels sont les délais d'intervention à La Défense ?", a: "Pour une course urgente, nous garantissons un enlèvement en moins de 45 minutes sur tout le parvis de La Défense et les communes limitrophes (Courbevoie, Puteaux, Nanterre)." },
               { q: "Vos coursiers accèdent-ils aux étages des tours ?", a: "Oui, nos coursiers sont habitués aux protocoles de sécurité des grandes tours (badges, quais de livraison, contrôle d'identité) et assurent une remise en main propre." },
               { q: "Proposez-vous la livraison depuis le 92 vers la banlieue éloignée ?", a: "Oui, depuis La Défense vers toute l'Île-de-France, en course dédiée. Nous ne livrons pas en province : pour une course hors Île-de-France, appelez-nous." },
-              { q: "Combien coûte une course depuis La Défense ?", a: "La Défense est en petite couronne : 39 € TTC en Normal (3 h), 58,50 € en Urgent et 78 € en Super jusqu'à 8 km de route, puis 2 €, 3 € ou 4 € TTC par km. Le prix exact s'affiche dès que vous saisissez les adresses." },
               { q: "Quels sont vos horaires à La Défense ?", a: "Du lundi au samedi, de 9h à 19h. Nous sommes fermés le dimanche et les jours fériés." }
             ].map((faq, i) => (
               <div key={i} className="rounded-xl border border-line bg-white p-5 hover:border-accent/30 transition-colors">
@@ -225,13 +232,14 @@ export default function ZonelaDefense() {
         </div>
       </section>
 
+      {/* ── CTA (sans H2 : hors plan) ── */}
       <section className="bg-ink text-white">
         <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-20">
           <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
             <div>
-              <h2 className="mb-3 text-[clamp(24px,3vw,36px)] font-bold leading-[1.2] tracking-[-0.02em]">
+              <p className="mb-3 text-[clamp(24px,3vw,36px)] font-bold leading-[1.2] tracking-[-0.02em]">
                 Une course dans le 92 maintenant ?
-              </h2>
+              </p>
               <p className="text-[15px] text-white/60">Dispatch en moins de 2 minutes, du lundi au samedi.</p>
             </div>
             <a href={`tel:${PHONE_TEL}`} className="rounded-[4px] bg-accent px-8 py-4 text-center text-[15px] font-bold text-white hover:bg-accent-dark">

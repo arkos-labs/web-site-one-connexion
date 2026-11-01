@@ -7,6 +7,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 import JsonLd from "@/components/JsonLd";
+import InlineLinks from "@/components/InlineLinks";
 import { GUIDE_SLUGS, getGuide } from "@/lib/guides";
 import { SITE_URL } from "@/lib/site-content";
 
@@ -21,12 +22,12 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   if (!guide) return {};
   const url = `/guides/${guide.slug}`;
   return {
-    title: guide.seoTitle,
+    title: { absolute: guide.seoTitle },
     description: guide.description,
     alternates: { canonical: url },
     openGraph: {
       images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION - Coursier B2B Paris & Île-de-France" }],
-      title: `${guide.seoTitle} - ONE CONNEXION`,
+      title: guide.seoTitle,
       description: guide.description,
       url,
       type: "article",
@@ -87,7 +88,7 @@ export default async function GuidePage({ params }: { params: Promise<Params> })
               ← Tous les guides
             </Link>
             <h1 className="mb-6 text-[clamp(30px,4.5vw,48px)] font-bold leading-[1.1] tracking-[-0.03em]">
-              {guide.title}
+              {guide.h1}
             </h1>
             <p className="text-[17px] leading-[1.6] text-white/70">{guide.intro}</p>
           </div>
@@ -101,7 +102,7 @@ export default async function GuidePage({ params }: { params: Promise<Params> })
               </h2>
               {section.paragraphs.map((p) => (
                 <p key={p} className="mb-4 text-[16.5px] leading-[1.7] text-muted">
-                  {p}
+                  <InlineLinks text={p} />
                 </p>
               ))}
               {section.table && (
@@ -140,7 +141,7 @@ export default async function GuidePage({ params }: { params: Promise<Params> })
               {section.list && (
                 <ul className="ml-5 list-disc space-y-2 text-[16.5px] leading-[1.7] text-muted">
                   {section.list.map((item) => (
-                    <li key={item}>{item}</li>
+                    <li key={item}><InlineLinks text={item} /></li>
                   ))}
                 </ul>
               )}
@@ -148,9 +149,10 @@ export default async function GuidePage({ params }: { params: Promise<Params> })
           ))}
 
           <section className="mb-12">
-            <h2 className="mb-5 text-[clamp(22px,2.6vw,28px)] font-bold tracking-[-0.02em] text-ink">
+            {/* Pas de H2 : le plan des guides compte exactement quatre H2. */}
+            <p className="mb-5 text-[clamp(22px,2.6vw,28px)] font-bold tracking-[-0.02em] text-ink">
               Questions fréquentes
-            </h2>
+            </p>
             <div className="flex flex-col gap-4">
               {guide.faq.map((item) => (
                 <div key={item.question} className="rounded-xl border border-line bg-white p-5">

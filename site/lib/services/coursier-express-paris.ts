@@ -1,7 +1,7 @@
 /**
  * lib/services/coursier-express-paris.ts
- * Page SEO dédiée. Requêtes visées : coursier express Paris, coursier paris
- * express, livraison express Paris, coursier urgent Paris, prix coursier express.
+ * Page SEO dédiée. Requête visée : « coursier express Paris ». « coursier moto »
+ * appartient à /services/coursier-moto-paris, les prix à /tarifs.
  * Chiffres repris de /tarifs et /flotte : ne pas en introduire de nouveaux ici.
  */
 import type { Service } from "./types";
@@ -17,33 +17,32 @@ export const coursierExpressParis: Service = {
   },
 
   seo: {
-    title: "Coursier express Paris - dès 42 € TTC",
+    title: "Coursier express Paris : course dédiée pour vos envois urgents",
     description:
-      "Coursier express à Paris : enlèvement en moins de 45 min, course dédiée en moto ou scooter, suivi en ligne. Dès 42 € TTC en 1 h 30, 56 € TTC en 1 h.",
+      "Coursier express à Paris pour vos envois urgents : une course dédiée, sans mutualisation, avec suivi de la prise en charge à la remise.",
     keywords: [
       "coursier express Paris",
       "coursier paris express",
       "livraison express Paris",
       "coursier urgent Paris",
-      "prix coursier express Paris",
       "course urgente Paris",
       "coursier express Île-de-France",
     ],
   },
 
-  h1: "Coursier express à Paris : enlèvement en moins de 45 minutes",
+  h1: "Coursier express Paris : une course dédiée, sans mutualisation",
 
   intro:
     "Quand un pli, un colis ou une pièce doit partir maintenant, One Connexion envoie un coursier en deux-roues en course dédiée : un enlèvement, un trajet direct, une remise horodatée. Intramuros et Île-de-France, du lundi au samedi de 9h à 19h.",
 
   stats: [
     { value: "< 45 min", label: "Prise en charge" },
-    { value: "Dès 42 € TTC", label: "Course urgente Paris (1 h 30)" },
+    { value: "1 course", label: "Un envoi, sans regroupement" },
     { value: "6j/7", label: "Lun–sam, 9h – 19h" },
   ],
 
   context: {
-    title: "Ce qui fait une vraie course express",
+    title: "Ce que change une course dédiée",
     paragraphs: [
       "Une livraison express n’a de sens que si le coursier part tout de suite et va directement à destination. Sans regroupement avec d’autres colis ni passage par un centre de tri, le délai annoncé est le délai réel.",
       "En intramuros, le deux-roues est le moyen le plus fiable pour tenir un créneau serré : il passe là où un utilitaire reste bloqué. Nos scooters et motos assurent les courses intra-muros, et les motos routières les trajets vers la banlieue, La Défense, Roissy ou Orly.",
@@ -75,6 +74,9 @@ export const coursierExpressParis: Service = {
   ],
 
   included: [
+    "Plis, contrats et actes à remettre en main propre",
+    "Colis, pièces de rechange et composants",
+    "Commandes e-commerce à livrer le jour même",
     "Course dédiée, sans regroupement avec d’autres colis",
     "Enlèvement en moins de 45 minutes",
     "Suivi de la course en ligne",
@@ -99,7 +101,7 @@ export const coursierExpressParis: Service = {
   ],
 
   coverage:
-    "Une course express coûte 42 € TTC en urgent (1 h 30) et 56 € TTC en formule Super (1 h) en intramuros, puis 58,50 € et 78 € TTC dans les Hauts-de-Seine, la Seine-Saint-Denis et le Val-de-Marne jusqu'à 8 km, et 3 € ou 4 € TTC par km au-delà. En grande couronne (77, 78, 91, 95), le prix suit la distance depuis Paris : dès 90 € et 120 € TTC.",
+    "Intramuros et Île-de-France : petite couronne (92, 93, 94), grande couronne (77, 78, 91, 95), Roissy et Orly. Le coursier part de l’adresse d’enlèvement et va directement à destination.",
 
   pricing: {
     title: "Prix d’un coursier express à Paris",
@@ -124,19 +126,14 @@ export const coursierExpressParis: Service = {
         "L’enlèvement se fait en moins de 45 minutes en intramuros, sous réserve de disponibilité au moment de la commande. Nous confirmons le délai avant d’engager la course.",
     },
     {
-      question: "Quel est le prix d’un coursier express à Paris ?",
-      answer:
-        "Une course express démarre à 42 € TTC en urgent (1 h 30) et 56 € TTC en formule Super (1 h) en intramuros, 58,50 € et 78 € TTC en petite couronne jusqu'à 8 km (puis 3 € ou 4 € TTC par km). Le prix est affiché avant de commander, détail sur la page tarifs.",
-    },
-    {
       question: "Quelle différence entre course immédiate et course planifiée ?",
       answer:
-        "La course Super part dans l’heure. La course normale, livrée sous 3 h, démarre à 28 € TTC en intramuros.",
+        "La course Super part dans l’heure. La course normale est livrée sous 3 h, et une course planifiée part à l’heure choisie à la commande.",
     },
     {
       question: "Livrez-vous en dehors de Paris ?",
       answer:
-        "Oui, en petite couronne (92, 93, 94) au tarif standard. La grande couronne, Roissy et Orly sont desservis, au tarif de leur zone.",
+        "Oui, en petite couronne (92, 93, 94) et en grande couronne, ainsi qu’à Roissy et Orly.",
     },
     {
       question: "Puis-je suivre la course ?",
@@ -149,4 +146,17 @@ export const coursierExpressParis: Service = {
         "Le samedi oui, de 9h à 19h, comme en semaine. Nous sommes fermés le dimanche et les jours fériés.",
     },
   ],
+
+  outline: {
+    sections: [
+      { key: "useCases", title: "Quand faire appel à un coursier express" },
+      { key: "context", title: "Ce que change une course dédiée" },
+      { key: "included", title: "Documents et colis pris en charge" },
+    ],
+    cta: {
+      title: "Commander une course express",
+      text: "Commandez en ligne ou appelez-nous : nous confirmons la faisabilité avant d’engager la course. Voir aussi le [tarif d'une course express](/tarifs), notre [coursier moto à Paris](/services/coursier-moto-paris) et [nos courses dans Paris](/zones/paris).",
+    },
+    hidePricing: true,
+  },
 };

@@ -82,7 +82,7 @@ const ZONES_75: Zone[] = [
     category: "paris",
     landmarks: ["Le Marais","Musée Picasso","Square du Temple","Rue de Bretagne"],
     intro: "Le 3e arrondissement (Haut Marais) est l'épicentre parisien du design, des galeries d'art et des marques branchées. Ses ruelles historiques abritent une clientèle exigeante nécessitant un service de livraison irréprochable et discret.",
-    logisticsContext: "La circulation dans le Marais est particulièrement contrainte le week-end et en soirée. Nos coursiers utilisent des vélos cargos et scooters électriques pour préserver la quiétude du quartier tout en garantissant des délais records.",
+    logisticsContext: "La circulation dans le Marais est particulièrement contrainte le week-end et en soirée. Nos coursiers en deux-roues s'y faufilent par les ruelles à sens unique, sans troubler la quiétude du quartier.",
     sectors: [
       { name: "Événementiel", example: "Transport sous haute protection de toiles et sculptures pour les vernissages des galeries du Marais.", serviceHref: "/services/transport-evenementiel", serviceLabel: "Transport d'art" },
       { name: "E-commerce & Luxe", example: "Livraison premium (white-glove) de pièces de créateurs pour une clientèle VIP locale.", serviceHref: "/services/livraison-e-commerce", serviceLabel: "Livraison luxe" },

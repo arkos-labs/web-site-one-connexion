@@ -19,6 +19,16 @@ export type ServicePricing = {
   note: string;
 };
 
+/** Photo légendée. alt et légende décrivent uniquement ce qui est visible. */
+export type ServicePhoto = {
+  src: string;
+  alt: string;
+  caption: string;
+  /** Dimensions réelles du fichier. */
+  width: number;
+  height: number;
+};
+
 export type Service = {
   /** Segment d'URL. Définitif : le modifier après indexation impose une redirection. */
   slug: string;
@@ -35,6 +45,8 @@ export type Service = {
   stats: ServiceStat[];
   context: { title: string; paragraphs: string[] };
   steps: ServiceStep[];
+  /** Photos facultatives : sous le titre du contexte et sous celui de la procédure. */
+  photos?: { context?: ServicePhoto; steps?: ServicePhoto };
   included: string[];
   useCases: ServiceUseCase[];
   coverage: string;
@@ -42,4 +54,21 @@ export type Service = {
   /** Titre de la FAQ, propre au service. */
   faqTitle: string;
   faq: FaqItem[];
+  /**
+   * Plan SEO de la page : exactement quatre H2, dans l'ordre. Les trois premiers
+   * titrent des blocs de contenu, le quatrième l'appel à l'action final. Les
+   * autres blocs restent affichés, sans H2. Absent : gabarit d'origine.
+   */
+  outline?: ServiceOutline;
 };
+
+export type ServiceSectionKey = "context" | "steps" | "included" | "useCases";
+
+export type ServiceOutline = {
+  sections: [OutlineSection, OutlineSection, OutlineSection];
+  cta: { title: string; /** Liens internes au format [ancre](/chemin). */ text: string };
+  /** Retire le bloc tarifs de la page. */
+  hidePricing?: boolean;
+};
+
+type OutlineSection = { key: ServiceSectionKey; title: string };

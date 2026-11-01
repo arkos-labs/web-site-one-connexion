@@ -1,17 +1,25 @@
-import Contact from "@/components/sections/Contact";
+/**
+ * app/flotte/page.tsx
+ * Requête visée : « flotte de coursiers moto à Paris ». « coursier moto Paris »
+ * appartient à /services/coursier-moto-paris.
+ */
 import { ShieldCheck, MapPin, Gauge, Zap, Clock, Award, Route, CheckCircle2, Phone } from "lucide-react";
 import Link from "next/link";
 import { PHONE_TEL, PHONE_DISPLAY } from "@/lib/site-content";
 
+const TITLE = "Flotte de coursiers moto à Paris : deux-roues dédiés";
+const DESCRIPTION =
+  "Notre flotte de coursiers moto à Paris : des deux-roues dédiés aux courses professionnelles, entretenus et affectés à un seul envoi à la fois.";
+const H2 = "text-[clamp(26px,3vw,38px)] font-bold leading-[1.15] tracking-[-0.02em]";
+
 export const metadata = {
-  title: "Notre flotte de coursiers moto",
-  description: "Flotte de scooters et motos pour la livraison express à Paris et en Île-de-France, équipée pour un usage professionnel. Coursiers vérifiés.",
+  title: { absolute: TITLE },
+  description: DESCRIPTION,
   alternates: { canonical: "/flotte" },
   openGraph: {
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION - Coursier B2B Paris & Île-de-France" }],
-    title: "Notre flotte de coursiers moto - ONE CONNEXION",
-    description:
-      "Scooters agiles et motos routières équipés pour la livraison professionnelle, pour la livraison express à Paris et en Île-de-France.",
+    title: TITLE,
+    description: DESCRIPTION,
     url: "/flotte",
     type: "website",
     locale: "fr_FR",
@@ -82,7 +90,7 @@ export default function FlottePage() {
             Flotte &amp; Couverture
           </div>
           <h1 className="mb-6 max-w-[18ch] text-[clamp(36px,5vw,64px)] font-bold leading-[1.1] tracking-[-0.03em]">
-            Une flotte de deux-roues dédiée aux livraisons urgentes.
+            Notre flotte de coursiers moto à Paris
           </h1>
           <p className="max-w-[55ch] text-[17px] leading-[1.65] text-white/65">
             Une flotte de coursiers deux-roues sur Paris et toute l'Île-de-France. Chaque livraison est horodatée, avec une preuve de remise.
@@ -112,11 +120,9 @@ export default function FlottePage() {
         <div className="mb-4 font-mono text-[11px] uppercase tracking-[0.16em] text-accent">
           Nos véhicules
         </div>
-        <h2 className="mb-16 max-w-[22ch] text-[clamp(26px,3vw,38px)] font-bold leading-[1.15] tracking-[-0.02em]">
-          Le bon véhicule pour chaque mission.
-        </h2>
+        <h2 className={`mb-16 max-w-[22ch] ${H2}`}>Composition de la flotte</h2>
         <div className="grid gap-8 md:grid-cols-2">
-          {VEHICLES.map((v) => {
+          {VEHICLES.slice(0, 2).map((v) => {
             const Icon = v.icon;
             return (
               <div key={v.title} className="flex flex-col gap-4 rounded-2xl border border-line bg-white p-8 shadow-sm">
@@ -144,9 +150,8 @@ export default function FlottePage() {
           <div className="mb-4 font-mono text-[11px] uppercase tracking-[0.16em] text-accent">
             Nos garanties
           </div>
-          <h2 className="mb-14 text-[clamp(26px,3vw,38px)] font-bold leading-[1.15] tracking-[-0.02em]">
-            Un standard professionnel sans compromis.
-          </h2>
+          <h2 className={`mb-6 ${H2}`}>Entretien et équipement</h2>
+          <p className="mb-14 max-w-[66ch] text-[15.5px] leading-[1.7] text-muted">{VEHICLES[2].desc}</p>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {FEATURES.map(({ Icon, title, desc }) => (
               <div key={title} className="flex flex-col gap-3 rounded-2xl bg-white p-6 shadow-sm border border-line">
@@ -166,9 +171,11 @@ export default function FlottePage() {
         <div className="mb-4 font-mono text-[11px] uppercase tracking-[0.16em] text-accent">
           Zone de couverture
         </div>
-        <h2 className="mb-14 text-[clamp(26px,3vw,38px)] font-bold leading-[1.15] tracking-[-0.02em]">
-          Île-de-France entière, sans exception.
-        </h2>
+        <h2 className={`mb-6 ${H2}`}>Une course, un coursier</h2>
+        <p className="mb-14 max-w-[66ch] text-[15.5px] leading-[1.7] text-muted">
+          Chaque coursier est affecté à un seul envoi à la fois : il part de l&apos;enlèvement et va directement à la
+          remise, sans regroupement. {VEHICLES[3].desc}
+        </p>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {ZONES.map((z) => (
             <div key={z.dept} className="flex items-start gap-4 rounded-xl border border-line p-5">
@@ -192,10 +199,15 @@ export default function FlottePage() {
         <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] flex flex-col md:flex-row md:items-center justify-between gap-8">
           <div>
             <h2 className="mb-2 text-[clamp(28px,3.2vw,40px)] font-bold leading-[1.1] tracking-[-0.03em]">
-              Rejoignez nos clients.
+              Réserver une course moto
             </h2>
             <p className="text-[16px] text-white/90">
-              Ouvrez un compte entreprise en 2 minutes, sans engagement.
+              Ouvrez un compte entreprise en 2 minutes, sans engagement. Pour savoir comment se déroule chaque course,
+              voyez{" "}
+              <Link href="/methode" className="font-semibold text-white underline decoration-white/60 underline-offset-4 hover:decoration-white">
+                notre méthode
+              </Link>
+              .
             </p>
           </div>
           <div className="flex flex-wrap gap-4">
