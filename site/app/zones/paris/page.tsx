@@ -1,7 +1,8 @@
 /**
  * app/zones/paris/page.tsx
- * Page locale "Coursier Paris intramuros" — cible les requêtes
- * géo-localisées "coursier Paris 75", "livraison express Paris intramuros".
+ * Page locale Paris intramuros. Requête visée : « coursier Paris ».
+ * Prix → /tarifs, banlieue → /zones/petite-couronne, express →
+ * /services/coursier-express-paris : la page y renvoie sans les traiter.
  */
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -10,15 +11,18 @@ import { SITE_URL, PHONE_TEL, PHONE_DISPLAY } from "@/lib/site-content";
 import { SERVICES } from "@/lib/services";
 import { Clock, MapPin, Zap, Shield } from "lucide-react";
 
+const TITLE = "Coursier Paris : courses dédiées dans tous les arrondissements";
+const DESCRIPTION =
+  "Coursier à Paris pour vos plis, documents et colis : une course dédiée par envoi, un interlocuteur unique et un suivi de bout en bout.";
+
 export const metadata: Metadata = {
-  title: { absolute: "Coursier Paris : prix dès 28 € TTC | ONE CONNEXION" },
-  description:
-    "Coursier à Paris : 28 € TTC en 3 h, 42 € en 1 h 30, 56 € en 1 h. Même prix dans les 20 arrondissements, enlèvement en moins de 45 min, remise horodatée.",
+  title: { absolute: TITLE },
+  description: DESCRIPTION,
   alternates: { canonical: "/zones/paris" },
   openGraph: {
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION - Coursier B2B Paris & Île-de-France" }],
-    title: "Coursier Paris : prix dès 28 € TTC | ONE CONNEXION",
-    description: "Coursier à Paris : 28 € TTC en 3 h, 42 € en 1 h 30, 56 € en 1 h. Même prix dans les 20 arrondissements, enlèvement en moins de 45 min, remise horodatée.",
+    title: TITLE,
+    description: DESCRIPTION,
     url: "/zones/paris",
     type: "website",
     locale: "fr_FR",
@@ -39,7 +43,7 @@ const serviceSchema = {
   "@context": "https://schema.org",
   "@type": "Service",
   "@id": `${SITE_URL}/zones/paris#service`,
-  name: "Coursier express - Paris intramuros",
+  name: "Coursier - Paris intramuros",
   serviceType: "Coursier B2B",
   url: `${SITE_URL}/zones/paris`,
   provider: { "@id": `${SITE_URL}/#organization` },
@@ -48,15 +52,7 @@ const serviceSchema = {
 
 const FAQ_PARIS = [
   {
-    q: "Quel est le prix d'un coursier à Paris ?",
-    a: "Une course dans Paris intramuros coûte 28 € TTC en normal (livraison sous 3 h), 42 € TTC en urgent (sous 1 h 30) et 56 € TTC en formule Super (sous 1 h). Le prix s'affiche avant de valider la commande.",
-  },
-  {
-    q: "Quel est le tarif d'un coursier moto ou scooter à Paris ?",
-    a: "Les courses sont effectuées en moto ou scooter. Le tarif est le même dans les 20 arrondissements : de 28 € TTC à 56 € TTC selon le délai choisi.",
-  },
-  {
-    q: "Comment gérez-vous la circulation parisienne (ZFE, embouteillages) ?",
+    q: "Comment gérez-vous la circulation parisienne ?",
     a: "Nos coursiers circulent en deux-roues, ce qui leur permet de passer entre les files et d'éviter les axes bloqués. Ils connaissent Paris et adaptent leur trajet en fonction de la circulation du moment.",
   },
   {
@@ -88,11 +84,14 @@ const ARRONDISSEMENTS = [
 ];
 
 const STATS = [
-  { value: "Dès 28 €", label: "TTC, course Normale (3 h)" },
   { value: "< 45 min", label: "Enlèvement" },
+  { value: "1 course", label: "Un envoi, sans regroupement" },
   { value: "6j/7", label: "Lun–sam, 9h – 19h" },
   { value: "20/20", label: "Arrondissements couverts" },
 ];
+
+const H2 = "text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]";
+const LINK = "font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark";
 
 export default function ZoneParis() {
   return (
@@ -116,17 +115,13 @@ export default function ZoneParis() {
             Zone couverte · Paris 75
           </div>
           <h1 className="mb-6 max-w-[20ch] text-balance text-[clamp(36px,5vw,64px)] font-bold leading-[1.05] tracking-[-0.035em]">
-            Coursier à Paris : dès 28 € TTC la course.
+            Coursier Paris : une course dédiée par envoi
           </h1>
           <p className="max-w-[58ch] text-pretty text-[17px] leading-[1.6] text-white/66">
-            Coursier en moto et scooter, dès 28 € TTC la course
-            (voir notre{" "}
-            <Link href="/services/coursier-moto-paris" className="text-white underline decoration-accent underline-offset-4 hover:text-accent">
-              coursier moto Paris
-            </Link>
-            ). One
-            Connexion couvre les 20 arrondissements avec sa flotte de deux-roues, au même prix partout. Enlèvement en moins de
-            45 minutes, suivi de chaque course en ligne, preuve de remise horodatée.
+            One Connexion couvre les 20 arrondissements avec sa flotte de
+            deux-roues. Un coursier prend votre pli, votre document ou votre colis
+            et le porte directement à destination. Enlèvement en moins de 45
+            minutes, suivi de chaque course en ligne, preuve de remise horodatée.
           </p>
           <div className="mt-10 flex flex-wrap gap-3">
             <a
@@ -135,12 +130,6 @@ export default function ZoneParis() {
             >
               Commander une course
             </a>
-            <Link
-              href="/tarifs"
-              className="rounded-[2px] border border-white/22 px-[26px] py-[15px] text-[15px] font-semibold text-white hover:border-white"
-            >
-              Voir les tarifs
-            </Link>
           </div>
         </div>
         {/* Stats */}
@@ -156,14 +145,12 @@ export default function ZoneParis() {
         </div>
       </section>
 
-      {/* ── Arrondissements ── */}
+      {/* ── 1. Arrondissements ── */}
       <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
         <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
           Couverture complète
         </div>
-        <h2 className="mb-10 text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-          Les 20 arrondissements, sans exception.
-        </h2>
+        <h2 className={`mb-10 ${H2}`}>Coursier Paris : les arrondissements couverts</h2>
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
           {ARRONDISSEMENTS.map((arr) => {
             const match = arr.match(/^(\d+(?:er|e))/);
@@ -178,66 +165,19 @@ export default function ZoneParis() {
         </div>
       </section>
 
-      {/* ── Tarif ── */}
-      <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
-        <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
-          Tarif par délai
-        </div>
-        <h2 className="mb-4 max-w-[28ch] text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-          Prix d&apos;une course intramuros : dès 28 € TTC.
-        </h2>
-        <p className="mb-10 max-w-[60ch] text-[15.5px] leading-[1.7] text-muted">
-          Le tarif est le même dans les 20 arrondissements. Seul le délai change
-          le prix, et il s&apos;affiche avant de valider votre commande.
-        </p>
-        <div className="grid max-w-[780px] gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-3">
-          {[
-            { name: "Normal", delay: "livré sous 3 h", price: "28 €" },
-            { name: "Urgent", delay: "livré sous 1 h 30", price: "42 €" },
-            { name: "Super", delay: "livré sous 1 h", price: "56 €" },
-          ].map((t) => (
-            <div key={t.name} className="bg-white p-6">
-              <div className="text-[15px] font-bold">{t.name}</div>
-              <div className="mb-4 font-mono text-[10.5px] tracking-[0.1em] text-label uppercase">{t.delay}</div>
-              <div className="text-[34px] font-bold tracking-[-0.04em]">
-                {t.price}
-                <span className="ml-1 font-mono text-[11px] font-normal tracking-[0.1em] text-label">TTC</span>
-              </div>
-            </div>
-          ))}
-        </div>
-        <p className="mt-5 max-w-[70ch] text-[14.5px] leading-[1.7] text-muted">
-          Banlieue, grande couronne ou besoin précis : consultez le{" "}
-          <Link href="/tarifs" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">
-            tarif coursier par zone
-          </Link>
-          {" "}ou notre guide sur le{" "}
-          <Link href="/guides/prix-coursier-express-paris" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">
-            prix d&apos;un coursier express à Paris
-          </Link>
-          . Pour la proche banlieue, voir{" "}
-          <Link href="/zones/petite-couronne" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">
-            coursier en petite couronne
-          </Link>
-          .
-        </p>
-      </section>
-
-      {/* ── Avantages intramuros ── */}
+      {/* ── Avantages intramuros (sans H2 : hors plan) ── */}
       <section className="bg-paper">
         <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
           <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
             Pourquoi choisir One Connexion en intramuros
           </div>
-          <h2 className="mb-14 max-w-[24ch] text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-            Conçu pour la densité parisienne.
-          </h2>
+          <p className={`mb-14 max-w-[24ch] ${H2}`}>Conçu pour la densité parisienne.</p>
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {[
               { icon: Zap, title: "Deux-roues, pas de camionnette", desc: "Nos coursiers circulent en moto et en scooter : ils passent là où une camionnette reste coincée, en plein centre comme dans les petites rues." },
               { icon: Clock, title: "Enlèvement < 45 min", desc: "Le coursier le plus proche part dès la confirmation de la course, du lundi au samedi de 9 h à 19 h." },
               { icon: Shield, title: "Accès compliqués", desc: "Digicode, accueil, bâtiment sur cour : nos coursiers ont l'habitude des adresses parisiennes, du Marais au quartier Latin." },
-              { icon: MapPin, title: "Tous les sites judiciaires", desc: "Palais de Justice, Tribunal de Commerce, Conseil d'État, Cour de Cassation : tous couverts aux mêmes conditions tarifaires." },
+              { icon: MapPin, title: "Tous les sites judiciaires", desc: "Palais de Justice, Tribunal de Commerce, Conseil d'État, Cour de Cassation : tous couverts aux mêmes conditions." },
             ].map(({ icon: Icon, title, desc }) => (
               <div key={title} className="flex flex-col gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10">
@@ -251,37 +191,16 @@ export default function ZoneParis() {
         </div>
       </section>
 
-      {/* ── Comment ça marche ── */}
-      <section className="bg-paper border-t border-gray-100">
-        <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
-          <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase text-center">Processus simple</div>
-          <h2 className="mb-12 text-center text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-            Votre course dans Paris en 3 étapes.
-          </h2>
-          <div className="grid gap-8 md:grid-cols-3">
-            {[
-              { num: "01", title: "Demande immédiate", desc: "Le prix s’affiche sur-le-champ pour n’importe quel arrondissement." },
-              { num: "02", title: "Enlèvement express", desc: "Un coursier expérimenté se faufile dans le trafic parisien pour récupérer votre pli en moins de 45 minutes." },
-              { num: "03", title: "Preuve de remise", desc: "Vous suivez la course en ligne. Une fois le pli remis en main propre, vous recevez l'heure exacte et le nom du destinataire." }
-            ].map((step) => (
-              <div key={step.num} className="flex flex-col items-center text-center p-6 bg-white rounded-2xl border border-line shadow-sm">
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-accent text-[16px] font-bold text-white shadow-md">
-                  {step.num}
-                </div>
-                <h3 className="mb-3 text-[18px] font-bold text-ink">{step.title}</h3>
-                <p className="text-[14.5px] leading-[1.6] text-muted">{step.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Prestations ── */}
+      {/* ── 2. Ce que nous transportons ── */}
       <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
         <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">Nos prestations parisiennes</div>
-        <h2 className="mb-10 text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-          Une solution pour chaque urgence intramuros.
-        </h2>
+        <h2 className={`mb-4 ${H2}`}>Ce que nous transportons à Paris</h2>
+        <p className="mb-10 max-w-[62ch] text-[15.5px] leading-[1.7] text-muted">
+          Actes et contrats pour les cabinets, prélèvements pour les
+          laboratoires, commandes pour les boutiques : chaque envoi part seul,
+          avec son coursier. Pour les documents sensibles, voyez notre{" "}
+          <Link href="/services/plis-confidentiels" className={LINK}>transport de plis confidentiels</Link>.
+        </p>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {SERVICES.map((s) => (
             <Link
@@ -298,77 +217,29 @@ export default function ZoneParis() {
         </div>
       </section>
 
-      {/* ── Défis de Paris ── */}
-      <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
-        <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
-          Défis & Solutions
-        </div>
-        <h2 className="mb-8 max-w-[30ch] text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-          Une course dans Paris : ce qui complique, et comment on fait
-        </h2>
-        <div className="grid gap-6 md:grid-cols-2 text-[15px] leading-[1.7]">
-          <div>
-            <h3 className="mb-4 font-bold text-ink">Ce qui complique une course à Paris</h3>
-            <ul className="space-y-3 text-muted">
-              <li className="flex gap-3">
-                <span className="font-bold text-accent">-</span>
-                <span><strong>Circulation :</strong> bouchons, travaux et voies fermées changent d'un jour à l'autre</span>
-              </li>
-              <li className="flex gap-3">
-                <span className="font-bold text-accent">-</span>
-                <span><strong>Adresses difficiles :</strong> immeubles sans numéro visible, entrée sur cour, digicode</span>
-              </li>
-              <li className="flex gap-3">
-                <span className="font-bold text-accent">-</span>
-                <span><strong>Accès contrôlés :</strong> tribunaux, ministères, sièges sociaux avec accueil ou contrôle d'identité</span>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="mb-4 font-bold text-ink">Comment on fait</h3>
-            <ul className="space-y-3 text-muted">
-              <li className="flex gap-3">
-                <span className="font-bold text-accent">✓</span>
-                <span><strong>Deux-roues :</strong> moto et scooter, plus rapides qu'une voiture en plein centre</span>
-              </li>
-              <li className="flex gap-3">
-                <span className="font-bold text-accent">✓</span>
-                <span><strong>Consignes notées :</strong> digicode, étage, nom à demander : vous les indiquez à la commande</span>
-              </li>
-              <li className="flex gap-3">
-                <span className="font-bold text-accent">✓</span>
-                <span><strong>Suivi en ligne :</strong> vous voyez où en est la course, et l'heure de remise est enregistrée</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Secteurs parisiens ── */}
+      {/* ── Secteurs parisiens (sans H2 : hors plan) ── */}
       <section className="bg-paper">
         <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
           <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
             Secteurs & industries
           </div>
-          <h2 className="mb-10 text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-            Secteurs parisiens avec couverture prioritaire
-          </h2>
+          <p className={`mb-10 ${H2}`}>Secteurs parisiens avec couverture prioritaire</p>
           <div className="grid gap-6 md:grid-cols-2">
             {[
               {
                 sector: "Finance & Administration",
                 zones: "8e, 1er, 4e",
-                desc: "Plis confidentiels pour banques, assurances, cabinets juridiques. Documents sensibles (contrats, testaments, brevets) livraison certifiée."
+                desc: "Plis confidentiels pour banques, assurances, cabinets juridiques. Documents sensibles (contrats, testaments, brevets) remis en main propre."
               },
               {
                 sector: "Fashion & Luxe",
                 zones: "8e, 1er, 6e",
-                desc: "Livraison de collections pour boutiques Champs-Élysées. Documents VIP confidentiels. Échantillons de haute couture."
+                desc: "Livraison de collections pour boutiques des Champs-Élysées. Échantillons et pièces de collection."
               },
               {
                 sector: "Santé & Médical",
                 zones: "5e, 11e, 14e",
-                desc: "Transport de prélèvements biologiques (tube sec, EDTA). Acheminement d'ordonnances urgentes. Matériel médical stérile."
+                desc: "Transport de prélèvements biologiques, en colis fermé préparé par l'expéditeur. Matériel médical."
               },
               {
                 sector: "E-Commerce Premium",
@@ -383,7 +254,7 @@ export default function ZoneParis() {
               {
                 sector: "Événementiel",
                 zones: "Tous les arrondissements",
-                desc: "Livraison de documents événementiels (invitations, programmes). Acheminement de matériel urgents pour salons & congrès."
+                desc: "Livraison de documents événementiels (invitations, programmes). Acheminement de matériel urgent pour salons & congrès."
               }
             ].map((item) => (
               <div key={item.sector} className="rounded-xl border border-line bg-white p-6">
@@ -396,14 +267,86 @@ export default function ZoneParis() {
         </div>
       </section>
 
-      {/* ── FAQ ── */}
-      <section className="bg-paper border-t border-line">
+      {/* ── 3. Déroulé d'une course ── */}
+      <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
+        <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase text-center">Processus simple</div>
+        <h2 className={`mb-12 text-center ${H2}`}>Comment se déroule une course</h2>
+        <div className="grid gap-8 md:grid-cols-3">
+          {[
+            { num: "01", title: "Demande immédiate", desc: "Le prix s’affiche sur-le-champ pour n’importe quel arrondissement." },
+            { num: "02", title: "Enlèvement", desc: "Un coursier se faufile dans le trafic parisien pour récupérer votre pli en moins de 45 minutes." },
+            { num: "03", title: "Preuve de remise", desc: "Vous suivez la course en ligne. Une fois le pli remis en main propre, vous recevez l'heure exacte et le nom du destinataire." }
+          ].map((step) => (
+            <div key={step.num} className="flex flex-col items-center text-center p-6 bg-white rounded-2xl border border-line shadow-sm">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-accent text-[16px] font-bold text-white shadow-md">
+                {step.num}
+              </div>
+              <h3 className="mb-3 text-[18px] font-bold text-ink">{step.title}</h3>
+              <p className="text-[14.5px] leading-[1.6] text-muted">{step.desc}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-14 grid gap-6 md:grid-cols-2 text-[15px] leading-[1.7]">
+          <div>
+            <h3 className="mb-4 font-bold text-ink">Ce qui complique une course à Paris</h3>
+            <ul className="space-y-3 text-muted">
+              <li className="flex gap-3">
+                <span className="font-bold text-accent">-</span>
+                <span><strong>Circulation :</strong> bouchons, travaux et voies fermées changent d&apos;un jour à l&apos;autre</span>
+              </li>
+              <li className="flex gap-3">
+                <span className="font-bold text-accent">-</span>
+                <span><strong>Adresses difficiles :</strong> immeubles sans numéro visible, entrée sur cour, digicode</span>
+              </li>
+              <li className="flex gap-3">
+                <span className="font-bold text-accent">-</span>
+                <span><strong>Accès contrôlés :</strong> tribunaux, ministères, sièges sociaux avec accueil ou contrôle d&apos;identité</span>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 className="mb-4 font-bold text-ink">Comment on fait</h3>
+            <ul className="space-y-3 text-muted">
+              <li className="flex gap-3">
+                <span className="font-bold text-accent">✓</span>
+                <span><strong>Deux-roues :</strong> moto et scooter, plus rapides qu&apos;une voiture en plein centre</span>
+              </li>
+              <li className="flex gap-3">
+                <span className="font-bold text-accent">✓</span>
+                <span><strong>Consignes notées :</strong> digicode, étage, nom à demander : vous les indiquez à la commande</span>
+              </li>
+              <li className="flex gap-3">
+                <span className="font-bold text-accent">✓</span>
+                <span><strong>Suivi en ligne :</strong> vous voyez où en est la course, et l&apos;heure de remise est enregistrée</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 4. Paris et l'Île-de-France ── */}
+      <section className="bg-paper">
+        <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
+          <h2 className={`mb-6 max-w-[28ch] ${H2}`}>Paris et le reste de l&apos;Île-de-France</h2>
+          <p className="max-w-[66ch] text-[15.5px] leading-[1.7] text-muted">
+            Vos courses ne s&apos;arrêtent pas au périphérique : voyez notre page{" "}
+            <Link href="/zones/petite-couronne" className={LINK}>coursier en petite couronne</Link>.
+            Pour un envoi qui ne peut pas attendre, notre{" "}
+            <Link href="/services/coursier-express-paris" className={LINK}>coursier express Paris</Link>{" "}
+            part dès la confirmation. Le{" "}
+            <Link href="/tarifs" className={LINK}>tarif coursier Paris</Link>{" "}
+            détaille le prix de chaque course.
+          </p>
+        </div>
+      </section>
+
+      {/* ── FAQ (sans H2 : hors plan) ── */}
+      <section className="border-t border-line">
         <div className="mx-auto max-w-[800px] px-[clamp(20px,4vw,28px)] py-[72px]">
           <div className="mb-10 text-center">
             <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">Foire Aux Questions</div>
-            <h2 className="text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-              Vos questions sur un coursier à Paris
-            </h2>
+            <p className={H2}>Vos questions sur un coursier à Paris</p>
           </div>
           <div className="flex flex-col gap-4">
             {FAQ_PARIS.map((faq, i) => (
@@ -416,14 +359,14 @@ export default function ZoneParis() {
         </div>
       </section>
 
-      {/* ── CTA ── */}
+      {/* ── CTA (sans H2 : hors plan) ── */}
       <section className="bg-ink text-white">
         <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-20">
           <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
             <div>
-              <h2 className="mb-3 text-[clamp(24px,3vw,36px)] font-bold leading-[1.2] tracking-[-0.02em]">
+              <p className="mb-3 text-[clamp(24px,3vw,36px)] font-bold leading-[1.2] tracking-[-0.02em]">
                 Une course maintenant ?
-              </h2>
+              </p>
               <p className="text-[15px] text-white/60">Dispatch en moins de 2 minutes, du lundi au samedi de 9h à 19h.</p>
             </div>
             <a

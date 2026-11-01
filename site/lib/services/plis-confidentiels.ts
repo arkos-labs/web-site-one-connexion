@@ -1,7 +1,7 @@
 /**
  * lib/services/plis-confidentiels.ts
- * Prestation juridique & notariale. Requêtes visées : coursier juridique Paris,
- * transport de plis confidentiels, coursier huissier, remise en main propre.
+ * Prestation juridique & notariale. Requête visée : « pli confidentiel ». La
+ * méthode d'envoi appartient au guide /guides/envoyer-un-pli-confidentiel-paris.
  */
 import type { Service } from "./types";
 
@@ -16,9 +16,9 @@ export const plisConfidentiels: Service = {
   },
 
   seo: {
-    title: "Envoi de pli confidentiel à Paris - coursier juridique",
+    title: "Pli confidentiel : transport sécurisé à Paris et en Île-de-France",
     description:
-      "Envoyer un pli confidentiel à Paris : course dédiée pour avocats, notaires et huissiers, remise en main propre, preuve horodatée.",
+      "Envoi de pli confidentiel avec remise en main propre : course dédiée, chaîne de traçabilité et interlocuteur unique pour vos documents sensibles.",
     keywords: [
       "pli confidentiel",
       "envoi pli confidentiel Paris",
@@ -30,7 +30,7 @@ export const plisConfidentiels: Service = {
     ],
   },
 
-  h1: "Envoi de pli confidentiel à Paris : coursier juridique, remise en main propre",
+  h1: "Pli confidentiel : un transport sans intermédiaire",
 
   intro:
     "One Connexion transporte les actes, conclusions et pièces de procédure des cabinets d’avocats, études notariales et offices d’huissiers d’Île-de-France. Chaque pli part en course dédiée, sans regroupement, et arrive avec une preuve de remise nominative.",
@@ -42,8 +42,9 @@ export const plisConfidentiels: Service = {
   ],
 
   context: {
-    title: "Ce qu’un pli juridique ne pardonne pas",
+    title: "Ce qu'est un envoi sous pli confidentiel",
     paragraphs: [
+      "Un envoi sous pli confidentiel est un document qui ne doit être remis qu’à son destinataire désigné : acte, conclusions, pièces de procédure, contrat ou courrier sensible. Il voyage fermé, sans regroupement avec d’autres envois, et n’est remis qu’en main propre.",
       "Un acte déposé après la clôture du greffe, c’est un délai forclos. Une pièce remise à une personne non identifiée, c’est une remise contestable. Dans le juridique, le transport ne relève pas de la commodité logistique : il s’inscrit dans la procédure et s’expose aux mêmes contestations qu’elle.",
       "La confidentialité impose une contrainte parallèle. Un pli qui voyage avec quinze autres colis, manipulé par trois personnes successives, ne permet plus d’établir qui a eu accès à quoi. C’est la raison pour laquelle nous n’appliquons aucun regroupement sur ces courses : un coursier, un pli, un trajet.",
       "Reste la preuve. Un justificatif de livraison n’a de valeur que s’il nomme la personne qui a reçu le pli, l’heure exacte et le lieu. Ces éléments sont enregistrés au moment de la remise, archivés, et restitués sur demande pour être versés au dossier.",
@@ -73,6 +74,18 @@ export const plisConfidentiels: Service = {
     },
   ],
 
+  // Photo interne, anonymisée. Écartées : la photo de remise (trop basse
+  // définition) et la photo de banque d'images (ni casque ni top-case, logo tiers).
+  photos: {
+    context: {
+      src: "/images/services/pli-confidentiel/pli-confidentiel-enveloppe-fermee-paris.webp",
+      alt: "Enveloppe kraft fermée, tenue à deux mains avant sa remise.",
+      caption: "Un pli fermé, une course dédiée : il ne circule pas avec d’autres envois.",
+      width: 1200,
+      height: 800,
+    },
+  },
+
   included: [
     "Course dédiée, sans regroupement avec d’autres plis",
     "Remise en main propre numérique",
@@ -90,7 +103,7 @@ export const plisConfidentiels: Service = {
     },
     {
       title: "Transmission entre études",
-      body: "Un acte à transmettre entre deux études parisiennes, avec remise nominative au clerc désigné et identification de la personne ayant signé.",
+      body: "Un acte à transmettre entre deux études parisiennes, remis en main propre au clerc désigné, dont le nom et l’heure de remise sont consignés.",
     },
     {
       title: "Pièces réclamées en audience",
@@ -110,14 +123,9 @@ export const plisConfidentiels: Service = {
       "Une audience, un dépôt au greffe ou un rendez-vous chez le notaire à heure fixe ? Choisissez Urgent ou Super : le coursier part dès la confirmation, sans attendre d’autres plis.",
   },
 
-  faqTitle: "Vos questions sur l’envoi d’un pli confidentiel.",
+  faqTitle: "Vos questions avant un envoi.",
 
   faq: [
-    {
-      question: "Qu’est-ce qu’un pli confidentiel ?",
-      answer:
-        "Un pli confidentiel est un document ou un courrier qui ne doit être remis qu’à son destinataire désigné : acte, conclusions, pièces de procédure, contrat ou courrier sensible. Il voyage fermé, sans regroupement avec d’autres envois, et n’est remis qu’à son destinataire, en main propre.",
-    },
     {
       question: "Comment envoyer un pli confidentiel à Paris ?",
       answer:
@@ -154,4 +162,16 @@ export const plisConfidentiels: Service = {
         "Oui. Le compte entreprise regroupe les courses de tous les collaborateurs, permet de régler les factures sous 30 jours.",
     },
   ],
+
+  outline: {
+    sections: [
+      { key: "context", title: "Ce qu'est un envoi sous pli confidentiel" },
+      { key: "steps", title: "Comment nous sécurisons la course" },
+      { key: "useCases", title: "Pour quels documents" },
+    ],
+    cta: {
+      title: "Demander une course pour un pli confidentiel",
+      text: "Appelez-nous ou écrivez-nous pour [organiser une course](/contact) : nous confirmons la faisabilité avant d’engager le coursier. Pour préparer le document, lisez notre guide pour [envoyer un pli confidentiel à Paris](/guides/envoyer-un-pli-confidentiel-paris).",
+    },
+  },
 };

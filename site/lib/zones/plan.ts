@@ -1,0 +1,53 @@
+/**
+ * lib/zones/plan.ts
+ * Plan SEO des pages de ville listées dans le brief de correction (novembre 2026) :
+ * les 20 arrondissements et Villejuif. Chaque page vise une seule requête
+ * (« coursier Paris Ne », « coursier Villejuif ») et compte exactement quatre H2.
+ * Les autres communes gardent le gabarit d'origine.
+ */
+import type { Zone } from "./types";
+
+export type ZonePlan = {
+  kind: "arrondissement" | "commune";
+  title: string;
+  description: string;
+  h1: string;
+  h2: [string, string, string, string];
+};
+
+export function getZonePlan(zone: Zone): ZonePlan | undefined {
+  if (zone.category === "paris" && zone.slug.startsWith("paris-")) {
+    const ne = zone.name.replace("Paris ", ""); // « 1er », « 2e »… « 20e »
+    return {
+      kind: "arrondissement",
+      title: `Coursier Paris ${ne} : courses dédiées dans l'arrondissement`,
+      description: `Coursier dans le ${ne} arrondissement de Paris : une course dédiée pour vos plis, documents et colis, avec un suivi de la prise en charge à la remise.`,
+      h1: `Coursier Paris ${ne} : une course dédiée dans l'arrondissement`,
+      h2: [
+        `Les rues et quartiers du ${ne} arrondissement`,
+        `Ce que nous transportons dans le ${ne}`,
+        "Organiser une course dans l'arrondissement",
+        `Le ${ne} et le reste de Paris`,
+      ],
+    };
+  }
+  if (zone.slug === "villejuif") {
+    return {
+      kind: "commune",
+      title: "Coursier Villejuif : courses dédiées pour vos envois",
+      description:
+        "Coursier à Villejuif pour vos envois professionnels : une course dédiée vers Paris et le reste de l'Île-de-France, avec un interlocuteur unique.",
+      h1: "Coursier Villejuif : une course dédiée pour vos envois",
+      h2: [
+        "Les quartiers de Villejuif desservis",
+        "Courses depuis et vers Villejuif",
+        "Ce que nous transportons",
+        "Organiser une course à Villejuif",
+      ],
+    };
+  }
+  return undefined;
+}
+
+/** Ces pages ne parlent pas de prix : les questions et réponses chiffrées vont sur /tarifs. */
+export const mentionsPrice = (text: string) => /prix|tarif|co[uû]t|€/i.test(text);

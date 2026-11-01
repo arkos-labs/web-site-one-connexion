@@ -1,7 +1,7 @@
 /**
  * app/services/page.tsx
- * Index des prestations. Capte les requêtes génériques ("coursier B2B Paris")
- * et distribue vers les quatre pages métier.
+ * Index des prestations. Requête visée : « service de coursier Paris ».
+ * Le hub renvoie vers les pages service, il ne raconte pas leur contenu.
  */
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -10,21 +10,26 @@ import ServiceCta from "@/components/services/ServiceCta";
 import { SERVICES } from "@/lib/services";
 import { SITE_URL } from "@/lib/site-content";
 
+const TITLE = "Service de coursier Paris : choisir la bonne course";
+const DESCRIPTION =
+  "Service de coursier à Paris : comparez nos courses (express, moto, plis confidentiels, médical, e-commerce) et choisissez celle qui convient.";
+
 export const metadata: Metadata = {
-  title: { absolute: "Prestations coursier B2B à Paris et en Île-de-France" },
-  description:
-    "Coursier B2B en Île-de-France : plis confidentiels, transport médical, e-commerce, tournées régulières. Prix affiché avant de commander, suivi en ligne.",
+  title: { absolute: TITLE },
+  description: DESCRIPTION,
   alternates: { canonical: "/services" },
   openGraph: {
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION - Coursier B2B Paris & Île-de-France" }],
-    title: "Prestations - coursier B2B à Paris et en Île-de-France",
-    description:
-      "Quatre prestations de coursier B2B en Île-de-France, chacune avec sa procédure écrite.",
+    title: TITLE,
+    description: DESCRIPTION,
     url: "/services",
     type: "website",
     locale: "fr_FR",
   },
 };
+
+const H2_CLASS = "mb-5 text-[clamp(24px,2.5vw,32px)] font-bold leading-[1.2] tracking-[-0.02em]";
+const LINK_CLASS = "font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark";
 
 export default function ServicesIndexPage() {
   const breadcrumbSchema = {
@@ -65,7 +70,7 @@ export default function ServicesIndexPage() {
           </div>
 
           <h1 className="mb-6 max-w-[20ch] text-balance text-[clamp(32px,4.4vw,58px)] font-bold leading-[1.05] tracking-[-0.035em]">
-            Nos prestations de transport urgent, en moto et en scooter.
+            Service de coursier Paris : nos courses dédiées
           </h1>
 
           <p className="max-w-[58ch] text-pretty text-[17px] leading-[1.6] text-white/66">
@@ -78,6 +83,11 @@ export default function ServicesIndexPage() {
       </section>
 
       <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
+        <h2 className={H2_CLASS}>Quel service pour quel envoi</h2>
+        <p className="mb-10 max-w-[62ch] text-[15.5px] leading-[1.7] text-muted">
+          Chaque prestation a sa propre procédure. Toutes partent en course
+          dédiée : un coursier, un envoi, un trajet direct.
+        </p>
         <div className="grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-4">
           {SERVICES.map((service) => (
             <Link
@@ -88,9 +98,9 @@ export default function ServicesIndexPage() {
               <div className="font-mono text-[10px] tracking-[0.16em] text-label uppercase">
                 {service.card.tag}
               </div>
-              <h2 className="text-xl font-bold tracking-[-0.02em]">
+              <h3 className="text-xl font-bold tracking-[-0.02em]">
                 {service.card.title}
-              </h2>
+              </h3>
               <p className="text-[15px] leading-[1.6] text-muted">
                 {service.card.body}
               </p>
@@ -102,103 +112,41 @@ export default function ServicesIndexPage() {
         </div>
       </div>
 
-      {/* Secteurs d'expertise */}
       <section className="bg-paper">
-        <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
-          <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
-            Expertise métier
+        <div className="mx-auto grid max-w-[1240px] gap-12 px-[clamp(20px,4vw,28px)] py-[72px] md:grid-cols-3">
+          <div>
+            <h2 className={H2_CLASS}>Coursier express et coursier moto</h2>
+            <p className="text-[15.5px] leading-[1.7] text-muted">
+              Pour un envoi urgent, le{" "}
+              <Link href="/services/coursier-express-paris" className={LINK_CLASS}>coursier express Paris</Link>{" "}
+              part dès la confirmation. Pour comprendre comment travaillent nos
+              deux-roues, voyez notre{" "}
+              <Link href="/services/coursier-moto-paris" className={LINK_CLASS}>coursier moto Paris</Link>.
+            </p>
           </div>
-          <h2 className="mb-12 max-w-[32ch] text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-            Nos secteurs d'expertise - 20 ans d'expérience B2B
-          </h2>
-          <p className="mb-12 max-w-[70ch] text-[15.5px] leading-[1.7] text-muted">
-            One Connexion n'est pas un coursier générique. Nous avons développé une expertise approfondie dans 4 secteurs stratégiques avec standards opérationnels strictes, formations dédiées et partenariats établis.
-          </p>
-          <div className="grid gap-8 md:grid-cols-2">
-            {[
-              {
-                title: "Plis Confidentiels & Documents Sensibles",
-                standards: ["Signature de discrétion pour chaque coursier", "Acheminement direct (pas de transit)", "Preuve de remise en main propre", "Conformité RGPD pour données personnelles", "Assurance responsabilité civile"],
-                industries: "Cabinets d'avocats, études notariales, banques, assurances, RH",
-                volume: "5000+ plis confidentiels par an"
-              },
-              {
-                title: "Transport Médical & Prélèvements Biologiques",
-                standards: ["Température contrôlée si requise", "Emballage stérile conforme", "Respect délai SFBC (30-60 min)", "Traçabilité chaîne du froid", "Coursiers formés protocoles médicaux"],
-                industries: "Laboratoires d'analyses, cliniques privées, hôpitaux",
-                volume: "15+ laboratoires partenaires, 8+ cliniques"
-              },
-              {
-                title: "Livraison E-commerce Premium & Dernier KM",
-                standards: ["Remise en main propre signée", "Créneaux horaires flexibles", "Notification client avant passage", "Photo de livraison", "Gestion colis non livrés"],
-                industries: "E-commerce luxe, cosmétiques, compléments alimentaires",
-                volume: "Colis volumineux jusqu'à 30 kg"
-              },
-              {
-                title: "Tournées Régulières & Circuits Multi-sites",
-                standards: ["Planning mensuel fixe garanti", "Collecte multi-sites une seule course", "Facture unique par mois", "Réduction tarifaire volume", "Engagement 6-12 mois"],
-                industries: "Multisite parisien, distribution catalogues, navettes inter-sites",
-                volume: "Économies réalisées : -25% vs ponctuelles"
-              }
-            ].map((sector) => (
-              <div key={sector.title} className="rounded-xl border border-line bg-white p-8">
-                <h3 className="mb-6 text-[18px] font-bold text-ink">{sector.title}</h3>
-                <div className="mb-6 space-y-3">
-                  <div>
-                    <div className="mb-2 font-mono text-[10px] tracking-[0.1em] text-label uppercase">Standards appliqués</div>
-                    <ul className="space-y-2">
-                      {sector.standards.map((std) => (
-                        <li key={std} className="flex gap-2 text-[13.5px] text-muted">
-                          <span className="font-bold text-accent">+</span>
-                          <span>{std}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-                <div className="border-t border-line pt-4">
-                  <div className="mb-3">
-                    <div className="font-mono text-[10px] tracking-[0.1em] text-label uppercase">Industries desservies</div>
-                    <p className="text-[13.5px] text-muted">{sector.industries}</p>
-                  </div>
-                  <div>
-                    <div className="font-mono text-[10px] tracking-[0.1em] text-label uppercase">Volume / Partenaires</div>
-                    <p className="text-[13.5px] font-medium text-accent">{sector.volume}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
+          <div>
+            <h2 className={H2_CLASS}>Plis confidentiels et transport médical</h2>
+            <p className="text-[15.5px] leading-[1.7] text-muted">
+              Un acte ou un contrat part en{" "}
+              <Link href="/services/plis-confidentiels" className={LINK_CLASS}>pli confidentiel</Link>,
+              remis en main propre. Un prélèvement ou du matériel de laboratoire
+              est confié à notre{" "}
+              <Link href="/services/transport-medical" className={LINK_CLASS}>coursier médical moto</Link>.
+            </p>
+          </div>
+          <div>
+            <h2 className={H2_CLASS}>Livraison e-commerce et tournées régulières</h2>
+            <p className="text-[15.5px] leading-[1.7] text-muted">
+              Pour les commandes de vos clients, voyez la{" "}
+              <Link href="/services/livraison-e-commerce" className={LINK_CLASS}>livraison e-commerce</Link>.
+              Pour des passages fixes entre vos sites, les{" "}
+              <Link href="/services/tournees-regulieres" className={LINK_CLASS}>tournées régulières</Link>.
+            </p>
           </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-10">
-        <div className="border-t border-line pt-20">
-          <h2 className="mb-8 text-[clamp(24px,2.5vw,32px)] font-bold leading-[1.2] tracking-[-0.02em]">
-            Une gamme de prestations calibrée pour les exigences franciliennes
-          </h2>
-          <div className="grid gap-8 md:grid-cols-2 text-[15.5px] leading-[1.7] text-muted">
-            <div>
-              <p className="mb-4">
-                La complexité du tissu économique parisien nécessite une approche logistique segmentée et hautement spécialisée. L'offre de <strong>One Connexion</strong> ne se limite pas à un simple déplacement d'un point A à un point B. Nous déployons de véritables solutions de <strong>transport sur-mesure</strong> pour répondre aux cahiers des charges spécifiques de l'<strong>acheminement juridique</strong>, du <strong>transport d'échantillons médicaux</strong> ou de la <strong>livraison e-commerce premium</strong>.
-              </p>
-              <p>
-                Chaque <strong>prestation de coursier B2B</strong> que nous opérons en <strong>Île-de-France</strong> s'appuie sur des procédures opérationnelles strictes. Nos processus garantissent une chaîne de responsabilité ininterrompue, de la prise de commande centralisée jusqu'à la sécurisation de la preuve de livraison électronique, horodatée et géolocalisée.
-              </p>
-            </div>
-            <div>
-              <p className="mb-4">
-                L'externalisation de vos urgences logistiques auprès de notre <strong>société de coursiers spécialisée à Paris</strong> vous octroie une flexibilité absolue. Qu'il s'agisse d'une demande ponctuelle nécessitant un enlèvement immédiat, ou de l'intégration continue de vos flux réguliers (tournées programmées), nos dispatcheurs s'engagent sur la meilleure allocation de nos ressources motorisées.
-              </p>
-              <p>
-                Faites le choix d'une organisation robuste pour soutenir vos opérations. En confiant vos <strong>livraisons express parisiennes</strong> à One Connexion, vous sécurisez vos délais, valorisez votre image de marque auprès de vos destinataires finaux et optimisez la gestion logistique de votre cœur de métier.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <ServiceCta serviceTitle="toutes prestations" />
+      <ServiceCta serviceTitle="toutes prestations" titleAs="p" />
     </>
   );
 }

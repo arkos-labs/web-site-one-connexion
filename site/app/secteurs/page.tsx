@@ -1,8 +1,8 @@
 /**
  * app/secteurs/page.tsx
  * Hub des secteurs d'activité desservis par ONE CONNEXION.
- * Capte les requêtes "coursier pour cabinet avocat Paris",
- * "coursier laboratoire Paris", etc.
+ * Requête visée : « coursier pour entreprise ». Plan : quatre H2, portés par
+ * les cartes juridique, santé, e-commerce et compte entreprise.
  */
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -10,15 +10,18 @@ import JsonLd from "@/components/JsonLd";
 import { SITE_URL } from "@/lib/site-content";
 import { Scale, Activity, ShoppingBag, Briefcase, Stethoscope, Building2 } from "lucide-react";
 
+const TITLE = "Coursier pour entreprise : nos secteurs d'activité";
+const DESCRIPTION =
+  "Coursier pour entreprise : cabinets juridiques, laboratoires et e-commerçants, découvrez comment nos courses dédiées s'adaptent à votre activité.";
+
 export const metadata: Metadata = {
-  title: "Coursier B2B par secteur d'activité",
-  description:
-    "Cabinets juridiques, laboratoires, e-commerçants, agences : une procédure de livraison adaptée à chaque secteur, à Paris et en Île-de-France.",
+  title: { absolute: TITLE },
+  description: DESCRIPTION,
   alternates: { canonical: "/secteurs" },
   openGraph: {
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION - Coursier B2B Paris & Île-de-France" }],
-    title: "Secteurs desservis - Coursier B2B Paris | ONE CONNEXION",
-    description: "Solutions de transport express par secteur : juridique, médical, e-commerce, corporate. Paris & IDF.",
+    title: TITLE,
+    description: DESCRIPTION,
     url: "/secteurs",
     type: "website",
     locale: "fr_FR",
@@ -34,11 +37,15 @@ const breadcrumbSchema = {
   ],
 };
 
-const SECTEURS = [
+const SECTEURS: {
+  icon: typeof Scale; slug: string; name: string; h2?: string; tag: string; color: string; iconBg: string;
+  desc: string; detail: string[]; service: string; serviceLabel: string;
+}[] = [
   {
     icon: Scale,
     slug: "juridique",
     name: "Juridique & Notarial",
+    h2: "Cabinets juridiques et professions du droit",
     tag: "01 - Cabinets & études",
     color: "border-blue-200 bg-blue-50",
     iconBg: "bg-blue-100 text-blue-700",
@@ -50,12 +57,13 @@ const SECTEURS = [
       "Significations et saisie-arrêts",
     ],
     service: "/services/plis-confidentiels",
-    serviceLabel: "Plis confidentiels",
+    serviceLabel: "pli confidentiel",
   },
   {
     icon: Activity,
     slug: "medical",
     name: "Médical & Laboratoires",
+    h2: "Laboratoires et établissements de santé",
     tag: "02 - Santé & analyses",
     color: "border-green-200 bg-green-50",
     iconBg: "bg-green-100 text-green-700",
@@ -67,12 +75,13 @@ const SECTEURS = [
       "Documents médicaux confidentiels",
     ],
     service: "/services/transport-medical",
-    serviceLabel: "Transport médical",
+    serviceLabel: "coursier médical moto",
   },
   {
     icon: ShoppingBag,
     slug: "ecommerce",
     name: "E-commerce & Retail",
+    h2: "E-commerçants et commerces",
     tag: "03 - Commerce en ligne",
     color: "border-orange-200 bg-orange-50",
     iconBg: "bg-orange-100 text-orange-700",
@@ -84,7 +93,7 @@ const SECTEURS = [
       "Livraison créneau garanti",
     ],
     service: "/services/livraison-e-commerce",
-    serviceLabel: "Livraison e-commerce",
+    serviceLabel: "livraison e-commerce",
   },
   {
     icon: Briefcase,
@@ -124,6 +133,7 @@ const SECTEURS = [
     icon: Building2,
     slug: "entreprises",
     name: "Grands comptes & PME",
+    h2: "Ouvrir un compte entreprise",
     tag: "06 - Comptes entreprise",
     color: "border-gray-200 bg-gray-50",
     iconBg: "bg-gray-100 text-gray-700",
@@ -135,7 +145,7 @@ const SECTEURS = [
       "Prix affiché avant de commander",
     ],
     service: "/services/compte-entreprise",
-    serviceLabel: "Compte entreprise",
+    serviceLabel: "compte entreprise",
   },
 ];
 
@@ -157,12 +167,12 @@ export default function SecteursPage() {
             Secteurs desservis
           </div>
           <h1 className="mb-6 max-w-[22ch] text-balance text-[clamp(36px,5vw,64px)] font-bold leading-[1.05] tracking-[-0.035em]">
-            Coursier B2B par secteur : juridique, santé, e-commerce
+            Coursier pour entreprise : nos secteurs d&apos;activité
           </h1>
           <p className="max-w-[58ch] text-pretty text-[17px] leading-[1.6] text-white/66">
             One Connexion ne fait pas de transport généraliste. Nos procédures sont
-            conçues secteur par secteur - juridique, médical, e-commerce, corporate -
-            pour répondre aux exigences spécifiques de chaque flux.
+            conçues métier par métier, juridique, médical, e-commerce, pour répondre
+            aux exigences de chaque flux.
           </p>
         </div>
       </section>
@@ -180,7 +190,11 @@ export default function SecteursPage() {
                   </div>
                   <div>
                     <div className="mb-1 font-mono text-[10px] tracking-[0.14em] text-muted uppercase">{s.tag}</div>
-                    <h2 className="text-[17px] font-bold text-ink">{s.name}</h2>
+                    {s.h2 ? (
+                      <h2 className="text-[17px] font-bold text-ink">{s.h2}</h2>
+                    ) : (
+                      <h3 className="text-[17px] font-bold text-ink">{s.name}</h3>
+                    )}
                   </div>
                 </div>
                 <p className="text-[14.5px] leading-[1.65] text-muted">{s.desc}</p>
@@ -209,9 +223,9 @@ export default function SecteursPage() {
         <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-20">
           <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
             <div>
-              <h2 className="mb-3 text-[clamp(24px,3vw,36px)] font-bold leading-[1.2] tracking-[-0.02em]">
-                Votre secteur, nos procédures.
-              </h2>
+              <p className="mb-3 text-[clamp(24px,3vw,36px)] font-bold leading-[1.2] tracking-[-0.02em]">
+                Votre métier, nos procédures.
+              </p>
               <p className="text-[15px] text-white/60">
                 Décrivez vos flux - nous proposons la procédure adaptée à votre métier.
               </p>

@@ -61,9 +61,10 @@ export default function Faq() {
       <div className="mb-5 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
         Questions fréquentes
       </div>
-      <h2 className="mb-8 max-w-[720px] text-[clamp(28px,3vw,40px)] font-bold leading-[1.1] tracking-[-0.03em]">
+      {/* Pas de H2 : le plan de l'accueil compte exactement quatre H2. */}
+      <p className="mb-8 max-w-[720px] text-[clamp(28px,3vw,40px)] font-bold leading-[1.1] tracking-[-0.03em]">
         Vous vous posez sûrement ces questions.
-      </h2>
+      </p>
       <div className="max-w-[860px] divide-y divide-line border-y border-line">
         {FAQ.map(({ q, a }) => (
           <details key={q} className="group py-4">

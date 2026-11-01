@@ -16,13 +16,18 @@ export default function Services() {
             Prestations
           </div>
           <h2 className="text-[clamp(30px,3.4vw,44px)] font-bold leading-[1.08] tracking-[-0.03em]">
-            Vos urgences, notre quotidien.
+            Nos services de coursier
           </h2>
         </div>
         <p className="min-w-0 max-w-[52ch] text-pretty text-[16.5px] leading-[1.65] text-muted">
           Un pli d&rsquo;avocat ne se transporte pas comme un prélèvement sanguin
           ou une commande e-commerce. Pour chaque type de course, nos coursiers
           savent ce qu&rsquo;il faut faire avant même de démarrer le scooter.
+          Comparez{" "}
+          <Link href="/services" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">
+            nos services de coursier
+          </Link>
+          .
         </p>
       </div>
 

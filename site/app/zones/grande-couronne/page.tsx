@@ -1,6 +1,7 @@
 /**
  * app/zones/grande-couronne/page.tsx
- * Page locale "Coursier grande couronne (77/78/91/95)".
+ * Page locale grande couronne (77/78/91/95). Requête visée : « coursier grand Paris ».
+ * « coursier Île-de-France » appartient à l'accueil.
  */
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -16,15 +17,23 @@ const EXAMPLES = ["Argenteuil 95", "Versailles 78", "Évry-Courcouronnes 91", "C
 const euro = (n: number) =>
   `${n.toLocaleString("fr-FR", { minimumFractionDigits: Number.isInteger(n) ? 0 : 2, maximumFractionDigits: 2 })} €`;
 
+/** Prix Normal (3 h) depuis Paris, par la même grille que le tableau : la FAQ et la description ne peuvent pas dériver. */
+const normal = (address: string) => euro(priceFromParis(address, "standard"));
+
+const TITLE = "Coursier grand Paris : courses en grande couronne";
+const DESCRIPTION =
+  "Coursier en grande couronne : courses dédiées vers et depuis le grand Paris pour les entreprises, avec un suivi de chaque envoi.";
+const H2 = "text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]";
+const LINK = "font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark";
+
 export const metadata: Metadata = {
-  title: "Coursier grande couronne 77, 78, 91, 95",
-  description:
-    "Coursier en Seine-et-Marne, Yvelines, Essonne et Val-d'Oise. Course directe vers Paris ou la banlieue, dès 60 € TTC selon la distance.",
+  title: { absolute: TITLE },
+  description: DESCRIPTION,
   alternates: { canonical: "/zones/grande-couronne" },
   openGraph: {
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION - Coursier B2B Paris & Île-de-France" }],
-    title: "Coursier grande couronne - Seine-et-Marne, Yvelines, Essonne, Val-d'Oise | ONE CONNEXION",
-    description: "Courses directes entre la grande couronne, la banlieue et Paris. Prix affiché avant de commander.",
+    title: TITLE,
+    description: DESCRIPTION,
     url: "/zones/grande-couronne",
     type: "website",
     locale: "fr_FR",
@@ -42,7 +51,7 @@ const breadcrumbSchema = {
 };
 
 const FAQ = [
-  { q: "Quel est le prix d’une course en grande couronne ?", a: "En grande couronne, le prix suit la distance entre Paris et l’adresse la plus éloignée du trajet, retour du coursier compris. En délai Normal (3 h) : 70 € TTC pour Versailles, 91 € pour Évry, 118 € pour Cergy, 145 € pour Meaux. L’Urgent (1 h 30) coûte 1,5 fois ce prix, le Super (1 h) 2 fois." },
+  { q: "Quel est le prix d’une course en grande couronne ?", a: `En grande couronne, le prix suit la distance entre Paris et l’adresse la plus éloignée du trajet, retour du coursier compris. En délai Normal (3 h) : ${normal("Versailles 78")} TTC pour Versailles, ${normal("Évry-Courcouronnes 91")} pour Évry, ${normal("Cergy 95")} pour Cergy, ${normal("Meaux 77")} pour Meaux. L’Urgent (1 h 30) coûte 1,5 fois ce prix, le Super (1 h) 2 fois.` },
   { q: "Faites-vous les trajets entre la grande couronne et Paris ?", a: "Oui, dans les deux sens, et aussi vers la petite couronne ou une autre commune de grande couronne. Le coursier va directement de l’enlèvement à la remise." },
   { q: "Quel poids peut-on vous confier ?", a: "Jusqu’à 18 kg, dans le top-case d’un deux-roues. Au-delà de 10 kg, ou pour un colis encombrant, appelez-nous avant de commander." },
   { q: "Quels sont vos horaires en grande couronne ?", a: "Du lundi au samedi, de 9h à 19h, comme à Paris. Nous sommes fermés le dimanche et les jours fériés." },
@@ -75,7 +84,7 @@ export default function ZoneGrandeCouronne() {
             Zone couverte · 77 / 78 / 91 / 95
           </div>
           <h1 className="mb-6 max-w-[22ch] text-balance text-[clamp(36px,5vw,64px)] font-bold leading-[1.05] tracking-[-0.035em]">
-            Livraison express en grande couronne.
+            Coursier grand Paris : la grande couronne couverte
           </h1>
           <p className="max-w-[58ch] text-pretty text-[17px] leading-[1.6] text-white/66">
             Seine-et-Marne, Yvelines, Essonne et Val-d’Oise : un coursier vient chercher votre pli
@@ -96,9 +105,7 @@ export default function ZoneGrandeCouronne() {
       {/* ── Départements ── */}
       <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
         <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">Couverture détaillée</div>
-        <h2 className="mb-12 text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-          Quatre départements, une page par ville.
-        </h2>
+        <h2 className={`mb-12 ${H2}`}>Les territoires desservis en grande couronne</h2>
         <DeptCards depts={["77", "78", "91", "95"]} />
         <p className="mt-6 text-[13px] text-muted">
           Votre commune n’est pas dans la liste ? Elle est desservie aussi : saisissez l’adresse pour voir le prix, ou appelez-nous.
@@ -109,9 +116,10 @@ export default function ZoneGrandeCouronne() {
       <section className="bg-paper">
         <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
           <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">Tarifs</div>
-          <h2 className="mb-8 max-w-[24ch] text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-            Un prix selon la distance, connu avant de commander.
-          </h2>
+          <h2 className={`mb-4 max-w-[24ch] ${H2}`}>Courses depuis et vers Paris</h2>
+          <p className="mb-8 max-w-[62ch] text-[15.5px] leading-[1.7] text-muted">
+            Un prix selon la distance, connu avant de commander. Exemples de courses au départ ou à l’arrivée de Paris :
+          </p>
           <div className="overflow-x-auto rounded-xl border border-line bg-white">
             <table className="w-full min-w-[520px] border-collapse text-[14.5px]">
               <thead>
@@ -146,9 +154,7 @@ export default function ZoneGrandeCouronne() {
       {/* ── Prestations ── */}
       <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
         <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">Nos prestations</div>
-        <h2 className="mb-10 text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-          Toutes les missions en grande couronne.
-        </h2>
+        <h2 className={`mb-10 ${H2}`}>Ce que nous transportons</h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {SERVICES.map((s) => (
             <Link
@@ -165,14 +171,24 @@ export default function ZoneGrandeCouronne() {
         </div>
       </section>
 
-      {/* ── FAQ ── */}
+      {/* ── Organiser une course ── */}
+      <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-[72px]">
+        <h2 className={`mb-6 max-w-[28ch] ${H2}`}>Organiser une course en grande couronne</h2>
+        <p className="max-w-[66ch] text-[15.5px] leading-[1.7] text-muted">
+          Saisissez les deux adresses avec leur code postal : le prix s’affiche avant de valider, et le
+          coursier va directement de l’enlèvement à la remise. Le détail des prix figure sur notre{" "}
+          <Link href="/tarifs" className={LINK}>grille tarifaire</Link>. Plus près de Paris, voyez notre page{" "}
+          <Link href="/zones/petite-couronne" className={LINK}>coursier en petite couronne</Link>, et dans la
+          capitale, notre page <Link href="/zones/paris" className={LINK}>coursier Paris</Link>.
+        </p>
+      </section>
+
+      {/* ── FAQ (sans H2 : hors plan) ── */}
       <section className="bg-paper border-t border-line">
         <div className="mx-auto max-w-[800px] px-[clamp(20px,4vw,28px)] py-[72px]">
           <div className="mb-10 text-center">
             <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">Foire Aux Questions</div>
-            <h2 className="text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-              Vos questions sur la grande couronne
-            </h2>
+            <p className={H2}>Vos questions sur la grande couronne</p>
           </div>
           <div className="flex flex-col gap-4">
             {FAQ.map((faq) => (
@@ -207,9 +223,9 @@ export default function ZoneGrandeCouronne() {
         <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-20">
           <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
             <div>
-              <h2 className="mb-3 text-[clamp(24px,3vw,36px)] font-bold leading-[1.2] tracking-[-0.02em]">
+              <p className="mb-3 text-[clamp(24px,3vw,36px)] font-bold leading-[1.2] tracking-[-0.02em]">
                 Une course en grande couronne maintenant ?
-              </h2>
+              </p>
               <p className="text-[15px] text-white/60">Du lundi au samedi, de 9h à 19h.</p>
             </div>
             <a href={`tel:${PHONE_TEL}`} className="rounded-[4px] bg-accent px-8 py-4 text-center text-[15px] font-bold text-white hover:bg-accent-dark">

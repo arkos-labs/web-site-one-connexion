@@ -1,7 +1,8 @@
 /**
  * lib/services/transport-medical.ts
- * Prestation santé & laboratoires. Requêtes visées : coursier médical Paris,
- * transport de prélèvements, transport d'échantillons biologiques Île-de-France.
+ * Prestation santé & laboratoires. Requête visée : « coursier médical moto ».
+ * Les prélèvements (et le sang réfrigéré) sont le sujet du guide
+ * /guides/transport-de-prelevements-medicaux.
  *
  * ATTENTION : aucune certification ni agrément (ADR, transport de matières dangereuses) n'est
  * affirmé ici. UN3373 est expliqué comme un conditionnement préparé par l'expéditeur, que le
@@ -20,9 +21,9 @@ export const transportMedical: Service = {
   },
 
   seo: {
-    title: "Coursier médical Paris - transport laboratoire",
+    title: "Coursier médical moto : transport de matériel médical",
     description:
-      "Coursier médical : transport prélèvements et échantillons pour laboratoires. Enlèvement < 45 min, contenants isothermes, remise directe, dès 28€.",
+      "Coursier médical à moto pour vos laboratoires et établissements : transport de matériel médical en course dédiée, avec traçabilité de l'envoi.",
     keywords: [
       "coursier médical",
       "transport laboratoire",
@@ -32,13 +33,11 @@ export const transportMedical: Service = {
       "transport échantillons biologiques Île-de-France",
       "coursier laboratoire analyses Paris",
       "transport urgent matériel médical",
-      "coursier transport de sang réfrigéré",
       "transport échantillons réfrigérés Paris",
-      "prix coursier médical Paris",
     ],
   },
 
-  h1: "Coursier médical à Paris : prélèvements, échantillons et matériel de laboratoire",
+  h1: "Coursier médical moto : transport de matériel médical",
 
   intro:
     "Un prélèvement doit arriver au laboratoire avant de s’abîmer. Un coursier vient le chercher en moins de 45 minutes et l’apporte directement, sans détour, dans un contenant isotherme. Pour les laboratoires d’analyses, cliniques et cabinets médicaux d’Île-de-France.",
@@ -50,10 +49,11 @@ export const transportMedical: Service = {
   ],
 
   context: {
-    title: "Un échantillon ne se renvoie pas",
+    title: "Transport de matériel médical : les précautions",
     paragraphs: [
       "Un prélèvement dégradé n’est pas une livraison ratée : c’est un patient qu’il faut reconvoquer, une analyse à refaire, et un résultat qui arrive trop tard pour la décision qu’il devait éclairer. Contrairement à un colis, un échantillon ne se réexpédie pas.",
       "Le délai de stabilité commande toute la course. Il varie selon la nature du prélèvement et les exigences du laboratoire destinataire : c’est vous qui le fixez, et c’est lui qui détermine si la course est réalisable. Nous confirmons la faisabilité avant d’engager, plutôt que d’accepter puis d’échouer.",
+      "Pour le matériel, la précaution tient au colis : une pièce d’automate ou un instrument fragile voyage calé, dans le sens indiqué, dans un top-case verrouillé.",
       "Le maintien en température suit la même logique. Le contenant isotherme est choisi en fonction de ce qui est transporté, et un relevé de température peut être joint à la course lorsque le protocole du laboratoire l’exige, à préciser à la commande.",
     ],
   },
@@ -128,9 +128,9 @@ export const transportMedical: Service = {
         "Un coursier médical transporte en urgence des prélèvements, échantillons, pièces techniques ou matériel entre laboratoires, cliniques et cabinets. La course est dédiée, le contenant adapté et le délai de stabilité de ce qui est transporté commande l’organisation de la course.",
     },
     {
-      question: "Pouvez-vous transporter des prélèvements sanguins et des échantillons réfrigérés ?",
+      question: "Pouvez-vous transporter des échantillons à conserver au froid ?",
       answer:
-        "Nous transportons des prélèvements sanguins, échantillons et pièces en contenant isotherme adapté, en course dédiée et directe, du lundi au samedi. Pour un transport réfrigéré, précisez à la commande la plage de température et le délai de stabilité fixés par le laboratoire : nous confirmons la faisabilité avant d’engager la course.",
+        "Nous transportons échantillons et pièces en contenant isotherme adapté, en course dédiée et directe, du lundi au samedi. Pour un transport au froid, précisez à la commande la plage de température et le délai de stabilité fixés par le laboratoire : nous confirmons la faisabilité avant d’engager la course.",
     },
     {
       question: "Quel est le prix d’un coursier médical à Paris ?",
@@ -173,4 +173,16 @@ export const transportMedical: Service = {
         "Le samedi oui, de 9h à 19h, comme en semaine. Nous sommes fermés le dimanche et les jours fériés.",
     },
   ],
+
+  outline: {
+    sections: [
+      { key: "useCases", title: "Les envois confiés à un coursier médical" },
+      { key: "context", title: "Transport de matériel médical : les précautions" },
+      { key: "steps", title: "Traçabilité et remise" },
+    ],
+    cta: {
+      title: "Travailler avec un laboratoire ou un établissement",
+      text: "Pour des envois ponctuels ou des collectes régulières, appelez-nous ou commandez en ligne. Nos guides détaillent le [transport de prélèvements médicaux](/guides/transport-de-prelevements-medicaux) et l’[expédition de matériel de laboratoire](/guides/expedier-du-materiel-de-laboratoire) ; pour les autres envois, voyez notre [coursier moto Paris](/services/coursier-moto-paris).",
+    },
+  },
 };

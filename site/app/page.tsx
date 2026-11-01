@@ -7,8 +7,30 @@ import JsonLd from "@/components/JsonLd";
 import Services from "@/components/sections/Services";
 import TrustStrip from "@/components/sections/TrustStrip";
 import Link from "next/link";
+import type { Metadata } from "next";
 import { LEGAL, PHONE_TEL, EMAIL, SITE_URL, MAPS_URL } from "@/lib/site-content";
 import { getZonesByCategory } from "@/lib/zones/data";
+
+/* Accueil. Requête visée : « coursier Île-de-France ». Plan : quatre H2, dans l'ordre
+   Services → Zones → Course dédiée (About) → Devis (Contact). */
+const TITLE = "Coursier Île-de-France : courses dédiées pour entreprises";
+const DESCRIPTION =
+  "Coursier en Île-de-France pour vos envois professionnels : une course dédiée par envoi, un interlocuteur unique et un suivi complet de la course.";
+
+export const metadata: Metadata = {
+  title: { absolute: TITLE },
+  description: DESCRIPTION,
+  alternates: { canonical: "/" },
+  openGraph: {
+    title: TITLE,
+    description: DESCRIPTION,
+    type: "website",
+    locale: "fr_FR",
+    siteName: "ONE CONNEXION",
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION - Coursier B2B Paris & Île-de-France" }],
+  },
+  twitter: { card: "summary_large_image", title: TITLE, description: DESCRIPTION, images: ["/og-image.jpg"] },
+};
 
 const organizationSchema = {
   "@context": "https://schema.org",
@@ -83,23 +105,21 @@ export default function Home() {
       <JsonLd data={organizationSchema} />
       <Hero />
       <TrustStrip />
-      <About />
       <Services />
       <OrderForm />
-      <Faq />
       <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[88px]">
         <div className="mb-3 flex items-center gap-3 font-mono text-[10px] tracking-[0.16em] text-accent uppercase">
           <span className="h-px w-6 bg-accent" />
-          Coursier Paris
+          Zones desservies
         </div>
         <h2 className="mb-4 max-w-[26ch] text-balance text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-          Un coursier dans votre arrondissement, en moins de 45 minutes.
+          Les zones couvertes en Île-de-France
         </h2>
         <p className="mb-8 max-w-[62ch] text-[15px] leading-[1.6] text-muted">
           Dans Paris, une course coûte 28 € TTC livrée sous 3 h. Plus pressé&nbsp;? Comptez 42 € pour 1 h 30, ou 56 € pour 1 h.
-          Choisissez votre arrondissement pour voir ce qu&apos;on y livre le plus souvent, ou{" "}
-          <Link href="/zones/paris" className="text-ink underline underline-offset-2">découvrez nos courses dans Paris</Link> et{" "}
-          <Link href="/tarifs" className="text-ink underline underline-offset-2">tous nos tarifs</Link>.
+          Choisissez votre arrondissement pour voir ce qu&apos;on y livre le plus souvent, ou voyez notre page{" "}
+          <Link href="/zones/paris" className="text-ink underline underline-offset-2">coursier Paris</Link> et notre{" "}
+          <Link href="/tarifs" className="text-ink underline underline-offset-2">tarif coursier Paris</Link>.
         </p>
         <ul className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-5">
           {getZonesByCategory("paris").map((z) => (
@@ -110,15 +130,10 @@ export default function Home() {
             </li>
           ))}
         </ul>
-      </section>
-      <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[88px]">
-        <div className="mb-3 flex items-center gap-3 font-mono text-[10px] tracking-[0.16em] text-accent uppercase">
-          <span className="h-px w-6 bg-accent" />
-          Villes desservies
-        </div>
-        <h2 className="mb-4 max-w-[26ch] text-balance text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
+
+        <p className="mb-4 mt-16 max-w-[26ch] text-balance text-[clamp(22px,2.5vw,30px)] font-bold leading-[1.15] tracking-[-0.02em]">
           Hors de Paris aussi, on arrive vite.
-        </h2>
+        </p>
         <p className="mb-10 max-w-[62ch] text-[15px] leading-[1.6] text-muted">
           Nanterre, Saint-Denis, Montreuil, Boulogne, Créteil… En petite couronne, le coursier est chez vous en moins de
           45 minutes, à partir de 39 € TTC. On va aussi plus loin, jusqu&apos;à Versailles, Cergy, Évry ou Meaux, au prix
@@ -139,7 +154,9 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <Contact />
+      <About />
+      <Faq />
+      <Contact title="Demander un devis" devisLink />
     </>
   );
 }

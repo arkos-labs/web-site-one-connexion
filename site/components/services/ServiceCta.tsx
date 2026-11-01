@@ -2,22 +2,41 @@
  * components/services/ServiceCta.tsx
  * Bloc de conversion final. Réutilise les points de contact existants
  * (téléphone et courriel) : aucun formulaire dupliqué, un seul canal à tenir.
+ * Avec un plan SEO, son titre est le quatrième H2 de la page et son texte
+ * porte les liens internes demandés.
  */
-import { EMAIL, PHONE_DISPLAY, PHONE_TEL } from "@/lib/site-content";
+import InlineLinks from "@/components/InlineLinks";
+import { PHONE_DISPLAY, PHONE_TEL } from "@/lib/site-content";
 
-export default function ServiceCta({ serviceTitle }: { serviceTitle: string }) {
-  const subject = encodeURIComponent(`Demande de course - ${serviceTitle}`);
-
+export default function ServiceCta({
+  outline,
+  titleAs = "h2",
+}: {
+  serviceTitle: string;
+  outline?: { title: string; text: string };
+  /** « p » quand le plan de la page n'a pas de place pour ce titre. */
+  titleAs?: "h2" | "p";
+}) {
+  const Title = titleAs;
   return (
     <section className="bg-accent text-white">
       <div className="mx-auto grid max-w-[1240px] grid-cols-[repeat(auto-fit,minmax(300px,1fr))] items-center gap-10 px-[clamp(20px,4vw,28px)] py-20">
         <div className="min-w-0">
-          <h2 className="mb-3.5 text-balance text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-            Une course à engager aujourd’hui ?
-          </h2>
+          <Title className="mb-3.5 text-balance text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
+            {outline?.title ?? "Une course à engager aujourd’hui ?"}
+          </Title>
           <p className="max-w-[46ch] text-[17px] leading-[1.6] text-white/88">
-            Appelez-nous pour un départ immédiat, ou commandez en ligne : nous
-            confirmons la faisabilité avant d’engager la course.
+            {outline ? (
+              <InlineLinks
+                text={outline.text}
+                className="font-semibold text-white underline decoration-white/60 underline-offset-4 hover:decoration-white"
+              />
+            ) : (
+              <>
+                Appelez-nous pour un départ immédiat, ou commandez en ligne : nous
+                confirmons la faisabilité avant d’engager la course.
+              </>
+            )}
           </p>
         </div>
         <div className="flex min-w-0 flex-wrap justify-end gap-3">

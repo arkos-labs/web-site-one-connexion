@@ -2,11 +2,17 @@
  * app/services/[slug]/page.tsx
  * Gabarit unique des pages de prestation. Pré-rendu statiquement pour chaque
  * slug déclaré dans lib/services. Un slug inconnu produit un vrai 404.
+ *
+ * Avec un plan SEO (service.outline), la page compte exactement quatre H2 :
+ * les trois blocs du plan, dans l'ordre, puis l'appel à l'action. Les autres
+ * blocs suivent, titrés sans balise H2. Sans plan, le gabarit d'origine.
  */
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import type { ReactNode } from "react";
 import JsonLd from "@/components/JsonLd";
+import InlineLinks from "@/components/InlineLinks";
 import ServiceCta from "@/components/services/ServiceCta";
 import ServiceFaq from "@/components/services/ServiceFaq";
 import ServiceHero from "@/components/services/ServiceHero";
@@ -14,7 +20,9 @@ import ServiceRelated from "@/components/services/ServiceRelated";
 import ServiceSteps from "@/components/services/ServiceSteps";
 import ServiceUseCases from "@/components/services/ServiceUseCases";
 import ServicePricing from "@/components/services/ServicePricing";
+import ServicePhoto from "@/components/services/ServicePhoto";
 import { SERVICE_SLUGS, getService } from "@/lib/services";
+import type { ServiceSectionKey } from "@/lib/services/types";
 import { GUIDES } from "@/lib/guides";
 import { SITE_URL } from "@/lib/site-content";
 
@@ -51,6 +59,13 @@ export async function generateMetadata({
   };
 }
 
+const H2_CLASS = "text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]";
+
+/** Titre de bloc : H2 s'il fait partie du plan (ou sans plan, s'il l'était déjà), sinon texte. */
+function Heading({ h2, className, children }: { h2: boolean; className: string; children: ReactNode }) {
+  return h2 ? <h2 className={className}>{children}</h2> : <p className={className}>{children}</p>;
+}
+
 export default async function ServicePage({
   params,
 }: {
@@ -62,6 +77,11 @@ export default async function ServicePage({
   if (!service) notFound();
 
   const pageUrl = `${SITE_URL}/services/${service.slug}`;
+  const outline = service.outline;
+  const planned = (key: ServiceSectionKey) => outline?.sections.find((s) => s.key === key);
+  /** Sans plan : la balise d'origine. Avec plan : H2 seulement pour les blocs du plan. */
+  const isH2 = (key: ServiceSectionKey, legacyH2: boolean) => (outline ? Boolean(planned(key)) : legacyH2);
+  const titleOf = (key: ServiceSectionKey, legacy: string) => planned(key)?.title ?? legacy;
 
   const serviceSchema = {
     "@context": "https://schema.org",
@@ -104,6 +124,103 @@ export default async function ServicePage({
     })),
   };
 
+  const blocks: Record<ServiceSectionKey, ReactNode> = {
+    context: (
+      <section key="context" className="border-b border-line py-[72px]">
+        <div
+          className={
+            service.photos?.context
+              ? "grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_440px] lg:gap-16"
+              : ""
+          }
+        >
+          <div>
+            <Heading h2={isH2("context", true)} className={`mb-7 max-w-[20ch] ${H2_CLASS}`}>
+              {titleOf("context", service.context.title)}
+            </Heading>
+            <div className="grid max-w-[68ch] gap-5">
+              {service.context.paragraphs.map((paragraph) => (
+                <p key={paragraph} className="text-[16.5px] leading-[1.65] text-muted">
+                  <InlineLinks text={paragraph} />
+                </p>
+              ))}
+            </div>
+          </div>
+          {service.photos?.context && (
+            <ServicePhoto photo={service.photos.context} className="lg:mt-2" />
+          )}
+        </div>
+      </section>
+    ),
+
+    steps: (
+      <section key="steps" className="border-b border-line py-[72px]">
+        <div
+          className={
+            service.photos?.steps
+              ? "mb-10 grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_400px] lg:gap-16"
+              : "mb-9"
+          }
+        >
+          <div>
+            <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
+              Procédure
+            </div>
+            <Heading h2={isH2("steps", true)} className={`max-w-[20ch] ${H2_CLASS}`}>
+              {titleOf("steps", "De la commande à la preuve de remise.")}
+            </Heading>
+          </div>
+          {service.photos?.steps && <ServicePhoto photo={service.photos.steps} />}
+        </div>
+        <ServiceSteps steps={service.steps} />
+      </section>
+    ),
+
+    included: (
+      <section key="included" className="border-b border-line py-[72px]">
+        <div className="mb-9">
+          <div className={`font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase ${planned("included") ? "mb-4" : ""}`}>
+            Prestations incluses
+          </div>
+          {planned("included") && (
+            <h2 className={`max-w-[24ch] ${H2_CLASS}`}>{planned("included")?.title}</h2>
+          )}
+        </div>
+        <ul className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-x-10 gap-y-px">
+          {service.included.map((item) => (
+            <li
+              key={item}
+              className="border-b border-line py-[15px] text-[15.5px] leading-[1.5] text-muted"
+            >
+              {item}
+            </li>
+          ))}
+        </ul>
+      </section>
+    ),
+
+    useCases: (
+      <section key="useCases" className="border-b border-line py-[72px]">
+        <div className="mb-9">
+          <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
+            Cas d’usage
+          </div>
+          <Heading h2={isH2("useCases", true)} className={`max-w-[22ch] ${H2_CLASS}`}>
+            {titleOf("useCases", "Trois situations que nous traitons chaque semaine.")}
+          </Heading>
+        </div>
+        <ServiceUseCases useCases={service.useCases} />
+      </section>
+    ),
+  };
+
+  const legacyOrder: ServiceSectionKey[] = ["context", "steps", "included", "useCases"];
+  const order: ServiceSectionKey[] = outline
+    ? [...outline.sections.map((s) => s.key), ...legacyOrder.filter((k) => !planned(k))]
+    : legacyOrder;
+  const showPricing = !outline?.hidePricing;
+  const otherH2 = !outline; // pricing, FAQ, villes : H2 seulement sans plan
+
   return (
     <>
       <JsonLd data={serviceSchema} />
@@ -113,77 +230,28 @@ export default async function ServicePage({
       <ServiceHero service={service} />
 
       <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)]">
-        <section className="border-b border-line py-[72px]">
-          <h2 className="mb-7 max-w-[20ch] text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-            {service.context.title}
-          </h2>
-          <div className="grid max-w-[68ch] gap-5">
-            {service.context.paragraphs.map((paragraph) => (
-              <p key={paragraph} className="text-[16.5px] leading-[1.65] text-muted">
-                {paragraph}
-              </p>
-            ))}
-          </div>
-        </section>
+        {order.map((key) => blocks[key])}
 
-        <section className="border-b border-line py-[72px]">
-          <div className="mb-9">
-            <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
-              Procédure
+        {showPricing && (
+          <section className="border-b border-line py-[72px]">
+            <div className="mb-9">
+              <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
+                Tarifs
+              </div>
+              <Heading h2={otherH2} className={`max-w-[24ch] ${H2_CLASS}`}>
+                {service.pricing.title}
+              </Heading>
             </div>
-            <h2 className="max-w-[20ch] text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-              De la commande à la preuve de remise.
-            </h2>
-          </div>
-          <ServiceSteps steps={service.steps} />
-        </section>
-
-        <section className="border-b border-line py-[72px]">
-          <div className="mb-9 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
-            Prestations incluses
-          </div>
-          <ul className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-x-10 gap-y-px">
-            {service.included.map((item) => (
-              <li
-                key={item}
-                className="border-b border-line py-[15px] text-[15.5px] leading-[1.5] text-muted"
-              >
-                {item}
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        <section className="border-b border-line py-[72px]">
-          <div className="mb-9">
-            <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
-              Cas d’usage
-            </div>
-            <h2 className="max-w-[22ch] text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-              Trois situations que nous traitons chaque semaine.
-            </h2>
-          </div>
-          <ServiceUseCases useCases={service.useCases} />
-        </section>
-
-        <section className="border-b border-line py-[72px]">
-          <div className="mb-9">
-            <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
-              Tarifs
-            </div>
-            <h2 className="max-w-[24ch] text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-              {service.pricing.title}
-            </h2>
-          </div>
-          <ServicePricing pricing={service.pricing} />
-        </section>
+            <ServicePricing pricing={service.pricing} />
+          </section>
+        )}
 
         <section className="border-b border-line py-[72px]">
           <div className="mb-5 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
             Zone couverte
           </div>
           <p className="max-w-[68ch] text-[16.5px] leading-[1.65] text-muted">
-            {service.coverage}
+            <InlineLinks text={service.coverage} />
           </p>
           <Link
             href="/flotte"
@@ -215,9 +283,9 @@ export default async function ServicePage({
             <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
               Questions fréquentes
             </div>
-            <h2 className="max-w-[20ch] text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
+            <Heading h2={otherH2} className={`max-w-[20ch] ${H2_CLASS}`}>
               {service.faqTitle}
-            </h2>
+            </Heading>
           </div>
           <ServiceFaq faq={service.faq} />
         </section>
@@ -226,9 +294,9 @@ export default async function ServicePage({
           <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
             Villes desservies
           </div>
-          <h2 className="mb-4 max-w-[28ch] text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
+          <Heading h2={otherH2} className={`mb-4 max-w-[28ch] ${H2_CLASS}`}>
             Nos coursiers en intramuros et en petite couronne
-          </h2>
+          </Heading>
           <p className="mb-9 max-w-[62ch] text-[15px] leading-[1.6] text-muted">
             Nous intervenons dans les 20 arrondissements de{" "}
             <Link href="/zones/paris" className="text-ink underline underline-offset-2">Paris</Link>, dans la{" "}
@@ -250,7 +318,7 @@ export default async function ServicePage({
         </section>
       </div>
 
-      <ServiceCta serviceTitle={service.card.title} />
+      <ServiceCta serviceTitle={service.card.title} outline={outline?.cta} />
     </>
   );
 }

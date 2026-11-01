@@ -1,7 +1,8 @@
 /**
  * lib/services/coursier-moto-paris.ts
- * Page SEO dédiée. Requêtes visées : coursier moto Paris, coursier scooter
- * Paris, livraison moto Paris, prix coursier moto.
+ * Page SEO dédiée. Requête visée : « coursier moto Paris ». « scooter » reste
+ * secondaire (une seule mention dans le texte), le détail des véhicules vit sur
+ * /flotte et les prix sur /tarifs.
  * Chiffres repris de /tarifs et /flotte : ne pas en introduire de nouveaux ici.
  */
 import type { Service } from "./types";
@@ -17,35 +18,33 @@ export const coursierMotoParis: Service = {
   },
 
   seo: {
-    title: "Coursier moto et scooter Paris - dès 28 € TTC",
+    title: "Coursier moto Paris : courses rapides en deux-roues",
     description:
-      "Coursier moto et scooter à Paris : livraison express en deux-roues, top-case verrouillé, suivi en ligne. Dès 28 € TTC en 3 h, 56 € TTC en 1 h.",
+      "Coursier moto à Paris et en Île-de-France : une flotte de deux-roues dédiée aux courses professionnelles, avec un interlocuteur unique par envoi.",
     keywords: [
       "coursier moto Paris",
-      "coursier scooter Paris",
       "livraison moto Paris",
       "coursier deux-roues Paris",
-      "prix coursier moto Paris",
       "coursier moto Île-de-France",
     ],
   },
 
-  h1: "Coursier moto et scooter à Paris : livraison express en deux-roues",
+  h1: "Coursier moto Paris : notre flotte de deux-roues",
 
   intro:
-    "One Connexion livre dans la capitale et en Île-de-France avec une flotte de scooters et de motos routières équipées pour un usage professionnel. Le deux-roues passe dans la circulation là où un utilitaire reste bloqué : c’est ce qui permet de tenir des délais courts.",
+    "One Connexion livre dans la capitale et en Île-de-France avec sa propre flotte de deux-roues, équipés pour un usage professionnel. Le deux-roues passe dans la circulation là où un utilitaire reste bloqué : c’est ce qui permet de tenir des délais courts.",
 
   stats: [
-    { value: "Dès 28 € TTC", label: "Course normale Paris (3 h)" },
     { value: "< 45 min", label: "Prise en charge" },
+    { value: "18 kg", label: "Top-case verrouillé" },
     { value: "6j/7", label: "Lun–sam, 9h – 19h" },
   ],
 
   context: {
-    title: "Pourquoi un coursier moto plutôt qu’un utilitaire",
+    title: "Pourquoi une course en deux-roues",
     paragraphs: [
-      "En ville, la circulation décide du délai. Un scooter ou une moto traverse la ville sans dépendre des embouteillages, et reste disponible pour une course dédiée plutôt qu’une tournée avec plusieurs arrêts.",
-      "Nos scooters électriques et 125cc circulent dans les rues les plus denses de la capitale sans être limités par les restrictions ZFE. Nos motos routières de 300 à 600cc gardent une bonne vitesse sur les rocades et les axes rapides.",
+      "En ville, la circulation décide du délai. Une moto traverse la ville sans dépendre des embouteillages, et reste disponible pour une course dédiée plutôt qu’une tournée avec plusieurs arrêts.",
+      "Dans les rues les plus denses de la capitale, un deux-roues léger, comme un scooter, se faufile plus facilement. Sur les rocades et les axes rapides, une moto routière garde une bonne vitesse.",
       "Chaque véhicule est équipé d’un top-case verrouillé et étanche, jusqu’à 18 kg. Les colis volumineux ou lourds ne conviennent pas à ce mode de transport : dites-nous ce que vous envoyez, nous confirmons la faisabilité avant d’engager la course.",
     ],
   },
@@ -57,7 +56,7 @@ export const coursierMotoParis: Service = {
     },
     {
       title: "Choix du véhicule",
-      body: "Scooter pour l’intra-muros, moto routière pour les trajets plus longs ou rapides. Nous choisissons selon la mission.",
+      body: "Un deux-roues léger pour l’intra-muros, une moto routière pour les trajets plus longs ou rapides. Nous choisissons selon la mission.",
     },
     {
       title: "Enlèvement",
@@ -74,7 +73,7 @@ export const coursierMotoParis: Service = {
   ],
 
   included: [
-    "Scooters et motos équipés pour un usage professionnel",
+    "Deux-roues équipés pour un usage professionnel",
     "Top-case verrouillé et étanche, jusqu’à 18 kg",
     "Un colis par trajet, jamais de tournée partagée",
     "Progression de la moto visible en ligne",
@@ -98,34 +97,28 @@ export const coursierMotoParis: Service = {
   ],
 
   coverage:
-    "Les 20 arrondissements de Paris dès 28 € TTC, puis les Hauts-de-Seine, la Seine-Saint-Denis et le Val-de-Marne dès 39 € TTC (puis 2 € par km au-delà de 8 km), et la grande couronne (77, 78, 91, 95) dès 60 € TTC selon la distance.",
+    "Les 20 arrondissements de Paris, les Hauts-de-Seine, la Seine-Saint-Denis et le Val-de-Marne, ainsi que la grande couronne (77, 78, 91, 95).",
 
   pricing: {
     title: "Prix d’un coursier moto à Paris",
     intro:
-      "Scooter ou moto, le tarif est le même : il dépend de la zone et du délai choisis. Le deux-roues passe là où un utilitaire reste bloqué, ce qui permet de tenir les trois délais, même aux heures de pointe.",
+      "Le tarif dépend de la zone et du délai choisis.",
     recommended: ["standard", "urgent", "flash"],
-    note:
-      "Dans Paris intra-muros, une course moto démarre à 28 € TTC en Normal (3 h). Pour La Défense, Roissy ou Orly, comptez le tarif de la zone d’arrivée.",
+    note: "Le prix exact s’affiche avant de commander.",
   },
 
   faqTitle: "Vos questions sur le coursier moto.",
 
   faq: [
     {
-      question: "Combien coûte un coursier moto à Paris ?",
-      answer:
-        "Une course en moto ou scooter démarre à 28 € TTC en normal (3 h), 42 € TTC en urgent (1 h 30) et 56 € TTC en formule Super (1 h) dans Paris. En petite couronne : 39 €, 58,50 € et 78 € TTC jusqu'à 8 km, puis 2 €, 3 € ou 4 € TTC par km selon le délai. Le prix est affiché avant de commander.",
-    },
-    {
       question: "Quels types de colis un coursier moto peut-il transporter ?",
       answer:
         "Documents, plis, petits colis et pièces légères, dans la limite d’un top-case verrouillé et étanche de 18 kg. Pour un colis plus volumineux, contactez-nous : nous confirmons la faisabilité avant d’engager la course.",
     },
     {
-      question: "Scooter ou moto : lequel est utilisé ?",
+      question: "Quel deux-roues est utilisé ?",
       answer:
-        "Les scooters électriques et 125cc assurent les courses intramuros. Les motos routières de 300 à 600cc sont utilisées pour la banlieue, les rocades et les trajets vers La Défense, Roissy ou Orly.",
+        "Un deux-roues léger pour les courses intramuros, une moto routière pour la banlieue, les rocades et les trajets vers La Défense, Roissy ou Orly.",
     },
     {
       question: "Le coursier moto est-il plus rapide qu’un utilitaire ?",
@@ -143,4 +136,17 @@ export const coursierMotoParis: Service = {
         "Le samedi oui, de 9h à 19h, comme en semaine. Nous sommes fermés le dimanche et les jours fériés.",
     },
   ],
+
+  outline: {
+    sections: [
+      { key: "context", title: "Pourquoi une course en deux-roues" },
+      { key: "steps", title: "Notre flotte et son organisation" },
+      { key: "useCases", title: "Types d'envois confiés à un coursier moto" },
+    ],
+    cta: {
+      title: "Réserver une course moto",
+      text: "Commandez en ligne ou appelez-nous : nous confirmons la faisabilité avant d’engager la course. Pour aller plus loin : [découvrir notre flotte](/flotte), notre [coursier express Paris](/services/coursier-express-paris) et notre [grille tarifaire](/tarifs).",
+    },
+    hidePricing: true,
+  },
 };

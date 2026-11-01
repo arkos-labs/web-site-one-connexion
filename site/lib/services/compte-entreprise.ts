@@ -1,7 +1,8 @@
 /**
  * lib/services/compte-entreprise.ts
  * Prestation transversale : compte entreprise, suivi et des factures à 30 jours.
- * Requêtes visées : compte coursier entreprise, factures à 30 jours coursier.
+ * Requête visée : « coursier pour entreprise » (partagée avec /secteurs, qui oriente
+ * vers les pages service ; celle-ci porte l'ouverture du compte).
  *
  * Fonctionnement réel : ouverture immédiate en ligne ; une entreprise peut ouvrir plusieurs comptes
  * avec le même SIRET (un par collaborateur, service ou site) ; chaque compte voit ses propres courses
@@ -20,18 +21,18 @@ export const compteEntreprise: Service = {
   },
 
   seo: {
-    title: "Compte entreprise coursier - paiement à 30 jours",
+    title: "Coursier pour entreprise : ouvrir un compte",
     description:
-      "Compte coursier entreprise : ouverture immédiate en ligne, un compte par service ou par site avec le même SIRET, suivi des courses, factures à 30 jours.",
+      "Coursier pour entreprise : ouvrez un compte, centralisez vos courses et gardez un interlocuteur unique pour tous vos envois professionnels.",
     keywords: [
-      "compte coursier entreprise",
+      "coursier pour entreprise",
       "coursier paiement 30 jours",
       "contrat coursier entreprise Paris",
       "coursier multi-sites Île-de-France",
     ],
   },
 
-  h1: "Compte entreprise : ouverture immédiate, suivi en ligne et paiement à 30 jours",
+  h1: "Coursier pour entreprise : ouvrir un compte",
 
   intro:
     "Ouvrez votre compte en ligne et commandez dans la minute. Chaque collaborateur, service ou site peut avoir son propre compte avec le même SIRET : chacun suit ses courses et reçoit ses factures, à régler sous 30 jours, sans avancer de frais.",
@@ -43,7 +44,7 @@ export const compteEntreprise: Service = {
   ],
 
   context: {
-    title: "Le coût d’une course n’est pas seulement son prix",
+    title: "Ce qu'apporte un compte entreprise",
     paragraphs: [
       "Dans la plupart des structures, les courses se commandent au fil de l’eau : chacun appelle, chacun avance, et la comptabilité récupère en fin de mois une liasse de justificatifs disparates qu’il faut rapprocher un par un. Le temps passé à régulariser dépasse souvent le prix des courses elles-mêmes.",
       "Avec un compte par service ou par site, ce tri est fait d’avance : chaque compte reçoit ses propres factures, avec le détail de ses courses. La comptabilité sait tout de suite à quel service rattacher chaque montant.",
@@ -100,7 +101,7 @@ export const compteEntreprise: Service = {
   ],
 
   coverage:
-    "Le compte entreprise couvre toutes nos prestations dans la capitale et en Île-de-France, chacune au tarif de sa zone : plis confidentiels, transport médical, livraison e-commerce, courses événementielles et tournées régulières.",
+    "Le compte entreprise couvre toutes nos prestations dans la capitale et en Île-de-France : plis confidentiels, transport médical, livraison e-commerce, courses événementielles et tournées régulières.",
 
   pricing: {
     title: "Les tarifs avec un compte entreprise",
@@ -137,7 +138,20 @@ export const compteEntreprise: Service = {
     {
       question: "Le compte couvre-t-il toutes les prestations ?",
       answer:
-        "Oui : plis confidentiels, transport médical, livraison e-commerce, courses événementielles et tournées régulières se commandent depuis le même compte, au tarif de la grille.",
+        "Oui : plis confidentiels, transport médical, livraison e-commerce, courses événementielles et tournées régulières se commandent depuis le même compte.",
     },
   ],
+
+  outline: {
+    sections: [
+      { key: "context", title: "Ce qu'apporte un compte entreprise" },
+      { key: "steps", title: "Comment se déroule l'ouverture" },
+      { key: "included", title: "Suivi et facturation des courses" },
+    ],
+    cta: {
+      title: "Nous contacter",
+      text: "Une question sur l’ouverture ou sur votre volume ? [Nous contacter](/contact). Découvrez aussi [nos secteurs d'activité](/secteurs) et notre [grille tarifaire](/tarifs).",
+    },
+    hidePricing: true,
+  },
 };

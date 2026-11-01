@@ -72,7 +72,7 @@ export default function Hero() {
         <div className="pt-8">
           <div className="min-w-0">
             <h1 className="mb-3 text-balance text-[clamp(36px,5vw,64px)] font-bold leading-[1.05] tracking-[-0.035em]">
-              Coursier B2B à Paris et en Île-de-France
+              Coursier Île-de-France : une course dédiée par envoi
             </h1>
             <p className="mb-4 border-l-2 border-accent pl-3 text-[clamp(18px,2.2vw,24px)] font-semibold text-white">
               Votre pli part dans l&rsquo;heure, pas demain.

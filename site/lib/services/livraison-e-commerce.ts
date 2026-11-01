@@ -1,7 +1,7 @@
 /**
  * lib/services/livraison-e-commerce.ts
- * Prestation e-commerce. Requêtes visées : livraison le jour même Paris,
- * coursier e-commerce, livraison same day Île-de-France.
+ * Prestation e-commerce. Requête visée : « livraison e-commerce ». Le jour même
+ * reste un argument, pas le sujet de la page ; les prix vivent sur /tarifs.
  */
 import type { Service } from "./types";
 
@@ -16,11 +16,11 @@ export const livraisonEcommerce: Service = {
   },
 
   seo: {
-    title: "Coursier jour : livraison same-day pour l'e-commerce",
+    title: "Livraison e-commerce : courses dédiées pour vos commandes",
     description:
-      "Livraison programmée ou urgente à Paris et en petite couronne : enlèvement sur le lieu de départ, livraison dans l'heure, dans les 3 heures ou dans la journée. Suivi en ligne, preuve de livraison.",
+      "Livraison e-commerce à Paris et en Île-de-France : confiez vos commandes à un coursier dédié, avec suivi de chaque envoi et interlocuteur unique.",
     keywords: [
-      "livraison jour même Paris",
+      "livraison e-commerce",
       "coursier e-commerce Paris",
       "livraison same day Île-de-France",
       "livraison dernier kilomètre Paris",
@@ -28,7 +28,7 @@ export const livraisonEcommerce: Service = {
     ],
   },
 
-  h1: "Livraison programmée ou urgente",
+  h1: "Livraison e-commerce : une course dédiée par commande",
 
   intro:
     "Vos clients peuvent prendre rendez-vous plusieurs jours à l’avance. Ou être livrés en urgence : dans l’heure, dans les 3 heures ou dans la journée. One Connexion vient chercher le colis sur le lieu d’enlèvement et le livre dans la capitale et la petite couronne.",
@@ -40,7 +40,7 @@ export const livraisonEcommerce: Service = {
   ],
 
   context: {
-    title: "Le dernier kilomètre porte votre promesse, pas la nôtre",
+    title: "Les contraintes de livraison d'un e-commerçant",
     paragraphs: [
       "Le transporteur est invisible tant que tout va bien. Dès qu’une livraison échoue, c’est votre marque que le client tient pour responsable, votre service client qui absorbe la réclamation, et votre note qui en porte la trace. Le dernier kilomètre est le seul moment physique de la relation : il vaut mieux qu’il soit tenu.",
       "L’échec de livraison est le premier poste de coût caché du secteur. Un destinataire absent, c’est une seconde présentation, un colis qui dort quelque part, et un client qui ne comprend pas. Laisser le destinataire choisir son créneau supprime la cause à la racine plutôt que d’en traiter les conséquences.",
@@ -97,7 +97,7 @@ export const livraisonEcommerce: Service = {
   ],
 
   coverage:
-    "Intramuros et petite couronne (92, 93, 94) au tarif standard. Roissy, Orly et la grande couronne au tarif de leur zone. Les collectes récurrentes s’organisent sur créneaux fixes convenus à l’avance.",
+    "Intramuros et petite couronne (92, 93, 94), ainsi que Roissy, Orly et la grande couronne. Les collectes récurrentes s’organisent sur créneaux fixes convenus à l’avance.",
 
   pricing: {
     title: "Tarif d’une livraison e-commerce, programmée ou urgente",
@@ -127,14 +127,22 @@ export const livraisonEcommerce: Service = {
         "Oui. Vous pouvez programmer une livraison plusieurs jours à l’avance. Pour une livraison urgente le jour même, la commande se passe avant l’heure limite.",
     },
     {
-      question: "Combien coûte une livraison le jour même ?",
-      answer:
-        "En intramuros, 28 € TTC en Normal (livré sous 3 h) ; vers la petite couronne, 39 € TTC jusqu'à 8 km puis 2 € TTC par km. Le prix est le même quel que soit le colis, dans la limite de 18 kg.",
-    },
-    {
       question: "Jusqu’à quelle heure commander pour livrer le jour même ?",
       answer:
         "Nous travaillons du lundi au samedi, de 9h à 19h. Pour une livraison en Normal (3 h) le jour même, commandez avant 16h ; en Super (1 h), jusqu’à 18h.",
     },
   ],
+
+  outline: {
+    sections: [
+      { key: "context", title: "Les contraintes de livraison d'un e-commerçant" },
+      { key: "steps", title: "Comment fonctionne une course dédiée" },
+      { key: "included", title: "Suivi et preuve de livraison" },
+    ],
+    cta: {
+      title: "Mettre en place vos livraisons",
+      text: "Pour des envois réguliers, [ouvrir un compte entreprise](/services/compte-entreprise) prend deux minutes, et des [tournées de livraison régulières](/services/tournees-regulieres) s’organisent sur créneaux fixes. Le prix de chaque course suit notre [tarif coursier Paris](/tarifs).",
+    },
+    hidePricing: true,
+  },
 };

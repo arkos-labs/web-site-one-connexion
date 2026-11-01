@@ -44,7 +44,7 @@ export default function GuidesPage() {
                 className="group flex flex-col gap-4 rounded-2xl border border-line bg-white p-7 shadow-sm transition-all hover:border-accent/40 hover:shadow-md"
               >
                 <h2 className="text-[19px] font-bold leading-[1.25] tracking-[-0.01em] text-ink">{guide.title}</h2>
-                <p className="flex-1 text-[14.5px] leading-[1.65] text-muted">{guide.description}</p>
+                <p className="flex-1 text-[14.5px] leading-[1.65] text-muted">{guide.summary}</p>
                 <span className="flex items-center gap-1.5 text-[13px] font-bold text-accent">
                   Lire le guide
                   <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
