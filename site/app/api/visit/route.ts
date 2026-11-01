@@ -1,14 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { refreshPinnedDashboard } from "@/lib/telegram-dashboard";
 import { visitorHash } from "@/lib/visitor-hash";
-
-// Adresse d'une page publique : chemin seul, sans paramètres ni espace admin.
-const cleanPath = (value: unknown) => {
-  if (typeof value !== "string" || value.length > 120) return null;
-  if (!/^\/[a-z0-9\/_-]*$/i.test(value)) return null;
-  if (/^\/(admin|dashboard|telegram)(\/|$)/.test(value)) return null;
-  return value;
-};
+import { cleanPath } from "@/lib/clean-path";
 
 // Compte une page vue du site public, sans cookie (cf. migration site_visits).
 export async function POST(req: Request) {

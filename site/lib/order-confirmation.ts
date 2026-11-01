@@ -49,7 +49,7 @@ export function orderConfirmationHtml(i: OrderConfirmationInput): string {
 <tr><td style="padding:30px 28px 8px">
 <p style="margin:0 0 6px;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#ed5518;font-weight:700">Commande confirmée</p>
 <h1 style="margin:0 0 14px;font-size:24px;line-height:1.2">Votre commande a bien été passée</h1>
-<p style="margin:0 0 18px;font-size:15px;line-height:1.6">Bonjour ${esc(i.name || '')},<br>merci pour votre commande. Un dispatcheur prend en charge votre course et vous contacte si besoin.</p>
+<p style="margin:0 0 18px;font-size:15px;line-height:1.6">Bonjour ${esc(i.name || '')},<br>merci pour votre commande. Un coordinateur prend en charge votre course et vous contacte si besoin.</p>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F4F2EE;border-radius:8px"><tr><td style="padding:16px 18px;text-align:center">
 <p style="margin:0;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#6B6862">Numéro de course</p>
 <p style="margin:6px 0 0;font-size:26px;font-weight:700;letter-spacing:.06em;font-family:'Courier New',monospace">${esc(i.trackingCode)}</p>

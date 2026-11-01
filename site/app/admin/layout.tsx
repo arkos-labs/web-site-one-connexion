@@ -19,6 +19,13 @@ export default function AdminLayout({
   const supabase = createClient();
   const [pendingCount, setPendingCount] = useState(0);
 
+  // Appareil de l'équipe : le site ne le compte plus dans l'audience (cookie posé à l'ouverture de l'admin).
+  useEffect(() => {
+    try {
+      document.cookie = "oc_interne=1; max-age=31536000; path=/; SameSite=Lax";
+    } catch {}
+  }, []);
+
   useEffect(() => {
     const loadPendingCount = async () => {
       const todayIso = new Date().toISOString().slice(0, 10);

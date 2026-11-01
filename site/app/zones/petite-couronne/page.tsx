@@ -93,7 +93,7 @@ export default function ZonePetiteCouronne() {
           <p className="max-w-[58ch] text-pretty text-[17px] leading-[1.6] text-white/66">
             One Connexion dessert les trois départements de petite couronne -
             Hauts-de-Seine (92), Seine-Saint-Denis (93) et Val-de-Marne (94) -
-            avec le même dispatch et une course dédiée pour chaque envoi.
+            avec le même coordination et une course dédiée pour chaque envoi.
           </p>
           <div className="mt-10 flex flex-wrap gap-3">
             <a href="/#commander" className="rounded-[2px] bg-accent px-[26px] py-[15px] text-[15px] font-semibold text-white hover:bg-accent-dark">
@@ -163,7 +163,7 @@ export default function ZonePetiteCouronne() {
           ))}
         </div>
         <p className="mt-6 text-[13px] text-muted">
-          Toutes les villes de petite couronne non listées sont couvertes. Contactez notre dispatch pour confirmer l'adresse.
+          Toutes les villes de petite couronne non listées sont couvertes. Contactez notre coordination pour confirmer l'adresse.
         </p>
       </section>
 
@@ -177,7 +177,7 @@ export default function ZonePetiteCouronne() {
               De nombreuses entreprises parisiennes ont des clients, des partenaires ou des sites
               en petite couronne. Confier ces livraisons à un prestataire différent crée une
               rupture dans la traçabilité et les conditions contractuelles. One Connexion couvre
-              l'intégralité de ce territoire avec le même dispatch, le même niveau de service et
+              l'intégralité de ce territoire avec le même coordination, le même niveau de service et
               une facturation centralisée.
             </p>
             <p>
@@ -318,7 +318,7 @@ export default function ZonePetiteCouronne() {
               <p className="mb-3 text-[clamp(24px,3vw,36px)] font-bold leading-[1.2] tracking-[-0.02em]">
                 Une course en petite couronne maintenant ?
               </p>
-              <p className="text-[15px] text-white/60">Dispatch en moins de 2 minutes, du lundi au samedi de 9h à 19h.</p>
+              <p className="text-[15px] text-white/60">Prise en charge en moins de 2 minutes, du lundi au samedi de 9h à 19h.</p>
             </div>
             <a href={`tel:${PHONE_TEL}`} className="rounded-[4px] bg-accent px-8 py-4 text-center text-[15px] font-bold text-white hover:bg-accent-dark">
               {PHONE_DISPLAY}

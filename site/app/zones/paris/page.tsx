@@ -354,7 +354,7 @@ export default function ZoneParis() {
               <p className="mb-3 text-[clamp(24px,3vw,36px)] font-bold leading-[1.2] tracking-[-0.02em]">
                 Une course maintenant ?
               </p>
-              <p className="text-[15px] text-white/60">Dispatch en moins de 2 minutes, du lundi au samedi de 9h à 19h.</p>
+              <p className="text-[15px] text-white/60">Prise en charge en moins de 2 minutes, du lundi au samedi de 9h à 19h.</p>
             </div>
             <a
               href={`tel:${PHONE_TEL}`}

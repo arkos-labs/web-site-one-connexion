@@ -30,7 +30,7 @@ Commander en 2 minutes : ${ORDER_URL}
 Créer un compte entreprise : ${ACCOUNT_URL}
 
 Keisha · Commercial et administratif · ${KEISHA_PHONE} · ${EMAIL}
-Nicolas · Commandes et dispatch · ${PHONE_DISPLAY}
+Nicolas · Commandes et coordination · ${PHONE_DISPLAY}
 ONE CONNEXION · 5 Square Nungesser, 94160 Saint-Mandé
 
 —
@@ -49,7 +49,7 @@ ${button(ACCOUNT_URL, "Créer un compte entreprise", false)}
 </td></tr>
 <tr><td style="padding:0 28px 28px 28px;font-size:14px;line-height:1.6;color:#4A4845;">
 <strong style="color:#0E0F10;">Keisha</strong> · Commercial et administratif · ${KEISHA_PHONE} · <a href="mailto:${EMAIL}" style="color:#ed5518;">${EMAIL}</a><br>
-<strong style="color:#0E0F10;">Nicolas</strong> · Commandes et dispatch · ${PHONE_DISPLAY}<br>
+<strong style="color:#0E0F10;">Nicolas</strong> · Commandes et coordination · ${PHONE_DISPLAY}<br>
 ONE CONNEXION · 5 Square Nungesser, 94160 Saint-Mandé
 </td></tr>
 <tr><td style="padding:16px 28px;border-top:1px solid #dfdcd6;font-size:12px;line-height:1.5;color:#8C8882;">

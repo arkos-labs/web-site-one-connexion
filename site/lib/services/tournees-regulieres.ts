@@ -14,7 +14,7 @@ export const tourneesRegulieres: Service = {
     keywords: ["tournées régulières", "navette entreprise paris", "coursier dédié", "navette inter-sites"],
   },
   h1: "Vos navettes inter-sites et tournées régulières.",
-  intro: "Une organisation logistique sur-mesure pour vos flux récurrents, assurée par un dispatcheur dédié et des coursiers familiers de vos exigences.",
+  intro: "Une organisation logistique sur-mesure pour vos flux récurrents, assurée par un coordinateur dédié et des coursiers familiers de vos exigences.",
   stats: [
     { value: "Fixe", label: "Même créneau chaque semaine" },
     { value: "0", label: "Gestion RH à votre charge" },
@@ -30,7 +30,7 @@ export const tourneesRegulieres: Service = {
   steps: [
     { title: "Audit et définition du plan", body: "Analyse de vos itinéraires, volumétries et contraintes horaires pour calibrer la tournée de manière optimale." },
     { title: "Affectation d'une équipe", body: "Des coursiers habitués à vos sites et à vos protocoles de sécurité sont spécifiquement affectés à vos missions." },
-    { title: "Déploiement et suivi", body: "Lancement des navettes avec un reporting régulier de notre dispatcheur pour ajuster le service à vos pics d'activité." },
+    { title: "Déploiement et suivi", body: "Lancement des navettes avec un reporting régulier de notre coordinateur pour ajuster le service à vos pics d'activité." },
   ],
   included: [
     "Continuité de service (coursiers de remplacement garantis)",
@@ -56,7 +56,7 @@ export const tourneesRegulieres: Service = {
   faqTitle: "Vos questions sur les tournées régulières.",
 
   faq: [
-    { question: "Puis-je modifier l'horaire de passage de la navette exceptionnellement ?", answer: "Oui, un simple appel à votre dispatcheur permet d'ajuster une tournée avec un délai de prévenance de quelques heures." },
+    { question: "Puis-je modifier l'horaire de passage de la navette exceptionnellement ?", answer: "Oui, un simple appel à votre coordinateur permet d'ajuster une tournée avec un délai de prévenance de quelques heures." },
     { question: "Que se passe-t-il si le coursier habituel est absent ?", answer: "La continuité de service est notre garantie phare : un coursier de réserve, préalablement briefé sur votre tournée, prend immédiatement le relais sans aucune interruption." },
     {
       question: "Combien coûte une tournée régulière ?",
