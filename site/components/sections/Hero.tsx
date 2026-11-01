@@ -158,7 +158,7 @@ export default function Hero() {
             JE COMMANDE MA COURSE
           </button>
         </div>
-        <p aria-live="polite" className="mb-6 -mt-3 rounded-xl bg-ink/70 px-3 py-2 text-[14px] font-medium text-white backdrop-blur-sm">
+        <p aria-live="polite" className="mb-6 -mt-3 rounded-xl bg-ink/70 px-3 py-2 text-[14px] font-medium text-white backdrop-blur-sm md:rounded-none md:bg-transparent md:px-1 md:py-0 md:font-normal md:text-white/80 md:backdrop-blur-none">
           {price != null ? (
             <>
               Votre course : <strong className="text-[16px] font-bold text-white">dès {formatEur(price)} € TTC</strong>
