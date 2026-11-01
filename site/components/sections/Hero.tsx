@@ -74,7 +74,7 @@ export default function Hero() {
         muted
         playsInline
         preload="auto"
-        poster="/hero-poster.webp"
+        poster="/hero-203401-poster.jpg"
         fetchPriority="high"
         aria-hidden="true"
         className="absolute inset-0 w-full h-full object-cover object-center z-0 hidden md:block"
