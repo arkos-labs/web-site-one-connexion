@@ -5,6 +5,7 @@
  */
 import type { MetadataRoute } from "next";
 import { SERVICE_SLUGS } from "@/lib/services";
+import { LANDING_SERVICES } from "@/lib/services/landing";
 import { SITE_URL } from "@/lib/site-content";
 import { INDEXED_ZONE_SLUGS, getZone } from "@/lib/zones/data";
 import { GUIDE_SLUGS } from "@/lib/guides";
@@ -36,6 +37,7 @@ function sourceFiles(path: string): string[] {
   if (path === "") return ["app/page.tsx"];
   if (path.startsWith("/services/")) {
     const slug = path.slice("/services/".length);
+    if (LANDING_SERVICES.some((s) => s.slug === slug)) return [`app${path}/page.tsx`, "lib/services/landing.ts"];
     return ["app/services/[slug]/page.tsx", `lib/services/${slug}.ts`];
   }
   if (path.startsWith("/guides/")) return ["app/guides/[slug]/page.tsx", "lib/guides.ts"];
@@ -53,6 +55,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const paths = [
     ...STATIC_PATHS,
     ...SERVICE_SLUGS.map((slug) => `/services/${slug}`),
+    ...LANDING_SERVICES.map((s) => `/services/${s.slug}`),
     ...GUIDE_SLUGS.map((slug) => `/guides/${slug}`),
     ...INDEXED_ZONE_SLUGS.map((slug) => `/zones/${slug}`),
   ];

@@ -5,6 +5,7 @@
  */
 import type { Metadata } from "next";
 import Link from "next/link";
+import InlineLinks from "@/components/InlineLinks";
 import JsonLd from "@/components/JsonLd";
 import { SITE_URL, PHONE_DISPLAY, PHONE_TEL } from "@/lib/site-content";
 import { CheckCircle2, Clock, MapPin, Shield } from "lucide-react";
@@ -88,7 +89,7 @@ const FACTORS = [
   {
     icon: Shield,
     title: "Même tarif pour tout colis",
-    desc: "Pli confidentiel, dossier, prélèvement médical ou colis jusqu'à 18 kg : le prix est le même. Seules la zone et le délai le font varier.",
+    desc: "Pli confidentiel, dossier, prélèvement médical ou colis jusqu'à 18 kg : le prix est le même. Seules la zone et le délai le font varier. C’est aussi le cas pour un [coursier pour particulier](/services/coursier-particulier-paris).",
   },
   {
     icon: CheckCircle2,
@@ -180,7 +181,7 @@ export default function TarifsPage() {
                 <Icon size={18} className="text-accent" strokeWidth={2} />
               </div>
               <h3 className="font-bold tracking-[-0.01em]">{title}</h3>
-              <p className="text-[14px] leading-[1.65] text-muted">{desc}</p>
+              <p className="text-[14px] leading-[1.65] text-muted"><InlineLinks text={desc} /></p>
             </div>
           ))}
         </div>
@@ -257,7 +258,8 @@ export default function TarifsPage() {
         <p className="mb-14 max-w-[60ch] text-[15.5px] leading-[1.7] text-muted">
           Le délai Urgent coûte 1,5 fois le prix Normal, le Super 2 fois. Vous
           pouvez payer à la course ou ouvrir un compte entreprise, réglé sur
-          facture à 30 jours.
+          facture à 30 jours. Pour une{" "}
+          <Link href="/services/coursier-urgent-paris" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">course urgente à Paris</Link>, choisissez le délai Urgent ou Super.
         </p>
         <div className="grid gap-6 md:grid-cols-2 max-w-[780px]">
           {FORMULES.map((f) => (
@@ -361,7 +363,11 @@ export default function TarifsPage() {
                 <Link href="/contact" className="font-medium text-white underline decoration-accent underline-offset-4 hover:text-accent">
                   demander un devis
                 </Link>
-                .
+                . Pour un{" "}
+                <Link href="/services/coursier-dimanche-paris" className="font-medium text-white underline decoration-accent underline-offset-4 hover:text-accent">
+                  coursier dimanche
+                </Link>
+                , contactez-nous en amont.
               </p>
             </div>
             <div className="flex flex-col gap-3 sm:flex-row">

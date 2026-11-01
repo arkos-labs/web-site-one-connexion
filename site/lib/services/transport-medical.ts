@@ -182,7 +182,7 @@ export const transportMedical: Service = {
     ],
     cta: {
       title: "Travailler avec un laboratoire ou un établissement",
-      text: "Pour des envois ponctuels ou des collectes régulières, appelez-nous ou commandez en ligne. Nos guides détaillent le [transport de prélèvements médicaux](/guides/transport-de-prelevements-medicaux) et l’[expédition de matériel de laboratoire](/guides/expedier-du-materiel-de-laboratoire) ; pour les autres envois, voyez notre [coursier moto Paris](/services/coursier-moto-paris).",
+      text: "Pour des envois ponctuels ou des collectes régulières, appelez-nous ou commandez en ligne. Nos guides détaillent le [transport de prélèvements médicaux](/guides/transport-de-prelevements-medicaux) et l’[expédition de matériel de laboratoire](/guides/expedier-du-materiel-de-laboratoire) ; pour les autres envois, voyez notre [coursier moto Paris](/services/coursier-moto-paris). Pour l’ensemble des envois d’un laboratoire, voyez aussi notre [coursier pour laboratoire](/services/coursier-laboratoire).",
     },
   },
 };

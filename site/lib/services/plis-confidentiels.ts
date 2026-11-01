@@ -109,7 +109,7 @@ export const plisConfidentiels: Service = {
     },
     {
       title: "Pièces réclamées en audience",
-      body: "Des originaux demandés en cours d’audience. Course immédiate du cabinet vers le palais, coursier joignable pendant tout le trajet.",
+      body: "Des originaux demandés en cours d’audience. Course immédiate du cabinet vers le palais, coursier joignable pendant tout le trajet. Voir aussi notre [coursier pour avocat et notaire](/services/coursier-avocat-notaire).",
     },
   ],
 

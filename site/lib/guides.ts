@@ -78,7 +78,7 @@ export const GUIDES: Guide[] = [
       {
         heading: "Confier l'envoi à un coursier",
         paragraphs: [
-          "Pour un document sensible ou urgent, la course dédiée est la plus adaptée : le coursier part de votre adresse et va directement chez le destinataire, sans arrêt intermédiaire. Pour des envois récurrents et moins pressés (courrier quotidien entre deux sites), une tournée régulière est plus économique.",
+          "Pour un document sensible ou urgent, la course dédiée est la plus adaptée : le coursier part de votre adresse et va directement chez le destinataire, sans arrêt intermédiaire. Pour des envois récurrents et moins pressés (courrier quotidien entre deux sites), une tournée régulière est plus économique. Pour les cabinets et les études, voyez notre [coursier avocat et notaire](/services/coursier-avocat-notaire).",
           "Le détail des engagements figure sur la page de notre [service de transport de plis confidentiels](/services/plis-confidentiels), et le [tarif d'une course](/tarifs) sur notre grille.",
         ],
       },
@@ -311,7 +311,7 @@ export const GUIDES: Guide[] = [
       {
         heading: "Confier l'envoi à une course dédiée",
         paragraphs: [
-          "En course dédiée, le coursier va directement chez le destinataire, sans arrêt intermédiaire, et la remise est horodatée avec le nom de la personne qui reçoit le colis.",
+          "En course dédiée, le coursier va directement chez le destinataire, sans arrêt intermédiaire, et la remise est horodatée avec le nom de la personne qui reçoit le colis. Voir aussi notre [coursier pour laboratoire](/services/coursier-laboratoire).",
           "Notre service de [transport de matériel médical](/services/transport-medical) détaille les engagements. Pour les échantillons biologiques, lisez notre guide du [transport de prélèvements médicaux](/guides/transport-de-prelevements-medicaux).",
         ],
       },

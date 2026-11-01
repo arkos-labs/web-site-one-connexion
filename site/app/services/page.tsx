@@ -86,7 +86,8 @@ export default function ServicesIndexPage() {
         <h2 className={H2_CLASS}>Quel service pour quel envoi</h2>
         <p className="mb-10 max-w-[62ch] text-[15.5px] leading-[1.7] text-muted">
           Chaque prestation a sa propre procédure. Toutes partent en course
-          dédiée : un coursier, un envoi, un trajet direct.
+          dédiée : un coursier, un envoi, un trajet direct. Vous n’êtes pas une entreprise ? Voyez notre{" "}
+          <Link href="/services/coursier-particulier-paris" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">coursier pour particulier</Link>.
         </p>
         <div className="grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-4">
           {SERVICES.map((service) => (

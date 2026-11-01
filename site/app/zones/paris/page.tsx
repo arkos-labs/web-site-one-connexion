@@ -6,6 +6,7 @@
  */
 import type { Metadata } from "next";
 import Link from "next/link";
+import InlineLinks from "@/components/InlineLinks";
 import JsonLd from "@/components/JsonLd";
 import TrustBlock from "@/components/TrustBlock";
 import { SITE_URL, PHONE_TEL, PHONE_DISPLAY } from "@/lib/site-content";
@@ -202,6 +203,8 @@ export default function ZoneParis() {
           laboratoires, commandes pour les boutiques : chaque envoi part seul,
           avec son coursier. Pour les documents sensibles, voyez notre{" "}
           <Link href="/services/plis-confidentiels" className={LINK}>transport de plis confidentiels</Link>.
+          {" "}Pour un <Link href="/services/coursier-urgent-paris" className={LINK}>envoi urgent à Paris</Link> ou une{" "}
+          <Link href="/services/coursier-particulier-paris" className={LINK}>course pour un particulier</Link>, la course reste dédiée.
         </p>
       </section>
 
@@ -261,7 +264,7 @@ export default function ZoneParis() {
         <h2 className={`mb-12 text-center ${H2}`}>Comment se déroule une course</h2>
         <div className="grid gap-8 md:grid-cols-3">
           {[
-            { num: "01", title: "Demande immédiate", desc: "Vous commandez en ligne ou par téléphone, pour n’importe quel arrondissement." },
+            { num: "01", title: "Demande immédiate", desc: "Vous commandez en ligne ou par téléphone, pour n’importe quel arrondissement. Une [course le dimanche](/services/coursier-dimanche-paris) se commande de la même façon." },
             { num: "02", title: "Enlèvement", desc: "Un coursier se faufile dans le trafic parisien pour récupérer votre pli en moins de 45 minutes." },
             { num: "03", title: "Preuve de remise", desc: "Vous suivez la course en ligne. Une fois le pli remis en main propre, vous recevez l'heure exacte et le nom du destinataire." }
           ].map((step) => (
@@ -270,7 +273,7 @@ export default function ZoneParis() {
                 {step.num}
               </div>
               <h3 className="mb-3 text-[18px] font-bold text-ink">{step.title}</h3>
-              <p className="text-[14.5px] leading-[1.6] text-muted">{step.desc}</p>
+              <p className="text-[14.5px] leading-[1.6] text-muted"><InlineLinks text={step.desc} /></p>
             </div>
           ))}
         </div>

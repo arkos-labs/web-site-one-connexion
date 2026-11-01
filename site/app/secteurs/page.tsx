@@ -6,6 +6,7 @@
  */
 import type { Metadata } from "next";
 import Link from "next/link";
+import InlineLinks from "@/components/InlineLinks";
 import JsonLd from "@/components/JsonLd";
 import { SITE_URL } from "@/lib/site-content";
 import { Scale, Activity, ShoppingBag, Briefcase, Stethoscope, Building2 } from "lucide-react";
@@ -40,6 +41,8 @@ const breadcrumbSchema = {
 const SECTEURS: {
   icon: typeof Scale; slug: string; name: string; h2?: string; tag: string; color: string; iconBg: string;
   desc: string; detail: string[]; service: string; serviceLabel: string;
+  /** Phrase ajoutée à la description, avec un lien [ancre](/chemin). */
+  descLink?: string;
 }[] = [
   {
     icon: Scale,
@@ -50,6 +53,7 @@ const SECTEURS: {
     color: "border-blue-200 bg-blue-50",
     iconBg: "bg-blue-100 text-blue-700",
     desc: "Cabinets d'avocats, études notariales, offices d'huissiers. Transport de plis confidentiels avec remise en main propre et preuve horodatée.",
+    descLink: "Voir aussi notre [coursier avocat et notaire](/services/coursier-avocat-notaire).",
     detail: [
       "Dépôt au greffe avant clôture",
       "Transmission d'actes entre études",
@@ -68,6 +72,7 @@ const SECTEURS: {
     color: "border-green-200 bg-green-50",
     iconBg: "bg-green-100 text-green-700",
     desc: "Laboratoires d'analyses, cliniques privées, pharmacies hospitalières, CHU. Transport de prélèvements biologiques, matériel médical sensible et médicaments urgents.",
+    descLink: "Voir aussi notre [coursier pour laboratoire](/services/coursier-laboratoire).",
     detail: [
       "Prélèvements biologiques et échantillons",
       "Matériel médical et instruments stériles",
@@ -197,7 +202,10 @@ export default function SecteursPage() {
                     )}
                   </div>
                 </div>
-                <p className="text-[14.5px] leading-[1.65] text-muted">{s.desc}</p>
+                <p className="text-[14.5px] leading-[1.65] text-muted">
+                  {s.desc}
+                  {s.descLink && <> <InlineLinks text={s.descLink} /></>}
+                </p>
                 <ul className="grid grid-cols-2 gap-x-4 gap-y-1.5">
                   {s.detail.map((d) => (
                     <li key={d} className="flex items-start gap-1.5 text-[13px] text-muted">

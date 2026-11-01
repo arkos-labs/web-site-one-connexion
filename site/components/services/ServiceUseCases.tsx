@@ -3,6 +3,7 @@
  * Situations concrètes. Fort levier sur les requêtes longue traîne et sur
  * les réponses générées par IA, qui reprennent volontiers ce format.
  */
+import InlineLinks from "@/components/InlineLinks";
 import type { ServiceUseCase } from "@/lib/services";
 
 export default function ServiceUseCases({
@@ -20,7 +21,7 @@ export default function ServiceUseCases({
           <h3 className="mb-2.5 text-[16px] font-bold tracking-[-0.02em]">
             {useCase.title}
           </h3>
-          <p className="text-[15px] leading-[1.6] text-muted">{useCase.body}</p>
+          <p className="text-[15px] leading-[1.6] text-muted"><InlineLinks text={useCase.body} /></p>
         </article>
       ))}
     </div>

@@ -88,7 +88,7 @@ export const coursierExpressParis: Service = {
   useCases: [
     {
       title: "Document à livrer dans l’heure",
-      body: "Un contrat ou un acte attendu chez un client avant la fin de journée. Enlèvement dans l’heure, remise en main propre.",
+      body: "Un contrat ou un acte attendu chez un client avant la fin de journée. Enlèvement dans l’heure, remise en main propre. Voir aussi notre [coursier urgent à Paris](/services/coursier-urgent-paris).",
     },
     {
       title: "Pièce qui bloque une activité",
@@ -96,7 +96,7 @@ export const coursierExpressParis: Service = {
     },
     {
       title: "Colis e-commerce à livrer le jour même",
-      body: "Une commande à livrer à un client parisien dans la journée, avec preuve de remise.",
+      body: "Une commande à livrer à un client parisien dans la journée, avec preuve de remise. Le week-end, voyez notre [coursier le dimanche à Paris](/services/coursier-dimanche-paris).",
     },
   ],
 
