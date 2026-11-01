@@ -10,8 +10,9 @@
  */
 import { useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { MessageCircle, Phone, Send, X } from "lucide-react";
+import { BadgeCheck, Clock, Euro, Lock, Map, MapPin, MessageCircle, Paperclip, Phone, PhoneCall, Send, UserPlus, X, Zap } from "lucide-react";
 import { STEPS, matchStep, type Choice, type StepId } from "@/lib/chatbot/quick-questions";
+import { matchFaq } from "@/lib/chatbot/faq";
 import { PHONE_DISPLAY, PHONE_TEL } from "@/lib/site-content";
 import { ACTION_BAR_HIDDEN } from "@/components/MobileActionBar";
 
@@ -22,7 +23,7 @@ const HIDDEN = /^\/(admin|telegram|commande)(\/|$)/;
 const MAX_LEN = 1000;
 const WELCOME: Msg = {
   role: "assistant",
-  content: "Bonjour ! Je suis l'assistant ONE CONNEXION. Comment puis-je vous aider aujourd'hui ? Écrivez votre question, ou choisissez une option ci-dessous.",
+  content: "Bonjour, je suis l'assistant ONE CONNEXION. Posez votre question ou choisissez une option ci-dessous.",
   choices: STEPS.menu.choices,
 };
 
@@ -91,7 +92,6 @@ export default function ChatWidget() {
 
     // Toute question écrite part à l'assistant (réponse détaillée). Sans clé IA côté serveur, il répond
     // « fallback » et on affiche le parcours guidé le plus proche.
-    const local = matchStep(text);
     setLoading(true);
     const started = Date.now();
     let reply: Msg;
@@ -102,10 +102,10 @@ export default function ChatWidget() {
         body: JSON.stringify({ messages: history(withUser) }),
       });
       const data = (await res.json().catch(() => ({}))) as { reply?: string; fallback?: boolean };
-      if (data.fallback || typeof data.reply !== "string" || !data.reply) reply = guided(local);
+      if (data.fallback || typeof data.reply !== "string" || !data.reply) reply = guided(text);
       else reply = { role: "assistant", content: data.reply, choices: [{ label: "Commander maintenant", action: "order" }, { label: "Être rappelé", action: "callback" }, { label: "Autre question", step: "menu" }] };
     } catch {
-      reply = guided(local);
+      reply = guided(text);
     }
     // Petit délai « il écrit… » : la réponse arrive comme dans une vraie conversation.
     await new Promise((resolve) => setTimeout(resolve, Math.max(0, typingMs(reply.content) - (Date.now() - started))));
@@ -136,23 +136,47 @@ export default function ChatWidget() {
           className="fixed inset-0 z-[80] flex flex-col bg-paper-card md:inset-auto md:bottom-6 md:right-6 md:h-[620px] md:max-h-[calc(100vh-48px)] md:w-[390px] md:overflow-hidden md:rounded-2xl md:border md:border-line md:shadow-2xl"
           style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
         >
-          <div className="flex items-center justify-between bg-ink px-4 py-3 text-white" style={{ paddingTop: "max(12px, env(safe-area-inset-top))" }}>
-            <div>
-              <div className="text-[15px] font-bold">Assistant ONE CONNEXION</div>
-              <div className="text-[12px] text-white/60">Réponse immédiate · Coursiers lun-sam 9 h - 19 h</div>
+          <div className="bg-ink px-4 pb-3 pt-3 text-white" style={{ paddingTop: "max(12px, env(safe-area-inset-top))" }}>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/10 text-[13px] font-extrabold text-accent ring-1 ring-white/10">
+                  1C
+                  <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-ink bg-emerald-400" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-1.5 text-[15px] font-bold">
+                    Assistant ONE CONNEXION
+                    <BadgeCheck size={16} className="text-accent" />
+                  </div>
+                  <div className="text-[12px] text-emerald-400">
+                    Réponse immédiate <span className="text-white/40">· &lt; 2 min</span>
+                  </div>
+                </div>
+              </div>
+              <button type="button" onClick={() => setOpen(false)} aria-label="Fermer" className="rounded-lg p-2 hover:bg-white/10">
+                <X size={22} />
+              </button>
             </div>
-            <button type="button" onClick={() => setOpen(false)} aria-label="Fermer" className="rounded-lg p-2 hover:bg-white/10">
-              <X size={22} />
-            </button>
+            <div className="mt-3 flex items-center justify-between gap-2 border-t border-white/10 pt-2.5 text-[12px] text-white/70">
+              <span className="flex items-center gap-1.5">
+                <Clock size={14} className="text-amber-400" /> Coursiers en service :
+              </span>
+              <span className="rounded-full border border-white/15 px-2.5 py-0.5 text-white/90">Lun – Sam • 9 h – 19 h</span>
+            </div>
           </div>
 
-          <div ref={listRef} className="relative flex-1 space-y-3 overflow-y-auto overscroll-contain px-4 py-4" aria-live="polite">
+          <div ref={listRef} className="relative flex-1 space-y-3 overflow-y-auto overscroll-contain bg-[#f5f7fb] px-4 py-4" aria-live="polite">
+            <div className="flex justify-center">
+              <span className="rounded-full bg-slate-200/70 px-3 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-slate-500">Aujourd'hui</span>
+            </div>
             {messages.map((m, i) => (
               <div key={i} data-last-bot={i === messages.length - 1 && m.role === "assistant" ? "" : undefined}>
                 <Bubble role={m.role} content={m.content} />
               </div>
             ))}
             {loading && <TypingBubble />}
+
+            {!loading && !callback && lastBot?.choices && <p className="pt-2 text-[12px] font-semibold uppercase tracking-wide text-slate-500">Suggestions rapides</p>}
 
             {callback ? (
               <CallbackForm
@@ -171,20 +195,39 @@ export default function ChatWidget() {
               !loading &&
               lastBot?.choices && (
                 <div className="flex flex-wrap gap-2 pt-1">
-                  {lastBot.choices.map((c) => (
-                    <button
-                      key={c.label}
-                      type="button"
-                      onClick={() => choose(c)}
-                      className={`rounded-full px-3 py-1.5 text-left text-[13px] font-semibold ${"action" in c && c.action === "order" ? "bg-accent text-white hover:bg-accent-dark" : "border border-accent/40 bg-white text-accent-dark hover:bg-accent/5"}`}
-                    >
-                      {c.label}
-                    </button>
-                  ))}
+                  {lastBot.choices.map((c) => {
+                    const Icon = choiceIcon(c);
+                    const primary = "action" in c && c.action === "order";
+                    return (
+                      <button
+                        key={c.label}
+                        type="button"
+                        onClick={() => choose(c)}
+                        className={`flex items-center gap-1.5 rounded-full border px-3 py-2 text-left text-[13.5px] font-semibold transition ${primary ? "border-ink bg-ink text-white hover:bg-ink/90" : "border-line bg-white text-ink shadow-sm hover:border-accent/50"}`}
+                      >
+                        <Icon size={15} className="shrink-0 text-accent" />
+                        {c.label}
+                      </button>
+                    );
+                  })}
                 </div>
               )
             )}
           </div>
+
+          <a
+            href={`tel:${PHONE_TEL}`}
+            className="mx-3 mb-2 flex items-center gap-3 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2.5"
+          >
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-amber-500 text-white">
+              <Phone size={16} />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-[11px] font-bold uppercase tracking-wide text-red-900">Urgence &amp; coordination directe</span>
+              <span className="block text-[15px] font-bold tracking-wide text-ink">{PHONE_DISPLAY}</span>
+            </span>
+            <span className="shrink-0 rounded-lg border border-amber-300 bg-white px-2.5 py-1 text-[12px] font-semibold text-ink">Appel direct</span>
+          </a>
 
           <form
             onSubmit={(e) => {
@@ -219,12 +262,9 @@ export default function ChatWidget() {
               <Send size={18} />
             </button>
           </form>
-          <div className="flex items-center justify-between gap-2 px-4 pb-2 text-[11px] text-label">
-            <span>Ne partagez ni carte bancaire ni mot de passe.</span>
-            <a href={`tel:${PHONE_TEL}`} className="flex shrink-0 items-center gap-1 font-bold text-ink">
-              <Phone size={12} className="text-accent" /> {PHONE_DISPLAY}
-            </a>
-          </div>
+          <p className="flex items-center justify-center gap-1.5 px-4 pb-3 text-center text-[11px] text-label">
+            <Lock size={11} /> Ne partagez ni carte bancaire ni mot de passe.
+          </p>
         </div>
       )}
     </>
@@ -233,15 +273,39 @@ export default function ChatWidget() {
 
 function Bubble({ role, content }: Pick<Msg, "role" | "content">) {
   const mine = role === "user";
+  if (mine) {
+    return (
+      <div className="flex justify-end">
+        <div className="max-w-[88%] whitespace-pre-line rounded-2xl rounded-br-md bg-ink px-4 py-2.5 text-[14.5px] leading-[1.5] text-white shadow-sm">{content}</div>
+      </div>
+    );
+  }
   return (
-    <div className={`flex ${mine ? "justify-end" : "justify-start"}`}>
-      <div
-        className={`max-w-[88%] whitespace-pre-line rounded-2xl px-4 py-2.5 text-[14.5px] leading-[1.5] shadow-sm ${mine ? "bg-ink text-white" : "bg-white text-ink"}`}
-      >
-        {content}
+    <div className="flex items-end gap-2">
+      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-ink text-[11px] font-extrabold text-accent">1C</div>
+      <div className="max-w-[85%]">
+        <div className="whitespace-pre-line rounded-2xl rounded-bl-md bg-white px-4 py-2.5 text-[14.5px] leading-[1.5] text-ink shadow-sm ring-1 ring-slate-200/70">{content}</div>
+        <p className="mt-1 pl-1 text-[11px] text-label">Envoyé à l'instant</p>
       </div>
     </div>
   );
+}
+
+/** Icône d'une suggestion, selon son libellé ou son action. */
+function choiceIcon(c: Choice) {
+  if ("action" in c) {
+    if (c.action === "order") return Zap;
+    if (c.action === "call") return PhoneCall;
+    return PhoneCall;
+  }
+  if ("href" in c) return Map;
+  if (c.label.includes("nouveau")) return UserPlus;
+  if (c.label.includes("coûte")) return Euro;
+  if (c.label.includes("Zones")) return MapPin;
+  if (c.label.includes("Horaires")) return Clock;
+  if (c.label.includes("Délai")) return Zap;
+  if (c.label.includes("Suivre")) return Map;
+  return Paperclip;
 }
 
 /** Demande de rappel : enregistrée comme un message de contact (base + e-mail à l'équipe). */
@@ -285,12 +349,15 @@ function CallbackForm({ lastQuestion, onDone }: { lastQuestion: string; onDone: 
   );
 }
 
-/** L'IA ne répond pas : réponse guidée si la question est reconnue, sinon menu et rappel. */
-function guided(step: StepId | null): Msg {
+/** L'IA ne répond pas : parcours guidé, puis questions fréquentes, sinon menu et rappel. */
+function guided(text: string): Msg {
+  const step = matchStep(text);
   if (step) return stepMsg(step);
+  const faq = matchFaq(text);
+  if (faq) return { role: "assistant", ...faq };
   return {
     role: "assistant",
-    content: "Je n'ai pas la réponse exacte, mais un conseiller peut vous aider. Laissez votre numéro et nous vous rappelons, ou choisissez une question.",
+    content: "Je ne suis pas sûr de bien comprendre. Un conseiller peut vous répondre : laissez votre numéro, ou choisissez une question ci-dessous.",
     choices: [{ label: "Être rappelé", action: "callback" }, ...STEPS.menu.choices.filter((c) => !("action" in c))],
   };
 }

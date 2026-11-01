@@ -171,7 +171,7 @@ export const GUIDES: Guide[] = [
       {
         question: "Que faire pour une urgence ?",
         answer:
-          "Appelez le dispatching au lieu de passer par le formulaire : nous confirmons la faisabilité avant l'enlèvement.",
+          "Appelez la coordination au lieu de passer par le formulaire : nous confirmons la faisabilité avant l'enlèvement.",
       },
       {
         question: "Qu’est-ce que le triple emballage UN3373 ?",

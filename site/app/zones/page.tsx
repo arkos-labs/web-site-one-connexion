@@ -112,7 +112,7 @@ export default function ZonesPage() {
           </h1>
           <p className="max-w-[58ch] text-pretty text-[17px] leading-[1.6] text-white/66">
             Paris intramuros, petite couronne et grande couronne sont couverts
-            sans rupture de charge. Un seul dispatch, une seule facturation,
+            sans rupture de charge. Une seule coordination, une seule facturation,
             le même niveau d'exigence partout.
           </p>
         </div>
