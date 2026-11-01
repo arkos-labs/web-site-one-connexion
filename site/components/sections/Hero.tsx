@@ -54,7 +54,21 @@ export default function Hero() {
 
   return (
     <section id="top" className="relative border-b border-white/10 bg-ink text-white">
+      {/* Téléphone : une photo fixe, sans vidéo. */}
+      <img
+        src="/hero-phone.jpg"
+        alt=""
+        aria-hidden="true"
+        className="absolute inset-0 w-full h-full object-cover object-[42%_center] z-0 md:hidden"
+      />
       <video
+        // Lecture accélérée (x3) : fait ressentir la vitesse de la course. Réappliqué au chargement et au départ, la vitesse étant remise à 1 sinon.
+        onLoadedMetadata={(e) => {
+          e.currentTarget.playbackRate = 3;
+        }}
+        onPlay={(e) => {
+          e.currentTarget.playbackRate = 3;
+        }}
         autoPlay
         loop
         muted
@@ -63,14 +77,15 @@ export default function Hero() {
         poster="/hero-poster.webp"
         fetchPriority="high"
         aria-hidden="true"
-        className="absolute inset-0 w-full h-full object-cover object-[center_60%] z-0"
+        className="absolute inset-0 w-full h-full object-cover object-center z-0 hidden md:block"
       >
-        <source src="/videos/hero-video-opt.mp4" type="video/mp4" />
+        <source src="/videos/hero-203401-aller-retour.mp4" type="video/mp4" />
       </video>
-      <div className="absolute inset-0 bg-ink/40 z-10 pointer-events-none"></div>
+      {/* Fondu sombre sur la vidéo, plus fort en haut et en bas, pour lire le texte. */}
+      <div className="absolute inset-0 bg-gradient-to-b from-ink/65 via-ink/30 to-ink/45 md:from-ink/90 md:via-ink/65 md:to-ink/90 z-10 pointer-events-none"></div>
       <div className="relative z-30 mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)]">
         <div className="pt-8">
-          <div className="min-w-0">
+          <div className="min-w-0 [text-shadow:0_1px_12px_rgba(0,0,0,0.65)]">
             <h1 className="mb-3 text-balance text-[clamp(36px,5vw,64px)] font-bold leading-[1.05] tracking-[-0.035em]">
               Coursier Île-de-France : une course dédiée par envoi
             </h1>
@@ -143,7 +158,7 @@ export default function Hero() {
             JE COMMANDE MA COURSE
           </button>
         </div>
-        <p aria-live="polite" className="mb-6 -mt-3 px-1 text-[14px] text-white/80">
+        <p aria-live="polite" className="mb-6 -mt-3 rounded-xl bg-ink/70 px-3 py-2 text-[14px] font-medium text-white backdrop-blur-sm">
           {price != null ? (
             <>
               Votre course : <strong className="text-[16px] font-bold text-white">dès {formatEur(price)} € TTC</strong>
