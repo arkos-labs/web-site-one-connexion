@@ -1,0 +1,179 @@
+/**
+ * lib/services/plis-confidentiels.ts
+ * Prestation juridique & notariale. Requête visée : « pli confidentiel ». La
+ * méthode d'envoi appartient au guide /guides/envoyer-un-pli-confidentiel-paris.
+ */
+import type { Service } from "./types";
+
+export const plisConfidentiels: Service = {
+  slug: "plis-confidentiels",
+
+  card: {
+    tag: "01 - Juridique & notarial",
+    title: "Plis et actes juridiques",
+    body: "Votre pli ne passe que par une seule paire de mains, celle du coursier, jusqu'au destinataire. Au tribunal, chez un notaire ou chez un huissier, il le remet en main propre et vous recevez l'heure exacte du dépôt.",
+    note: "Preuve de dépôt horodatée",
+  },
+
+  serviceType: "Transport de plis confidentiels",
+
+  seo: {
+    title: "Pli confidentiel : transport sécurisé à Paris et en Île-de-France",
+    description:
+      "Envoi de pli confidentiel avec remise en main propre : course dédiée, chaîne de traçabilité et interlocuteur unique pour vos documents sensibles.",
+    keywords: [
+      "pli confidentiel",
+      "envoi pli confidentiel Paris",
+      "coursier juridique Paris",
+      "transport plis confidentiels",
+      "coursier huissier Paris",
+      "coursier notaire Paris",
+      "remise en main propre",
+    ],
+  },
+
+  h1: "Pli confidentiel : un transport sans intermédiaire",
+
+  intro:
+    "One Connexion transporte les actes, conclusions et pièces de procédure des cabinets d’avocats, études notariales et offices d’huissiers d’Île-de-France. Chaque pli part en course dédiée, sans regroupement, et arrive avec une preuve de remise nominative.",
+
+  stats: [
+    { value: "< 45 min", label: "Prise en charge" },
+    { value: "Dédiée", label: "Course sans regroupement" },
+    { value: "En main propre", label: "Remise au destinataire" },
+  ],
+
+  context: {
+    title: "Ce qu'est un envoi sous pli confidentiel",
+    paragraphs: [
+      "Un envoi sous pli confidentiel est un document qui ne doit être remis qu’à son destinataire désigné : acte, conclusions, pièces de procédure, contrat ou courrier sensible. Il voyage fermé, sans regroupement avec d’autres envois, et n’est remis qu’en main propre.",
+      "Un acte déposé après la clôture du greffe, c’est un délai forclos. Une pièce remise à une personne non identifiée, c’est une remise contestable. Dans le juridique, le transport ne relève pas de la commodité logistique : il s’inscrit dans la procédure et s’expose aux mêmes contestations qu’elle.",
+      "La confidentialité impose une contrainte parallèle. Un pli qui voyage avec quinze autres colis, manipulé par trois personnes successives, ne permet plus d’établir qui a eu accès à quoi. C’est la raison pour laquelle nous n’appliquons aucun regroupement sur ces courses : un coursier, un pli, un trajet.",
+      "Reste la preuve. Un justificatif de livraison n’a de valeur que s’il nomme la personne qui a reçu le pli, l’heure exacte et le lieu. Ces éléments sont enregistrés au moment de la remise, archivés, et restitués sur demande pour être versés au dossier.",
+    ],
+  },
+
+  steps: [
+    {
+      title: "Commande",
+      body: "Sur le site, par téléphone ou par courriel, avec l’adresse d’enlèvement, la destination et l’heure limite de remise. Nous confirmons la faisabilité avant d’engager la course.",
+    },
+    {
+      title: "Enlèvement",
+      body: "Le coursier vient chercher le pli au cabinet et le garde avec lui jusqu’à la remise : il ne passe par aucun dépôt ni aucune autre main.",
+    },
+    {
+      title: "Transport dédié",
+      body: "Course directe, sans regroupement ni passage par un centre de tri. L'avancement de la course est visible en ligne à chaque étape.",
+    },
+    {
+      title: "Remise en main propre",
+      body: "Le pli est remis au destinataire en personne. Son nom, l’horodatage et le lieu sont consignés au moment précis de la remise.",
+    },
+    {
+      title: "Preuve archivée",
+      body: "Le justificatif vous est transmis puis conservé. Vous pouvez le redemander pour l’annexer à un dossier.",
+    },
+  ],
+
+  // Photo interne, anonymisée. Écartées : la photo de remise (trop basse
+  // définition) et la photo de banque d'images (ni casque ni top-case, logo tiers).
+  photos: {
+    context: {
+      src: "/images/services/pli-confidentiel/pli-confidentiel-enveloppe-fermee-paris.webp",
+      alt: "Enveloppe kraft fermée, tenue à deux mains avant sa remise.",
+      caption: "Un pli fermé, une course dédiée : il ne circule pas avec d’autres envois.",
+      width: 1200,
+      height: 800,
+    },
+  },
+
+  included: [
+    "Course dédiée, sans regroupement avec d’autres plis",
+    "Remise en main propre numérique",
+    "Nom du destinataire, horodatage et lieu consignés",
+    "Suivi de chaque course en ligne pendant le transport",
+    "Justificatif de livraison archivé et restituable",
+    "Coursier identifiable et joignable pendant la course",
+    "Course dédiée, sans regroupement avec d’autres colis",
+  ],
+
+  useCases: [
+    {
+      title: "Dépôt au greffe avant clôture",
+      body: "Un jeu de conclusions à déposer avant la fermeture du greffe. Enlèvement au cabinet, dépôt dans la journée, justificatif horodaté en retour.",
+    },
+    {
+      title: "Transmission entre études",
+      body: "Un acte à transmettre entre deux études parisiennes, remis en main propre au clerc désigné, dont le nom et l’heure de remise sont consignés.",
+    },
+    {
+      title: "Pièces réclamées en audience",
+      body: "Des originaux demandés en cours d’audience. Course immédiate du cabinet vers le palais, coursier joignable pendant tout le trajet. Voir aussi notre [coursier pour avocat et notaire](/services/coursier-avocat-notaire).",
+    },
+  ],
+
+  coverage:
+    "Intramuros et petite couronne (92, 93, 94) au tarif standard. Roissy, Orly et la grande couronne au tarif de leur zone. Les palais de justice, greffes et études d’Île-de-France sont desservis aux mêmes conditions.",
+
+  pricing: {
+    title: "Tarif d’un pli confidentiel",
+    intro:
+      "Un pli confidentiel se facture comme toute course : selon la zone et le délai, jamais selon la nature du document. La course dédiée et la remise en main propre au destinataire sont comprises, sans supplément.",
+    recommended: ["standard", "urgent"],
+    note:
+      "Une audience, un dépôt au greffe ou un rendez-vous chez le notaire à heure fixe ? Choisissez Urgent ou Super : le coursier part dès la confirmation, sans attendre d’autres plis.",
+  },
+
+  faqTitle: "Vos questions avant un envoi.",
+
+  faq: [
+    {
+      question: "Comment envoyer un pli confidentiel à Paris ?",
+      answer:
+        "Commandez une course en ligne, par téléphone ou par courriel en indiquant l’adresse d’enlèvement, la destination et l’heure limite. Un coursier prend le pli en charge, le transporte en course directe et le remet en main propre au destinataire, dont le nom et l’heure de remise sont enregistrés.",
+    },
+    {
+      question: "La remise en main propre a-t-elle une valeur probante ?",
+      answer:
+        "Le justificatif enregistre le nom du destinataire, l’horodatage et le lieu de remise : il établit la réalité et la date de la remise. Il ne se substitue pas à une signification par huissier, qui constitue un acte de procédure distinct.",
+    },
+    {
+      question: "Que se passe-t-il si le destinataire est absent ?",
+      answer:
+        "Le coursier vous appelle avant toute décision. Selon votre consigne, il patiente, remet à une personne que vous désignez, ou rapporte le pli au cabinet. Un pli confidentiel n’est jamais déposé en boîte aux lettres ni laissé à un tiers non identifié.",
+    },
+    {
+      question: "Le pli voyage-t-il avec d’autres courses ?",
+      answer:
+        "Non. Les plis confidentiels partent en course dédiée : un coursier, un pli, un trajet direct. C’est la condition pour que la chaîne de responsabilité reste documentable de bout en bout.",
+    },
+    {
+      question: "Combien de temps conservez-vous les justificatifs ?",
+      answer:
+        "Les justificatifs de remise (nom du destinataire, horodatage, lieu) sont archivés et restituables sur simple demande. Contactez-nous pour connaître les conditions d'archivage applicables à votre type de mission.",
+    },
+    {
+      question: "Intervenez-vous en dehors des heures de bureau ?",
+      answer:
+        "Nous opérons du lundi au samedi, de 9h à 19h. Nous sommes fermés le dimanche et les jours fériés.",
+    },
+    {
+      question: "Peut-on ouvrir un compte pour l’ensemble du cabinet ?",
+      answer:
+        "Oui. Le compte entreprise regroupe les courses de tous les collaborateurs, permet de régler les factures sous 30 jours.",
+    },
+  ],
+
+  outline: {
+    sections: [
+      { key: "context", title: "Ce qu'est un envoi sous pli confidentiel" },
+      { key: "steps", title: "Comment nous sécurisons la course" },
+      { key: "useCases", title: "Pour quels documents" },
+    ],
+    cta: {
+      title: "Demander une course pour un pli confidentiel",
+      text: "Appelez-nous ou écrivez-nous pour [organiser une course](/contact) : nous confirmons la faisabilité avant d’engager le coursier. Pour préparer le document, lisez notre guide pour [envoyer un pli confidentiel à Paris](/guides/envoyer-un-pli-confidentiel-paris).",
+    },
+  },
+};

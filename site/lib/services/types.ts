@@ -68,8 +68,14 @@ export type Service = {
 export type ServiceSectionKey = "context" | "steps" | "included" | "useCases";
 
 export type ServiceOutline = {
-  sections: [OutlineSection, OutlineSection, OutlineSection];
+  sections: OutlineSection[];
   cta: { title: string; /** Liens internes au format [ancre](/chemin). */ text: string };
+  /**
+   * Plan à H2 supplémentaires : titre H2 de la couverture, H2 des tarifs
+   * (`pricing.title`) et de la FAQ (`faqTitle`), appel à l'action final
+   * rétrogradé en texte pour tenir le compte de H2 voulu.
+   */
+  extraH2?: { coverage?: string; pricing?: boolean; faq?: boolean; ctaAsText?: boolean };
   /** Retire le bloc tarifs de la page. */
   hidePricing?: boolean;
 };
