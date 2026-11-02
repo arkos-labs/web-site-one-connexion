@@ -1,0 +1,262 @@
+/**
+ * lib/services/landing.ts
+ * Pages service créées par le plan « nouvelles pages » (novembre 2026). Chacune vise une seule
+ * requête, compte un H1 et quatre H2, sans lien interne dans le corps.
+ * Hors de SERVICES : elles n'apparaissent ni sur l'accueil ni sur /services.
+ * Règles de contenu : aucun prix, aucun délai chiffré, aucun horaire.
+ * Exception : une page avec `faq` suit le plan SEO étendu (5 H2 : quatre sections + FAQ), peut
+ * chiffrer prix et délais, et porte des liens internes [ancre](/chemin) dans ses paragraphes.
+ */
+
+export type LandingService = {
+  slug: string;
+  /** Libellé court du fil d'Ariane. */
+  name: string;
+  title: string;
+  description: string;
+  h1: string;
+  intro: string;
+  sections: { title: string; paragraphs: string[] }[];
+  /** Plan étendu : H2 « Questions fréquentes » + schéma FAQPage. */
+  faq?: { question: string; answer: string }[];
+  /** Offres chiffrées (TTC) exposées en schema.org Offer. */
+  offers?: { name: string; price: number }[];
+};
+
+import { gridPrice } from "../pricing";
+
+export const LANDING_SERVICES: LandingService[] = [
+  {
+    slug: "coursier-laboratoire",
+    name: "Coursier pour laboratoire",
+    title: "Coursier pour laboratoire : courses dédiées en Île-de-France",
+    description:
+      "Coursier pour laboratoire : transport de prélèvements, de matériel et de documents en course dédiée, avec traçabilité de la prise en charge à la remise.",
+    h1: "Coursier pour laboratoire : une course dédiée par envoi",
+    intro:
+      "Un laboratoire confie ses prélèvements, son matériel et ses documents à un coursier qui vient les chercher sur place. L’envoi part seul, dans le contenant convenu, et va directement au destinataire. Il est remis en main propre, et la prise en charge comme la remise sont enregistrées.",
+    sections: [
+      {
+        title: "Ce qu'un laboratoire confie à un coursier",
+        paragraphs: [
+          "Les envois d’un laboratoire sont variés : prélèvements et échantillons à acheminer vers un plateau technique ou un laboratoire partenaire, consommables et matériel entre deux sites, pièces pour un appareil d’analyse, documents et comptes rendus à remettre à un établissement ou à un prescripteur.",
+          "Chacun part en course dédiée : un coursier pour un seul envoi, sans le mêler aux colis d’autres clients. C’est ce qui le distingue de la mutualisation, où un même trajet regroupe plusieurs envois et plusieurs arrêts.",
+        ],
+      },
+      {
+        title: "Prélèvements et matériel : les précautions de transport",
+        paragraphs: [
+          "Le conditionnement est préparé par le laboratoire, selon ses protocoles. Le coursier transporte le colis fermé, calé et dans le sens indiqué, sans jamais l’ouvrir.",
+          "Quand l’envoi doit rester au frais, le contenant isotherme est convenu à la commande pour préserver la chaîne du froid pendant le trajet. Les conditions à respecter sont celles que vous fixez : nous confirmons la faisabilité avant d’engager la course.",
+          "La remise se fait en main propre, au service ou à la personne désignés, jamais dans une boîte ou à un accueil non prévu.",
+        ],
+      },
+      {
+        title: "Traçabilité et remise",
+        paragraphs: [
+          "L’heure de prise en charge est enregistrée, l’avancement de la course est consultable en ligne et le coursier reste joignable pendant le trajet. Vous pouvez ainsi prévenir le destinataire de l’arrivée.",
+          "À la remise, le nom de la personne qui reçoit l’envoi et l’heure sont consignés. Pour toutes vos courses, vous gardez un interlocuteur unique, qui connaît vos adresses et vos consignes.",
+        ],
+      },
+      {
+        title: "Organiser une course pour votre laboratoire",
+        paragraphs: [
+          "Commandez en ligne ou par téléphone en indiquant l’adresse d’enlèvement, le destinataire, la nature de l’envoi et les conditions de transport. Pour des envois réguliers entre plusieurs sites, nous convenons à l’avance des adresses, des contenants et des personnes à prévenir.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "coursier-avocat-notaire",
+    name: "Coursier avocat et notaire",
+    title: "Coursier avocat et notaire : transport de vos documents",
+    description:
+      "Coursier pour avocat et notaire : transport de pièces, actes et dossiers en course dédiée, avec remise en main propre et suivi de chaque envoi.",
+    h1: "Coursier avocat et notaire : vos documents en course dédiée",
+    intro:
+      "Un cabinet d’avocats et une étude notariale n’envoient pas les mêmes documents, mais ils ont la même exigence : que l’envoi arrive à la bonne personne, et qu’on puisse le prouver. Chaque course part seule et se termine par une remise en main propre.",
+    sections: [
+      {
+        title: "Les documents confiés par un cabinet ou une étude",
+        paragraphs: [
+          "Pour un cabinet d’avocats : pièces de procédure, conclusions, dossiers de plaidoirie, courriers à un confrère ou à un client. Ces envois suivent le rythme des audiences et des échéances, et ils arrivent souvent au dernier moment.",
+          "Pour une étude notariale : actes à faire signer, pièces d’un dossier de vente ou de succession, documents à remettre à une autre étude. Ici, l’enjeu est surtout que l’original parvienne intact à la bonne étude, entre les mains du clerc ou du notaire désigné.",
+          "Que vous cherchiez un coursier pour avocat ou un coursier pour notaire, la course est organisée de la même façon : un envoi, un coursier, un trajet direct.",
+        ],
+      },
+      {
+        title: "Confidentialité et remise en main propre",
+        paragraphs: [
+          "La course est dédiée à un seul envoi : le dossier ne voyage pas avec d’autres colis et ne passe par aucun dépôt. Le coursier le garde avec lui jusqu’à la remise.",
+          "La remise se fait en main propre à la personne que vous avez désignée. Son nom et l’heure de remise sont enregistrés : cette preuve de remise peut être jointe au dossier.",
+        ],
+      },
+      {
+        title: "Courses entre cabinets, études et tribunaux",
+        paragraphs: [
+          "Les trajets les plus courants relient un cabinet à un autre cabinet, un cabinet au tribunal ou au greffe, et une étude à une autre étude. Pour un dépôt, indiquez le service destinataire et l’heure limite : le coursier se présente à l’accueil avec ces éléments.",
+          "Pour une étude, précisez le nom du clerc ou du notaire qui attend l’acte : la remise est faite à cette personne, pas à un accueil général.",
+        ],
+      },
+      {
+        title: "Organiser une course pour votre cabinet",
+        paragraphs: [
+          "Commandez en ligne ou par téléphone avec l’adresse d’enlèvement, la destination, le nom du destinataire et l’heure limite. Nous confirmons la faisabilité avant d’engager la course. Pour les envois réguliers d’un cabinet ou d’une étude, un compte regroupe les courses de tous les collaborateurs.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "coursier-dimanche-paris",
+    name: "Coursier dimanche Paris",
+    title: "Coursier dimanche Paris : courses dédiées le week-end",
+    description:
+      "Coursier le dimanche à Paris : courses dédiées pour vos envois du week-end, avec prise en charge, suivi de la course et remise au destinataire.",
+    h1: "Coursier dimanche Paris : une course dédiée le week-end",
+    intro:
+      "Certains envois ne peuvent pas attendre le lundi. Le dimanche, un coursier prend en charge votre document ou votre colis et le remet directement au destinataire, avec le même suivi qu’en semaine.",
+    sections: [
+      {
+        title: "Les envois du dimanche",
+        paragraphs: [
+          "Le dimanche, on fait appel à un coursier pour un document à remettre avant une réunion du lundi matin, un colis professionnel attendu pour une ouverture, une pièce oubliée par un collaborateur, ou une remise urgente qu’un service postal ne fera pas le week-end.",
+          "La différence avec une course de semaine tient surtout au destinataire : les bureaux sont fermés, les accueils aussi. La course se prépare donc avec la personne qui recevra l’envoi, plutôt qu’avec un service.",
+        ],
+      },
+      {
+        title: "Préparer une course pour le week-end",
+        paragraphs: [
+          "Indiquez l’adresse complète, avec le code d’accès et l’étage, le nom d’un destinataire joignable et l’heure de remise souhaitée. Préparez l’envoi fermé avant l’arrivée du coursier.",
+          "Si le destinataire ne peut pas être présent, dites-nous à qui l’envoi peut être remis à sa place : sans consigne, le coursier ne le laisse pas à un tiers.",
+        ],
+      },
+      {
+        title: "Suivi et remise le dimanche",
+        paragraphs: [
+          "L’avancement de la course est visible en ligne, comme en semaine. Le coursier remet l’envoi en main propre, et le nom de la personne qui le reçoit est enregistré avec l’heure de remise.",
+          "En cas d’absence, le coursier vous appelle avant toute décision : il attend, remet l’envoi à la personne que vous désignez ou le rapporte.",
+        ],
+      },
+      {
+        title: "Organiser une course pour le dimanche",
+        paragraphs: [
+          "Pour une course le dimanche, contactez-nous en amont avec l’adresse d’enlèvement, la destination et l’heure souhaitée : nous confirmons la faisabilité avant d’engager le coursier.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "coursier-particulier-paris",
+    name: "Coursier pour particulier",
+    title: "Coursier pour particulier à Paris : courses ponctuelles",
+    description:
+      "Coursier pour particulier à Paris : confiez un colis, un document ou un objet à une course dédiée, avec prise en charge et remise au destinataire.",
+    h1: "Coursier pour particulier : une course dédiée à Paris",
+    intro:
+      "Vous n’êtes pas une entreprise et vous avez un colis, un document ou un objet à faire porter ? Un coursier le prend chez vous ou chez la personne qui le détient, et le remet directement au destinataire.",
+    sections: [
+      {
+        title: "Ce qu'un particulier peut confier à un coursier",
+        paragraphs: [
+          "Un document à remettre en main propre, un colis à envoyer à un proche, des clés à transmettre, un objet oublié chez quelqu’un, un achat à récupérer en boutique : tout ce qui tient dans le top-case d’un deux-roues peut partir en course.",
+          "La course est dédiée : votre envoi voyage seul, du point de départ au destinataire, sans passer par un centre de tri.",
+        ],
+      },
+      {
+        title: "Récupérer un colis ou faire livrer un objet",
+        paragraphs: [
+          "Vous avez besoin d’un coursier pour récupérer un colis ? Il peut aller le chercher chez un commerçant, dans un point de retrait ou chez un tiers, puis vous l’apporter. Prévenez la personne ou la boutique qui remet le colis, et indiquez à la commande la référence ou le nom sous lequel il est réservé.",
+          "Pour un service de coursier pour particulier, le principe est le même dans les deux sens : un enlèvement à une adresse, une remise à une autre, et une personne joignable à chaque bout.",
+        ],
+      },
+      {
+        title: "Comment se déroule une course",
+        paragraphs: [
+          "Vous indiquez l’adresse d’enlèvement, l’adresse de remise, les coordonnées du destinataire et une description de l’envoi. Le coursier se présente, prend l’envoi en charge et part directement vers le destinataire.",
+          "Vous suivez la course en ligne. À la remise, le nom de la personne qui reçoit l’envoi et l’heure sont enregistrés.",
+        ],
+      },
+      {
+        title: "Commander une course à Paris",
+        paragraphs: [
+          "Vous cherchez un coursier pour particulier à Paris ? Commandez en ligne ou par téléphone. Préparez l’envoi fermé avant l’arrivée du coursier, et vérifiez que le destinataire sera joignable.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "coursier-urgent-paris",
+    name: "Coursier urgent Paris",
+    title: "Coursier urgent Paris : course dédiée en moins de 45 minutes",
+    description:
+      "Coursier urgent à Paris : une course dédiée pour votre envoi pressé, sans mutualisation, avec prise en charge et suivi jusqu'à la remise.",
+    h1: "Coursier urgent Paris : une course dédiée en moins de 45 minutes",
+    intro:
+      "Un envoi devient urgent quand quelqu’un l’attend et qu’il ne peut pas attendre une tournée. Le coursier part pour votre seul envoi et va directement au destinataire.",
+    offers: [
+      { name: "Course Urgente 1 h 30 à Paris", price: gridPrice("urgent", 0) },
+      { name: "Course Super 1 h à Paris", price: gridPrice("flash", 0) },
+    ],
+    sections: [
+      {
+        title: "Coursier urgent Paris : quand nous appeler",
+        paragraphs: [
+          "Un contrat à faire signer avant la fin de la journée, une pièce manquante qui bloque un dossier ou un chantier, un colis à récupérer chez un fournisseur et à livrer dans la journée, un document oublié avant un rendez-vous : l’urgence vient du besoin, pas du type de colis.",
+          "Pour gagner du temps, donnez des adresses complètes, avec le code d’accès, l’étage et le nom de l’entreprise, et un destinataire joignable. Préparez l’envoi fermé avant l’arrivée du coursier : il n’attend pas qu’un document soit imprimé ou signé. Si votre envoi est urgent mais que l’heure limite est plus souple, notre [coursier express Paris](/services/coursier-express-paris) répond au même besoin.",
+        ],
+      },
+      {
+        title: "Délais garantis et horaires (7h–23h, 7j/7)",
+        paragraphs: [
+          "Le coursier prend l’envoi en charge en moins de 45 minutes, 7j/7 de 7h à 23h, sous réserve de disponibilité au moment de la commande. Si l’envoi doit être remis avant une heure précise, dites-le à la commande : nous confirmons la faisabilité avant d’engager la course.",
+          "Dans un envoi mutualisé, votre colis attend que d’autres soient collectés, puis suit une tournée avec plusieurs arrêts. En course dédiée, le coursier ne transporte que le vôtre : il part de votre adresse et va directement au destinataire. Vous suivez la course en ligne jusqu’à la remise, et le nom de la personne qui reçoit l’envoi est enregistré avec l’heure.",
+        ],
+      },
+      {
+        title: "Ce que nous transportons en urgence",
+        paragraphs: [
+          "Documents, contrats, actes, pièces de rechange, petits colis et commandes à livrer le jour même : tout ce qui tient dans le top-case d’un deux-roues, jusqu’à 18 kg. Pour les documents sensibles, notre service de [pli confidentiel](/services/plis-confidentiels) ajoute la remise en main propre au seul destinataire désigné.",
+          "Les courses partent de Paris et de toute l’Île-de-France ; pour les adresses dans la capitale, voyez notre page [coursier Paris](/zones/paris).",
+        ],
+      },
+      {
+        title: "Tarifs d’une course urgente",
+        paragraphs: [
+          `Le prix dépend de la zone la plus éloignée du trajet et du délai choisi. À Paris, une course Urgente (livrée sous 1 h 30) coûte ${gridPrice("urgent", 0)} € TTC et une course Super (sous 1 h) ${gridPrice("flash", 0)} € TTC, contre ${gridPrice("standard", 0)} € TTC pour une course Normale (sous 3 h). Pour une urgence, choisissez Urgent ou Super.`,
+          "Le prix exact s’affiche avant de valider la commande. Retrouvez toute la grille, par zone et par délai, sur la page [tarif coursier Paris](/tarifs).",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "En combien de temps un coursier urgent prend-il mon envoi en charge ?",
+        answer:
+          "En moins de 45 minutes, 7j/7 de 7h à 23h, sous réserve de disponibilité au moment de la commande. Nous confirmons la faisabilité avant d’engager la course.",
+      },
+      {
+        question: "Quelle est la différence entre une course urgente et une course super ?",
+        answer:
+          "La course Urgente est livrée sous 1 h 30, la course Super sous 1 h. Le prix suit le délai : Urgent coûte 1,5 fois le Normal, Super 2 fois.",
+      },
+      {
+        question: "Que peut-on envoyer par coursier urgent ?",
+        answer:
+          "Documents, contrats, actes, pièces de rechange et colis jusqu’à 18 kg. La nature de l’envoi ne change pas le prix, seuls comptent la zone et le délai.",
+      },
+      {
+        question: "Puis-je suivre ma course urgente ?",
+        answer:
+          "Oui. L’avancement de la course est visible en ligne, et la remise est horodatée avec le nom du destinataire.",
+      },
+      {
+        question: "Faites-vous des courses urgentes hors de Paris ?",
+        answer:
+          "Oui, en petite couronne (92, 93, 94) et dans le reste de l’Île-de-France. Le prix dépend de la zone la plus éloignée du trajet et s’affiche avant la commande.",
+      },
+    ],
+  },
+];
+
+export function getLandingService(slug: string): LandingService | undefined {
+  return LANDING_SERVICES.find((s) => s.slug === slug);
+}
