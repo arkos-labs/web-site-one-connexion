@@ -255,6 +255,80 @@ export const LANDING_SERVICES: LandingService[] = [
       },
     ],
   },
+  {
+    slug: "transport-prelevements-sang",
+    name: "Transport de prélèvements sanguins",
+    title: "Transport de prélèvements sanguins : coursier dédié Paris",
+    description:
+      "Transport de prélèvements sanguins et de sang réfrigéré à Paris : coursier dédié, contenant isotherme convenu à la commande, suivi et remise en main propre.",
+    h1: "Transport de prélèvements sanguins et de sang réfrigéré par coursier dédié",
+    intro:
+      "Un prélèvement sanguin a un délai de stabilité et, souvent, une température à tenir. Un coursier dédié vient le chercher, le conduit directement au laboratoire et le remet en main propre, avec une preuve de remise horodatée.",
+    sections: [
+      {
+        title: "Transport de sang réfrigéré : la chaîne du froid respectée",
+        paragraphs: [
+          "Le sang réfrigéré, tubes de prélèvement et échantillons biologiques à conserver au frais, ne voyage pas comme un colis ordinaire. La température de conservation est fixée par le laboratoire destinataire, et c’est elle qui commande le choix du contenant. Chez One Connexion, le contenant isotherme est convenu à la commande, en fonction de ce qui est transporté et de la durée prévue du trajet.",
+          "Le coursier transporte le colis fermé, tel qu’il lui est remis, sans jamais l’ouvrir. Comme la course est dédiée, il va droit au laboratoire, sans arrêt intermédiaire ni regroupement avec d’autres colis : le temps passé en transport est celui du trajet, ce qui limite l’exposition du prélèvement. Un relevé de température peut être joint à la course lorsque le protocole du laboratoire l’exige : précisez-le au moment de la commande. Les conditions à respecter sont celles que vous fixez ; nous confirmons la faisabilité avant d’engager la course.",
+        ],
+      },
+      {
+        title: "Prélèvements biologiques : délais et conditions de prise en charge",
+        paragraphs: [
+          "Le délai de stabilité commande tout le reste. À la commande, indiquez l’heure limite d’arrivée et la température de conservation demandée : le choix du mode de transport en découle. Quatre informations évitent la plupart des malentendus : le nom du destinataire et son service de réception, l’heure limite d’arrivée avec la température, un contact joignable à l’enlèvement comme à la remise, et le nombre de colis, pour vérifier la remise complète.",
+          "Le conditionnement est préparé par l’expéditeur, selon les consignes du laboratoire destinataire. Les échantillons biologiques de catégorie B sont généralement conditionnés en triple emballage UN3373 : un récipient étanche, un emballage secondaire étanche avec absorbant, et un emballage extérieur rigide étiqueté. Si votre envoi exige une conformité réglementaire particulière, précisez-la avant la commande : nous vous dirons clairement si nous pouvons la prendre en charge. Pour préparer l’envoi, lisez notre guide du [transport de prélèvements médicaux](/guides/transport-de-prelevements-medicaux).",
+        ],
+      },
+      {
+        title: "Laboratoires, hôpitaux et centres d’analyses : nos donneurs d’ordre",
+        paragraphs: [
+          "Nos courses de prélèvements s’adressent aux laboratoires d’analyses, aux cliniques, aux cabinets médicaux et aux établissements de santé qui ont besoin d’un transport fiable entre leurs sites, ou vers un plateau technique ou un laboratoire partenaire. Pour l’ensemble de leurs flux, voyez notre page [coursier pour laboratoire](/services/coursier-laboratoire) ; pour le matériel, les consommables et les médicaments urgents, notre service de [coursier médical moto](/services/transport-medical).",
+          "Pour des envois réguliers entre plusieurs sites, nous convenons à l’avance des adresses, des contenants et des personnes à prévenir. Vous gardez un interlocuteur unique, qui connaît vos adresses et vos consignes. L’ensemble des métiers que nous desservons est présenté sur la page [nos secteurs d’activité](/secteurs).",
+        ],
+      },
+      {
+        title: "Traçabilité et preuve de remise pour les prélèvements",
+        paragraphs: [
+          "L’heure de prise en charge est enregistrée, l’avancement de la course est consultable en ligne et le coursier reste joignable pendant le trajet : vous pouvez prévenir le laboratoire de l’arrivée. À la remise, le colis est donné en main propre au service ou à la personne désignés, jamais déposé dans une boîte ou laissé à un accueil non prévu.",
+          "Le nom de la personne qui reçoit le prélèvement et l’heure de remise sont consignés, puis archivés et restitués sur demande. En cas de question du laboratoire sur un échantillon, ce justificatif permet de reconstituer le trajet, de la prise en charge à la remise.",
+        ],
+      },
+      {
+        title: "Zones et délais (Paris, petite couronne, Île-de-France)",
+        paragraphs: [
+          `Le coursier prend le prélèvement en charge en moins de 45 minutes, 7j/7 de 8h à 19h, sous réserve de disponibilité au moment de la commande. Il intervient à Paris, en petite couronne (92, 93, 94) et dans le reste de l’Île-de-France. Le délai de livraison dépend de la formule choisie : Normal sous 3 h, Urgent sous 1 h 30, Super sous 1 h.`,
+          `Un prélèvement se facture comme n’importe quelle course : la zone et le délai font le tarif, jamais la nature de l’envoi. À Paris, une course Super (sous 1 h) coûte ${gridPrice("flash", 0)} € TTC, et le contenant isotherme est compris. Le prix exact s’affiche avant de valider la commande ; la grille complète figure sur la page [tarif coursier Paris](/tarifs).`,
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "Pouvez-vous transporter du sang réfrigéré ?",
+        answer:
+          "Oui, dans un contenant isotherme convenu à la commande, en course dédiée et directe. Précisez la plage de température et le délai de stabilité fixés par le laboratoire : nous confirmons la faisabilité avant d’engager la course.",
+      },
+      {
+        question: "Qui prépare le colis de prélèvement ?",
+        answer:
+          "L’expéditeur : le laboratoire ou le cabinet remet un colis conditionné selon les consignes du laboratoire destinataire, généralement en triple emballage UN3373 pour les échantillons de catégorie B. Le coursier le transporte fermé, sans l’ouvrir.",
+      },
+      {
+        question: "Un relevé de température est-il possible ?",
+        answer:
+          "Oui, sur demande : un relevé de température peut être joint à la course lorsque le protocole du laboratoire l’exige. Précisez-le au moment de la commande.",
+      },
+      {
+        question: "En combien de temps un prélèvement est-il pris en charge ?",
+        answer:
+          "En moins de 45 minutes, 7j/7 de 8h à 19h, sous réserve de disponibilité au moment de la commande. Pour une urgence, appelez la coordination : nous confirmons la faisabilité avant l’enlèvement.",
+      },
+      {
+        question: "Combien coûte le transport d’un prélèvement ?",
+        answer:
+          `Le prix d’une course classique, selon la zone et le délai : par exemple ${gridPrice("flash", 0)} € TTC en Super (1 h) intramuros. Le contenant isotherme est compris.`,
+      },
+    ],
+  },
 ];
 
 export function getLandingService(slug: string): LandingService | undefined {
