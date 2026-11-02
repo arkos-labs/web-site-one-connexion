@@ -16,7 +16,7 @@ export const livraisonEcommerce: Service = {
   },
 
   seo: {
-    title: "Livraison e-commerce : courses dédiées pour vos commandes",
+    title: "Coursier e-commerce : livraison du dernier kilomètre à Paris",
     description:
       "Livraison e-commerce à Paris et en Île-de-France : confiez vos commandes à un coursier dédié, avec suivi de chaque envoi et interlocuteur unique.",
     keywords: [
@@ -28,7 +28,9 @@ export const livraisonEcommerce: Service = {
     ],
   },
 
-  h1: "Livraison e-commerce : une course dédiée par commande",
+  h1: "Coursier e-commerce : livraison du dernier kilomètre à Paris",
+
+  serviceType: "Coursier e-commerce, livraison du dernier kilomètre",
 
   intro:
     "Vos clients peuvent prendre rendez-vous plusieurs jours à l’avance. Ou être livrés en urgence : dans l’heure, dans les 3 heures ou dans la journée. One Connexion vient chercher le colis sur le lieu d’enlèvement et le livre dans la capitale et la petite couronne.",
@@ -100,7 +102,7 @@ export const livraisonEcommerce: Service = {
     "Intramuros et petite couronne (92, 93, 94), ainsi que Roissy, Orly et la grande couronne. Les collectes récurrentes s’organisent sur créneaux fixes convenus à l’avance.",
 
   pricing: {
-    title: "Tarif d’une livraison e-commerce, programmée ou urgente",
+    title: "Tarifs et volume",
     intro:
       "Pour une livraison urgente dans l’heure, la formule Super (1 h) s’applique ; dans 1 h 30, la formule Urgent ; dans les 3 heures ou dans la journée, la formule Normale (3 h). Pour une livraison programmée, le prix est connu avant l’envoi.",
     recommended: ["standard"],
@@ -108,7 +110,7 @@ export const livraisonEcommerce: Service = {
       "Vous expédiez chaque semaine ? Avec un compte entreprise, vos livraisons sont facturées à 30 jours, avec un tarif dégressif selon le volume.",
   },
 
-  faqTitle: "Vos questions sur la livraison à créneau.",
+  faqTitle: "Questions fréquentes",
 
   faq: [
     {
@@ -129,20 +131,36 @@ export const livraisonEcommerce: Service = {
     {
       question: "Jusqu’à quelle heure commander pour livrer le jour même ?",
       answer:
-        "Nous travaillons du lundi au samedi, de 9h à 19h. Pour une livraison en Normal (3 h) le jour même, commandez avant 16h ; en Super (1 h), jusqu’à 18h.",
+        "Nous prenons en charge vos courses 7j/7, de 8h à 19h. Pour livrer le jour même, laissez le délai de la formule choisie : Normal 3 h, Urgent 1 h 30, Super 1 h.",
     },
   ],
 
   outline: {
     sections: [
-      { key: "context", title: "Les contraintes de livraison d'un e-commerçant" },
-      { key: "steps", title: "Comment fonctionne une course dédiée" },
-      { key: "included", title: "Suivi et preuve de livraison" },
+      { key: "context", title: "Coursier e-commerce : les enjeux du dernier kilomètre" },
     ],
+    extraSections: [
+      {
+        after: "context",
+        title: "Retours, échanges et réexpéditions",
+        paragraphs: [
+          "Un retour ou un échange urgent est un trajet comme un autre : un coursier récupère l’article chez le client ou en point de vente et le rapporte au stock, à la boutique ou à l’atelier, en course dédiée, avec une remise horodatée. Pour une réexpédition (article échangé, pièce manquante), l’envoi repart dès la confirmation, sans attendre une tournée.",
+          "En cas d’absence du destinataire, la consigne est définie à l’avance, à l’ouverture du compte : représentation, retour à l’expéditeur ou remise à une personne désignée. Les [tournées régulières](/services/tournees-regulieres) permettent de planifier collectes et retours sur créneaux fixes.",
+        ],
+      },
+      {
+        after: "context",
+        title: "Pic de charge : Black Friday et soldes",
+        paragraphs: [
+          "Black Friday, soldes, fêtes de fin d’année : le volume peut doubler en quelques jours. Lors d’un pic, les tournées passent en créneaux rapprochés plutôt que de renégocier un contrat, et chaque commande reste une course dédiée, avec suivi en ligne et preuve de remise.",
+          "Prévenez-nous de vos dates et de votre volume estimé avant la période : nous confirmons ce que nous pouvons assurer. Un [compte entreprise](/services/compte-entreprise) regroupe les courses de vos équipes, avec des factures à régler sous 30 jours.",
+        ],
+      },
+    ],
+    extraH2: { pricing: true, faq: true, ctaAsText: true },
     cta: {
       title: "Mettre en place vos livraisons",
-      text: "Pour des envois réguliers, [ouvrir un compte entreprise](/services/compte-entreprise) prend deux minutes, et des [tournées de livraison régulières](/services/tournees-regulieres) s’organisent sur créneaux fixes. Le prix de chaque course suit notre [tarif coursier Paris](/tarifs).",
+      text: "Pour des envois réguliers, [ouvrir un compte entreprise](/services/compte-entreprise) prend deux minutes, et des [tournées de livraison régulières](/services/tournees-regulieres) s’organisent sur créneaux fixes. Le prix de chaque course suit notre [tarif coursier Paris](/tarifs) ; retrouvez les métiers desservis sur [nos secteurs d’activité](/secteurs).",
     },
-    hidePricing: true,
   },
 };

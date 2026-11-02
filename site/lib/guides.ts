@@ -34,6 +34,8 @@ export interface Guide {
   /** Prestation liée */
   service: { href: string; label: string };
   published: string; // ISO
+  /** Plan à 6 H2 : titre « Questions fréquentes » rendu en H2. */
+  faqHeading?: boolean;
   /** Dernière modification de fond (schéma Article dateModified) ; à défaut, `published`. */
   modified?: string; // ISO
 }
@@ -289,6 +291,115 @@ export const GUIDES: Guide[] = [
     service: { href: "/tarifs", label: "Grille tarifaire" },
     published: "2026-09-21",
     modified: "2026-11-02",
+  },
+  {
+    slug: "combien-coute-un-coursier-a-paris",
+    title: "Combien coûte un coursier à Paris ? Prix et calcul détaillé",
+    h1: "Combien coûte un coursier à Paris ? Prix et calcul détaillé",
+    seoTitle: "Combien coûte un coursier à Paris ? Prix et calcul détaillé",
+    description:
+      "Combien coûte un coursier à Paris ? Prix par formule, facteurs qui font varier le tarif, exemples chiffrés en banlieue et conseils pour réduire sa facture.",
+    summary:
+      "Le prix d'un coursier à Paris expliqué : tarifs par formule, calcul en petite couronne, coût réel d'une course dédiée et leviers pour réduire sa facture.",
+    intro:
+      "Combien coûte un coursier à Paris ? La réponse tient en une phrase : à partir de 28 € TTC pour une course dans Paris, et le montant exact dépend de deux critères, la zone et le délai. Ce guide détaille le calcul, avec des exemples chiffrés et les leviers pour réduire une facture de coursier professionnelle.",
+    faqHeading: true,
+    sections: [
+      {
+        heading: "Le prix d'un coursier à Paris en 2026",
+        paragraphs: [
+          "Dans Paris intramuros, le prix d'une course dépend du délai de livraison demandé. Trois formules existent : Normal (livraison sous 3 h), Urgent (sous 1 h 30) et Super (sous 1 h). Les prix sont TTC, TVA de 20 % comprise, identiques pour les professionnels et les particuliers, et le montant exact s'affiche avant de valider la commande.",
+          "Le prix hors taxe s'obtient en divisant le prix TTC par 1,20. La facture détaille le montant HT et la TVA, ce qui compte pour un service comptable. Chaque formule correspond à une course dédiée : un coursier pour un seul envoi, sans regroupement. La grille complète figure sur notre page [tarif coursier Paris](/tarifs).",
+          "Un exemple concret : un cabinet envoie un dossier du 8e au 12e arrondissement. En Normal, la course coûte 28 € TTC, soit 23,33 € HT. Si le dossier doit être remis dans l'heure, le même trajet passe à 56 € TTC, soit 46,67 € HT. Le trajet est identique : seul le délai a changé, et c'est lui qui fait l'écart.",
+          "Ce qui ne fait pas varier le prix est tout aussi utile à savoir. La nature de l'envoi (pli confidentiel, prélèvement médical, colis, pièce de rechange) ne change pas le tarif, pas plus que la remise en main propre, le suivi en ligne ou la preuve de remise horodatée : tout cela est compris, dans la limite de 18 kg. Pour comprendre chaque poste de coût en détail, lisez notre guide [prix coursier Paris : comprendre le coût](/guides/prix-coursier-express-paris).",
+        ],
+        table: {
+          head: ["Formule à Paris", "Prix TTC", "Prix HT"],
+          rows: [
+            ["Normal · 3 h", "28 €", "23,33 €"],
+            ["Urgent · 1 h 30", "42 €", "35 €"],
+            ["Super · 1 h", "56 €", "46,67 €"],
+          ],
+          note: "Prix par course, TVA 20 % comprise dans le prix TTC (HT = TTC ÷ 1,20).",
+        },
+      },
+      {
+        heading: "Les 5 facteurs qui font varier le tarif",
+        paragraphs: [
+          "Un coursier ne se facture pas au kilomètre partout ni à l'heure : cinq éléments fixent le prix, et il est utile de les connaître pour comparer des offres sur des bases identiques :",
+        ],
+        list: [
+          "La zone : Paris, petite couronne (92, 93, 94) ou grande couronne (77, 78, 91, 95). Quand le trajet traverse deux zones, la zone la plus éloignée s'applique.",
+          "Le délai : une course Urgente coûte 1,5 fois le prix Normal, une course Super 2 fois. En intramuros, la même course coûte le double livrée en 1 h plutôt qu'en 3 h.",
+          "La distance en petite couronne : le prix de base couvre les 8 premiers kilomètres de route, puis chaque kilomètre en plus s'ajoute.",
+          "Le type de service : une course ponctuelle se commande à la demande, une navette régulière sur créneaux fixes se chiffre sur devis.",
+          "Le volume : un compte entreprise ouvre un tarif dégressif selon le volume mensuel.",
+        ],
+      },
+      {
+        heading: "Course dédiée ou plateforme mutualisée : le coût réel",
+        paragraphs: [
+          "Comparer le prix affiché ne suffit pas. Une plateforme mutualisée regroupe plusieurs envois sur une même tournée : le tarif unitaire peut être plus bas, mais l'heure d'arrivée dépend des autres livraisons, et un retard se paie en temps perdu, en client mécontent ou en échéance manquée. Une course dédiée mobilise un coursier pour un seul envoi, avec un trajet direct : le prix est connu avant la commande et le délai annoncé est le délai réel.",
+          "Il faut aussi compter la preuve. Avec une course dédiée, la remise est horodatée, avec le nom du destinataire, et le coursier garde l'envoi de l'enlèvement à la remise : le jour où une réception est contestée, l'information est retrouvée en quelques secondes. Ce fonctionnement est détaillé sur la page [notre méthode](/methode), et l'urgence est le terrain du [coursier express Paris](/services/coursier-express-paris).",
+          "Prenons un document à remettre avant la clôture d'un greffe. Si une course regroupée arrive après la clôture, l'économie de quelques euros se transforme en délai forclos. À l'inverse, pour un colis sans échéance, une formule Normal à 28 € ou une tournée régulière suffit. Le bon choix dépend donc de ce que coûte un retard, pas seulement du prix de la course.",
+        ],
+      },
+      {
+        heading: "Tarifs en petite couronne et en Île-de-France",
+        paragraphs: [
+          "En petite couronne, une course démarre à 39 € TTC en Normal, 58,50 € TTC en Urgent et 78 € TTC en Super, jusqu'à 8 km de route entre l'enlèvement et la livraison. Au-delà, chaque kilomètre en plus coûte 2 € TTC en Normal.",
+          "Exemple : une course de 15 km par la route en petite couronne revient à 53 € TTC en Normal, soit 39 € de prix de base plus 7 km supplémentaires à 2 €. En grande couronne (77, 78, 91, 95), il n'y a pas de prix fixe : le montant dépend de la distance depuis Paris, retour à vide compris, et s'affiche avant la commande. Le détail des communes et des délais figure sur notre page [coursier banlieue Paris](/zones/petite-couronne).",
+          "Pour une entreprise dont les sites sont répartis sur plusieurs départements, le calcul se fait course par course : chaque trajet est facturé à la zone la plus éloignée entre l'enlèvement et la livraison. Un trajet Paris – Montreuil relève ainsi de la petite couronne, un trajet Montreuil – Versailles de la grande couronne. Le prix s'affiche toujours avant de valider.",
+        ],
+      },
+      {
+        heading: "Comment réduire sa facture de coursier B2B",
+        paragraphs: [
+          "Cinq leviers permettent de maîtriser le budget sans sacrifier la fiabilité :",
+        ],
+        list: [
+          "Choisir la formule au plus juste de l'échéance : si la livraison peut attendre 3 h, la formule Normal coûte deux fois moins cher que la formule Super.",
+          "Programmer les courses à l'avance quand c'est possible : un créneau plus large évite de payer l'urgence.",
+          "Transmettre des adresses complètes dès la commande (code d'accès, étage, contact joignable) : le coursier ne perd pas de temps sur place.",
+          "Ouvrir un [compte entreprise](/services/compte-entreprise) : tarif dégressif selon le volume mensuel, un compte par service ou par site avec le même SIRET, et des factures détaillées course par course à régler sous 30 jours.",
+          "Regrouper les besoins répétitifs en navettes régulières, chiffrées sur devis : voyez nos [tournées régulières](/services/tournees-regulieres), puis appelez-nous avec vos adresses et votre fréquence pour connaître le prix avant toute commande.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "Combien coûte un coursier à Paris ?",
+        answer:
+          "Une course dans Paris démarre à 28 € TTC en Normal (livraison sous 3 h), 42 € TTC en Urgent (sous 1 h 30) et 56 € TTC en Super (sous 1 h). Le prix exact s'affiche avant de valider la commande.",
+      },
+      {
+        question: "Quel est le prix d'une course urgente ?",
+        answer:
+          "À Paris, 42 € TTC pour une livraison sous 1 h 30 et 56 € TTC pour une livraison sous 1 h. Une course Urgente coûte 1,5 fois le prix Normal, une course Super 2 fois.",
+      },
+      {
+        question: "Les prix sont-ils HT ou TTC ?",
+        answer:
+          "Les prix affichés sont TTC, TVA de 20 % comprise, pour les professionnels comme pour les particuliers. La facture détaille le montant HT et la TVA.",
+      },
+      {
+        question: "Le poids ou la nature du colis changent-ils le prix ?",
+        answer:
+          "Non. Un pli, un dossier ou un colis jusqu'à 18 kg coûtent le même prix : seuls comptent la zone la plus éloignée du trajet et le délai.",
+      },
+      {
+        question: "Combien coûte une course en banlieue ?",
+        answer:
+          "En petite couronne, une course démarre à 39 € TTC en Normal, 58,50 € TTC en Urgent et 78 € TTC en Super, jusqu'à 8 km de route, puis 2 € TTC par km en plus en Normal.",
+      },
+      {
+        question: "Existe-t-il un tarif pour les entreprises ?",
+        answer:
+          "Oui : avec un compte entreprise, un tarif dégressif s'applique au-delà d'un volume mensuel régulier, et les factures se règlent sous 30 jours.",
+      },
+    ],
+    service: { href: "/tarifs", label: "Grille tarifaire" },
+    published: "2026-11-02",
   },
   {
     slug: "expedier-du-materiel-de-laboratoire",
