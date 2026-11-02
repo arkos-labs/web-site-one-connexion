@@ -33,6 +33,13 @@ interface OrderModalProps {
 // Tarifs TTC (TVA 20 % comprise) pour tous les clients.
 const eur = (n: number) => `${n.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`;
 
+// Premier jour possible pour un enlèvement programmé (demain, date locale au format AAAA-MM-JJ).
+const tomorrowIso = () => {
+  const d = new Date();
+  d.setDate(d.getDate() + 1);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+};
+
 export default function OrderModal({ open, onClose, initialPickup = "", initialDropoff = "", restoreDraft = false }: OrderModalProps) {
   const [step, setStep] = useState(1);
   const [submitted, setSubmitted] = useState(false);
@@ -45,6 +52,8 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
   const [nature, setNature] = useState("");
   const [natureDetail, setNatureDetail] = useState("");
   const [delai, setDelai] = useState("standard");
+  const [scheduledDate, setScheduledDate] = useState(""); // enlèvement un autre jour (optionnel)
+  const [scheduledTime, setScheduledTime] = useState("");
   const [pickupAddress, setPickupAddress] = useState(initialPickup);
   const [dropoffAddress, setDropoffAddress] = useState(initialDropoff);
   const [contactName, setContactName] = useState(""); // nom de la société (pro)
@@ -272,7 +281,9 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
         nature,
         nature_detail: nature === "autre" ? natureDetail.trim() : null,
         delai,
-        notes,
+        notes: scheduledDate
+          ? `Enlèvement souhaité le ${scheduledDate.split("-").reverse().join("/")}${scheduledTime ? ` à ${scheduledTime}` : ""}${notes.trim() ? `\n${notes}` : ""}`
+          : notes,
         contact_name: `${firstName.trim()} ${lastName.trim()}`.trim(),
         contact_email: contactEmail.trim(),
         contact_phone: contactPhone.trim(),
@@ -485,6 +496,31 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                           </button>
                         ))}
                       </div>
+                    </div>
+
+                    <div>
+                      <label htmlFor="order-scheduled-date" className="mb-2 block text-xs font-bold uppercase tracking-wider text-gray-600">Enlèvement un autre jour (optionnel)</label>
+                      <input
+                        id="order-scheduled-date"
+                        type="date"
+                        min={tomorrowIso()}
+                        value={scheduledDate}
+                        onChange={(e) => setScheduledDate(e.target.value)}
+                        className="w-full rounded-xl border border-line bg-[#FAFAFA] px-4 py-2 text-sm font-semibold text-ink focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+                      />
+                      {scheduledDate && (
+                        <div className="mt-3">
+                          <label htmlFor="order-scheduled-time" className="mb-2 block text-xs font-bold uppercase tracking-wider text-gray-600">Heure souhaitée</label>
+                          <input
+                            id="order-scheduled-time"
+                            type="time"
+                            value={scheduledTime}
+                            onChange={(e) => setScheduledTime(e.target.value)}
+                            className="w-full rounded-xl border border-line bg-[#FAFAFA] px-4 py-2 text-sm font-semibold text-ink focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+                          />
+                        </div>
+                      )}
+                      <p className="mt-1 text-[11px] text-gray-500">Laissez vide pour un enlèvement aujourd’hui. Pour demain ou plus tard, choisissez la date et l’heure.</p>
                     </div>
 
                     {/* Adresse enlèvement */}
