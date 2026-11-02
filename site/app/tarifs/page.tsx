@@ -44,6 +44,10 @@ const breadcrumbSchema = {
 
 const FAQ = [
   {
+    q: "Combien coûte un coursier à Paris ?",
+    a: `Une course à Paris démarre à ${euro(gridPrice("standard", 0))} TTC en Normal 3 h, ${euro(gridPrice("urgent", 0))} TTC en Urgent 1 h 30 et ${euro(gridPrice("flash", 0))} TTC en Super 1 h. Le prix exact s'affiche avant de valider la commande.`,
+  },
+  {
     q: "Quel est le tarif d'une course dans Paris ?",
     a: "En intramuros, une course normale sous 3 h démarre à 28 € TTC, une course urgente sous 1 h 30 à 42 € TTC et une course Super sous 1 h à 56 € TTC.",
   },
@@ -54,6 +58,10 @@ const FAQ = [
   {
     q: "Le tarif est-il différent pour un pli confidentiel ou un transport médical ?",
     a: "Les plis confidentiels et le transport médical sont facturés au tarif standard de la zone, selon le délai demandé.",
+  },
+  {
+    q: "Quel est le prix d'une course en banlieue ?",
+    a: `En petite couronne (92, 93, 94), une course démarre à ${euro(gridPrice("standard", 1))} TTC en Normal, ${euro(gridPrice("urgent", 1))} TTC en Urgent et ${euro(gridPrice("flash", 1))} TTC en Super, jusqu'à ${PC_INCLUDED_KM} km de route, puis ${euro(pcKmPrice("standard"))} TTC par km en plus en Normal. En grande couronne, le prix dépend de la distance depuis Paris.`,
   },
   {
     q: "Les tarifs sont-ils HT ou TTC ?",
@@ -72,6 +80,35 @@ const faqSchema = {
     "@type": "Question",
     name: q,
     acceptedAnswer: { "@type": "Answer", text: a },
+  })),
+};
+
+const serviceSchema = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  name: "Courses de coursier moto à Paris et en Île-de-France",
+  serviceType: "Coursier express B2B",
+  url: `${SITE_URL}/tarifs`,
+  provider: { "@id": `${SITE_URL}/#organization` },
+  areaServed: { "@type": "AdministrativeArea", name: "Île-de-France" },
+  offers: (
+    [
+      ["Course Normale 3 h à Paris", "standard"],
+      ["Course Urgente 1 h 30 à Paris", "urgent"],
+      ["Course Super 1 h à Paris", "flash"],
+    ] as const
+  ).map(([name, level]) => ({
+    "@type": "Offer",
+    name,
+    price: String(gridPrice(level, 0)),
+    priceCurrency: "EUR",
+    url: `${SITE_URL}/tarifs`,
+    priceSpecification: {
+      "@type": "PriceSpecification",
+      price: String(gridPrice(level, 0)),
+      priceCurrency: "EUR",
+      valueAddedTaxIncluded: true,
+    },
   })),
 };
 
@@ -142,6 +179,7 @@ export default function TarifsPage() {
     <>
       <JsonLd data={breadcrumbSchema} />
       <JsonLd data={faqSchema} />
+      <JsonLd data={serviceSchema} />
 
       {/* ── Hero ── */}
       <section className="bg-ink text-white">
@@ -166,27 +204,6 @@ export default function TarifsPage() {
         </div>
       </section>
 
-      {/* ── 1. Calcul du tarif ── */}
-      <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
-        <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
-          Calcul du tarif
-        </div>
-        <h2 className="mb-14 max-w-[24ch] text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-          Comment est calculé le tarif d&apos;une course
-        </h2>
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          {FACTORS.map(({ icon: Icon, title, desc }) => (
-            <div key={title} className="flex flex-col gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10">
-                <Icon size={18} className="text-accent" strokeWidth={2} />
-              </div>
-              <h3 className="font-bold tracking-[-0.01em]">{title}</h3>
-              <p className="text-[14px] leading-[1.65] text-muted"><InlineLinks text={desc} /></p>
-            </div>
-          ))}
-        </div>
-      </section>
-
       {/* ── 2. Grille ── */}
       <section className="bg-paper">
         <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
@@ -194,7 +211,7 @@ export default function TarifsPage() {
             Grille
           </div>
           <h2 className="mb-8 text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
-            Grille tarifaire par type de course
+            Tarif coursier Paris : la grille complète
           </h2>
           <p className="mb-10 max-w-[60ch] text-[15.5px] leading-[1.7] text-muted">
             Trois types de course, selon le délai : Normal, Urgent et Super. Le
@@ -247,14 +264,99 @@ export default function TarifsPage() {
         </div>
       </section>
 
+      {/* ── 1. Calcul du tarif ── */}
+      <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
+        <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
+          Calcul du tarif
+        </div>
+        <h2 className="mb-6 max-w-[24ch] text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
+          Prix coursier Paris : ce qui fait varier le tarif
+        </h2>
+        <p className="mb-14 max-w-[68ch] text-[15.5px] leading-[1.7] text-muted">
+          Le prix d&apos;une course dépend de deux choses : la zone, c&apos;est-à-dire la distance entre
+          l&apos;enlèvement et la livraison, et le délai demandé. Une course Urgente coûte 1,5 fois le prix
+          Normal, une course Super 2 fois. À l&apos;inverse, la nature de l&apos;envoi ne change rien : un pli
+          confidentiel, un dossier, un prélèvement médical ou un colis jusqu&apos;à 18 kg sont facturés de la
+          même façon, sans supplément de confidentialité ni de poids dans cette limite. Le montant exact
+          s&apos;affiche avant de valider la commande, dès que vous saisissez les adresses et le délai. Pour
+          comprendre le détail d&apos;un montant, lisez{" "}
+          <Link href="/guides/prix-coursier-express-paris" className={linkClass}>
+            Prix coursier Paris : comprendre le coût d&apos;une course
+          </Link>
+          , ou découvrez notre{" "}
+          <Link href="/services/coursier-express-paris" className={linkClass}>
+            coursier express à Paris
+          </Link>
+          .
+        </p>
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          {FACTORS.map(({ icon: Icon, title, desc }) => (
+            <div key={title} className="flex flex-col gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10">
+                <Icon size={18} className="text-accent" strokeWidth={2} />
+              </div>
+              <h3 className="font-bold tracking-[-0.01em]">{title}</h3>
+              <p className="text-[14px] leading-[1.65] text-muted"><InlineLinks text={desc} /></p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── Petite couronne et Île-de-France ── */}
+      <section className="bg-paper">
+        <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
+          <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
+            Banlieue
+          </div>
+          <h2 className="mb-6 max-w-[28ch] text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
+            Tarifs en petite couronne et en Île-de-France
+          </h2>
+          <p className="max-w-[68ch] text-[15.5px] leading-[1.7] text-muted">
+            En petite couronne (92, 93, 94), une course démarre à {euro(gridPrice("standard", 1))} TTC en
+            Normal 3 h, {euro(gridPrice("urgent", 1))} TTC en Urgent 1 h 30 et {euro(gridPrice("flash", 1))} TTC
+            en Super 1 h, kilomètres compris jusqu&apos;à {PC_INCLUDED_KM} km de route, puis{" "}
+            {euro(pcKmPrice("standard"))} TTC par km en plus en Normal. En grande couronne (77, 78, 91, 95), le
+            prix dépend de la distance depuis Paris et s&apos;affiche avant la commande. Pour le détail des
+            communes et des délais, consultez notre page{" "}
+            <Link href="/zones/petite-couronne" className={linkClass}>
+              coursier banlieue Paris
+            </Link>
+            .
+          </p>
+        </div>
+      </section>
+
+      {/* ── Comparaison ── */}
+      <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
+        <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
+          Comparaison
+        </div>
+        <h2 className="mb-6 max-w-[28ch] text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
+          Comparaison : course dédiée vs plateforme mutualisée
+        </h2>
+        <p className="max-w-[68ch] text-[15.5px] leading-[1.7] text-muted">
+          Avec une course dédiée, un coursier prend en charge un seul envoi à la fois et le conduit
+          directement à destination : pas de regroupement, pas de détour, une remise en main propre
+          horodatée, et un prix connu avant la commande. Une plateforme mutualisée optimise ses tournées en
+          regroupant plusieurs envois : le tarif unitaire peut être plus bas, mais l&apos;heure d&apos;arrivée
+          dépend des autres livraisons de la tournée et la chaîne de responsabilité est plus difficile à
+          documenter. Pour un document sensible, un délai serré ou une pièce à produire en justice, la
+          course dédiée est le choix le plus sûr. Pour un volume régulier, le{" "}
+          <Link href="/services/compte-entreprise" className={linkClass}>
+            compte entreprise
+          </Link>{" "}
+          applique une grille dégressive selon le volume mensuel.
+        </p>
+      </section>
+
       {/* ── 3. Options ── */}
       <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
         <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
           Options
         </div>
-        <h2 className="mb-6 text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
+        <p className="mb-6 text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
           Options et suppléments
-        </h2>
+        </p>
         <p className="mb-14 max-w-[60ch] text-[15.5px] leading-[1.7] text-muted">
           Le délai Urgent coûte 1,5 fois le prix Normal, le Super 2 fois. Vous
           pouvez payer à la course ou ouvrir un compte entreprise, réglé sur
@@ -332,14 +434,14 @@ export default function TarifsPage() {
         </ul>
       </section>
 
-      {/* ── FAQ (sans H2 : hors plan) ── */}
+      {/* ── FAQ ── */}
       <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-[72px]">
         <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
           Questions fréquentes
         </div>
-        <p className="mb-10 max-w-[24ch] text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
+        <h2 className="mb-10 max-w-[24ch] text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
           Vos questions sur nos tarifs.
-        </p>
+        </h2>
         <div className="grid max-w-[780px] gap-8">
           {FAQ.map(({ q, a }) => (
             <div key={q}>
@@ -356,7 +458,7 @@ export default function TarifsPage() {
           <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
             <div>
               <h2 className="mb-3 text-[clamp(24px,3vw,36px)] font-bold leading-[1.2] tracking-[-0.02em]">
-                Demander un devis pour votre entreprise
+                Comment obtenir un devis
               </h2>
               <p className="text-[15px] text-white/60">
                 Pour des courses régulières ou un volume mensuel, écrivez-nous pour{" "}
