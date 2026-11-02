@@ -112,7 +112,7 @@ export const compteEntreprise: Service = {
       "Au-delà d’un volume mensuel régulier, un tarif dégressif s’applique. Contactez-nous avec votre volume estimé pour le connaître.",
   },
 
-  faqTitle: "Vos questions sur le compte entreprise.",
+  faqTitle: "Questions fréquentes",
 
   faq: [
     {
@@ -144,10 +144,21 @@ export const compteEntreprise: Service = {
 
   outline: {
     sections: [
-      { key: "context", title: "Ce qu'apporte un compte entreprise" },
+      { key: "context", title: "Coursier pour entreprise : ce que couvre le compte" },
+      { key: "included", title: "Facturation et suivi des courses" },
       { key: "steps", title: "Comment se déroule l'ouverture" },
-      { key: "included", title: "Suivi et facturation des courses" },
     ],
+    extraSections: [
+      {
+        after: "included",
+        title: "Livraison le jour même pour les équipes B2B",
+        paragraphs: [
+          "Avec un compte entreprise, chaque équipe peut commander une livraison le jour même : l’envoi part dès la confirmation, en course dédiée, avec une prise en charge en moins de 45 minutes, 7j/7 de 8h à 19h, sous réserve de disponibilité. Le prix s’affiche avant la commande, et la facture est rattachée au compte du service ou du site qui a commandé.",
+          "Pour les besoins qui se répètent sur les mêmes trajets, les [tournées régulières](/services/tournees-regulieres) évitent de recommander chaque semaine. Le fonctionnement, les horaires et les métiers concernés sont détaillés sur la page [livraison le jour même B2B](/services/livraison-jour-meme-b2b). Toutes les prestations se commandent depuis le même compte : retrouvez les métiers desservis sur [coursier pour entreprise : nos secteurs](/secteurs), et la grille de prix sur la page [tarif coursier Paris](/tarifs).",
+        ],
+      },
+    ],
+    extraH2: { faq: true, ctaAsText: true },
     cta: {
       title: "Nous contacter",
       text: "Une question sur l’ouverture ou sur votre volume ? [Nous contacter](/contact). Découvrez aussi [nos secteurs d'activité](/secteurs) et notre [grille tarifaire](/tarifs).",
