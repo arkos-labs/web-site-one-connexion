@@ -238,13 +238,13 @@ export default function AdminProspectionPage() {
 function MailForm({ prospect, onSent }: { prospect: Prospect; onSent: (to: string, subject: string) => void }) {
   const [to, setTo] = useState("");
   const [contact, setContact] = useState("");
-  const [subject, setSubject] = useState(`Livraisons urgentes à ${prospect.city ?? "Paris"}`);
+  const [subject, setSubject] = useState(`${prospect.name} : une course dédiée à ${prospect.city ?? "Paris"}`);
   const [body, setBody] = useState(
-    `Une livraison urgente à faire à ${prospect.city ?? "Paris"} ? ${prospect.need ?? ""}
+    `${prospect.need ?? ""}
 
-Avec ONE CONNEXION, un coursier vient chercher votre envoi en moins de 45 minutes à Paris et en petite couronne, et le remet en main propre, avec preuve de remise.
+Un coursier dédié peut venir chercher votre envoi et le remettre en main propre, avec preuve de remise.
 
-Le prix est affiché avant de commander : 28 € TTC dans Paris, 39 € TTC en petite couronne (jusqu'à 8 km), commande en 2 minutes.`,
+Nous pouvons aussi mettre en place une navette à heure fixe, avec un compte entreprise. Répondez à ce mail et nous vous rappelons.`,
   );
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -292,7 +292,7 @@ Le prix est affiché avant de commander : 28 € TTC dans Paris, 39 € TTC en p
         className="w-full rounded-lg border border-line bg-white px-3 py-2 text-sm"
       />
       <p className="text-xs text-muted">
-        Le bouton « Commander », le bouton « Créer un compte », la signature et la mention de désinscription sont ajoutés automatiquement.
+        Le bouton « Commander une course », la signature et la mention de désinscription sont ajoutés automatiquement.
       </p>
       {error && <p className="text-sm text-red-700">{error}</p>}
       <button
