@@ -73,10 +73,12 @@ Nouveau risque créé par le plan : le guide S11 `combien-coute-un-coursier-a-pa
 
 ## 6. Écarts assumés par rapport au plan
 
-1. **Horaires** : le plan affirme « 7j/7, 7h–23h ». Vous avez choisi de le conserver. Le reste du site, le chatbot, le pied de page,
-   le Hero, la FAQ et l'About de l'accueil affichent encore **lundi–samedi, 9h–19h** (une cinquantaine d'endroits (55 lignes), listés dans
-   `harmonisation-horaires.md`). Les pages modifiées disent maintenant l'inverse des pages non modifiées, parfois sur la même URL
-   (l'accueil, par exemple). Les données structurées de l'accueil annoncent aussi 7j/7 07:00–23:00.
+1. **Horaires** : le plan affirmait « 7j/7, 7h–23h » alors que le site affichait « lundi–samedi, 9h–19h ». Les horaires réels,
+   communiqués après le bilan, sont **7j/7, de 8h à 19h**. Les deux versions étaient donc fausses. Tout a été corrigé :
+   les pages du plan (dans chaque lot S1 à S11) et le reste du site (branche `seo/s0-horaires`, 35 fichiers : pages, FAQ, chatbot,
+   pied de page, dashboard, `llms.txt`, données structurées). Conséquence : la meta description de l'accueil, marquée [MESURÉ] dans le plan,
+   dit maintenant « 7j/7 de 8h à 19h » au lieu de « 7j/7 de 7h à 23h » — même longueur pour la partie horaire, mais à
+   re-mesurer en pixels avant mise en ligne. Les jours fériés ne sont plus mentionnés nulle part (non confirmés).
 2. « Commande avant 15h » (S10) : non reprise, aucune heure limite n'existe sur le site.
 3. « Mettre en place un compte en 3 étapes » (S10) : non repris, la page décrit 5 étapes.
 4. « Facturation mensuelle » (S10) : non reprise, non documentée.
@@ -92,6 +94,7 @@ une branche par semaine, dans l'ordre, et noter la date dans `changelog-seo.md` 
 
 | Semaine de mise en ligne | Branche à fusionner | Pages |
 |---|---|---|
+| D0 (avant tout) | `seo/s0-horaires` | Horaires réels sur tout le reste du site (35 fichiers) |
 | D1 | `seo/s1-plis-confidentiels` | /methode (correctif), /services/plis-confidentiels |
 | D2 | `seo/s2-tarifs` | /tarifs, guide prix |
 | D3 | `seo/s3-arrondissements` | /zones/paris-17e, paris-15e |
@@ -104,12 +107,12 @@ une branche par semaine, dans l'ordre, et noter la date dans `changelog-seo.md` 
 | D10 | `seo/s10-jour-meme` | nouvelle page jour même, compte entreprise |
 | D11 | `seo/s11-ecommerce-guide` | e-commerce, nouveau guide |
 
-Avant D1 : décider la question des horaires (point 6.1), sinon D1 à D11 exposent progressivement des promesses incohérentes.
+D0 d'abord : `seo/s0-horaires` corrige les horaires du reste du site ; il fusionne sans conflit avec D1 à D11 (testé : fusion s0 + s11, plus aucune ancienne mention d'horaires).
 Après chaque fusion : relever le sitemap, soumettre les nouvelles URLs dans GSC, ajouter la date au changelog.
 
 ## 8. Ce qui reste à faire de votre côté
 
-- Décision sur les horaires, puis harmonisation (voir `harmonisation-horaires.md`).
+- Mise en ligne de D0 (horaires), puis D1 à D11 ; `harmonisation-horaires.md` garde la liste d'origine des 55 lignes corrigées par D0.
 - Fusion/déploiement hebdomadaire des branches, et passage des JSON-LD au test des résultats enrichis.
 - Netlinking : 18 liens thématiques (voir `plan-S13-S24.md`), à suivre dans `netlinking-suivi.csv`.
 - Relevés GSC à D4, D8, D12 (28 j glissants) dans `releves-gsc/`.

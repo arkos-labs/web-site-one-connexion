@@ -1,3 +1,5 @@
+> **Résolu** : horaires réels = 7j/7, de 8h à 19h. Correction faite dans la branche `seo/s0-horaires` (35 fichiers). La liste ci-dessous est l'état *avant* correction, conservée pour contrôle.
+
 # Harmonisation des horaires (état au 2 novembre 2026, branche seo/s12-bilan)
 
 Les pages modifiées par le plan annoncent « 7j/7, 7h–23h ». Les emplacements ci-dessous affichent encore « lundi–samedi, 9h–19h » / « fermé le dimanche ». Source des lignes : recherche dans le dépôt (hors admin, dashboard, api).
