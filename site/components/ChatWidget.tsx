@@ -78,7 +78,7 @@ export default function ChatWidget() {
     } else if (c.action === "call") {
       window.location.assign(`tel:${PHONE_TEL}`);
     } else {
-      setMessages((m) => [...m, { role: "user", content: c.label }, { role: "assistant", content: "Laissez vos coordonnées : nous vous rappelons rapidement (lundi au samedi, 9 h - 19 h)." }]);
+      setMessages((m) => [...m, { role: "user", content: c.label }, { role: "assistant", content: "Laissez vos coordonnées : nous vous rappelons rapidement (7j/7, de 8 h à 19 h)." }]);
       setCallback(true);
     }
   }
@@ -161,7 +161,7 @@ export default function ChatWidget() {
               <span className="flex items-center gap-1.5">
                 <Clock size={14} className="text-amber-400" /> Coursiers en service :
               </span>
-              <span className="rounded-full border border-white/15 px-2.5 py-0.5 text-white/90">Lun – Sam • 9 h – 19 h</span>
+              <span className="rounded-full border border-white/15 px-2.5 py-0.5 text-white/90">7j/7 • 8 h – 19 h</span>
             </div>
           </div>
 

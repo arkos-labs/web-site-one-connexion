@@ -82,7 +82,7 @@ export const STEPS: Record<StepId, { text: string; choices: Choice[] }> = {
     choices: [ORDER, HOW, MENU],
   },
   horaires: {
-    text: "Nous sommes ouverts du lundi au samedi, de 9 h à 19 h, fermés le dimanche et les jours fériés. Hors de ces horaires, laissez votre numéro : nous étudions la demande au cas par cas.",
+    text: "Nous sommes ouverts 7j/7, de 8 h à 19 h. Hors de ces horaires, laissez votre numéro : nous étudions la demande au cas par cas.",
     choices: [ORDER, CALLBACK, MENU],
   },
   delai: {

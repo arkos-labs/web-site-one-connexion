@@ -7,7 +7,7 @@
 const STATS = [
   { value: "18 kg", label: "Charge par course" },
   { value: "60 × 40 cm", label: "Volume top-case" },
-  { value: "6j/7", label: "Lun–sam, 9h – 19h" },
+  { value: "7j/7", label: "De 8h à 19h" },
 ];
 
 const COVERAGE = ["Paris 1–20", "92", "93", "94", "77 · 78 · 91 · 95"];

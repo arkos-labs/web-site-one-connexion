@@ -117,7 +117,7 @@ export const LOCAL_92: Record<string, LocalZoneContent> = {
     },
     faq: [
       { q: "Pouvez-vous déposer un document au tribunal de Paris depuis Asnières ?", a: "Oui, en course dédiée. Indiquez le service et l'heure limite ; la remise est horodatée et nominative." },
-      { q: "Livrez-vous le soir à Asnières ?", a: "Oui, jusqu'à 19h, du lundi au samedi, selon la disponibilité des pilotes au moment de la commande." },
+      { q: "Livrez-vous le soir à Asnières ?", a: "Oui, jusqu'à 19h, 7j/7, selon la disponibilité des pilotes au moment de la commande." },
       { q: "Combien coûte une livraison depuis Asnières ?", a: "Asnières est en petite couronne : dès {normal} € TTC en normal (3 h) et {super} € TTC en formule Super (1 h) jusqu’à 8 km de route, puis 2 € (Normal) à 4 € (Super) TTC par km." },
     ],
   },

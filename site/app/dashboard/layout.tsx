@@ -187,14 +187,14 @@ export default function DashboardLayout({
                 </button>
               </nav>
 
-              {/* Dispatch en ligne (lun–sam, 9h–19h) */}
+              {/* Dispatch en ligne (7j/7, 8h–19h) */}
               <div className="flex flex-col bg-[#1A1C20] text-white p-6">
                 <div className="mb-2 flex items-center gap-2">
                   <div className="h-2 w-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]"></div>
                   <h3 className="text-sm font-bold tracking-wide">DISPATCH EN LIGNE</h3>
                 </div>
                 <p className="mb-5 text-xs font-medium text-white/70 leading-relaxed">
-                  Besoin d'une modification urgente ou d'un itinéraire multi-points ? Nos régulateurs vous répondent en direct, du lundi au samedi de 9h à 19h.
+                  Besoin d'une modification urgente ou d'un itinéraire multi-points ? Nos régulateurs vous répondent en direct, 7j/7 de 8h à 19h.
                 </p>
                 <a
                   href={`tel:${PHONE_TEL}`}

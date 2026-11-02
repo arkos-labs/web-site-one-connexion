@@ -21,7 +21,7 @@ const AddressAutocomplete = dynamic(
 const COMMITMENTS = [
   { tag: "Enlèvement express", value: "< 45", unit: "min", title: "Enlèvement du colis", desc: "Après confirmation de la course, un coursier part immédiatement." },
   { tag: "Service exclusif", value: "Dédiée", unit: "", title: "Course sans regroupement", desc: "Un coursier pour votre course, sans regroupement ni détour." },
-  { tag: "Disponibilité", value: "6j/7", unit: "", title: "Du lundi au samedi, 9h–19h", desc: "Du lundi au samedi, de 9h à 19h." },
+  { tag: "Disponibilité", value: "7j/7", unit: "", title: "Tous les jours, 8h–19h", desc: "7j/7, de 8h à 19h." },
   { tag: "Livraison rapide", value: "1", unit: "h", title: "Livraison en formule Super", desc: "Livraison porte à porte en 1 h dans Paris." },
 ];
 

@@ -55,7 +55,7 @@ const FAQ = [
   { q: "Quel est le prix d’une course en grande couronne ?", a: `En grande couronne, le prix suit la distance entre Paris et l’adresse la plus éloignée du trajet, retour du coursier compris. En délai Normal (3 h) : ${normal("Versailles 78")} TTC pour Versailles, ${normal("Évry-Courcouronnes 91")} pour Évry, ${normal("Cergy 95")} pour Cergy, ${normal("Meaux 77")} pour Meaux. L’Urgent (1 h 30) coûte 1,5 fois ce prix, le Super (1 h) 2 fois.` },
   { q: "Faites-vous les trajets entre la grande couronne et Paris ?", a: "Oui, dans les deux sens, et aussi vers la petite couronne ou une autre commune de grande couronne. Le coursier va directement de l’enlèvement à la remise." },
   { q: "Quel poids peut-on vous confier ?", a: "Jusqu’à 18 kg, dans le top-case d’un deux-roues. Au-delà de 10 kg, ou pour un colis encombrant, appelez-nous avant de commander." },
-  { q: "Quels sont vos horaires en grande couronne ?", a: "Du lundi au samedi, de 9h à 19h, comme à Paris. Nous sommes fermés le dimanche et les jours fériés." },
+  { q: "Quels sont vos horaires en grande couronne ?", a: "7j/7, de 8h à 19h, comme à Paris." },
   { q: "Ma commune n’a pas de page, est-elle desservie ?", a: "Les quatre départements de grande couronne sont desservis. Saisissez l’adresse dans le formulaire de commande : le prix s’affiche tout de suite, ou appelez-nous en cas de doute." },
 ];
 
@@ -227,7 +227,7 @@ export default function ZoneGrandeCouronne() {
               <p className="mb-3 text-[clamp(24px,3vw,36px)] font-bold leading-[1.2] tracking-[-0.02em]">
                 Une course en grande couronne maintenant ?
               </p>
-              <p className="text-[15px] text-white/60">Du lundi au samedi, de 9h à 19h.</p>
+              <p className="text-[15px] text-white/60">7j/7, de 8h à 19h.</p>
             </div>
             <a href={`tel:${PHONE_TEL}`} className="rounded-[4px] bg-accent px-8 py-4 text-center text-[15px] font-bold text-white hover:bg-accent-dark">
               {PHONE_DISPLAY}

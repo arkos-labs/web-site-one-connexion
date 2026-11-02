@@ -299,7 +299,7 @@ export const GUIDES: Guide[] = [
       {
         heading: "Choisir le mode d'expédition",
         paragraphs: [
-          "Le bon choix dépend de l'urgence et de la fréquence de vos envois. Le prix ne dépend ni du contenu ni du poids, jusqu'à 18 kg : seuls comptent la zone, la distance et le délai choisi. Le service fonctionne du lundi au samedi, de 9 h à 19 h.",
+          "Le bon choix dépend de l'urgence et de la fréquence de vos envois. Le prix ne dépend ni du contenu ni du poids, jusqu'à 18 kg : seuls comptent la zone, la distance et le délai choisi. Le service fonctionne 7j/7, de 8 h à 19 h.",
         ],
         list: [
           "Course immédiate : pour une pièce qui bloque un automate ou un réactif attendu le jour même. Le coursier passe en moins de 45 minutes.",
@@ -330,7 +330,7 @@ export const GUIDES: Guide[] = [
       {
         question: "Une pièce d'automate peut-elle être livrée le jour même ?",
         answer:
-          "Oui, du lundi au samedi entre 9 h et 19 h. En course Super, la livraison se fait en 1 h, par exemple pour 56 € TTC intramuros. Le coursier passe en moins de 45 minutes.",
+          "Oui, 7j/7 entre 8 h et 19 h. En course Super, la livraison se fait en 1 h, par exemple pour 56 € TTC intramuros. Le coursier passe en moins de 45 minutes.",
       },
       {
         question: "Comment ouvrir un compte pour les envois du laboratoire ?",
@@ -380,7 +380,7 @@ export const GUIDES: Guide[] = [
           "Le nom du destinataire et un numéro joignable côté enlèvement comme côté livraison.",
           "Les codes d'accès, l'entrée à utiliser et les horaires de réception, si le site ferme à l'heure du déjeuner.",
           "Le poids et la taille du colis, pour vérifier qu'il tient dans le top-case.",
-          "Le délai réel : Normal (3 h), Urgent (1 h 30), Super (1 h), ou une course programmée à l'avance au tarif Normal. Le service fonctionne du lundi au samedi, de 9 h à 19 h.",
+          "Le délai réel : Normal (3 h), Urgent (1 h 30), Super (1 h), ou une course programmée à l'avance au tarif Normal. Le service fonctionne 7j/7, de 8 h à 19 h.",
         ],
       },
       {
@@ -418,7 +418,7 @@ export const GUIDES: Guide[] = [
       {
         question: "Peut-on commander une course le dimanche ?",
         answer:
-          "Non. Le service fonctionne du lundi au samedi, de 9 h à 19 h. Il est fermé le dimanche et les jours fériés. Pour un envoi prévu à l'avance, vous pouvez programmer la course à la date et à l'heure de votre choix.",
+          "Oui. Le service fonctionne 7j/7, de 8 h à 19 h, dimanche compris. Pour un envoi prévu à l'avance, vous pouvez programmer la course à la date et à l'heure de votre choix.",
       },
       {
         question: "Comment ouvrir un compte pour les courses de l'entreprise ?",

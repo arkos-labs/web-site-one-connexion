@@ -50,7 +50,7 @@ export const transportEvenementiel: Service = {
       "Accréditations oubliées, matériel de stand, pièce pour un tournage : la course se facture comme les autres, à la zone et au délai. Le coursier part dès la confirmation, sans regroupement.",
     recommended: ["urgent", "flash"],
     note:
-      "Montage de nuit, démontage le dimanche ou astreinte pendant un salon : en dehors de nos horaires (lun–sam, 9h–19h), le tarif se fait sur devis.",
+      "Montage de nuit, démontage le dimanche ou astreinte pendant un salon : en dehors de nos horaires (7j/7, 8h–19h), le tarif se fait sur devis.",
   },
 
   faqTitle: "Vos questions sur la logistique événementielle.",

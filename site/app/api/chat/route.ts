@@ -47,7 +47,7 @@ function fromOtherSite(req: Request): boolean {
   }
 }
 
-const FALLBACK = `Je ne peux pas répondre pour le moment. Appelez-nous au ${PHONE_DISPLAY} (lundi au samedi, 9 h - 19 h) ou écrivez à ${EMAIL}.`;
+const FALLBACK = `Je ne peux pas répondre pour le moment. Appelez-nous au ${PHONE_DISPLAY} (7j/7, de 8 h à 19 h) ou écrivez à ${EMAIL}.`;
 
 /** Pas de réponse de l'IA : la fenêtre prend le relais (parcours guidé, rappel). */
 const fallback = () => NextResponse.json({ reply: FALLBACK, fallback: true });
