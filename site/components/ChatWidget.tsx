@@ -139,8 +139,8 @@ export default function ChatWidget() {
           <div className="bg-ink px-4 pb-3 pt-3 text-white" style={{ paddingTop: "max(12px, env(safe-area-inset-top))" }}>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/10 text-[13px] font-extrabold text-accent ring-1 ring-white/10">
-                  1C
+                <div className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full">
+                  <img src="/chat-avatar.png" alt="" className="h-full w-full rounded-full object-cover" />
                   <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-ink bg-emerald-400" />
                 </div>
                 <div>
@@ -282,7 +282,7 @@ function Bubble({ role, content }: Pick<Msg, "role" | "content">) {
   }
   return (
     <div className="flex items-end gap-2">
-      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-ink text-[11px] font-extrabold text-accent">1C</div>
+      <img src="/chat-avatar.png" alt="" className="h-8 w-8 shrink-0 rounded-full object-cover" />
       <div className="max-w-[85%]">
         <div className="whitespace-pre-line rounded-2xl rounded-bl-md bg-white px-4 py-2.5 text-[14.5px] leading-[1.5] text-ink shadow-sm ring-1 ring-slate-200/70">{content}</div>
         <p className="mt-1 pl-1 text-[11px] text-label">Envoyé à l'instant</p>
