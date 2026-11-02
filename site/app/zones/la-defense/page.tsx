@@ -50,9 +50,48 @@ const VILLES = [
 const STATS = [
   { value: "< 45 min", label: "Enlèvement" },
   { value: "1 course", label: "Un envoi, sans regroupement" },
-  { value: "6j/7", label: "Lun–sam, 9h – 19h" },
+  { value: "7j/7", label: "De 8h à 19h" },
   { value: "92", label: "Dépt. couvert" },
 ];
+
+const FAQ = [
+  {
+    q: "Quel est le délai de La Défense vers Paris centre ?",
+    a: "Le temps de trajet moyen entre La Défense et Paris Centre est inférieur à 20 minutes en dehors des pointes de trafic, par l'A14, l'A86 ou le périphérique. L'enlèvement dans les tours se fait en moins de 45 minutes, sous réserve de disponibilité au moment de la commande.",
+  },
+  {
+    q: "Quels sont vos horaires à La Défense ?",
+    a: "Nous prenons en charge vos courses 7j/7, de 8h à 19h, sur tout le parvis de La Défense et dans les communes limitrophes (Courbevoie, Puteaux, Nanterre).",
+  },
+  {
+    q: "Pouvez-vous transporter un pli confidentiel depuis La Défense ?",
+    a: "Oui. Un pli confidentiel part en course dédiée, sans regroupement, et est remis en main propre au destinataire. Nos coursiers anticipent les procédures d'accueil des tours (badge, interlocuteur désigné), et le nom du destinataire comme l'heure de remise sont enregistrés.",
+  },
+  {
+    q: "Peut-on regrouper la facturation des courses de notre entreprise ?",
+    a: "Oui, avec un compte entreprise : les courses de vos collaborateurs sont regroupées et les factures se règlent sous 30 jours.",
+  },
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: FAQ.map(({ q, a }) => ({
+    "@type": "Question",
+    name: q,
+    acceptedAnswer: { "@type": "Answer", text: a },
+  })),
+};
+
+const serviceSchema = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  name: "Coursier à La Défense",
+  serviceType: "Coursier express B2B",
+  url: `${SITE_URL}/zones/la-defense`,
+  provider: { "@id": `${SITE_URL}/#organization` },
+  areaServed: ["La Défense", "Courbevoie", "Nanterre"].map((name) => ({ "@type": "City", name })),
+};
 
 const H2 = "text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]";
 const LINK = "font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark";
@@ -61,6 +100,8 @@ export default function ZonelaDefense() {
   return (
     <>
       <JsonLd data={breadcrumbSchema} />
+      <JsonLd data={serviceSchema} />
+      <JsonLd data={faqSchema} />
 
       <section className="bg-ink text-white">
         <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-20 pt-16">
@@ -109,7 +150,7 @@ export default function ZonelaDefense() {
       <section className="bg-paper">
         <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
           <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">Particularités du secteur</div>
-          <h2 className={`mb-8 max-w-[24ch] ${H2}`}>Les tours et adresses desservies</h2>
+          <h2 className={`mb-8 max-w-[24ch] ${H2}`}>Coursier La Défense : les tours et quartiers desservis</h2>
           <div className="grid gap-8 md:grid-cols-2 text-[15.5px] leading-[1.7] text-muted">
             <p>
               Le quartier d&apos;affaires de La Défense regroupe les sièges de nombreuses multinationales, des
@@ -149,6 +190,33 @@ export default function ZonelaDefense() {
         </div>
       </section>
 
+      {/* ── Délais depuis La Défense ── */}
+      <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
+        <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">Délais</div>
+        <h2 className={`mb-8 max-w-[28ch] ${H2}`}>Délais depuis La Défense vers Paris et la petite couronne</h2>
+        <div className="grid max-w-[72ch] gap-5 text-[15.5px] leading-[1.7] text-muted">
+          <p>
+            Le temps de trajet moyen entre La Défense et Paris Centre est inférieur à 20 minutes en dehors des
+            pointes de trafic. Nos motos routières empruntent l&apos;A14, l&apos;A86 et le périphérique, là où une
+            camionnette reste prise dans les bouchons. L&apos;enlèvement dans les tours se fait en moins de 45
+            minutes, 7j/7 de 8h à 19h, sous réserve de disponibilité au moment de la commande, puis la course part
+            directement vers le destinataire.
+          </p>
+          <p>
+            Vers la petite couronne, la logique est la même : un coursier, un envoi, un trajet direct. Courbevoie,
+            Puteaux, Nanterre et Neuilly-sur-Seine sont à quelques minutes ; pour les autres communes des
+            Hauts-de-Seine, du Val-de-Marne et de la Seine-Saint-Denis, voyez notre page{" "}
+            <Link href="/zones/petite-couronne" className={LINK}>coursier banlieue Paris</Link>. Le délai de
+            livraison dépend de la formule choisie : Normal sous 3 h, Urgent sous 1 h 30, Super sous 1 h. Le prix
+            de chaque course s&apos;affiche avant la commande et figure sur la page{" "}
+            <Link href="/tarifs" className={LINK}>tarif coursier Paris</Link>. Pour des courses régulières depuis
+            vos bureaux, un{" "}
+            <Link href="/services/compte-entreprise" className={LINK}>compte entreprise</Link> regroupe les courses
+            de vos collaborateurs, avec des factures à régler sous 30 jours.
+          </p>
+        </div>
+      </section>
+
       {/* ── 2. Ce que nous transportons ── */}
       <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
         <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">Nos prestations dans le 92</div>
@@ -179,7 +247,7 @@ export default function ZonelaDefense() {
       <section className="bg-paper border-t border-gray-100">
         <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
           <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase text-center">Processus simple</div>
-          <h2 className={`mb-12 text-center ${H2}`}>Organiser une course depuis le quartier</h2>
+          <h2 className={`mb-12 text-center ${H2}`}>Organiser une course à La Défense</h2>
           <div className="grid gap-8 md:grid-cols-3">
             {[
               { num: "01", title: "Demande immédiate", desc: "Contactez-nous par téléphone ou par le formulaire, avec la tour, l'étage et le nom du destinataire." },
@@ -200,7 +268,7 @@ export default function ZonelaDefense() {
 
       {/* ── 4. La Défense et l'Île-de-France ── */}
       <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
-        <h2 className={`mb-6 max-w-[28ch] ${H2}`}>La Défense et le reste de l&apos;Île-de-France</h2>
+        <h2 className={`mb-6 max-w-[28ch] ${H2}`}>Zones proches</h2>
         <p className="max-w-[66ch] text-[15.5px] leading-[1.7] text-muted">
           Depuis La Défense, nos courses rejoignent toute l&apos;Île-de-France, en
           course dédiée. Pour vos envois dans la capitale, voyez notre page{" "}
@@ -218,12 +286,7 @@ export default function ZonelaDefense() {
             <p className={H2}>Vos questions sur la livraison à La Défense</p>
           </div>
           <div className="flex flex-col gap-4">
-            {[
-              { q: "Quels sont les délais d'intervention à La Défense ?", a: "Pour une course urgente, nous garantissons un enlèvement en moins de 45 minutes sur tout le parvis de La Défense et les communes limitrophes (Courbevoie, Puteaux, Nanterre)." },
-              { q: "Vos coursiers accèdent-ils aux étages des tours ?", a: "Oui, nos coursiers sont habitués aux protocoles de sécurité des grandes tours (badges, quais de livraison, contrôle d'identité) et assurent une remise en main propre." },
-              { q: "Proposez-vous la livraison depuis le 92 vers la banlieue éloignée ?", a: "Oui, depuis La Défense vers toute l'Île-de-France, en course dédiée. Nous ne livrons pas en province : pour une course hors Île-de-France, appelez-nous." },
-              { q: "Quels sont vos horaires à La Défense ?", a: "Du lundi au samedi, de 9h à 19h. Nous sommes fermés le dimanche et les jours fériés." }
-            ].map((faq, i) => (
+            {FAQ.map((faq, i) => (
               <div key={i} className="rounded-xl border border-line bg-white p-5 hover:border-accent/30 transition-colors">
                 <h3 className="mb-2 text-[15.5px] font-bold text-ink">{faq.q}</h3>
                 <p className="text-[14.5px] leading-[1.65] text-muted">{faq.a}</p>
@@ -241,7 +304,7 @@ export default function ZonelaDefense() {
               <p className="mb-3 text-[clamp(24px,3vw,36px)] font-bold leading-[1.2] tracking-[-0.02em]">
                 Une course dans le 92 maintenant ?
               </p>
-              <p className="text-[15px] text-white/60">Prise en charge en moins de 2 minutes, du lundi au samedi.</p>
+              <p className="text-[15px] text-white/60">Prise en charge en moins de 2 minutes, 7j/7 de 8h à 19h.</p>
             </div>
             <a href={`tel:${PHONE_TEL}`} className="rounded-[4px] bg-accent px-8 py-4 text-center text-[15px] font-bold text-white hover:bg-accent-dark">
               {PHONE_DISPLAY}
