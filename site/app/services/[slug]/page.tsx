@@ -10,7 +10,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import type { ReactNode } from "react";
+import { Fragment, type ReactNode } from "react";
 import JsonLd from "@/components/JsonLd";
 import TrustBlock from "@/components/TrustBlock";
 import InlineLinks from "@/components/InlineLinks";
@@ -96,6 +96,21 @@ export default async function ServicePage({
     areaServed: { "@type": "AdministrativeArea", name: "Île-de-France" },
     provider: { "@id": `${SITE_URL}/#organization` },
     url: pageUrl,
+    ...(service.offers && {
+      offers: service.offers.map((o) => ({
+        "@type": "Offer",
+        name: o.name,
+        price: String(o.price),
+        priceCurrency: "EUR",
+        url: pageUrl,
+        priceSpecification: {
+          "@type": "PriceSpecification",
+          price: String(o.price),
+          priceCurrency: "EUR",
+          valueAddedTaxIncluded: true,
+        },
+      })),
+    }),
   };
 
   const breadcrumbSchema = {
@@ -237,7 +252,25 @@ export default async function ServicePage({
       <ServiceHero service={service} />
 
       <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)]">
-        {order.map((key) => blocks[key])}
+        {order.map((key) => (
+          <Fragment key={key}>
+            {blocks[key]}
+            {outline?.extraSections
+              ?.filter((e) => e.after === key)
+              .map((e) => (
+                <section key={e.title} className="border-b border-line py-[72px]">
+                  <h2 className={`mb-7 max-w-[26ch] ${H2_CLASS}`}>{e.title}</h2>
+                  <div className="grid max-w-[68ch] gap-5">
+                    {e.paragraphs.map((paragraph) => (
+                      <p key={paragraph} className="text-[16.5px] leading-[1.65] text-muted">
+                        <InlineLinks text={paragraph} />
+                      </p>
+                    ))}
+                  </div>
+                </section>
+              ))}
+          </Fragment>
+        ))}
 
         {showPricing && (
           <section className="border-b border-line py-[72px]">

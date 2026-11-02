@@ -5,6 +5,7 @@
  * Chiffres repris de /tarifs et /flotte : ne pas en introduire de nouveaux ici.
  */
 import type { Service } from "./types";
+import { gridPrice } from "../pricing";
 
 export const coursierExpressParis: Service = {
   slug: "coursier-express-paris",
@@ -33,12 +34,12 @@ export const coursierExpressParis: Service = {
   h1: "Coursier express Paris : une course dédiée, sans mutualisation",
 
   intro:
-    "Quand un pli, un colis ou une pièce doit partir maintenant, One Connexion envoie un coursier en deux-roues en course dédiée : un enlèvement, un trajet direct, une remise horodatée. Intramuros et Île-de-France, du lundi au samedi de 9h à 19h.",
+    "Quand un pli, un colis ou une pièce doit partir maintenant, One Connexion envoie un coursier en deux-roues en course dédiée : un enlèvement, un trajet direct, une remise horodatée. Intramuros et Île-de-France, 7j/7 de 8h à 19h.",
 
   stats: [
     { value: "< 45 min", label: "Prise en charge" },
     { value: "1 course", label: "Un envoi, sans regroupement" },
-    { value: "6j/7", label: "Lun–sam, 9h – 19h" },
+    { value: "7j/7", label: "De 8h à 19h" },
   ],
 
   context: {
@@ -104,7 +105,7 @@ export const coursierExpressParis: Service = {
     "Intramuros et Île-de-France : petite couronne (92, 93, 94), grande couronne (77, 78, 91, 95), Roissy et Orly. Le coursier part de l’adresse d’enlèvement et va directement à destination.",
 
   pricing: {
-    title: "Prix d’un coursier express à Paris",
+    title: "Tarifs d’une course express",
     intro:
       "Une course express part dès la confirmation et va directement à destination. Les formules Urgent (1 h 30) et Super (1 h) sont faites pour ça ; le prix ne dépend que de la zone la plus éloignée du trajet.",
     recommended: ["urgent", "flash"],
@@ -112,7 +113,13 @@ export const coursierExpressParis: Service = {
       "En intramuros, une course Super coûte 56 € TTC, livrée sous 1 h. Si votre délai est plus large, la formule Normale (3 h) revient deux fois moins cher.",
   },
 
-  faqTitle: "Vos questions sur le coursier express.",
+  faqTitle: "Questions fréquentes",
+
+  offers: [
+    { name: "Course Normale 3 h à Paris", price: gridPrice("standard", 0) },
+    { name: "Course Urgente 1 h 30 à Paris", price: gridPrice("urgent", 0) },
+    { name: "Course Super 1 h à Paris", price: gridPrice("flash", 0) },
+  ],
 
   faq: [
     {
@@ -143,20 +150,36 @@ export const coursierExpressParis: Service = {
     {
       question: "Travaillez-vous le week-end ?",
       answer:
-        "Le samedi oui, de 9h à 19h, comme en semaine. Nous sommes fermés le dimanche et les jours fériés.",
+        "Oui, nos courses sont prises en charge 7j/7, de 8h à 19h.",
     },
   ],
 
   outline: {
     sections: [
-      { key: "useCases", title: "Quand faire appel à un coursier express" },
-      { key: "context", title: "Ce que change une course dédiée" },
-      { key: "included", title: "Documents et colis pris en charge" },
+      { key: "context", title: "Coursier express Paris : ce que couvre le service" },
     ],
+    extraSections: [
+      {
+        after: "context",
+        title: "Délais réels : moins de 45 minutes, 7j/7, 8h–19h",
+        paragraphs: [
+          "Pour une course express, l’enlèvement se fait en moins de 45 minutes, 7j/7 de 8h à 19h, sous réserve de disponibilité au moment de la commande ; nous confirmons le délai avant d’engager la course. Ensuite, le délai de livraison dépend de la formule choisie : Normal sous 3 h, Urgent sous 1 h 30, Super sous 1 h.",
+          "Contrairement à une livraison mutualisée, où votre colis attend la fin d’une tournée avec plusieurs arrêts, la course dédiée part pour votre seul envoi : le délai annoncé est le délai réel. Notre [flotte de coursiers moto](/flotte) se faufile là où un utilitaire reste bloqué, ce qui fait la différence aux heures de pointe. Le prix de chaque formule figure sur la page [tarif coursier Paris](/tarifs) et s’affiche avant de commander.",
+        ],
+      },
+      {
+        after: "context",
+        title: "Coursier express en Île-de-France et en banlieue",
+        paragraphs: [
+          "La même course express est disponible hors de Paris : petite couronne (92, 93, 94), grande couronne (77, 78, 91, 95), Roissy et Orly. Le coursier part de l’adresse d’enlèvement et va directement à destination, avec un colis jusqu’à 18 kg.",
+          "Pour la banlieue, voyez notre page [coursier banlieue Paris](/zones/petite-couronne), qui détaille les communes, les délais et les tarifs depuis et vers la petite couronne. Pour un coursier express en Île-de-France, le prix dépend de la zone la plus éloignée du trajet et du délai choisi, et s’affiche avant la commande.",
+        ],
+      },
+    ],
+    extraH2: { pricing: true, faq: true, ctaAsText: true },
     cta: {
       title: "Commander une course express",
       text: "Commandez en ligne ou appelez-nous : nous confirmons la faisabilité avant d’engager la course. Voir aussi le [tarif d'une course express](/tarifs), notre [coursier moto à Paris](/services/coursier-moto-paris) et [nos courses dans Paris](/zones/paris).",
     },
-    hidePricing: true,
   },
 };

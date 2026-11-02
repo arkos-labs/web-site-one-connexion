@@ -54,6 +54,8 @@ export type Service = {
   useCases: ServiceUseCase[];
   coverage: string;
   pricing: ServicePricing;
+  /** Offres chiffrées (TTC) exposées en schema.org Offer sur la page. */
+  offers?: { name: string; price: number }[];
   /** Titre de la FAQ, propre au service. */
   faqTitle: string;
   faq: FaqItem[];
@@ -76,6 +78,11 @@ export type ServiceOutline = {
    * rétrogradé en texte pour tenir le compte de H2 voulu.
    */
   extraH2?: { coverage?: string; pricing?: boolean; faq?: boolean; ctaAsText?: boolean };
+  /**
+   * H2 supplémentaires à contenu libre, insérés après le bloc `after`.
+   * Les liens internes s'écrivent [ancre](/chemin) dans les paragraphes.
+   */
+  extraSections?: { after: ServiceSectionKey; title: string; paragraphs: string[] }[];
   /** Retire le bloc tarifs de la page. */
   hidePricing?: boolean;
 };
