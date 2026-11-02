@@ -15,13 +15,27 @@ export type ZonePlan = {
   h2: [string, string, string, string];
 };
 
+/**
+ * Meta descriptions propres à un arrondissement : chacune cite des lieux de
+ * l'arrondissement (plan SEO, fiche 4.14). Les arrondissements absents gardent
+ * la description générique ci-dessous, en attendant leur tour (3 pages par semaine).
+ */
+const ARRONDISSEMENT_DESCRIPTIONS: Record<string, string> = {
+  "paris-17e":
+    "Coursier Paris 17e : dépôts au Tribunal de Paris (Batignolles), plis vers Wagram et les Ternes. Course dédiée, suivi de la prise en charge à la remise.",
+  "paris-15e":
+    "Coursier Paris 15e : prélèvements vers l'HEGP et Necker, matériel pour la Porte de Versailles, plis à Beaugrenelle. Course dédiée, suivi jusqu'à la remise.",
+};
+
 export function getZonePlan(zone: Zone): ZonePlan | undefined {
   if (zone.category === "paris" && zone.slug.startsWith("paris-")) {
     const ne = zone.name.replace("Paris ", ""); // « 1er », « 2e »… « 20e »
     return {
       kind: "arrondissement",
       title: `Coursier Paris ${ne} : courses dédiées dans l'arrondissement`,
-      description: `Coursier dans le ${ne} arrondissement de Paris : une course dédiée pour vos plis, documents et colis, avec un suivi de la prise en charge à la remise.`,
+      description:
+        ARRONDISSEMENT_DESCRIPTIONS[zone.slug] ??
+        `Coursier dans le ${ne} arrondissement de Paris : une course dédiée pour vos plis, documents et colis, avec un suivi de la prise en charge à la remise.`,
       h1: `Coursier Paris ${ne} : une course dédiée dans l'arrondissement`,
       h2: [
         `Les rues et quartiers du ${ne} arrondissement`,
