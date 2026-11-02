@@ -6,7 +6,7 @@
 import { SITE_URL } from "@/lib/site-content";
 
 const ORDER_URL = `${SITE_URL}/#commander`;
-const HEADER_LOGO_URL = `${SITE_URL}/logo-white.png`;
+const HEADER_LOGO_URL = `${SITE_URL}/logo-dark.png`;
 const SIGNATURE_LOGO_URL = `${SITE_URL}/sig-logo.png`;
 
 const esc = (s: string) =>
@@ -30,10 +30,9 @@ Pour ne plus recevoir nos messages, répondez « STOP » à cet e-mail.`;
 
   const html = `<!doctype html><html><body style="margin:0;padding:20px 16px;background:#ffffff;font-family:Arial,Helvetica,sans-serif;color:#222222;">
 <table role="presentation" cellpadding="0" cellspacing="0" style="max-width:560px;font-size:15px;line-height:1.6;color:#222222;">
-<tr><td style="background:#0E0F10;border-radius:10px 10px 0 0;padding:20px 24px;">
-<img src="${HEADER_LOGO_URL}" width="150" height="56" alt="ONE CONNEXION" style="display:block;width:150px;height:auto;">
+<tr><td style="padding:0 0 18px 0;">
+<img src="${HEADER_LOGO_URL}" width="160" height="43" alt="ONE CONNEXION" style="display:block;width:160px;height:auto;">
 </td></tr>
-<tr><td style="height:18px;font-size:0;line-height:0;">&nbsp;</td></tr>
 <tr><td>
 ${paragraphs.map((p) => `<p style="margin:0 0 14px 0;">${esc(p).replace(/\n/g, "<br>")}</p>`).join("\n")}
 <p style="margin:18px 0 22px 0;"><a href="${ORDER_URL}" style="display:inline-block;padding:12px 22px;border-radius:8px;background:#ed5518;color:#ffffff;font-size:15px;font-weight:700;text-decoration:none;">Commander une course</a></p>
