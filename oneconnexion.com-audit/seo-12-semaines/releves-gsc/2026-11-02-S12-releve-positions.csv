@@ -1,0 +1,22 @@
+mot_cle,page_gsc,impressions_28j,clics_28j,position_28j,position_plan_90j,commentaire
+pli confidentiel,/services/plis-confidentiels,89,0,9.35,9.6,page 1 sans clic : title modifie en S1 (non deploye)
+envoi pli confidentiel,/services/plis-confidentiels,19,0,9.42,12.4,
+coursier paris 17,/zones/paris (pas la page 17e),1,0,59,16.4,la page 17e n'apparait plus sur cette requete
+coursier paris tarif,/tarifs,1,0,28,22.0,
+tarif coursier paris,/tarifs,89,0,36.93,50.4,cannibalise par /zones/paris (56 imp - pos 54.4)
+prix coursier paris,/tarifs,69,0,39.26,49.4,cannibalise par /zones/paris (62 imp - pos 52.5)
+emballages d'expedition de laboratoire,/guides/expedier-du-materiel-de-laboratoire,8,0,18.13,18.1,
+courses en ligne charenton le pont,/zones/charenton-le-pont,19,0,7.68,7.7,page zone existante
+coursier paris banlieue,/zones/petite-couronne,104,0,26.34,33.1,/zones/paris en parallele (23 imp - pos 70.7)
+coursier banlieue paris,/zones/petite-couronne,77,0,17.10,41.9,/zones/paris en parallele (43 imp - pos 86.3)
+coursier ile de france,/,47,0,38.45,62.8,aussi /zones/paris (26 imp pos 86) et /tarifs (24 imp pos 79)
+coursier express paris,/zones/paris,48,0,66.46,61.5,la page express n'a que 1 imp (pos 70) : /zones/paris capte la requete
+coursier urgent paris,(absent),0,0,,,
+coursier paris,/zones/paris,127,0,48.06,47.9,
+coursier dans paris,/zones/paris,65,0,65.52,68.1,
+livraison le jour meme b2b,/services/livraison-e-commerce,7,0,32.57,37.6,la nouvelle page /services/livraison-jour-meme-b2b doit reprendre la requete
+coursier pour transport de sang refrigere,/services/transport-medical,63,0,71.08,68.6,3 URLs se partagent la requete (transport-medical 63 / guide labo 16 / guide prelevements 14)
+transport laboratoire hospitalier,/services/transport-medical,6,0,46.33,47.7,
+expedition de materiel de laboratoire,/guides/expedier-du-materiel-de-laboratoire,4,0,5.50,52.0,transport-medical en parallele (16 imp - pos 61.5)
+livraison internationale de laboratoire,/guides/expedier-du-materiel-de-laboratoire,3,0,6.33,47.8,transport-medical en parallele (20 imp - pos 56.2)
+expedition b2b laboratoire,/guides/expedier-du-materiel-de-laboratoire,4,0,7.25,47.2,transport-medical en parallele (12 imp - pos 61.8)
