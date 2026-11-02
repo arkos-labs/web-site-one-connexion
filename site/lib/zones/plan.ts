@@ -23,6 +23,8 @@ export type ZonePlan = {
 const ARRONDISSEMENT_DESCRIPTIONS: Record<string, string> = {
   "paris-17e":
     "Coursier Paris 17e : dépôts au Tribunal de Paris (Batignolles), plis vers Wagram et les Ternes. Course dédiée, suivi de la prise en charge à la remise.",
+  "paris-8e":
+    "Coursier Paris 8e : plis vers Haussmann et le Triangle d'Or, livraisons aux Champs-Élysées et à Saint-Lazare. Course dédiée, suivi jusqu'à la remise.",
   "paris-15e":
     "Coursier Paris 15e : prélèvements vers l'HEGP et Necker, matériel pour la Porte de Versailles, plis à Beaugrenelle. Course dédiée, suivi jusqu'à la remise.",
 };
