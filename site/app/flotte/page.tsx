@@ -5,7 +5,8 @@
  */
 import { ShieldCheck, MapPin, Gauge, Zap, Clock, Award, Route, CheckCircle2, Phone } from "lucide-react";
 import Link from "next/link";
-import { PHONE_TEL, PHONE_DISPLAY } from "@/lib/site-content";
+import JsonLd from "@/components/JsonLd";
+import { PHONE_TEL, PHONE_DISPLAY, SITE_URL } from "@/lib/site-content";
 
 const TITLE = "Flotte de coursiers moto à Paris : deux-roues dédiés";
 const DESCRIPTION =
@@ -30,7 +31,7 @@ const STATS = [
   { value: "Dédiée", label: "Une course, un coursier" },
   { value: "18 kg", label: "Charge par course" },
   { value: "< 45 min", label: "Prise en charge moyenne" },
-  { value: "6j/7", label: "Lun–sam, 9h–19h" },
+  { value: "7j/7", label: "De 8h à 19h" },
 ];
 
 const VEHICLES = [
@@ -63,7 +64,7 @@ const VEHICLES = [
 const FEATURES = [
   { Icon: Award, title: "Discrétion & rigueur", desc: "Nos coursiers sont sensibilisés aux exigences juridiques et médicales et travaillent en toute discrétion." },
   { Icon: Route, title: "Optimisation d'itinéraire", desc: "Dispatch assuré par notre équipe pour affecter le coursier le plus adapté." },
-  { Icon: Clock, title: "Horaires d'ouverture", desc: "Du lundi au samedi, de 9h à 19h. En dehors de ces horaires, sur demande et selon disponibilité." },
+  { Icon: Clock, title: "Horaires d'ouverture", desc: "7j/7, de 8h à 19h." },
   { Icon: CheckCircle2, title: "Coursiers vérifiés", desc: "Permis et casier judiciaire vérifiés, formation interne obligatoire avant prise de poste." },
 ];
 
@@ -78,9 +79,52 @@ const ZONES = [
   { dept: "95", name: "Val-d'Oise", detail: "Cergy, Argenteuil - dès 60 € TTC" },
 ];
 
+const LINK = "font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark";
+
+const FAQ = [
+  {
+    q: "Quelle charge peut transporter un coursier moto ?",
+    a: "Chaque deux-roues est équipé d'un top-case verrouillé et étanche, qui accepte jusqu'à 18 kg par course.",
+  },
+  {
+    q: "Pouvez-vous transporter un objet volumineux ?",
+    a: "Notre flotte est composée de deux-roues (scooters et motos) : elle convient aux plis, colis et matériel léger. Pour un volume ou un gabarit important, contactez-nous avant de commander : nous vous dirons si nous pouvons le prendre en charge.",
+  },
+  {
+    q: "Quel est le délai de prise en charge ?",
+    a: "Le coursier prend l'envoi en charge en moins de 45 minutes, 7j/7 de 8h à 19h, sous réserve de disponibilité au moment de la commande. Le délai de livraison dépend de la formule : Normal 3 h, Urgent 1 h 30, Super 1 h.",
+  },
+  {
+    q: "Quelles zones la flotte couvre-t-elle ?",
+    a: "Paris intramuros, la petite couronne (92, 93, 94) et la grande couronne (77, 78, 91, 95), y compris Roissy et Orly. Le prix dépend de la zone la plus éloignée du trajet et s'affiche avant la commande.",
+  },
+];
+
+const serviceSchema = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  name: "Flotte de coursiers moto à Paris",
+  serviceType: "Coursier moto B2B",
+  url: `${SITE_URL}/flotte`,
+  provider: { "@id": `${SITE_URL}/#organization` },
+  areaServed: { "@type": "AdministrativeArea", name: "Île-de-France" },
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: FAQ.map(({ q, a }) => ({
+    "@type": "Question",
+    name: q,
+    acceptedAnswer: { "@type": "Answer", text: a },
+  })),
+};
+
 export default function FlottePage() {
   return (
     <main>
+      <JsonLd data={serviceSchema} />
+      <JsonLd data={faqSchema} />
 
       {/* ── Hero ── */}
       <section className="relative bg-ink text-white" style={{ backgroundImage: "url('/images/flotte-bg-opt.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
@@ -120,7 +164,14 @@ export default function FlottePage() {
         <div className="mb-4 font-mono text-[11px] uppercase tracking-[0.16em] text-accent">
           Nos véhicules
         </div>
-        <h2 className={`mb-16 max-w-[22ch] ${H2}`}>Composition de la flotte</h2>
+        <h2 className={`mb-6 max-w-[26ch] ${H2}`}>Coursier moto Paris : notre flotte de deux-roues</h2>
+        <p className="mb-14 max-w-[68ch] text-[15.5px] leading-[1.7] text-muted">
+          Notre flotte associe deux familles de deux-roues, choisies selon la course : des scooters agiles pour
+          l&apos;hyper-centre de Paris et des motos routières pour les trajets plus longs. Chaque véhicule est
+          affecté à un seul envoi à la fois, de l&apos;enlèvement à la remise, par un coursier que notre dispatcheur
+          connaît. Pour commander une course, voyez notre{" "}
+          <Link href="/services/coursier-express-paris" className={LINK}>coursier express Paris</Link>.
+        </p>
         <div className="grid gap-8 md:grid-cols-2">
           {VEHICLES.slice(0, 2).map((v) => {
             const Icon = v.icon;
@@ -144,14 +195,42 @@ export default function FlottePage() {
         </div>
       </section>
 
+      {/* ── Motos 300–600cc ── */}
+      <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-10">
+        <h2 className={`mb-6 max-w-[26ch] ${H2}`}>Motos 300–600cc : pourquoi ce choix</h2>
+        <div className="grid max-w-[68ch] gap-5 text-[15.5px] leading-[1.7] text-muted">
+          <p>
+            Pour les trajets au-delà de Paris, nous utilisons des motos routières de 300 à 600cc. Ce choix tient
+            à trois critères. L&apos;agilité d&apos;abord : une moto traverse la circulation dense là où une
+            camionnette reste bloquée, ce qui tient le délai annoncé aux heures de pointe. La capacité
+            d&apos;emport ensuite : le top-case verrouillé et étanche accepte jusqu&apos;à 18 kg, de quoi
+            transporter plis, dossiers, petits colis et matériel léger. La fiabilité enfin : ces motos
+            maintiennent une vitesse commerciale régulière sur les axes autoroutiers (A14, A86, périphérique) qui
+            relient Paris à La Défense, à Roissy et à Orly.
+          </p>
+          <p>
+            Les scooters de 50 à 125cc restent réservés à l&apos;hyper-centre, où leur gabarit permet de passer
+            dans les rues les plus denses. Pour la couverture de La Défense, voyez notre page{" "}
+            <Link href="/zones/la-defense" className={LINK}>coursier La Défense</Link>.
+          </p>
+        </div>
+      </section>
+
       {/* ── Garanties ── */}
       <section className="bg-paper">
         <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-10">
           <div className="mb-4 font-mono text-[11px] uppercase tracking-[0.16em] text-accent">
             Nos garanties
           </div>
-          <h2 className={`mb-6 ${H2}`}>Entretien et équipement</h2>
-          <p className="mb-14 max-w-[66ch] text-[15.5px] leading-[1.7] text-muted">{VEHICLES[2].desc}</p>
+          <h2 className={`mb-6 ${H2}`}>Entretien, équipement et sécurité des coursiers</h2>
+          <p className="mb-5 max-w-[66ch] text-[15.5px] leading-[1.7] text-muted">{VEHICLES[2].desc}</p>
+          <p className="mb-14 max-w-[66ch] text-[15.5px] leading-[1.7] text-muted">
+            Les deux-roues sont entretenus pour tenir les délais annoncés, et chaque coursier suit une formation
+            interne avant de prendre un poste. Les envois voyagent fermés dans le top-case, du début à la fin de la
+            course, sans passer de main en main : c&apos;est ce qui permet d&apos;établir qui a eu accès à quoi. Pour
+            le détail du déroulé d&apos;une course, de la commande à la preuve de remise, lisez{" "}
+            <Link href="/methode" className={LINK}>notre méthode</Link>.
+          </p>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {FEATURES.map(({ Icon, title, desc }) => (
               <div key={title} className="flex flex-col gap-3 rounded-2xl bg-white p-6 shadow-sm border border-line">
@@ -171,10 +250,11 @@ export default function FlottePage() {
         <div className="mb-4 font-mono text-[11px] uppercase tracking-[0.16em] text-accent">
           Zone de couverture
         </div>
-        <h2 className={`mb-6 ${H2}`}>Une course, un coursier</h2>
+        <h2 className={`mb-6 ${H2}`}>Ce que la flotte permet : délais et zones</h2>
         <p className="mb-14 max-w-[66ch] text-[15.5px] leading-[1.7] text-muted">
           Chaque coursier est affecté à un seul envoi à la fois : il part de l&apos;enlèvement et va directement à la
-          remise, sans regroupement. {VEHICLES[3].desc}
+          remise, sans regroupement. {VEHICLES[3].desc} Pour Paris et ses arrondissements, voyez notre page{" "}
+          <Link href="/zones/paris" className={LINK}>coursier Paris</Link>.
         </p>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {ZONES.map((z) => (
@@ -190,17 +270,32 @@ export default function FlottePage() {
           ))}
         </div>
         <p className="mt-8 text-[13.5px] text-muted">
-          * Départements 77, 78, 91 et 95 (grande couronne) : prix selon la distance depuis Paris, à partir de 60 € TTC par course.
+          * Départements 77, 78, 91 et 95 (grande couronne) : prix selon la distance depuis Paris, à partir de 60 € TTC par course. Le prix de chaque course s&apos;affiche avant la commande ; la grille figure sur
+          la page{" "}
+          <Link href="/tarifs" className={LINK}>tarif coursier Paris</Link>.
         </p>
+      </section>
+
+      {/* ── FAQ ── */}
+      <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-10">
+        <h2 className={`mb-8 ${H2}`}>Questions fréquentes</h2>
+        <div className="grid max-w-[780px] gap-6">
+          {FAQ.map((item) => (
+            <div key={item.q}>
+              <h3 className="mb-2 font-bold tracking-[-0.01em] text-ink">{item.q}</h3>
+              <p className="text-[15px] leading-[1.65] text-muted">{item.a}</p>
+            </div>
+          ))}
+        </div>
       </section>
 
       {/* ── CTA ── */}
       <section className="bg-accent text-white py-16">
         <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] flex flex-col md:flex-row md:items-center justify-between gap-8">
           <div>
-            <h2 className="mb-2 text-[clamp(28px,3.2vw,40px)] font-bold leading-[1.1] tracking-[-0.03em]">
+            <p className="mb-2 text-[clamp(28px,3.2vw,40px)] font-bold leading-[1.1] tracking-[-0.03em]">
               Réserver une course moto
-            </h2>
+            </p>
             <p className="text-[16px] text-white/90">
               Ouvrez un compte entreprise en 2 minutes, sans engagement. Pour savoir comment se déroule chaque course,
               voyez{" "}
