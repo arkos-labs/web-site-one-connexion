@@ -1,9 +1,11 @@
 /**
  * lib/services/landing.ts
  * Pages service créées par le plan « nouvelles pages » (novembre 2026). Chacune vise une seule
- * requête, compte un H1 et exactement quatre H2, sans lien interne dans le corps.
+ * requête, compte un H1 et quatre H2, sans lien interne dans le corps.
  * Hors de SERVICES : elles n'apparaissent ni sur l'accueil ni sur /services.
  * Règles de contenu : aucun prix, aucun délai chiffré, aucun horaire.
+ * Exception : une page avec `faq` suit le plan SEO étendu (5 H2 : quatre sections + FAQ), peut
+ * chiffrer prix et délais, et porte des liens internes [ancre](/chemin) dans ses paragraphes.
  */
 
 export type LandingService = {
@@ -15,7 +17,13 @@ export type LandingService = {
   h1: string;
   intro: string;
   sections: { title: string; paragraphs: string[] }[];
+  /** Plan étendu : H2 « Questions fréquentes » + schéma FAQPage. */
+  faq?: { question: string; answer: string }[];
+  /** Offres chiffrées (TTC) exposées en schema.org Offer. */
+  offers?: { name: string; price: number }[];
 };
+
+import { gridPrice } from "../pricing";
 
 export const LANDING_SERVICES: LandingService[] = [
   {
@@ -179,38 +187,71 @@ export const LANDING_SERVICES: LandingService[] = [
   {
     slug: "coursier-urgent-paris",
     name: "Coursier urgent Paris",
-    title: "Coursier urgent Paris : course dédiée pour un envoi pressé",
+    title: "Coursier urgent Paris : course dédiée en moins de 45 minutes",
     description:
       "Coursier urgent à Paris : une course dédiée pour votre envoi pressé, sans mutualisation, avec prise en charge et suivi jusqu'à la remise.",
-    h1: "Coursier urgent Paris : une course dédiée pour vos envois pressés",
+    h1: "Coursier urgent Paris : une course dédiée en moins de 45 minutes",
     intro:
       "Un envoi devient urgent quand quelqu’un l’attend et qu’il ne peut pas attendre une tournée. Le coursier part pour votre seul envoi et va directement au destinataire.",
+    offers: [
+      { name: "Course Urgente 1 h 30 à Paris", price: gridPrice("urgent", 0) },
+      { name: "Course Super 1 h à Paris", price: gridPrice("flash", 0) },
+    ],
     sections: [
       {
-        title: "Quand un envoi devient urgent",
+        title: "Coursier urgent Paris : quand nous appeler",
         paragraphs: [
           "Un contrat à faire signer avant la fin de la journée, une pièce manquante qui bloque un dossier ou un chantier, un colis à récupérer chez un fournisseur et à livrer dans la journée, un document oublié avant un rendez-vous : l’urgence vient du besoin, pas du type de colis.",
+          "Pour gagner du temps, donnez des adresses complètes, avec le code d’accès, l’étage et le nom de l’entreprise, et un destinataire joignable. Préparez l’envoi fermé avant l’arrivée du coursier : il n’attend pas qu’un document soit imprimé ou signé. Si votre envoi est urgent mais que l’heure limite est plus souple, notre [coursier express Paris](/services/coursier-express-paris) répond au même besoin.",
         ],
       },
       {
-        title: "Ce que change une course dédiée",
+        title: "Délais garantis et horaires (8h–19h, 7j/7)",
         paragraphs: [
-          "Dans un envoi mutualisé, votre colis attend que d’autres soient collectés, puis suit une tournée avec plusieurs arrêts. En course dédiée, le coursier ne transporte que le vôtre : il part de votre adresse et va directement au destinataire.",
-          "Vous suivez la course en ligne jusqu’à la remise, et le nom de la personne qui reçoit l’envoi est enregistré avec l’heure.",
+          "Le coursier prend l’envoi en charge en moins de 45 minutes, 7j/7 de 8h à 19h, sous réserve de disponibilité au moment de la commande. Si l’envoi doit être remis avant une heure précise, dites-le à la commande : nous confirmons la faisabilité avant d’engager la course.",
+          "Dans un envoi mutualisé, votre colis attend que d’autres soient collectés, puis suit une tournée avec plusieurs arrêts. En course dédiée, le coursier ne transporte que le vôtre : il part de votre adresse et va directement au destinataire. Vous suivez la course en ligne jusqu’à la remise, et le nom de la personne qui reçoit l’envoi est enregistré avec l’heure.",
         ],
       },
       {
-        title: "Préparer un envoi urgent",
+        title: "Ce que nous transportons en urgence",
         paragraphs: [
-          "Pour gagner du temps, donnez des adresses complètes, avec le code d’accès, l’étage et le nom de l’entreprise, et un destinataire joignable. Préparez l’envoi fermé avant l’arrivée du coursier : il n’attend pas qu’un document soit imprimé ou signé.",
-          "Si l’envoi doit être remis avant une heure précise, dites-le à la commande : nous confirmons la faisabilité avant d’engager la course.",
+          "Documents, contrats, actes, pièces de rechange, petits colis et commandes à livrer le jour même : tout ce qui tient dans le top-case d’un deux-roues, jusqu’à 18 kg. Pour les documents sensibles, notre service de [pli confidentiel](/services/plis-confidentiels) ajoute la remise en main propre au seul destinataire désigné.",
+          "Les courses partent de Paris et de toute l’Île-de-France ; pour les adresses dans la capitale, voyez notre page [coursier Paris](/zones/paris).",
         ],
       },
       {
-        title: "Commander une course urgente à Paris",
+        title: "Tarifs d’une course urgente",
         paragraphs: [
-          "Commandez en ligne ou par téléphone en choisissant le délai qui correspond à votre urgence. Le prix de chaque délai figure sur notre grille tarifaire et s’affiche avant de valider la commande.",
+          `Le prix dépend de la zone la plus éloignée du trajet et du délai choisi. À Paris, une course Urgente (livrée sous 1 h 30) coûte ${gridPrice("urgent", 0)} € TTC et une course Super (sous 1 h) ${gridPrice("flash", 0)} € TTC, contre ${gridPrice("standard", 0)} € TTC pour une course Normale (sous 3 h). Pour une urgence, choisissez Urgent ou Super.`,
+          "Le prix exact s’affiche avant de valider la commande. Retrouvez toute la grille, par zone et par délai, sur la page [tarif coursier Paris](/tarifs).",
         ],
+      },
+    ],
+    faq: [
+      {
+        question: "En combien de temps un coursier urgent prend-il mon envoi en charge ?",
+        answer:
+          "En moins de 45 minutes, 7j/7 de 8h à 19h, sous réserve de disponibilité au moment de la commande. Nous confirmons la faisabilité avant d’engager la course.",
+      },
+      {
+        question: "Quelle est la différence entre une course urgente et une course super ?",
+        answer:
+          "La course Urgente est livrée sous 1 h 30, la course Super sous 1 h. Le prix suit le délai : Urgent coûte 1,5 fois le Normal, Super 2 fois.",
+      },
+      {
+        question: "Que peut-on envoyer par coursier urgent ?",
+        answer:
+          "Documents, contrats, actes, pièces de rechange et colis jusqu’à 18 kg. La nature de l’envoi ne change pas le prix, seuls comptent la zone et le délai.",
+      },
+      {
+        question: "Puis-je suivre ma course urgente ?",
+        answer:
+          "Oui. L’avancement de la course est visible en ligne, et la remise est horodatée avec le nom du destinataire.",
+      },
+      {
+        question: "Faites-vous des courses urgentes hors de Paris ?",
+        answer:
+          "Oui, en petite couronne (92, 93, 94) et dans le reste de l’Île-de-France. Le prix dépend de la zone la plus éloignée du trajet et s’affiche avant la commande.",
       },
     ],
   },

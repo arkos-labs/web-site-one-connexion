@@ -1,11 +1,12 @@
 /**
  * components/services/LandingServicePage.tsx
- * Gabarit des pages de lib/services/landing.ts : un H1, quatre H2 du plan,
- * aucun lien interne dans le corps, aucun chiffre (pas de bandeau de stats).
+ * Gabarit des pages de lib/services/landing.ts : un H1, quatre H2 du plan (cinq avec une FAQ),
+ * aucun lien interne dans le corps sauf [ancre](/chemin) dans une page au plan étendu.
  */
 import type { Metadata } from "next";
 import Link from "next/link";
 import JsonLd from "@/components/JsonLd";
+import InlineLinks, { stripLinks } from "@/components/InlineLinks";
 import type { LandingService } from "@/lib/services/landing";
 import { PHONE_DISPLAY, PHONE_TEL, SITE_URL } from "@/lib/site-content";
 
@@ -39,6 +40,31 @@ export default function LandingServicePage({ page }: { page: LandingService }) {
     areaServed: { "@type": "AdministrativeArea", name: "Île-de-France" },
     provider: { "@id": `${SITE_URL}/#organization` },
     url: pageUrl,
+    ...(page.offers && {
+      offers: page.offers.map((o) => ({
+        "@type": "Offer",
+        name: o.name,
+        price: String(o.price),
+        priceCurrency: "EUR",
+        url: pageUrl,
+        priceSpecification: {
+          "@type": "PriceSpecification",
+          price: String(o.price),
+          priceCurrency: "EUR",
+          valueAddedTaxIncluded: true,
+        },
+      })),
+    }),
+  };
+
+  const faqSchema = page.faq && {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: page.faq.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: { "@type": "Answer", text: stripLinks(item.answer) },
+    })),
   };
 
   const breadcrumbSchema = {
@@ -55,6 +81,7 @@ export default function LandingServicePage({ page }: { page: LandingService }) {
     <>
       <JsonLd data={serviceSchema} />
       <JsonLd data={breadcrumbSchema} />
+      {faqSchema && <JsonLd data={faqSchema} />}
 
       <section className="bg-ink text-white">
         <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-16 pt-12">
@@ -92,11 +119,25 @@ export default function LandingServicePage({ page }: { page: LandingService }) {
             <h2 className={`mb-7 max-w-[26ch] ${H2_CLASS}`}>{s.title}</h2>
             <div className="grid max-w-[68ch] gap-5">
               {s.paragraphs.map((p) => (
-                <p key={p} className="text-[16.5px] leading-[1.65] text-muted">{p}</p>
+                <p key={p} className="text-[16.5px] leading-[1.65] text-muted"><InlineLinks text={p} /></p>
               ))}
             </div>
           </section>
         ))}
+
+        {page.faq && (
+          <section className="py-[72px]">
+            <h2 className={`mb-7 max-w-[26ch] ${H2_CLASS}`}>Questions fréquentes</h2>
+            <div className="grid max-w-[68ch] gap-6">
+              {page.faq.map((item) => (
+                <div key={item.question}>
+                  <h3 className="mb-2 font-bold tracking-[-0.01em]">{item.question}</h3>
+                  <p className="text-[15.5px] leading-[1.65] text-muted">{item.answer}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
       </div>
     </>
   );
