@@ -89,7 +89,6 @@ export default function MethodePage() {
   return (
     <>
       <JsonLd data={howToSchema} />
-    <main>
       <section className="relative bg-ink text-white" style={{ backgroundImage: "url('/images/methode-bg-opt.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <div className="absolute inset-0 bg-ink/85"></div>
         <div className="relative mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pt-20 pb-16">
@@ -150,7 +149,7 @@ export default function MethodePage() {
             Ce fonctionnement explique la ponctualité, mais aussi la discrétion : le même coursier garde votre
             envoi de l&apos;enlèvement à la remise, sans le confier à un tiers. Le détail des véhicules et de la
             couverture se trouve sur la page{" "}
-            <Link href="/flotte" className={LINK}>flotte de coursiers moto</Link>. Pour les entreprises qui
+            <Link href="/flotte" className={LINK}>flotte de coursiers moto</Link>. Pour une course en deux-roues, voyez notre <Link href="/services/coursier-moto-paris" className={LINK}>coursier moto à Paris</Link>. Pour les entreprises qui
             commandent régulièrement, cette organisation se traduit par des tournées prévisibles, des délais
             tenus et une facturation unique.
           </p>
@@ -206,7 +205,6 @@ export default function MethodePage() {
       </section>
 
       <Contact titleAs="p" />
-    </main>
     </>
   );
 }

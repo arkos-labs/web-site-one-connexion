@@ -122,7 +122,7 @@ const faqSchema = {
 
 export default function FlottePage() {
   return (
-    <main>
+    <>
       <JsonLd data={serviceSchema} />
       <JsonLd data={faqSchema} />
 
@@ -170,7 +170,7 @@ export default function FlottePage() {
           l&apos;hyper-centre de Paris et des motos routières pour les trajets plus longs. Chaque véhicule est
           affecté à un seul envoi à la fois, de l&apos;enlèvement à la remise, par un coursier que notre dispatcheur
           connaît. Pour commander une course, voyez notre{" "}
-          <Link href="/services/coursier-express-paris" className={LINK}>coursier express Paris</Link>.
+          <Link href="/services/coursier-express-paris" className={LINK}>coursier express Paris</Link>. Pour une course en deux-roues, voyez aussi notre <Link href="/services/coursier-moto-paris" className={LINK}>coursier moto à Paris</Link>.
         </p>
         <div className="grid gap-8 md:grid-cols-2">
           {VEHICLES.slice(0, 2).map((v) => {
@@ -323,6 +323,6 @@ export default function FlottePage() {
         </div>
       </section>
 
-    </main>
+    </>
   );
 }

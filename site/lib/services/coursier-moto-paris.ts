@@ -18,9 +18,9 @@ export const coursierMotoParis: Service = {
   },
 
   seo: {
-    title: "Coursier moto Paris : courses rapides en deux-roues",
+    title: "Coursier moto à Paris : course dédiée en 45 min",
     description:
-      "Coursier moto à Paris et en Île-de-France : une flotte de deux-roues dédiée aux courses professionnelles, avec un interlocuteur unique par envoi.",
+      "Coursier moto à Paris et en Île-de-France : un deux-roues dédié par envoi, 7h-23h, 7j/7. Délais constatés, traçabilité complète, devis en 2 h.",
     keywords: [
       "coursier moto Paris",
       "livraison moto Paris",
@@ -111,29 +111,19 @@ export const coursierMotoParis: Service = {
 
   faq: [
     {
-      question: "Quels types de colis un coursier moto peut-il transporter ?",
+      question: "Un coursier moto peut-il transporter des documents confidentiels ?",
       answer:
-        "Documents, plis, petits colis et pièces légères, dans la limite d’un top-case verrouillé et étanche de 18 kg. Pour un colis plus volumineux, contactez-nous : nous confirmons la faisabilité avant d’engager la course.",
+        "Oui. Un pli ou un document confidentiel part en course dédiée, sans regroupement, et est remis en main propre au destinataire désigné, avec le nom et l’heure de remise enregistrés.",
     },
     {
-      question: "Quel deux-roues est utilisé ?",
+      question: "Livrez-vous des prélèvements ou des échantillons à moto ?",
       answer:
-        "Un deux-roues léger pour les courses intramuros, une moto routière pour la banlieue, les rocades et les trajets vers La Défense, Roissy ou Orly.",
+        "Oui, dans un contenant isotherme convenu à la commande, en course dédiée et directe. Précisez les conditions de température fixées par le laboratoire : nous confirmons la faisabilité avant d’engager la course.",
     },
     {
-      question: "Le coursier moto est-il plus rapide qu’un utilitaire ?",
+      question: "Combien de temps pour une livraison moto dans Paris ?",
       answer:
-        "En ville, oui : le deux-roues contourne la congestion qui est le principal risque sur les délais courts. Pour les gros volumes, un utilitaire reste plus adapté.",
-    },
-    {
-      question: "En combien de temps le coursier vient-il chercher mon colis ?",
-      answer:
-        "En intramuros, la moto est généralement chez vous en moins de 45 minutes ; le délai exact vous est annoncé à la confirmation.",
-    },
-    {
-      question: "Intervenez-vous le week-end ?",
-      answer:
-        "Oui, 7j/7, de 8h à 19h.",
+        "L’enlèvement se fait en moins de 45 minutes, sous réserve de disponibilité. Le délai de livraison dépend de la formule : Normal 3 h, Urgent 1 h 30, Super 1 h.",
     },
   ],
 
@@ -142,6 +132,26 @@ export const coursierMotoParis: Service = {
       { key: "context", title: "Pourquoi une course en deux-roues" },
       { key: "steps", title: "Notre flotte et son organisation" },
       { key: "useCases", title: "Types d'envois confiés à un coursier moto" },
+    ],
+    extraSections: [
+      {
+        after: "context",
+        title: "Pourquoi une moto plutôt qu’un vélo ou une voiture",
+        paragraphs: [
+          "Pour une course urgente à Paris, la moto est le compromis le plus fiable pour un usage professionnel. Elle passe entre les files là où une voiture ou un utilitaire reste bloqué, et elle transporte plus qu’un vélo : un top-case verrouillé et étanche accepte jusqu’à 18 kg, de quoi emporter des plis, des dossiers, des échantillons ou du petit matériel.",
+          "Le vélo reste pertinent pour les très courtes distances dans l’hypercentre, et la voiture pour les volumes ou le matériel lourd. Dès qu’il faut combiner délai, capacité et fiabilité par tous les temps, le deux-roues motorisé répond le mieux à une course dédiée. C’est une question de délai tenu.",
+          "Le deux-roues stationne plus facilement qu’un véhicule à quatre roues, ce qui évite de perdre du temps à chercher une place devant l’immeuble du destinataire. Pour les cas où le vélo ou la voiture sont plus adaptés, nous vous le disons à la commande.",
+        ],
+      },
+      {
+        after: "useCases",
+        title: "Coursier moto par secteur : juridique, laboratoire, e-commerce",
+        paragraphs: [
+          "Juridique : actes, plis confidentiels et dossiers à remettre contre signature, avec la confidentialité d’une course dédiée et une remise nominative. Pour les professions du droit, voyez notre [coursier pour avocat et notaire](/services/coursier-avocat-notaire) ou le [pli confidentiel](/services/plis-confidentiels).",
+          "Laboratoire : prélèvements, échantillons et matériel, transportés dans un contenant isotherme convenu à la commande, avec horodatage de la prise en charge et de la remise. Pour les prélèvements, voyez notre page [transport médical](/services/transport-medical).",
+          "E-commerce : courses du dernier kilomètre, retours et livraisons à créneau, avec suivi en ligne et preuve de livraison. Pour un trajet direct le jour même, voyez notre [coursier express Paris](/services/coursier-express-paris).",
+        ],
+      },
     ],
     cta: {
       title: "Réserver une course moto",

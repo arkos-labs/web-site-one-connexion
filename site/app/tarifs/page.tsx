@@ -15,9 +15,9 @@ import { gridPrice, pcKmPrice, PC_INCLUDED_KM, splitTTC, type Zone } from "@/lib
 const euro = (n: number) =>
   `${n.toLocaleString("fr-FR", { minimumFractionDigits: Number.isInteger(n) ? 0 : 2, maximumFractionDigits: 2 })} €`;
 
-const TITLE = "Tarif coursier Paris : grille et prix de nos courses";
+const TITLE = "Tarifs coursier Paris : prix clairs, sans surprise";
 const DESCRIPTION =
-  "Consultez le tarif coursier à Paris : grille de prix par type de course, prise en charge et options. Demandez votre devis professionnel.";
+  "Grille de prix coursier à Paris et en Île-de-France : course dédiée, plis confidentiels, transport médical. Devis gratuit sous 2 h ouvrées.";
 
 export const metadata: Metadata = {
   title: { absolute: TITLE },
@@ -44,32 +44,24 @@ const breadcrumbSchema = {
 
 const FAQ = [
   {
-    q: "Combien coûte un coursier à Paris ?",
-    a: `Une course à Paris démarre à ${euro(gridPrice("standard", 0))} TTC en Normal 3 h, ${euro(gridPrice("urgent", 0))} TTC en Urgent 1 h 30 et ${euro(gridPrice("flash", 0))} TTC en Super 1 h. Le prix exact s'affiche avant de valider la commande.`,
+    q: "Combien coûte une course dans Paris intra-muros ?",
+    a: "À Paris intra-muros, une course coûte 28 € TTC en Normal (3 h), 42 € TTC en Urgent (1 h 30) et 56 € TTC en Super (1 h). Le prix exact s’affiche avant de valider la commande.",
   },
   {
-    q: "Quel est le tarif d'une course dans Paris ?",
-    a: "En intramuros, une course normale sous 3 h démarre à 28 € TTC, une course urgente sous 1 h 30 à 42 € TTC et une course Super sous 1 h à 56 € TTC.",
+    q: "Y a-t-il un supplément pour la banlieue ?",
+    a: "En petite couronne, une course démarre à 39 € TTC en Normal, avec 8 km de route compris, puis 2 € TTC par km en plus. En grande couronne, le prix dépend de la distance depuis Paris et s’affiche avant la commande.",
   },
   {
-    q: "Combien coûte une course en moto à Paris ?",
-    a: "Une course en moto en intramuros démarre à 28 € TTC en normal 3 h et 56 € TTC en formule Super (enlèvement et livraison sous 1 h).",
+    q: "Existe-t-il un tarif de nuit ou du dimanche ?",
+    a: "Il n’existe pas de grille distincte : les tarifs ci-dessus s’appliquent tous les jours. Pour une demande en dehors de nos horaires habituels, contactez-nous avant de commander.",
   },
   {
-    q: "Le tarif est-il différent pour un pli confidentiel ou un transport médical ?",
-    a: "Les plis confidentiels et le transport médical sont facturés au tarif standard de la zone, selon le délai demandé.",
+    q: "Comment fonctionne la facturation mensuelle pour une entreprise ?",
+    a: "Avec un compte entreprise, vos courses sont regroupées et facturées : les factures se règlent sous 30 jours, avec un tarif dégressif selon le volume mensuel.",
   },
   {
-    q: "Quel est le prix d'une course en banlieue ?",
-    a: `En petite couronne (92, 93, 94), une course démarre à ${euro(gridPrice("standard", 1))} TTC en Normal, ${euro(gridPrice("urgent", 1))} TTC en Urgent et ${euro(gridPrice("flash", 1))} TTC en Super, jusqu'à ${PC_INCLUDED_KM} km de route, puis ${euro(pcKmPrice("standard"))} TTC par km en plus en Normal. En grande couronne, le prix dépend de la distance depuis Paris.`,
-  },
-  {
-    q: "Les tarifs sont-ils HT ou TTC ?",
-    a: "Les tarifs indiqués sont TTC : la TVA de 20 % est comprise dans le prix, pour les professionnels comme pour les particuliers. La facture détaille le montant HT et la TVA.",
-  },
-  {
-    q: "Comment connaître le tarif avant de commander ?",
-    a: "Le prix s’affiche automatiquement dès que vous saisissez les adresses et le délai, avant de valider la commande. Les clients avec un compte entreprise bénéficient d'une grille dégressive selon le volume mensuel.",
+    q: "Qu’est-ce qui est inclus dans le prix ?",
+    a: "La course dédiée, l’enlèvement, le suivi en ligne et la remise en main propre avec preuve horodatée. La TVA de 20 % est incluse dans le prix TTC, et le poids ne change pas le prix jusqu’à 18 kg.",
   },
 ];
 

@@ -73,7 +73,7 @@ export default function Hero() {
         loop
         muted
         playsInline
-        preload="auto"
+        preload="none"
         poster="/hero-203401-poster.jpg"
         fetchPriority="high"
         aria-hidden="true"
