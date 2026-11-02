@@ -149,10 +149,16 @@ export default async function GuidePage({ params }: { params: Promise<Params> })
           ))}
 
           <section className="mb-12">
-            {/* Pas de H2 : le plan des guides compte exactement quatre H2. */}
-            <p className="mb-5 text-[clamp(22px,2.6vw,28px)] font-bold tracking-[-0.02em] text-ink">
-              Questions fréquentes
-            </p>
+            {/* H2 uniquement si le plan du guide le prévoit (faqHeading) ; sinon quatre H2 exactement. */}
+            {guide.faqHeading ? (
+              <h2 className="mb-5 text-[clamp(22px,2.6vw,28px)] font-bold tracking-[-0.02em] text-ink">
+                Questions fréquentes
+              </h2>
+            ) : (
+              <p className="mb-5 text-[clamp(22px,2.6vw,28px)] font-bold tracking-[-0.02em] text-ink">
+                Questions fréquentes
+              </p>
+            )}
             <div className="flex flex-col gap-4">
               {guide.faq.map((item) => (
                 <div key={item.question} className="rounded-xl border border-line bg-white p-5">
