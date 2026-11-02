@@ -10,6 +10,7 @@ import TrustBlock from "@/components/TrustBlock";
 import { SITE_URL, PHONE_TEL, PHONE_DISPLAY } from "@/lib/site-content";
 import { SERVICES } from "@/lib/services";
 import { getZone, getIndexedZonesByDept } from "@/lib/zones/data";
+import { gridPrice, pcKmPrice, PC_INCLUDED_KM } from "@/lib/pricing";
 
 const slugOf = (v: string) =>
   v.replace(" (limite)", "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/\s+/g, "-").replace(/[^\w\-]+/g, "").replace(/\-\-+/g, "-").replace(/^-+/, "").replace(/-+$/, "");
@@ -69,10 +70,66 @@ const DEPTS = [
   },
 ];
 
+// 31,5 → « 31,50 € », 42 → « 42 € »
+const euro = (n: number) =>
+  `${n.toLocaleString("fr-FR", { minimumFractionDigits: Number.isInteger(n) ? 0 : 2, maximumFractionDigits: 2 })} €`;
+
+const PRIX = {
+  normal: euro(gridPrice("standard", 1)),
+  urgent: euro(gridPrice("urgent", 1)),
+  super: euro(gridPrice("flash", 1)),
+  km: euro(pcKmPrice("standard")),
+};
+
+const FAQ = [
+  {
+    q: "Quels sont les délais pour une course en banlieue ?",
+    a: "Un coursier prend le colis en charge en moins de 45 minutes après la confirmation de la course, puis le livre directement, sans détour ni regroupement. Le délai de livraison dépend de la formule : Normal 3 h, Urgent 1 h 30, Super 1 h.",
+  },
+  {
+    q: "Quel est le tarif d'une course en banlieue parisienne ?",
+    a: `En petite couronne, une course démarre à ${PRIX.normal} TTC en Normal, ${PRIX.urgent} TTC en Urgent et ${PRIX.super} TTC en Super, kilomètres compris jusqu'à ${PC_INCLUDED_KM} km de route, puis ${PRIX.km} TTC par km en plus en Normal. Le prix exact s'affiche avant de commander.`,
+  },
+  {
+    q: "Quels sont vos horaires en petite couronne ?",
+    a: "Nous prenons en charge vos courses 7j/7, de 8h à 19h, dans les trois départements (92, 93 et 94).",
+  },
+  {
+    q: "Pouvez-vous transporter un pli confidentiel en banlieue ?",
+    a: "Oui. Un pli confidentiel part en course dédiée, sans regroupement, et est remis en main propre au destinataire, dont le nom et l'heure de remise sont enregistrés. Il se facture au tarif de la zone, comme toute course.",
+  },
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: FAQ.map(({ q, a }) => ({
+    "@type": "Question",
+    name: q,
+    acceptedAnswer: { "@type": "Answer", text: a },
+  })),
+};
+
+const COMMUNES = Array.from(
+  new Set([...DEPTS.flatMap((d) => d.villes.map((v) => v.replace(" (limite)", ""))), "Villejuif"]),
+);
+
+const serviceSchema = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  name: "Coursier en banlieue parisienne (petite couronne)",
+  serviceType: "Coursier express B2B",
+  url: `${SITE_URL}/zones/petite-couronne`,
+  provider: { "@id": `${SITE_URL}/#organization` },
+  areaServed: COMMUNES.map((name) => ({ "@type": "City", name })),
+};
+
 export default function ZonePetiteCouronne() {
   return (
     <>
       <JsonLd data={breadcrumbSchema} />
+      <JsonLd data={serviceSchema} />
+      <JsonLd data={faqSchema} />
 
       <section className="bg-ink text-white">
         <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-20 pt-16">
@@ -120,7 +177,7 @@ export default function ZonePetiteCouronne() {
       {/* ── Départements ── */}
       <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
         <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">Couverture détaillée</div>
-        <h2 className={`mb-12 ${H2}`}>Les communes desservies en petite couronne</h2>
+        <h2 className={`mb-12 ${H2}`}>Coursier banlieue Paris : les communes couvertes (92, 93, 94)</h2>
         <div className="grid gap-6 lg:grid-cols-3">
           {DEPTS.map((d) => (
             <div key={d.dept} className={`rounded-2xl border p-6 ${d.color}`}>
@@ -167,11 +224,39 @@ export default function ZonePetiteCouronne() {
         </p>
       </section>
 
-      {/* ── Pourquoi ── */}
+      {/* ── Délais et tarifs ── */}
+      <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-[72px]">
+        <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">Délais et prix</div>
+        <h2 className={`mb-8 max-w-[28ch] ${H2}`}>Délais et tarifs depuis et vers la banlieue</h2>
+        <div className="grid max-w-[72ch] gap-5 text-[15.5px] leading-[1.7] text-muted">
+          <p>
+            Depuis et vers la petite couronne, la prise en charge se fait en moins de 45 minutes, 7j/7 de 8h à
+            19h. Le tarif dépend de la zone la plus éloignée entre l&apos;enlèvement et la livraison, et du délai
+            choisi : en banlieue, une course démarre à {PRIX.normal} TTC en Normal (3 h), {PRIX.urgent} TTC en
+            Urgent (1 h 30) et {PRIX.super} TTC en Super (1 h), kilomètres compris jusqu&apos;à {PC_INCLUDED_KM} km
+            de route.
+          </p>
+          <p>
+            Au-delà, chaque kilomètre en plus coûte {PRIX.km} TTC en Normal : un trajet de 15 km par la route
+            revient ainsi à {euro(gridPrice("standard", 1) + (15 - PC_INCLUDED_KM) * pcKmPrice("standard"))} TTC.
+            Le délai module le prix : l&apos;Urgent coûte 1,5 fois le Normal, le Super 2 fois. La nature de
+            l&apos;envoi ne change rien, sans supplément de confidentialité ni de poids jusqu&apos;à 18 kg.
+          </p>
+          <p>
+            Le prix exact s&apos;affiche avant de valider la commande. Retrouvez toute la grille sur la page{" "}
+            <Link href="/tarifs" className={LINK}>tarif coursier Paris</Link>, découvrez notre{" "}
+            <Link href="/services/coursier-express-paris" className={LINK}>coursier express Paris</Link> pour une
+            urgence, ou consultez notre page{" "}
+            <Link href="/" className={LINK}>coursier Île-de-France</Link> pour les autres départements.
+          </p>
+        </div>
+      </section>
+
+      {/* ── Pourquoi (sans H2 : hors plan) ── */}
       <section className="bg-paper">
         <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
           <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">Avantages</div>
-          <h2 className={`mb-8 max-w-[24ch] ${H2}`}>Courses depuis et vers Paris</h2>
+          <p className={`mb-8 max-w-[24ch] ${H2}`}>Courses depuis et vers Paris</p>
           <div className="grid gap-8 md:grid-cols-2 text-[15.5px] leading-[1.7] text-muted">
             <p>
               De nombreuses entreprises parisiennes ont des clients, des partenaires ou des sites
@@ -194,7 +279,7 @@ export default function ZonePetiteCouronne() {
       {/* ── Prestations ── */}
       <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
         <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">Nos prestations</div>
-        <h2 className={`mb-10 ${H2}`}>Ce que nous transportons</h2>
+        <h2 className={`mb-10 ${H2}`}>Ce que nous transportons en petite couronne</h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {SERVICES.map((s) => (
             <Link
@@ -246,7 +331,7 @@ export default function ZonePetiteCouronne() {
       {/* ── Organiser une course ── */}
       <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
         <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase text-center">Processus simple</div>
-        <h2 className={`mb-12 text-center ${H2}`}>Organiser une course en banlieue</h2>
+        <h2 className={`mb-12 text-center ${H2}`}>Organiser une course en banlieue parisienne</h2>
         <div className="grid gap-8 md:grid-cols-3">
           {[
             { num: "01", title: "Demande immédiate", desc: "Un simple appel ou un formulaire en ligne suffit : le prix s’affiche immédiatement pour n’importe quelle ville du 92, 93 ou 94." },
@@ -278,12 +363,7 @@ export default function ZonePetiteCouronne() {
             <p className={H2}>Vos questions sur la livraison en banlieue parisienne</p>
           </div>
           <div className="flex flex-col gap-4">
-            {[
-              { q: "Couvrez-vous vraiment toute la petite couronne ?", a: "Oui, notre flotte est répartie de manière optimale pour couvrir l'intégralité des Hauts-de-Seine (92), de la Seine-Saint-Denis (93) et du Val-de-Marne (94)." },
-              { q: "Pouvez-vous transporter des colis lourds ou volumineux ?", a: "Notre flotte est composée de deux-roues (scooters et motos) : elle convient aux plis, colis et matériel léger. Pour un volume ou un gabarit important, contactez-nous avant de commander, nous vous dirons si nous pouvons le prendre en charge." },
-              { q: "Quels sont vos horaires en petite couronne ?", a: "Du lundi au samedi, de 9h à 19h, dans les trois départements. Nous sommes fermés le dimanche et les jours fériés." },
-              { q: "Combien de temps pour un enlèvement en banlieue ?", a: "Un coursier vient chercher le colis en moins de 45 minutes après la confirmation de la course, puis le livre directement, sans détour." }
-            ].map((faq, i) => (
+            {FAQ.map((faq, i) => (
               <div key={i} className="rounded-xl border border-line bg-white p-5 hover:border-accent/30 transition-colors">
                 <h3 className="mb-2 text-[15.5px] font-bold text-ink">{faq.q}</h3>
                 <p className="text-[14.5px] leading-[1.65] text-muted">{faq.a}</p>
@@ -296,7 +376,7 @@ export default function ZonePetiteCouronne() {
       {/* ── Autres zones ── */}
       <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-[72px]">
         <div className="border-t border-line pt-12">
-          <div className="mb-6 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">Autres zones</div>
+          <h2 className="mb-6 font-mono text-[11px] font-normal tracking-[0.16em] text-accent-dark uppercase">Zones proches</h2>
           <div className="flex flex-wrap gap-3">
             <Link href="/zones/paris" className="rounded-lg border border-line bg-paper-card px-4 py-2.5 text-[13.5px] font-medium hover:border-ink">
               Paris intramuros (75)
