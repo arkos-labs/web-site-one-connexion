@@ -52,7 +52,7 @@ export default async function GuidePage({ params }: { params: Promise<Params> })
           description: guide.description,
           inLanguage: "fr-FR",
           datePublished: guide.published,
-          dateModified: guide.published,
+          dateModified: guide.modified ?? guide.published,
           mainEntityOfPage: pageUrl,
           author: { "@id": `${SITE_URL}/#organization` },
           publisher: { "@id": `${SITE_URL}/#organization` },

@@ -34,6 +34,8 @@ export interface Guide {
   /** Prestation liée */
   service: { href: string; label: string };
   published: string; // ISO
+  /** Dernière modification de fond (schéma Article dateModified) ; à défaut, `published`. */
+  modified?: string; // ISO
 }
 
 export const GUIDES: Guide[] = [
@@ -200,22 +202,46 @@ export const GUIDES: Guide[] = [
       "Il n'existe pas de prix unique pour un coursier : la même course peut varier selon quelques critères précis. Les connaître permet de comparer des offres sur des bases identiques.",
     sections: [
       {
-        heading: "Les postes de coût d'une course express",
+        heading: "Prix coursier Paris : les composantes du tarif",
         paragraphs: [
           "Une course express se décompose en quelques postes : le trajet entre l'enlèvement et la remise, le délai demandé, le niveau de service qu'exige l'envoi et, pour les clients réguliers, le volume mensuel.",
           "Un pli remis contre preuve, un prélèvement avec contraintes de manutention ou un colis standard n'exigent pas le même niveau de service. Le volume compte aussi : un compte entreprise permet de régler les factures sous 30 jours et peut ouvrir une grille adaptée aux envois réguliers.",
+          "Sur toute offre, trois éléments suffisent à juger le prix : la zone de départ et d'arrivée, le délai promis, et les conditions de facturation (TTC ou HT, paiement à la course ou compte entreprise). Si l'un des trois reste flou, la comparaison entre deux devis n'a pas de sens. Notre [grille de tarifs](/tarifs) détaille ces trois éléments pour chacune de nos formules.",
         ],
       },
       {
-        heading: "Distance, délai et horaire : ce qui change le prix",
+        heading: "Combien coûte une course à Paris, en petite couronne, en grande couronne",
         paragraphs: [
-          "Le point de départ et le point d'arrivée fixent la zone : Paris intramuros, petite couronne ou grande couronne. Quand le trajet traverse deux zones, la zone la plus éloignée s'applique, et plus elle est éloignée de Paris, plus le prix de base augmente.",
-          "Plus le délai est court, plus la course coûte cher : en intramuros, la même course coûte le double livrée en 1 h plutôt qu'en 3 h. L'horaire compte aussi : une course programmée à l'avance laisse un créneau plus large qu'une course immédiate, et une navette régulière, avec un passage fixé, est en général la formule la plus économique pour des besoins répétés.",
+          "Le prix dépend d'abord de la zone. À Paris intramuros, une course coûte 28 € TTC en Normal (3 h), 42 € TTC en Urgent (1 h 30) et 56 € TTC en Super (1 h). En petite couronne (92, 93, 94), elle démarre à 39 € TTC en Normal, 58,50 € TTC en Urgent et 78 € TTC en Super, jusqu'à 8 km de route, puis 2 € TTC par km supplémentaire en Normal.",
+          "En grande couronne (77, 78, 91, 95), il n'y a pas de prix fixe : le montant dépend de la distance depuis Paris, retour à vide compris, et s'affiche avant la commande. Quand le trajet traverse deux zones, la zone la plus éloignée s'applique. Pour le détail des communes et des délais, voyez notre page [coursier banlieue Paris](/zones/petite-couronne).",
+          "Plus le délai est court, plus la course coûte cher : en intramuros, la même course coûte le double livrée en 1 h plutôt qu'en 3 h. Une course programmée à l'avance laisse un créneau plus large qu'une course immédiate, et une navette régulière, avec un passage fixé, est en général la formule la plus économique pour des besoins répétés.",
+        ],
+        table: {
+          head: ["Zone", "Normal 3 h", "Urgent 1 h 30", "Super 1 h"],
+          rows: [
+            ["Paris", "28 €", "42 €", "56 €"],
+            ["Petite couronne (dès)", "39 €", "58,50 €", "78 €"],
+          ],
+          note: "Prix par course, TTC (TVA 20 % comprise). Petite couronne : kilomètres compris jusqu'à 8 km de route. Grande couronne : prix selon la distance, affiché avant la commande.",
+        },
+      },
+      {
+        heading: "Prix d'un coursier : les 5 erreurs de calcul",
+        paragraphs: [
+          "Comparer deux devis de coursier est plus piégeux qu'il n'y paraît. Voici les cinq erreurs les plus fréquentes :",
+        ],
+        list: [
+          "Comparer un prix HT à un prix TTC : l'écart est de 20 %.",
+          "Ignorer le délai : un prix bas pour une livraison sous 3 h n'a rien à voir avec un prix pour une livraison sous 1 h.",
+          "Oublier la zone la plus éloignée : dès que le trajet sort de Paris, c'est la zone de destination qui s'applique.",
+          "Comparer une course dédiée à une course regroupée : le colis regroupé coûte moins cher, mais son heure d'arrivée dépend des autres envois de la tournée.",
+          "Négliger les suppléments : certains coursiers facturent le poids, le nombre d'adresses ou l'attente. Chez One Connexion, la nature du colis (jusqu'à 18 kg) ne change pas le prix.",
         ],
       },
       {
-        heading: "Les questions à poser avant de commander",
+        heading: "Course dédiée ou plateforme : quel coût réel",
         paragraphs: [
+          "Le prix affiché ne dit pas tout : le coût réel inclut le risque de retard et le temps passé à suivre l'envoi. Une course dédiée mobilise un coursier pour un seul envoi, avec un trajet direct, une remise en main propre horodatée et un interlocuteur unique, c'est le principe de notre [méthode](/methode). Une plateforme mutualisée regroupe les envois pour baisser le prix unitaire, au prix d'un délai moins prévisible.",
           "Pour comparer deux coursiers, donnez à chacun les mêmes informations et posez les mêmes questions :",
         ],
         list: [
@@ -227,9 +253,10 @@ export const GUIDES: Guide[] = [
         ],
       },
       {
-        heading: "Voir la grille tarifaire complète",
+        heading: "Demander un devis",
         paragraphs: [
-          "Les montants par zone et par délai figurent sur notre [grille tarifaire coursier](/tarifs), et le prix exact s'affiche avant de valider la commande. Pour une course urgente dans Paris, voyez notre [service de coursier express](/services/coursier-express-paris).",
+          "Les montants par zone et par délai figurent sur notre [grille tarifaire coursier](/tarifs), et le prix exact s'affiche avant de valider la commande. Pour des envois réguliers, le [compte entreprise](/services/compte-entreprise) applique un tarif dégressif selon le volume mensuel, avec des factures à régler sous 30 jours.",
+          "Pour une course urgente dans Paris, voyez notre [service de coursier express](/services/coursier-express-paris) et notre [coursier urgent Paris](/services/coursier-urgent-paris).",
         ],
       },
     ],
@@ -261,6 +288,7 @@ export const GUIDES: Guide[] = [
     ],
     service: { href: "/tarifs", label: "Grille tarifaire" },
     published: "2026-09-21",
+    modified: "2026-11-02",
   },
   {
     slug: "expedier-du-materiel-de-laboratoire",
