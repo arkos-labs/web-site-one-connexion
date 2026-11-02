@@ -79,7 +79,7 @@ export default function Hero() {
         aria-hidden="true"
         className="absolute inset-0 w-full h-full object-cover object-center z-0 hidden md:block"
       >
-        <source src="/videos/hero-203401-aller-retour.mp4" type="video/mp4" />
+        <source src="/videos/hero-203401-light.mp4" type="video/mp4" />
       </video>
       {/* Fondu sombre sur la vidéo, plus fort en haut et en bas, pour lire le texte. */}
       <div className="absolute inset-0 bg-gradient-to-b from-ink/65 via-ink/30 to-ink/45 md:from-ink/90 md:via-ink/65 md:to-ink/90 z-10 pointer-events-none"></div>
