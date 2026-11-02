@@ -59,6 +59,7 @@ export function categoryLabel(cat: string): string {
     "hauts-de-seine":   "Hauts-de-Seine (92)",
     "seine-saint-denis":"Seine-Saint-Denis (93)",
     "val-de-marne":     "Val-de-Marne (94)",
+    "grande-couronne":  "Grande couronne",
   };
   return map[cat] ?? cat;
 }

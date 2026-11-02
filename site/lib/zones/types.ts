@@ -1,4 +1,4 @@
-export type ZoneCategory = "paris" | "hauts-de-seine" | "seine-saint-denis" | "val-de-marne";
+export type ZoneCategory = "paris" | "hauts-de-seine" | "seine-saint-denis" | "val-de-marne" | "grande-couronne";
 
 export interface ZoneSector {
   /** Secteur concerné */
