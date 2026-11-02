@@ -15,7 +15,7 @@ import { getZonesByCategory } from "@/lib/zones/data";
    Services → Zones → Course dédiée (About) → Devis (Contact). */
 const TITLE = "Coursier Île-de-France : courses dédiées pour entreprises";
 const DESCRIPTION =
-  "Coursier en Île-de-France pour vos envois professionnels : une course dédiée par envoi, un interlocuteur unique et un suivi complet de la course.";
+  "Coursier Île-de-France pour entreprises : une course dédiée par envoi, 7j/7 de 8h à 19h, livraison en moins de 45 minutes à Paris et en Île-de-France. Traçabilité complète et interlocuteur unique. Devis en ligne.";
 
 export const metadata: Metadata = {
   title: { absolute: TITLE },
@@ -75,8 +75,8 @@ const organizationSchema = {
   openingHoursSpecification: [
     {
       "@type": "OpeningHoursSpecification",
-      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-      opens: "09:00",
+      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+      opens: "08:00",
       closes: "19:00",
     },
   ],
@@ -160,6 +160,38 @@ export default function Home() {
         </div>
       </section>
       <About />
+      <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[88px]">
+        <h2 className="mb-6 max-w-[26ch] text-balance text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
+          Coursier Île-de-France : ce que change une flotte propre
+        </h2>
+        <div className="grid max-w-[72ch] gap-5 text-[15.5px] leading-[1.7] text-muted">
+          <p>
+            Un coursier en Île-de-France n&apos;a de valeur que s&apos;il arrive quand il l&apos;a annoncé. Chez
+            One Connexion, vos courses sont assurées par notre propre flotte de deux-roues, pas par une plateforme
+            qui distribue les envois à des livreurs différents chaque jour. Le dispatcheur qui connaît votre
+            dossier affecte le coursier le plus proche, qui prend votre envoi en charge en moins de 45 minutes, 7j/7
+            de 8h à 19h, et le conduit directement à destination, sans regroupement.
+          </p>
+          <p>
+            Cette organisation change trois choses. La ponctualité d&apos;abord : le délai annoncé est le délai
+            réel, puisque votre colis n&apos;attend pas d&apos;autres envois. La traçabilité ensuite :
+            l&apos;avancement de la course est visible en ligne et la remise est horodatée avec le nom du
+            destinataire, ce qui en fait une preuve pour vos dossiers. L&apos;interlocuteur unique enfin : une
+            ligne directe avec votre dispatcheur plutôt qu&apos;un standard.
+          </p>
+          <p>
+            Elle vaut à Paris comme hors de Paris : voyez notre{" "}
+            <Link href="/zones/petite-couronne" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">coursier banlieue Paris</Link>{" "}
+            pour les trois départements de petite couronne, et notre{" "}
+            <Link href="/services/coursier-express-paris" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">coursier express Paris</Link>{" "}
+            pour une urgence. Pour un document sensible, un{" "}
+            <Link href="/services/plis-confidentiels" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">pli confidentiel</Link>{" "}
+            part en course dédiée et est remis en main propre. Les prix s&apos;affichent avant de commander : voir
+            le{" "}
+            <Link href="/tarifs" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">tarif coursier Paris</Link>.
+          </p>
+        </div>
+      </section>
       <Faq />
       <Contact title="Demander un devis" devisLink />
     </>
