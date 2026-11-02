@@ -45,7 +45,7 @@ export default function ContactPage() {
         <div className="relative mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] text-center">
           <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/10 px-3 py-1.5 text-xs font-bold uppercase tracking-widest text-accent">
             <span className="h-1.5 w-1.5 rounded-full bg-accent"></span>
-            Assistance du lundi au samedi
+            Assistance 7j/7
           </div>
           <h1 className="mb-6 text-[clamp(2.5rem,5vw,4rem)] font-extrabold leading-[1.05] tracking-tight text-white">
             Parlons de vos <span className="text-accent">livraisons</span>.
@@ -185,8 +185,8 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <div className="font-mono text-[11px] uppercase tracking-wider text-white/50">Horaires d'opération</div>
-                    <div className="mt-1 text-[15px] font-medium">Du lundi au samedi - 9h00 à 19h00</div>
-                    <div className="mt-1 text-[13px] text-white/60">Fermé le dimanche et les jours fériés.</div>
+                    <div className="mt-1 text-[15px] font-medium">7j/7 - 8h00 à 19h00</div>
+                    <div className="mt-1 text-[13px] text-white/60">Tous les jours, y compris le dimanche.</div>
                   </div>
                 </div>
 

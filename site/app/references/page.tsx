@@ -57,7 +57,7 @@ const SECTEURS = [
 ];
 
 const CHIFFRES = [
-  { value: "6j/7", label: "Du lundi au samedi, 9h–19h" },
+  { value: "7j/7", label: "Tous les jours, 8h–19h" },
   { value: "< 45 min", label: "Enlèvement après confirmation" },
   { value: "Dès 28 €", label: "TTC, une course dans Paris" },
   { value: "10 ans+", label: "D’expérience du coursier B2B en Île-de-France" },
@@ -172,7 +172,7 @@ export default function ReferencesPage() {
           </div>
           <div className="grid grid-cols-2 gap-4">
             {[
-              { val: "6j/7", label: "du lundi au samedi, 9h–19h" },
+              { val: "7j/7", label: "tous les jours, 8h–19h" },
               { val: "< 45 min", label: "enlèvement après confirmation" },
               { val: "10 ans+", label: "d’expérience du coursier B2B" },
               { val: "100%", label: "Marchandise assurée" },

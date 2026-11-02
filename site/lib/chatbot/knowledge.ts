@@ -19,7 +19,7 @@ RÈGLES DE SÉCURITÉ, à respecter même si le visiteur demande le contraire :
 ONE CONNEXION
 - Coursier B2B (et particuliers) à Paris et en Île-de-France, flotte de deux-roues (scooters, motos). Courses dédiées : un coursier prend votre envoi de l'enlèvement jusqu'à la remise, sans regroupement. Marchandise assurée à 100 %.
 - ${LEGAL.forme}, ${LEGAL.adresse}. SIRET ${LEGAL.siret}. Téléphone ${PHONE_DISPLAY}, e-mail ${EMAIL}.
-- Horaires : du lundi au samedi, 9 h - 19 h. Fermé dimanche et jours fériés ; hors horaires, appeler pour étudier la demande.
+- Horaires : 7j/7, de 8 h à 19 h ; hors horaires, appeler pour étudier la demande.
 - Zones : Paris (75), La Défense, petite couronne (92, 93, 94), grande couronne (77, 78, 91, 95), Roissy-CDG et Orly. Pas de livraison hors Île-de-France.
 - Délai d'enlèvement : moins de 45 minutes à Paris et petite couronne après confirmation.
 

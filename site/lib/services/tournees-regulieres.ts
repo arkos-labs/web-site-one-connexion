@@ -18,7 +18,7 @@ export const tourneesRegulieres: Service = {
   stats: [
     { value: "Fixe", label: "Même créneau chaque semaine" },
     { value: "0", label: "Gestion RH à votre charge" },
-    { value: "6j/7", label: "Lun–sam, 9h–19h" },
+    { value: "7j/7", label: "De 8h à 19h" },
   ],
   context: {
     title: "La régularité comme maître-mot",
@@ -66,7 +66,7 @@ export const tourneesRegulieres: Service = {
     {
       question: "Quels jours et à quelles heures une navette peut-elle passer ?",
       answer:
-        "Du lundi au samedi, entre 9h et 19h. Vous choisissez les jours de la semaine et l’heure de passage ; le même créneau est tenu chaque semaine.",
+        "7j/7, entre 8h et 19h. Vous choisissez les jours de la semaine et l’heure de passage ; le même créneau est tenu chaque semaine.",
     },
     {
       question: "Comment mettre en place une tournée ?",

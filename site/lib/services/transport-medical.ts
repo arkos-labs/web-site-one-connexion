@@ -44,7 +44,7 @@ export const transportMedical: Service = {
 
   stats: [
     { value: "< 45 min", label: "Prise en charge" },
-    { value: "6j/7", label: "Lun–sam, 9h – 19h" },
+    { value: "7j/7", label: "De 8h à 19h" },
     { value: "Dédiée", label: "Course sans regroupement" },
   ],
 
@@ -130,7 +130,7 @@ export const transportMedical: Service = {
     {
       question: "Pouvez-vous transporter des échantillons à conserver au froid ?",
       answer:
-        "Nous transportons échantillons et pièces en contenant isotherme adapté, en course dédiée et directe, du lundi au samedi. Pour un transport au froid, précisez à la commande la plage de température et le délai de stabilité fixés par le laboratoire : nous confirmons la faisabilité avant d’engager la course.",
+        "Nous transportons échantillons et pièces en contenant isotherme adapté, en course dédiée et directe, 7j/7. Pour un transport au froid, précisez à la commande la plage de température et le délai de stabilité fixés par le laboratoire : nous confirmons la faisabilité avant d’engager la course.",
     },
     {
       question: "Quel est le prix d’un coursier médical à Paris ?",
@@ -170,7 +170,7 @@ export const transportMedical: Service = {
     {
       question: "Intervenez-vous le week-end ?",
       answer:
-        "Le samedi oui, de 9h à 19h, comme en semaine. Nous sommes fermés le dimanche et les jours fériés.",
+        "Oui, 7j/7, de 8h à 19h.",
     },
   ],
 

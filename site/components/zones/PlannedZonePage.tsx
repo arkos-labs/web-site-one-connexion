@@ -206,7 +206,7 @@ export default function PlannedZonePage({
                   <Clock size={14} className="mt-0.5 shrink-0 text-accent" />
                   <div>
                     <div className="text-[13px] font-semibold text-white">Un coursier chez vous en moins de 45 min</div>
-                    <div className="text-[11px] text-white/40">Du lundi au samedi, de 9 h à 19 h</div>
+                    <div className="text-[11px] text-white/40">7j/7, de 8 h à 19 h</div>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">

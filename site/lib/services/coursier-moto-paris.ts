@@ -37,7 +37,7 @@ export const coursierMotoParis: Service = {
   stats: [
     { value: "< 45 min", label: "Prise en charge" },
     { value: "18 kg", label: "Top-case verrouillé" },
-    { value: "6j/7", label: "Lun–sam, 9h – 19h" },
+    { value: "7j/7", label: "De 8h à 19h" },
   ],
 
   context: {
@@ -133,7 +133,7 @@ export const coursierMotoParis: Service = {
     {
       question: "Intervenez-vous le week-end ?",
       answer:
-        "Le samedi oui, de 9h à 19h, comme en semaine. Nous sommes fermés le dimanche et les jours fériés.",
+        "Oui, 7j/7, de 8h à 19h.",
     },
   ],
 
