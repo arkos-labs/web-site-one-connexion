@@ -58,9 +58,9 @@ function buildRow(c: Company, contact: Contact, sector: Sector, week: string) {
   const opener = contact.pitch ?? need;
   const body = `${opener}
 
-Avec ONE CONNEXION, un coursier vient chercher votre envoi en moins de 45 minutes à Paris et en petite couronne, et le remet en main propre, avec preuve de remise.
+Un coursier dédié peut venir chercher votre envoi et le remettre en main propre, avec preuve de remise.
 
-Le prix est affiché avant de commander : 28 € TTC dans Paris, 39 € TTC en petite couronne (jusqu'à 8 km), commande en 2 minutes.`;
+Nous pouvons aussi mettre en place une navette à heure fixe, avec un compte entreprise. Répondez à ce mail et nous vous rappelons.`;
   return {
     siret: c.siret,
     siren: c.siren,
@@ -74,7 +74,7 @@ Le prix est affiché avant de commander : 28 € TTC dans Paris, 39 € TTC en p
     website: contact.website,
     email: contact.email,
     pitch: contact.pitch,
-    mail_subject: `Livraisons urgentes à ${c.city ?? "Paris"}`,
+    mail_subject: `${c.name} : une course dédiée à ${c.city ?? "Paris"}`,
     mail_body: body,
     mail_status: contact.email ? "brouillon" : "pas_d_email",
     batch_week: week,
