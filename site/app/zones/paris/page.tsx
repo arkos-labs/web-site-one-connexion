@@ -58,7 +58,15 @@ const FAQ_PARIS = [
   },
   {
     q: "Quels sont les horaires d'enlèvement à Paris intramuros ?",
-    a: "Nous opérons du lundi au samedi, de 9h à 19h. En journée, nous garantissons un enlèvement en moins de 45 minutes quel que soit l'arrondissement.",
+    a: "Nous opérons 7j/7, de 8h à 19h. Nous visons un enlèvement en moins de 45 minutes quel que soit l'arrondissement.",
+  },
+  {
+    q: "Combien de temps pour une course dans Paris ?",
+    a: "L'enlèvement se fait en moins de 45 minutes quel que soit l'arrondissement, sous réserve de disponibilité au moment de la commande. Le délai de livraison dépend de la formule : Normal 3 h, Urgent 1 h 30, Super 1 h.",
+  },
+  {
+    q: "Livrez-vous en petite couronne depuis Paris ?",
+    a: "Oui. La même flotte dessert les Hauts-de-Seine, la Seine-Saint-Denis et le Val-de-Marne, avec une seule course et un seul interlocuteur. Le prix dépend de la zone la plus éloignée du trajet et s'affiche avant la commande.",
   },
   {
     q: "Livrez-vous aussi bien les particuliers que les entreprises ?",
@@ -87,7 +95,7 @@ const ARRONDISSEMENTS = [
 const STATS = [
   { value: "< 45 min", label: "Enlèvement" },
   { value: "1 course", label: "Un envoi, sans regroupement" },
-  { value: "6j/7", label: "Lun–sam, 9h – 19h" },
+  { value: "7j/7", label: "De 8h à 19h" },
   { value: "20/20", label: "Arrondissements couverts" },
 ];
 
@@ -261,7 +269,7 @@ export default function ZoneParis() {
       {/* ── 3. Déroulé d'une course ── */}
       <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
         <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase text-center">Processus simple</div>
-        <h2 className={`mb-12 text-center ${H2}`}>Comment se déroule une course</h2>
+        <h2 className={`mb-12 text-center ${H2}`}>Organiser une course à Paris</h2>
         <div className="grid gap-8 md:grid-cols-3">
           {[
             { num: "01", title: "Demande immédiate", desc: "Vous commandez en ligne ou par téléphone, pour n’importe quel arrondissement. Une [course le dimanche](/services/coursier-dimanche-paris) se commande de la même façon." },
@@ -316,18 +324,39 @@ export default function ZoneParis() {
         </div>
       </section>
 
-      {/* ── 4. Paris et l'Île-de-France ── */}
+      {/* ── 4. Paris et la petite couronne ── */}
       <section className="bg-paper">
         <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
-          <h2 className={`mb-6 max-w-[28ch] ${H2}`}>Paris et le reste de l&apos;Île-de-France</h2>
-          <p className="max-w-[66ch] text-[15.5px] leading-[1.7] text-muted">
-            Vos courses ne s&apos;arrêtent pas au périphérique : voyez notre page{" "}
-            <Link href="/zones/petite-couronne" className={LINK}>coursier en petite couronne</Link>.
-            Pour un envoi qui ne peut pas attendre, notre{" "}
-            <Link href="/services/coursier-express-paris" className={LINK}>coursier express Paris</Link>{" "}
-            part dès la confirmation. Voir aussi notre{" "}
-            <Link href="/tarifs" className={LINK}>tarif coursier Paris</Link>.
-          </p>
+          <h2 className={`mb-6 max-w-[28ch] ${H2}`}>Paris et la petite couronne : une seule flotte</h2>
+          <div className="grid max-w-[68ch] gap-5 text-[15.5px] leading-[1.7] text-muted">
+            <p>
+              Nos coursiers ne s&apos;arrêtent pas au périphérique. La même flotte de deux-roues dessert les 20
+              arrondissements et les trois départements voisins (92, 93, 94), avec le même dispatcheur, la même
+              prise en charge en moins de 45 minutes et la même preuve de remise horodatée. Pour un envoi entre
+              Paris et la petite couronne, vous n&apos;avez donc qu&apos;une seule course à commander et un seul
+              interlocuteur à joindre. Que le colis parte de la rue de Rivoli pour Boulogne-Billancourt ou de
+              Montreuil pour le 8e, le trajet reste direct, sans regroupement ni relais.
+            </p>
+            <p>
+              Le détail des communes, des délais et des tarifs figure sur notre page{" "}
+              <Link href="/zones/petite-couronne" className={LINK}>coursier banlieue Paris</Link>. Pour un envoi
+              qui ne peut pas attendre, notre{" "}
+              <Link href="/services/coursier-urgent-paris" className={LINK}>coursier urgent Paris</Link> ou notre{" "}
+              <Link href="/services/coursier-express-paris" className={LINK}>coursier express Paris</Link> part dès
+              la confirmation. Le prix de chaque course s&apos;affiche avant la commande ; voyez le{" "}
+              <Link href="/tarifs" className={LINK}>tarif coursier Paris</Link>.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 5. Zones proches ── */}
+      <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
+        <h2 className={`mb-6 ${H2}`}>Zones proches</h2>
+        <div className="flex flex-wrap gap-x-6 gap-y-3 text-[15px] font-semibold">
+          <Link href="/zones/petite-couronne" className="text-ink underline underline-offset-2">Petite couronne : 92, 93, 94</Link>
+          <Link href="/zones/la-defense" className="text-ink underline underline-offset-2">La Défense</Link>
+          <Link href="/zones/grande-couronne" className="text-ink underline underline-offset-2">Grande couronne : 77, 78, 91, 95</Link>
         </div>
       </section>
 
@@ -357,7 +386,7 @@ export default function ZoneParis() {
               <p className="mb-3 text-[clamp(24px,3vw,36px)] font-bold leading-[1.2] tracking-[-0.02em]">
                 Une course maintenant ?
               </p>
-              <p className="text-[15px] text-white/60">Prise en charge en moins de 2 minutes, du lundi au samedi de 9h à 19h.</p>
+              <p className="text-[15px] text-white/60">Prise en charge en moins de 2 minutes, 7j/7 de 8h à 19h.</p>
             </div>
             <a
               href={`tel:${PHONE_TEL}`}
