@@ -51,14 +51,7 @@ const ENGAGEMENTS = {
   },
 };
 
-const breadcrumbSchema = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Accueil", item: SITE_URL },
-    { "@type": "ListItem", position: 2, name: "Notre méthode", item: `${SITE_URL}/methode` },
-  ],
-};
+// Le fil d'Ariane (BreadcrumbList) est émis par le layout via PageSchema : ne pas le dupliquer ici.
 
 // Les 4 étapes affichées sur la page, décrites pour les moteurs et les assistants IA.
 const howToSchema = {
@@ -95,7 +88,6 @@ function Engagements({ items }: { items: (typeof ENGAGEMENTS)[keyof typeof ENGAG
 export default function MethodePage() {
   return (
     <>
-      <JsonLd data={breadcrumbSchema} />
       <JsonLd data={howToSchema} />
     <main>
       <section className="relative bg-ink text-white" style={{ backgroundImage: "url('/images/methode-bg-opt.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
