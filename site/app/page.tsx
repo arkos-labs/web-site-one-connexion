@@ -121,7 +121,7 @@ export default function Home() {
           Les zones couvertes en Île-de-France
         </h2>
         <p className="mb-8 max-w-[62ch] text-[15px] leading-[1.6] text-muted">
-          Dans Paris, une course coûte 28 € TTC livrée sous 3 h. Plus pressé&nbsp;? Comptez 42 € pour 1 h 30, ou 56 € pour 1 h.
+          Les tarifs par zone et par délai sont détaillés sur notre <Link href="/tarifs" className="text-ink underline underline-offset-2">grille tarifaire</Link>.
           Choisissez votre arrondissement pour voir ce qu&apos;on y livre le plus souvent, ou voyez notre page{" "}
           <Link href="/zones/paris" className="text-ink underline underline-offset-2">coursier Paris</Link> et notre{" "}
           <Link href="/tarifs" className="text-ink underline underline-offset-2">tarif coursier Paris</Link>.

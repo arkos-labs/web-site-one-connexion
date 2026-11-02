@@ -29,6 +29,16 @@ const nextConfig: NextConfig = {
   typescript: { ignoreBuildErrors: true },
   // Tests en local depuis un téléphone sur le même Wi-Fi (serveur de dev uniquement).
   allowedDevOrigins: ["192.168.1.22"],
+  async redirects() {
+    // Adresses qui renvoyaient 404 (plan, point 1.4) et page particulier fusionnée (point 3.5).
+    return [
+      { source: "/services/coursier-nuit-paris", destination: "/services/coursier-express-paris", permanent: true },
+      { source: "/services/coursier-express-ile-de-france", destination: "/services/coursier-express-paris", permanent: true },
+      { source: "/services/coursier-particulier-paris", destination: "/services/coursier-express-paris", permanent: true },
+      { source: "/zones/coursier-92", destination: "/zones/petite-couronne", permanent: true },
+      { source: "/zones/coursier-orly", destination: "/zones/petite-couronne", permanent: true },
+    ];
+  },
   async headers() {
     return [
       { source: "/:path*", headers: securityHeaders },

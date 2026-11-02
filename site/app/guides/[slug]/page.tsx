@@ -81,7 +81,6 @@ export default async function GuidePage({ params }: { params: Promise<Params> })
         }}
       />
 
-      <main>
         <section className="bg-ink text-white">
           <div className="mx-auto max-w-[860px] px-[clamp(20px,4vw,28px)] pt-16 pb-14">
             <Link href="/guides" className="mb-6 inline-block text-[13px] text-white/60 hover:text-white">
@@ -187,7 +186,6 @@ export default async function GuidePage({ params }: { params: Promise<Params> })
             </div>
           </div>
         </article>
-      </main>
     </>
   );
 }

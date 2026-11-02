@@ -18,9 +18,9 @@ export const plisConfidentiels: Service = {
   serviceType: "Transport de plis confidentiels",
 
   seo: {
-    title: "Pli confidentiel : envoi sécurisé par coursier dédié à Paris",
+    title: "Plis confidentiels à Paris : coursier dédié, 45 min",
     description:
-      "Envoi de pli confidentiel avec remise en main propre : course dédiée, chaîne de traçabilité et interlocuteur unique pour vos documents sensibles.",
+      "Un seul coursier, une seule paire de mains, de votre porte au destinataire. Plis, actes et dossiers sensibles à Paris et en Île-de-France. Devis en 2 h.",
     keywords: [
       "pli confidentiel",
       "envoi pli confidentiel Paris",
@@ -35,7 +35,7 @@ export const plisConfidentiels: Service = {
   h1: "Pli confidentiel : envoi sécurisé par coursier dédié",
 
   intro:
-    "One Connexion transporte les actes, conclusions et pièces de procédure des cabinets d’avocats, études notariales et offices d’huissiers d’Île-de-France. Chaque pli part en course dédiée, sans regroupement, et arrive avec une preuve de remise nominative.",
+    "One Connexion transporte les actes, conclusions et pièces de procédure des cabinets d’avocats, études notariales et offices d’huissiers d’Île-de-France. Chaque pli part en course dédiée, sans regroupement, et arrive avec une preuve de remise nominative. Comment savez-vous que mon pli est bien arrivé ? Au moment de la remise, le coursier enregistre le nom de la personne qui reçoit le pli, prend une photo et horodate la remise. Ces éléments sont transmis dans la minute, puis archivés sur votre compte pendant 12 mois. Pendant la course, vous suivez l’avancement en ligne.",
 
   stats: [
     { value: "< 45 min", label: "Prise en charge" },

@@ -12,9 +12,9 @@ import TrustBlock from "@/components/TrustBlock";
 import { SITE_URL, PHONE_TEL, PHONE_DISPLAY } from "@/lib/site-content";
 import { Clock, MapPin, Zap, Shield } from "lucide-react";
 
-const TITLE = "Coursier Paris : courses dédiées dans tous les arrondissements";
+const TITLE = "Coursier à Paris : course dédiée 7j/7, 7h-23h";
 const DESCRIPTION =
-  "Coursier à Paris pour vos plis, documents et colis : une course dédiée par envoi, un interlocuteur unique et un suivi de bout en bout.";
+  "Un coursier dédié par envoi, partout dans Paris, en moins de 45 minutes. Plis, médical, e-commerce. Tarifs clairs, interlocuteur unique.";
 
 export const metadata: Metadata = {
   title: { absolute: TITLE },
@@ -53,24 +53,20 @@ const serviceSchema = {
 
 const FAQ_PARIS = [
   {
-    q: "Comment gérez-vous la circulation parisienne ?",
-    a: "Nos coursiers circulent en deux-roues, ce qui leur permet de passer entre les files et d'éviter les axes bloqués. Ils connaissent Paris et adaptent leur trajet en fonction de la circulation du moment.",
+    q: "Combien de temps pour un pli urgent dans le 8e ?",
+    a: "L’enlèvement se fait en moins de 45 minutes, sous réserve de disponibilité au moment de la commande. Le délai de livraison dépend de la formule : Normal 3 h, Urgent 1 h 30, Super 1 h.",
   },
   {
-    q: "Quels sont les horaires d'enlèvement à Paris intramuros ?",
-    a: "Nous opérons 7j/7, de 8h à 19h. Nous visons un enlèvement en moins de 45 minutes quel que soit l'arrondissement.",
+    q: "Intervenez-vous le samedi ?",
+    a: "Oui, nous intervenons 7j/7 dans Paris.",
   },
   {
-    q: "Combien de temps pour une course dans Paris ?",
-    a: "L'enlèvement se fait en moins de 45 minutes quel que soit l'arrondissement, sous réserve de disponibilité au moment de la commande. Le délai de livraison dépend de la formule : Normal 3 h, Urgent 1 h 30, Super 1 h.",
+    q: "Que se passe-t-il si le destinataire est absent ?",
+    a: "Le coursier vous appelle avant toute décision. Selon votre consigne, il patiente, remet le pli à une personne que vous désignez, ou le rapporte. Un pli confidentiel n’est jamais déposé en boîte aux lettres.",
   },
   {
-    q: "Livrez-vous en petite couronne depuis Paris ?",
-    a: "Oui. La même flotte dessert les Hauts-de-Seine, la Seine-Saint-Denis et le Val-de-Marne, avec une seule course et un seul interlocuteur. Le prix dépend de la zone la plus éloignée du trajet et s'affiche avant la commande.",
-  },
-  {
-    q: "Livrez-vous aussi bien les particuliers que les entreprises ?",
-    a: "Nous travaillons surtout pour les entreprises (plis confidentiels, laboratoires, événementiel), mais un particulier peut aussi commander une course, avec un paiement par carte.",
+    q: "Peut-on suivre la course ?",
+    a: "Oui. L’avancement de chaque course est visible en ligne, et la remise est horodatée avec le nom du destinataire.",
   },
 ];
 
@@ -344,7 +340,7 @@ export default function ZoneParis() {
               <Link href="/services/coursier-urgent-paris" className={LINK}>coursier urgent Paris</Link> ou notre{" "}
               <Link href="/services/coursier-express-paris" className={LINK}>coursier express Paris</Link> part dès
               la confirmation. Le prix de chaque course s&apos;affiche avant la commande ; voyez le{" "}
-              <Link href="/tarifs" className={LINK}>tarif coursier Paris</Link>.
+              <Link href="/tarifs" className={LINK}>tarif coursier Paris</Link>. Pour un envoi en deux-roues, voyez aussi notre <Link href="/services/coursier-moto-paris" className={LINK}>coursier moto à Paris</Link>.
             </p>
           </div>
         </div>
