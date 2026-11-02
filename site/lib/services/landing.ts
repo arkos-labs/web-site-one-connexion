@@ -329,6 +329,73 @@ export const LANDING_SERVICES: LandingService[] = [
       },
     ],
   },
+  {
+    slug: "livraison-jour-meme-b2b",
+    name: "Livraison le jour même B2B",
+    title: "Livraison le jour même B2B : coursier dédié en Île-de-France",
+    description:
+      "Livraison le jour même B2B en Île-de-France : une course dédiée pour chaque envoi professionnel, prise en charge en moins de 45 minutes, remise horodatée.",
+    h1: "Livraison le jour même B2B : une course dédiée pour chaque envoi",
+    intro:
+      "Un contrat à faire parvenir avant la fin de la journée, une pièce qui bloque un site, une commande client à livrer sans attendre demain : le coursier part pour votre seul envoi et le remet en main propre, avec une preuve de livraison.",
+    sections: [
+      {
+        title: "Livraison le jour même : ce que cela change pour une entreprise",
+        paragraphs: [
+          "Pour une entreprise, une livraison le jour même n’est pas un confort : c’est un engagement tenu envers un client, un partenaire ou un site de production. La différence avec un transporteur classique tient à la course dédiée. Un coursier prend en charge un seul envoi, le conduit directement à destination, sans passage par un centre de tri ni tournée à plusieurs arrêts. L’heure de remise n’est pas une estimation de fin de journée : c’est celle du trajet.",
+          "C’est aussi une livraison documentée. Chaque course produit un justificatif : le nom de la personne qui reçoit l’envoi, l’heure exacte et le lieu sont enregistrés à la remise, archivés sur votre compte et restitués sur demande. Pour les équipes qui commandent régulièrement, c’est la garantie de retrouver en quelques secondes qui a reçu quoi, et quand. Vous gardez un interlocuteur unique, qui connaît vos adresses et vos consignes, plutôt qu’un standard. Cette organisation est détaillée sur la page [notre méthode](/methode).",
+        ],
+      },
+      {
+        title: "Livraison le jour même : commande et horaires (7j/7, 8h–19h)",
+        paragraphs: [
+          "Vous commandez en ligne, par téléphone ou depuis votre compte, en indiquant l’adresse d’enlèvement, la destination, la nature de l’envoi et l’heure limite de remise. Le coursier prend l’envoi en charge en moins de 45 minutes, 7j/7 de 8h à 19h, sous réserve de disponibilité au moment de la commande.",
+          "Le délai de livraison dépend de la formule : Normal sous 3 h, Urgent sous 1 h 30, Super sous 1 h. Pour une livraison le jour même, choisissez la formule qui correspond à votre heure limite. Si l’envoi doit être remis avant une heure précise, dites-le à la commande : nous confirmons la faisabilité avant d’engager la course, plutôt que d’accepter puis de manquer l’échéance.",
+        ],
+      },
+      {
+        title: "Secteurs concernés : juridique, santé, e-commerce, industrie",
+        paragraphs: [
+          "La livraison le jour même sert des métiers très différents. Les cabinets juridiques y recourent pour des actes et pièces à déposer avant une clôture ; les laboratoires et établissements de santé pour des prélèvements, du matériel et des documents confidentiels ; les e-commerçants pour livrer une commande client dans la journée, ou traiter un retour ou un échange urgent ; les sites industriels et ateliers pour recevoir une pièce de rechange qui immobilise une activité.",
+          "Chaque secteur a ses exigences de procédure, que nous détaillons métier par métier sur la page [nos secteurs d’activité](/secteurs). Quel que soit le secteur, la règle reste la même : un coursier, un envoi, un trajet direct, une remise en main propre horodatée.",
+        ],
+      },
+      {
+        title: "Tarifs et mise en place d’un compte entreprise",
+        paragraphs: [
+          `Le prix dépend de la zone la plus éloignée du trajet et du délai choisi, jamais de la nature de l’envoi (jusqu’à 18 kg). À Paris, une course coûte ${gridPrice("standard", 0)} € TTC en Normal, ${gridPrice("urgent", 0)} € TTC en Urgent et ${gridPrice("flash", 0)} € TTC en Super ; en petite couronne, elle démarre à ${gridPrice("standard", 1)} € TTC en Normal. Le prix exact s’affiche avant de valider la commande, et la grille complète figure sur la page [tarif coursier Paris](/tarifs).`,
+          "Pour des livraisons régulières, ouvrez un [compte entreprise](/services/compte-entreprise) : l’ouverture se fait en ligne en 2 minutes, plusieurs collaborateurs, services ou sites peuvent avoir leur propre compte avec le même SIRET, et les factures se règlent sous 30 jours. Un tarif dégressif s’applique au-delà d’un volume mensuel régulier. Si vos besoins se répètent sur les mêmes trajets, voyez aussi nos [tournées régulières](/services/tournees-regulieres).",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "Qu’est-ce qu’une livraison le jour même B2B ?",
+        answer:
+          "C’est la livraison d’un envoi professionnel, document, pièce ou colis, le jour de la commande, par un coursier dédié qui va directement de l’enlèvement à la remise, sans regroupement avec d’autres colis.",
+      },
+      {
+        question: "En combien de temps le coursier vient-il chercher l’envoi ?",
+        answer:
+          "En moins de 45 minutes, 7j/7 de 8h à 19h, sous réserve de disponibilité au moment de la commande. Nous confirmons la faisabilité avant d’engager la course.",
+      },
+      {
+        question: "Comment suivre et prouver la livraison ?",
+        answer:
+          "L’avancement de la course est visible en ligne. À la remise, le nom du destinataire, l’heure et le lieu sont enregistrés ; le justificatif est archivé sur votre compte et restituable sur demande.",
+      },
+      {
+        question: "Combien coûte une livraison le jour même ?",
+        answer:
+          `Selon la zone et le délai : à Paris, ${gridPrice("standard", 0)} € TTC en Normal (sous 3 h), ${gridPrice("urgent", 0)} € TTC en Urgent (sous 1 h 30) et ${gridPrice("flash", 0)} € TTC en Super (sous 1 h). Le prix s’affiche avant de commander.`,
+      },
+      {
+        question: "Faut-il un compte entreprise pour commander ?",
+        answer:
+          "Non, on peut commander à la course. Un compte entreprise est utile pour des livraisons régulières : plusieurs comptes avec le même SIRET, factures détaillées course par course, à régler sous 30 jours.",
+      },
+    ],
+  },
 ];
 
 export function getLandingService(slug: string): LandingService | undefined {
