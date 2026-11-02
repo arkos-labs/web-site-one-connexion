@@ -18,7 +18,7 @@ export const plisConfidentiels: Service = {
   serviceType: "Transport de plis confidentiels",
 
   seo: {
-    title: "Pli confidentiel : transport sécurisé à Paris et en Île-de-France",
+    title: "Pli confidentiel : envoi sécurisé par coursier dédié à Paris",
     description:
       "Envoi de pli confidentiel avec remise en main propre : course dédiée, chaîne de traçabilité et interlocuteur unique pour vos documents sensibles.",
     keywords: [
@@ -32,7 +32,7 @@ export const plisConfidentiels: Service = {
     ],
   },
 
-  h1: "Pli confidentiel : un transport sans intermédiaire",
+  h1: "Pli confidentiel : envoi sécurisé par coursier dédié",
 
   intro:
     "One Connexion transporte les actes, conclusions et pièces de procédure des cabinets d’avocats, études notariales et offices d’huissiers d’Île-de-France. Chaque pli part en course dédiée, sans regroupement, et arrive avec une preuve de remise nominative.",
@@ -44,11 +44,12 @@ export const plisConfidentiels: Service = {
   ],
 
   context: {
-    title: "Ce qu'est un envoi sous pli confidentiel",
+    title: "Pli confidentiel : ce que nous transportons",
     paragraphs: [
       "Un envoi sous pli confidentiel est un document qui ne doit être remis qu’à son destinataire désigné : acte, conclusions, pièces de procédure, contrat ou courrier sensible. Il voyage fermé, sans regroupement avec d’autres envois, et n’est remis qu’en main propre.",
       "Un acte déposé après la clôture du greffe, c’est un délai forclos. Une pièce remise à une personne non identifiée, c’est une remise contestable. Dans le juridique, le transport ne relève pas de la commodité logistique : il s’inscrit dans la procédure et s’expose aux mêmes contestations qu’elle.",
       "La confidentialité impose une contrainte parallèle. Un pli qui voyage avec quinze autres colis, manipulé par trois personnes successives, ne permet plus d’établir qui a eu accès à quoi. C’est la raison pour laquelle nous n’appliquons aucun regroupement sur ces courses : un coursier, un pli, un trajet.",
+      "Concrètement, nous transportons des actes, des contrats, des dossiers juridiques et des résultats d’analyses. Pour les professions du droit, voyez notre [coursier pour avocat et notaire](/services/coursier-avocat-notaire) ; pour les résultats et prélèvements, notre [coursier de laboratoire](/services/coursier-laboratoire).",
       "Reste la preuve. Un justificatif de livraison n’a de valeur que s’il nomme la personne qui a reçu le pli, l’heure exacte et le lieu. Ces éléments sont enregistrés au moment de la remise, archivés, et restitués sur demande pour être versés au dossier.",
     ],
   },
@@ -114,10 +115,10 @@ export const plisConfidentiels: Service = {
   ],
 
   coverage:
-    "Intramuros et petite couronne (92, 93, 94) au tarif standard. Roissy, Orly et la grande couronne au tarif de leur zone. Les palais de justice, greffes et études d’Île-de-France sont desservis aux mêmes conditions.",
+    "Prise en charge en moins de 45 minutes, 7j/7 de 8h à 19h. Intramuros et petite couronne (92, 93, 94) au tarif standard ; Roissy, Orly et le reste de l’Île-de-France au tarif de leur zone. Les palais de justice, greffes et études sont desservis aux mêmes conditions. Les prix par zone sont détaillés sur la [grille de tarifs](/tarifs).",
 
   pricing: {
-    title: "Tarif d’un pli confidentiel",
+    title: "Tarifs d’un envoi de pli confidentiel",
     intro:
       "Un pli confidentiel se facture comme toute course : selon la zone et le délai, jamais selon la nature du document. La course dédiée et la remise en main propre au destinataire sont comprises, sans supplément.",
     recommended: ["standard", "urgent"],
@@ -125,52 +126,47 @@ export const plisConfidentiels: Service = {
       "Une audience, un dépôt au greffe ou un rendez-vous chez le notaire à heure fixe ? Choisissez Urgent ou Super : le coursier part dès la confirmation, sans attendre d’autres plis.",
   },
 
-  faqTitle: "Vos questions avant un envoi.",
+  faqTitle: "Questions fréquentes",
 
   faq: [
     {
-      question: "Comment envoyer un pli confidentiel à Paris ?",
+      question: "Quel est le délai pour un envoi de pli confidentiel ?",
       answer:
-        "Commandez une course en ligne, par téléphone ou par courriel en indiquant l’adresse d’enlèvement, la destination et l’heure limite. Un coursier prend le pli en charge, le transporte en course directe et le remet en main propre au destinataire, dont le nom et l’heure de remise sont enregistrés.",
+        "La prise en charge se fait en moins de 45 minutes, 7j/7 de 8h à 19h. Le coursier part en course directe vers le destinataire, sans regroupement : le délai total dépend de la distance et de la formule choisie (Standard, Urgent ou Super).",
     },
     {
-      question: "La remise en main propre a-t-elle une valeur probante ?",
+      question: "Comment la confidentialité du pli est-elle garantie ?",
       answer:
-        "Le justificatif enregistre le nom du destinataire, l’horodatage et le lieu de remise : il établit la réalité et la date de la remise. Il ne se substitue pas à une signification par huissier, qui constitue un acte de procédure distinct.",
+        "Un coursier, un pli, un trajet : le pli ne passe par aucun dépôt ni aucune autre main, et n’est jamais regroupé avec d’autres envois. Il est remis uniquement au destinataire désigné, jamais déposé en boîte aux lettres ni laissé à un tiers non identifié.",
     },
     {
-      question: "Que se passe-t-il si le destinataire est absent ?",
+      question: "La preuve de remise a-t-elle une valeur probante ?",
       answer:
-        "Le coursier vous appelle avant toute décision. Selon votre consigne, il patiente, remet à une personne que vous désignez, ou rapporte le pli au cabinet. Un pli confidentiel n’est jamais déposé en boîte aux lettres ni laissé à un tiers non identifié.",
+        "Le justificatif enregistre le nom du destinataire, l’horodatage et le lieu de remise : il établit la réalité et la date de la remise, et reste restituable sur demande pour être versé à un dossier. Il ne se substitue pas à une signification par huissier, qui est un acte de procédure distinct.",
     },
     {
-      question: "Le pli voyage-t-il avec d’autres courses ?",
+      question: "Combien coûte l’envoi d’un pli confidentiel ?",
       answer:
-        "Non. Les plis confidentiels partent en course dédiée : un coursier, un pli, un trajet direct. C’est la condition pour que la chaîne de responsabilité reste documentable de bout en bout.",
+        "Un pli confidentiel se facture comme toute course : selon la zone et le délai, jamais selon la nature du document. La course dédiée et la remise en main propre sont comprises, sans supplément. Les prix par zone figurent sur la grille de tarifs.",
     },
     {
-      question: "Combien de temps conservez-vous les justificatifs ?",
+      question: "Quelles zones sont couvertes pour un pli confidentiel ?",
       answer:
-        "Les justificatifs de remise (nom du destinataire, horodatage, lieu) sont archivés et restituables sur simple demande. Contactez-nous pour connaître les conditions d'archivage applicables à votre type de mission.",
-    },
-    {
-      question: "Intervenez-vous en dehors des heures de bureau ?",
-      answer:
-        "Nous opérons du lundi au samedi, de 9h à 19h. Nous sommes fermés le dimanche et les jours fériés.",
-    },
-    {
-      question: "Peut-on ouvrir un compte pour l’ensemble du cabinet ?",
-      answer:
-        "Oui. Le compte entreprise regroupe les courses de tous les collaborateurs, permet de régler les factures sous 30 jours.",
+        "Paris intramuros, la petite couronne (92, 93, 94) et le reste de l’Île-de-France, y compris Roissy et Orly, au tarif de leur zone. Les palais de justice, greffes et études notariales sont desservis aux mêmes conditions.",
     },
   ],
 
   outline: {
     sections: [
-      { key: "context", title: "Ce qu'est un envoi sous pli confidentiel" },
-      { key: "steps", title: "Comment nous sécurisons la course" },
-      { key: "useCases", title: "Pour quels documents" },
+      { key: "context", title: "Pli confidentiel : ce que nous transportons" },
+      { key: "steps", title: "Envoi pli confidentiel : la chaîne de traçabilité" },
     ],
+    extraH2: {
+      coverage: "Délais et zones couvertes (Paris, petite couronne, Île-de-France)",
+      pricing: true,
+      faq: true,
+      ctaAsText: true,
+    },
     cta: {
       title: "Demander une course pour un pli confidentiel",
       text: "Appelez-nous ou écrivez-nous pour [organiser une course](/contact) : nous confirmons la faisabilité avant d’engager le coursier. Pour préparer le document, lisez notre guide pour [envoyer un pli confidentiel à Paris](/guides/envoyer-un-pli-confidentiel-paris).",

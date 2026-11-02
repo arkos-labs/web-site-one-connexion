@@ -223,7 +223,10 @@ export default async function ServicePage({
     ? [...outline.sections.map((s) => s.key), ...legacyOrder.filter((k) => !planned(k))]
     : legacyOrder;
   const showPricing = !outline?.hidePricing;
+  const extra = outline?.extraH2;
   const otherH2 = !outline; // pricing, FAQ, villes : H2 seulement sans plan
+  const pricingH2 = otherH2 || Boolean(extra?.pricing);
+  const faqH2 = otherH2 || Boolean(extra?.faq);
 
   return (
     <>
@@ -242,7 +245,7 @@ export default async function ServicePage({
               <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
                 Tarifs
               </div>
-              <Heading h2={otherH2} className={`max-w-[24ch] ${H2_CLASS}`}>
+              <Heading h2={pricingH2} className={`max-w-[24ch] ${H2_CLASS}`}>
                 {service.pricing.title}
               </Heading>
             </div>
@@ -251,9 +254,10 @@ export default async function ServicePage({
         )}
 
         <section className="border-b border-line py-[72px]">
-          <div className="mb-5 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
+          <div className={`font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase ${extra?.coverage ? "mb-4" : "mb-5"}`}>
             Zone couverte
           </div>
+          {extra?.coverage && <h2 className={`mb-6 max-w-[28ch] ${H2_CLASS}`}>{extra.coverage}</h2>}
           <p className="max-w-[68ch] text-[16.5px] leading-[1.65] text-muted">
             <InlineLinks text={service.coverage} />
           </p>
@@ -287,7 +291,7 @@ export default async function ServicePage({
             <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
               Questions fréquentes
             </div>
-            <Heading h2={otherH2} className={`max-w-[20ch] ${H2_CLASS}`}>
+            <Heading h2={faqH2} className={`max-w-[20ch] ${H2_CLASS}`}>
               {service.faqTitle}
             </Heading>
           </div>
@@ -322,7 +326,11 @@ export default async function ServicePage({
         </section>
       </div>
 
-      <ServiceCta serviceTitle={service.card.title} outline={outline?.cta} />
+      <ServiceCta
+        serviceTitle={service.card.title}
+        outline={outline?.cta}
+        titleAs={extra?.ctaAsText ? "p" : "h2"}
+      />
       {!UNTOUCHED_SERVICES.has(service.slug) && <TrustBlock />}
     </>
   );
