@@ -77,7 +77,7 @@ function Engagements({ items }: { items: (typeof ENGAGEMENTS)[keyof typeof ENGAG
       {items.map((item) => (
         <div key={item.title} className="flex flex-col">
           {item.icon}
-          <h3 className="mb-3 text-lg font-bold tracking-[-0.01em]">{item.title}</h3>
+          <p className="mb-3 text-lg font-bold tracking-[-0.01em]">{item.title}</p>
           <p className="text-[14.5px] leading-[1.6] text-muted">{item.desc}</p>
         </div>
       ))}
@@ -103,18 +103,26 @@ export default function MethodePage() {
         </div>
       </section>
 
-      {/* 1. De la demande à la prise en charge */}
+      {/* 1. Notre organisation */}
       <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-10">
         <div className="mb-5 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">Nos engagements</div>
-        <h2 className={H2}>De la demande à la prise en charge</h2>
+        <h2 className={H2}>Société de coursier Paris : notre organisation</h2>
+        <p className="mb-12 max-w-[68ch] text-[15.5px] leading-[1.7] text-muted">
+          One Connexion est une société de coursier installée à Saint-Mandé, à côté du 12e arrondissement, qui
+          intervient à Paris, en petite couronne et dans le reste de l&apos;Île-de-France. Notre organisation tient
+          en une règle : un envoi, un coursier, un trajet direct. Quand vous commandez, le dispatcheur qui connaît
+          votre dossier affecte le coursier le plus proche, et vous gardez le même interlocuteur de la commande à
+          la remise. Le prix s&apos;affiche avant de commander ; notre{" "}
+          <Link href="/tarifs" className={LINK}>grille de tarifs</Link> détaille chaque formule.
+        </p>
         <Engagements items={[ENGAGEMENTS.reactivite, ENGAGEMENTS.interlocuteur]} />
       </section>
 
-      {/* 2. Le déroulé d'une course */}
+      {/* 2. Les 4 étapes (= étapes du HowTo) */}
       <section id="methode" className="border-y border-line bg-paper-card">
         <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-10">
           <div className="mb-5 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">Méthode</div>
-          <h2 className={H2}>Le déroulé d&apos;une course</h2>
+          <h2 className={H2}>Les 4 étapes d&apos;une course dédiée</h2>
           <div className="grid grid-cols-[repeat(auto-fit,minmax(230px,1fr))] gap-10">
             {STEPS.map((item) => (
               <div key={item.step} className="border-t-2 border-ink pt-[22px]">
@@ -127,17 +135,48 @@ export default function MethodePage() {
         </div>
       </section>
 
-      {/* 3. Traçabilité et remise */}
+      {/* 3. Flotte propre */}
       <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-10">
-        <h2 className={H2}>Traçabilité et remise</h2>
+        <h2 className={H2}>Une flotte propre, pas une plateforme</h2>
+        <div className="grid max-w-[68ch] gap-5 text-[15.5px] leading-[1.7] text-muted">
+          <p>
+            Une plateforme de mise en relation distribue vos courses à des livreurs qui changent d&apos;un jour à
+            l&apos;autre. Nous faisons l&apos;inverse : vos courses sont assurées par nos coursiers, en deux-roues,
+            avec un dispatcheur qui les connaît et suit chaque trajet. Pas de regroupement d&apos;envois, pas de
+            détour : le coursier prend en charge votre pli en moins de 45 minutes, 7j/7 de 8h à 19h, et le
+            conduit directement à destination.
+          </p>
+          <p>
+            Ce fonctionnement explique la ponctualité, mais aussi la discrétion : le même coursier garde votre
+            envoi de l&apos;enlèvement à la remise, sans le confier à un tiers. Le détail des véhicules et de la
+            couverture se trouve sur la page{" "}
+            <Link href="/flotte" className={LINK}>flotte de coursiers moto</Link>. Pour les entreprises qui
+            commandent régulièrement, cette organisation se traduit par des tournées prévisibles, des délais
+            tenus et une facturation unique.
+          </p>
+        </div>
+      </section>
+
+      {/* 4. Traçabilité */}
+      <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-10">
+        <h2 className={H2}>Traçabilité et preuve de remise</h2>
+        <p className="mb-12 max-w-[68ch] text-[15.5px] leading-[1.7] text-muted">
+          Chaque course est visible en ligne de l&apos;enlèvement à la remise. Au moment de la remise, nous
+          enregistrons le nom du destinataire, l&apos;heure exacte et le lieu ; le justificatif vous est transmis
+          puis archivé sur votre compte, et peut être restitué pour être versé à un dossier. Pour les documents
+          sensibles, notre service de{" "}
+          <Link href="/services/plis-confidentiels" className={LINK}>pli confidentiel</Link> ajoute la remise en
+          main propre au seul destinataire désigné, sans regroupement. En cas d&apos;imprévu, nous appelons avant
+          que vous ayez à le faire.
+        </p>
         <Engagements items={[ENGAGEMENTS.suivi, ENGAGEMENTS.securite]} />
       </section>
 
-      {/* 4. Ce que change notre organisation */}
+      {/* 5. Compte entreprise */}
       <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-10">
         <div className="border-t border-line pt-20">
           <h2 className="mb-8 text-[clamp(24px,2.5vw,32px)] font-bold leading-[1.2] tracking-[-0.02em]">
-            Ce que change notre organisation
+            Travailler avec nous : compte entreprise
           </h2>
           <div className="grid gap-8 md:grid-cols-2 text-[15.5px] leading-[1.7] text-muted">
             <div>
@@ -153,7 +192,9 @@ export default function MethodePage() {
             </div>
             <div>
               <p className="mb-4">
-                Nos dispatcheurs suivent chaque course en temps réel et affectent le coursier le plus adapté, pour toute <strong>livraison dans la journée</strong> ou urgence nécessitant un coursier dédié.
+                Nos dispatcheurs suivent chaque course en temps réel et affectent le coursier le plus adapté, pour toute <strong>livraison dans la journée</strong> ou urgence nécessitant un coursier dédié. Un{" "}
+                <Link href="/services/compte-entreprise" className={LINK}>compte entreprise</Link>{" "}
+                regroupe les courses de vos collaborateurs, avec des factures à régler sous 30 jours.
               </p>
               <p>
                 Vous vous recentrez sur votre cœur de métier, nous tenons les délais. Les entreprises qui nous font confiance sont présentées dans{" "}
