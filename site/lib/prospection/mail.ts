@@ -5,7 +5,7 @@
  */
 import { SITE_URL } from "@/lib/site-content";
 
-const ORDER_URL = `${SITE_URL}/#commander`;
+const ORDER_URL = `${SITE_URL}/`;
 const HEADER_LOGO_URL = `${SITE_URL}/logo-dark.png`;
 const SIGNATURE_LOGO_URL = `${SITE_URL}/sig-logo.png`;
 
