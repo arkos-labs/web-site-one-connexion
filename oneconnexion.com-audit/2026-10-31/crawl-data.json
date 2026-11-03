@@ -1,0 +1,1424 @@
+[
+ {
+  "url": "https://www.oneconnexion.com",
+  "status": 200,
+  "ms": 242,
+  "bytes": 124966,
+  "title": "ONE CONNEXION - Coursier B2B, Paris &amp; Île-de-France",
+  "titleLen": 49,
+  "desc": "One Connexion opère les livraisons urgentes des cabinets juridiques, laboratoires et e-commerçants d&#x27;Île-de-France. Flotte deux-roues, traçabilité complète.",
+  "descLen": 161,
+  "canon": "https://www.oneconnexion.com",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Coursier B2B à Paris et en Île-de-France"
+  ],
+  "h2c": 7,
+  "words": 1112,
+  "imgs": 11,
+  "noAlt": 0,
+  "types": [
+   "WebSite",
+   "LocalBusiness+Organization",
+   "FAQPage"
+  ],
+  "internal": 75,
+  "links": 80,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/services",
+  "status": 200,
+  "ms": 342,
+  "bytes": 76785,
+  "title": "Prestations coursier B2B à Paris et en Île-de-France",
+  "titleLen": 52,
+  "desc": "Services coursier B2B Île-de-France: plis confidentiels, transport médical, e-commerce, tournées régulières. Tarif fixe, traçabilité complète, 20+ ans d&#x27;expérience B2B Paris.",
+  "descLen": 179,
+  "canon": "https://www.oneconnexion.com/services",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Nos prestations de transport urgent, en moto et en scooter."
+  ],
+  "h2c": 9,
+  "words": 688,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [
+   "BreadcrumbList"
+  ],
+  "internal": 47,
+  "links": 52,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/methode",
+  "status": 200,
+  "ms": 290,
+  "bytes": 62067,
+  "title": "Coursier méthode : processus transparent et fiable de livraison express",
+  "titleLen": 71,
+  "desc": "Coursier méthode : processus transparent, traçabilité complète, remise en main propre. Découvrez notre processus de livraison express à Paris et en Île-de-France.",
+  "descLen": 162,
+  "canon": "https://www.oneconnexion.com/methode",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Notre méthode de coursier B2B, étape par étape"
+  ],
+  "h2c": 3,
+  "words": 533,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [
+   "BreadcrumbList",
+   "WebPage",
+   "BreadcrumbList"
+  ],
+  "internal": 41,
+  "links": 45,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/flotte",
+  "status": 200,
+  "ms": 322,
+  "bytes": 76278,
+  "title": "Notre flotte de coursiers moto | ONE CONNEXION",
+  "titleLen": 46,
+  "desc": "Flotte de scooters et motos pour la livraison express à Paris et en Île-de-France, équipée pour un usage professionnel. Coursiers vérifiés.",
+  "descLen": 139,
+  "canon": "https://www.oneconnexion.com/flotte",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Une flotte de deux-roues dédiée aux livraisons urgentes."
+  ],
+  "h2c": 4,
+  "words": 402,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [
+   "BreadcrumbList",
+   "WebPage"
+  ],
+  "internal": 42,
+  "links": 46,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/references",
+  "status": 200,
+  "ms": 319,
+  "bytes": 74894,
+  "title": "Nos références clients | ONE CONNEXION",
+  "titleLen": 38,
+  "desc": "Cabinets juridiques, laboratoires, agences et e-commerçants : les secteurs pour lesquels One Connexion assure des livraisons express en Île-de-France.",
+  "descLen": 150,
+  "canon": "https://www.oneconnexion.com/references",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Les entreprises qui nous confient leurs livraisons."
+  ],
+  "h2c": 3,
+  "words": 365,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [
+   "BreadcrumbList",
+   "WebPage"
+  ],
+  "internal": 41,
+  "links": 45,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/tarifs",
+  "status": 200,
+  "ms": 311,
+  "bytes": 96476,
+  "title": "Tarif coursier Paris : dès 28 € TTC | ONE CONNEXION",
+  "titleLen": 51,
+  "desc": "Tarif coursier à Paris dès 28 € TTC, 39 € en petite couronne puis 2 €/km au-delà de 8 km. Prix affiché avant commande. Compte entreprise, facture à 30 jours.",
+  "descLen": 157,
+  "canon": "https://www.oneconnexion.com/tarifs",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Tarifs coursier B2B : dès 28 € TTC la course."
+  ],
+  "h2c": 6,
+  "words": 1103,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [
+   "BreadcrumbList",
+   "FAQPage"
+  ],
+  "internal": 51,
+  "links": 56,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/contact",
+  "status": 200,
+  "ms": 274,
+  "bytes": 48399,
+  "title": "Contact coursier Paris &amp; Île-de-France | ONE CONNEXION",
+  "titleLen": 52,
+  "desc": "Contactez One Connexion pour vos livraisons urgentes à Paris et en Île-de-France. Prix affiché avant commande, réponse rapide. Téléphone, email ou formulaire.",
+  "descLen": 158,
+  "canon": "https://www.oneconnexion.com/contact",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Parlons de vos livraisons ."
+  ],
+  "h2c": 1,
+  "words": 112,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [
+   "BreadcrumbList",
+   "ContactPage"
+  ],
+  "internal": 40,
+  "links": 46,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/secteurs",
+  "status": 200,
+  "ms": 290,
+  "bytes": 72985,
+  "title": "Coursier secteurs : solutions par domaine d&#x27;activité | ONE CONNEXION",
+  "titleLen": 68,
+  "desc": "Coursier secteurs : One Connexion opère pour les cabinets juridiques, laboratoires, e-commerçants, agences et entreprises d&#x27;Île-de-France. Découvrez nos solutions par secteur.",
+  "descLen": 180,
+  "canon": "https://www.oneconnexion.com/secteurs",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Coursier B2B par secteur : juridique, santé, e-commerce"
+  ],
+  "h2c": 7,
+  "words": 367,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [
+   "BreadcrumbList"
+  ],
+  "internal": 48,
+  "links": 52,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/guides",
+  "status": 200,
+  "ms": 256,
+  "bytes": 51687,
+  "title": "Guides du coursier B2B à Paris | ONE CONNEXION",
+  "titleLen": 46,
+  "desc": "Guides pratiques pour vos envois urgents à Paris : plis confidentiels, transport de prélèvements médicaux et calcul du prix d&#x27;un coursier express.",
+  "descLen": 151,
+  "canon": "https://www.oneconnexion.com/guides",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Guides pratiques du coursier B2B"
+  ],
+  "h2c": 5,
+  "words": 230,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [
+   "BreadcrumbList",
+   "WebPage"
+  ],
+  "internal": 44,
+  "links": 48,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/zones",
+  "status": 200,
+  "ms": 351,
+  "bytes": 95648,
+  "title": "Zones île-de-france : couverture complète de Paris et Île-de-France",
+  "titleLen": 67,
+  "desc": "Zones de couverture One Connexion : Paris, petite couronne, La Défense, grande couronne. Livraison express Île-de-France dès 28 euros. Tarifs fixes, traçabilité GPS, 6j/7 9h-19h.",
+  "descLen": 178,
+  "canon": "https://www.oneconnexion.com/zones",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Zones de livraison en Île-de-France"
+  ],
+  "h2c": 10,
+  "words": 560,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [
+   "BreadcrumbList"
+  ],
+  "internal": 149,
+  "links": 153,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/zones/paris",
+  "status": 200,
+  "ms": 313,
+  "bytes": 123930,
+  "title": "Tarif coursier Paris : dès 28 € TTC",
+  "titleLen": 35,
+  "desc": "Tarif coursier Paris dès 28 € TTC en normal, 42 € en urgent. Livraison express dans les 20 arrondissements, enlèvement en moins de 45 min, remise horodatée.",
+  "descLen": 156,
+  "canon": "https://www.oneconnexion.com/zones/paris",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Livraison express dans les 20 arrondissements de Paris."
+  ],
+  "h2c": 9,
+  "words": 1081,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [
+   "BreadcrumbList",
+   "Service",
+   "FAQPage"
+  ],
+  "internal": 73,
+  "links": 78,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/zones/la-defense",
+  "status": 200,
+  "ms": 321,
+  "bytes": 89368,
+  "title": "Coursier La Défense &amp; Hauts-de-Seine | ONE CONNEXION",
+  "titleLen": 50,
+  "desc": "Coursier moto dédié à La Défense, Nanterre, Neuilly, Boulogne-Billancourt et tout le 92. Enlèvement &lt; 45 min, suivi en ligne. Prix affiché avant de commander.",
+  "descLen": 161,
+  "canon": "https://www.oneconnexion.com/zones/la-defense",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Coursier express à La Défense et dans les Hauts-de-Seine."
+  ],
+  "h2c": 6,
+  "words": 663,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [
+   "BreadcrumbList"
+  ],
+  "internal": 61,
+  "links": 66,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/zones/petite-couronne",
+  "status": 200,
+  "ms": 339,
+  "bytes": 159944,
+  "title": "Coursier petite couronne 92, 93, 94 | ONE CONNEXION",
+  "titleLen": 51,
+  "desc": "Livraison express banlieue : commander en petite couronne (92, 93, 94) dès 39€ TTC, puis 2€/km au-delà de 8 km. Enlèvement &lt; 45 min, course dédiée, suivi GPS, remise certifiée.",
+  "descLen": 179,
+  "canon": "https://www.oneconnexion.com/zones/petite-couronne",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Livraison express dans toute la petite couronne."
+  ],
+  "h2c": 8,
+  "words": 920,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [
+   "BreadcrumbList"
+  ],
+  "internal": 119,
+  "links": 124,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/zones/grande-couronne",
+  "status": 200,
+  "ms": 320,
+  "bytes": 88588,
+  "title": "Coursier grande couronne 77, 78, 91, 95 | ONE CONNEXION",
+  "titleLen": 55,
+  "desc": "Coursier en grande couronne : Seine-et-Marne (77), Yvelines (78), Essonne (91), Val-d&#x27;Oise (95). Course directe vers Paris ou la banlieue, dès 60 € TTC selon la distance, du lundi au samedi.",
+  "descLen": 195,
+  "canon": "https://www.oneconnexion.com/zones/grande-couronne",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Livraison express en grande couronne."
+  ],
+  "h2c": 5,
+  "words": 694,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [
+   "BreadcrumbList",
+   "FAQPage"
+  ],
+  "internal": 88,
+  "links": 93,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/mentions-legales",
+  "status": 200,
+  "ms": 257,
+  "bytes": 44211,
+  "title": "Mentions légales | ONE CONNEXION",
+  "titleLen": 32,
+  "desc": "Mentions légales du site ONE CONNEXION : éditeur, hébergeur, coordonnées et informations légales de la société de coursiers B2B à Paris.",
+  "descLen": 136,
+  "canon": "https://www.oneconnexion.com/mentions-legales",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Mentions légales"
+  ],
+  "h2c": 6,
+  "words": 221,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [],
+  "internal": 43,
+  "links": 47,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/cgv",
+  "status": 200,
+  "ms": 277,
+  "bytes": 46909,
+  "title": "Conditions Générales de Vente | ONE CONNEXION",
+  "titleLen": 45,
+  "desc": "Conditions générales de vente de ONE CONNEXION : commande, prix, paiement, délais de livraison, responsabilité et réclamations pour vos courses à Paris et en Île-de-France.",
+  "descLen": 172,
+  "canon": "https://www.oneconnexion.com/cgv",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Conditions Générales de Vente"
+  ],
+  "h2c": 9,
+  "words": 471,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [],
+  "internal": 40,
+  "links": 44,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/politique-de-confidentialite",
+  "status": 200,
+  "ms": 265,
+  "bytes": 46595,
+  "title": "Politique de confidentialité | ONE CONNEXION",
+  "titleLen": 44,
+  "desc": "Comment ONE CONNEXION collecte, utilise et protège vos données personnelles : finalités, destinataires, durées de conservation et exercice de vos droits (RGPD).",
+  "descLen": 160,
+  "canon": "https://www.oneconnexion.com/politique-de-confidentialite",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Politique de confidentialité"
+  ],
+  "h2c": 6,
+  "words": 388,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [],
+  "internal": 41,
+  "links": 46,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/services/plis-confidentiels",
+  "status": 200,
+  "ms": 352,
+  "bytes": 110855,
+  "title": "Envoi de pli confidentiel à Paris - coursier juridique",
+  "titleLen": 54,
+  "desc": "Envoyer un pli confidentiel à Paris : course dédiée pour avocats, notaires et huissiers, remise en main propre, preuve horodatée.",
+  "descLen": 129,
+  "canon": "https://www.oneconnexion.com/services/plis-confidentiels",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Envoi de pli confidentiel à Paris : coursier juridique, remise en main propre"
+  ],
+  "h2c": 7,
+  "words": 1281,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [
+   "Service",
+   "BreadcrumbList",
+   "FAQPage"
+  ],
+  "internal": 57,
+  "links": 63,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/services/transport-medical",
+  "status": 200,
+  "ms": 295,
+  "bytes": 119084,
+  "title": "Coursier médical Paris - transport laboratoire",
+  "titleLen": 46,
+  "desc": "Coursier médical : transport prélèvements et échantillons pour laboratoires. Enlèvement &lt; 45 min, contenants isothermes, remise directe, dès 28€.",
+  "descLen": 148,
+  "canon": "https://www.oneconnexion.com/services/transport-medical",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Coursier médical à Paris : prélèvements, échantillons et matériel de laboratoire"
+  ],
+  "h2c": 7,
+  "words": 1437,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [
+   "Service",
+   "BreadcrumbList",
+   "FAQPage"
+  ],
+  "internal": 58,
+  "links": 64,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/services/livraison-e-commerce",
+  "status": 200,
+  "ms": 325,
+  "bytes": 101073,
+  "title": "Coursier jour : livraison same-day pour l&#x27;e-commerce",
+  "titleLen": 52,
+  "desc": "Coursier jour : collecte en boutique ou entrepôt, livraison le jour même à Paris et en petite couronne. Créneau choisi, suivi en ligne, preuve de livraison.",
+  "descLen": 156,
+  "canon": "https://www.oneconnexion.com/services/livraison-e-commerce",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Coursier jour"
+  ],
+  "h2c": 7,
+  "words": 1099,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [
+   "Service",
+   "BreadcrumbList",
+   "FAQPage"
+  ],
+  "internal": 56,
+  "links": 62,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/services/tournees-regulieres",
+  "status": 200,
+  "ms": 344,
+  "bytes": 88469,
+  "title": "Tournées régulières et navettes coursier B2B Paris",
+  "titleLen": 50,
+  "desc": "Confiez vos navettes inter-sites et tournées régulières en Île-de-France à nos coursiers. Flexibilité, ponctualité et suivi quotidien garantis.",
+  "descLen": 143,
+  "canon": "https://www.oneconnexion.com/services/tournees-regulieres",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Vos navettes inter-sites et tournées régulières."
+  ],
+  "h2c": 7,
+  "words": 767,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [
+   "Service",
+   "BreadcrumbList",
+   "FAQPage"
+  ],
+  "internal": 55,
+  "links": 61,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/services/transport-evenementiel",
+  "status": 200,
+  "ms": 326,
+  "bytes": 97219,
+  "title": "Coursier logistique : événementiel et RP à Paris",
+  "titleLen": 48,
+  "desc": "Coursier logistique : partenaire de vos événements, pop-up stores et opérations RP. Livraison VIP, accréditations, transport sous haute discrétion.",
+  "descLen": 147,
+  "canon": "https://www.oneconnexion.com/services/transport-evenementiel",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Coursier logistique"
+  ],
+  "h2c": 7,
+  "words": 950,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [
+   "Service",
+   "BreadcrumbList",
+   "FAQPage"
+  ],
+  "internal": 56,
+  "links": 62,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/services/compte-entreprise",
+  "status": 200,
+  "ms": 322,
+  "bytes": 102168,
+  "title": "Compte entreprise coursier - paiement à 30 jours",
+  "titleLen": 48,
+  "desc": "Compte coursier pour votre entreprise à Paris : ouverture immédiate en ligne, plusieurs comptes avec le même SIRET (un par service ou par site), suivi de chaque course et factures à régler sous 30 jours.",
+  "descLen": 203,
+  "canon": "https://www.oneconnexion.com/services/compte-entreprise",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Compte entreprise : ouverture immédiate, suivi en ligne et paiement à 30 jours"
+  ],
+  "h2c": 7,
+  "words": 1087,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [
+   "Service",
+   "BreadcrumbList",
+   "FAQPage"
+  ],
+  "internal": 56,
+  "links": 62,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/services/coursier-express-paris",
+  "status": 200,
+  "ms": 301,
+  "bytes": 106805,
+  "title": "Coursier express Paris - dès 42 € TTC",
+  "titleLen": 37,
+  "desc": "Coursier express à Paris : enlèvement en moins de 45 minutes, course dédiée en moto ou scooter, suivi en ligne, du lundi au samedi. Prix coursier express Paris : dès 42 € TTC en urgent (1 h 30), 56 € TTC en formule Super (1 h).",
+  "descLen": 227,
+  "canon": "https://www.oneconnexion.com/services/coursier-express-paris",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Coursier express à Paris : enlèvement en moins de 45 minutes"
+  ],
+  "h2c": 7,
+  "words": 1186,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [
+   "Service",
+   "BreadcrumbList",
+   "FAQPage"
+  ],
+  "internal": 58,
+  "links": 64,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/services/coursier-moto-paris",
+  "status": 200,
+  "ms": 379,
+  "bytes": 104249,
+  "title": "Coursier moto et scooter Paris - dès 28 € TTC",
+  "titleLen": 45,
+  "desc": "Coursier moto et scooter à Paris : livraison express en deux-roues, top-case verrouillé, suivi en ligne, du lundi au samedi. Prix coursier moto Paris : dès 28 € TTC en normal (3 h), 56 € TTC en formule Super (1 h).",
+  "descLen": 214,
+  "canon": "https://www.oneconnexion.com/services/coursier-moto-paris",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Coursier moto et scooter à Paris : livraison express en deux-roues"
+  ],
+  "h2c": 7,
+  "words": 1132,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [
+   "Service",
+   "BreadcrumbList",
+   "FAQPage"
+  ],
+  "internal": 56,
+  "links": 62,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/guides/envoyer-un-pli-confidentiel-paris",
+  "status": 200,
+  "ms": 283,
+  "bytes": 60065,
+  "title": "Envoyer un pli confidentiel à Paris : guide | ONE CONNEXION",
+  "titleLen": 59,
+  "desc": "Comment préparer, faire prendre en charge et suivre un pli confidentiel à Paris : conditionnement, remise en main propre, preuve de remise, course dédiée.",
+  "descLen": 154,
+  "canon": "https://www.oneconnexion.com/guides/envoyer-un-pli-confidentiel-paris",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Envoyer un pli confidentiel à Paris : bien préparer sa remise"
+  ],
+  "h2c": 5,
+  "words": 477,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [
+   "Article",
+   "BreadcrumbList",
+   "FAQPage"
+  ],
+  "internal": 42,
+  "links": 46,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/guides/transport-de-prelevements-medicaux",
+  "status": 200,
+  "ms": 244,
+  "bytes": 60369,
+  "title": "Transport de prélèvements médicaux : guide | ONE CONNEXION",
+  "titleLen": 58,
+  "desc": "Ce qu&#x27;un laboratoire ou un cabinet doit anticiper pour faire transporter des prélèvements : conditionnement, délai de stabilité, température, remise et traçabilité.",
+  "descLen": 169,
+  "canon": "https://www.oneconnexion.com/guides/transport-de-prelevements-medicaux",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Transport de prélèvements médicaux : les points à anticiper"
+  ],
+  "h2c": 5,
+  "words": 440,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [
+   "Article",
+   "BreadcrumbList",
+   "FAQPage"
+  ],
+  "internal": 42,
+  "links": 46,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/guides/prix-coursier-express-paris",
+  "status": 200,
+  "ms": 265,
+  "bytes": 65232,
+  "title": "Tarif coursier Paris : prix et critères | ONE CONNEXION",
+  "titleLen": 55,
+  "desc": "Tarif d&#x27;un coursier à Paris : distance, délai, zone et volume. Comment connaître le prix avant de commander.",
+  "descLen": 113,
+  "canon": "https://www.oneconnexion.com/guides/prix-coursier-express-paris",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Prix d un coursier express à Paris : ce qui fait varier le tarif"
+  ],
+  "h2c": 7,
+  "words": 541,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [
+   "Article",
+   "BreadcrumbList",
+   "FAQPage"
+  ],
+  "internal": 42,
+  "links": 46,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/guides/expedier-du-materiel-de-laboratoire",
+  "status": 200,
+  "ms": 333,
+  "bytes": 74555,
+  "title": "Expédier du matériel de laboratoire : guide | ONE CONNEXION",
+  "titleLen": 59,
+  "desc": "Réactifs, consommables, pièce d&#x27;automate, instrument fragile : comment qualifier, emballer et faire transporter du matériel de laboratoire en Île-de-France, et à quel prix.",
+  "descLen": 177,
+  "canon": "https://www.oneconnexion.com/guides/expedier-du-materiel-de-laboratoire",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Expédier du matériel de laboratoire en Île-de-France : préparer l envoi"
+  ],
+  "h2c": 7,
+  "words": 966,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [
+   "Article",
+   "BreadcrumbList",
+   "FAQPage"
+  ],
+  "internal": 42,
+  "links": 46,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/guides/coursier-paris-banlieue",
+  "status": 200,
+  "ms": 341,
+  "bytes": 77302,
+  "title": "Coursier Paris banlieue : zones et prix | ONE CONNEXION",
+  "titleLen": 55,
+  "desc": "Petite couronne, grande couronne, trajets de banlieue à banlieue : comment est calculé le prix d&#x27;un coursier entre Paris et la banlieue, quels délais choisir et comment préparer la course.",
+  "descLen": 193,
+  "canon": "https://www.oneconnexion.com/guides/coursier-paris-banlieue",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Coursier entre Paris et la banlieue : zones, délais et prix"
+  ],
+  "h2c": 7,
+  "words": 1177,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [
+   "Article",
+   "BreadcrumbList",
+   "FAQPage"
+  ],
+  "internal": 42,
+  "links": 46,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/zones/paris-1er",
+  "status": 200,
+  "ms": 360,
+  "bytes": 113014,
+  "title": "Coursier Paris 1er - Châtelet, Louvre, Vendôme",
+  "titleLen": 46,
+  "desc": "Coursier express Paris 1er (75001). Spécialiste des plis juridiques (Tribunal de Commerce) et livraisons luxe (Vendôme). Enlèvement &lt; 45 min.",
+  "descLen": 144,
+  "canon": "https://www.oneconnexion.com/zones/paris-1er",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Coursier express Paris 1er"
+  ],
+  "h2c": 9,
+  "words": 846,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [
+   "BreadcrumbList",
+   "Service",
+   "FAQPage"
+  ],
+  "internal": 54,
+  "links": 60,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/zones/paris-2e",
+  "status": 200,
+  "ms": 337,
+  "bytes": 111271,
+  "title": "Coursier Paris 2e - Bourse, Sentier, Start-ups",
+  "titleLen": 46,
+  "desc": "Coursier express Paris 2e (75002). Livraison de prototypes (Sentier), plis financiers et navettes start-ups. Enlèvement &lt; 45 min.",
+  "descLen": 132,
+  "canon": "https://www.oneconnexion.com/zones/paris-2e",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Coursier express Paris 2e"
+  ],
+  "h2c": 9,
+  "words": 767,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [
+   "BreadcrumbList",
+   "Service",
+   "FAQPage"
+  ],
+  "internal": 54,
+  "links": 60,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/zones/paris-3e",
+  "status": 200,
+  "ms": 312,
+  "bytes": 111191,
+  "title": "Coursier Paris 3e - Le Marais, Galeries d&#x27;Art",
+  "titleLen": 45,
+  "desc": "Coursier express Paris 3e (75003). Spécialiste du transport d&#x27;art, livraisons VIP pour les boutiques du Marais et agences RP. Discrétion et sécurité.",
+  "descLen": 154,
+  "canon": "https://www.oneconnexion.com/zones/paris-3e",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Coursier express Paris 3e"
+  ],
+  "h2c": 9,
+  "words": 768,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [
+   "BreadcrumbList",
+   "Service",
+   "FAQPage"
+  ],
+  "internal": 54,
+  "links": 60,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/zones/paris-4e",
+  "status": 200,
+  "ms": 353,
+  "bytes": 111553,
+  "title": "Coursier Paris 4e - Hôtel de Ville, Beaubourg",
+  "titleLen": 45,
+  "desc": "Coursier express Paris 4e (75004). Appels d&#x27;offres Hôtel de Ville, plis institutionnels, transport pour galeries d&#x27;art (Beaubourg, Marais).",
+  "descLen": 149,
+  "canon": "https://www.oneconnexion.com/zones/paris-4e",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Coursier express Paris 4e"
+  ],
+  "h2c": 9,
+  "words": 764,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [
+   "BreadcrumbList",
+   "Service",
+   "FAQPage"
+  ],
+  "internal": 54,
+  "links": 60,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/zones/paris-5e",
+  "status": 200,
+  "ms": 310,
+  "bytes": 111195,
+  "title": "Coursier Paris 5e - Quartier Latin, Institut Curie",
+  "titleLen": 50,
+  "desc": "Coursier express Paris 5e (75005). Spécialiste du transport médical urgent (Curie) et liaisons pour les universités et l&#x27;édition. Enlèvement &lt; 45 min.",
+  "descLen": 158,
+  "canon": "https://www.oneconnexion.com/zones/paris-5e",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Coursier express Paris 5e"
+  ],
+  "h2c": 9,
+  "words": 723,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [
+   "BreadcrumbList",
+   "Service",
+   "FAQPage"
+  ],
+  "internal": 54,
+  "links": 60,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/zones/paris-6e",
+  "status": 200,
+  "ms": 277,
+  "bytes": 110589,
+  "title": "Coursier Paris 6e - Saint-Germain, Sénat, Luxe",
+  "titleLen": 46,
+  "desc": "Coursier express Paris 6e (75006). Livraison premium, plis ultra-confidentiels (Sénat, Avocats) et transport d&#x27;œuvres d&#x27;art. Discrétion absolue.",
+  "descLen": 154,
+  "canon": "https://www.oneconnexion.com/zones/paris-6e",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Coursier express Paris 6e"
+  ],
+  "h2c": 9,
+  "words": 738,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [
+   "BreadcrumbList",
+   "Service",
+   "FAQPage"
+  ],
+  "internal": 54,
+  "links": 60,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/zones/paris-7e",
+  "status": 200,
+  "ms": 291,
+  "bytes": 111402,
+  "title": "Coursier Paris 7e - Invalides, Ministères, Ambassades",
+  "titleLen": 53,
+  "desc": "Coursier express Paris 7e (75007). Plis confidentiels remis en main propre aux ministères et ambassades du 7e. Enlèvement &lt; 45 min.",
+  "descLen": 134,
+  "canon": "https://www.oneconnexion.com/zones/paris-7e",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Coursier express Paris 7e"
+  ],
+  "h2c": 9,
+  "words": 726,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [
+   "BreadcrumbList",
+   "Service",
+   "FAQPage"
+  ],
+  "internal": 54,
+  "links": 60,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/zones/paris-8e",
+  "status": 200,
+  "ms": 345,
+  "bytes": 111115,
+  "title": "Coursier Paris 8e - Champs-Élysées, Triangle d&#x27;Or",
+  "titleLen": 49,
+  "desc": "Coursier express Paris 8e (75008). Spécialiste finance, luxe et grands comptes. Enlèvement &lt; 45 min sur les Champs-Élysées et Haussmann.",
+  "descLen": 139,
+  "canon": "https://www.oneconnexion.com/zones/paris-8e",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Coursier express Paris 8e"
+  ],
+  "h2c": 9,
+  "words": 762,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [
+   "BreadcrumbList",
+   "Service",
+   "FAQPage"
+  ],
+  "internal": 54,
+  "links": 60,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/zones/paris-9e",
+  "status": 200,
+  "ms": 330,
+  "bytes": 111040,
+  "title": "Coursier Paris 9e - Opéra, Grands Boulevards, Start-ups",
+  "titleLen": 55,
+  "desc": "Coursier express Paris 9e (75009). Spécialiste tech, start-ups et retail (Grands Magasins). Livraison informatique et plis urgents &lt; 45 min.",
+  "descLen": 143,
+  "canon": "https://www.oneconnexion.com/zones/paris-9e",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Coursier express Paris 9e"
+  ],
+  "h2c": 9,
+  "words": 745,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [
+   "BreadcrumbList",
+   "Service",
+   "FAQPage"
+  ],
+  "internal": 54,
+  "links": 60,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/zones/paris-10e",
+  "status": 200,
+  "ms": 488,
+  "bytes": 111205,
+  "title": "Coursier Paris 10e - Gares, Canal Saint-Martin, Hôpital",
+  "titleLen": 55,
+  "desc": "Coursier express Paris 10e (75010). Urgences médicales (Hôpital Saint-Louis), liaisons Gare du Nord/Est et navettes pour les agences du Canal.",
+  "descLen": 142,
+  "canon": "https://www.oneconnexion.com/zones/paris-10e",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Coursier express Paris 10e"
+  ],
+  "h2c": 9,
+  "words": 746,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [
+   "BreadcrumbList",
+   "Service",
+   "FAQPage"
+  ],
+  "internal": 54,
+  "links": 60,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/zones/paris-11e",
+  "status": 200,
+  "ms": 356,
+  "bytes": 110580,
+  "title": "Coursier Paris 11e - Bastille, Oberkampf, Nation",
+  "titleLen": 48,
+  "desc": "Coursier express Paris 11e (75011). Livraisons pour start-ups, coworkings et artisans de Bastille à Nation. Enlèvement &lt; 45 min.",
+  "descLen": 131,
+  "canon": "https://www.oneconnexion.com/zones/paris-11e",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Coursier express Paris 11e"
+  ],
+  "h2c": 9,
+  "words": 693,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [
+   "BreadcrumbList",
+   "Service",
+   "FAQPage"
+  ],
+  "internal": 54,
+  "links": 60,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/zones/paris-12e",
+  "status": 200,
+  "ms": 296,
+  "bytes": 111072,
+  "title": "Coursier Paris 12e - Bercy, Gare de Lyon, Hôpitaux",
+  "titleLen": 50,
+  "desc": "Coursier express Paris 12e (75012). Plis officiels (Bercy), urgences médicales (Saint-Antoine) et relais Gare de Lyon. Enlèvement &lt; 45 min.",
+  "descLen": 142,
+  "canon": "https://www.oneconnexion.com/zones/paris-12e",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Coursier express Paris 12e"
+  ],
+  "h2c": 9,
+  "words": 747,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [
+   "BreadcrumbList",
+   "Service",
+   "FAQPage"
+  ],
+  "internal": 54,
+  "links": 60,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/zones/paris-13e",
+  "status": 200,
+  "ms": 356,
+  "bytes": 110890,
+  "title": "Coursier Paris 13e - Station F, Pitié-Salpêtrière",
+  "titleLen": 49,
+  "desc": "Coursier express Paris 13e (75013). Logistique médicale (Pitié-Salpêtrière) et transports urgents IT pour les start-ups (Station F).",
+  "descLen": 132,
+  "canon": "https://www.oneconnexion.com/zones/paris-13e",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Coursier express Paris 13e"
+  ],
+  "h2c": 9,
+  "words": 721,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [
+   "BreadcrumbList",
+   "Service",
+   "FAQPage"
+  ],
+  "internal": 54,
+  "links": 60,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/zones/paris-14e",
+  "status": 200,
+  "ms": 356,
+  "bytes": 110459,
+  "title": "Coursier Paris 14e - Montparnasse, Hôpital Cochin",
+  "titleLen": 49,
+  "desc": "Coursier express Paris 14e (75014). Livraisons urgentes Tour Montparnasse, urgences médicales (Cochin) et liaisons TGV. Enlèvement &lt; 45 min.",
+  "descLen": 143,
+  "canon": "https://www.oneconnexion.com/zones/paris-14e",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Coursier express Paris 14e"
+  ],
+  "h2c": 9,
+  "words": 675,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [
+   "BreadcrumbList",
+   "Service",
+   "FAQPage"
+  ],
+  "internal": 54,
+  "links": 60,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/zones/paris-15e",
+  "status": 200,
+  "ms": 352,
+  "bytes": 110757,
+  "title": "Coursier Paris 15e - Porte de Versailles, HEGP, Médias",
+  "titleLen": 54,
+  "desc": "Coursier express Paris 15e (75015). Spécialiste logistique salons (Porte de Versailles), transport audiovisuel et médical (HEGP). Enlèvement &lt; 45 min.",
+  "descLen": 153,
+  "canon": "https://www.oneconnexion.com/zones/paris-15e",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Coursier express Paris 15e"
+  ],
+  "h2c": 9,
+  "words": 708,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [
+   "BreadcrumbList",
+   "Service",
+   "FAQPage"
+  ],
+  "internal": 54,
+  "links": 60,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/zones/paris-16e",
+  "status": 200,
+  "ms": 357,
+  "bytes": 110581,
+  "title": "Coursier Paris 16e - Ambassades, Luxe, Événementiel",
+  "titleLen": 51,
+  "desc": "Coursier express Paris 16e (75016). Livraison VIP discrète, plis diplomatiques, navettes ambassades et logistique d&#x27;événements sportifs.",
+  "descLen": 141,
+  "canon": "https://www.oneconnexion.com/zones/paris-16e",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Coursier express Paris 16e"
+  ],
+  "h2c": 9,
+  "words": 693,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [
+   "BreadcrumbList",
+   "Service",
+   "FAQPage"
+  ],
+  "internal": 54,
+  "links": 60,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/zones/paris-17e",
+  "status": 200,
+  "ms": 365,
+  "bytes": 111041,
+  "title": "Coursier Paris 17e - Tribunal de Paris, Batignolles",
+  "titleLen": 51,
+  "desc": "Coursier express Paris 17e (75017). Dépôts juridiques au Tribunal de Paris (Batignolles). Enlèvement immédiat, course dédiée spécialisée.",
+  "descLen": 137,
+  "canon": "https://www.oneconnexion.com/zones/paris-17e",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Coursier express Paris 17e"
+  ],
+  "h2c": 9,
+  "words": 708,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [
+   "BreadcrumbList",
+   "Service",
+   "FAQPage"
+  ],
+  "internal": 54,
+  "links": 60,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/zones/paris-18e",
+  "status": 200,
+  "ms": 324,
+  "bytes": 110629,
+  "title": "Coursier Paris 18e - Montmartre, Hôpital Bichat, Pigalle",
+  "titleLen": 56,
+  "desc": "Coursier express Paris 18e (75018). Spécialiste logistique pour l&#x27;Hôpital Bichat, livraisons événementielles pour les salles de spectacles et théâtres.",
+  "descLen": 156,
+  "canon": "https://www.oneconnexion.com/zones/paris-18e",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Coursier express Paris 18e"
+  ],
+  "h2c": 9,
+  "words": 694,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [
+   "BreadcrumbList",
+   "Service",
+   "FAQPage"
+  ],
+  "internal": 54,
+  "links": 60,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/zones/paris-19e",
+  "status": 200,
+  "ms": 311,
+  "bytes": 111173,
+  "title": "Coursier Paris 19e - La Villette, Hôpital Robert-Debré",
+  "titleLen": 54,
+  "desc": "Coursier express Paris 19e (75019). Transport médical pédiatrique (Robert-Debré), logistique événementielle lourde (La Villette). Enlèvement &lt; 45 min.",
+  "descLen": 153,
+  "canon": "https://www.oneconnexion.com/zones/paris-19e",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Coursier express Paris 19e"
+  ],
+  "h2c": 9,
+  "words": 719,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [
+   "BreadcrumbList",
+   "Service",
+   "FAQPage"
+  ],
+  "internal": 54,
+  "links": 60,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ },
+ {
+  "url": "https://www.oneconnexion.com/zones/paris-20e",
+  "status": 200,
+  "ms": 344,
+  "bytes": 110308,
+  "title": "Coursier Paris 20e - Tenon, Belleville, Père-Lachaise",
+  "titleLen": 53,
+  "desc": "Coursier express Paris 20e (75020). Urgences médicales Hôpital Tenon, navettes pour start-ups et galeries de Belleville. Enlèvement &lt; 45 min.",
+  "descLen": 144,
+  "canon": "https://www.oneconnexion.com/zones/paris-20e",
+  "robots": "index, follow",
+  "ogImage": true,
+  "h1s": [
+   "Coursier express Paris 20e"
+  ],
+  "h2c": 9,
+  "words": 676,
+  "imgs": 10,
+  "noAlt": 0,
+  "types": [
+   "BreadcrumbList",
+   "Service",
+   "FAQPage"
+  ],
+  "internal": 54,
+  "links": 60,
+  "xRobots": null,
+  "cache": "public, max-age=0, must-revalidate"
+ }
+]
