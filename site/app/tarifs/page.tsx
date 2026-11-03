@@ -9,15 +9,25 @@ import InlineLinks from "@/components/InlineLinks";
 import JsonLd from "@/components/JsonLd";
 import { SITE_URL, PHONE_DISPLAY, PHONE_TEL } from "@/lib/site-content";
 import { CheckCircle2, Clock, MapPin, Shield } from "lucide-react";
-import { gridPrice, pcKmPrice, PC_INCLUDED_KM, splitTTC, type Zone } from "@/lib/pricing";
+import { gridPrice, pcKmPrice, PC_INCLUDED_KM, splitTTC, type ServiceLevel, type Zone } from "@/lib/pricing";
 
 // 31,5 → « 31,50 € », 42 → « 42 € »
 const euro = (n: number) =>
   `${n.toLocaleString("fr-FR", { minimumFractionDigits: Number.isInteger(n) ? 0 : 2, maximumFractionDigits: 2 })} €`;
 
-const TITLE = "Tarifs coursier Paris : prix clairs, sans surprise";
+const TITLE = "Tarif coursier Paris dès 28 € TTC : grille et prix au km";
 const DESCRIPTION =
-  "Grille de prix coursier à Paris et en Île-de-France : course dédiée, plis confidentiels, transport médical. Devis gratuit sous 2 h ouvrées.";
+  "Tarif coursier à Paris dès 28 € TTC, 39 € TTC en petite couronne puis 2 € par km. Grille complète, exemples de courses et devis gratuit sous 2 h ouvrées.";
+
+// Petite couronne : prix de base (jusqu'à 8 km) et chaque km en plus, par délai.
+const PC_LEVELS = [
+  { label: "Normal 3 h", level: "standard" },
+  { label: "Urgent 1 h 30", level: "urgent" },
+  { label: "Super 1 h", level: "flash" },
+] as const;
+const EXAMPLE_KM = 15;
+const pcCourse = (level: ServiceLevel, km: number) =>
+  gridPrice(level, 1) + Math.max(0, km - PC_INCLUDED_KM) * pcKmPrice(level);
 
 export const metadata: Metadata = {
   title: { absolute: TITLE },
@@ -189,9 +199,10 @@ export default function TarifsPage() {
             Tarif coursier Paris : notre grille de prix
           </h1>
           <p className="max-w-[58ch] text-pretty text-[17px] leading-[1.6] text-white/66">
-            Course moto dès 28 € TTC en intramuros, en normal 3 h, 56 € TTC en
-            formule Super 1 h. Voici comment le tarif est calculé, la grille par
-            délai et les options possibles.
+            Dans Paris, une course coûte {euro(gridPrice("standard", 0))} TTC en Normal 3 h, et jusqu&apos;à{" "}
+            {euro(gridPrice("flash", 0))} TTC en Super 1 h. En petite couronne, le prix démarre à{" "}
+            {euro(gridPrice("standard", 1))} TTC, avec {PC_INCLUDED_KM} km de route compris, puis{" "}
+            {euro(pcKmPrice("standard"))} TTC par km en plus. Voici la grille complète et des exemples de courses.
           </p>
         </div>
       </section>
@@ -316,6 +327,60 @@ export default function TarifsPage() {
             .
           </p>
         </div>
+      </section>
+
+      {/* ── Prix au kilomètre ── */}
+      <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
+        <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
+          Prix au kilomètre
+        </div>
+        <h2 className="mb-6 max-w-[28ch] text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
+          Coursier au kilomètre en petite couronne : le calcul
+        </h2>
+        <p className="mb-10 max-w-[68ch] text-[15.5px] leading-[1.7] text-muted">
+          En petite couronne, le prix de base couvre les {PC_INCLUDED_KM} premiers kilomètres de route entre
+          l&apos;enlèvement et la livraison. Chaque kilomètre au-delà s&apos;ajoute, au tarif du délai choisi.
+          Le total exact s&apos;affiche avant de valider la commande.
+        </p>
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[560px] border-collapse text-[14.5px]">
+            <thead>
+              <tr className="border-b-2 border-ink">
+                <th className="py-3 pr-6 text-left font-mono text-[10px] tracking-[0.14em] text-label uppercase">Délai</th>
+                <th className="py-3 pr-6 text-left font-mono text-[10px] tracking-[0.14em] text-label uppercase">Jusqu&apos;à {PC_INCLUDED_KM} km</th>
+                <th className="py-3 pr-6 text-left font-mono text-[10px] tracking-[0.14em] text-label uppercase">Chaque km en plus</th>
+                <th className="py-3 text-left font-mono text-[10px] tracking-[0.14em] text-label uppercase">Exemple {EXAMPLE_KM} km</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-line">
+              {PC_LEVELS.map(({ label, level }) => (
+                <tr key={level}>
+                  <td className="py-4 pr-6 font-medium text-ink">{label}</td>
+                  <td className="py-4 pr-6 font-semibold text-ink">{euro(gridPrice(level, 1))} TTC</td>
+                  <td className="py-4 pr-6 text-muted">+ {euro(pcKmPrice(level))} TTC</td>
+                  <td className="py-4 font-semibold text-ink">{euro(pcCourse(level, EXAMPLE_KM))} TTC</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <h3 className="mt-14 mb-6 text-[20px] font-bold tracking-[-0.02em]">Exemples de courses</h3>
+        <ul className="grid max-w-[780px] gap-4 text-[15px] leading-[1.65] text-muted">
+          <li>
+            <strong className="text-ink">Paris intra-muros, Normal 3 h :</strong> {euro(gridPrice("standard", 0))} TTC,
+            soit {euro(splitTTC(gridPrice("standard", 0)).ht)} HT. Un prix fixe, sans kilomètre à compter.
+          </li>
+          <li>
+            <strong className="text-ink">Saint-Mandé → Paris 12e, en Normal :</strong> {euro(gridPrice("standard", 1))} TTC,
+            le trajet reste dans les {PC_INCLUDED_KM} km compris.
+          </li>
+          <li>
+            <strong className="text-ink">Petite couronne, {EXAMPLE_KM} km de route :</strong>{" "}
+            {euro(pcCourse("standard", EXAMPLE_KM))} TTC en Normal, {euro(pcCourse("urgent", EXAMPLE_KM))} TTC en Urgent,{" "}
+            {euro(pcCourse("flash", EXAMPLE_KM))} TTC en Super.
+          </li>
+        </ul>
       </section>
 
       {/* ── Comparaison ── */}
