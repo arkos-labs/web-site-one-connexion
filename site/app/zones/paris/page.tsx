@@ -356,6 +356,92 @@ export default function ZoneParis() {
         </div>
       </section>
 
+      {/* ── Grille tarifaire Paris intramuros ── */}
+      <section className="border-t border-line bg-paper">
+        <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
+          <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase text-center">
+            Tarifs clairs & transparents
+          </div>
+          <h2 className={`mb-4 text-center ${H2}`}>Tarifs d&apos;un coursier à Paris intramuros</h2>
+          <p className="mx-auto mb-10 max-w-[65ch] text-center text-[15px] text-muted">
+            Prix fixes de porte à porte dans les 20 arrondissements de Paris. Prise en charge en moins de 45 minutes, course 100 % dédiée sans regroupement et remise en main propre contre signature.
+          </p>
+
+          <div className="grid gap-6 md:grid-cols-3">
+            {[
+              {
+                delai: "Normal - 3 h",
+                ttc: "28 €",
+                ht: "23,33 € HT",
+                desc: "Pour vos plis, contrats et réapprovisionnements sans urgence critique.",
+                badge: "Le plus économique",
+              },
+              {
+                delai: "Urgent - 1 h 30",
+                ttc: "42 €",
+                ht: "35,00 € HT",
+                desc: "Pour les pièces juridiques, dossiers d'appels d'offres ou prélèvements.",
+                badge: "Le plus demandé",
+                highlight: true,
+              },
+              {
+                delai: "Super - 1 h",
+                ttc: "56 €",
+                ht: "46,67 € HT",
+                desc: "Course immédiate sans escale : départ direct dès confirmation.",
+                badge: "Urgence absolue",
+              },
+            ].map((p, idx) => (
+              <div
+                key={idx}
+                className={`flex flex-col justify-between rounded-2xl border p-6 transition-shadow ${
+                  p.highlight
+                    ? "border-accent bg-white shadow-md relative"
+                    : "border-line bg-white hover:shadow-sm"
+                }`}
+              >
+                <div>
+                  <div className="mb-2 flex items-center justify-between">
+                    <span className="font-mono text-[11px] uppercase tracking-wider text-accent-dark font-semibold">
+                      {p.badge}
+                    </span>
+                  </div>
+                  <h3 className="mb-2 text-[19px] font-bold text-ink">{p.delai}</h3>
+                  <div className="mb-4">
+                    <span className="text-[32px] font-extrabold text-ink">{p.ttc}</span>
+                    <span className="ml-1 text-[13px] font-semibold text-muted">TTC</span>
+                    <span className="ml-2 text-[12px] text-muted">({p.ht})</span>
+                  </div>
+                  <p className="text-[14px] leading-relaxed text-muted">{p.desc}</p>
+                </div>
+                <div className="mt-6 border-t border-line/60 pt-4">
+                  <Link
+                    href="/commande"
+                    className={`block w-full rounded-[4px] py-2.5 text-center text-[13.5px] font-bold transition-colors ${
+                      p.highlight
+                        ? "bg-accent text-white hover:bg-accent-dark"
+                        : "bg-surface text-ink hover:bg-ink hover:text-white"
+                    }`}
+                  >
+                    Commander cette course
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-10 text-center">
+            <p className="text-[14.5px] text-muted">
+              Besoin de livrer en banlieue ou d&apos;estimer un trajet spécifique ? Consultez notre{" "}
+              <Link href="/tarifs" className={LINK}>
+                grille complète des tarifs coursier
+              </Link>{" "}
+              ou obtenez un prix instantané sur notre formulaire.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* ── FAQ (sans H2 : hors plan) ── */}
       <section className="border-t border-line">
         <div className="mx-auto max-w-[800px] px-[clamp(20px,4vw,28px)] py-[72px]">

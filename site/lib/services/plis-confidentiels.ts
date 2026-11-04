@@ -18,7 +18,7 @@ export const plisConfidentiels: Service = {
   serviceType: "Transport de plis confidentiels",
 
   seo: {
-    title: "Pli confidentiel à Paris : coursier dédié, remise en main propre",
+    title: "Pli confidentiel à Paris : coursier dédié, 28 € TTC",
     description:
       "Pli confidentiel : un seul coursier, une seule paire de mains, de votre porte au destinataire. Actes et dossiers sensibles à Paris et en Île-de-France. Devis en 2 h.",
     keywords: [
