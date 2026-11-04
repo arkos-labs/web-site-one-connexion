@@ -72,6 +72,7 @@ const ZONE_LINKS = [
   { label: "Paris intramuros (75)", href: "/zones/paris" },
   { label: "Petite couronne (92/93/94)", href: "/zones/petite-couronne" },
   { label: "Grande couronne (77/78/91/95)", href: "/zones/grande-couronne" },
+  { label: "Île-de-France (toute la région)", href: "/zones/ile-de-france" },
   { label: "Toutes les villes desservies", href: "/zones" },
 ];
 
