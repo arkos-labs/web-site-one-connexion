@@ -12,7 +12,7 @@ import TrustBlock from "@/components/TrustBlock";
 import { SITE_URL, PHONE_TEL, PHONE_DISPLAY } from "@/lib/site-content";
 import { Clock, MapPin, Zap, Shield } from "lucide-react";
 
-const TITLE = "Coursier à Paris : course dédiée 7j/7, 7h-23h";
+const TITLE = "Coursier à Paris : course dédiée 7j/7, 8h-19h";
 const DESCRIPTION =
   "Un coursier dédié par envoi, partout dans Paris, en moins de 45 minutes. Plis, médical, e-commerce. Tarifs clairs, interlocuteur unique.";
 
