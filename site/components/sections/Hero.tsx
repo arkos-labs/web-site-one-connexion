@@ -59,6 +59,8 @@ export default function Hero() {
         src="/hero-phone.jpg"
         alt=""
         aria-hidden="true"
+        fetchPriority="high"
+        decoding="async"
         className="absolute inset-0 w-full h-full object-cover object-[42%_center] z-0 md:hidden"
       />
       <video
