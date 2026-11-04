@@ -18,7 +18,7 @@ import { MapPin } from "lucide-react";
 
 const TITLE = "Coursier banlieue Paris : courses en petite couronne";
 const DESCRIPTION =
-  "Coursier en banlieue parisienne : courses dédiées vers et depuis la petite couronne, pour les entreprises qui ont besoin d'un envoi suivi.";
+  "Coursier paris banlieue : courses dédiées vers et depuis la petite couronne (92, 93, 94), pour les entreprises qui ont besoin d'un envoi suivi.";
 const H2 = "text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]";
 const LINK = "font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark";
 

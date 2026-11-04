@@ -20,7 +20,7 @@ export const coursierMotoParis: Service = {
   seo: {
     title: "Coursier moto à Paris : course dédiée en 45 min",
     description:
-      "Coursier moto à Paris et en Île-de-France : un deux-roues dédié par envoi, 7h-23h, 7j/7. Délais constatés, traçabilité complète, devis en 2 h.",
+      "Coursier moto à Paris et en Île-de-France : un deux-roues dédié par envoi, 8h-19h, 7j/7. Délais constatés, traçabilité complète, devis en 2 h.",
     keywords: [
       "coursier moto Paris",
       "livraison moto Paris",

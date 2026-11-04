@@ -16,7 +16,7 @@ export const livraisonEcommerce: Service = {
   },
 
   seo: {
-    title: "Coursier e-commerce : livraison du dernier kilomètre à Paris",
+    title: "Livraison e-commerce à Paris : coursier dédié du dernier kilomètre",
     description:
       "Livraison e-commerce à Paris et en Île-de-France : confiez vos commandes à un coursier dédié, avec suivi de chaque envoi et interlocuteur unique.",
     keywords: [
