@@ -568,6 +568,104 @@ export const GUIDES: Guide[] = [
     service: { href: "/services/coursier-express-paris", label: "Coursier express Paris" },
     published: "2026-10-29",
   },
+  {
+    slug: "livraison-le-jour-meme-entreprise",
+    title: "Livraison le jour même pour les entreprises : bien l'organiser",
+    h1: "Livraison le jour même pour les entreprises : comment l'organiser",
+    seoTitle: "Livraison le jour même pour entreprise : guide B2B",
+    description:
+      "Livraison le jour même pour les entreprises à Paris et en Île-de-France : délais réels, formules, prix TTC et préparation de l'envoi.",
+    summary:
+      "Organiser une livraison le jour même en entreprise : quel délai choisir, combien ça coûte, comment préparer l'envoi et en garder la preuve.",
+    intro:
+      "Une pièce bloquée, un document à remettre avant la fermeture d'un greffe, un échantillon attendu pour le début d'une série : certaines livraisons ne peuvent pas attendre le lendemain. Ce guide explique comment organiser une livraison le jour même, quels délais existent et ce qu'il faut transmettre pour que l'envoi arrive à temps.",
+    sections: [
+      {
+        heading: "Livraison le jour même : de quoi parle-t-on",
+        paragraphs: [
+          "Une livraison le jour même part et arrive dans la même journée de travail. Elle se distingue d'un envoi standard, qui s'organise sur un ou deux jours ouvrés, par une contrainte : l'heure limite de remise compte autant que la distance. Un dossier qui doit être déposé avant la fermeture d'un accueil ne se mesure pas en kilomètres, mais en minutes restantes.",
+          "Dans une course dédiée, un coursier prend l'envoi à une adresse et le remet à une autre, sans passer par un centre de tri. C'est la forme la plus directe de livraison le jour même. Le service fonctionne 7j/7, de 8 h à 19 h : au-delà de cette plage, il faut prévoir une course pour le lendemain.",
+        ],
+      },
+      {
+        heading: "Choisir le bon délai",
+        paragraphs: [
+          "Le délai se choisit à la commande, et c'est lui qui fixe le prix. Trois formules existent : Normal (livraison sous 3 h), Urgent (sous 1 h 30) et Super (sous 1 h). Pour une course dans Paris, les prix TTC sont de 28 €, 42 € et 56 €.",
+        ],
+        table: {
+          head: ["Zone", "Normal · 3 h", "Urgent · 1 h 30", "Super · 1 h"],
+          rows: [
+            ["Paris", "28 €", "42 €", "56 €"],
+            ["Petite couronne (dès)", "39 €", "58,50 €", "78 €"],
+          ],
+          note: "Prix par course, TTC, TVA 20 % comprise. Petite couronne : 8 km de route compris, puis le kilomètre supplémentaire. Grande couronne : prix selon la distance, affiché avant la commande.",
+        },
+      },
+      {
+        heading: "Préparer la course en quelques minutes",
+        paragraphs: [
+          "Une course le jour même se joue sur les informations transmises à la commande. Un coursier qui perd dix minutes à chercher un interphone ou un service n'a plus la même marge. Indiquez :",
+        ],
+        list: [
+          "L'adresse complète, avec le bâtiment, l'étage et le nom du service.",
+          "Le nom et un numéro joignable du destinataire, côté enlèvement comme côté remise.",
+          "Les codes d'accès, le badge ou le contrôle d'identité à prévoir.",
+          "L'heure limite réelle de remise, par exemple la fermeture d'un accueil.",
+          "Le poids et la taille du colis : un deux-roues transporte jusqu'à 18 kg, dans un top-case verrouillé.",
+        ],
+      },
+      {
+        heading: "Suivre la livraison et garder la preuve",
+        paragraphs: [
+          "Le suivi de la course est consultable en ligne. La remise est horodatée et nominative : le coursier note le nom de la personne qui reçoit l'envoi. C'est cette information qui sert en cas de question sur une réception.",
+          "Pour une échéance stricte, prévenez le destinataire de l'arrivée de l'envoi et conservez le numéro de course dans votre dossier. Si la remise doit se faire à une personne précise, indiquez-le à la commande : en cas d'absence, le coursier vous appelle avant toute décision.",
+        ],
+      },
+      {
+        heading: "Course dédiée ou messagerie regroupée",
+        paragraphs: [
+          "Pour un envoi sans heure précise, une messagerie qui regroupe les colis sur une tournée reste économique. Le jour même, elle a une limite : l'heure d'arrivée dépend des autres envois de la tournée, et un colis peut arriver après l'heure attendue. Une course dédiée part directement de votre adresse et va au destinataire, sans arrêt intermédiaire. Elle coûte plus cher à l'unité, mais son délai est connu avant la commande.",
+          "Une règle simple : si l'envoi peut arriver le lendemain sans conséquence, un envoi regroupé suffit. Si une heure précise compte, prenez la course dédiée. Pour comparer les offres sur des bases identiques, lisez notre guide sur le [prix d'un coursier à Paris](/guides/prix-coursier-express-paris).",
+        ],
+      },
+      {
+        heading: "Organiser des envois réguliers",
+        paragraphs: [
+          "Si vous faites appel au même service plusieurs fois par semaine, un [compte entreprise](/services/compte-entreprise) simplifie l'organisation : commande en ligne, suivi de chaque course et factures détaillées course par course, à régler sous 30 jours. Un tarif dégressif s'applique au-delà d'un volume mensuel régulier, et l'ouverture du compte est immédiate.",
+          "Pour une course urgente dans Paris, voyez notre [service de coursier express](/services/coursier-express-paris).",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "Peut-on commander une livraison le jour même le dimanche ?",
+        answer:
+          "Oui. Le service fonctionne 7j/7, de 8 h à 19 h, dimanche compris. Au-delà de cette plage, la course se programme pour le lendemain.",
+      },
+      {
+        question: "Quel est le délai le plus court ?",
+        answer:
+          "La formule Super vise une livraison sous 1 h. Pour une course immédiate, le coursier se présente en moins de 45 minutes ; le délai total dépend de la distance et de l'heure. Si votre échéance est très serrée, appelez-nous avant de commander.",
+      },
+      {
+        question: "Le prix change-t-il pour une livraison le jour même ?",
+        answer:
+          "Oui, c'est le délai qui fait le prix. À Paris, la formule Super coûte 56 € TTC, soit deux fois la formule Normal à 28 € TTC. Le prix exact s'affiche avant de valider la commande.",
+      },
+      {
+        question: "Peut-on livrer hors Paris le jour même ?",
+        answer:
+          "Oui, en petite couronne (92, 93, 94) et en grande couronne (77, 78, 91, 95). En grande couronne, le prix dépend de la distance depuis Paris et s'affiche avant la commande. Nous ne livrons pas hors d'Île-de-France.",
+      },
+      {
+        question: "Un compte entreprise est-il utile pour un envoi occasionnel ?",
+        answer:
+          "Pas forcément. Il devient utile dès que les envois se répètent : commandes, suivi et factures sont centralisés, et les factures se règlent sous 30 jours.",
+      },
+    ],
+    service: { href: "/services/coursier-express-paris", label: "Coursier express Paris" },
+    published: "2026-11-06",
+  },
 ];
 
 export const GUIDE_SLUGS = GUIDES.map((g) => g.slug);
