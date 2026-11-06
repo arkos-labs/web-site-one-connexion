@@ -98,6 +98,7 @@ export default function OrderForm() {
   const [siret, setSiret] = useState("");
   const [raisonSociale, setRaisonSociale] = useState("");
   const [adresseFacturation, setAdresseFacturation] = useState("");
+  const [factureAutreAdresse, setFactureAutreAdresse] = useState(false);
   const [tva, setTva] = useState("");
   const [validatingSiret, setValidatingSiret] = useState(false);
 
@@ -347,7 +348,9 @@ export default function OrderForm() {
         source: "page_publique",
         siret: clientType === 'entreprise' ? siret : null,
         raison_sociale: clientType === 'entreprise' ? (contactName.trim() || raisonSociale) : null,
-        adresse_facturation: clientType === 'entreprise' ? adresseFacturation : null,
+        adresse_facturation: clientType === 'entreprise'
+          ? adresseFacturation
+          : (factureAutreAdresse && adresseFacturation.trim() ? adresseFacturation.trim() : null),
         tva_number: clientType === 'entreprise' ? tva : null,
       });
 
@@ -704,6 +707,31 @@ export default function OrderForm() {
                             placeholder="Adresse de facturation"
                             className="w-full bg-gray-50 border border-gray-200 rounded-xl px-5 py-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-400 transition-colors"
                           />
+                        </div>
+                      )}
+
+                      {clientType === 'particulier' && (
+                        <div className="space-y-3">
+                          <label className="flex items-center gap-3 text-sm font-bold text-gray-800 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={factureAutreAdresse}
+                              onChange={(e) => {
+                                setFactureAutreAdresse(e.target.checked);
+                                if (!e.target.checked) setAdresseFacturation("");
+                              }}
+                              className="h-4 w-4 accent-[#ed5518]"
+                            />
+                            Adresse de facturation différente de l&apos;enlèvement
+                          </label>
+                          {factureAutreAdresse && (
+                            <AddressAutocomplete
+                              value={adresseFacturation}
+                              onChange={setAdresseFacturation}
+                              placeholder="Adresse de facturation"
+                              className="w-full bg-gray-50 border border-gray-200 rounded-xl px-5 py-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-400 transition-colors"
+                            />
+                          )}
                         </div>
                       )}
 
