@@ -120,7 +120,7 @@ export default function RegisterForm() {
           // Données B2B
           siret: accountType === "pro" ? siret : null,
           raison_sociale: accountType === "pro" ? raisonSociale : null,
-          adresse_facturation: accountType === "pro" ? adresseFacturation : null,
+          adresse_facturation: accountType === "pro" ? adresseFacturation : (adresseFacturation.trim() || null),
           tva_number: accountType === "pro" ? tva : null,
         },
       },
@@ -324,19 +324,6 @@ export default function RegisterForm() {
                     />
                   </div>
 
-                  {/* Adresse Facturation */}
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold uppercase tracking-wider text-muted">Adresse de Facturation <span className="text-accent">*</span></label>
-                    <input
-                      type="text"
-                      placeholder="ex. 123 Rue de la Paix, 75000 Paris"
-                      value={adresseFacturation}
-                      onChange={(e) => setAdresseFacturation(e.target.value)}
-                      className="w-full rounded-[4px] border border-line bg-transparent px-4 py-2.5 text-sm text-ink placeholder:text-line focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
-                      required
-                    />
-                  </div>
-
                   {/* TVA (lecture seule) */}
                   {tva && (
                     <div className="flex items-center gap-2 rounded-lg bg-green-50 p-3">
@@ -347,6 +334,23 @@ export default function RegisterForm() {
                       </div>
                     </div>
                   )}
+                </div>
+              )}
+
+              {/* Adresse de facturation : obligatoire pour un pro, facultative pour un particulier */}
+              {(accountType === "pro" || accountType === "particulier") && (
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-bold uppercase tracking-wider text-muted">
+                    Adresse de facturation {accountType === "pro" ? <span className="text-accent">*</span> : <span className="normal-case tracking-normal font-normal">(facultative)</span>}
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="ex. 123 Rue de la Paix, 75000 Paris"
+                    value={adresseFacturation}
+                    onChange={(e) => setAdresseFacturation(e.target.value)}
+                    className="w-full rounded-[4px] border border-line bg-transparent px-4 py-2.5 text-sm text-ink placeholder:text-line focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+                    required={accountType === "pro"}
+                  />
                 </div>
               )}
 
