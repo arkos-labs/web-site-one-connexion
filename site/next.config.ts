@@ -8,7 +8,7 @@ const csp = [
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https:",
   "font-src 'self' data:",
-  "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api-adresse.data.gouv.fr https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com",
+  "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api-adresse.data.gouv.fr https://photon.komoot.io https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com",
   "frame-src https://www.google.com https://www.googletagmanager.com",
   "frame-ancestors 'self'",
   "base-uri 'self'",

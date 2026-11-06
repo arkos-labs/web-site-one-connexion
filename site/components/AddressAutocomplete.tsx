@@ -5,6 +5,54 @@ import { createPortal } from "react-dom";
 import { MapPin } from "lucide-react";
 import { joinNumberSuffix } from "@/lib/address-idf";
 
+const IDF_DEPARTMENTS = ["75", "77", "78", "91", "92", "93", "94", "95"];
+
+// Établissements (hôtels, magasins, sièges…) via Photon (OpenStreetMap). Échec silencieux : on retombe sur la BAN seule.
+interface PhotonProperties {
+  name?: string;
+  street?: string;
+  housenumber?: string;
+  postcode?: string;
+  city?: string;
+  countrycode?: string;
+  osm_key?: string;
+  osm_type?: string;
+  osm_id?: number;
+}
+
+async function fetchPlaces(q: string): Promise<{ properties: { id: string; name?: string; postcode?: string; city?: string; label: string; type: string } }[]> {
+  if (q.length < 3) return [];
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 4000);
+  try {
+    const res = await fetch(
+      `https://photon.komoot.io/api/?q=${encodeURIComponent(q)}&lat=48.8566&lon=2.3522&limit=8&lang=fr&bbox=1.4,48.1,3.6,49.3`,
+      { signal: ctrl.signal }
+    );
+    const data: { features?: { properties: PhotonProperties }[] } = await res.json();
+    return (data.features || [])
+      .map((f) => f.properties)
+      .filter((p): p is PhotonProperties =>
+        p?.countrycode === "FR" &&
+        IDF_DEPARTMENTS.includes(String(p.postcode ?? "").substring(0, 2)) &&
+        // On ne garde que les lieux nommés, pas les simples rues ou numéros
+        !!p.osm_key && p.osm_key !== "place" && !!p.name && p.name !== p.street && p.name !== p.housenumber
+      )
+      .map((p) => {
+        const street = [p.housenumber, p.street].filter(Boolean).join(" ");
+        const cityPart = p.postcode && p.city ? `${p.postcode} ${p.city}` : (p.city ?? "");
+        const label = [p.name, street, cityPart].filter(Boolean).join(", ");
+        return {
+          properties: { id: `poi-${p.osm_type}${p.osm_id}`, name: p.name, postcode: p.postcode, city: p.city, label, type: "poi" },
+        };
+      });
+  } catch {
+    return [];
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 interface AddressAutocompleteProps {
   value: string;
   onChange: (value: string) => void;
@@ -116,19 +164,16 @@ export function AddressAutocomplete({
         const typed = joinNumberSuffix(query.trim());
         const apiQuery = typed.length < 3 ? `${typed} paris` : typed;
         // On augmente la limite à 50 pour avoir plus de chances d'avoir des résultats en Île-de-France
-        const res = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(apiQuery)}&lat=48.8566&lon=2.3522&limit=50`);
-        const data = await res.json();
-        
+        const banRequest = fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(apiQuery)}&lat=48.8566&lon=2.3522&limit=50`).then((r) => r.json());
+        const [data, places] = await Promise.all([banRequest, fetchPlaces(typed)]);
+
         if (!isSelectingRef.current && isTypingRef.current) {
-          // Départements de la région Île-de-France
-          const idfDepartments = ["75", "77", "78", "91", "92", "93", "94", "95"];
-          
           // Filtrer pour ne garder que l'Île-de-France
           const filteredFeatures = (data.features || []).filter((feature: any) => {
             const postcode = feature.properties.postcode;
             if (!postcode) return false;
             const dept = postcode.substring(0, 2);
-            return idfDepartments.includes(dept);
+            return IDF_DEPARTMENTS.includes(dept);
           });
           
           // Indices de répétition : « 12 rue X » propose aussi 12bis, 12ter si ces numéros existent
@@ -149,8 +194,8 @@ export function AddressAutocomplete({
             filteredFeatures.splice(1, 0, ...variants.filter(Boolean));
           }
 
-          // Ne garder que les 8 meilleurs résultats
-          setSuggestions(filteredFeatures.slice(0, 5));
+          // Établissements d'abord (3 au plus), puis adresses ; 6 suggestions au total
+          setSuggestions([...places.slice(0, 3), ...filteredFeatures].slice(0, 6));
           setIsOpen(true);
         }
       } catch (error) {
