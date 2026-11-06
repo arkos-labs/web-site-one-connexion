@@ -34,13 +34,13 @@ export async function POST(req: Request) {
 
     // 2. Parse body
     const body = await req.json();
-    const { email, firstName, lastName, company, phone, accountType, siret } = body;
+    const { email, firstName, lastName, company, phone, accountType, siret, billing_address } = body;
 
     if (!email || !firstName || !lastName) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
-    if (accountType === 'pro' && (!company || !siret)) {
-      return NextResponse.json({ error: 'Société et SIRET requis pour un client professionnel' }, { status: 400 });
+    if (accountType === 'pro' && (!company || !siret || !String(billing_address ?? '').trim())) {
+      return NextResponse.json({ error: 'Société, SIRET et adresse de facturation requis pour un client professionnel' }, { status: 400 });
     }
 
     // 3. Admin create user using service role key
@@ -77,6 +77,7 @@ export async function POST(req: Request) {
         company_name: accountType === 'pro' ? company : '',
         siret: siret || null,
         contact_phone: phone || null,
+        billing_address: String(billing_address ?? '').trim() || null,
       }).eq('id', newUser.user.id);
 
       if (updateError) {

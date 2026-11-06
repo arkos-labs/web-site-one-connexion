@@ -10,6 +10,7 @@ export function CreateClientModal({ isOpen, onClose, onSuccess }: { isOpen: bool
   const [phone, setPhone] = useState("");
   const [company, setCompany] = useState("");
   const [siret, setSiret] = useState("");
+  const [billingAddress, setBillingAddress] = useState("");
   const [accountType, setAccountType] = useState<"pro" | "particulier">("pro");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -32,6 +33,7 @@ export function CreateClientModal({ isOpen, onClose, onSuccess }: { isOpen: bool
           phone,
           company: accountType === "pro" ? company : "",
           siret: accountType === "pro" ? siret : "",
+          billing_address: billingAddress,
           accountType,
         }),
       });
@@ -42,7 +44,7 @@ export function CreateClientModal({ isOpen, onClose, onSuccess }: { isOpen: bool
       if (onSuccess) onSuccess();
       onClose();
       // Reset form
-      setFirstName(""); setLastName(""); setEmail(""); setPhone(""); setCompany(""); setSiret(""); setAccountType("pro");
+      setFirstName(""); setLastName(""); setEmail(""); setPhone(""); setCompany(""); setSiret(""); setBillingAddress(""); setAccountType("pro");
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -110,6 +112,19 @@ export function CreateClientModal({ isOpen, onClose, onSuccess }: { isOpen: bool
                 </div>
               </>
             )}
+
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1.5">
+                Adresse de facturation {accountType === "pro" ? "*" : <span className="normal-case tracking-normal font-normal">(facultative)</span>}
+              </label>
+              <input
+                required={accountType === "pro"}
+                value={billingAddress}
+                onChange={e => setBillingAddress(e.target.value)}
+                placeholder="ex. 123 Rue de la Paix, 75000 Paris"
+                className="w-full px-4 py-2.5 border rounded-xl bg-gray-50 text-sm focus:outline-none focus:ring-1 focus:ring-accent"
+              />
+            </div>
 
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-1.5">Email *</label>
