@@ -259,3 +259,22 @@ export const RETURN_RATE = 0.4;
 export function returnPrice(base: number): number {
   return Math.round(base * RETURN_RATE * 100) / 100;
 }
+
+/* ── Constantes du plan (source unique) ──────────────────────────────────────────────────────────
+ * Valeurs alignées sur la logique ci-dessus. Les fonctions existantes restent inchangées.
+ */
+export const ZONES = {
+  paris: { label: "Paris (75)", from: 28, base: 28, perKm: 0, freeKm: 0 },
+  petiteCouronne: { label: "Petite couronne", from: PC_BASE_TTC, base: PC_BASE_TTC, perKm: PC_KM_TTC, freeKm: PC_INCLUDED_KM },
+  grandeCouronne: { label: "Grande couronne", from: GC_MIN_TTC, base: GC_MIN_TTC, perKm: 0, freeKm: 0 },
+} as const;
+
+export const SPEEDS = {
+  normal: { label: "Normal", delay: "3 h", multiplier: 1 },
+  urgent: { label: "Urgent", delay: "1 h 30", multiplier: 1.5 },
+  super: { label: "Super", delay: "1 h", multiplier: 2 },
+} as const;
+
+export const RETURN_TO_PICKUP_RATE = RETURN_RATE; // +40 % du prix de la course
+export const MAX_WEIGHT_KG = 18; // aucune surcharge jusqu'à 18 kg
+export const VAT_RATE = 0.2;
