@@ -293,6 +293,23 @@ export default function AdminClientDetailPage() {
 
   // Préparer / bloquer / débloquer une facture avant son envoi (route admin, la RLS interdit l'écriture directe).
   const [invoiceBusy, setInvoiceBusy] = useState<string | null>(null);
+  // Émet la facture interne (hors Stripe) d'une course et l'ouvre dans un nouvel onglet.
+  const issueCashInvoice = async (orderId: string) => {
+    setInvoiceBusy(orderId);
+    try {
+      const res = await fetch("/api/admin/cash-invoices", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ orderId }) });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        alert(data.error || "La facture n'a pas pu être émise.");
+        return;
+      }
+      const url = URL.createObjectURL(await res.blob());
+      window.open(url, "_blank");
+    } finally {
+      setInvoiceBusy(null);
+    }
+  };
+
   const runInvoiceAction = async (invoiceId: string, action: InvoiceActionKind) => {
     // Paiement reçu hors Stripe : facture marquée payée ici et sur Stripe (plus de relance).
     const paid = action === "paid" || action === "paid_order" || action === "paid_cash" || action === "paid_order_cash";
@@ -438,6 +455,16 @@ export default function AdminClientDetailPage() {
                     )}
                     {payment.due && (
                       <InvoiceAction invoiceId={o.id} action="paid_order_cash" label="Payée en espèces" busy={invoiceBusy} onRun={runInvoiceAction} />
+                    )}
+                    {payment.due && (
+                      <button
+                        type="button"
+                        onClick={() => issueCashInvoice(o.id)}
+                        disabled={invoiceBusy !== null}
+                        className="whitespace-nowrap rounded-full border border-line px-3 py-1 text-[11.5px] font-bold text-muted transition-colors hover:border-ink/20 hover:text-ink disabled:opacity-50"
+                      >
+                        Facture (espèces)
+                      </button>
                     )}
                     <span className={`flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1 text-[11px] font-bold ${PAYMENT_TONE[payment.tone]}`}>
                       {payment.paid ? <CheckCircle2 size={12} /> : <Clock size={12} />} {payment.label}
