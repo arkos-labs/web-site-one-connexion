@@ -15,6 +15,8 @@ type InvoiceInfo = {
   number: string;
   monthLabel: string;
   status: string;
+  paidInCash: boolean;
+  paymentDate: string | null;
   subtotal: number;
   tax: number;
   total: number;
@@ -47,7 +49,7 @@ export default function FactureDetailsPage() {
         const { data: inv } = await supabase
           .from("invoices")
           .select(
-            "id, client_id, invoice_number, billing_period_start, status, subtotal, tax_amount, total_amount, hosted_invoice_url, pdf_url, " +
+            "id, client_id, invoice_number, billing_period_start, status, payment_method, payment_date, subtotal, tax_amount, total_amount, hosted_invoice_url, pdf_url, " +
               "invoice_items(total_price, orders(id, tracking_code, created_at, pickup_address, dropoff_address, stops, delivered_at, delivery_recipient, delivery_department, delivery_comment, delivery_photo_url))"
           )
           .eq("id", invoiceId)
@@ -69,6 +71,8 @@ export default function FactureDetailsPage() {
           number: (inv as any).invoice_number,
           monthLabel: new Date((inv as any).billing_period_start).toLocaleDateString("fr-FR", { month: "long", year: "numeric" }),
           status: (inv as any).status,
+          paidInCash: (inv as any).payment_method === "especes",
+          paymentDate: (inv as any).payment_date ?? null,
           subtotal: Number((inv as any).subtotal),
           tax: Number((inv as any).tax_amount),
           total: Number((inv as any).total_amount),
@@ -148,7 +152,7 @@ export default function FactureDetailsPage() {
       actions={
         <>
           <StatusPill tone={invoice.status === "payee" ? "green" : invoice.status === "echec" ? "red" : invoice.status === "emise" ? "orange" : "blue"}>
-            {invoice.status === "payee" ? "Réglée" : invoice.status === "echec" ? "Paiement échoué" : invoice.status === "emise" ? "À régler" : "En cours"}
+            {invoice.status === "payee" ? (invoice.paidInCash ? `Réglée en espèces${invoice.paymentDate ? ` le ${new Date(invoice.paymentDate).toLocaleDateString("fr-FR")}` : ""}` : "Réglée") : invoice.status === "echec" ? "Paiement échoué" : invoice.status === "emise" ? "À régler" : "En cours"}
           </StatusPill>
           {unpaid && invoice.payUrl && (
             <a href={invoice.payUrl} target="_blank" rel="noreferrer" className={BTN_ACCENT}>

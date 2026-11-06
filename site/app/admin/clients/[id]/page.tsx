@@ -46,6 +46,7 @@ type OrderRow = {
   amount_due: number | null;
   payment_due_date: string | null;
   paid_at: string | null;
+  payment_method: string | null;
   delivered_at: string | null;
   stripe_invoice_id: string | null;
 };
@@ -64,7 +65,7 @@ const shortDate = (d: string) => new Intl.DateTimeFormat("fr-FR", { day: "numeri
 function paymentOf(o: OrderRow): { label: string; tone: PaymentTone; paid: boolean; due: boolean } | null {
   switch (o.billing_status) {
     case "paye":
-      return { label: o.paid_at ? `Payée le ${shortDate(o.paid_at)}` : "Payée", tone: "green", paid: true, due: false };
+      return { label: `${o.payment_method === "especes" ? "Payée en espèces" : "Payée"}${o.paid_at ? ` le ${shortDate(o.paid_at)}` : ""}`, tone: "green", paid: true, due: false };
     case "rembourse":
       return { label: "Remboursée", tone: "blue", paid: false, due: false };
     case "a_regler":
@@ -159,7 +160,7 @@ export default function AdminClientDetailPage() {
     if (guestEmail) {
       const { data: rows } = await supabase
         .from("orders")
-        .select("id, tracking_code, pickup_address, dropoff_address, status, price_estimate, created_at, driver_id, client_type, contact_name, contact_phone, billing_status, amount_due, payment_due_date, paid_at, delivered_at, stripe_invoice_id")
+        .select("id, tracking_code, pickup_address, dropoff_address, status, price_estimate, created_at, driver_id, client_type, contact_name, contact_phone, billing_status, amount_due, payment_due_date, paid_at, payment_method, delivered_at, stripe_invoice_id")
         .is("user_id", null)
         .ilike("contact_email", guestEmail.replace(/[\\%_]/g, "\\$&"))
         .order("created_at", { ascending: false });
@@ -195,7 +196,7 @@ export default function AdminClientDetailPage() {
       supabase.from("clients").select("company_name, siret, tax_id, billing_address, billing_postal_code, billing_city, contact_email").eq("id", clientId).maybeSingle(),
       supabase
         .from("orders")
-        .select("id, tracking_code, pickup_address, dropoff_address, status, price_estimate, created_at, driver_id, client_type, billing_status, amount_due, payment_due_date, paid_at, delivered_at, stripe_invoice_id")
+        .select("id, tracking_code, pickup_address, dropoff_address, status, price_estimate, created_at, driver_id, client_type, billing_status, amount_due, payment_due_date, paid_at, payment_method, delivered_at, stripe_invoice_id")
         .eq("user_id", clientId)
         .order("created_at", { ascending: false }),
       supabase
@@ -294,12 +295,16 @@ export default function AdminClientDetailPage() {
   const [invoiceBusy, setInvoiceBusy] = useState<string | null>(null);
   const runInvoiceAction = async (invoiceId: string, action: InvoiceActionKind) => {
     // Paiement reçu hors Stripe : facture marquée payée ici et sur Stripe (plus de relance).
-    const paid = action === "paid" || action === "paid_order";
-    if (paid && !window.confirm("Le client a bien payé cette facture ? Elle sera marquée réglée, ici et sur Stripe.")) return;
+    const paid = action === "paid" || action === "paid_order" || action === "paid_cash" || action === "paid_order_cash";
+    const cash = action === "paid_cash" || action === "paid_order_cash";
+    const isInvoice = action === "paid" || action === "paid_cash";
+    if (paid && !window.confirm(cash
+      ? "Le client a payé en espèces ? Elle sera marquée réglée (espèces), ici et sur Stripe."
+      : "Le client a bien payé cette facture ? Elle sera marquée réglée, ici et sur Stripe.")) return;
     setInvoiceBusy(invoiceId);
     try {
       const res = paid
-        ? await fetch("/api/admin/mark-paid", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(action === "paid" ? { invoiceId } : { orderId: invoiceId }) })
+        ? await fetch("/api/admin/mark-paid", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...(isInvoice ? { invoiceId } : { orderId: invoiceId }), ...(cash ? { method: "especes" } : {}) }) })
         : await fetch("/api/admin/invoices", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ invoiceId, action }) });
       const data = await res.json().catch(() => ({}));
       if (!res.ok || data.ok === false) alert(data.error || data.detail || "L'action a échoué.");
@@ -431,6 +436,9 @@ export default function AdminClientDetailPage() {
                     {payment.due && o.stripe_invoice_id && (
                       <InvoiceAction invoiceId={o.id} action="paid_order" label="Marquer comme payée" busy={invoiceBusy} onRun={runInvoiceAction} />
                     )}
+                    {payment.due && (
+                      <InvoiceAction invoiceId={o.id} action="paid_order_cash" label="Payée en espèces" busy={invoiceBusy} onRun={runInvoiceAction} />
+                    )}
                     <span className={`flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1 text-[11px] font-bold ${PAYMENT_TONE[payment.tone]}`}>
                       {payment.paid ? <CheckCircle2 size={12} /> : <Clock size={12} />} {payment.label}
                     </span>
@@ -470,6 +478,9 @@ export default function AdminClientDetailPage() {
                     )}
                     {(inv.status === "emise" || inv.status === "echec") && (
                       <InvoiceAction invoiceId={inv.id} action="paid" label="Marquer comme payée" busy={invoiceBusy} onRun={runInvoiceAction} />
+                    )}
+                    {(inv.status === "emise" || inv.status === "echec") && (
+                      <InvoiceAction invoiceId={inv.id} action="paid_cash" label="Payée en espèces" busy={invoiceBusy} onRun={runInvoiceAction} />
                     )}
                     {inv.status === "retenue" && inv.url && (
                       <InvoiceAction invoiceId={inv.id} action="release" label="Débloquer l'envoi" busy={invoiceBusy} onRun={runInvoiceAction} primary />
@@ -634,7 +645,7 @@ export default function AdminClientDetailPage() {
   );
 }
 
-type InvoiceActionKind = "prepare" | "hold" | "release" | "redo" | "paid" | "paid_order";
+type InvoiceActionKind = "prepare" | "hold" | "release" | "redo" | "paid" | "paid_order" | "paid_cash" | "paid_order_cash";
 
 function InvoiceAction({
   invoiceId,

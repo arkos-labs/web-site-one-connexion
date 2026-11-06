@@ -7,6 +7,7 @@ import { cookies } from 'next/headers';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder');
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const PAYMENT_METHODS = ['especes', 'virement', 'carte', 'autre'];
 
 // Paiement reçu hors Stripe (espèces, virement direct…) : l'admin marque la facture payée. Elle est aussi
 // marquée payée sur Stripe (« paid out of band ») : plus de relance, et le client ne peut plus la régler deux fois.
@@ -22,9 +23,10 @@ export async function POST(req: Request) {
   const { data: profile } = await auth.from('profiles').select('role').eq('id', user.id).single();
   if (profile?.role !== 'admin') return NextResponse.json({ error: 'Réservé aux administrateurs.' }, { status: 403 });
 
-  const { orderId, invoiceId } = await req.json().catch(() => ({}));
+  const { orderId, invoiceId, method } = await req.json().catch(() => ({}));
   const id = orderId ?? invoiceId;
   if (typeof id !== 'string' || !UUID.test(id)) return NextResponse.json({ error: 'Requête invalide.' }, { status: 400 });
+  if (method !== undefined && !PAYMENT_METHODS.includes(method)) return NextResponse.json({ error: 'Mode de paiement invalide.' }, { status: 400 });
 
   const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
   const table = orderId ? 'orders' : 'invoices';
@@ -42,9 +44,11 @@ export async function POST(req: Request) {
   }
 
   const paidAt = new Date().toISOString();
+  // Mode de paiement renseigné seulement s'il est fourni (sinon la valeur existante est conservée)
+  const methodField = method ? { payment_method: method } : {};
   const { error } = orderId
-    ? await supabase.from('orders').update({ billing_status: 'paye', paid_at: paidAt }).eq('id', id)
-    : await supabase.from('invoices').update({ status: 'payee', payment_date: paidAt.slice(0, 10) }).eq('id', id);
+    ? await supabase.from('orders').update({ billing_status: 'paye', paid_at: paidAt, ...methodField }).eq('id', id)
+    : await supabase.from('invoices').update({ status: 'payee', payment_date: paidAt.slice(0, 10), ...methodField }).eq('id', id);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json({ ok: true });
 }
