@@ -542,6 +542,13 @@ export default async function ZonePage({ params }: Props) {
               Nous intervenons aussi dans ces zones
             </h2>
           </div>
+          {zone.category === "paris" && (
+            <p className="mb-8 text-[14px] text-muted">
+              Pour toutes nos courses dans Paris intramuros, voyez notre page{" "}
+              <Link href="/zones/paris" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">coursier Paris</Link>
+              {" "}et nos <Link href="/tarifs" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">tarifs</Link>.
+            </p>
+          )}
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {related.map((z) => (
               <Link
