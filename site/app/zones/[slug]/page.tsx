@@ -12,6 +12,8 @@ import { notFound } from "next/navigation";
 import JsonLd from "@/components/JsonLd";
 import TrustBlock from "@/components/TrustBlock";
 import { SITE_URL, PHONE_DISPLAY, PHONE_TEL, EMAIL } from "@/lib/site-content";
+import HeroBackdrop from "@/components/HeroBackdrop";
+import { HERO_IMAGES } from "@/lib/hero-images";
 import { ZONES, getZone, isZoneIndexed } from "@/lib/zones/data";
 import { withFaqComplements } from "@/lib/zones/faq-complements";
 import { getZonePlan, mentionsPrice } from "@/lib/zones/plan";
@@ -146,8 +148,9 @@ export default async function ZonePage({ params }: Props) {
       {faqSchema && <JsonLd data={faqSchema} />}
 
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
-      <section className="bg-ink text-white">
-        <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-20 pt-16">
+      <section className="relative overflow-hidden bg-ink text-white">
+        {HERO_IMAGES[zone.slug] && <HeroBackdrop src={HERO_IMAGES[zone.slug].src} />}
+        <div className="relative mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-20 pt-16">
           {/* Fil d'Ariane */}
           <nav aria-label="Fil d'Ariane" className="mb-8 flex flex-wrap items-center gap-1 font-mono text-[10px] tracking-[0.16em] text-white/40 uppercase">
             <Link href="/" className="hover:text-white transition-colors">Accueil</Link>
