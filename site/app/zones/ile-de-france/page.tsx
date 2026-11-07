@@ -3,6 +3,8 @@
  * Page locale globale Île-de-France (75, 92, 93, 94, 77, 78, 91, 95).
  * Requête visée : « coursier ile de france ».
  */
+import HeroBackdrop from "@/components/HeroBackdrop";
+import { HERO_IMAGES } from "@/lib/hero-images";
 import type { Metadata } from "next";
 import Link from "next/link";
 import JsonLd from "@/components/JsonLd";
@@ -92,6 +94,12 @@ export default function ZoneIleDeFrance() {
 
       {/* ── Hero ── */}
       <section className="border-b border-line bg-paper">
+        <div
+          role="img"
+          aria-label="Vue aérienne de Paris et de la Seine"
+          className="h-[200px] w-full bg-cover bg-center md:h-[280px]"
+          style={{ backgroundImage: `url('${HERO_IMAGES["ile-de-france"].src}')` }}
+        />
         <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[clamp(48px,6vw,72px)]">
           <nav aria-label="Fil d'Ariane" className="mb-6">
             <ol className="flex flex-wrap items-center gap-2 font-mono text-[11px] tracking-wider text-muted uppercase">
