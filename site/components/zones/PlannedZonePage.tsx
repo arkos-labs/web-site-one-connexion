@@ -11,6 +11,8 @@ import type { ZonePlan } from "@/lib/zones/plan";
 import { PHONE_DISPLAY, PHONE_TEL } from "@/lib/site-content";
 import { getColor, getIcon, getIconBg, categoryLabel } from "./sector-style";
 import { MapPin, Phone, Clock, CheckCircle, ArrowRight, ChevronRight } from "lucide-react";
+import HeroBackdrop from "@/components/HeroBackdrop";
+import { HERO_IMAGES } from "@/lib/hero-images";
 
 const H2 = "text-[clamp(24px,3vw,36px)] font-bold leading-[1.1] tracking-tight text-ink";
 const LINK = "font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark";
@@ -169,8 +171,9 @@ export default function PlannedZonePage({
   return (
     <>
       {/* ── Hero ── */}
-      <section className="bg-ink text-white">
-        <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-20 pt-16">
+      <section className="relative overflow-hidden bg-ink text-white">
+        {HERO_IMAGES[zone.slug] && <HeroBackdrop src={HERO_IMAGES[zone.slug].src} />}
+        <div className="relative mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-20 pt-16">
           <nav aria-label="Fil d'Ariane" className="mb-8 flex flex-wrap items-center gap-1 font-mono text-[10px] tracking-[0.16em] text-white/40 uppercase">
             <Link href="/" className="hover:text-white transition-colors">Accueil</Link>
             <ChevronRight size={10} className="text-white/25" />
