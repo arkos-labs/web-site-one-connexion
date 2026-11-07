@@ -27,4 +27,8 @@ export const HERO_IMAGES: Record<string, { src: string; credit: string; position
   "paris-9e": { src: "/images/hero/paris-9e.jpg", credit: "Unsplash" },
   "paris-10e": { src: "/images/hero/paris-10e.jpg", credit: "Unsplash" },
   "paris-11e": { src: "/images/hero/paris-11e.jpg", credit: "Unsplash" },
+  "paris-17e": { src: "/images/hero/paris-17e.jpg", credit: "Unsplash" },
+  "paris-18e": { src: "/images/hero/paris-18e.jpg", credit: "Unsplash" },
+  "paris-19e": { src: "/images/hero/paris-19e.jpg", credit: "Unsplash" },
+  "paris-20e": { src: "/images/hero/paris-20e.jpg", credit: "Unsplash" },
 };
