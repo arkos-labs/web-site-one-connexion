@@ -666,6 +666,101 @@ export const GUIDES: Guide[] = [
     service: { href: "/services/coursier-express-paris", label: "Coursier express Paris" },
     published: "2026-11-06",
   },
+  {
+    slug: "delai-coursier-express-ile-de-france",
+    title: "Combien de temps met un coursier express pour livrer en Île-de-France ?",
+    seoTitle: "Délai coursier express Île-de-France : guide",
+    description:
+      "Combien de temps met un coursier express pour livrer en Île-de-France ? Délai d'une course dédiée, facteurs qui le font varier et erreurs qui le font exploser.",
+    intro:
+      "La réponse honnête tient en une phrase : sur une course dédiée, le délai dépend surtout de la distance réelle entre l'enlèvement et la livraison, du moment de la journée et de la fluidité de la prise en charge. Ce guide détaille ce qui compose vraiment un délai, zone par zone.",
+    sections: [
+      {
+        heading: "Le délai d'un coursier express, concrètement",
+        paragraphs: [
+          "Un coursier express en Île-de-France transporte un pli ou un petit colis confié à un seul véhicule, sans passage par un centre de tri, entre une adresse d'enlèvement et une adresse de livraison précises. Le délai se mesure entre le moment où le coursier récupère l'objet et celui où il le remet en main propre ou contre signature.",
+          "Sur une course dédiée en zone dense, le trajet tourne autour de l'heure, parfois moins. Entre deux arrondissements parisiens, la livraison peut se faire bien plus vite. Vers la grande couronne, la distance pèse davantage et le temps de prise en charge devient le facteur dominant. Ce sont des ordres de grandeur, pas des engagements : aucun prestataire sérieux ne peut garantir une minute exacte sur un réseau routier qui bouge.",
+          "« Express » ne signifie pas « en un temps fixe ». Cela signifie que la course est traitée en priorité, sans regroupement, avec un départ dès que possible. Le délai final se calcule à partir de l'adresse d'enlèvement réelle, de l'adresse de livraison réelle et de l'heure de validation de la demande.",
+          "Le délai commence à courir à la validation de la demande, pas à l'envoi du mail. Adresse incomplète, contact qui ne décroche pas, colis pas prêt à l'heure dite : le compteur tourne quand même. La préparation en amont fait gagner plus de temps que n'importe quel choix de véhicule.",
+        ],
+      },
+      {
+        heading: "Comment se construit le délai, étape par étape",
+        paragraphs: [
+          "Le délai d'une course express se décompose en cinq phases. Les comprendre permet de savoir où le temps se perd et où il se gagne.",
+        ],
+        list: [
+          "Prise en charge de la demande : vérification de la faisabilité et affectation d'un coursier. Plus les informations sont complètes, plus cette étape est courte.",
+          "Trajet vers le point d'enlèvement : en zone dense, le stationnement peut allonger ce trajet.",
+          "Enlèvement : récupération du pli, vérification de l'adresse et de l'emballage. Un colis mal fermé fait perdre du temps à tout le monde.",
+          "Trajet direct : le cœur du délai, qui dépend de la distance réelle, du sens de circulation, des ponts et de l'heure.",
+          "Remise : le coursier trouve le bon interlocuteur, fait signer si nécessaire et repart. Une adresse sans précision d'étage ou de service rallonge cette phase.",
+        ],
+      },
+      {
+        heading: "Deux-roues ou voiture ?",
+        paragraphs: [
+          "Un deux-roues se faufile là où une voiture reste bloquée, mais il transporte moins de volume. Pour un pli ou un petit colis, c'est souvent le choix le plus rapide en zone dense. Pour un objet plus encombrant, la voiture redevient pertinente malgré le stationnement. Le véhicule doit suivre la nature de l'envoi, pas une préférence abstraite.",
+        ],
+      },
+      {
+        heading: "Le délai selon la zone",
+        paragraphs: [
+          "Ordres de grandeur, pas des engagements. Sur une course dédiée :",
+        ],
+        list: [
+          "Paris, trajet court : le plus souvent moins d'une heure. Le stationnement est le principal frein.",
+          "Paris, trajet long entre arrondissements : plus long, à cause de la Seine et des axes saturés.",
+          "Paris vers la petite couronne : modéré, selon la sortie de Paris et la prise en charge.",
+          "Vers la grande couronne : plus long, la distance devient le facteur dominant.",
+        ],
+      },
+      {
+        heading: "Les erreurs qui font exploser le délai",
+        paragraphs: [
+          "Ces erreurs reviennent dans presque toutes les courses en retard, et n'ont presque jamais de rapport avec la vitesse du coursier.",
+        ],
+        list: [
+          "Adresse approximative : donnez l'adresse exacte, avec le nom de l'entreprise, l'étage et le contact sur place.",
+          "Colis non prêt : la préparation doit être terminée avant l'heure d'enlèvement annoncée.",
+          "Mauvais format : un objet volumineux confié à un deux-roues, ou un pli urgent confié à une tournée, crée un décalage.",
+          "Horaires du destinataire ignorés : livrer pendant la pause déjeuner ou après la fermeture de l'accueil ajoute un arrêt au lendemain.",
+          "Commande au dernier moment : une course prioritaire reste soumise au trafic, surtout aux heures de pointe.",
+        ],
+      },
+      {
+        heading: "Pourquoi l'heure de commande compte autant que le trajet",
+        paragraphs: [
+          "Une course lancée quand un coursier se trouve déjà près du point d'enlèvement part plus vite qu'une course qui oblige à rapatrier un véhicule d'une autre zone. Une entreprise qui envoie régulièrement des plis a donc intérêt à regrouper ses demandes sur des créneaux prévisibles.",
+          "La distance à vol d'oiseau trompe aussi : deux adresses séparées par la Seine peuvent imposer un détour par un pont saturé, alors que deux points éloignés sur un axe fluide se rejoignent vite. Le délai se calcule sur le trajet réel, c'est pourquoi un devis sérieux demande les deux adresses exactes.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "Combien de temps met un coursier express pour livrer en Île-de-France ?",
+        answer:
+          "Sur une course dédiée en zone dense, le délai se compte souvent en moins d'une heure entre l'enlèvement et la livraison. En grande couronne, il faut compter davantage, car la distance et la prise en charge pèsent plus lourd. Le délai réel dépend du trafic, de l'heure et de la précision des adresses.",
+      },
+      {
+        question: "Pourquoi le délai annoncé diffère-t-il du délai réel ?",
+        answer:
+          "Le délai annoncé repose sur une estimation de trajet. Le délai réel intègre le stationnement, la recherche du contact sur place, l'état du colis et les aléas de circulation.",
+      },
+      {
+        question: "Une course dédiée est-elle plus rapide qu'une tournée groupée ?",
+        answer:
+          "Dans la grande majorité des cas, oui, car elle supprime les arrêts chez d'autres clients. Une tournée groupée peut rester pertinente pour des envois non urgents vers une même zone, mais elle allonge le délai de chaque destinataire.",
+      },
+      {
+        question: "Que faire pour réduire le temps de livraison ?",
+        answer:
+          "Donnez l'adresse exacte avec le nom de l'entreprise et le contact sur place, préparez le colis avant l'heure d'enlèvement, vérifiez les horaires de réception du destinataire et choisissez le format de course adapté. Ces éléments pèsent plus que le choix du véhicule.",
+      },
+    ],
+    service: { href: "/services/coursier-express-paris", label: "Coursier express Paris" },
+    published: "2026-11-07",
+  },
 ];
 
 export const GUIDE_SLUGS = GUIDES.map((g) => g.slug);
