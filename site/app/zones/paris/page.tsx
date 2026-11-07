@@ -4,6 +4,8 @@
  * Prix → /tarifs, banlieue → /zones/petite-couronne, express →
  * /services/coursier-express-paris : la page y renvoie sans les traiter.
  */
+import HeroBackdrop from "@/components/HeroBackdrop";
+import { HERO_IMAGES } from "@/lib/hero-images";
 import type { Metadata } from "next";
 import Link from "next/link";
 import InlineLinks from "@/components/InlineLinks";
@@ -106,8 +108,9 @@ export default function ZoneParis() {
       <JsonLd data={faqSchema} />
 
       {/* ── Hero ── */}
-      <section className="bg-ink text-white">
-        <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-20 pt-16">
+      <section className="relative overflow-hidden bg-ink text-white">
+        <HeroBackdrop src={HERO_IMAGES["paris"].src} />
+        <div className="relative mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-20 pt-16">
           <nav aria-label="Fil d'Ariane" className="mb-8 font-mono text-[10px] tracking-[0.16em] text-white/40 uppercase">
             <Link href="/" className="hover:text-white">Accueil</Link>
             <span className="px-2 text-white/25">›</span>

@@ -6,13 +6,17 @@
 import Link from "next/link";
 import type { Service } from "@/lib/services";
 import { EMAIL, PHONE_DISPLAY, PHONE_TEL } from "@/lib/site-content";
+import HeroBackdrop from "@/components/HeroBackdrop";
+import { HERO_IMAGES } from "@/lib/hero-images";
 
 export default function ServiceHero({ service }: { service: Service }) {
   const subject = encodeURIComponent(`Demande de course - ${service.card.title}`);
+  const photo = HERO_IMAGES[service.slug];
 
   return (
-    <section className="bg-ink text-white">
-      <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-16 pt-12">
+    <section className="relative overflow-hidden bg-ink text-white">
+      {photo && <HeroBackdrop src={photo.src} position={photo.position} />}
+      <div className="relative mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-16 pt-12">
         <nav
           aria-label="Fil d’Ariane"
           className="mb-9 font-mono text-[10px] tracking-[0.16em] text-white/40 uppercase"
