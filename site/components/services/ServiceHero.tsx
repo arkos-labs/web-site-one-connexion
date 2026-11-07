@@ -15,7 +15,7 @@ export default function ServiceHero({ service }: { service: Service }) {
 
   return (
     <section className="relative overflow-hidden bg-ink text-white">
-      {photo && <HeroBackdrop src={photo.src} />}
+      {photo && <HeroBackdrop src={photo.src} position={photo.position} />}
       <div className="relative mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-16 pt-12">
         <nav
           aria-label="Fil d’Ariane"
