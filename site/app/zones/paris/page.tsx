@@ -14,7 +14,7 @@ import { Clock, MapPin, Zap, Shield } from "lucide-react";
 
 const TITLE = "Coursier à Paris : course dédiée 7j/7, 8h-19h";
 const DESCRIPTION =
-  "Un coursier dédié par envoi, partout dans Paris, en moins de 45 minutes. Plis, médical, e-commerce. Tarifs clairs, interlocuteur unique.";
+  "Coursier dans Paris intramuros : un coursier dédié par envoi, en moins de 45 minutes. Plis, médical, e-commerce. Prix affiché avant de commander, interlocuteur unique.";
 
 export const metadata: Metadata = {
   title: { absolute: TITLE },

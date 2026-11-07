@@ -9,7 +9,7 @@ import { SITE_URL } from "@/lib/site-content";
 import DeptCards from "@/components/sections/DeptCards";
 
 export const metadata: Metadata = {
-  title: { absolute: "Zones de livraison en Île-de-France | ONE CONNEXION" },
+  title: { absolute: "Coursier Île-de-France : toutes les zones 75 à 95" },
   description:
     "Coursier à Paris, en petite et grande couronne et à La Défense. Enlèvement en moins de 45 min, 7j/7, prix affiché avant de commander.",
   alternates: { canonical: "/zones" },

@@ -405,7 +405,7 @@ export const GUIDES: Guide[] = [
     slug: "expedier-du-materiel-de-laboratoire",
     title: "Expédier du matériel de laboratoire en Île-de-France : préparer l'envoi",
     h1: "Expédition matériel de laboratoire : le guide",
-    seoTitle: "Expédition matériel de laboratoire : organiser l'envoi",
+    seoTitle: "Expédition de matériel de laboratoire : guide en IDF",
     description:
       "Expédition de matériel de laboratoire : préparer le colis, choisir le bon conditionnement et confier l'envoi à une course dédiée en Île-de-France.",
     summary:
