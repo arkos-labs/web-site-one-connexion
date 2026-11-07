@@ -670,6 +670,7 @@ export const GUIDES: Guide[] = [
     slug: "delai-coursier-express-ile-de-france",
     title: "Combien de temps met un coursier express pour livrer en Île-de-France ?",
     h1: "Combien de temps met un coursier express pour livrer en Île-de-France ?",
+    summary: "Délai d'une course dédiée en Île-de-France : ce qui le fait varier, zone par zone, et les erreurs qui le font exploser.",
     seoTitle: "Délai coursier express Île-de-France : guide",
     description:
       "Combien de temps met un coursier express pour livrer en Île-de-France ? Délai d'une course dédiée, facteurs qui le font varier et erreurs qui le font exploser.",
