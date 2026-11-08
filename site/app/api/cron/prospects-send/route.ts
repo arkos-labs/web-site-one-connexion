@@ -3,7 +3,8 @@ import { createClient } from "@supabase/supabase-js";
 import { buildProspectMail } from "@/lib/prospection/mail";
 import { sendProspectMail } from "@/lib/prospection/send";
 
-// Toutes les heures : envoie les mails préparés dont l'heure d'envoi (send_at) est passée.
+// Une fois par jour (7 h UTC, 9 h à Paris) : envoie les mails préparés dont l'heure d'envoi (send_at) est passée.
+// Le plan Hobby de Vercel limite les crons à un passage par jour ; repasser à « 0 * * * * » avec le plan Pro.
 // Ne fait rien tant que PROSPECTION_AUTO_SEND n'est pas à « on » dans Vercel : c'est l'interrupteur.
 export const maxDuration = 300;
 const MAX_PER_RUN = 30;
