@@ -3,8 +3,8 @@ import { createClient } from "@supabase/supabase-js";
 import { buildProspectMail } from "@/lib/prospection/mail";
 import { sendProspectMail } from "@/lib/prospection/send";
 
-// Chaque lundi à 9 h : envoie les mails préparés le dimanche. Ne fait rien tant que
-// PROSPECTION_AUTO_SEND n'est pas à « on » dans Vercel : c'est l'interrupteur.
+// Toutes les heures : envoie les mails préparés dont l'heure d'envoi (send_at) est passée.
+// Ne fait rien tant que PROSPECTION_AUTO_SEND n'est pas à « on » dans Vercel : c'est l'interrupteur.
 export const maxDuration = 300;
 const MAX_PER_RUN = 30;
 
@@ -23,6 +23,7 @@ export async function GET(req: Request) {
     .select("id, email, mail_subject, mail_body")
     .eq("mail_status", "brouillon")
     .not("email", "is", null)
+    .lte("send_at", new Date().toISOString())
     .order("created_at")
     .limit(MAX_PER_RUN);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
