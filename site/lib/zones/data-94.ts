@@ -189,7 +189,7 @@ export const ZONES_94: Zone[] = [
     distanceParis: "~5 min de Paris 12e",
     pricingZone: "standard",
     seoTitle: "Coursier Charenton-le-Pont - Livraison express 94220",
-    seoDesc: "Coursier express à Charenton-le-Pont (94). Limitrophe Paris 12e, PME, services. Enlèvement < 45 min. Traçabilité complète, prix immédiat.",
+    seoDesc: "Coursier express à Charenton-le-Pont (94) : courses en ligne pour les PME et services. Limitrophe Paris 12e. Enlèvement < 45 min. Traçabilité complète, prix immédiat.",
     seoKeywords: ["coursier Charenton-le-Pont", "livraison express 94220", "coursier 94 Charenton"],
   }),
   makeZone({
