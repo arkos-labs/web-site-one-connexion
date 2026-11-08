@@ -26,6 +26,7 @@ type Prospect = {
   mail_subject: string | null;
   mail_body: string | null;
   sent_at: string | null;
+  send_at: string | null;
 };
 
 const STATUSES: { key: Status | "all"; label: string }[] = [
@@ -39,6 +40,16 @@ const STATUSES: { key: Status | "all"; label: string }[] = [
 
 const sectorLabel = (key: string) => SECTORS.find((s) => s.key === key)?.label ?? key;
 const dateFr = (iso: string | null) => (iso ? new Date(iso).toLocaleDateString("fr-FR") : "—");
+const dateTimeFr = (iso: string | null) =>
+  iso ? new Date(iso).toLocaleString("fr-FR", { dateStyle: "short", timeStyle: "short", timeZone: "Europe/Paris" }) : "—";
+// Valeur par défaut du champ d'heure : demain 9 h (heure locale), au format attendu par <input type="datetime-local">.
+const defaultSendAt = () => {
+  const d = new Date();
+  d.setDate(d.getDate() + 1);
+  d.setHours(9, 0, 0, 0);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T09:00`;
+};
 
 export default function AdminProspectionPage() {
   const supabase = useMemo(() => createClient(), []);
@@ -53,7 +64,7 @@ export default function AdminProspectionPage() {
     let live = true;
     supabase
       .from("prospect_targets")
-      .select("id, name, city, postcode, department, sector, siret, need, status, notes, batch_week, contacted_at, website, email, mail_status, mail_subject, mail_body, sent_at")
+      .select("id, name, city, postcode, department, sector, siret, need, status, notes, batch_week, contacted_at, website, email, mail_status, mail_subject, mail_body, sent_at, send_at")
       .order("batch_week", { ascending: false })
       .order("name")
       .limit(1000)
@@ -173,7 +184,7 @@ export default function AdminProspectionPage() {
                       : p.mail_status === "brouillon" ? "bg-amber-100 text-amber-800"
                       : "bg-gray-100 text-gray-600"}`}>
                       {p.mail_status === "envoye" ? `Envoyé le ${dateFr(p.sent_at)}`
-                        : p.mail_status === "brouillon" ? "Prêt pour lundi 9 h"
+                        : p.mail_status === "brouillon" ? `Programmé le ${dateTimeFr(p.send_at)}`
                         : p.mail_status === "pas_d_email" ? "Sans adresse : à traiter à la main"
                         : "Non préparé"}
                     </span>
@@ -216,7 +227,14 @@ export default function AdminProspectionPage() {
                 </div>
               </div>
               {openMail === p.id && (
-                <MailForm prospect={p} onSent={(to, subject) => onSent(p.id, to, subject)} />
+                <MailForm
+                  prospect={p}
+                  onSent={(to, subject) => onSent(p.id, to, subject)}
+                  onScheduled={(patch) => {
+                    update(p.id, patch);
+                    setOpenMail(null);
+                  }}
+                />
               )}
               <textarea
                 defaultValue={p.notes ?? ""}
@@ -235,8 +253,17 @@ export default function AdminProspectionPage() {
   );
 }
 
-function MailForm({ prospect, onSent }: { prospect: Prospect; onSent: (to: string, subject: string) => void }) {
-  const [to, setTo] = useState("");
+function MailForm({
+  prospect,
+  onSent,
+  onScheduled,
+}: {
+  prospect: Prospect;
+  onSent: (to: string, subject: string) => void;
+  onScheduled: (patch: Partial<Prospect>) => void;
+}) {
+  const [to, setTo] = useState(prospect.email ?? "");
+  const [sendAt, setSendAt] = useState(defaultSendAt);
   const [contact, setContact] = useState("");
   const [subject, setSubject] = useState(`${prospect.name} : une course dédiée à ${prospect.city ?? "Paris"}`);
   const [body, setBody] = useState(
@@ -248,6 +275,22 @@ Nous pouvons aussi mettre en place une navette à heure fixe, avec un compte ent
   );
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  function schedule() {
+    const when = new Date(sendAt);
+    if (Number.isNaN(when.getTime()) || when.getTime() <= Date.now()) {
+      setError("Choisissez une heure d'envoi dans le futur.");
+      return;
+    }
+    setError(null);
+    onScheduled({
+      email: to.trim(),
+      mail_subject: subject.trim(),
+      mail_body: body,
+      mail_status: "brouillon",
+      send_at: when.toISOString(),
+    });
+  }
 
   async function send() {
     setSending(true);
@@ -295,14 +338,32 @@ Nous pouvons aussi mettre en place une navette à heure fixe, avec un compte ent
         Le bouton « Commander une course », la signature et la mention de désinscription sont ajoutés automatiquement.
       </p>
       {error && <p className="text-sm text-red-700">{error}</p>}
-      <button
-        type="button"
-        onClick={send}
-        disabled={sending || !to.trim() || !subject.trim() || !body.trim()}
-        className="rounded-lg bg-accent px-4 py-2 text-sm font-bold text-white disabled:opacity-40"
-      >
-        {sending ? "Envoi…" : "Envoyer maintenant"}
-      </button>
+      <div className="flex flex-wrap items-center gap-2">
+        <label className="text-sm font-semibold text-ink" htmlFor={`send-at-${prospect.id}`}>Envoyer le</label>
+        <input
+          id={`send-at-${prospect.id}`}
+          type="datetime-local"
+          value={sendAt}
+          onChange={(e) => setSendAt(e.target.value)}
+          className="rounded-lg border border-line bg-white px-3 py-2 text-sm"
+        />
+        <button
+          type="button"
+          onClick={schedule}
+          disabled={!to.trim() || !subject.trim() || !body.trim() || !sendAt}
+          className="rounded-lg border border-ink px-4 py-2 text-sm font-bold text-ink disabled:opacity-40"
+        >
+          Programmer l&apos;envoi
+        </button>
+        <button
+          type="button"
+          onClick={send}
+          disabled={sending || !to.trim() || !subject.trim() || !body.trim()}
+          className="rounded-lg bg-accent px-4 py-2 text-sm font-bold text-white disabled:opacity-40"
+        >
+          {sending ? "Envoi…" : "Envoyer maintenant"}
+        </button>
+      </div>
     </div>
   );
 }
