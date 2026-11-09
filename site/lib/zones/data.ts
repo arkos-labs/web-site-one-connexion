@@ -585,7 +585,7 @@ const PETITE_COURONNE = new Set(["92", "93", "94", "77", "78", "91", "95"]); // 
  * (18/10/2026) : la grande couronne (77, 78, 91, 95), avec son contenu et 5 questions de FAQ.
  */
 /** Villes réécrites à la main, avec un texte propre : elles retournent dans l'index une par une. */
-const REWRITTEN_CITY_SLUGS = new Set(["villejuif"]);
+const REWRITTEN_CITY_SLUGS = new Set(["villejuif", "charenton-le-pont"]);
 
 export function isZoneIndexed(zone: Zone): boolean {
   // Les 20 arrondissements de Paris sont indexés (contenu rédigé à la main, unique).

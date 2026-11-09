@@ -211,7 +211,7 @@ export default function ZoneParis() {
           avec son coursier. Pour les documents sensibles, voyez notre{" "}
           <Link href="/services/plis-confidentiels" className={LINK}>transport de plis confidentiels</Link>.
           {" "}Pour un <Link href="/services/coursier-urgent-paris" className={LINK}>envoi urgent à Paris</Link> ou une{" "}
-          <Link href="/services/coursier-particulier-paris" className={LINK}>course pour un particulier</Link>, la course reste dédiée.
+          <Link href="/services/coursier-express-paris" className={LINK}>course pour un particulier</Link>, la course reste dédiée.
         </p>
       </section>
 
