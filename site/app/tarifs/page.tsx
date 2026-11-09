@@ -128,7 +128,7 @@ const FACTORS = [
   {
     icon: Shield,
     title: "Même tarif pour tout colis",
-    desc: "Pli confidentiel, dossier, prélèvement médical ou colis jusqu'à 18 kg : le prix est le même. Seules la zone et le délai le font varier. C’est aussi le cas pour un [coursier pour particulier](/services/coursier-particulier-paris).",
+    desc: "Pli confidentiel, dossier, prélèvement médical ou colis jusqu'à 18 kg : le prix est le même. Seules la zone et le délai le font varier. C’est aussi le cas pour un [coursier pour particulier](/services/coursier-express-paris).",
   },
   {
     icon: CheckCircle2,

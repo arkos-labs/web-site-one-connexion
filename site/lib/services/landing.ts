@@ -146,45 +146,6 @@ export const LANDING_SERVICES: LandingService[] = [
     ],
   },
   {
-    slug: "coursier-particulier-paris",
-    name: "Coursier pour particulier",
-    title: "Coursier pour particulier à Paris : courses ponctuelles",
-    description:
-      "Coursier pour particulier à Paris : confiez un colis, un document ou un objet à une course dédiée, avec prise en charge et remise au destinataire.",
-    h1: "Coursier pour particulier : une course dédiée à Paris",
-    intro:
-      "Vous n’êtes pas une entreprise et vous avez un colis, un document ou un objet à faire porter ? Un coursier le prend chez vous ou chez la personne qui le détient, et le remet directement au destinataire.",
-    sections: [
-      {
-        title: "Ce qu'un particulier peut confier à un coursier",
-        paragraphs: [
-          "Un document à remettre en main propre, un colis à envoyer à un proche, des clés à transmettre, un objet oublié chez quelqu’un, un achat à récupérer en boutique : tout ce qui tient dans le top-case d’un deux-roues peut partir en course.",
-          "La course est dédiée : votre envoi voyage seul, du point de départ au destinataire, sans passer par un centre de tri.",
-        ],
-      },
-      {
-        title: "Récupérer un colis ou faire livrer un objet",
-        paragraphs: [
-          "Vous avez besoin d’un coursier pour récupérer un colis ? Il peut aller le chercher chez un commerçant, dans un point de retrait ou chez un tiers, puis vous l’apporter. Prévenez la personne ou la boutique qui remet le colis, et indiquez à la commande la référence ou le nom sous lequel il est réservé.",
-          "Pour un service de coursier pour particulier, le principe est le même dans les deux sens : un enlèvement à une adresse, une remise à une autre, et une personne joignable à chaque bout.",
-        ],
-      },
-      {
-        title: "Comment se déroule une course",
-        paragraphs: [
-          "Vous indiquez l’adresse d’enlèvement, l’adresse de remise, les coordonnées du destinataire et une description de l’envoi. Le coursier se présente, prend l’envoi en charge et part directement vers le destinataire.",
-          "Vous suivez la course en ligne. À la remise, le nom de la personne qui reçoit l’envoi et l’heure sont enregistrés.",
-        ],
-      },
-      {
-        title: "Commander une course à Paris",
-        paragraphs: [
-          "Vous cherchez un coursier pour particulier à Paris ? Commandez en ligne ou par téléphone. Préparez l’envoi fermé avant l’arrivée du coursier, et vérifiez que le destinataire sera joignable.",
-        ],
-      },
-    ],
-  },
-  {
     slug: "coursier-urgent-paris",
     name: "Coursier urgent Paris",
     title: "Coursier urgent Paris : course dédiée en moins de 45 minutes",

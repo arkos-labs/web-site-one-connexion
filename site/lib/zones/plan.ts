@@ -62,6 +62,21 @@ export function getZonePlan(zone: Zone): ZonePlan | undefined {
       ],
     };
   }
+  if (zone.slug === "charenton-le-pont") {
+    return {
+      kind: "commune",
+      title: "Coursier Charenton-le-Pont : courses dédiées depuis et vers Paris",
+      description:
+        "Coursier à Charenton-le-Pont pour vos envois professionnels : une course dédiée vers Bercy et Paris 12e, avec un interlocuteur unique.",
+      h1: "Coursier Charenton-le-Pont : une course dédiée pour vos envois",
+      h2: [
+        "Les quartiers de Charenton-le-Pont desservis",
+        "Courses depuis et vers Charenton-le-Pont",
+        "Ce que nous transportons",
+        "Organiser une course à Charenton-le-Pont",
+      ],
+    };
+  }
   return undefined;
 }
 
