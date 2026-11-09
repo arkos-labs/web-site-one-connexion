@@ -5,7 +5,7 @@
  * Questionnaire gratuit de maturité logistique : une question à la fois.
  * Tout reste dans le navigateur : aucune réponse n'est envoyée.
  */
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
 type Q = { id: string; t: string; h: string; reco: string; why: string };
@@ -63,8 +63,9 @@ const OPTS = [
 ];
 
 const LABEL = "font-mono text-[11px] tracking-[0.16em] uppercase text-accent-dark";
-const BTN = "inline-flex items-center justify-center font-mono text-[12px] tracking-[0.14em] uppercase px-6 py-3.5 bg-accent text-ink hover:opacity-90 disabled:opacity-40 disabled:cursor-default";
-const BTN_GHOST = "inline-flex items-center justify-center font-mono text-[12px] tracking-[0.14em] uppercase px-6 py-3.5 border border-ink text-ink hover:bg-ink hover:text-paper disabled:opacity-30 disabled:cursor-default disabled:hover:bg-transparent disabled:hover:text-ink";
+// Mêmes styles que le bouton principal du site (components/Header.tsx).
+const BTN = "inline-flex items-center justify-center rounded-[4px] bg-accent px-[18px] py-[11px] text-[13px] font-semibold tracking-[0.01em] text-white transition-colors hover:bg-accent-dark disabled:opacity-40 disabled:cursor-default disabled:hover:bg-accent";
+const BTN_GHOST = "inline-flex items-center justify-center rounded-[4px] border border-line bg-paper-card px-[18px] py-[11px] text-[13px] font-semibold tracking-[0.01em] text-ink transition-colors hover:border-ink disabled:opacity-40 disabled:cursor-default";
 
 export default function AuditQuestionnaire() {
   const [phase, setPhase] = useState<"intro" | "volume" | "quiz" | "result">("intro");
@@ -72,6 +73,25 @@ export default function AuditQuestionnaire() {
   const [index, setIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [warn, setWarn] = useState("");
+  const sent = useRef(false);
+
+  // Envoi unique de l'audit terminé (enregistrement + email). Échec silencieux côté visiteur.
+  useEffect(() => {
+    if (phase !== "result" || sent.current) return;
+    sent.current = true;
+    const stageScores: Record<string, number> = {};
+    STAGES.forEach((st) => {
+      const sum = st.qs.reduce((a, q) => a + (answers[q.id] ?? 0), 0);
+      stageScores[st.key] = Math.round((sum / (st.qs.length * 2)) * 100);
+    });
+    const total = Math.round(Object.values(stageScores).reduce((a, b) => a + b, 0) / STAGES.length);
+    fetch("/api/audit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ volume: volume ?? "", answers, scores: stageScores, global: total, website: "" }),
+      keepalive: true,
+    }).catch(() => undefined);
+  }, [phase, answers, volume]);
 
   const stageScore = (s: Stage) => {
     const sum = s.qs.reduce((a, q) => a + (answers[q.id] ?? 0), 0);
@@ -79,6 +99,7 @@ export default function AuditQuestionnaire() {
   };
 
   const restart = () => {
+    sent.current = false;
     setAnswers({});
     setIndex(0);
     setWarn("");
