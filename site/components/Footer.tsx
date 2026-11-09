@@ -189,6 +189,9 @@ export default function Footer() {
                   {l.label}
                 </Link>
               ))}
+              <Link href="/audit-tracabilite" className="text-[13px] transition-colors" style={{ color: "rgba(244,242,238,0.5)" }}>
+                Audit gratuit de traçabilité
+              </Link>
           </FooterColumn>
 
           {/* ── COL 5 : Contact ── */}
