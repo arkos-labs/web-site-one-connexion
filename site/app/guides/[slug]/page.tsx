@@ -7,7 +7,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 import JsonLd from "@/components/JsonLd";
-import InlineLinks from "@/components/InlineLinks";
+import InlineLinks, { stripLinks } from "@/components/InlineLinks";
 import { GUIDE_SLUGS, getGuide } from "@/lib/guides";
 import { SITE_URL } from "@/lib/site-content";
 
@@ -76,7 +76,7 @@ export default async function GuidePage({ params }: { params: Promise<Params> })
           mainEntity: guide.faq.map((item) => ({
             "@type": "Question",
             name: item.question,
-            acceptedAnswer: { "@type": "Answer", text: item.answer },
+            acceptedAnswer: { "@type": "Answer", text: stripLinks(item.answer) },
           })),
         }}
       />
@@ -162,7 +162,7 @@ export default async function GuidePage({ params }: { params: Promise<Params> })
               {guide.faq.map((item) => (
                 <div key={item.question} className="rounded-xl border border-line bg-white p-5">
                   <h3 className="mb-2 text-[16px] font-bold text-ink">{item.question}</h3>
-                  <p className="text-[15px] leading-[1.65] text-muted">{item.answer}</p>
+                  <p className="text-[15px] leading-[1.65] text-muted"><InlineLinks text={item.answer} /></p>
                 </div>
               ))}
             </div>
