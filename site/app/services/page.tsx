@@ -43,9 +43,9 @@ const faqSchema = {
   })),
 };
 
-const TITLE = "Service de coursier Paris : choisir la bonne course";
+const TITLE = "Services de coursier express à Paris et en Île-de-France";
 const DESCRIPTION =
-  "Service de coursier à Paris : comparez nos courses (express, moto, plis confidentiels, médical, e-commerce) et choisissez celle qui convient.";
+  "Plis confidentiels, documents juridiques, prélèvements médicaux, e-commerce : une course dédiée par envoi, prise en charge en moins de 45 minutes.";
 
 export const metadata: Metadata = {
   title: { absolute: TITLE },
