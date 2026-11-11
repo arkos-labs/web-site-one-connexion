@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import { useForm, useFieldArray, useWatch, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -8,6 +8,7 @@ import { MapPin, Clock, Plus, Trash2, ShieldCheck, AlertTriangle, Loader2, Check
 import { AddressAutocomplete } from "@/components/AddressAutocomplete";
 import { isServedAddress, getDepartmentFromAddress, getZoneFromDepartment, extraStopPrice } from "@/lib/pricing";
 import { legDistancesKm } from "@/lib/route-distance";
+import { joinNumberSuffix } from "@/lib/address-idf";
 import UnservedAddressAlert, { useUnservedAddresses } from "@/components/UnservedAddressAlert";
 
 const OUT_OF_ZONE = "Adresse non reconnue : Paris et Île-de-France uniquement";
@@ -33,6 +34,9 @@ const DAYS = [
 ];
 
 const SCOOTER_MAX_POINTS = 100;
+const IDF_DEPTS = ["75", "77", "78", "91", "92", "93", "94", "95"];
+// Adresse en cours d'identification : une adresse reconnue qui n'alerte pas le client pendant la recherche.
+const PENDING_ADDRESS = "75001 Paris";
 
 const stepSchema = z.object({
   address: z.string().min(5, "L'adresse est requise").refine(isServedAddress, OUT_OF_ZONE),
@@ -112,6 +116,7 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
     handleSubmit,
     watch,
     setValue,
+    getValues,
     formState: { errors },
   } = useForm<NavetteFormValues>({
     resolver: zodResolver(navetteSchema),
@@ -125,11 +130,71 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
 
   const watchSteps = watch("steps");
   const watchMain = watch("mainAddress");
+  const watchDays = watch("selectedDays");
+  // useWatch suit directement chaque champ, pour que le prix se mette à jour à chaque saisie.
+  const [tMain, tSteps] = useWatch({ control, name: ["mainAddress", "steps"] });
+
+  // Une adresse tapée sans ville ni code postal (« 19 rue Cambacérès ») est identifiée toute seule auprès de la
+  // Base Adresse Nationale, dès que le client arrête de taper : il n'a pas à choisir une suggestion.
+  // Le tarif, l'alerte et le blocage s'appuient sur l'adresse complète trouvée.
+  const resolvedRef = useRef<Map<string, string | null>>(new Map());
+  const [resolvedVersion, setResolvedVersion] = useState(0);
+  useEffect(() => {
+    const raws = [tMain ?? "", ...(tSteps ?? []).map((s) => s?.address ?? "")]
+      .map((a) => a.trim())
+      .filter((a) => a.length >= 5 && !isServedAddress(a) && !resolvedRef.current.has(a));
+    if (raws.length === 0) return;
+    const timer = setTimeout(async () => {
+      await Promise.all(
+        raws.map(async (a) => {
+          try {
+            const res = await fetch(
+              `https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(joinNumberSuffix(a))}&lat=48.8566&lon=2.3522&limit=1`,
+            );
+            const f = (await res.json()).features?.[0];
+            const label: string | undefined = f?.properties?.label;
+            const dept = String(f?.properties?.postcode ?? "").slice(0, 2);
+            resolvedRef.current.set(a, label && IDF_DEPTS.includes(dept) ? label : null);
+          } catch {
+            /* service indisponible : on réessaiera à la prochaine saisie */
+          }
+        }),
+      );
+      setResolvedVersion((v) => v + 1);
+    }, 450);
+    return () => clearTimeout(timer);
+  }, [tMain, tSteps]);
+
+  /** Adresse utilisable pour le prix : reconnue telle quelle, ou identifiée par la recherche ; sinon null. */
+  const effectiveAddress = (a: string): string | null => {
+    const t = a.trim();
+    if (!t) return null;
+    if (isServedAddress(t)) return t;
+    return resolvedRef.current.get(t) ?? null;
+  };
+
   // Adresses hors Paris / IDF : pas de tarif, demande bloquée (voir aussi la validation zod).
-  const zoneAddresses = [watchMain ?? "", ...(watchSteps ?? []).map((st) => st?.address ?? "")];
+  const zoneAddresses = [watchMain ?? "", ...(watchSteps ?? []).map((st) => st?.address ?? "")].map((a) => {
+    const t = a.trim();
+    if (!t || isServedAddress(t)) return a;
+    const r = resolvedRef.current.get(t);
+    if (r) return r;
+    return r === undefined && t.length >= 5 ? PENDING_ADDRESS : a;
+  });
   const outOfZone = zoneAddresses.some((a) => a.trim().length > 0 && !isServedAddress(a));
   const showZoneAlert = useUnservedAddresses(zoneAddresses);
-  const watchDays = watch("selectedDays");
+
+  // À l'envoi, les adresses identifiées remplacent le texte tapé, pour passer la validation.
+  const commitResolved = () => {
+    const main = (getValues("mainAddress") ?? "").trim();
+    const rm = resolvedRef.current.get(main);
+    if (rm && !isServedAddress(main)) setValue("mainAddress", rm);
+    (getValues("steps") ?? []).forEach((s, i) => {
+      const t = (s?.address ?? "").trim();
+      const r = resolvedRef.current.get(t);
+      if (r && !isServedAddress(t)) setValue(`steps.${i}.address`, r);
+    });
+  };
 
   // Tarif d'une navette régulière, par passage. Point 1 = enlèvement, point 2 = livraison, points 3 et suivants
   // = livraisons en plus ou retour au départ.
@@ -137,17 +202,16 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
   //   grande couronne 55 € TTC), quelle que soit la distance.
   // - À partir du point 3 : chaque trajet (point précédent → point) est facturé au kilomètre, comme les
   //   adresses en plus d'une course normale (extraStopPrice : distance par la route).
-  // useWatch suit directement chaque champ, pour que le prix se mette à jour à chaque saisie.
   const NAVETTE_FORFAIT = { 0: 25, 1: 35, 2: 55 } as const;
-  const [tMain, tSteps] = useWatch({ control, name: ["mainAddress", "steps"] });
   const [tarif, setTarif] = useState<{ legs: { label: string; price: number }[]; total: number } | null>(null);
   useEffect(() => {
-    const pickup = (tMain ?? "").trim();
-    const deliveries = (tSteps ?? []).map((s) => (s?.address ?? "").trim());
-    if (!pickup || deliveries.length === 0 || [pickup, ...deliveries].some((a) => !isServedAddress(a))) {
+    const pickup = effectiveAddress(tMain ?? "");
+    const resolvedDeliveries = (tSteps ?? []).map((s) => effectiveAddress(s?.address ?? ""));
+    if (!pickup || resolvedDeliveries.length === 0 || resolvedDeliveries.some((a) => !a)) {
       setTarif(null);
       return;
     }
+    const deliveries = resolvedDeliveries as string[];
     const zoneOf = (a: string) => getZoneFromDepartment(getDepartmentFromAddress(a));
     const firstZone = Math.max(zoneOf(pickup), zoneOf(deliveries[0]));
     const forfait = NAVETTE_FORFAIT[firstZone as 0 | 1 | 2];
@@ -180,7 +244,7 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
       cancelled = true;
       clearTimeout(timer);
     };
-  }, [tMain, tSteps]);
+  }, [tMain, tSteps, resolvedVersion]);
   const tarifPassage = tarif?.total ?? null;
 
   const totalVolumePoints = useMemo(() => {
@@ -284,7 +348,7 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit, onInvalid)} className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start">
+    <form onSubmit={(e) => { commitResolved(); return handleSubmit(onSubmit, onInvalid)(e); }} className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start">
       <div className="flex min-w-0 flex-col gap-4">
         {/* Itinéraire */}
         <Panel title="Itinéraire" aside={<span className="text-xs font-semibold text-muted">{fields.length + 1} points</span>}>
