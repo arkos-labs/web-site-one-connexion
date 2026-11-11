@@ -714,7 +714,7 @@ export const GUIDES: Guide[] = [
       {
         heading: "Combien de temps met un coursier express pour livrer en Île-de-France, concrètement",
         paragraphs: [
-          "La réponse directe : le délai total se décompose en deux séquences. D'abord l'enlèvement, annoncé en moins de 45 minutes chez One Connexion, 7 jours sur 7 entre 8h et 19h, sous réserve de disponibilité au moment où vous commandez. Ensuite le trajet jusqu'au destinataire, qui suit la formule retenue. Une course en formule Super vise la livraison sous 1 heure après enlèvement. La formule Urgent vise sous 1 h 30. La formule Normal vise sous 3 heures.",
+          "La réponse directe : le délai total se décompose en deux séquences. D'abord l'enlèvement, annoncé en moins de 45 minutes chez One Connexion, 7 jours sur 7 entre 8h et 19h, sous réserve de disponibilité au moment où vous commandez. Ensuite le trajet jusqu'au destinataire, qui suit la formule retenue. Une course en formule Super vise la livraison sous 1 heure après enlèvement. La formule Urgent vise sous 1 h 30. La formule Normal vise sous 3 heures. Pour un besoin immédiat, voyez notre service de [coursier urgent](/services/coursier-urgent-paris).",
           "Ce découpage a son importance. Beaucoup de prestataires communiquent un chiffre unique, du genre « livraison en 1 heure », sans préciser s'il inclut le temps d'enlèvement. Chez One Connexion, la confirmation se fait avant d'engager la course : vous savez à quelle heure le coursier arrive, et vous savez quelle formule vous avez choisie. Le délai annoncé correspond au délai réel parce que la course est dédiée, sans regroupement avec d'autres colis et sans passage par un centre de tri.",
           "Autre point à intégrer : le coursier ne part pas d'un entrepôt. Il part de l'adresse d'enlèvement que vous indiquez. Le trajet est donc celui de votre expédition, pas celui d'un réseau logistique. C'est ce qui rend le calcul lisible : vous connaissez vos deux adresses, vous connaissez l'heure de prise en charge, vous pouvez estimer le reste.",
           "La zone change la donne. Un trajet intra-Paris en deux-roues et un trajet Paris vers la grande couronne ne se jouent pas de la même façon. Le deux-roues passe là où un utilitaire reste bloqué, ce qui fait la différence aux heures de pointe. Sur les trajets vers la banlieue, La Défense, Roissy ou Orly, ce sont les motos routières qui prennent le relais.",
@@ -738,7 +738,7 @@ export const GUIDES: Guide[] = [
       {
         heading: "Ce déroulé explique pourquoi le délai tient",
         paragraphs: [
-          "Ce déroulé explique pourquoi le délai tient. Une livraison mutualisée fait attendre votre colis jusqu'à la fin d'une tournée qui comporte plusieurs arrêts. Une course dédiée part pour vous seul. Le temps de trajet n'est donc pas gonflé par les livraisons des autres clients.",
+          "Ce déroulé explique pourquoi le délai tient. Une livraison mutualisée fait attendre votre colis jusqu'à la fin d'une tournée qui comporte plusieurs arrêts. Une course dédiée part pour vous seul. Le temps de trajet n'est donc pas gonflé par les livraisons des autres clients. Pour un envoi à livrer dans la journée sans formule express, la [livraison le jour même](/services/livraison-jour-meme-b2b) pour les entreprises est l'alternative.",
           "La nature de l'envoi entre aussi dans l'organisation, même si elle ne change pas le tarif, qui dépend seulement de la zone et du délai. Un pli juridique destiné à un tribunal ou à un notaire exige une remise en main propre avec preuve de dépôt horodatée. Un prélèvement ou un échantillon de laboratoire peut nécessiter un contenant isotherme pour rester au frais. Ces procédures se calent sur le même squelette de course, avec les mêmes repères de temps.",
         ],
       },
@@ -746,7 +746,7 @@ export const GUIDES: Guide[] = [
         heading: "Lire le tableau : formule et géographie",
         paragraphs: [
           "Deux lectures possibles de ce tableau. La première porte sur la formule : plus vous serrez le délai, plus le prix monte, et le tarif dépend de la zone et du délai. La seconde porte sur la géographie : la plage horaire de service reste la même partout en Île-de-France, mais le temps de trajet réel dépend de la distance et de la circulation. Un colis jusqu'à 18 kg peut être pris en charge, ce qui couvre la majorité des envois professionnels courants.",
-          "Pour situer le budget avant de choisir une formule, la page sur le prix d'un coursier express à Paris détaille ce qui fait varier la facture. Et si votre destinataire se trouve hors de la capitale, le fonctionnement des trajets vers la banlieue est décrit sur la page coursier Paris banlieue.",
+          "Pour situer le budget avant de choisir une formule, la page sur le [prix d'une course](/guides/prix-coursier-express-paris) de [coursier express à Paris](/services/coursier-express-paris) détaille ce qui fait varier la facture. Et si votre destinataire se trouve hors de la capitale, le fonctionnement des trajets vers la banlieue est décrit sur la page coursier Paris banlieue. Les [zones couvertes en Île-de-France](/zones/ile-de-france) y sont détaillées commune par commune.",
         ],
       },
       {
