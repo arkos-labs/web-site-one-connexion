@@ -152,6 +152,27 @@ export const LANDING_SERVICES: LandingService[] = [
           "Commandez en ligne ou par téléphone avec l’adresse d’enlèvement, la destination, le nom du destinataire et l’heure limite. Nous confirmons la faisabilité avant d’engager la course. Pour les envois réguliers d’un cabinet ou d’une étude, un compte regroupe les courses de tous les collaborateurs.",
         ],
       },
+      {
+        title: "Pièces, actes et dossiers : ce qui part et comment le préparer",
+        paragraphs: [
+          "Un envoi de cabinet ou d’étude se prépare comme un dossier : pièces classées, actes dans une pochette ou une enveloppe fermée, nom du destinataire inscrit lisiblement. Plus l’envoi est sensible, plus il est utile de le sceller avant l’arrivée du coursier. Pour un original ou un document confidentiel, voyez notre service de [plis confidentiels](/services/plis-confidentiels).",
+          "Le guide pour [envoyer un pli confidentiel à Paris](/guides/envoyer-un-pli-confidentiel-paris) détaille cette préparation. Le coursier transporte l’envoi tel qu’il lui est remis, sans l’ouvrir.",
+        ],
+      },
+      {
+        title: "Preuve de remise et traçabilité du dossier",
+        paragraphs: [
+          "À la remise, le nom de la personne qui reçoit l’envoi et l’heure sont enregistrés. Cette preuve peut être jointe au dossier du client, pour établir qu’une pièce ou un acte a bien été remis à la date et à l’heure voulues.",
+          "L’avancement de la course est consultable en ligne depuis la prise en charge, et le coursier reste joignable. Vous pouvez prévenir le destinataire de l’arrivée, ce qui évite l’attente à l’accueil.",
+        ],
+      },
+      {
+        title: "Un seul coursier, un seul destinataire",
+        paragraphs: [
+          "Le principe tient en une phrase : un envoi, un coursier, un trajet direct. C’est la [course dédiée](/guides/course-dediee-coursier), qui évite les arrêts intermédiaires et les regroupements avec d’autres colis.",
+          "Pour un cabinet comme pour une étude, cela signifie que le dossier n’est pas confié à un tiers en cours de route et ne transite par aucun dépôt. Si le destinataire change au dernier moment, prévenez-nous : le coursier est joignable et adapte la remise.",
+        ],
+      },
     ],
     faq: [
       {
