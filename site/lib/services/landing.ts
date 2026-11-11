@@ -29,9 +29,9 @@ export const LANDING_SERVICES: LandingService[] = [
   {
     slug: "coursier-laboratoire",
     name: "Coursier pour laboratoire",
-    title: "Coursier pour laboratoire : courses dédiées en Île-de-France",
+    title: "Coursier pour laboratoire à Paris : prélèvements et matériel",
     description:
-      "Coursier pour laboratoire : transport de prélèvements, de matériel et de documents en course dédiée, avec traçabilité de la prise en charge à la remise.",
+      "Coursier pour laboratoire à Paris : transport de prélèvements, de matériel et de documents en course dédiée, traçabilité de la prise en charge à la remise.",
     h1: "Coursier pour laboratoire : une course dédiée par envoi",
     intro:
       "Un laboratoire confie ses prélèvements, son matériel et ses documents à un coursier qui vient les chercher sur place. L’envoi part seul, dans le contenant convenu, et va directement au destinataire. Il est remis en main propre, et la prise en charge comme la remise sont enregistrées.",
