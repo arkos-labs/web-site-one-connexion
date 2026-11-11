@@ -9,9 +9,9 @@ import { SITE_URL } from "@/lib/site-content";
 import DeptCards from "@/components/sections/DeptCards";
 
 export const metadata: Metadata = {
-  title: { absolute: "Zones de livraison en Île-de-France | ONE CONNEXION" },
+  title: { absolute: "Zones de livraison coursier à Paris et en Île-de-France" },
   description:
-    "Coursier à Paris, en petite et grande couronne et à La Défense. Enlèvement en moins de 45 min, 7j/7, prix affiché avant de commander.",
+    "Nos zones de livraison coursier : Paris, petite et grande couronne. Une course dédiée par envoi, prise en charge en moins de 45 minutes, suivi en direct.",
   alternates: { canonical: "/zones" },
 };
 
