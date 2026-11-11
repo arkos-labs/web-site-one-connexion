@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
-import { useForm, useFieldArray, Controller } from "react-hook-form";
+import React, { useState, useMemo, useEffect } from "react";
+import { useForm, useFieldArray, useWatch, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Truck, MapPin, Clock, Plus, Trash2, ArrowRight, ShieldCheck, AlertTriangle, Loader2, Check } from "lucide-react";
 import { AddressAutocomplete } from "@/components/AddressAutocomplete";
-import { isServedAddress, calculatePrice, getDepartmentFromAddress, getZoneFromDepartment } from "@/lib/pricing";
+import { isServedAddress, getDepartmentFromAddress, getZoneFromDepartment } from "@/lib/pricing";
+import { priceRoute } from "@/lib/route-distance";
 import UnservedAddressAlert, { useUnservedAddresses } from "@/components/UnservedAddressAlert";
 
 const OUT_OF_ZONE = "Adresse non reconnue : Paris et Île-de-France uniquement";
@@ -145,21 +146,55 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
   const showZoneAlert = useUnservedAddresses(zoneAddresses);
   const watchDays = watch("selectedDays");
 
-  // Tarif régulier par passage, calculé à partir des deux adresses de la navette.
-  // Paris → Paris : 25 € TTC. Petite et grande couronne : tarif normal de la grille − 4 € (fidélisation).
-  const tarifPassage = useMemo<number | null>(() => {
-    const main = watchMain ?? "";
-    const steps = watchSteps ?? [];
-    const pickup = watchType === "distribution" ? main : steps[0]?.address ?? "";
-    const dropoff = watchType === "distribution" ? steps[steps.length - 1]?.address ?? "" : main;
-    if (!isServedAddress(pickup) || !isServedAddress(dropoff)) return null;
-    const zone = Math.max(
-      getZoneFromDepartment(getDepartmentFromAddress(pickup)),
-      getZoneFromDepartment(getDepartmentFromAddress(dropoff)),
-    );
-    if (zone === 0) return 25;
-    return calculatePrice(pickup, dropoff, "standard") - 4;
-  }, [watchMain, watchSteps, watchType]);
+  // Tarif régulier par passage. Le trajet est découpé en tronçons, comme une course normale :
+  // - 1er tronçon (enlèvement → 1er point) : tarif régulier. Paris → Paris 25 € TTC ; couronnes : tarif normal − 4 €.
+  // - Tronçons suivants (point → point) : tarif normal de la grille, au kilomètre.
+  // useWatch suit directement chaque champ, pour que le prix se mette à jour sans re-cliquer.
+  const [tType, tMain, tSteps] = useWatch({ control, name: ["type", "mainAddress", "steps"] });
+  // Même calcul que pour une course normale (priceRoute : distance par la route, prix au km après 8 km en
+  // petite couronne, supplément par point en plus). Seule remise : 1er trajet, 25 € Paris, normal − 4 € en couronne.
+  const [tarif, setTarif] = useState<{ legs: { label: string; price: number }[]; total: number } | null>(null);
+  useEffect(() => {
+    const main = (tMain ?? "").trim();
+    const stopAddrs = (tSteps ?? []).map((s) => (s?.address ?? "").trim()).filter(Boolean);
+    const pickup = tType === "distribution" ? main : (stopAddrs[0] ?? "");
+    const deliveries = tType === "distribution" ? stopAddrs : [...stopAddrs.slice(1), main];
+    const all = [pickup, ...deliveries];
+    if (!pickup || deliveries.length === 0 || all.some((a) => !isServedAddress(a))) {
+      setTarif(null);
+      return;
+    }
+    let cancelled = false;
+    const timer = setTimeout(() => {
+      priceRoute(pickup, deliveries, "standard")
+        .then((r) => {
+          if (cancelled) return;
+          // Remise de fidélisation sur le 1er trajet : Paris −3 € (28 → 25), petite couronne −4 € (39 → 35).
+          // Grande couronne : aucune remise, le prix reste celui d'une course normale.
+          const firstZone = Math.max(
+            getZoneFromDepartment(getDepartmentFromAddress(pickup)),
+            getZoneFromDepartment(getDepartmentFromAddress(deliveries[0])),
+          );
+          // Petite couronne : minimum 35 € TTC sur le 1er trajet des navettes régulières.
+          // Grande couronne : −4 € sur le 1er trajet, comme la petite couronne.
+          const firstPrice =
+            firstZone === 0 ? r.base - 3 : firstZone === 1 ? Math.max(35, r.base - 4) : r.base - 4;
+          const legs = [
+            { label: "1er trajet (tarif régulier)", price: Math.round(firstPrice * 100) / 100 },
+            ...r.extras.map((e, i) => ({ label: `Point ${i + 1} → point ${i + 2} (${e.km} km)`, price: e.price })),
+          ];
+          setTarif({ legs, total: Math.round(legs.reduce((s, l) => s + l.price, 0) * 100) / 100 });
+        })
+        .catch(() => {
+          if (!cancelled) setTarif(null);
+        });
+    }, 400);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [tType, tMain, tSteps]);
+  const tarifPassage = tarif?.total ?? null;
 
   const totalVolumePoints = useMemo(() => {
     return watchSteps.reduce((total, step) => {
@@ -457,6 +492,16 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
               <>
                 <div className="text-3xl font-extrabold leading-none tracking-tight">{tarifPassage} € TTC</div>
                 <p className="mt-1 text-xs text-white/80">par passage, tarif régulier</p>
+                {tarif && tarif.legs.length > 1 && (
+                  <ul className="mt-3 space-y-1 text-xs text-white/70">
+                    {tarif.legs.map((l, i) => (
+                      <li key={i} className="flex justify-between gap-3">
+                        <span>{l.label}</span>
+                        <span className="tabular-nums">{l.price} €</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
                 <p className="mt-2 text-xs text-white/60">
                   {watchDays?.length
                     ? `${watchDays.length} passage(s) par semaine, soit environ ${Math.round(tarifPassage * watchDays.length * 52 / 12)} € TTC par mois.`
