@@ -4,10 +4,10 @@ import React, { useState, useMemo, useEffect } from "react";
 import { useForm, useFieldArray, useWatch, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Truck, MapPin, Clock, Plus, Trash2, ArrowRight, ShieldCheck, AlertTriangle, Loader2, Check } from "lucide-react";
+import { MapPin, Clock, Plus, Trash2, ShieldCheck, AlertTriangle, Loader2, Check } from "lucide-react";
 import { AddressAutocomplete } from "@/components/AddressAutocomplete";
-import { isServedAddress, getDepartmentFromAddress, getZoneFromDepartment } from "@/lib/pricing";
-import { priceRoute } from "@/lib/route-distance";
+import { isServedAddress, getDepartmentFromAddress, getZoneFromDepartment, extraStopPrice } from "@/lib/pricing";
+import { legDistancesKm } from "@/lib/route-distance";
 import UnservedAddressAlert, { useUnservedAddresses } from "@/components/UnservedAddressAlert";
 
 const OUT_OF_ZONE = "Adresse non reconnue : Paris et Île-de-France uniquement";
@@ -45,7 +45,6 @@ const stepSchema = z.object({
 });
 
 const navetteSchema = z.object({
-  type: z.enum(["distribution", "collecte"]),
   mainAddress: z.string().min(5, "L'adresse est requise").refine(isServedAddress, OUT_OF_ZONE),
   mainContactName: z.string().min(2, "Nom requis"),
   mainContactPhone: z.string().min(10, "Téléphone requis"),
@@ -72,35 +71,23 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
 
   const defaultValues = useMemo(() => {
     if (initialData) {
-      const isDist = initialData.name?.includes("Distribution");
-      const mappedSteps = isDist
-        ? [
-            ...(initialData.stops || []).map((s: any) => ({ ...s, volume: s.volume || "pli" })),
-            { 
-              address: initialData.dropoff_address || "", 
-              contactName: initialData.dropoff_contact_name || "", 
-              contactPhone: initialData.dropoff_contact_phone || "", 
-              notes: initialData.dropoff_notes || "", 
-              volume: "pli" 
-            }
-          ]
-        : [
-            { 
-              address: initialData.pickup_address || "", 
-              contactName: initialData.pickup_contact_name || "", 
-              contactPhone: initialData.pickup_contact_phone || "", 
-              notes: initialData.pickup_notes || "", 
-              volume: "pli" 
-            },
-            ...(initialData.stops || []).map((s: any) => ({ ...s, volume: s.volume || "pli" }))
-          ];
+      // Itinéraire : point 1 = enlèvement, puis les livraisons dans l'ordre enregistré (stops, puis dropoff).
+      const mappedSteps = [
+        ...(initialData.stops || []).map((s: any) => ({ ...s, volume: s.volume || "pli" })),
+        {
+          address: initialData.dropoff_address || "",
+          contactName: initialData.dropoff_contact_name || "",
+          contactPhone: initialData.dropoff_contact_phone || "",
+          notes: initialData.dropoff_notes || "",
+          volume: "pli",
+        },
+      ];
 
       return {
-        type: isDist ? "distribution" : "collecte",
-        mainAddress: isDist ? initialData.pickup_address : initialData.dropoff_address,
-        mainContactName: isDist ? initialData.pickup_contact_name : initialData.dropoff_contact_name,
-        mainContactPhone: isDist ? initialData.pickup_contact_phone : initialData.dropoff_contact_phone,
-        mainNotes: isDist ? initialData.pickup_notes : initialData.dropoff_notes,
+        mainAddress: initialData.pickup_address,
+        mainContactName: initialData.pickup_contact_name,
+        mainContactPhone: initialData.pickup_contact_phone,
+        mainNotes: initialData.pickup_notes,
         steps: mappedSteps,
         selectedDays: initialData.days_of_week || ["mon", "tue", "wed", "thu", "fri"],
         startTime: initialData.start_time || "08:30",
@@ -108,7 +95,6 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
       };
     }
     return {
-      type: "distribution",
       mainAddress: "",
       mainContactName: "",
       mainContactPhone: "",
@@ -137,7 +123,6 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
     name: "steps",
   });
 
-  const watchType = watch("type");
   const watchSteps = watch("steps");
   const watchMain = watch("mainAddress");
   // Adresses hors Paris / IDF : pas de tarif, demande bloquée (voir aussi la validation zod).
@@ -146,43 +131,45 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
   const showZoneAlert = useUnservedAddresses(zoneAddresses);
   const watchDays = watch("selectedDays");
 
-  // Tarif régulier par passage. Le trajet est découpé en tronçons, comme une course normale :
-  // - 1er tronçon (enlèvement → 1er point) : tarif régulier. Paris → Paris 25 € TTC ; couronnes : tarif normal − 4 €.
-  // - Tronçons suivants (point → point) : tarif normal de la grille, au kilomètre.
-  // useWatch suit directement chaque champ, pour que le prix se mette à jour sans re-cliquer.
-  const [tType, tMain, tSteps] = useWatch({ control, name: ["type", "mainAddress", "steps"] });
-  // Même calcul que pour une course normale (priceRoute : distance par la route, prix au km après 8 km en
-  // petite couronne, supplément par point en plus). Seule remise : 1er trajet, 25 € Paris, normal − 4 € en couronne.
+  // Tarif d'une navette régulière, par passage. Point 1 = enlèvement, point 2 = livraison, points 3 et suivants
+  // = livraisons en plus ou retour au départ.
+  // - Enlèvement → point 2 : forfait selon la zone la plus éloignée (Paris 25 €, petite couronne 35 €,
+  //   grande couronne 55 € TTC), quelle que soit la distance.
+  // - À partir du point 3 : chaque trajet (point précédent → point) est facturé au kilomètre, comme les
+  //   adresses en plus d'une course normale (extraStopPrice : distance par la route).
+  // useWatch suit directement chaque champ, pour que le prix se mette à jour à chaque saisie.
+  const NAVETTE_FORFAIT = { 0: 25, 1: 35, 2: 55 } as const;
+  const [tMain, tSteps] = useWatch({ control, name: ["mainAddress", "steps"] });
   const [tarif, setTarif] = useState<{ legs: { label: string; price: number }[]; total: number } | null>(null);
   useEffect(() => {
-    const main = (tMain ?? "").trim();
-    const stopAddrs = (tSteps ?? []).map((s) => (s?.address ?? "").trim()).filter(Boolean);
-    const pickup = tType === "distribution" ? main : (stopAddrs[0] ?? "");
-    const deliveries = tType === "distribution" ? stopAddrs : [...stopAddrs.slice(1), main];
-    const all = [pickup, ...deliveries];
-    if (!pickup || deliveries.length === 0 || all.some((a) => !isServedAddress(a))) {
+    const pickup = (tMain ?? "").trim();
+    const deliveries = (tSteps ?? []).map((s) => (s?.address ?? "").trim());
+    if (!pickup || deliveries.length === 0 || [pickup, ...deliveries].some((a) => !isServedAddress(a))) {
       setTarif(null);
+      return;
+    }
+    const zoneOf = (a: string) => getZoneFromDepartment(getDepartmentFromAddress(a));
+    const firstZone = Math.max(zoneOf(pickup), zoneOf(deliveries[0]));
+    const forfait = NAVETTE_FORFAIT[firstZone as 0 | 1 | 2];
+    if (forfait == null) {
+      setTarif(null);
+      return;
+    }
+    const firstLeg = { label: "Enlèvement → livraison (forfait navette)", price: forfait };
+    if (deliveries.length === 1) {
+      setTarif({ legs: [firstLeg], total: forfait });
       return;
     }
     let cancelled = false;
     const timer = setTimeout(() => {
-      priceRoute(pickup, deliveries, "standard")
-        .then((r) => {
+      legDistancesKm(deliveries)
+        .then((legKm) => {
           if (cancelled) return;
-          // Remise de fidélisation sur le 1er trajet : Paris −3 € (28 → 25), petite couronne −4 € (39 → 35).
-          // Grande couronne : aucune remise, le prix reste celui d'une course normale.
-          const firstZone = Math.max(
-            getZoneFromDepartment(getDepartmentFromAddress(pickup)),
-            getZoneFromDepartment(getDepartmentFromAddress(deliveries[0])),
-          );
-          // Petite couronne : minimum 35 € TTC sur le 1er trajet des navettes régulières.
-          // Grande couronne : −4 € sur le 1er trajet, comme la petite couronne.
-          const firstPrice =
-            firstZone === 0 ? r.base - 3 : firstZone === 1 ? Math.max(35, r.base - 4) : r.base - 4;
-          const legs = [
-            { label: "1er trajet (tarif régulier)", price: Math.round(firstPrice * 100) / 100 },
-            ...r.extras.map((e, i) => ({ label: `Point ${i + 1} → point ${i + 2} (${e.km} km)`, price: e.price })),
-          ];
+          const extras = deliveries.slice(1).map((to, i) => {
+            const km = legKm[i] ?? 0;
+            return { label: `Point ${i + 2} → point ${i + 3} (${km} km)`, price: extraStopPrice(deliveries[i], to, km, "standard") };
+          });
+          const legs = [firstLeg, ...extras];
           setTarif({ legs, total: Math.round(legs.reduce((s, l) => s + l.price, 0) * 100) / 100 });
         })
         .catch(() => {
@@ -193,7 +180,7 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
       cancelled = true;
       clearTimeout(timer);
     };
-  }, [tType, tMain, tSteps]);
+  }, [tMain, tSteps]);
   const tarifPassage = tarif?.total ?? null;
 
   const totalVolumePoints = useMemo(() => {
@@ -216,20 +203,20 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
 
       const navettePayload = {
         user_id: user?.id || null,
-        name: `Demande de Navette (${data.type === "distribution" ? "Distribution" : "Collecte"})`,
-        pickup_address: data.type === "distribution" ? data.mainAddress : data.steps[0].address,
-        pickup_contact_name: data.type === "distribution" ? data.mainContactName : data.steps[0].contactName,
-        pickup_contact_phone: data.type === "distribution" ? data.mainContactPhone : data.steps[0].contactPhone,
-        pickup_notes: data.type === "distribution" ? data.mainNotes : data.steps[0].notes,
-        dropoff_address: data.type === "collecte" ? data.mainAddress : data.steps[data.steps.length - 1].address,
-        dropoff_contact_name: data.type === "collecte" ? data.mainContactName : data.steps[data.steps.length - 1].contactName,
-        dropoff_contact_phone: data.type === "collecte" ? data.mainContactPhone : data.steps[data.steps.length - 1].contactPhone,
-        dropoff_notes: data.type === "collecte" ? data.mainNotes : data.steps[data.steps.length - 1].notes,
+        name: "Demande de Navette (Itinéraire)",
+        pickup_address: data.mainAddress,
+        pickup_contact_name: data.mainContactName,
+        pickup_contact_phone: data.mainContactPhone,
+        pickup_notes: data.mainNotes,
+        dropoff_address: data.steps[data.steps.length - 1].address,
+        dropoff_contact_name: data.steps[data.steps.length - 1].contactName,
+        dropoff_contact_phone: data.steps[data.steps.length - 1].contactPhone,
+        dropoff_notes: data.steps[data.steps.length - 1].notes,
         days_of_week: data.selectedDays,
         days_str: daysStr,
         start_time: data.startTime,
         end_time: data.endTime,
-        stops: data.type === "distribution" ? data.steps.slice(0, -1) : data.steps.slice(1),
+        stops: data.steps.slice(0, -1),
       };
 
       if (isEdit && initialData?.id) {
@@ -299,35 +286,6 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
   return (
     <form onSubmit={handleSubmit(onSubmit, onInvalid)} className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start">
       <div className="flex min-w-0 flex-col gap-4">
-        {/* Type */}
-        <Panel title="Type de navette">
-          <div role="radiogroup" className="grid grid-cols-1 gap-3 p-4 sm:grid-cols-2">
-            {([
-              { v: "distribution", name: "Distribution", text: "1 adresse de retrait fixe → plusieurs points de livraison.", icon: Truck },
-              { v: "collecte", name: "Collecte", text: "Plusieurs points de retrait → 1 adresse de livraison finale.", icon: ArrowRight },
-            ] as const).map(({ v, name, text, icon: Icon }) => {
-              const selected = watchType === v;
-              return (
-                <label
-                  key={v}
-                  className={`flex cursor-pointer items-start gap-3 rounded-xl border-2 p-4 transition-all focus-within:ring-2 focus-within:ring-accent/30 ${
-                    selected ? "border-accent bg-accent/[0.03]" : "border-line bg-white hover:border-[#c9c5bd]"
-                  }`}
-                >
-                  <input type="radio" value={v} {...register("type")} className="sr-only" />
-                  <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${selected ? "bg-accent text-white" : "bg-paper text-muted"}`}>
-                    <Icon size={17} />
-                  </span>
-                  <span className="min-w-0">
-                    <span className="block text-sm font-extrabold text-ink">{name}</span>
-                    <span className="mt-0.5 block text-xs leading-snug text-muted">{text}</span>
-                  </span>
-                </label>
-              );
-            })}
-          </div>
-        </Panel>
-
         {/* Itinéraire */}
         <Panel title="Itinéraire" aside={<span className="text-xs font-semibold text-muted">{fields.length + 1} points</span>}>
           <div className="relative flex flex-col gap-5 px-5 py-5 pl-14">
@@ -336,7 +294,7 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
             {/* Adresse principale */}
             <div className="relative">
               <span aria-hidden className="absolute -left-9 top-0 flex h-6 w-6 items-center justify-center rounded-full border-2 border-ink bg-white text-[10px] font-bold text-ink">A</span>
-              <span className={LABEL}>{watchType === "distribution" ? "Adresse de retrait" : "Adresse de livraison finale"} <span className="text-accent">*</span></span>
+              <span className={LABEL}>Adresse d&apos;enlèvement (point 1) <span className="text-accent">*</span></span>
               <div className="relative mb-2">
                 <MapPin size={16} className="pointer-events-none absolute left-3.5 top-1/2 z-10 -translate-y-1/2 text-label" />
                 <Controller
@@ -368,7 +326,7 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
                 <span aria-hidden className="absolute -left-9 top-0 flex h-6 w-6 items-center justify-center rounded-full border-2 border-label bg-white text-[10px] font-bold text-muted">{index + 1}</span>
                 <div className="mb-2 flex h-6 items-center justify-between">
                   <span className={LABEL.replace("mb-1.5 block", "")}>
-                    {watchType === "distribution" ? "Livraison" : "Collecte"} {index + 1} <span className="text-accent">*</span>
+                    {index === 0 ? "Livraison (point 2)" : `Point ${index + 2} (livraison ou retour)`} <span className="text-accent">*</span>
                   </span>
                   {fields.length > 1 && (
                     <button
@@ -491,7 +449,7 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
             ) : (
               <>
                 <div className="text-3xl font-extrabold leading-none tracking-tight">{tarifPassage} € TTC</div>
-                <p className="mt-1 text-xs text-white/80">par passage, tarif régulier</p>
+                <p className="mt-1 text-xs text-white/80">par passage, navette régulière</p>
                 {tarif && tarif.legs.length > 1 && (
                   <ul className="mt-3 space-y-1 text-xs text-white/70">
                     {tarif.legs.map((l, i) => (
@@ -507,7 +465,7 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
                     ? `${watchDays.length} passage(s) par semaine, soit environ ${Math.round(tarifPassage * watchDays.length * 52 / 12)} € TTC par mois.`
                     : "Choisissez vos jours de passage pour voir le montant mensuel."}
                 </p>
-                <p className="mt-2 text-xs text-white/60">Un retour à vide est facturé au tarif normal d&apos;une course, selon la grille.</p>
+                <p className="mt-2 text-xs text-white/60">Enlèvement → livraison au forfait. À partir du 3e point (livraison ou retour au départ), chaque trajet est facturé au kilomètre.</p>
               </>
             )}
             {showZoneAlert && <UnservedAddressAlert className="mt-4 text-left" />}
