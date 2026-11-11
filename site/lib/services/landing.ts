@@ -96,9 +96,9 @@ export const LANDING_SERVICES: LandingService[] = [
   {
     slug: "coursier-avocat-notaire",
     name: "Coursier avocat et notaire",
-    title: "Coursier avocat et notaire : transport de vos documents",
+    title: "Coursier avocat et notaire à Paris : actes et pièces",
     description:
-      "Coursier pour avocat et notaire : transport de pièces, actes et dossiers en course dédiée, avec remise en main propre et suivi de chaque envoi.",
+      "Coursier pour avocat et notaire à Paris : transport de pièces, actes et dossiers en course dédiée, remise en main propre et suivi de chaque envoi.",
     h1: "Coursier avocat et notaire : vos documents en course dédiée",
     intro:
       "Un cabinet d’avocats et une étude notariale n’envoient pas les mêmes documents, mais ils ont la même exigence : que l’envoi arrive à la bonne personne, et qu’on puisse le prouver. Chaque course part seule et se termine par une remise en main propre.",
