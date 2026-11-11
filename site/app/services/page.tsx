@@ -10,6 +10,7 @@ import ServiceCta from "@/components/services/ServiceCta";
 import { SERVICES } from "@/lib/services";
 import { SITE_URL } from "@/lib/site-content";
 import { gridPrice } from "@/lib/pricing";
+import { hubServiceSchema } from "@/lib/service-schema";
 
 const FAQ = [
   {
@@ -82,6 +83,15 @@ export default function ServicesIndexPage() {
   return (
     <>
       <JsonLd data={breadcrumbSchema} />
+      <JsonLd
+        data={hubServiceSchema({
+          path: "/services",
+          name: "Coursier moto express en Île-de-France",
+          description: "Course dédiée par envoi, sans regroupement, avec prise en charge en moins de 45 minutes et suivi en direct.",
+          areaName: "Île-de-France",
+          withOffer: true,
+        })}
+      />
 
       <section className="relative bg-ink text-white" style={{ backgroundImage: "url('/images/services-bg-opt.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <div className="absolute inset-0 bg-ink/85"></div>
