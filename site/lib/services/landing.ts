@@ -65,6 +65,33 @@ export const LANDING_SERVICES: LandingService[] = [
         ],
       },
     ],
+    faq: [
+      {
+        question: "Pouvez-vous transporter des prélèvements pour un laboratoire ?",
+        answer:
+          "Oui, en course dédiée : le coursier transporte le colis fermé, sans l’ouvrir, et le remet en main propre au service désigné. Pour les prélèvements à conserver au frais, le contenant isotherme est convenu à la commande.",
+      },
+      {
+        question: "Qui prépare le colis avant l’enlèvement ?",
+        answer:
+          "Le laboratoire, selon ses protocoles. Le coursier transporte le colis tel qu’il lui est remis, calé et dans le sens indiqué.",
+      },
+      {
+        question: "En combien de temps le coursier prend-il l’envoi en charge ?",
+        answer:
+          "En moins de 45 minutes, 7j/7 de 8h à 19h, sous réserve de disponibilité au moment de la commande. Nous confirmons la faisabilité avant d’engager la course.",
+      },
+      {
+        question: "Combien coûte une course pour un laboratoire ?",
+        answer:
+          `Le prix dépend de la zone et du délai, jamais de la nature de l’envoi. À Paris, une course Normal (sous 3 h) coûte ${gridPrice("standard", 0)} € TTC, une course Urgent (sous 1 h 30) ${gridPrice("urgent", 0)} € TTC et une course Super (sous 1 h) ${gridPrice("flash", 0)} € TTC.`,
+      },
+      {
+        question: "Peut-on organiser des envois réguliers entre deux sites ?",
+        answer:
+          "Oui. Nous convenons à l’avance des adresses, des contenants et des personnes à prévenir, et vous gardez un interlocuteur unique pour toutes vos courses.",
+      },
+    ],
   },
   {
     slug: "coursier-avocat-notaire",
@@ -105,6 +132,33 @@ export const LANDING_SERVICES: LandingService[] = [
         ],
       },
     ],
+    faq: [
+      {
+        question: "Pouvez-vous transporter des actes et des pièces de procédure ?",
+        answer:
+          "Oui. Pièces de procédure, conclusions, actes à faire signer et dossiers sont transportés en course dédiée, avec remise en main propre à la personne désignée.",
+      },
+      {
+        question: "À qui le dossier est-il remis ?",
+        answer:
+          "À la personne désignée lors de la commande : le nom du clerc, du notaire ou du greffier est consigné avec l’heure de remise.",
+      },
+      {
+        question: "Peut-on déposer un dossier au tribunal ou au greffe ?",
+        answer:
+          "Oui. Indiquez le service destinataire et l’heure limite : le coursier se présente à l’accueil avec ces éléments.",
+      },
+      {
+        question: "Le dossier voyage-t-il avec d’autres colis ?",
+        answer:
+          "Non. La course est dédiée à un seul envoi : le dossier ne passe par aucun dépôt et reste avec le coursier jusqu’à la remise.",
+      },
+      {
+        question: "Combien coûte une course pour un cabinet ou une étude ?",
+        answer:
+          `Le prix dépend de la zone et du délai choisi. À Paris, une course Normal (sous 3 h) coûte ${gridPrice("standard", 0)} € TTC, une course Urgent (sous 1 h 30) ${gridPrice("urgent", 0)} € TTC et une course Super (sous 1 h) ${gridPrice("flash", 0)} € TTC.`,
+      },
+    ],
   },
   {
     slug: "coursier-dimanche-paris",
@@ -142,6 +196,28 @@ export const LANDING_SERVICES: LandingService[] = [
         paragraphs: [
           "Pour une course le dimanche, contactez-nous en amont avec l’adresse d’enlèvement, la destination et l’heure souhaitée : nous confirmons la faisabilité avant d’engager le coursier.",
         ],
+      },
+    ],
+    faq: [
+      {
+        question: "Livrez-vous le dimanche à Paris ?",
+        answer:
+          "Oui, 7j/7 de 8h à 19h, sous réserve de disponibilité au moment de la commande. Nous confirmons la faisabilité avant d’engager le coursier.",
+      },
+      {
+        question: "Que se passe-t-il si le destinataire est absent ?",
+        answer:
+          "Le coursier vous appelle avant toute décision : il attend, remet l’envoi à la personne que vous désignez, ou le rapporte. Sans consigne, il ne laisse pas l’envoi à un tiers.",
+      },
+      {
+        question: "Faut-il préparer l’envoi à l’avance ?",
+        answer:
+          "Oui : indiquez l’adresse complète avec le code d’accès et l’étage, un destinataire joignable et l’heure de remise souhaitée, et préparez l’envoi fermé avant l’arrivée du coursier.",
+      },
+      {
+        question: "Comment connaître le prix d’une course le dimanche ?",
+        answer:
+          "Le prix dépend de la zone et du délai choisi, et il s’affiche avant de valider la commande.",
       },
     ],
   },

@@ -9,6 +9,39 @@ import JsonLd from "@/components/JsonLd";
 import ServiceCta from "@/components/services/ServiceCta";
 import { SERVICES } from "@/lib/services";
 import { SITE_URL } from "@/lib/site-content";
+import { gridPrice } from "@/lib/pricing";
+
+const FAQ = [
+  {
+    question: "Quelle est la différence entre une course dédiée et une course groupée ?",
+    answer:
+      "Une course dédiée transporte un seul envoi, du point d’enlèvement jusqu’à la remise, sans arrêt intermédiaire. Une course groupée regroupe plusieurs envois sur un même trajet, avec plusieurs arrêts : elle coûte souvent moins cher, mais l’heure d’arrivée dépend des autres envois.",
+  },
+  {
+    question: "En combien de temps un coursier prend-il l’envoi en charge ?",
+    answer:
+      "En moins de 45 minutes, 7j/7 de 8h à 19h, sous réserve de disponibilité au moment de la commande. Nous confirmons la faisabilité avant d’engager la course.",
+  },
+  {
+    question: "Combien coûte une course à Paris ?",
+    answer: `Le prix dépend de la zone et du délai, jamais de la nature de l’envoi. À Paris, une course Normal (sous 3 h) coûte ${gridPrice("standard", 0)} € TTC, une course Urgent (sous 1 h 30) ${gridPrice("urgent", 0)} € TTC et une course Super (sous 1 h) ${gridPrice("flash", 0)} € TTC.`,
+  },
+  {
+    question: "Quel service choisir pour un envoi confidentiel ?",
+    answer:
+      "Le pli confidentiel : le document est remis en main propre au destinataire désigné, avec le nom de la personne et l’heure enregistrés. Toutes nos prestations partent en course dédiée.",
+  },
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: FAQ.map((item) => ({
+    "@type": "Question",
+    name: item.question,
+    acceptedAnswer: { "@type": "Answer", text: item.answer },
+  })),
+};
 
 const TITLE = "Service de coursier Paris : choisir la bonne course";
 const DESCRIPTION =
@@ -144,6 +177,19 @@ export default function ServicesIndexPage() {
               <Link href="/services/tournees-regulieres" className={LINK_CLASS}>tournées régulières</Link>.
             </p>
           </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
+        <JsonLd data={faqSchema} />
+        <h2 className={H2_CLASS}>Questions fréquentes</h2>
+        <div className="grid gap-6 md:grid-cols-2">
+          {FAQ.map((item) => (
+            <div key={item.question}>
+              <h3 className="mb-2 text-[17px] font-bold tracking-[-0.01em]">{item.question}</h3>
+              <p className="text-[15.5px] leading-[1.7] text-muted">{item.answer}</p>
+            </div>
+          ))}
         </div>
       </section>
 
