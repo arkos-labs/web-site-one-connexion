@@ -197,6 +197,27 @@ export const LANDING_SERVICES: LandingService[] = [
           "Pour une course le dimanche, contactez-nous en amont avec l’adresse d’enlèvement, la destination et l’heure souhaitée : nous confirmons la faisabilité avant d’engager le coursier.",
         ],
       },
+      {
+        title: "Ce qui circule le dimanche",
+        paragraphs: [
+          "Les envois du dimanche relèvent de quelques familles : plis et documents à remettre avant la reprise du lundi, prélèvements et matériel dont un laboratoire a besoin sans attendre, pièces ou colis légers qu’un collaborateur ou un client attend. Dans tous les cas, l’envoi part en [course dédiée](/guides/course-dediee-coursier) : un coursier pour un seul envoi, sans regroupement avec d’autres colis.",
+          "Le gabarit compte autant que la nature de l’envoi. Notre flotte est composée de deux-roues : elle convient aux plis, aux documents, aux petits colis et au matériel léger. Pour un volume ou un format important, prévenez-nous avant de commander.",
+        ],
+      },
+      {
+        title: "Organiser une course un dimanche",
+        paragraphs: [
+          "Commandez dès que l’envoi est prêt, en ligne ou par téléphone. La prise en charge se fait en moins de 45 minutes, sous réserve de disponibilité au moment de la commande, et nous confirmons la faisabilité avant d’engager le coursier. Si le besoin est pressant, regardez aussi notre service de [coursier urgent à Paris](/services/coursier-urgent-paris).",
+          "Une fois la course lancée, vous suivez son avancement en ligne et le coursier reste joignable. Les [zones couvertes](/zones/ile-de-france) vont de Paris à la grande couronne : indiquez l’adresse complète pour vérifier que votre trajet en fait partie.",
+        ],
+      },
+      {
+        title: "Dimanche et jours fériés : ce qui change et ce qui ne change pas",
+        paragraphs: [
+          "Les horaires de prise en charge sont ceux de toute la semaine : 7j/7 de 8h à 19h. Ce qui change le dimanche, c’est l’environnement : bureaux fermés, accueils absents, destinataire à joindre autrement. Ce qui ne change pas, c’est la méthode : une course dédiée, un suivi en ligne, une remise en main propre et l’heure de remise enregistrée.",
+          "Pour un jour férié, appelez-nous avant de commander : nous confirmons la faisabilité avant d’engager le coursier.",
+        ],
+      },
     ],
     faq: [
       {
