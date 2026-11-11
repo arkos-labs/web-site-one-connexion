@@ -435,8 +435,14 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
             <h2 className="label-mono text-xs font-medium text-white/60">Tarif</h2>
           </div>
           <div className="px-5 py-4">
-            <div className="text-3xl font-extrabold leading-none tracking-tight">Sur devis</div>
-            <p className="mt-2 text-xs text-white/60">Le prix par passage dépend des arrêts, des horaires et du volume. Un conseiller vous l&apos;envoie après étude de la tournée.</p>
+            <div className="text-3xl font-extrabold leading-none tracking-tight">35 € TTC</div>
+            <p className="mt-1 text-xs text-white/80">par passage</p>
+            <p className="mt-2 text-xs text-white/60">
+              {watchDays?.length
+                ? `${watchDays.length} passage(s) par semaine, soit environ ${Math.round(35 * watchDays.length * 52 / 12)} € TTC par mois.`
+                : "Choisissez vos jours de passage pour voir le montant mensuel."}
+            </p>
+            <p className="mt-2 text-xs text-white/60">Un retour à vide est facturé au tarif normal d&apos;une course, selon la grille.</p>
             {showZoneAlert && <UnservedAddressAlert className="mt-4 text-left" />}
             <button
               type="submit"
