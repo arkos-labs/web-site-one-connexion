@@ -7,6 +7,7 @@ import Link from "next/link";
 import JsonLd from "@/components/JsonLd";
 import { SITE_URL } from "@/lib/site-content";
 import DeptCards from "@/components/sections/DeptCards";
+import { hubServiceSchema } from "@/lib/service-schema";
 
 export const metadata: Metadata = {
   title: { absolute: "Zones de livraison coursier à Paris et en Île-de-France" },
@@ -95,6 +96,15 @@ export default function ZonesPage() {
   return (
     <>
       <JsonLd data={breadcrumbSchema} />
+      <JsonLd
+        data={hubServiceSchema({
+          path: "/zones",
+          name: "Coursier moto express en Île-de-France",
+          description: "Course dédiée par envoi, sans regroupement, avec prise en charge en moins de 45 minutes et suivi en direct.",
+          areaName: "Île-de-France",
+          withOffer: true,
+        })}
+      />
 
       <section className="bg-ink text-white">
         <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-20 pt-16">
