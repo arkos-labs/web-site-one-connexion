@@ -10,9 +10,9 @@ import JsonLd from "@/components/JsonLd";
 import { ShieldCheck, Zap, PhoneCall, Smartphone } from "lucide-react";
 import { SITE_URL } from "@/lib/site-content";
 
-const TITLE = "Société de coursier Paris : notre méthode de course";
+const TITLE = "Notre méthode de coursier express : course dédiée garantie";
 const DESCRIPTION =
-  "Société de coursier à Paris : découvrez notre méthode, de la prise en charge à la remise, et l'organisation d'une course dédiée pour les entreprises.";
+  "Comment nous garantissons une course dédiée par envoi : prise en charge en moins de 45 minutes, suivi en direct et remise horodatée. La méthode, étape par étape.";
 
 export const metadata = {
   title: { absolute: TITLE },
