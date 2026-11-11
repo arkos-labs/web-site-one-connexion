@@ -6,6 +6,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import JsonLd from "@/components/JsonLd";
+import { hubServiceSchema } from "@/lib/service-schema";
 import TrustBlock from "@/components/TrustBlock";
 import DeptCards from "@/components/sections/DeptCards";
 import { SITE_URL, PHONE_TEL, PHONE_DISPLAY } from "@/lib/site-content";
@@ -70,6 +71,14 @@ export default function ZoneGrandeCouronne() {
     <>
       <JsonLd data={breadcrumbSchema} />
       <JsonLd data={faqSchema} />
+      <JsonLd
+        data={hubServiceSchema({
+          path: "/zones/grande-couronne",
+          name: "Coursier moto express en grande couronne",
+          description: "Course dédiée par envoi entre Paris et la grande couronne (77, 78, 91, 95), avec suivi en direct.",
+          areaName: "Grande couronne d'Île-de-France",
+        })}
+      />
 
       <section className="bg-ink text-white">
         <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-20 pt-16">
