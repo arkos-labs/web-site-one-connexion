@@ -163,9 +163,9 @@ export const LANDING_SERVICES: LandingService[] = [
   {
     slug: "coursier-dimanche-paris",
     name: "Coursier dimanche Paris",
-    title: "Coursier dimanche Paris : courses dédiées le week-end",
+    title: "Coursier le dimanche à Paris : course dédiée 7j/7",
     description:
-      "Coursier le dimanche à Paris : courses dédiées pour vos envois du week-end, avec prise en charge, suivi de la course et remise au destinataire.",
+      "Besoin d'un coursier le dimanche à Paris ? Une course dédiée par envoi, prise en charge en moins de 45 minutes, suivi en direct et remise horodatée.",
     h1: "Coursier dimanche Paris : une course dédiée le week-end",
     intro:
       "Certains envois ne peuvent pas attendre le lundi. Le dimanche, un coursier prend en charge votre document ou votre colis et le remet directement au destinataire, avec le même suivi qu’en semaine.",
