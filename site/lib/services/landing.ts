@@ -64,6 +64,27 @@ export const LANDING_SERVICES: LandingService[] = [
           "Commandez en ligne ou par téléphone en indiquant l’adresse d’enlèvement, le destinataire, la nature de l’envoi et les conditions de transport. Pour des envois réguliers entre plusieurs sites, nous convenons à l’avance des adresses, des contenants et des personnes à prévenir.",
         ],
       },
+      {
+        title: "Prélèvements et chaîne du froid",
+        paragraphs: [
+          "Pour un prélèvement qui doit rester au frais, le contenant isotherme est convenu à la commande et préparé par le laboratoire. Le coursier le transporte fermé, sans l’ouvrir, et va directement chez le destinataire pour limiter la durée du trajet. Le détail du service figure sur notre page de [transport de prélèvements sanguins](/services/transport-prelevements-sang).",
+          "Le [guide des prélèvements médicaux](/guides/transport-de-prelevements-medicaux) explique comment préparer l’envoi, quel conditionnement prévoir et ce que le coursier prend en charge ou non. Pour les établissements d’hébergement, lisez aussi notre guide du [coursier pour EHPAD](/guides/coursier-ehpad-logistique-des-soins).",
+        ],
+      },
+      {
+        title: "Matériel et consommables : ce qui se transporte, ce qui ne se transporte pas",
+        paragraphs: [
+          "Réactifs sous conditionnement fermé, consommables, petites pièces d’appareil, documents d’analyse : tout ce qui tient dans un colis léger peut partir en course dédiée. Notre [transport de matériel médical](/services/transport-medical) couvre ces envois entre laboratoires, cabinets et établissements.",
+          "Notre flotte est composée de deux-roues. Un volume ou un gabarit important, ou un conditionnement qui demande des précautions particulières, doit nous être signalé avant la commande : nous vous disons si nous pouvons prendre l’envoi en charge, plutôt que de le découvrir à l’enlèvement.",
+        ],
+      },
+      {
+        title: "Preuve de remise et destinataire désigné",
+        paragraphs: [
+          "À chaque course, l’heure de prise en charge et l’heure de remise sont enregistrées, avec le nom de la personne qui reçoit l’envoi. Ces informations peuvent être conservées dans le dossier de l’échantillon ou de la commande de matériel.",
+          "Indiquez à la commande le service ou la personne destinataire, ainsi qu’un numéro joignable : le coursier remet l’envoi en main propre, pas à un accueil non prévu.",
+        ],
+      },
     ],
     faq: [
       {
