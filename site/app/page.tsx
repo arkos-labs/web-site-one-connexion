@@ -13,9 +13,9 @@ import { getZonesByCategory } from "@/lib/zones/data";
 
 /* Accueil. Requête visée : « coursier Île-de-France ». Plan : quatre H2, dans l'ordre
    Services → Zones → Course dédiée (About) → Devis (Contact). */
-const TITLE = "Coursier Île-de-France : courses dédiées pour entreprises";
+const TITLE = "Coursier moto express en Île-de-France | ONE CONNEXION";
 const DESCRIPTION =
-  "Coursier Île-de-France pour entreprises : une course dédiée par envoi, 7j/7 de 8h à 19h, livraison en moins de 45 minutes à Paris et en Île-de-France. Traçabilité complète et interlocuteur unique. Devis en ligne.";
+  "Coursier moto express en Île-de-France : une course dédiée par envoi, prise en charge en moins de 45 minutes et suivi en direct. Devis immédiat.";
 
 export const metadata: Metadata = {
   title: { absolute: TITLE },
@@ -24,6 +24,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: TITLE,
     description: DESCRIPTION,
+    url: "/",
     type: "website",
     locale: "fr_FR",
     siteName: "ONE CONNEXION",
