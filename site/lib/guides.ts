@@ -767,6 +767,96 @@ export const GUIDES: Guide[] = [
     service: { href: "/services/coursier-express-paris", label: "Coursier express Paris" },
     published: "2026-11-11",
   },
+  {
+    slug: "coursier-ehpad-logistique-des-soins",
+    title: "Coursier pour EHPAD : organiser les transports liés aux soins",
+    h1: "Coursier pour EHPAD : ce qui doit être transporté, et ce qui ne l'est plus",
+    seoTitle: "Coursier EHPAD : prélèvements, matériel et documents",
+    description:
+      "Coursier pour EHPAD en Île-de-France : prélèvements, matériel de soin et documents à faire transporter, et les déplacements que la téléexpertise permet d'éviter.",
+    summary:
+      "Prélèvements, matériel de soin, documents : ce qu'un EHPAD fait transporter par coursier, comment préparer la course, et ce que la téléexpertise évite de déplacer.",
+    intro:
+      "Un EHPAD fait circuler chaque semaine des prélèvements, du matériel de soin et des documents entre l'établissement, le laboratoire, les fournisseurs et les familles. Ce guide fait le tri : ce qui demande une course, comment la préparer, et les déplacements qu'il est désormais possible d'éviter, à commencer par certains transports de résidents vers un spécialiste.",
+    sections: [
+      {
+        heading: "Ce qu'un EHPAD fait transporter",
+        paragraphs: [
+          "Les envois d'un établissement se rangent en trois familles, qui n'ont ni les mêmes délais ni les mêmes précautions. Les identifier évite de commander une course urgente pour un envoi qui pouvait attendre, ou l'inverse.",
+        ],
+        list: [
+          "Les prélèvements : tubes de sang, flacons, écouvillons à remettre au laboratoire dans leur délai de stabilité. C'est l'envoi le plus contraint, détaillé dans notre guide du [transport de prélèvements médicaux](/guides/transport-de-prelevements-medicaux).",
+          "Le matériel de soin : pansements, consommables, petit matériel en rupture, pièce d'un appareil. L'urgence dépend du stock restant dans l'établissement.",
+          "Les documents : dossiers d'admission, pièces administratives, contrats à remettre contre signature. Pour ceux qui ne doivent passer que par leur destinataire, voyez le guide du [pli confidentiel](/guides/envoyer-un-pli-confidentiel-paris).",
+        ],
+      },
+      {
+        heading: "Préparer une course depuis l'établissement",
+        paragraphs: [
+          "Dans un EHPAD, le temps perdu se situe rarement sur la route : il se situe à l'accueil, quand le coursier ne sait pas à qui s'adresser ni où le colis l'attend. Quelques informations à la commande suffisent :",
+        ],
+        list: [
+          "Le point d'enlèvement précis : accueil, infirmerie ou salle de soins, avec l'étage et les horaires d'ouverture.",
+          "Le nom d'un soignant joignable sur place, et celui du service de réception côté destinataire.",
+          "L'heure limite d'arrivée réelle, par exemple la dernière réception du laboratoire.",
+          "La température de conservation, s'il y en a une : le contenant isotherme est convenu à la commande.",
+          "Le nombre de colis, pour vérifier la remise complète.",
+        ],
+        table: {
+          head: ["Zone", "Normal 3 h", "Urgent 1 h 30", "Super 1 h"],
+          rows: [
+            ["Paris", "28 €", "42 €", "56 €"],
+            ["Petite couronne (dès)", "39 €", "58,50 €", "78 €"],
+          ],
+          note: "Prix par course, TTC (TVA 20 % comprise). Petite couronne : 8 km de route compris. Grande couronne : prix selon la distance, affiché avant la commande. Le prix ne dépend pas du contenu, jusqu'à 18 kg.",
+        },
+      },
+      {
+        heading: "Ce qui ne se déplace plus : l'avis spécialisé sur une plaie",
+        paragraphs: [
+          "Le transport le plus lourd pour un EHPAD n'est pas celui d'un colis : c'est celui d'un résident. Une escarre ou un ulcère qui n'évolue pas malgré les pansements demande l'avis d'un spécialiste, et cet avis supposait jusqu'ici un rendez-vous éloigné, un transport sanitaire et une demi-journée fatigante pour une personne fragile.",
+          "La téléexpertise change cette équation : c'est le dossier qui voyage, pas le patient. Depuis l'avenant 9 à la convention médicale, applicable au 1er avril 2022, elle est un acte reconnu et pris en charge par l'Assurance Maladie. Une plateforme comme EIZOR est spécialisée dans la [téléexpertise des plaies](https://eizor.fr/) : l'infirmière ou le médecin coordonnateur envoie la photo de la plaie et le contexte clinique depuis la chambre du résident, et un médecin expert renvoie un avis structuré, avec le protocole de soin et l'ordonnance.",
+          "Les deux logiques se complètent. L'avis arrive sans déplacement, mais il se traduit souvent par un besoin matériel : un type de pansement que l'établissement n'a pas en stock, un prélèvement à porter au laboratoire. Le résident reste dans sa chambre, et seul ce qui doit réellement circuler prend la route.",
+        ],
+      },
+      {
+        heading: "Course ponctuelle ou tournée régulière",
+        paragraphs: [
+          "Pour un besoin imprévu (un prélèvement hors tournée du laboratoire, un consommable en rupture), la course dédiée est la plus adaptée : le coursier part de l'établissement et va directement chez le destinataire, sans arrêt intermédiaire, et la remise est horodatée avec le nom du réceptionnaire. Le service fonctionne 7j/7, de 8 h à 19 h.",
+          "Pour des envois qui reviennent à jours fixes, une tournée régulière avec des heures de passage convenues est plus économique, et un [compte entreprise](/services/compte-entreprise) regroupe les courses sur des factures à régler sous 30 jours. Le détail des engagements figure sur la page de notre service de [transport médical](/services/transport-medical).",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "Un coursier peut-il venir chercher un prélèvement le week-end ?",
+        answer:
+          "Oui. Le service fonctionne 7j/7, de 8 h à 19 h, dimanche compris. Vérifiez avant de commander que le laboratoire destinataire réceptionne bien ce jour-là.",
+      },
+      {
+        question: "Qui prépare le colis ?",
+        answer:
+          "L'établissement. Le coursier transporte le colis fermé, tel qu'il lui est remis ; pour un prélèvement, le conditionnement suit les consignes du laboratoire destinataire.",
+      },
+      {
+        question: "Transportez-vous des résidents ou des patients ?",
+        answer:
+          "Non. Nous transportons des plis et des colis jusqu'à 18 kg, pas des personnes. Le transport d'un résident relève d'un transporteur sanitaire.",
+      },
+      {
+        question: "Combien coûte une course entre un EHPAD et un laboratoire ?",
+        answer:
+          "Le prix d'une course classique, selon la zone et le délai : par exemple 28 € TTC en Normal (3 h) dans Paris. Le prix exact s'affiche avant de valider la commande.",
+      },
+      {
+        question: "L'établissement peut-il régler sur facture ?",
+        answer:
+          "Oui, avec un compte entreprise : les courses sont suivies en ligne et les factures se règlent sous 30 jours. L'ouverture du compte est immédiate.",
+      },
+    ],
+    service: { href: "/services/transport-medical", label: "Transport médical" },
+    published: "2026-11-11",
+  },
 ];
 
 export const GUIDE_SLUGS = GUIDES.map((g) => g.slug);
