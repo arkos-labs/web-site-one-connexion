@@ -53,6 +53,47 @@ export default function GuidesPage() {
             ))}
           </div>
         </section>
+
+        <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-16">
+          <div className="grid gap-12 lg:grid-cols-2">
+            <div>
+              <h2 className="text-[clamp(22px,2.4vw,30px)] font-bold leading-[1.15] tracking-[-0.02em]">Les guides par besoin</h2>
+              <p className="mt-3 text-[15.5px] leading-[1.7] text-muted">
+                Pour un document sensible, commencez par le guide pour{" "}
+                <Link href="/guides/envoyer-un-pli-confidentiel-paris" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">envoyer un pli confidentiel</Link>.
+                Côté santé, deux lectures : le{" "}
+                <Link href="/guides/transport-de-prelevements-medicaux" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">transport de prélèvements médicaux</Link>
+                , le guide pour{" "}
+                <Link href="/guides/expedier-du-materiel-de-laboratoire" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">expédier du matériel de laboratoire</Link>
+                {" "}et celui du{" "}
+                <Link href="/guides/coursier-ehpad-logistique-des-soins" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">coursier pour EHPAD</Link>.
+              </p>
+              <p className="mt-3 text-[15.5px] leading-[1.7] text-muted">
+                Pour comparer les offres, lisez ce qui fait le{" "}
+                <Link href="/guides/prix-coursier-express-paris" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">prix d&apos;un coursier express à Paris</Link>
+                , les{" "}
+                <Link href="/guides/delai-formules-coursier-express" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">délais par formule</Link>
+                {" "}et la différence entre une{" "}
+                <Link href="/guides/course-dediee-coursier" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">course dédiée</Link>
+                {" "}et une livraison groupée.
+              </p>
+            </div>
+            <div>
+              <h2 className="text-[clamp(22px,2.4vw,30px)] font-bold leading-[1.15] tracking-[-0.02em]">Les guides par zone et par usage</h2>
+              <p className="mt-3 text-[15.5px] leading-[1.7] text-muted">
+                Pour un envoi qui sort de Paris, le guide du{" "}
+                <Link href="/guides/coursier-paris-banlieue" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">coursier en banlieue parisienne</Link>
+                {" "}décrit les trajets vers la petite et la grande couronne ; les communes couvertes sont listées sur la page{" "}
+                <Link href="/zones" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">zones de livraison</Link>.
+              </p>
+              <p className="mt-3 text-[15.5px] leading-[1.7] text-muted">
+                Pour un besoin régulier, voyez le guide de la{" "}
+                <Link href="/guides/livraison-le-jour-meme-entreprise" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">livraison le jour même en entreprise</Link>
+                {" "}: il aide à choisir entre une course dédiée et une tournée.
+              </p>
+            </div>
+          </div>
+        </section>
       </main>
     </PageSchema>
   );
