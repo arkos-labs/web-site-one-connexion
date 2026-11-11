@@ -37,6 +37,7 @@ const nextConfig: NextConfig = {
       { source: "/services/coursier-particulier-paris", destination: "/services/coursier-express-paris", permanent: true },
       { source: "/zones/coursier-92", destination: "/zones/petite-couronne", permanent: true },
       { source: "/zones/coursier-orly", destination: "/zones/petite-couronne", permanent: true },
+      { source: "/guides/combien-coute-un-coursier-a-paris", destination: "/guides/prix-coursier-express-paris", permanent: true },
       { source: "/guides/delai-coursier-express-ile-de-france", destination: "/guides/delai-formules-coursier-express", permanent: true },
     ];
   },
