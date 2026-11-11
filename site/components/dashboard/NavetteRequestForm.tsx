@@ -133,6 +133,9 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
   const watchDays = watch("selectedDays");
   // useWatch suit directement chaque champ, pour que le prix se mette à jour à chaque saisie.
   const [tMain, tSteps] = useWatch({ control, name: ["mainAddress", "steps"] });
+  // react-hook-form renvoie la même liste (modifiée sur place) quand une adresse d'étape change : les effets ne
+  // se relançaient donc pas. On les déclenche avec une clé texte, qui change à chaque frappe.
+  const addrKey = [tMain ?? "", ...(tSteps ?? []).map((s) => s?.address ?? "")].join("\u0001");
 
   // Une adresse tapée sans ville ni code postal (« 19 rue Cambacérès ») est identifiée toute seule auprès de la
   // Base Adresse Nationale, dès que le client arrête de taper : il n'a pas à choisir une suggestion.
@@ -163,7 +166,7 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
       setResolvedVersion((v) => v + 1);
     }, 450);
     return () => clearTimeout(timer);
-  }, [tMain, tSteps]);
+  }, [addrKey]);
 
   /** Adresse utilisable pour le prix : reconnue telle quelle, ou identifiée par la recherche ; sinon null. */
   const effectiveAddress = (a: string): string | null => {
@@ -244,7 +247,7 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
       cancelled = true;
       clearTimeout(timer);
     };
-  }, [tMain, tSteps, resolvedVersion]);
+  }, [addrKey, resolvedVersion]);
   const tarifPassage = tarif?.total ?? null;
 
   const totalVolumePoints = useMemo(() => {
