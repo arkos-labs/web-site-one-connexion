@@ -2,13 +2,15 @@ import type { Metadata } from "next";
 import PageSchema from "@/components/PageSchema";
 
 export const metadata: Metadata = {
-  title: "Contact coursier Paris & Île-de-France",
+  title: { absolute: "Contacter ONE CONNEXION : coursier express en Île-de-France" },
   description:
-    "Contactez One Connexion pour vos livraisons urgentes à Paris et en Île-de-France. Prix affiché avant commande, réponse rapide. Téléphone, email ou formulaire.",
+    "Un envoi à organiser ? Contactez notre équipe coursier : réponse rapide, devis immédiat, prise en charge en moins de 45 minutes en Île-de-France.",
   alternates: { canonical: "/contact" },
   openGraph: {
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "ONE CONNEXION - Coursier B2B Paris & Île-de-France" }],
     url: "/contact",
+    siteName: "ONE CONNEXION",
+    locale: "fr_FR",
     title: "Contact - ONE CONNEXION",
     description:
       "Contactez-nous pour vos livraisons urgentes à Paris et en Île-de-France.",

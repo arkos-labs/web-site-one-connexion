@@ -186,6 +186,42 @@ export default function ReferencesPage() {
         </div>
       </section>
 
+      {/* ── Secteurs servis, demandes, compte ── */}
+      <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-12">
+        <div className="grid gap-12 lg:grid-cols-3">
+          <div>
+            <h2 className="text-[clamp(22px,2.4vw,30px)] font-bold leading-[1.15] tracking-[-0.02em]">Secteurs servis</h2>
+            <p className="mt-3 text-[15.5px] leading-[1.7] text-muted">
+              Nous travaillons pour trois grandes familles de clients professionnels : le juridique (cabinets d&apos;avocats, études notariales, huissiers), la santé (laboratoires, cliniques, pharmacies) et le commerce en ligne ou de luxe. Ce qui les réunit n&apos;est pas le contenu de l&apos;envoi, mais l&apos;exigence qui l&apos;accompagne : un délai à tenir, un destinataire précis, une preuve de remise.
+            </p>
+            <p className="mt-3 text-[15.5px] leading-[1.7] text-muted">
+              Chaque secteur a ses envois types : pièces de procédure et actes pour le juridique, prélèvements et matériel pour la santé, colis de valeur pour le commerce. Le principe reste le même partout : une course dédiée, un coursier pour un seul envoi, détaillée dans{" "}
+              <Link href="/methode" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">notre méthode</Link>.
+            </p>
+          </div>
+          <div>
+            <h2 className="text-[clamp(22px,2.4vw,30px)] font-bold leading-[1.15] tracking-[-0.02em]">Ce que nos clients nous demandent</h2>
+            <p className="mt-3 text-[15.5px] leading-[1.7] text-muted">
+              Les demandes se ressemblent d&apos;un secteur à l&apos;autre : savoir à quelle heure le coursier arrive, suivre la course en ligne, obtenir le nom de la personne qui a reçu l&apos;envoi et l&apos;heure de remise, puis retrouver ces informations au moment de facturer. Un prix affiché avant de commander et un interlocuteur unique complètent la liste.
+            </p>
+            <p className="mt-3 text-[15.5px] leading-[1.7] text-muted">
+              Cette page décrit des secteurs et des cas d&apos;usage, pas une liste nominative de clients.
+            </p>
+          </div>
+          <div>
+            <h2 className="text-[clamp(22px,2.4vw,30px)] font-bold leading-[1.15] tracking-[-0.02em]">Ouvrir un compte</h2>
+            <p className="mt-3 text-[15.5px] leading-[1.7] text-muted">
+              Pour des envois réguliers, vous pouvez{" "}
+              <Link href="/services/compte-entreprise" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">ouvrir un compte entreprise</Link>
+              {" "}: les courses de vos collaborateurs sont regroupées, avec un suivi centralisé.
+            </p>
+            <p className="mt-3 text-[15.5px] leading-[1.7] text-muted">
+              Pour vérifier qu&apos;une adresse est desservie avant de commander, consultez{" "}
+              <Link href="/zones" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">nos zones de livraison</Link>.
+            </p>
+          </div>
+        </div>
+      </section>
 
       <Contact />
     </main>

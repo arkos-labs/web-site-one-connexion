@@ -14,9 +14,9 @@ import { SITE_URL, PHONE_TEL, PHONE_DISPLAY } from "@/lib/site-content";
 import { SERVICES } from "@/lib/services";
 import { Clock, Shield, MapPin, Zap } from "lucide-react";
 
-const TITLE = "Coursier en Île-de-France : courses dédiées 7j/7, 7h-23h";
+const TITLE = "Coursier en Île-de-France : course dédiée 7j/7";
 const DESCRIPTION =
-  "Coursier en Île-de-France pour entreprises : enlèvement en moins de 45 minutes, course 100% dédiée sans rupture, 8 départements couverts. Suivi en direct et preuve de remise.";
+  "Coursier en Île-de-France : une course dédiée par envoi, prise en charge en moins de 45 minutes, suivi en direct. Paris, petite et grande couronne.";
 
 const H2 = "text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]";
 const LINK = "font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark";

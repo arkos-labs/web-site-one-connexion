@@ -2,7 +2,9 @@
 
 import React, { useState } from "react";
 import { Mail, Phone, MapPin, Clock, ArrowRight, Send } from "lucide-react";
+import Link from "next/link";
 import { PHONE_DISPLAY, PHONE_TEL, EMAIL, LEGAL, MAPS_URL } from "@/lib/site-content";
+import { HOURS } from "@/lib/hours";
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -222,6 +224,34 @@ export default function ContactPage() {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Préparer sa demande : contenu éditorial */}
+      <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-16">
+        <div className="grid gap-12 lg:grid-cols-3">
+          <div>
+            <h2 className="text-[clamp(22px,2.4vw,30px)] font-bold leading-[1.15] tracking-[-0.02em]">Ce qu&apos;il faut préparer avant d&apos;appeler</h2>
+            <p className="mt-3 text-[15.5px] leading-[1.7] text-muted">
+              Pour qu&apos;une course parte vite, rassemblez quatre informations : l&apos;adresse d&apos;enlèvement (avec code d&apos;accès et étage), l&apos;adresse de remise, la nature de l&apos;envoi et l&apos;heure à laquelle il doit arriver. Un numéro joignable côté enlèvement comme côté remise évite la plupart des retards.
+            </p>
+          </div>
+          <div>
+            <h2 className="text-[clamp(22px,2.4vw,30px)] font-bold leading-[1.15] tracking-[-0.02em]">Nos horaires de prise en charge</h2>
+            <p className="mt-3 text-[15.5px] leading-[1.7] text-muted">
+              La prise en charge se fait {HOURS.label}, y compris le dimanche, en moins de 45 minutes sous réserve de disponibilité au moment de la commande. Hors de ces horaires, le formulaire reste disponible. Pour comprendre le déroulé d&apos;une course, voyez{" "}
+              <Link href="/methode" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">notre méthode de course dédiée</Link>.
+            </p>
+          </div>
+          <div>
+            <h2 className="text-[clamp(22px,2.4vw,30px)] font-bold leading-[1.15] tracking-[-0.02em]">Comptes entreprise et facturation</h2>
+            <p className="mt-3 text-[15.5px] leading-[1.7] text-muted">
+              Pour des envois réguliers, vous pouvez{" "}
+              <Link href="/services/compte-entreprise" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">ouvrir un compte entreprise</Link>
+              {" "}: les courses de vos collaborateurs sont regroupées, avec un suivi centralisé. Le prix d&apos;une course s&apos;affiche avant de commander, et la grille figure sur{" "}
+              <Link href="/tarifs" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">nos tarifs</Link>.
+            </p>
           </div>
         </div>
       </section>

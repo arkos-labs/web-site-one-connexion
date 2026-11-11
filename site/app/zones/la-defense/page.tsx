@@ -12,9 +12,9 @@ import { SERVICES } from "@/lib/services";
 import { getZone } from "@/lib/zones/data";
 import { MapPin } from "lucide-react";
 
-const TITLE = "Coursier La Défense : courses pour les entreprises du quartier";
+const TITLE = "Coursier La Défense : course dédiée en 45 min";
 const DESCRIPTION =
-  "Coursier à La Défense pour vos plis, documents et colis professionnels : une course dédiée dans le quartier d'affaires, avec suivi de l'envoi.";
+  "Coursier à La Défense : une course dédiée par envoi, prise en charge en moins de 45 minutes, tarif affiché à la commande et suivi en direct jusqu'à la remise.";
 
 export const metadata: Metadata = {
   title: { absolute: TITLE },

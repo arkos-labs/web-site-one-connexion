@@ -86,6 +86,27 @@ export const GUIDES: Guide[] = [
           "Le détail des engagements figure sur la page de notre [service de transport de plis confidentiels](/services/plis-confidentiels), et le [tarif d'une course](/tarifs) sur notre grille.",
         ],
       },
+      {
+        heading: "Sceller le pli avant le passage du coursier",
+        paragraphs: [
+          "Le pli se prépare avant l’arrivée du coursier, pas devant lui. Fermez l’enveloppe ou la pochette, vérifiez que le nom du destinataire est lisible et gardez un double de ce que contient le pli si vous en avez besoin pour votre dossier.",
+          "Le coursier transporte le pli tel qu’il lui est remis : il ne l’ouvre pas et ne vérifie pas son contenu. Un pli fermé, sans mention du contenu à l’extérieur, limite aussi les questions à l’accueil du destinataire.",
+        ],
+      },
+      {
+        heading: "Choisir le bon service : pli simple, pli confidentiel, acte",
+        paragraphs: [
+          "Pour un document courant, une course dédiée suffit : un coursier pour un seul envoi, avec remise horodatée. Pour un pli dont le destinataire doit être le seul à le recevoir, choisissez la remise en main propre et décrivez-la à la commande. Notre [coursier plis confidentiels](/services/plis-confidentiels) correspond à ce besoin.",
+          "Pour un acte, un dossier de procédure ou une pièce à remettre à une autre étude, voyez le [coursier avocat et notaire](/services/coursier-avocat-notaire). Le délai se choisit ensuite selon l’échéance : Normal (3 h), Urgent (1 h 30) ou Super (1 h), selon [nos tarifs](/tarifs).",
+        ],
+      },
+      {
+        heading: "Ce que le coursier ne fait pas",
+        paragraphs: [
+          "Le périmètre de la prestation est simple : le coursier prend en charge l’envoi fermé, le transporte directement et le remet à la personne désignée. Il n’ouvre pas le pli, ne contrôle pas son contenu et ne le laisse à un accueil que sur votre consigne.",
+          "La remise horodatée établit qui a reçu l’envoi et à quelle heure. Elle ne remplace pas les formalités propres à un acte (signification, lettre recommandée) lorsque la loi les impose. En cas de doute sur ce qu’exige votre dossier, renseignez-vous auprès de votre conseil avant de commander.",
+        ],
+      },
     ],
     faq: [
       {
@@ -158,6 +179,27 @@ export const GUIDES: Guide[] = [
         paragraphs: [
           "Pour un prélèvement, la course dédiée évite les arrêts intermédiaires. La remise est horodatée avec le nom du réceptionnaire, ce qui permet de reconstituer le trajet en cas de question du laboratoire.",
           "Pour commander, voyez notre service de [coursier médical moto](/services/transport-medical). Pour les réactifs, consommables et instruments, lisez le guide de l'[expédition de matériel de laboratoire](/guides/expedier-du-materiel-de-laboratoire).",
+        ],
+      },
+      {
+        heading: "Contenant isotherme et température de conservation",
+        paragraphs: [
+          "La température demandée figure dans les consignes du laboratoire destinataire. Elle se communique à la commande, avec le contenant prévu : c’est l’expéditeur qui prépare le colis, le coursier le transporte fermé, dans le sens indiqué, sans l’ouvrir.",
+          "Pour un envoi qui doit rester au frais, ne comptez pas sur le trajet pour rattraper un conditionnement insuffisant. Si vous hésitez sur le contenant, appelez-nous avant de commander : nous vous disons ce que nous pouvons prendre en charge. Notre page de [transport de prélèvements sanguins](/services/transport-prelevements-sang) précise ce service.",
+        ],
+      },
+      {
+        heading: "Délais et horodatage de la course",
+        paragraphs: [
+          "Le délai de stabilité fixe l’heure limite d’arrivée, et c’est à partir d’elle que se choisit la formule : Normal (3 h), Urgent (1 h 30) ou Super (1 h). La prise en charge se fait en moins de 45 minutes, sous réserve de disponibilité au moment de la commande.",
+          "L’heure de prise en charge et l’heure de remise sont enregistrées avec le nom de la personne qui reçoit le colis. Si le laboratoire s’interroge sur le délai d’un échantillon, vous pouvez reconstituer le trajet.",
+        ],
+      },
+      {
+        heading: "Laboratoires et EHPAD : deux cas d’usage",
+        paragraphs: [
+          "Un laboratoire envoie ses prélèvements vers un plateau technique ou un laboratoire partenaire : c’est le cas décrit sur notre page [coursier pour laboratoire](/services/coursier-laboratoire), avec des courses régulières entre les mêmes adresses.",
+          "Un établissement d’hébergement pour personnes âgées envoie des prélèvements ponctuels vers le laboratoire qui assure les analyses : le déroulé est détaillé dans notre guide du [coursier pour EHPAD](/guides/coursier-ehpad-logistique-des-soins). Dans les deux cas, la course est dédiée et le colis part fermé.",
         ],
       },
     ],
@@ -672,7 +714,7 @@ export const GUIDES: Guide[] = [
       {
         heading: "Combien de temps met un coursier express pour livrer en Île-de-France, concrètement",
         paragraphs: [
-          "La réponse directe : le délai total se décompose en deux séquences. D'abord l'enlèvement, annoncé en moins de 45 minutes chez One Connexion, 7 jours sur 7 entre 8h et 19h, sous réserve de disponibilité au moment où vous commandez. Ensuite le trajet jusqu'au destinataire, qui suit la formule retenue. Une course en formule Super vise la livraison sous 1 heure après enlèvement. La formule Urgent vise sous 1 h 30. La formule Normal vise sous 3 heures.",
+          "La réponse directe : le délai total se décompose en deux séquences. D'abord l'enlèvement, annoncé en moins de 45 minutes chez One Connexion, 7 jours sur 7 entre 8h et 19h, sous réserve de disponibilité au moment où vous commandez. Ensuite le trajet jusqu'au destinataire, qui suit la formule retenue. Une course en formule Super vise la livraison sous 1 heure après enlèvement. La formule Urgent vise sous 1 h 30. La formule Normal vise sous 3 heures. Pour un besoin immédiat, voyez notre service de [coursier urgent](/services/coursier-urgent-paris).",
           "Ce découpage a son importance. Beaucoup de prestataires communiquent un chiffre unique, du genre « livraison en 1 heure », sans préciser s'il inclut le temps d'enlèvement. Chez One Connexion, la confirmation se fait avant d'engager la course : vous savez à quelle heure le coursier arrive, et vous savez quelle formule vous avez choisie. Le délai annoncé correspond au délai réel parce que la course est dédiée, sans regroupement avec d'autres colis et sans passage par un centre de tri.",
           "Autre point à intégrer : le coursier ne part pas d'un entrepôt. Il part de l'adresse d'enlèvement que vous indiquez. Le trajet est donc celui de votre expédition, pas celui d'un réseau logistique. C'est ce qui rend le calcul lisible : vous connaissez vos deux adresses, vous connaissez l'heure de prise en charge, vous pouvez estimer le reste.",
           "La zone change la donne. Un trajet intra-Paris en deux-roues et un trajet Paris vers la grande couronne ne se jouent pas de la même façon. Le deux-roues passe là où un utilitaire reste bloqué, ce qui fait la différence aux heures de pointe. Sur les trajets vers la banlieue, La Défense, Roissy ou Orly, ce sont les motos routières qui prennent le relais.",
@@ -696,7 +738,7 @@ export const GUIDES: Guide[] = [
       {
         heading: "Ce déroulé explique pourquoi le délai tient",
         paragraphs: [
-          "Ce déroulé explique pourquoi le délai tient. Une livraison mutualisée fait attendre votre colis jusqu'à la fin d'une tournée qui comporte plusieurs arrêts. Une course dédiée part pour vous seul. Le temps de trajet n'est donc pas gonflé par les livraisons des autres clients.",
+          "Ce déroulé explique pourquoi le délai tient. Une livraison mutualisée fait attendre votre colis jusqu'à la fin d'une tournée qui comporte plusieurs arrêts. Une course dédiée part pour vous seul. Le temps de trajet n'est donc pas gonflé par les livraisons des autres clients. Pour un envoi à livrer dans la journée sans formule express, la [livraison le jour même](/services/livraison-jour-meme-b2b) pour les entreprises est l'alternative.",
           "La nature de l'envoi entre aussi dans l'organisation, même si elle ne change pas le tarif, qui dépend seulement de la zone et du délai. Un pli juridique destiné à un tribunal ou à un notaire exige une remise en main propre avec preuve de dépôt horodatée. Un prélèvement ou un échantillon de laboratoire peut nécessiter un contenant isotherme pour rester au frais. Ces procédures se calent sur le même squelette de course, avec les mêmes repères de temps.",
         ],
       },
@@ -704,7 +746,7 @@ export const GUIDES: Guide[] = [
         heading: "Lire le tableau : formule et géographie",
         paragraphs: [
           "Deux lectures possibles de ce tableau. La première porte sur la formule : plus vous serrez le délai, plus le prix monte, et le tarif dépend de la zone et du délai. La seconde porte sur la géographie : la plage horaire de service reste la même partout en Île-de-France, mais le temps de trajet réel dépend de la distance et de la circulation. Un colis jusqu'à 18 kg peut être pris en charge, ce qui couvre la majorité des envois professionnels courants.",
-          "Pour situer le budget avant de choisir une formule, la page sur le prix d'un coursier express à Paris détaille ce qui fait varier la facture. Et si votre destinataire se trouve hors de la capitale, le fonctionnement des trajets vers la banlieue est décrit sur la page coursier Paris banlieue.",
+          "Pour situer le budget avant de choisir une formule, la page sur le [prix d'une course](/guides/prix-coursier-express-paris) de [coursier express à Paris](/services/coursier-express-paris) détaille ce qui fait varier la facture. Et si votre destinataire se trouve hors de la capitale, le fonctionnement des trajets vers la banlieue est décrit sur la page coursier Paris banlieue. Les [zones couvertes en Île-de-France](/zones/ile-de-france) y sont détaillées commune par commune.",
         ],
       },
       {

@@ -7,11 +7,12 @@ import Link from "next/link";
 import JsonLd from "@/components/JsonLd";
 import { SITE_URL } from "@/lib/site-content";
 import DeptCards from "@/components/sections/DeptCards";
+import { hubServiceSchema } from "@/lib/service-schema";
 
 export const metadata: Metadata = {
-  title: { absolute: "Zones de livraison en Île-de-France | ONE CONNEXION" },
+  title: { absolute: "Zones de livraison coursier à Paris et en Île-de-France" },
   description:
-    "Coursier à Paris, en petite et grande couronne et à La Défense. Enlèvement en moins de 45 min, 7j/7, prix affiché avant de commander.",
+    "Nos zones de livraison coursier : Paris, petite et grande couronne. Une course dédiée par envoi, prise en charge en moins de 45 minutes, suivi en direct.",
   alternates: { canonical: "/zones" },
 };
 
@@ -95,6 +96,15 @@ export default function ZonesPage() {
   return (
     <>
       <JsonLd data={breadcrumbSchema} />
+      <JsonLd
+        data={hubServiceSchema({
+          path: "/zones",
+          name: "Coursier moto express en Île-de-France",
+          description: "Course dédiée par envoi, sans regroupement, avec prise en charge en moins de 45 minutes et suivi en direct.",
+          areaName: "Île-de-France",
+          withOffer: true,
+        })}
+      />
 
       <section className="bg-ink text-white">
         <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-20 pt-16">

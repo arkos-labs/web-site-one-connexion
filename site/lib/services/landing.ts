@@ -29,9 +29,9 @@ export const LANDING_SERVICES: LandingService[] = [
   {
     slug: "coursier-laboratoire",
     name: "Coursier pour laboratoire",
-    title: "Coursier pour laboratoire : courses dédiées en Île-de-France",
+    title: "Coursier pour laboratoire à Paris : prélèvements et matériel",
     description:
-      "Coursier pour laboratoire : transport de prélèvements, de matériel et de documents en course dédiée, avec traçabilité de la prise en charge à la remise.",
+      "Coursier pour laboratoire à Paris : transport de prélèvements, de matériel et de documents en course dédiée, traçabilité de la prise en charge à la remise.",
     h1: "Coursier pour laboratoire : une course dédiée par envoi",
     intro:
       "Un laboratoire confie ses prélèvements, son matériel et ses documents à un coursier qui vient les chercher sur place. L’envoi part seul, dans le contenant convenu, et va directement au destinataire. Il est remis en main propre, et la prise en charge comme la remise sont enregistrées.",
@@ -62,6 +62,27 @@ export const LANDING_SERVICES: LandingService[] = [
         title: "Organiser une course pour votre laboratoire",
         paragraphs: [
           "Commandez en ligne ou par téléphone en indiquant l’adresse d’enlèvement, le destinataire, la nature de l’envoi et les conditions de transport. Pour des envois réguliers entre plusieurs sites, nous convenons à l’avance des adresses, des contenants et des personnes à prévenir.",
+        ],
+      },
+      {
+        title: "Prélèvements et chaîne du froid",
+        paragraphs: [
+          "Pour un prélèvement qui doit rester au frais, le contenant isotherme est convenu à la commande et préparé par le laboratoire. Le coursier le transporte fermé, sans l’ouvrir, et va directement chez le destinataire pour limiter la durée du trajet. Le détail du service figure sur notre page de [transport de prélèvements sanguins](/services/transport-prelevements-sang).",
+          "Le [guide des prélèvements médicaux](/guides/transport-de-prelevements-medicaux) explique comment préparer l’envoi, quel conditionnement prévoir et ce que le coursier prend en charge ou non. Pour les établissements d’hébergement, lisez aussi notre guide du [coursier pour EHPAD](/guides/coursier-ehpad-logistique-des-soins).",
+        ],
+      },
+      {
+        title: "Matériel et consommables : ce qui se transporte, ce qui ne se transporte pas",
+        paragraphs: [
+          "Réactifs sous conditionnement fermé, consommables, petites pièces d’appareil, documents d’analyse : tout ce qui tient dans un colis léger peut partir en course dédiée. Notre [transport de matériel médical](/services/transport-medical) couvre ces envois entre laboratoires, cabinets et établissements.",
+          "Notre flotte est composée de deux-roues. Un volume ou un gabarit important, ou un conditionnement qui demande des précautions particulières, doit nous être signalé avant la commande : nous vous disons si nous pouvons prendre l’envoi en charge, plutôt que de le découvrir à l’enlèvement.",
+        ],
+      },
+      {
+        title: "Preuve de remise et destinataire désigné",
+        paragraphs: [
+          "À chaque course, l’heure de prise en charge et l’heure de remise sont enregistrées, avec le nom de la personne qui reçoit l’envoi. Ces informations peuvent être conservées dans le dossier de l’échantillon ou de la commande de matériel.",
+          "Indiquez à la commande le service ou la personne destinataire, ainsi qu’un numéro joignable : le coursier remet l’envoi en main propre, pas à un accueil non prévu.",
         ],
       },
     ],
@@ -96,9 +117,9 @@ export const LANDING_SERVICES: LandingService[] = [
   {
     slug: "coursier-avocat-notaire",
     name: "Coursier avocat et notaire",
-    title: "Coursier avocat et notaire : transport de vos documents",
+    title: "Coursier avocat et notaire à Paris : actes et pièces",
     description:
-      "Coursier pour avocat et notaire : transport de pièces, actes et dossiers en course dédiée, avec remise en main propre et suivi de chaque envoi.",
+      "Coursier pour avocat et notaire à Paris : transport de pièces, actes et dossiers en course dédiée, remise en main propre et suivi de chaque envoi.",
     h1: "Coursier avocat et notaire : vos documents en course dédiée",
     intro:
       "Un cabinet d’avocats et une étude notariale n’envoient pas les mêmes documents, mais ils ont la même exigence : que l’envoi arrive à la bonne personne, et qu’on puisse le prouver. Chaque course part seule et se termine par une remise en main propre.",
@@ -129,6 +150,27 @@ export const LANDING_SERVICES: LandingService[] = [
         title: "Organiser une course pour votre cabinet",
         paragraphs: [
           "Commandez en ligne ou par téléphone avec l’adresse d’enlèvement, la destination, le nom du destinataire et l’heure limite. Nous confirmons la faisabilité avant d’engager la course. Pour les envois réguliers d’un cabinet ou d’une étude, un compte regroupe les courses de tous les collaborateurs.",
+        ],
+      },
+      {
+        title: "Pièces, actes et dossiers : ce qui part et comment le préparer",
+        paragraphs: [
+          "Un envoi de cabinet ou d’étude se prépare comme un dossier : pièces classées, actes dans une pochette ou une enveloppe fermée, nom du destinataire inscrit lisiblement. Plus l’envoi est sensible, plus il est utile de le sceller avant l’arrivée du coursier. Pour un original ou un document confidentiel, voyez notre service de [plis confidentiels](/services/plis-confidentiels).",
+          "Le guide pour [envoyer un pli confidentiel à Paris](/guides/envoyer-un-pli-confidentiel-paris) détaille cette préparation. Le coursier transporte l’envoi tel qu’il lui est remis, sans l’ouvrir.",
+        ],
+      },
+      {
+        title: "Preuve de remise et traçabilité du dossier",
+        paragraphs: [
+          "À la remise, le nom de la personne qui reçoit l’envoi et l’heure sont enregistrés. Cette preuve peut être jointe au dossier du client, pour établir qu’une pièce ou un acte a bien été remis à la date et à l’heure voulues.",
+          "L’avancement de la course est consultable en ligne depuis la prise en charge, et le coursier reste joignable. Vous pouvez prévenir le destinataire de l’arrivée, ce qui évite l’attente à l’accueil.",
+        ],
+      },
+      {
+        title: "Un seul coursier, un seul destinataire",
+        paragraphs: [
+          "Le principe tient en une phrase : un envoi, un coursier, un trajet direct. C’est la [course dédiée](/guides/course-dediee-coursier), qui évite les arrêts intermédiaires et les regroupements avec d’autres colis.",
+          "Pour un cabinet comme pour une étude, cela signifie que le dossier n’est pas confié à un tiers en cours de route et ne transite par aucun dépôt. Si le destinataire change au dernier moment, prévenez-nous : le coursier est joignable et adapte la remise.",
         ],
       },
     ],
@@ -163,9 +205,9 @@ export const LANDING_SERVICES: LandingService[] = [
   {
     slug: "coursier-dimanche-paris",
     name: "Coursier dimanche Paris",
-    title: "Coursier dimanche Paris : courses dédiées le week-end",
+    title: "Coursier le dimanche à Paris : course dédiée 7j/7",
     description:
-      "Coursier le dimanche à Paris : courses dédiées pour vos envois du week-end, avec prise en charge, suivi de la course et remise au destinataire.",
+      "Besoin d'un coursier le dimanche à Paris ? Une course dédiée par envoi, prise en charge en moins de 45 minutes, suivi en direct et remise horodatée.",
     h1: "Coursier dimanche Paris : une course dédiée le week-end",
     intro:
       "Certains envois ne peuvent pas attendre le lundi. Le dimanche, un coursier prend en charge votre document ou votre colis et le remet directement au destinataire, avec le même suivi qu’en semaine.",
@@ -195,6 +237,27 @@ export const LANDING_SERVICES: LandingService[] = [
         title: "Organiser une course pour le dimanche",
         paragraphs: [
           "Pour une course le dimanche, contactez-nous en amont avec l’adresse d’enlèvement, la destination et l’heure souhaitée : nous confirmons la faisabilité avant d’engager le coursier.",
+        ],
+      },
+      {
+        title: "Ce qui circule le dimanche",
+        paragraphs: [
+          "Les envois du dimanche relèvent de quelques familles : plis et documents à remettre avant la reprise du lundi, prélèvements et matériel dont un laboratoire a besoin sans attendre, pièces ou colis légers qu’un collaborateur ou un client attend. Dans tous les cas, l’envoi part en [course dédiée](/guides/course-dediee-coursier) : un coursier pour un seul envoi, sans regroupement avec d’autres colis.",
+          "Le gabarit compte autant que la nature de l’envoi. Notre flotte est composée de deux-roues : elle convient aux plis, aux documents, aux petits colis et au matériel léger. Pour un volume ou un format important, prévenez-nous avant de commander.",
+        ],
+      },
+      {
+        title: "Organiser une course un dimanche",
+        paragraphs: [
+          "Commandez dès que l’envoi est prêt, en ligne ou par téléphone. La prise en charge se fait en moins de 45 minutes, sous réserve de disponibilité au moment de la commande, et nous confirmons la faisabilité avant d’engager le coursier. Si le besoin est pressant, regardez aussi notre service de [coursier urgent à Paris](/services/coursier-urgent-paris).",
+          "Une fois la course lancée, vous suivez son avancement en ligne et le coursier reste joignable. Les [zones couvertes](/zones/ile-de-france) vont de Paris à la grande couronne : indiquez l’adresse complète pour vérifier que votre trajet en fait partie.",
+        ],
+      },
+      {
+        title: "Dimanche et jours fériés : ce qui change et ce qui ne change pas",
+        paragraphs: [
+          "Les horaires de prise en charge sont ceux de toute la semaine : 7j/7 de 8h à 19h. Ce qui change le dimanche, c’est l’environnement : bureaux fermés, accueils absents, destinataire à joindre autrement. Ce qui ne change pas, c’est la méthode : une course dédiée, un suivi en ligne, une remise en main propre et l’heure de remise enregistrée.",
+          "Pour un jour férié, appelez-nous avant de commander : nous confirmons la faisabilité avant d’engager le coursier.",
         ],
       },
     ],
