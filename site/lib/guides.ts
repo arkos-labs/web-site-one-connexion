@@ -86,6 +86,27 @@ export const GUIDES: Guide[] = [
           "Le détail des engagements figure sur la page de notre [service de transport de plis confidentiels](/services/plis-confidentiels), et le [tarif d'une course](/tarifs) sur notre grille.",
         ],
       },
+      {
+        heading: "Sceller le pli avant le passage du coursier",
+        paragraphs: [
+          "Le pli se prépare avant l’arrivée du coursier, pas devant lui. Fermez l’enveloppe ou la pochette, vérifiez que le nom du destinataire est lisible et gardez un double de ce que contient le pli si vous en avez besoin pour votre dossier.",
+          "Le coursier transporte le pli tel qu’il lui est remis : il ne l’ouvre pas et ne vérifie pas son contenu. Un pli fermé, sans mention du contenu à l’extérieur, limite aussi les questions à l’accueil du destinataire.",
+        ],
+      },
+      {
+        heading: "Choisir le bon service : pli simple, pli confidentiel, acte",
+        paragraphs: [
+          "Pour un document courant, une course dédiée suffit : un coursier pour un seul envoi, avec remise horodatée. Pour un pli dont le destinataire doit être le seul à le recevoir, choisissez la remise en main propre et décrivez-la à la commande. Notre [coursier plis confidentiels](/services/plis-confidentiels) correspond à ce besoin.",
+          "Pour un acte, un dossier de procédure ou une pièce à remettre à une autre étude, voyez le [coursier avocat et notaire](/services/coursier-avocat-notaire). Le délai se choisit ensuite selon l’échéance : Normal (3 h), Urgent (1 h 30) ou Super (1 h), selon [nos tarifs](/tarifs).",
+        ],
+      },
+      {
+        heading: "Ce que le coursier ne fait pas",
+        paragraphs: [
+          "Le périmètre de la prestation est simple : le coursier prend en charge l’envoi fermé, le transporte directement et le remet à la personne désignée. Il n’ouvre pas le pli, ne contrôle pas son contenu et ne le laisse à un accueil que sur votre consigne.",
+          "La remise horodatée établit qui a reçu l’envoi et à quelle heure. Elle ne remplace pas les formalités propres à un acte (signification, lettre recommandée) lorsque la loi les impose. En cas de doute sur ce qu’exige votre dossier, renseignez-vous auprès de votre conseil avant de commander.",
+        ],
+      },
     ],
     faq: [
       {
