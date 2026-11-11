@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { MapPin, Clock, Plus, Trash2, ShieldCheck, AlertTriangle, Loader2, Check } from "lucide-react";
 import { AddressAutocomplete } from "@/components/AddressAutocomplete";
-import { isServedAddress, getDepartmentFromAddress, getZoneFromDepartment, extraStopPrice } from "@/lib/pricing";
+import { isServedAddress, getDepartmentFromAddress, getZoneFromDepartment, extraStopPrice, calculatePrice } from "@/lib/pricing";
 import { legDistancesKm } from "@/lib/route-distance";
 import { joinNumberSuffix } from "@/lib/address-idf";
 import UnservedAddressAlert, { useUnservedAddresses } from "@/components/UnservedAddressAlert";
@@ -217,12 +217,19 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
     const deliveries = resolvedDeliveries as string[];
     const zoneOf = (a: string) => getZoneFromDepartment(getDepartmentFromAddress(a));
     const firstZone = Math.max(zoneOf(pickup), zoneOf(deliveries[0]));
-    const forfait = NAVETTE_FORFAIT[firstZone as 0 | 1 | 2];
+    // Grande couronne : facturée à la distance depuis Paris, comme une course normale, moins 4 € (minimum 55 €).
+    const forfait =
+      firstZone === 2
+        ? Math.max(NAVETTE_FORFAIT[2], calculatePrice(pickup, deliveries[0], "standard") - 4)
+        : NAVETTE_FORFAIT[firstZone as 0 | 1];
     if (forfait == null) {
       setTarif(null);
       return;
     }
-    const firstLeg = { label: "Enlèvement → livraison (forfait navette)", price: forfait };
+    const firstLeg = {
+      label: firstZone === 2 ? "Enlèvement → livraison (navette, selon la distance)" : "Enlèvement → livraison (forfait navette)",
+      price: forfait,
+    };
     if (deliveries.length === 1) {
       setTarif({ legs: [firstLeg], total: forfait });
       return;
