@@ -181,6 +181,27 @@ export const GUIDES: Guide[] = [
           "Pour commander, voyez notre service de [coursier médical moto](/services/transport-medical). Pour les réactifs, consommables et instruments, lisez le guide de l'[expédition de matériel de laboratoire](/guides/expedier-du-materiel-de-laboratoire).",
         ],
       },
+      {
+        heading: "Contenant isotherme et température de conservation",
+        paragraphs: [
+          "La température demandée figure dans les consignes du laboratoire destinataire. Elle se communique à la commande, avec le contenant prévu : c’est l’expéditeur qui prépare le colis, le coursier le transporte fermé, dans le sens indiqué, sans l’ouvrir.",
+          "Pour un envoi qui doit rester au frais, ne comptez pas sur le trajet pour rattraper un conditionnement insuffisant. Si vous hésitez sur le contenant, appelez-nous avant de commander : nous vous disons ce que nous pouvons prendre en charge. Notre page de [transport de prélèvements sanguins](/services/transport-prelevements-sang) précise ce service.",
+        ],
+      },
+      {
+        heading: "Délais et horodatage de la course",
+        paragraphs: [
+          "Le délai de stabilité fixe l’heure limite d’arrivée, et c’est à partir d’elle que se choisit la formule : Normal (3 h), Urgent (1 h 30) ou Super (1 h). La prise en charge se fait en moins de 45 minutes, sous réserve de disponibilité au moment de la commande.",
+          "L’heure de prise en charge et l’heure de remise sont enregistrées avec le nom de la personne qui reçoit le colis. Si le laboratoire s’interroge sur le délai d’un échantillon, vous pouvez reconstituer le trajet.",
+        ],
+      },
+      {
+        heading: "Laboratoires et EHPAD : deux cas d’usage",
+        paragraphs: [
+          "Un laboratoire envoie ses prélèvements vers un plateau technique ou un laboratoire partenaire : c’est le cas décrit sur notre page [coursier pour laboratoire](/services/coursier-laboratoire), avec des courses régulières entre les mêmes adresses.",
+          "Un établissement d’hébergement pour personnes âgées envoie des prélèvements ponctuels vers le laboratoire qui assure les analyses : le déroulé est détaillé dans notre guide du [coursier pour EHPAD](/guides/coursier-ehpad-logistique-des-soins). Dans les deux cas, la course est dédiée et le colis part fermé.",
+        ],
+      },
     ],
     faq: [
       {
