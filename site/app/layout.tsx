@@ -13,6 +13,7 @@ import CookieConsent from "@/components/CookieConsent";
 import MobileActionBar from "@/components/MobileActionBar";
 import ChatWidget from "@/components/ChatWidget";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
+import Contentsquare from "./contentsquare";
 import { SITE_URL } from "@/lib/site-content";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -97,6 +98,7 @@ export default function RootLayout({
         <MobileActionBar />
         <ChatWidget />
         <GoogleAnalytics />
+        <Contentsquare />
         <CookieConsent />
         <Analytics />
         <SpeedInsights />

@@ -5,7 +5,7 @@
 import Link from "next/link";
 import { Fragment } from "react";
 
-const LINK = /\[([^\]]+)\]\((\/[^)\s]*)\)/g;
+const LINK = /\[([^\]]+)\]\((\/[^)\s]*|https:\/\/[^)\s]+)\)/g;
 
 export default function InlineLinks({
   text,
@@ -20,9 +20,15 @@ export default function InlineLinks({
     const at = m.index ?? 0;
     if (at > last) parts.push(text.slice(last, at));
     parts.push(
-      <Link key={at} href={m[2]} className={className}>
-        {m[1]}
-      </Link>,
+      m[2].startsWith("https://") ? (
+        <a key={at} href={m[2]} className={className} target="_blank" rel="noopener noreferrer">
+          {m[1]}
+        </a>
+      ) : (
+        <Link key={at} href={m[2]} className={className}>
+          {m[1]}
+        </Link>
+      ),
     );
     last = at + m[0].length;
   }

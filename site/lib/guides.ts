@@ -763,6 +763,216 @@ export const GUIDES: Guide[] = [
     service: { href: "/services/coursier-express-paris", label: "Coursier express Paris" },
     published: "2026-11-07",
   },
+  {
+    slug: "course-dediee-coursier",
+    title: "Qu'est-ce qu'une course dédiée coursier ?",
+    h1: "Qu'est-ce qu'une course dédiée coursier ?",
+    summary: "Définition d'une course dédiée : un coursier, un seul envoi, un trajet direct. Ce qui la distingue d'une tournée groupée, et quand la choisir.",
+    seoTitle: "Course dédiée coursier : définition et comparatif",
+    description:
+      "Qu'est-ce qu'une course dédiée coursier ? Un seul envoi, un trajet direct, une responsabilité traçable. Comparatif avec la tournée groupée et cas d'usage.",
+    intro:
+      "Une course dédiée coursier est une mission où le coursier ne transporte que votre envoi, du point de collecte au point de remise, sans arrêt intermédiaire pour un autre client. Vous réservez un véhicule et un chauffeur pour votre seul pli, sur un trajet direct. La dédiée s'achète pour la maîtrise du trajet, pas pour le prix au kilomètre.",
+    sections: [
+      {
+        heading: "Définition : un mode d'exécution, pas un niveau de gamme",
+        paragraphs: [
+          "Une course dédiée est une prestation de transport express dans laquelle un coursier se voit confier un envoi unique et le remet à son destinataire sans collecter ni livrer autre chose en chemin. Le véhicule est mobilisé pour vous pendant la durée de la mission. Personne d'autre ne monte dans le coffre, personne d'autre ne dicte l'ordre des arrêts.",
+          "Le mot décrit la manière dont la mission est organisée, pas le véhicule. Un coursier à vélo peut faire une course dédiée dans Paris intra-muros, un utilitaire peut faire une tournée groupée en petite couronne.",
+        ],
+        list: [
+          "Un seul expéditeur par mission, un seul destinataire.",
+          "Un itinéraire direct, sans détour pour charger ou déposer chez un tiers.",
+          "Une responsabilité traçable de bout en bout : le coursier qui prend le pli est celui qui le remet.",
+        ],
+      },
+      {
+        heading: "Comment se déroule une course dédiée",
+        paragraphs: [
+          "Le déroulé est simple : vous transmettez la demande (adresse de collecte, adresse de remise, nature de l'envoi, créneau souhaité), le prestataire affecte un coursier et confirme la prise en charge. Le coursier récupère l'envoi, vérifie ce qu'il prend, part directement vers le destinataire, puis la remise se fait contre signature ou contre accusé, selon ce que vous avez demandé. Vous recevez la confirmation de livraison.",
+          "Pour un envoi sensible, cadrez l'étape de collecte : un coursier qui récupère un colis scellé doit pouvoir constater l'état du scellé avant de partir. Un scellé déjà rompu à la collecte ne peut pas être imputé au transporteur.",
+          "Sur une dédiée, vous achetez une fenêtre de disponibilité et non une place dans un planning partagé. Si l'accueil du destinataire est occupé, le coursier peut attendre quelques minutes, dans la limite prévue par le contrat.",
+        ],
+      },
+      {
+        heading: "Course dédiée ou tournée groupée : le comparatif",
+        paragraphs: [
+          "Les deux formats répondent à des besoins différents. Le tableau compare les critères observables. Aucun prix n'y figure : les tarifs dépendent du trajet, du véhicule et de l'horaire.",
+        ],
+        table: {
+          head: ["Critère", "Course dédiée", "Tournée groupée"],
+          rows: [
+            ["Nombre d'envois par véhicule", "Un seul", "Plusieurs, mutualisés"],
+            ["Itinéraire", "Direct, collecte puis remise", "Ordonné selon les autres clients"],
+            ["Maîtrise de l'heure de remise", "Élevée, le trajet ne dépend que de vous", "Dépendante des arrêts précédents"],
+            ["Chaîne de responsabilité", "Courte : un coursier du début à la fin", "Plus longue, plusieurs manipulations"],
+            ["Coût par envoi", "Plus élevé, le véhicule est mobilisé pour vous", "Plus bas, partagé entre expéditeurs"],
+            ["Pertinent pour", "Plis confidentiels, pièces sensibles, délais serrés", "Volume de plis courants, zones proches"],
+            ["Attente à la remise", "Possible dans la limite du contrat", "Difficile, elle décale la suite"],
+            ["Traçabilité", "Suivi d'une mission unique", "Suivi d'une tournée multi-arrêts"],
+          ],
+        },
+      },
+      {
+        heading: "Quand la course dédiée s'impose",
+        paragraphs: [
+          "Trois contextes justifient le plus souvent une dédiée. D'abord les pièces à valeur juridique ou contractuelle (acte notarié, contrat signé, dossier à remettre avant clôture) : la preuve de remise doit être conservée, et une dédiée avec accusé de réception répond à cette exigence. Ensuite les envois dont la confidentialité est structurante, comme un pli de licenciement ou un rapport d'audit, qui ne doivent pas voyager avec les plis d'autres expéditeurs. Enfin les envois fragiles ou sensibles au transport, comme les échantillons ou le matériel de laboratoire, car chaque arrêt d'une tournée est une occasion de cogner un colis.",
+          "À l'inverse, un pli courant sans contrainte d'heure ni de confidentialité supporte très bien une tournée groupée. Une entreprise qui envoie une vingtaine de plis administratifs dans le même quartier n'a pas besoin de vingt véhicules dédiés.",
+        ],
+        list: [
+          "Envoi courant, sans contrainte d'heure : tournée groupée.",
+          "Pièce juridique ou contractuelle : course dédiée avec accusé de réception.",
+          "Document confidentiel : course dédiée, pli scellé et remise contre signature.",
+          "Échantillon ou matériel fragile : course dédiée pour limiter les manipulations.",
+        ],
+      },
+      {
+        heading: "Ce que la course dédiée ne règle pas",
+        paragraphs: [
+          "Une course dédiée n'est pas plus rapide qu'une autre si le trajet et le trafic sont identiques. Elle ne remplace ni une préparation soignée du colis, ni la vérification de l'identité du destinataire à la remise. Une adresse fausse fait déplacer le coursier pour rien, dédié ou non.",
+          "Elle ne convient pas non plus aux volumes : livrer cinquante plis dans la journée en dédiée n'a pas de sens économique. Pour ce cas, une [livraison le jour même](/guides/livraison-le-jour-meme-entreprise) organisée en tournée est plus adaptée.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "Une course dédiée coursier est-elle la même chose qu'un coursier express ?",
+        answer:
+          "Non. Le coursier express désigne la promesse de délai, souvent dans la journée. La course dédiée désigne le mode d'exécution : un seul envoi par véhicule, trajet direct. Un coursier express peut être dédié ou groupé.",
+      },
+      {
+        question: "Combien de plis puis-je envoyer lors d'une course dédiée ?",
+        answer:
+          "Un seul envoi par mission, c'est la définition. Plusieurs plis pour un même destinataire peuvent voyager ensemble dans la même mission. Dès qu'il y a plusieurs destinataires, il faut une tournée groupée ou plusieurs dédiées.",
+      },
+      {
+        question: "La course dédiée coûte-t-elle toujours plus cher ?",
+        answer:
+          "Par envoi, en général oui, puisque le véhicule est mobilisé pour vous seul. Le calcul se fait à l'échelle de l'enjeu : si un retard entraîne une reprise, une reprogrammation ou une perte contractuelle, la dédiée peut être l'option la moins coûteuse au total.",
+      },
+      {
+        question: "Comment vérifier qu'un prestataire me facture bien une dédiée ?",
+        answer:
+          "Demandez à la commande : « le coursier part-il avec mon seul envoi ? ». La réponse doit être explicite. Demandez aussi si le contrat prévoit l'exclusivité du véhicule pendant la mission.",
+      },
+      {
+        question: "Une course dédiée est-elle adaptée aux envois confidentiels ?",
+        answer:
+          "Elle réduit le nombre d'intermédiaires, ce qui est un prérequis. Elle ne suffit pas seule : le pli doit être scellé, référencé et remis contre signature. La confidentialité se construit avec la procédure d'envoi, pas seulement avec le mode de transport. Voir le guide [pli confidentiel à Paris](/guides/envoyer-un-pli-confidentiel-paris).",
+      },
+    ],
+    service: { href: "/services/coursier-express-paris", label: "Coursier express Paris" },
+    published: "2026-11-10",
+  },
+  {
+    slug: "delai-formules-coursier-express",
+    title: "Combien de temps met un coursier express pour livrer en Île-de-France ?",
+    h1: "Combien de temps met un coursier express pour livrer en Île-de-France ?",
+    summary: "Délai d'un coursier express en Île-de-France : enlèvement en moins de 45 min, puis livraison sous 3 h, 1 h 30 ou 1 h selon la formule.",
+    seoTitle: "Délai coursier express Île-de-France : par formule",
+    description:
+      "Combien de temps met un coursier express pour livrer en Île-de-France ? Enlèvement en moins de 45 min, livraison sous 3 h (Normal), 1 h 30 (Urgent) ou 1 h (Super).",
+    intro:
+      "Comptez moins de 45 minutes pour l'enlèvement, puis sous 3 heures en Normal, sous 1 h 30 en Urgent ou sous 1 heure en Super, pour une course dédiée.",
+    sections: [
+      {
+        heading: "Combien de temps met un coursier express pour livrer en Île-de-France, concrètement",
+        paragraphs: [
+          "La réponse directe : le délai total se décompose en deux séquences. D'abord l'enlèvement, annoncé en moins de 45 minutes chez One Connexion, 7 jours sur 7 entre 8h et 19h, sous réserve de disponibilité au moment où vous commandez. Ensuite le trajet jusqu'au destinataire, qui suit la formule retenue. Une course en formule Super vise la livraison sous 1 heure après enlèvement. La formule Urgent vise sous 1 h 30. La formule Normal vise sous 3 heures.",
+          "Ce découpage a son importance. Beaucoup de prestataires communiquent un chiffre unique, du genre « livraison en 1 heure », sans préciser s'il inclut le temps d'enlèvement. Chez One Connexion, la confirmation se fait avant d'engager la course : vous savez à quelle heure le coursier arrive, et vous savez quelle formule vous avez choisie. Le délai annoncé correspond au délai réel parce que la course est dédiée, sans regroupement avec d'autres colis et sans passage par un centre de tri.",
+          "Autre point à intégrer : le coursier ne part pas d'un entrepôt. Il part de l'adresse d'enlèvement que vous indiquez. Le trajet est donc celui de votre expédition, pas celui d'un réseau logistique. C'est ce qui rend le calcul lisible : vous connaissez vos deux adresses, vous connaissez l'heure de prise en charge, vous pouvez estimer le reste.",
+          "La zone change la donne. Un trajet intra-Paris en deux-roues et un trajet Paris vers la grande couronne ne se jouent pas de la même façon. Le deux-roues passe là où un utilitaire reste bloqué, ce qui fait la différence aux heures de pointe. Sur les trajets vers la banlieue, La Défense, Roissy ou Orly, ce sont les motos routières qui prennent le relais.",
+        ],
+      },
+      {
+        heading: "Comment se déroule une course express, étape par étape",
+        paragraphs: [
+          "Le mécanisme est simple, et c'est justement sa simplicité qui rend le délai tenable. Voici comment une course se déroule chez One Connexion.",
+        ],
+        list: [
+          "Vous saisissez les deux adresses, l'enlèvement et la destination. Le prix s'affiche tout de suite, sans inscription.",
+          "Vous choisissez la formule : Normal, Urgent ou Super. Chacune correspond à un engagement de délai différent.",
+          "La faisabilité et le prix sont confirmés avant que la course ne soit engagée. Si le créneau n'est pas tenable, vous le savez avant, pas après.",
+          "Un coursier passe chercher le pli ou le colis en moins de 45 minutes, dans la plage 8h-19h, 7j/7.",
+          "La course est dédiée : un seul envoi à bord, trajet direct vers le destinataire, sans autre arrêt en route.",
+          "La remise est horodatée. Vous suivez l'avancement de la course en ligne jusqu'à la remise.",
+          "La facture avec TVA détaillée arrive par e-mail à la livraison. Le paiement se fait par carte via Stripe, ou sur facture à 30 jours pour les comptes entreprise.",
+        ],
+      },
+      {
+        heading: "Ce déroulé explique pourquoi le délai tient",
+        paragraphs: [
+          "Ce déroulé explique pourquoi le délai tient. Une livraison mutualisée fait attendre votre colis jusqu'à la fin d'une tournée qui comporte plusieurs arrêts. Une course dédiée part pour vous seul. Le temps de trajet n'est donc pas gonflé par les livraisons des autres clients.",
+          "La nature de l'envoi entre aussi dans l'organisation, même si elle ne change pas le tarif, qui dépend seulement de la zone et du délai. Un pli juridique destiné à un tribunal ou à un notaire exige une remise en main propre avec preuve de dépôt horodatée. Un prélèvement ou un échantillon de laboratoire peut nécessiter un contenant isotherme pour rester au frais. Ces procédures se calent sur le même squelette de course, avec les mêmes repères de temps.",
+        ],
+      },
+      {
+        heading: "Lire le tableau : formule et géographie",
+        paragraphs: [
+          "Deux lectures possibles de ce tableau. La première porte sur la formule : plus vous serrez le délai, plus le prix monte, et le tarif dépend de la zone et du délai. La seconde porte sur la géographie : la plage horaire de service reste la même partout en Île-de-France, mais le temps de trajet réel dépend de la distance et de la circulation. Un colis jusqu'à 18 kg peut être pris en charge, ce qui couvre la majorité des envois professionnels courants.",
+          "Pour situer le budget avant de choisir une formule, la page sur le prix d'un coursier express à Paris détaille ce qui fait varier la facture. Et si votre destinataire se trouve hors de la capitale, le fonctionnement des trajets vers la banlieue est décrit sur la page coursier Paris banlieue.",
+        ],
+      },
+      {
+        heading: "Les erreurs qui font rater le délai annoncé",
+        paragraphs: [
+          "Le premier piège consiste à commander trop tard dans la journée. La plage de service s'arrête à 19h. Une commande passée en fin d'après-midi pour un trajet long vers la grande couronne peut ne plus être tenable, même si l'enlèvement en moins de 45 minutes reste possible. La confirmation de faisabilité existe précisément pour éviter cette déconvenue : elle vous dit si le créneau tient, avant que vous ne comptiez dessus.",
+          "Le deuxième piège concerne l'adresse. Une adresse imprécise, un bâtiment avec plusieurs entrées, un destinataire absent à l'arrivée : chacun de ces imprévus ajoute du temps que personne n'avait prévu. Sur une course dédiée, le coursier n'a qu'un arrêt, donc pas de marge pour absorber un contretemps. Donnez un numéro de téléphone joignable pour le destinataire, et vérifiez que quelqu'un sera là pour réceptionner.",
+          "Troisième erreur fréquente : confondre course dédiée et livraison mutualisée. Si vous commandez une course en pensant qu'elle sera groupée avec d'autres envois pour réduire le coût, vous serez déçu du prix. À l'inverse, si vous commandez une livraison groupée en espérant un délai serré, vous serez déçu du délai. Le choix entre les deux dépend de l'enjeu de l'envoi, et la page course dédiée ou tournée groupée pour entreprise aide à trancher selon votre cas.",
+          "Quatrième erreur : négliger la nature du contenu. Un pli confidentiel ne se remet pas à n'importe qui, un prélèvement médical ne se transporte pas à température ambiante. Ces contraintes ne rallongent pas forcément le trajet, mais elles imposent une procédure de remise qui doit être prévue dès la commande. Si votre envoi est un document sensible, la page sur l'envoi d'un pli confidentiel à Paris précise le cadre.",
+          "Enfin, un piège moins visible : croire que le délai affiché par un comparateur vaut engagement. Seul le prestataire qui prend la course peut confirmer un horaire. Un devis générique ne dit rien de la disponibilité réelle à l'instant où vous commandez.",
+        ],
+      },
+      {
+        heading: "Le délai que personne ne mesure : le temps entre votre décision et votre commande",
+        paragraphs: [
+          "Voici un point que peu de prestataires mettent en avant. Le délai qui compte le plus dans une urgence n'est pas celui du trajet, c'est celui qui sépare le moment où vous savez qu'il faut envoyer quelque chose du moment où la course est réellement lancée. Un coursier peut mettre moins de 45 minutes à arriver, encore faut-il avoir commandé. Et entre la découverte du besoin et la commande, il y a souvent une recherche de prestataire, un échange de mails, une attente de devis, une validation interne.",
+          "Sur ce plan, la mécanique de One Connexion réduit l'écart : vous entrez vos deux adresses, le prix s'affiche immédiatement, sans inscription. Pour un compte entreprise, l'ouverture se fait en quelques minutes et chaque service ou site peut disposer du sien avec le même SIRET, avec un suivi centralisé de toutes les courses et un paiement sur facture à 30 jours. L'intérêt n'est pas commercial, il est temporel : moins de temps passé à commander, c'est plus de temps gagné sur le délai global.",
+          "Cette distinction change la façon de comparer deux offres. Un prestataire qui annonce une livraison en une heure mais vous fait attendre un devis pendant trente minutes est plus lent, en pratique, qu'un prestataire qui annonce une heure et demie et prend la course en trois clics. Le délai qui vous intéresse court à partir de votre besoin, pas à partir de la validation du bon de commande.",
+          "Un détail concret va dans le même sens : la facture avec TVA détaillée part par e-mail à la livraison. Personne n'a besoin de relancer la comptabilité pour clôturer le dossier, ce qui compte quand une course s'insère dans une journée déjà chargée. Pour les structures qui gèrent aussi des rendez-vous en parallèle, des outils comme [Kalenai](https://kalenai.eu/), une plateforme de prise de rendez-vous en ligne avec agenda synchronisé et rappels automatiques, répondent à une logique voisine : supprimer les allers-retours qui grignotent le temps avant même que le service ne commence.",
+        ],
+      },
+      {
+        heading: "Ce qui fait vraiment varier le délai, zone par zone",
+        paragraphs: [
+          "À Paris intramuros, le deux-roues est le moyen le plus fiable pour tenir un créneau serré. Les rues étroites, les sens uniques et les embouteillages rendent l'utilitaire imprévisible. Un scooter ou une moto se faufile et garde une vitesse moyenne plus stable. C'est la raison pour laquelle les formules les plus rapides sont réalistes en intra-muros.",
+          "En petite couronne, le trajet reste court mais la circulation change de nature : axes plus larges, entrées de ville saturées aux heures de pointe. Le deux-roues ou la moto routière selon la distance permettent de tenir les formules Urgent et Super dans de bonnes conditions.",
+          "En grande couronne, la distance prend le dessus. Un trajet vers le 77 ou le 95 implique plus de kilomètres, donc un temps incompressible que la formule ne peut pas effacer. La moto routière est adaptée, mais il faut accepter que la formule Super soit plus difficile à tenir sur les destinations les plus éloignées. La confirmation de faisabilité joue ici son rôle : elle vous dit si le créneau est réaliste pour votre trajet précis.",
+          "Les plateformes aéroportuaires, Roissy et Orly, forment un cas à part. Les accès sont contraints, les contrôles nombreux, et le temps d'accès au point de remise peut dépasser le temps de trajet routier. Prévoyez une marge si votre destinataire est situé côté zone réservée.",
+          "Une limite à admettre clairement : aucun prestataire sérieux ne peut garantir un délai à la minute près sur un trajet soumis à la circulation francilienne. Ce qui peut être garanti, c'est un engagement de formule et une confirmation de faisabilité avant le départ. Le reste relève de l'aléa routier, et il vaut mieux le savoir avant de promettre un horaire à votre propre client.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "Combien de temps met un coursier express pour livrer en Île-de-France si je commande maintenant ?",
+        answer:
+          "L'enlèvement se fait en moins de 45 minutes, 7j/7 de 8h à 19h, sous réserve de disponibilité confirmée au moment de la commande. Ensuite, la livraison dépend de la formule : sous 3 h en Normal, sous 1 h 30 en Urgent, sous 1 h en Super. La faisabilité est confirmée avant que la course ne démarre.",
+      },
+      {
+        question: "Le délai de livraison inclut-il le temps d'enlèvement ?",
+        answer:
+          "Non. Le délai de livraison court à partir de l'enlèvement. Le temps total pour le client correspond donc au temps de prise en charge, moins de 45 minutes, plus le délai de la formule choisie. C'est pourquoi il faut toujours préciser la formule quand on compare deux offres.",
+      },
+      {
+        question: "La zone change-t-elle le délai ?",
+        answer:
+          "Oui, par le temps de trajet. Paris intramuros se traite en deux-roues, ce qui tient bien les créneaux serrés. La petite couronne reste rapide mais subit les entrées de ville aux heures de pointe. La grande couronne, Roissy et Orly imposent des distances plus longues, donc un temps incompressible que la formule ne peut pas supprimer.",
+      },
+      {
+        question: "Que se passe-t-il si le créneau demandé n'est pas tenable ?",
+        answer:
+          "La faisabilité et le prix sont confirmés avant d'engager la course. Si le créneau n'est pas réaliste pour votre trajet, vous le savez avant le départ et pouvez ajuster la formule ou l'horaire. C'est plus utile que de découvrir le retard à l'arrivée.",
+      },
+      {
+        question: "Puis-je envoyer un colis volumineux ou lourd en express ?",
+        answer:
+          "La course express prend en charge un colis jusqu'à 18 kg. Au-delà, il faut en parler au moment de la commande pour vérifier la faisabilité avec le véhicule adapté. Le poids ne change pas la logique de délai, mais il peut changer le véhicule mobilisé.",
+      },
+    ],
+    service: { href: "/services/coursier-express-paris", label: "Coursier express Paris" },
+    published: "2026-11-11",
+  },
 ];
 
 export const GUIDE_SLUGS = GUIDES.map((g) => g.slug);
