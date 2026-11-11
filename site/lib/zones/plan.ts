@@ -34,10 +34,10 @@ export function getZonePlan(zone: Zone): ZonePlan | undefined {
     const ne = zone.name.replace("Paris ", ""); // « 1er », « 2e »… « 20e »
     return {
       kind: "arrondissement",
-      title: `Coursier Paris ${ne} : courses dédiées dans l'arrondissement`,
+      title: `Coursier Paris ${ne} : course dédiée en 45 min`,
       description:
         ARRONDISSEMENT_DESCRIPTIONS[zone.slug] ??
-        `Coursier dans le ${ne} arrondissement de Paris : une course dédiée pour vos plis, documents et colis, avec un suivi de la prise en charge à la remise.`,
+        `Coursier à Paris ${ne} : une course dédiée par envoi, prise en charge en moins de 45 minutes, tarif affiché à la commande et suivi en direct jusqu'à la remise.`,
       h1: `Coursier Paris ${ne} : une course dédiée dans l'arrondissement`,
       h2: [
         `Les rues et quartiers du ${ne} arrondissement`,
