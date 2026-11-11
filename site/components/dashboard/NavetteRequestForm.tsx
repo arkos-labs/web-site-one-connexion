@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Truck, MapPin, Clock, Plus, Trash2, ArrowRight, ShieldCheck, AlertTriangle, Loader2, Check } from "lucide-react";
 import { AddressAutocomplete } from "@/components/AddressAutocomplete";
-import { isServedAddress } from "@/lib/pricing";
+import { isServedAddress, calculatePrice, getDepartmentFromAddress, getZoneFromDepartment } from "@/lib/pricing";
 import UnservedAddressAlert, { useUnservedAddresses } from "@/components/UnservedAddressAlert";
 
 const OUT_OF_ZONE = "Adresse non reconnue : Paris et Île-de-France uniquement";
@@ -144,6 +144,22 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
   const outOfZone = zoneAddresses.some((a) => a.trim().length > 0 && !isServedAddress(a));
   const showZoneAlert = useUnservedAddresses(zoneAddresses);
   const watchDays = watch("selectedDays");
+
+  // Tarif régulier par passage, calculé à partir des deux adresses de la navette.
+  // Paris → Paris : 25 € TTC. Petite et grande couronne : tarif normal de la grille − 4 € (fidélisation).
+  const tarifPassage = useMemo<number | null>(() => {
+    const main = watchMain ?? "";
+    const steps = watchSteps ?? [];
+    const pickup = watchType === "distribution" ? main : steps[0]?.address ?? "";
+    const dropoff = watchType === "distribution" ? steps[steps.length - 1]?.address ?? "" : main;
+    if (!isServedAddress(pickup) || !isServedAddress(dropoff)) return null;
+    const zone = Math.max(
+      getZoneFromDepartment(getDepartmentFromAddress(pickup)),
+      getZoneFromDepartment(getDepartmentFromAddress(dropoff)),
+    );
+    if (zone === 0) return 25;
+    return calculatePrice(pickup, dropoff, "standard") - 4;
+  }, [watchMain, watchSteps, watchType]);
 
   const totalVolumePoints = useMemo(() => {
     return watchSteps.reduce((total, step) => {
@@ -435,14 +451,20 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
             <h2 className="label-mono text-xs font-medium text-white/60">Tarif</h2>
           </div>
           <div className="px-5 py-4">
-            <div className="text-3xl font-extrabold leading-none tracking-tight">35 € TTC</div>
-            <p className="mt-1 text-xs text-white/80">par passage</p>
-            <p className="mt-2 text-xs text-white/60">
-              {watchDays?.length
-                ? `${watchDays.length} passage(s) par semaine, soit environ ${Math.round(35 * watchDays.length * 52 / 12)} € TTC par mois.`
-                : "Choisissez vos jours de passage pour voir le montant mensuel."}
-            </p>
-            <p className="mt-2 text-xs text-white/60">Un retour à vide est facturé au tarif normal d&apos;une course, selon la grille.</p>
+            {tarifPassage == null ? (
+              <p className="text-sm text-white/70">Renseignez les adresses de la navette pour voir le tarif.</p>
+            ) : (
+              <>
+                <div className="text-3xl font-extrabold leading-none tracking-tight">{tarifPassage} € TTC</div>
+                <p className="mt-1 text-xs text-white/80">par passage, tarif régulier</p>
+                <p className="mt-2 text-xs text-white/60">
+                  {watchDays?.length
+                    ? `${watchDays.length} passage(s) par semaine, soit environ ${Math.round(tarifPassage * watchDays.length * 52 / 12)} € TTC par mois.`
+                    : "Choisissez vos jours de passage pour voir le montant mensuel."}
+                </p>
+                <p className="mt-2 text-xs text-white/60">Un retour à vide est facturé au tarif normal d&apos;une course, selon la grille.</p>
+              </>
+            )}
             {showZoneAlert && <UnservedAddressAlert className="mt-4 text-left" />}
             <button
               type="submit"
