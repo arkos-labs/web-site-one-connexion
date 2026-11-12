@@ -899,6 +899,105 @@ export const GUIDES: Guide[] = [
     service: { href: "/services/transport-medical", label: "Transport médical" },
     published: "2026-11-11",
   },
+  {
+    slug: "coursier-transport-sang-refrigere",
+    title: "Coursier pour le transport de sang réfrigéré : les points à cadrer",
+    h1: "Coursier pour le transport de sang réfrigéré : ce qu'il faut cadrer",
+    seoTitle: "Coursier transport de sang réfrigéré : points clés",
+    description:
+      "Coursier pour le transport de sang réfrigéré : informations à donner à la commande, conditionnement, délai, course dédiée et preuve de remise.",
+    summary:
+      "Transporter du sang réfrigéré par coursier : ce qu'il faut préciser à la commande, qui prépare le colis, quel délai choisir et pourquoi une course dédiée.",
+    intro:
+      "Un coursier peut transporter du sang réfrigéré, à condition que la course soit cadrée avant le départ. Ce guide liste ce qu'il faut préciser à la commande, ce qui revient à l'expéditeur et ce qui relève du coursier, pour qu'un échantillon arrive dans les temps et dans les conditions demandées par le laboratoire.",
+    sections: [
+      {
+        heading: "Transport de sang réfrigéré : de quoi parle-t-on",
+        paragraphs: [
+          "Le sang réfrigéré désigne ici les prélèvements et échantillons biologiques qui doivent rester au frais pendant le trajet : tubes de prélèvement, petits flacons, échantillons destinés à un laboratoire d'analyses. Ce n'est pas un colis ordinaire. Deux paramètres commandent tout le reste : le délai de stabilité de l'échantillon et la température de conservation demandée.",
+          "Ces deux paramètres sont fixés par le laboratoire destinataire, pas par le transporteur. Le rôle de la course est de les respecter, en limitant le temps de trajet et les manipulations. Pour des produits sanguins labiles destinés à un établissement de transfusion, appelez-nous avant de commander : nous vous confirmerons si l'envoi entre dans notre périmètre.",
+        ],
+      },
+      {
+        heading: "Les informations à donner à la commande",
+        paragraphs: [
+          "La plupart des retards ou des échantillons refusés viennent d'une information manquante au moment de la commande. Transmettez au minimum :",
+        ],
+        list: [
+          "Le nom du laboratoire ou du service destinataire, et celui de la personne à qui remettre le colis.",
+          "L'heure limite d'arrivée, déterminée par le délai de stabilité de l'échantillon.",
+          "La température de conservation demandée et la plage acceptée par le laboratoire.",
+          "Le nombre de colis et leur taille approximative, pour choisir le contenant isotherme.",
+          "Un contact joignable à l'enlèvement comme à la remise.",
+          "Si le protocole l'exige, la demande d'un relevé de température joint à la course.",
+        ],
+      },
+      {
+        heading: "Conditionnement : qui fait quoi",
+        paragraphs: [
+          "L'expéditeur prépare le colis, selon les consignes du laboratoire destinataire. Pour des échantillons biologiques, ces consignes reprennent souvent la référence UN3373, utilisée pour les envois de catégorie B : récipient étanche, emballage secondaire étanche avec absorbant, emballage extérieur rigide et étiqueté. C'est au laboratoire de confirmer la catégorie de son envoi ; le guide ne remplace pas ses procédures.",
+          "Le coursier transporte le colis fermé, tel qu'il lui est remis, dans le sens indiqué, sans l'ouvrir et sans en vérifier le contenu. Son rôle commence à la prise en charge et finit à la remise, pas à la préparation du colis. Si un conditionnement vous paraît insuffisant pour la durée du trajet, dites-le avant la commande plutôt que de compter sur la course pour rattraper l'écart.",
+        ],
+      },
+      {
+        heading: "Choisir le délai selon le temps de stabilité",
+        paragraphs: [
+          "La prise en charge se fait en moins de 45 minutes, 7 jours sur 7 de 8 h à 19 h, sous réserve de disponibilité au moment de la commande. La livraison suit la formule choisie : Normal sous 3 h, Urgent sous 1 h 30 ou Super sous 1 h. Pour un prélèvement, c'est le délai de stabilité qui décide de la formule, et non l'inverse.",
+        ],
+        table: {
+          head: ["Zone", "Normal 3 h", "Urgent 1 h 30", "Super 1 h"],
+          rows: [
+            ["Paris", "28 €", "42 €", "56 €"],
+            ["Petite couronne (dès)", "39 €", "58,50 €", "78 €"],
+          ],
+          note: "Prix par course, TTC, TVA 20 % comprise. Petite couronne : 8 km de route compris, puis 2 € TTC par km en Normal, 3 € en Urgent et 4 € en Super. Grande couronne : prix selon la distance, affiché avant la commande.",
+        },
+      },
+      {
+        heading: "Pourquoi une course dédiée",
+        paragraphs: [
+          "Pour un échantillon sensible à la température, chaque arrêt compte. En course dédiée, le coursier part de votre adresse et va directement au laboratoire, sans passer chez un autre client. Le colis n'est ni regroupé avec d'autres envois, ni déposé en route.",
+          "Une tournée groupée reste possible pour des envois sans heure limite. Son ordre d'arrêts rend cependant l'heure d'arrivée moins prévisible. Pour un prélèvement dont l'heure limite est fixée par le laboratoire, la course dédiée donne un délai que vous pouvez vérifier avant de commander. Le principe est détaillé dans notre guide sur la [course dédiée coursier](/guides/course-dediee-coursier).",
+        ],
+      },
+      {
+        heading: "Preuve de remise et traçabilité",
+        paragraphs: [
+          "L'heure de prise en charge est enregistrée et l'avancement de la course est consultable en ligne. La remise se fait en main propre au service ou à la personne désignés, avec le nom du réceptionnaire et l'heure de remise. Ces informations restent consultables dans votre espace.",
+          "Ce justificatif permet de reconstituer le trajet, de la prise en charge à la remise, si le laboratoire pose une question sur un échantillon. Il ne remplace ni les données de traçabilité que le laboratoire tient de son côté, ni les procédures internes de vos analyses.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "Pouvez-vous transporter du sang réfrigéré ?",
+        answer:
+          "Oui, en course dédiée, dans un contenant isotherme convenu à la commande. Indiquez la température et le délai de stabilité fixés par le laboratoire : nous confirmons la faisabilité avant d'engager la course.",
+      },
+      {
+        question: "Qui prépare le colis ?",
+        answer:
+          "L'expéditeur, selon les consignes du laboratoire destinataire. Le coursier transporte le colis fermé et ne l'ouvre pas.",
+      },
+      {
+        question: "Peut-on obtenir un relevé de température ?",
+        answer:
+          "Oui, sur demande, lorsque le protocole du laboratoire l'exige. Précisez-le au moment de la commande.",
+      },
+      {
+        question: "Transportez-vous des produits sanguins pour un établissement de transfusion ?",
+        answer:
+          "Pour ces produits, appelez-nous avant de commander. Nous vous confirmerons si l'envoi entre dans notre périmètre.",
+      },
+      {
+        question: "Quel délai prévoir pour un prélèvement ?",
+        answer:
+          "La prise en charge se fait en moins de 45 minutes, 7j/7 de 8 h à 19 h, sous réserve de disponibilité. La livraison suit la formule : sous 3 h, 1 h 30 ou 1 h.",
+      },
+    ],
+    service: { href: "/services/transport-prelevements-sang", label: "Transport de prélèvements sanguins" },
+    published: "2026-11-12",
+  },
 ];
 
 export const GUIDE_SLUGS = GUIDES.map((g) => g.slug);
