@@ -998,6 +998,77 @@ export const GUIDES: Guide[] = [
     service: { href: "/services/transport-prelevements-sang", label: "Transport de prélèvements sanguins" },
     published: "2026-11-12",
   },
+  {
+    slug: "fideliser-clients-commerce-livraison-express",
+    title: "Commerçants : fidéliser ses clients grâce à la livraison express",
+    h1: "Fidéliser ses clients quand on est commerçant : carte de fidélité et livraison express",
+    seoTitle: "Fidéliser ses clients en commerce : outils et livraison",
+    description:
+      "Commerçant de proximité : comment faire revenir vos clients avec une carte de fidélité numérique, des avis Google et une livraison express fiable à Paris.",
+    summary:
+      "Carte de fidélité numérique, suivi des clients et avis Google d'un côté, livraison express fiable de l'autre : les leviers d'un commerce de proximité pour faire revenir ses clients.",
+    intro:
+      "Un client satisfait ne revient pas par hasard. Il revient parce que le commerçant lui a donné une raison de le faire : un avantage simple à utiliser, un contact au bon moment et, de plus en plus, une livraison qui tient ses délais. Voici les leviers à combiner quand on tient un restaurant, un salon, une boulangerie ou une boutique.",
+    sections: [
+      {
+        heading: "Une carte de fidélité que le client a déjà dans sa poche",
+        paragraphs: [
+          "Le frein classique des cartes de fidélité tient à leur support : la carte en carton se perd, l'application à installer reste souvent vide. La solution qui s'impose consiste à ranger la carte dans le portefeuille numérique du téléphone, Apple Wallet ou Google Wallet, sans application à télécharger.",
+          "C'est le principe de [Loyzia](https://loyzia.com), une plateforme française pensée pour les commerçants de proximité : le client ajoute la carte à son Wallet, puis cumule des tampons ou des points à chaque passage. Le commerçant garde la main sur la récompense, ce qui lui permet de la calibrer selon sa marge.",
+        ],
+      },
+      {
+        heading: "Suivre ses clients et relancer ceux qui s'éloignent",
+        paragraphs: [
+          "Fidéliser suppose de savoir qui revient et qui a disparu. Un outil de CRM client répond à cette question : il met en évidence les clients les plus assidus, pour les remercier, et ceux qui ne sont pas revenus depuis plusieurs semaines, pour leur envoyer une notification au bon moment.",
+          "Pour les commerçants qui ont plusieurs points de vente, la même logique s'applique établissement par établissement. Sur Loyzia, la gestion multi-établissements et l'application de caisse font partie des fonctions proposées, avec un essai gratuit de 14 jours sans carte bancaire pour se faire une idée avant de s'engager.",
+        ],
+        list: [
+          "Remercier les clients les plus fidèles par un avantage ciblé.",
+          "Relancer les clients inactifs avec une notification plutôt qu'une promotion générale.",
+          "Mesurer ce qui fonctionne avant d'élargir l'opération à tous les établissements.",
+        ],
+      },
+      {
+        heading: "Les avis Google : la fidélité qui travaille pour vous",
+        paragraphs: [
+          "Un client fidèle est aussi le meilleur ambassadeur d'un commerce. Les avis Google pèsent sur la visibilité locale et sur la décision d'un nouveau client qui compare deux adresses. Plutôt que de les attendre, on peut les solliciter au bon moment, à la sortie de la caisse, avec un geste simple.",
+          "Certaines formules, comme le plan Business de [Loyzia](https://loyzia.com), proposent un mini-jeu, la Roue de la Chance, pour encourager le client à laisser un avis. Quel que soit l'outil retenu, respectez les règles de la plateforme d'avis et ne conditionnez jamais la récompense à une note positive.",
+        ],
+      },
+      {
+        heading: "La livraison express : tenir sa promesse jusqu'à la remise",
+        paragraphs: [
+          "Pour un commerce qui livre, la fidélité se joue aussi sur le dernier kilomètre. Un colis en retard, une commande abîmée ou un coursier injoignable effacent en une fois les efforts d'une carte de fidélité. La livraison est un moment de contact avec le client : elle mérite la même attention que le comptoir.",
+          "Pour les envois urgents d'un commerce ou d'une entreprise à Paris et en Île-de-France, une course dédiée ou une [livraison le jour même](/guides/livraison-le-jour-meme-entreprise) permet de maîtriser le créneau et de suivre l'avancement. Avant de choisir, comparez les [formules de délai](/guides/delai-formules-coursier-express) et consultez la [grille tarifaire](/tarifs) : le prix est affiché avant de commander.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "Faut-il une application pour une carte de fidélité numérique ?",
+        answer:
+          "Non, pas nécessairement. Des solutions comme [Loyzia](https://loyzia.com) ajoutent la carte directement à Apple Wallet ou Google Wallet, sans application à installer pour le client.",
+      },
+      {
+        question: "Comment savoir quels clients ne reviennent plus ?",
+        answer:
+          "Un outil de CRM client liste les clients les plus fidèles et ceux qui n'ont pas reparu depuis un certain temps. Vous pouvez ensuite leur envoyer une notification ciblée.",
+      },
+      {
+        question: "Peut-on offrir une récompense en échange d'un avis Google ?",
+        answer:
+          "Solliciter un avis est possible, mais la récompense ne doit jamais dépendre de la note donnée. Renseignez-vous sur les règles de la plateforme avant de lancer une opération.",
+      },
+      {
+        question: "Comment livrer rapidement un client à Paris ?",
+        answer:
+          "Par une course dédiée ou une [livraison le jour même](/guides/livraison-le-jour-meme-entreprise). Le prix est affiché avant la commande sur la [grille tarifaire](/tarifs).",
+      },
+    ],
+    service: { href: "/services/coursier-express-paris", label: "Coursier express Paris" },
+    published: "2026-11-13",
+  },
 ];
 
 export const GUIDE_SLUGS = GUIDES.map((g) => g.slug);
