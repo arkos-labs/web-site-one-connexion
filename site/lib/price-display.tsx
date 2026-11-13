@@ -26,7 +26,7 @@ export const priceHTTTC = (ttc: number, separator = " • "): string =>
 /**
  * Normalise le prix d'une course en TTC.
  * Gère la transition avec les anciennes commandes où le montant stocké était en HT
- * (ex: 17.50 € HT au lieu de 21 € TTC, ou 35.00 € HT au lieu de 42 € TTC).
+ * (ex: 65.00 € HT au lieu de 78 € TTC).
  */
 export function normalizeOrderPriceTTC(
   storedPrice: number | null | undefined,
@@ -39,7 +39,7 @@ export function normalizeOrderPriceTTC(
     if (pickup && dropoff) {
       try {
         const gridPrice = calculatePrice(pickup, dropoff, (delai || "standard") as ServiceLevel);
-        // Si l'ancien montant correspond au montant HT de la grille (ex: 17.50 pour 21, 35 pour 42, 65 pour 78)
+        // Si l'ancien montant correspond au montant HT de la grille (ex: 65 pour 78)
         if (Math.abs(val * 1.2 - gridPrice) < 0.1 || Math.abs(gridPrice / 1.2 - val) < 0.1) {
           return gridPrice;
         }
@@ -48,12 +48,9 @@ export function normalizeOrderPriceTTC(
     // Mapping direct des anciens montants HT de l'ancienne grille vers leur montant TTC
     const oldHtToTtc: Record<string, number> = {
       "15.00": 18, "15": 18,
-      "17.50": 21, "17.5": 21,
       "25.00": 30, "25": 30,
       "26.25": 31.5,
-      "35.00": 42, "35": 42,
       "45.00": 54, "45": 54,
-      "49.00": 58.8, "49": 58.8,
       "52.50": 63, "52.5": 63,
       "63.00": 75.6, "63": 75.6,
       "65.00": 78, "65": 78,

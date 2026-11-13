@@ -125,7 +125,7 @@ export default function ZoneIleDeFrance() {
 
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <Link
-                href="/commande"
+                href="/#commander"
                 className="rounded-[4px] bg-accent px-6 py-3.5 text-[15px] font-bold text-white transition-colors hover:bg-accent-dark"
               >
                 Commander une course
@@ -329,7 +329,7 @@ export default function ZoneIleDeFrance() {
             </div>
             <div className="flex flex-wrap gap-4">
               <Link
-                href="/commande"
+                href="/#commander"
                 className="rounded-[4px] bg-accent px-8 py-4 text-center text-[15px] font-bold text-white hover:bg-accent-dark"
               >
                 Commander en ligne

@@ -26,8 +26,8 @@ Tout ce qui est ici vient de ton site et de tes données légales. **Garde exact
 > ONE CONNEXION est un coursier B2B en moto et scooter à Paris et en Île-de-France. Enlèvement en moins de 45 minutes, course dédiée de A à B sans regroupement, prix affiché avant de commander et preuve de livraison horodatée. Nous livrons les plis confidentiels des cabinets juridiques et notaires, les prélèvements et matériels des laboratoires, les commandes des e-commerçants, ainsi que les tournées régulières et l'événementiel. Disponible 7 jours sur 7, de 7h à 23h. Compte entreprise avec facture envoyée dès la livraison et 30 jours pour régler.
 
 **Services à ajouter** (un par ligne, avec le prix de départ) :
-- Coursier express Paris — dès 17,50 € HT
-- Coursier moto et scooter — dès 17,50 € HT
+- Coursier express Paris — dès 23,33 € HT (28 € TTC)
+- Coursier moto et scooter — dès 23,33 € HT (28 € TTC)
 - Plis confidentiels (remise contre signature)
 - Transport médical et prélèvements
 - Livraison e-commerce, jour même
@@ -49,7 +49,7 @@ Mêmes informations que ci-dessus. Pour Apple : catégorie « Coursier / Livrais
 >
 > • Enlèvement en moins de 45 minutes, 7j/7 de 7h à 23h
 > • Course dédiée, sans regroupement : un coursier, une course
-> • Prix instantané affiché avant de commander, dès 17,50 € HT dans Paris
+> • Prix instantané affiché avant de commander, dès 23,33 € HT (28 € TTC) dans Paris
 > • Suivi en ligne et preuve de livraison horodatée
 > • Compte entreprise : tarif dégressif, facture dès la livraison, 30 jours pour régler
 >

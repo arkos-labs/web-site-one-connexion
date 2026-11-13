@@ -419,7 +419,7 @@ export default function ZoneParis() {
                 </div>
                 <div className="mt-6 border-t border-line/60 pt-4">
                   <Link
-                    href="/commande"
+                    href="/#commander"
                     className={`block w-full rounded-[4px] py-2.5 text-center text-[13.5px] font-bold transition-colors ${
                       p.highlight
                         ? "bg-accent text-white hover:bg-accent-dark"
