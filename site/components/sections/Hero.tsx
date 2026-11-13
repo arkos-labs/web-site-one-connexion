@@ -11,6 +11,7 @@ import dynamic from "next/dynamic";
 import { useRoutePrice } from "@/lib/use-route-price";
 import { trackEvent } from "@/lib/track-event";
 import { formatEur } from "@/lib/price-display";
+import { ZONES } from "@/lib/pricing";
 import { PHONE_DISPLAY, PHONE_TEL } from "@/lib/site-content";
 
 const AddressAutocomplete = dynamic(
@@ -99,6 +100,11 @@ export default function Hero() {
               suivez la course en direct.
             </p>
             
+            <p className="mb-4 inline-flex items-baseline gap-2 rounded-[2px] bg-white/10 px-3 py-1.5 text-[15px] font-semibold text-white">
+              <span className="text-white/75">Course dans Paris</span>
+              <span>à partir de <strong className="text-[18px] font-bold">{ZONES.paris.from}&nbsp;€ TTC</strong></span>
+            </p>
+
             <div className="mb-4 flex flex-wrap gap-3">
               <button
                 type="button"
@@ -164,7 +170,7 @@ export default function Hero() {
               Votre course : <strong className="text-[16px] font-bold text-white">dès {formatEur(price)} € TTC</strong>
             </>
           ) : (
-            <>Entrez vos deux adresses : le prix s&rsquo;affiche tout de suite, sans inscription.</>
+            <>À partir de {ZONES.paris.from}&nbsp;€ TTC dans Paris. Entrez vos deux adresses : le prix exact s&rsquo;affiche tout de suite, sans inscription.</>
           )}
         </p>
       </div>

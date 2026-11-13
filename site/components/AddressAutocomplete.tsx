@@ -103,6 +103,8 @@ export function AddressAutocomplete({
   }, [isOpen, suggestions.length]);
 
   useEffect(() => {
+    // Annule la requête en cours dès que la saisie change : une réponse ancienne ne remplace jamais la plus récente.
+    const controller = new AbortController();
     const fetchAddresses = async () => {
       // On ne cherche pas si le champ est vide, si on vient de sélectionner, ou si on a cliqué sur un favori (pas de frappe)
       if (query.trim().length < 1 || isSelectingRef.current || !isTypingRef.current) {
@@ -116,9 +118,10 @@ export function AddressAutocomplete({
         const typed = joinNumberSuffix(query.trim());
         const apiQuery = typed.length < 3 ? `${typed} paris` : typed;
         // On augmente la limite à 50 pour avoir plus de chances d'avoir des résultats en Île-de-France
-        const res = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(apiQuery)}&lat=48.8566&lon=2.3522&limit=50`);
+        const res = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(apiQuery)}&lat=48.8566&lon=2.3522&limit=50`, { signal: controller.signal });
         const data = await res.json();
-        
+        if (controller.signal.aborted) return;
+
         if (!isSelectingRef.current && isTypingRef.current) {
           // Départements de la région Île-de-France
           const idfDepartments = ["75", "77", "78", "91", "92", "93", "94", "95"];
@@ -138,7 +141,7 @@ export function AddressAutocomplete({
             const variants = await Promise.all(["bis", "ter"].map(async (suffix) => {
               try {
                 const vq = `${typedNumber}${suffix} ${first.properties.street} ${first.properties.postcode} ${first.properties.city}`;
-                const vr = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(vq)}&limit=1`);
+                const vr = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(vq)}&limit=1`, { signal: controller.signal });
                 const vf = (await vr.json()).features?.[0];
                 const ok = vf?.properties?.type === "housenumber"
                   && String(vf.properties.housenumber).toLowerCase() === `${typedNumber}${suffix}`
@@ -154,9 +157,9 @@ export function AddressAutocomplete({
           setIsOpen(true);
         }
       } catch (error) {
-        console.error("Erreur lors de la recherche d'adresse", error);
+        if ((error as any)?.name !== "AbortError") console.error("Erreur lors de la recherche d'adresse", error);
       } finally {
-        setIsLoading(false);
+        if (!controller.signal.aborted) setIsLoading(false);
       }
     };
 
@@ -165,7 +168,10 @@ export function AddressAutocomplete({
       fetchAddresses();
     }, 300);
 
-    return () => clearTimeout(timeoutId);
+    return () => {
+      clearTimeout(timeoutId);
+      controller.abort();
+    };
   }, [query]);
 
   const handleSelect = (feature: any) => {
