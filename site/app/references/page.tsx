@@ -24,8 +24,8 @@ const SECTEURS = [
     subtitle: "Documents, actes & significations",
     desc: "Acheminement sécurisé de dossiers confidentiels, significations d'actes notariés et dépôts en juridiction. Preuve de remise électronique horodatée incluse.",
     clients: ["Cabinets d'avocats", "Notaires", "Huissiers de justice", "Cours d'appel"],
-    color: "bg-blue-50 text-blue-700",
-    border: "border-blue-100",
+    color: "bg-ink text-white",
+    border: "border-line",
   },
   {
     Icon: Activity,
@@ -33,8 +33,8 @@ const SECTEURS = [
     subtitle: "Prélèvements, matériel & urgences",
     desc: "Transport urgent de prélèvements biologiques, d'échantillons et de matériel médical sensible. Protocoles de manutention stricts et chaîne du froid maîtrisée.",
     clients: ["Laboratoires d'analyses", "Cliniques privées", "Pharmacies", "CHU / hôpitaux"],
-    color: "bg-green-50 text-green-700",
-    border: "border-green-100",
+    color: "bg-ink text-white",
+    border: "border-line",
   },
   {
     Icon: Briefcase,
@@ -42,8 +42,8 @@ const SECTEURS = [
     subtitle: "Maquettes, contrats & cadeaux",
     desc: "Livraison de maquettes, prototypes, contrats signés ou cadeaux d'affaires pour les directions, agences de publicité et cabinets de conseil.",
     clients: ["Agences de communication", "Directions générales", "Cabinets de conseil", "Studios créatifs"],
-    color: "bg-purple-50 text-purple-700",
-    border: "border-purple-100",
+    color: "bg-ink text-white",
+    border: "border-line",
   },
   {
     Icon: ShoppingBag,
@@ -51,13 +51,13 @@ const SECTEURS = [
     subtitle: "Dernier kilomètre premium",
     desc: "Logistique du dernier kilomètre pour les boutiques de luxe et l'e-commerce exigeant. Remise en main propre, pour une expérience client irréprochable.",
     clients: ["Maisons de luxe", "Boutiques en ligne", "Showrooms", "Places de marché"],
-    color: "bg-amber-50 text-amber-700",
-    border: "border-amber-100",
+    color: "bg-ink text-white",
+    border: "border-line",
   },
 ];
 
 const CHIFFRES = [
-  { value: "7j/7", label: "Tous les jours, 8h–19h" },
+  { value: "7j/7", label: "Tous les jours, 7h–23h" },
   { value: "< 45 min", label: "Enlèvement après confirmation" },
   { value: "Dès 28 €", label: "TTC, une course dans Paris" },
   { value: "10 ans+", label: "D’expérience du coursier B2B en Île-de-France" },
@@ -84,37 +84,19 @@ export default function ReferencesPage() {
 
       </section>
 
-      {/* ── Chiffres (Carousel) ── */}
-      <section className="bg-white border-b border-gray-100 py-10 overflow-hidden relative">
-        <style>{`
-          @keyframes marquee {
-            0% { transform: translateX(0%); }
-            100% { transform: translateX(-50%); }
-          }
-          .animate-marquee {
-            display: flex;
-            width: max-content;
-            animation: marquee 20s linear infinite;
-          }
-          @media (max-width: 768px) {
-            .animate-marquee {
-              animation-duration: 15s;
-            }
-          }
-        `}</style>
-        
-        {/* Dégradés pour l'effet de fondu sur les bords */}
-        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 md:w-32 bg-gradient-to-r from-white to-transparent"></div>
-        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 md:w-32 bg-gradient-to-l from-white to-transparent"></div>
-        
-        <div className="animate-marquee hover:[animation-play-state:paused]">
-          {[...CHIFFRES, ...CHIFFRES, ...CHIFFRES].map((c, i) => (
-            <div key={i} className="flex flex-col items-center justify-center px-10 md:px-20 text-center shrink-0">
-              <span className="text-[clamp(24px,3vw,36px)] font-bold text-ink">{c.value}</span>
-              <span className="mt-1 text-[11px] md:text-[12px] font-bold text-muted uppercase tracking-wider">{c.label}</span>
-            </div>
+      {/* ── Chiffres : grille fixe, lisible d'un coup d'œil ── */}
+      <section className="border-b border-line bg-paper-card">
+        <ul className="mx-auto grid max-w-[1240px] grid-cols-2 md:grid-cols-4">
+          {CHIFFRES.slice(0, 4).map((c, i) => (
+            <li
+              key={c.label}
+              className={`flex flex-col items-center justify-center border-line px-3 py-6 text-center md:border-l md:py-8 md:first:border-l-0 ${i % 2 === 1 ? "border-l" : ""} ${i < 2 ? "border-b md:border-b-0" : ""}`}
+            >
+              <span className="text-[clamp(24px,3vw,36px)] font-bold leading-none text-ink">{c.value}</span>
+              <span className="mt-2 text-[11px] font-bold uppercase tracking-wider text-muted md:text-[12px]">{c.label}</span>
+            </li>
           ))}
-        </div>
+        </ul>
       </section>
 
       {/* ── Secteurs ── */}
@@ -129,9 +111,9 @@ export default function ReferencesPage() {
           {SECTEURS.map((s) => {
             const Icon = s.Icon;
             return (
-              <div key={s.title} className={`flex flex-col gap-5 rounded-2xl border p-8 ${s.border} bg-white shadow-sm`}>
+              <div key={s.title} className={`flex flex-col gap-5 rounded-[4px] border p-8 ${s.border} bg-paper-card shadow-sm`}>
                 <div className="flex items-start gap-4">
-                  <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${s.color}`}>
+                  <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-[4px] ${s.color}`}>
                     <Icon size={22} strokeWidth={2} />
                   </div>
                   <div>
@@ -142,7 +124,7 @@ export default function ReferencesPage() {
                 <p className="text-[14.5px] leading-[1.65] text-muted">{s.desc}</p>
                 <div className="flex flex-wrap gap-2">
                   {s.clients.map((c) => (
-                    <span key={c} className="rounded-full bg-paper px-3 py-1 text-[11.5px] font-semibold text-muted">
+                    <span key={c} className="rounded-[2px] border border-line bg-paper px-3 py-1 text-[12px] font-semibold text-muted">
                       {c}
                     </span>
                   ))}
@@ -172,12 +154,12 @@ export default function ReferencesPage() {
           </div>
           <div className="grid grid-cols-2 gap-4">
             {[
-              { val: "7j/7", label: "tous les jours, 8h–19h" },
+              { val: "7j/7", label: "tous les jours, 7h–23h" },
               { val: "< 45 min", label: "enlèvement après confirmation" },
               { val: "10 ans+", label: "d’expérience du coursier B2B" },
               { val: "100%", label: "Marchandise assurée" },
             ].map((item) => (
-              <div key={item.label} className="flex flex-col gap-2 rounded-2xl border border-line bg-white p-6 shadow-sm">
+              <div key={item.label} className="flex flex-col gap-2 rounded-[4px] border border-line bg-paper-card p-6 shadow-sm">
                 <span className="text-[clamp(22px,2.5vw,32px)] font-bold text-accent">{item.val}</span>
                 <span className="text-[13px] leading-[1.5] text-muted">{item.label}</span>
               </div>

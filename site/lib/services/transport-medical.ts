@@ -44,7 +44,7 @@ export const transportMedical: Service = {
 
   stats: [
     { value: "< 45 min", label: "Prise en charge" },
-    { value: "7j/7", label: "De 8h à 19h" },
+    { value: "7j/7", label: "De 7h à 23h" },
     { value: "Dédiée", label: "Course sans regroupement" },
   ],
 
@@ -170,7 +170,7 @@ export const transportMedical: Service = {
     {
       question: "Intervenez-vous le week-end ?",
       answer:
-        "Oui, 7j/7, de 8h à 19h.",
+        "Oui, 7j/7, de 7h à 23h.",
     },
   ],
 

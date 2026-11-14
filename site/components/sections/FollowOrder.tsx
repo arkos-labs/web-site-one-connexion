@@ -20,7 +20,7 @@ type State =
   | { kind: "error"; message: string };
 
 const INPUT =
-  "w-full rounded-[6px] border border-line bg-white py-3.5 pl-11 pr-11 text-[14px] text-ink placeholder:text-label/60 transition-all focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/15";
+  "w-full rounded-[6px] border border-line bg-paper-card py-3.5 pl-11 pr-11 text-[14px] text-ink placeholder:text-label/60 transition-all focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/15";
 const BUTTON =
   "flex w-full items-center justify-center gap-2 rounded-[6px] bg-accent py-4 text-[14px] font-bold text-white transition-colors hover:bg-accent-dark disabled:opacity-60";
 

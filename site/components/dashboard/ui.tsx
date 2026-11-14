@@ -12,18 +12,18 @@ import { Search, Loader2, ArrowLeft } from "lucide-react";
 /* ── Styles de champs ─────────────────────────────────────────────────── */
 
 export const INPUT =
-  "h-11 w-full rounded-lg border border-line bg-white px-3.5 text-sm font-medium text-ink placeholder:text-label transition-colors hover:border-[#c9c5bd] focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/15 disabled:cursor-not-allowed disabled:bg-paper disabled:text-muted";
+  "h-11 w-full rounded-[4px] border border-line bg-paper-card px-3.5 text-sm font-medium text-ink placeholder:text-label transition-colors hover:border-[#c9c5bd] focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/15 disabled:cursor-not-allowed disabled:bg-paper disabled:text-muted";
 export const TEXTAREA =
-  "w-full resize-none rounded-lg border border-line bg-white px-3.5 py-2.5 text-sm font-medium text-ink placeholder:text-label transition-colors hover:border-[#c9c5bd] focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/15";
+  "w-full resize-none rounded-[4px] border border-line bg-paper-card px-3.5 py-2.5 text-sm font-medium text-ink placeholder:text-label transition-colors hover:border-[#c9c5bd] focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/15";
 export const LABEL = "label-mono mb-1.5 block text-xs font-medium text-muted";
 export const BTN_PRIMARY =
-  "flex h-10 shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-ink px-4 text-sm font-bold text-white shadow-sm transition-colors hover:bg-[#25272a] disabled:opacity-50";
+  "flex h-10 shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-[4px] bg-ink px-4 text-sm font-bold text-white shadow-sm transition-colors hover:bg-[#25272a] disabled:opacity-50";
 export const BTN_ACCENT =
-  "flex h-10 shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-accent px-4 text-sm font-bold text-white shadow-sm transition-colors hover:bg-accent-dark disabled:opacity-60";
+  "flex h-10 shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-[4px] bg-accent px-4 text-sm font-bold text-white shadow-sm transition-colors hover:bg-accent-dark disabled:opacity-60";
 export const BTN_GHOST_DARK =
-  "flex h-11 shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-xl border border-white/20 bg-white/[0.07] px-5 text-sm font-bold text-white transition-colors hover:bg-white/15";
+  "flex h-11 shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-[4px] border border-white/20 bg-white/[0.07] px-5 text-sm font-bold text-white transition-colors hover:bg-white/15";
 export const BTN_GHOST =
-  "flex h-11 shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-xl border border-line bg-white px-5 text-sm font-bold text-ink transition-colors hover:bg-paper";
+  "flex h-11 shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-[4px] border border-line bg-paper-card px-5 text-sm font-bold text-ink transition-colors hover:bg-paper";
 
 /* ── Coque de page ────────────────────────────────────────────────────── */
 
@@ -48,7 +48,7 @@ export function PageShell({
 }) {
   return (
     <div
-      className={`flex flex-col overflow-hidden rounded-2xl border border-ink bg-white shadow-[0_12px_40px_-12px_rgba(14,15,16,0.25)] ${
+      className={`flex flex-col overflow-hidden rounded-[4px] border border-ink bg-paper-card shadow-[0_12px_40px_-12px_rgba(14,15,16,0.25)] ${
         fill ? "[@media(min-height:760px)_and_(min-width:1024px)]:h-[calc(100dvh-160px)]" : ""
       }`}
     >
@@ -97,7 +97,7 @@ export function SearchInput({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="h-10 w-full rounded-lg border border-white/15 bg-white/[0.07] pl-10 pr-3.5 text-sm font-medium text-white placeholder:text-white/45 transition-colors hover:border-white/30 focus:border-accent focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-accent/30"
+        className="h-10 w-full rounded-[4px] border border-white/15 bg-white/[0.07] pl-10 pr-3.5 text-sm font-medium text-white placeholder:text-white/45 transition-colors hover:border-white/30 focus:border-accent focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-accent/30"
       />
     </div>
   );
@@ -113,7 +113,7 @@ export function KpiStrip({ items }: { items: { label: string; value: React.React
     >
       {items.map((k) => (
         <div key={k.label} className="min-w-0 px-3 py-2.5 sm:px-6">
-          <dt className="label-mono truncate text-[10.5px] font-medium tracking-[0.04em] text-white/55 sm:text-[11px] sm:tracking-[0.16em]">{k.label}</dt>
+          <dt className="label-mono truncate text-[11px] font-medium tracking-[0.04em] text-white/55 sm:text-[11px] sm:tracking-[0.16em]">{k.label}</dt>
           <dd className={`mt-0.5 truncate text-xl font-extrabold leading-none tracking-tight ${k.accent ? "text-accent" : "text-white"}`}>
             {k.value}
           </dd>
@@ -159,7 +159,7 @@ export function EmptyState({
 }) {
   return (
     <div className="flex flex-1 flex-col items-center justify-center px-6 py-16 text-center">
-      <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-line bg-paper-card text-label">
+      <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-[4px] border border-line bg-paper-card text-label">
         <Icon size={26} strokeWidth={1.75} />
       </div>
       <h2 className="text-base font-extrabold text-ink">{title}</h2>
@@ -188,7 +188,7 @@ export const TD = "px-4 py-3 align-middle first:pl-6 last:pr-6";
 /** Corps d'une page de détail : fond papier, grille principale + latérale. */
 export function DetailBody({ main, side }: { main: React.ReactNode; side?: React.ReactNode }) {
   return (
-    <div className="grid gap-4 bg-paper-card p-4 sm:p-6 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start">
+    <div className="grid gap-4 bg-paper p-4 sm:p-6 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start">
       <div className="flex min-w-0 flex-col gap-4">{main}</div>
       {side && <div className="flex min-w-0 flex-col gap-4">{side}</div>}
     </div>
@@ -208,7 +208,7 @@ export function Panel({
 }) {
   const border = tone === "danger" ? "border-red-200" : tone === "success" ? "border-green-200" : "border-line";
   return (
-    <section className={`overflow-hidden rounded-xl border bg-white ${border}`}>
+    <section className={`overflow-hidden rounded-[4px] border bg-paper-card ${border}`}>
       {title && (
         <div className={`flex items-center justify-between gap-3 border-b px-5 py-3 ${border}`}>
           <h2 className="label-mono text-xs font-medium text-muted">{title}</h2>
@@ -233,7 +233,7 @@ export function InfoRow({ label, value, strong }: { label: string; value: React.
 export function Fact({ k, children, tone = "default" }: { k: string; children: React.ReactNode; tone?: "default" | "success" }) {
   return (
     <p className="text-xs leading-snug text-muted">
-      <span className={`label-mono mr-2 text-[10px] font-medium ${tone === "success" ? "text-green-700" : "text-label"}`}>{k}</span>
+      <span className={`label-mono mr-2 text-[11px] font-medium ${tone === "success" ? "text-green-700" : "text-label"}`}>{k}</span>
       <span className="font-semibold text-ink">{children}</span>
     </p>
   );
@@ -242,7 +242,7 @@ export function Fact({ k, children, tone = "default" }: { k: string; children: R
 export function NoteBox({ tone = "default", children }: { tone?: "default" | "success"; children: React.ReactNode }) {
   return (
     <div
-      className={`mt-2 flex flex-col gap-1 rounded-lg border px-3 py-2 ${
+      className={`mt-2 flex flex-col gap-1 rounded-[4px] border px-3 py-2 ${
         tone === "success" ? "border-green-200 bg-green-50" : "border-line bg-paper-card"
       }`}
     >
@@ -253,7 +253,7 @@ export function NoteBox({ tone = "default", children }: { tone?: "default" | "su
 
 export function ErrorState({ text, back }: { text: string; back: { href: string; label: string } }) {
   return (
-    <div className="flex flex-col items-center gap-4 rounded-2xl border border-line bg-white px-6 py-16 text-center">
+    <div className="flex flex-col items-center gap-4 rounded-[4px] border border-line bg-paper-card px-6 py-16 text-center">
       <p className="text-base font-extrabold text-ink">{text}</p>
       <Link href={back.href} className={`${BTN_PRIMARY} text-white hover:text-white`}>
         <ArrowLeft size={15} strokeWidth={2.5} />
@@ -281,7 +281,7 @@ export function AdminPage({
 }) {
   return (
     <PageShell eyebrow={eyebrow} title={title} subtitle={subtitle} actions={actions} back={back}>
-      <div className="flex flex-col gap-6 bg-paper-card p-4 sm:p-6">{children}</div>
+      <div className="flex flex-col gap-6 bg-paper p-4 sm:p-6">{children}</div>
     </PageShell>
   );
 }

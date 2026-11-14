@@ -30,24 +30,25 @@ export default function CookieConsent() {
   if (!visible) return null;
 
   return (
-    <div className="fixed inset-x-3 bottom-3 z-[9999] sm:left-auto sm:right-4 sm:bottom-4 sm:max-w-sm" role="region" aria-label="Choix des cookies">
-      <div className="flex flex-col gap-3 rounded-xl border border-line bg-white p-4 shadow-xl">
-        <p className="text-[13px] leading-snug text-label">
-          Nous utilisons des cookies pour mesurer l&apos;audience.
+    // Téléphone : bandeau fin posé au-dessus de la barre « Appeler / Commander », à gauche de la bulle de chat.
+    <div className="fixed bottom-[84px] left-3 right-[84px] z-[9999] md:bottom-4 md:left-auto md:right-24 md:max-w-sm" role="region" aria-label="Choix des cookies">
+      <div className="flex flex-col gap-2 rounded-[4px] border border-line bg-paper-card p-3 shadow-lg md:gap-3 md:p-4">
+        <p className="text-[13px] leading-snug text-muted">
+          Cookies de mesure d&apos;audience.{" "}
+          <a href="/politique-de-confidentialite" className="font-semibold text-accent-dark underline underline-offset-2">
+            En savoir plus
+          </a>
         </p>
-        <a href="/politique-de-confidentialite" className="-mt-1 inline-block w-fit py-2 text-[13px] font-semibold text-accent underline">
-          En savoir plus
-        </a>
         <div className="flex gap-2">
           <button
             onClick={handleRefuse}
-            className="flex-1 rounded-lg border border-line px-3 py-2 text-[13px] font-semibold text-label transition hover:bg-gray-50"
+            className="flex-1 rounded-[2px] border border-line px-3 py-2 text-[13px] font-semibold text-muted transition hover:border-ink hover:text-ink"
           >
             Refuser
           </button>
           <button
             onClick={handleAccept}
-            className="flex-1 rounded-lg bg-ink px-3 py-2 text-[13px] font-bold text-white transition hover:bg-ink/90"
+            className="flex-1 rounded-[2px] bg-ink px-3 py-2 text-[13px] font-bold text-white transition hover:bg-ink/90"
           >
             Accepter
           </button>

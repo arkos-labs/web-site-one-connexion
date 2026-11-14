@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mail prêt à copier</title>
+<style>
+  :root { --bg:#f5f5f4; --card:#fff; --ink:#1c1917; --muted:#57534e; --line:#d6d3d1; --accent:#c2410c; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#1c1917; --card:#292524; --ink:#fafaf9; --muted:#a8a29e; --line:#44403c; --accent:#fb923c; } }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family: Arial, Helvetica, sans-serif; }
+  .wrap { max-width:720px; margin:0 auto; padding:24px 16px 48px; }
+  h1 { font-size:18px; margin:0 0 16px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:16px; margin-bottom:16px; }
+  .label { font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.04em; margin-bottom:8px; }
+  button { background:var(--accent); color:#fff; border:0; border-radius:6px; padding:10px 16px; font-size:14px; cursor:pointer; }
+  button:active { opacity:.85; }
+  .ok { color:var(--accent); font-size:13px; margin-left:10px; }
+  #mail { font-family: Arial, Helvetica, sans-serif; font-size:14px; line-height:1.5; }
+  #mail p { margin:0 0 12px; }
+  #mail a { color:#1155cc; }
+  .note { font-size:13px; color:var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Mail à Madame Castellanos</h1>
+
+  <div class="card">
+    <div class="label">Objet</div>
+    <div id="subject">Re: Transport médical, questions complémentaires et rendez-vous</div>
+    <p style="margin:12px 0 0"><button onclick="copyText('subject', this)">Copier l'objet</button><span class="ok"></span></p>
+  </div>
+
+  <div class="card">
+    <div class="label">Corps du mail</div>
+    <div id="mail">
+<p>Bonjour Madame Castellanos,</p>
+
+<p>Merci pour votre message et pour vos questions. Nous prenons bonne note que les sites, fréquences et températures par trajet ne sont pas encore arrêtés. Nous restons disponibles pour le devis dès que vous serez en mesure de nous les transmettre.</p>
+
+<p>1. <b>Emballages P650 et carboglace :</b> nous intervenons uniquement sur le transport, mais nous sommes heureux de vous orienter. Des fournisseurs spécialisés proposent des emballages homologués adaptés, par exemple <a href="https://www.labomoderne.com/gammes/boites-isothermes-polairpack-un3373-avec-calage-ck2530">Labomoderne</a> ou <a href="https://www.hellopro.fr/polairpack-5l30-hd-un-3373-2000260-9605261-produit.html">Polairpack</a>. Nous vous invitons simplement à vérifier avec eux la fiche technique correspondant à votre besoin (température, durée).</p>
+
+<p>2. <b>Véhicules et carboglace :</b> les courses sont effectuées à deux-roues, avec un top-case fermé de 58 litres. Pour les courses avec carboglace, les mentions réglementaires (UN 1845, agent de réfrigération) sont reportées sur notre document de transport.</p>
+
+<p>3. <b>Enregistreur de température :</b> oui, nous proposons un suivi de la température pendant le transport. Nous pourrons vous présenter le dispositif lors de notre échange.</p>
+
+<p>4. <b>Conditions générales de vente :</b> vous les trouverez en pièce jointe. Nous pourrons les reprendre ensemble.</p>
+
+<p>Je suis disponible le <b>mercredi 18 novembre entre 8h30 et 11h30</b>. Dites-moi si ce créneau vous convient ou si une autre heure serait préférable.</p>
+
+<p>Merci encore pour votre disponibilité, et au plaisir d'échanger avec vous.</p>
+
+<p>Bien cordialement,</p>
+
+<p>Khoto Thinu<br>One Connexion</p>
+    </div>
+    <p style="margin:12px 0 0"><button onclick="copyRich('mail', this)">Copier le mail</button><span class="ok"></span></p>
+    <p class="note">Collez dans le corps du message Hostinger : la mise en forme et les liens sont conservés. Joignez ensuite le fichier cgv-transport-medical.pdf.</p>
+  </div>
+</div>
+
+<script>
+function done(btn, msg) {
+  var s = btn.parentNode.querySelector('.ok');
+  s.textContent = msg;
+  setTimeout(function(){ s.textContent = ''; }, 2500);
+}
+function copyText(id, btn) {
+  var t = document.getElementById(id).innerText;
+  navigator.clipboard.writeText(t).then(function(){ done(btn, 'Copié'); }, function(){ done(btn, 'Échec : sélectionnez et copiez à la main'); });
+}
+function copyRich(id, btn) {
+  var el = document.getElementById(id);
+  var html = el.innerHTML;
+  var text = el.innerText;
+  if (window.ClipboardItem) {
+    var item = new ClipboardItem({
+      'text/html': new Blob([html], {type:'text/html'}),
+      'text/plain': new Blob([text], {type:'text/plain'})
+    });
+    navigator.clipboard.write([item]).then(function(){ done(btn, 'Copié'); }, fallback);
+  } else { fallback(); }
+  function fallback() {
+    var r = document.createRange(); r.selectNodeContents(el);
+    var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+    var ok = document.execCommand('copy');
+    done(btn, ok ? 'Copié' : 'Échec : sélectionnez et copiez à la main');
+  }
+}
+</script>
+</body>
+</html>

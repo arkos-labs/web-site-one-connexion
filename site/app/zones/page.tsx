@@ -29,10 +29,10 @@ const ZONES = [
   {
     dept: "75",
     name: "Paris intramuros",
-    desc: "Les 20 arrondissements, scooters dédiés, délai < 30 min en moyenne.",
+    desc: "Les 20 arrondissements, scooters dédiés, enlèvement en moins de 45 min.",
     href: "/zones/paris",
     tag: "Standard",
-    tagColor: "bg-blue-100 text-blue-700",
+    tagColor: "bg-ink text-white",
   },
   {
     dept: "92",
@@ -40,7 +40,7 @@ const ZONES = [
     desc: "Nanterre, Neuilly, Boulogne, Levallois et tout le 92 au tarif standard.",
     href: "/zones/la-defense",
     tag: "Standard",
-    tagColor: "bg-blue-100 text-blue-700",
+    tagColor: "bg-ink text-white",
   },
   {
     dept: "93",
@@ -48,7 +48,7 @@ const ZONES = [
     desc: "Saint-Denis, Montreuil, Pantin, Aubervilliers et tout le 93.",
     href: "/zones/petite-couronne",
     tag: "Standard",
-    tagColor: "bg-blue-100 text-blue-700",
+    tagColor: "bg-ink text-white",
   },
   {
     dept: "94",
@@ -56,7 +56,7 @@ const ZONES = [
     desc: "Vincennes, Créteil, Ivry, Saint-Mandé et tout le 94. Siège One Connexion.",
     href: "/zones/petite-couronne",
     tag: "Standard",
-    tagColor: "bg-blue-100 text-blue-700",
+    tagColor: "bg-ink text-white",
   },
   {
     dept: "77",
@@ -64,7 +64,7 @@ const ZONES = [
     desc: "Melun, Marne-la-Vallée, Meaux - dès 59 € TTC selon la distance.",
     href: "/zones/grande-couronne",
     tag: "Dès 59 € TTC",
-    tagColor: "bg-amber-100 text-amber-700",
+    tagColor: "bg-line text-ink",
   },
   {
     dept: "78",
@@ -72,7 +72,7 @@ const ZONES = [
     desc: "Versailles, Saint-Quentin-en-Yvelines - dès 62 € TTC selon la distance.",
     href: "/zones/grande-couronne",
     tag: "Dès 62 € TTC",
-    tagColor: "bg-amber-100 text-amber-700",
+    tagColor: "bg-line text-ink",
   },
   {
     dept: "91",
@@ -80,7 +80,7 @@ const ZONES = [
     desc: "Évry-Courcouronnes, Massy, Palaiseau - dès 62 € TTC selon la distance.",
     href: "/zones/grande-couronne",
     tag: "Dès 62 € TTC",
-    tagColor: "bg-amber-100 text-amber-700",
+    tagColor: "bg-line text-ink",
   },
   {
     dept: "95",
@@ -88,7 +88,7 @@ const ZONES = [
     desc: "Cergy-Pontoise, Argenteuil, Roissy-CDG - dès 60 € TTC selon la distance.",
     href: "/zones/grande-couronne",
     tag: "Dès 60 € TTC",
-    tagColor: "bg-amber-100 text-amber-700",
+    tagColor: "bg-line text-ink",
   },
 ];
 
@@ -108,12 +108,12 @@ export default function ZonesPage() {
 
       <section className="bg-ink text-white">
         <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-20 pt-16">
-          <nav aria-label="Fil d'Ariane" className="mb-8 font-mono text-[10px] tracking-[0.16em] text-white/40 uppercase">
+          <nav aria-label="Fil d'Ariane" className="mb-8 font-mono text-[11px] tracking-[0.16em] text-white/40 uppercase">
             <Link href="/" className="hover:text-white">Accueil</Link>
             <span className="px-2 text-white/25">›</span>
             <span className="text-white/70">Zones de livraison</span>
           </nav>
-          <div className="mb-3 flex items-center gap-3 font-mono text-[10px] tracking-[0.16em] text-accent uppercase">
+          <div className="mb-3 flex items-center gap-3 font-mono text-[11px] tracking-[0.16em] text-accent uppercase">
             <span className="h-px w-6 bg-accent" />
             Couverture géographique
           </div>
@@ -134,17 +134,17 @@ export default function ZonesPage() {
             <Link
               key={z.dept}
               href={z.href}
-              className="flex flex-col gap-3 rounded-xl border border-line bg-paper-card p-6 hover:border-ink"
+              className="flex flex-col gap-3 rounded-[4px] border border-line bg-paper-card p-6 hover:border-ink"
             >
               <div className="flex items-start justify-between">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent text-[13px] font-bold text-white">
+                <div className="flex h-10 w-10 items-center justify-center rounded-[4px] bg-accent text-[13px] font-bold text-white">
                   {z.dept}
                 </div>
-                <span className={`rounded-full px-2.5 py-1 text-[10px] font-bold ${z.tagColor}`}>{z.tag}</span>
+                <span className={`rounded-[2px] px-2.5 py-1 text-[11px] font-bold ${z.tagColor}`}>{z.tag}</span>
               </div>
               <h2 className="font-bold tracking-[-0.01em] text-ink">{z.name}</h2>
               <p className="text-[13px] leading-[1.55] text-muted">{z.desc}</p>
-              <div className="mt-auto font-mono text-[10px] tracking-[0.1em] text-accent-dark uppercase">Voir la zone →</div>
+              <div className="mt-auto font-mono text-[11px] tracking-[0.1em] text-accent-dark uppercase">Voir la zone →</div>
             </Link>
           ))}
         </div>
@@ -188,37 +188,29 @@ export default function ZonesPage() {
               {
                 zone: "Grande Couronne",
                 dept: "77, 78, 91, 95",
-                budget: "A partir de 60 euros TTC",
+                budget: "À partir de 59 € TTC",
                 delai: "60-90 min enlèvement",
                 ideal: "Livraisons moins urgentes, zones éloignées",
                 exemple: "Enlever échantillons Évry et livrer Versailles en 2h"
               }
             ].map((item) => (
-              <div key={item.zone} className="rounded-xl border border-line bg-white p-6">
+              <div key={item.zone} className="rounded-[4px] border border-line bg-paper-card p-6">
                 <div className="mb-3 flex items-start justify-between">
                   <h3 className="font-bold text-ink">{item.zone}</h3>
-                  <span className="rounded-full bg-accent/10 px-2.5 py-1 font-mono text-[10px] font-bold text-accent">
+                  <span className="rounded-[2px] bg-ink px-2.5 py-1 font-mono text-[11px] font-bold text-white">
                     {item.dept}
                   </span>
                 </div>
-                <div className="space-y-3 text-[13.5px]">
-                  <div>
-                    <div className="font-medium text-label">Budget :</div>
-                    <div className="text-muted">{item.budget}</div>
-                  </div>
-                  <div>
-                    <div className="font-medium text-label">Délai :</div>
-                    <div className="text-muted">{item.delai}</div>
-                  </div>
-                  <div>
-                    <div className="font-medium text-label">Idéal pour :</div>
-                    <div className="text-muted">{item.ideal}</div>
-                  </div>
-                  <div>
-                    <div className="font-medium text-label">Exemple :</div>
-                    <div className="text-muted">{item.exemple}</div>
-                  </div>
-                </div>
+                <dl className="grid grid-cols-[88px_1fr] gap-x-4 gap-y-2.5 border-t border-line pt-4 text-[14.5px] leading-[1.5]">
+                  <dt className="font-semibold text-ink">Budget</dt>
+                  <dd className="text-muted">{item.budget}</dd>
+                  <dt className="font-semibold text-ink">Délai</dt>
+                  <dd className="text-muted">{item.delai}</dd>
+                  <dt className="font-semibold text-ink">Idéal pour</dt>
+                  <dd className="text-muted">{item.ideal}</dd>
+                  <dt className="font-semibold text-ink">Exemple</dt>
+                  <dd className="text-muted">{item.exemple}</dd>
+                </dl>
               </div>
             ))}
           </div>
@@ -227,7 +219,7 @@ export default function ZonesPage() {
 
       {/* Toutes les communes desservies, avec lien vers leur page dédiée */}
       <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-[88px]">
-        <div className="mb-3 flex items-center gap-3 font-mono text-[10px] tracking-[0.16em] text-accent uppercase">
+        <div className="mb-3 flex items-center gap-3 font-mono text-[11px] tracking-[0.16em] text-accent uppercase">
           <span className="h-px w-6 bg-accent" />
           Villes desservies
         </div>

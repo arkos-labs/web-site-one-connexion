@@ -131,7 +131,7 @@ export default function Header() {
         <div className="mx-auto flex h-[80px] max-w-[1240px] items-center justify-between px-[clamp(20px,4vw,28px)]">
 
           {/* Logo */}
-          <Link href="/" className={`flex shrink-0 items-center overflow-visible ${isDashboard ? "order-2" : ""}`}>
+          <Link href="/" className={`flex shrink-0 items-center overflow-visible ${isDashboard ? "order-2 lg:order-none" : ""}`}>
             <Image
               src="/logo-white.png"
               alt="Logo ONE CONNEXION, coursier moto B2B à Paris et en Île-de-France"
@@ -200,7 +200,7 @@ export default function Header() {
 
             <a
               href={`tel:${PHONE_TEL}`}
-              className="ml-4 flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 font-mono text-[13px] font-semibold text-white transition-colors hover:bg-white/20"
+              className="ml-4 flex items-center gap-2 rounded-[4px] bg-white/10 px-4 py-2 text-[13.5px] font-semibold text-white transition-colors hover:bg-white/20"
             >
               <Phone size={14} className="text-accent" />
               {PHONE_DISPLAY}
@@ -284,7 +284,7 @@ export default function Header() {
                   {/* Statistiques */}
                   <div className="flex items-center divide-x divide-white/10 rounded-xl bg-white/5 p-3">
                     <div className="flex flex-1 flex-col items-center justify-center">
-                      <span className="text-[10px] font-medium text-white/50">Courses ce mois</span>
+                      <span className="text-[11px] font-medium text-white/50">Courses ce mois</span>
                       <span className="mt-0.5 text-sm font-bold text-white">
                         {coursesThisMonth === null ? "…" : `${coursesThisMonth} course${coursesThisMonth > 1 ? "s" : ""}`}
                       </span>
@@ -317,7 +317,7 @@ export default function Header() {
                       )}
 
                       {item.badge && (
-                        <span className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-yellow-400/20 px-2 py-0.5 text-[10px] font-bold text-yellow-300">
+                        <span className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-yellow-400/20 px-2 py-0.5 text-[11px] font-bold text-yellow-300">
                           {item.badge}
                         </span>
                       )}
@@ -369,7 +369,7 @@ export default function Header() {
                 ))}
               </nav>
               <div className="mt-5 flex flex-col gap-3">
-                <a href={`tel:${PHONE_TEL}`} className="flex items-center gap-2 px-3 font-mono text-[12.5px] text-white/60 hover:text-white">
+                <a href={`tel:${PHONE_TEL}`} className="flex items-center gap-2 px-3 text-[13.5px] font-semibold text-white/75 hover:text-white">
                   <Phone size={13} className="text-accent" />
                   {PHONE_DISPLAY}
                 </a>

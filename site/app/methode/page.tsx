@@ -69,6 +69,8 @@ const howToSchema = {
 };
 
 const H2 = "mb-14 max-w-[24ch] text-[clamp(28px,3vw,40px)] font-bold leading-[1.1] tracking-[-0.03em]";
+const H2_COL = "max-w-[20ch] text-[clamp(28px,3vw,40px)] font-bold leading-[1.1] tracking-[-0.03em]";
+const COL = "grid gap-6 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16";
 const LINK = "font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark";
 
 function Engagements({ items }: { items: (typeof ENGAGEMENTS)[keyof typeof ENGAGEMENTS][] }) {
@@ -103,10 +105,13 @@ export default function MethodePage() {
       </section>
 
       {/* 1. Notre organisation */}
-      <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-10">
-        <div className="mb-5 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">Nos engagements</div>
-        <h2 className={H2}>Société de coursier Paris : notre organisation</h2>
-        <p className="mb-12 max-w-[68ch] text-[15.5px] leading-[1.7] text-muted">
+      <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-14">
+        <div className={`mb-12 ${COL}`}>
+          <div>
+            <div className="mb-5 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">Nos engagements</div>
+            <h2 className={H2_COL}>Société de coursier Paris : notre organisation</h2>
+          </div>
+          <p className="max-w-[68ch] text-[15.5px] leading-[1.7] text-muted">
           One Connexion est une société de coursier installée à Saint-Mandé, à côté du 12e arrondissement, qui
           intervient à Paris, en petite couronne et dans le reste de l&apos;Île-de-France. Notre organisation tient
           en une règle : un envoi, un coursier, un trajet direct. Quand vous commandez, le dispatcheur qui connaît
@@ -114,6 +119,7 @@ export default function MethodePage() {
           la remise. Le prix s&apos;affiche avant de commander ; notre{" "}
           <Link href="/tarifs" className={LINK}>grille de tarifs</Link> détaille chaque formule.
         </p>
+        </div>
         <Engagements items={[ENGAGEMENTS.reactivite, ENGAGEMENTS.interlocuteur]} />
       </section>
 
@@ -135,14 +141,14 @@ export default function MethodePage() {
       </section>
 
       {/* 3. Flotte propre */}
-      <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-10">
-        <h2 className={H2}>Une flotte propre, pas une plateforme</h2>
+      <section className={`mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-14 ${COL}`}>
+        <h2 className={H2_COL}>Une flotte propre, pas une plateforme</h2>
         <div className="grid max-w-[68ch] gap-5 text-[15.5px] leading-[1.7] text-muted">
           <p>
             Une plateforme de mise en relation distribue vos courses à des livreurs qui changent d&apos;un jour à
             l&apos;autre. Nous faisons l&apos;inverse : vos courses sont assurées par nos coursiers, en deux-roues,
             avec un dispatcheur qui les connaît et suit chaque trajet. Pas de regroupement d&apos;envois, pas de
-            détour : le coursier prend en charge votre pli en moins de 45 minutes, 7j/7 de 8h à 19h, et le
+            détour : le coursier prend en charge votre pli en moins de 45 minutes, 7j/7 de 7h à 23h, et le
             conduit directement à destination.
           </p>
           <p>
@@ -158,8 +164,9 @@ export default function MethodePage() {
 
       {/* 4. Traçabilité */}
       <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-10">
-        <h2 className={H2}>Traçabilité et preuve de remise</h2>
-        <p className="mb-12 max-w-[68ch] text-[15.5px] leading-[1.7] text-muted">
+        <div className={`mb-12 border-t border-line pt-14 ${COL}`}>
+          <h2 className={H2_COL}>Traçabilité et preuve de remise</h2>
+          <p className="max-w-[68ch] text-[15.5px] leading-[1.7] text-muted">
           Chaque course est visible en ligne de l&apos;enlèvement à la remise. Au moment de la remise, nous
           enregistrons le nom du destinataire, l&apos;heure exacte et le lieu ; le justificatif vous est transmis
           puis archivé sur votre compte, et peut être restitué pour être versé à un dossier. Pour les documents
@@ -168,6 +175,7 @@ export default function MethodePage() {
           main propre au seul destinataire désigné, sans regroupement. En cas d&apos;imprévu, nous appelons avant
           que vous ayez à le faire.
         </p>
+        </div>
         <Engagements items={[ENGAGEMENTS.suivi, ENGAGEMENTS.securite]} />
       </section>
 

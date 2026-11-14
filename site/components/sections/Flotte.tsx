@@ -7,7 +7,7 @@
 const STATS = [
   { value: "18 kg", label: "Charge par course" },
   { value: "60 × 40 cm", label: "Volume top-case" },
-  { value: "7j/7", label: "De 8h à 19h" },
+  { value: "7j/7", label: "De 7h à 23h" },
 ];
 
 const COVERAGE = ["Paris 1–20", "92", "93", "94", "77 · 78 · 91 · 95"];
@@ -35,14 +35,14 @@ export default function Flotte({ hideHeader = false }: { hideHeader?: boolean } 
           <div className="grid grid-cols-[repeat(auto-fit,minmax(140px,1fr))] gap-px border border-white/10 bg-white/10">
             <div className="bg-ink px-[18px] py-[22px]">
               <div className="text-[26px] font-bold tracking-[-0.02em]">10 ans+</div>
-              <div className="mt-2 font-mono text-[10px] tracking-[0.12em] text-white/44 uppercase">
+              <div className="mt-2 font-mono text-[11px] tracking-[0.12em] text-white/44 uppercase">
                 D’expérience du coursier B2B
               </div>
             </div>
             {STATS.map((stat) => (
               <div key={stat.label} className="bg-ink px-[18px] py-[22px]">
                 <div className="text-[26px] font-bold tracking-[-0.02em]">{stat.value}</div>
-                <div className="mt-2 font-mono text-[10px] tracking-[0.12em] text-white/44 uppercase">
+                <div className="mt-2 font-mono text-[11px] tracking-[0.12em] text-white/44 uppercase">
                   {stat.label}
                 </div>
               </div>
@@ -68,7 +68,7 @@ export default function Flotte({ hideHeader = false }: { hideHeader?: boolean } 
             {COVERAGE.map((zone) => (
               <div
                 key={zone}
-                className="flex-1 whitespace-nowrap px-3 py-3 text-center font-mono text-[10.5px] tracking-[0.1em] text-white/60 uppercase"
+                className="flex-1 whitespace-nowrap px-3 py-3 text-center font-mono text-[11px] tracking-[0.1em] text-white/60 uppercase"
               >
                 {zone}
               </div>

@@ -430,46 +430,46 @@ export default function OrderForm() {
   const prices = estimatedPrice === null ? null : splitTTC(estimatedPrice);
 
   return (
-    <section id="commander" className="border-y border-line bg-[#F8F9FA]">
+    <section id="commander" className="border-y border-line bg-paper">
       <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-10">
         <div className="mb-14 text-center">
           {/* Pas de H2 : le plan de l'accueil compte exactement quatre H2. */}
-          <p className="text-[clamp(28px,3vw,40px)] font-bold leading-[1.1] tracking-[-0.03em] text-gray-900">
+          <p className="text-[clamp(28px,3vw,40px)] font-bold leading-[1.1] tracking-[-0.03em] text-ink">
             Commander une course.
           </p>
-          <p className="mt-4 text-[16.5px] text-gray-500 max-w-xl mx-auto">
+          <p className="mt-4 text-[16.5px] text-muted max-w-xl mx-auto">
             Service de coursier express. Remplissez ce formulaire pour une estimation et une prise en charge rapide.
           </p>
         </div>
 
-        <div id="commander-form" className="mx-auto max-w-xl bg-white rounded-3xl p-6 sm:p-10 shadow-sm border border-gray-100 relative scroll-mt-24 pb-32">
+        <div id="commander-form" className="mx-auto max-w-xl bg-paper-card rounded-[4px] p-6 sm:p-10 shadow-sm border border-line relative scroll-mt-24 pb-32">
           {submitted ? (
             <div className="text-center py-16">
               <div className="mb-6 inline-flex h-20 w-20 items-center justify-center rounded-full bg-green-50 text-emerald-500">
                 <CheckCircle2 className="h-10 w-10" />
               </div>
-              <h3 className="mb-3 text-3xl font-bold text-gray-900">
+              <h3 className="mb-3 text-3xl font-bold text-ink">
                 Demande envoyée !
               </h3>
-              <p className="text-gray-500 text-lg mb-6 max-w-md mx-auto">
+              <p className="text-muted text-lg mb-6 max-w-md mx-auto">
                 Un dispatcheur va vous contacter dans les 10 prochaines minutes pour confirmer l'enlèvement.
               </p>
               {clientType === 'entreprise' && paymentMode === 'fin_de_mois' && debitMethod === 'virement' && (
-                <p className="text-gray-500 mb-6 max-w-md mx-auto">
+                <p className="text-muted mb-6 max-w-md mx-auto">
                   <strong>Rien à payer aujourd&apos;hui.</strong> La facture avec nos coordonnées bancaires a été envoyée à <strong>{contactEmail}</strong>. À régler sous 30 jours, par virement ou par carte depuis la facture.
                 </p>
               )}
               {trackingCode && (
-                <div className="mb-8 inline-block rounded-xl border border-gray-200 bg-gray-50 px-6 py-3">
-                  <p className="text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-1">Code de suivi</p>
-                  <p className="text-xl font-extrabold tracking-widest text-gray-900">{trackingCode}</p>
+                <div className="mb-8 inline-block rounded-[4px] border border-line bg-paper px-6 py-3">
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-label mb-1">Code de suivi</p>
+                  <p className="text-xl font-extrabold tracking-widest text-ink">{trackingCode}</p>
                 </div>
               )}
               {trackingCode && <div className="mx-auto max-w-md"><GuestAccountBox trackingCode={trackingCode} /></div>}
               <div className="flex gap-4 justify-center">
                 <button
                   onClick={() => { setSubmitted(false); setStep(1); setPickupAddress(""); setDropoffAddress(""); setTrackingCode(null); }}
-                  className="bg-black text-white px-8 py-3.5 rounded-xl font-semibold hover:bg-gray-800 transition-colors"
+                  className="bg-black text-white px-8 py-3.5 rounded-[4px] font-semibold hover:bg-gray-800 transition-colors"
                 >
                   Nouvelle commande
                 </button>
@@ -479,7 +479,7 @@ export default function OrderForm() {
             <>
               {/* Stepper Header */}
               <div className="flex items-center justify-between mb-10 relative">
-                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-gray-100 rounded-full z-0"></div>
+                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-paper rounded-full z-0"></div>
                 <div 
                   className="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-[#ed5518] rounded-full z-0 transition-all duration-500"
                   style={{ width: `${((step - 1) / 2) * 100}%` }}
@@ -489,7 +489,7 @@ export default function OrderForm() {
                   <div 
                     key={s} 
                     className={`relative z-10 w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-colors duration-300 ${
-                      step >= s ? 'bg-[#ed5518] text-white shadow-md shadow-accent/20' : 'bg-gray-100 text-gray-400'
+                      step >= s ? 'bg-[#ed5518] text-white shadow-sm shadow-accent/20' : 'bg-paper text-label'
                     }`}
                   >
                     {s}
@@ -502,54 +502,54 @@ export default function OrderForm() {
                 {/* Step 1: Itinéraire */}
                 {step === 1 && (
                   <div className="flex-1 animate-in fade-in slide-in-from-right-4 duration-500">
-                    <div className="mb-8 flex p-1 bg-gray-100 rounded-xl">
+                    <div className="mb-8 flex p-1 bg-paper rounded-[4px]">
                       <button 
                         type="button"
                         onClick={() => setClientType('entreprise')}
-                        className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-bold transition-all ${clientType === 'entreprise' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                        className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-[4px] text-sm font-bold transition-all ${clientType === 'entreprise' ? 'bg-paper-card text-ink shadow-sm' : 'text-muted hover:text-muted'}`}
                       >
                         <Building2 className="w-4 h-4" /> Entreprise
                       </button>
                       <button 
                         type="button"
                         onClick={() => setClientType('particulier')}
-                        className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-bold transition-all ${clientType === 'particulier' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                        className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-[4px] text-sm font-bold transition-all ${clientType === 'particulier' ? 'bg-paper-card text-ink shadow-sm' : 'text-muted hover:text-muted'}`}
                       >
                         <User className="w-4 h-4" /> Particulier
                       </button>
                     </div>
 
                     {clientType === 'particulier' && (
-                      <div className="mb-8 p-4 bg-orange-50 border border-orange-100 rounded-xl flex gap-3 text-sm text-orange-800">
+                      <div className="mb-8 p-4 bg-orange-50 border border-orange-100 rounded-[4px] flex gap-3 text-sm text-orange-800">
                         <CreditCard className="w-5 h-5 text-orange-500 shrink-0" />
                         <p>En tant que particulier, <strong>le paiement devra être effectué par carte bancaire</strong> avant la prise en charge de la course.</p>
                       </div>
                     )}
                     {clientType === 'entreprise' && (
-                      <div className="mb-8 p-4 bg-blue-50 border border-blue-100 rounded-xl flex gap-3 text-sm text-blue-800">
-                        <CreditCard className="w-5 h-5 text-blue-500 shrink-0" />
+                      <div className="mb-8 p-4 bg-paper border border-line rounded-[4px] flex gap-3 text-sm text-ink">
+                        <CreditCard className="w-5 h-5 text-accent shrink-0" />
                         <p>Pour les professionnels, <strong>deux modes de règlement : par carte bancaire ou sur facture à 30 jours</strong>. Vous choisirez à la dernière étape.</p>
                       </div>
                     )}
 
                     <div className="flex items-center justify-between mb-8">
-                      <div className="flex items-center gap-3 text-gray-900 font-bold text-lg">
-                        <div className="p-2 bg-orange-50 rounded-lg"><MapPin className="w-5 h-5 text-[#ed5518]" /></div>
+                      <div className="flex items-center gap-3 text-ink font-bold text-lg">
+                        <div className="p-2 bg-orange-50 rounded-[4px]"><MapPin className="w-5 h-5 text-[#ed5518]" /></div>
                         Itinéraire de livraison
                       </div>
-                      <div className="hidden sm:block bg-orange-50 text-[#ed5518] px-3 py-1.5 rounded-md text-xs font-semibold">
+                      <div className="hidden sm:block bg-orange-50 text-[#ed5518] px-3 py-1.5 rounded-[4px] text-xs font-semibold">
                         Paris & Île-de-France
                       </div>
                     </div>
 
                     <div className="relative pl-10 space-y-8">
-                      <div className="absolute left-[15px] top-8 bottom-10 border-l-2 border-dashed border-gray-200"></div>
+                      <div className="absolute left-[15px] top-8 bottom-10 border-l-2 border-dashed border-line"></div>
 
                       <div className="relative">
-                        <div className="absolute -left-[38px] top-1.5 w-6 h-6 rounded-full border-[3px] border-emerald-500 bg-white flex items-center justify-center">
+                        <div className="absolute -left-[38px] top-1.5 w-6 h-6 rounded-full border-[3px] border-emerald-500 bg-paper-card flex items-center justify-center">
                           <div className="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
                         </div>
-                        <label className="block text-sm font-bold text-gray-800 mb-2">
+                        <label className="block text-sm font-bold text-ink mb-2">
                           Adresse d'enlèvement <span className="text-[#ed5518]">*</span>
                         </label>
                         <div className="relative mb-3">
@@ -560,17 +560,17 @@ export default function OrderForm() {
                             required 
                           />
                         </div>
-                        <div className="flex items-center gap-3 bg-white border border-gray-200 rounded-xl px-4 py-1 focus-within:border-gray-400 focus-within:ring-2 focus-within:ring-gray-100 transition-colors">
-                          <Building2 className="w-4 h-4 text-gray-400 shrink-0" />
+                        <div className="flex items-center gap-3 bg-paper-card border border-line rounded-[4px] px-4 py-1 focus-within:border-gray-400 focus-within:ring-2 focus-within:ring-line transition-colors">
+                          <Building2 className="w-4 h-4 text-label shrink-0" />
                           <input type="text" value={pickupDetails} onChange={(e) => setPickupDetails(e.target.value)} placeholder="Étage, Digicode ou Bureau..." className="w-full bg-transparent py-3 text-sm focus:outline-none" />
                         </div>
                       </div>
 
                       <div className="relative">
-                        <div className="absolute -left-[38px] top-1.5 w-6 h-6 rounded-full border-[3px] border-[#ed5518] bg-white flex items-center justify-center">
+                        <div className="absolute -left-[38px] top-1.5 w-6 h-6 rounded-full border-[3px] border-[#ed5518] bg-paper-card flex items-center justify-center">
                           <div className="w-2.5 h-2.5 rounded-full bg-[#ed5518]"></div>
                         </div>
-                        <label className="block text-sm font-bold text-gray-800 mb-2">
+                        <label className="block text-sm font-bold text-ink mb-2">
                           Adresse de livraison <span className="text-[#ed5518]">*</span>
                         </label>
                         <div className="relative mb-3">
@@ -581,8 +581,8 @@ export default function OrderForm() {
                             required 
                           />
                         </div>
-                        <div className="flex items-center gap-3 bg-white border border-gray-200 rounded-xl px-4 py-1 focus-within:border-gray-400 focus-within:ring-2 focus-within:ring-gray-100 transition-colors">
-                          <User className="w-4 h-4 text-gray-400 shrink-0" />
+                        <div className="flex items-center gap-3 bg-paper-card border border-line rounded-[4px] px-4 py-1 focus-within:border-gray-400 focus-within:ring-2 focus-within:ring-line transition-colors">
+                          <User className="w-4 h-4 text-label shrink-0" />
                           <input type="text" value={recipientName} onChange={(e) => setRecipientName(e.target.value)} placeholder="Destinataire sur place (Nom, Accueil)..." className="w-full bg-transparent py-3 text-sm focus:outline-none" />
                         </div>
                       </div>
@@ -590,7 +590,7 @@ export default function OrderForm() {
 
                     {showZoneAlert && <UnservedAddressAlert className="mt-6" />}
 
-                    <label className="mt-6 flex cursor-pointer items-start gap-3 rounded-2xl border border-gray-200 px-5 py-4">
+                    <label className="mt-6 flex cursor-pointer items-start gap-3 rounded-[4px] border border-line px-5 py-4">
                       <input
                         type="checkbox"
                         checked={returnTrip}
@@ -598,22 +598,22 @@ export default function OrderForm() {
                         className="mt-1 h-4 w-4 accent-[#ed5518]"
                       />
                       <span>
-                        <span className="block text-sm font-bold text-gray-900">Retour à l’adresse d’enlèvement</span>
-                        <span className="block text-xs text-gray-500">
+                        <span className="block text-sm font-bold text-ink">Retour à l’adresse d’enlèvement</span>
+                        <span className="block text-xs text-muted">
                           À cocher seulement si le colis doit revenir à l’adresse d’enlèvement, par exemple si le destinataire est absent ou refuse le colis. Le coursier repart alors de la dernière adresse de livraison jusqu’à l’adresse d’enlèvement. Ce trajet est facturé 40 % de son prix, en plus de la course. Sans cette case, la course s’arrête à la dernière livraison.
                         </span>
                       </span>
                     </label>
 
                     {estimatedPrice !== null && (
-                      <div className="mt-8 flex items-center justify-between rounded-2xl border border-orange-100 bg-orange-50/60 px-5 py-4">
+                      <div className="mt-8 flex items-center justify-between rounded-[4px] border border-orange-100 bg-orange-50/60 px-5 py-4">
                         <div>
                           <div className="text-[11px] font-bold uppercase tracking-wider text-orange-600/80">Tarif estimé</div>
-                          <div className="text-xs text-gray-500">Course normale, sans engagement</div>
+                          <div className="text-xs text-muted">Course normale, sans engagement</div>
                         </div>
                         <div className="text-right">
                           <div className="text-2xl font-extrabold text-[#ed5518]">{prices && `${eur(prices.ttc)} TTC`}</div>
-                          <div className="text-xs font-semibold text-gray-500">{prices && `dont TVA ${eur(prices.tva)} (${eur(prices.ht)} HT)`}</div>
+                          <div className="text-xs font-semibold text-muted">{prices && `dont TVA ${eur(prices.tva)} (${eur(prices.ht)} HT)`}</div>
                         </div>
                       </div>
                     )}
@@ -623,15 +623,15 @@ export default function OrderForm() {
                 {/* Step 2: Société & Contact */}
                 {step === 2 && (
                   <div className="flex-1 animate-in fade-in slide-in-from-right-4 duration-500">
-                    <div className="flex items-center gap-3 text-gray-900 font-bold text-lg mb-6">
-                      <div className="p-2 bg-orange-50 rounded-lg"><User className="w-5 h-5 text-[#ed5518]" /></div>
+                    <div className="flex items-center gap-3 text-ink font-bold text-lg mb-6">
+                      <div className="p-2 bg-orange-50 rounded-[4px]"><User className="w-5 h-5 text-[#ed5518]" /></div>
                       Vos informations
                     </div>
 
                     <div className="space-y-6">
                       {clientType === 'entreprise' && (
                         <div>
-                          <label className="block text-sm font-bold text-gray-800 mb-2">
+                          <label className="block text-sm font-bold text-ink mb-2">
                             SIRET <span className="text-[#ed5518]">*</span>
                           </label>
                           <div className="relative">
@@ -642,14 +642,14 @@ export default function OrderForm() {
                               onChange={(e) => { setSiret(e.target.value.replace(/\D/g, "").slice(0, 14)); setTva(""); setFormError(""); }}
                               maxLength={14}
                               placeholder="14 chiffres, vérifié automatiquement"
-                              className="w-full bg-gray-50 border border-gray-200 rounded-xl px-5 py-4 pr-28 text-[15px] focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-400 transition-colors"
+                              className="w-full bg-paper border border-line rounded-[4px] px-5 py-4 pr-28 text-[15px] focus:outline-none focus:ring-2 focus:ring-line focus:border-gray-400 transition-colors"
                             />
                             {validatingSiret && (
-                              <span className="absolute inset-y-0 right-4 flex items-center text-xs font-semibold text-gray-400">Vérification…</span>
+                              <span className="absolute inset-y-0 right-4 flex items-center text-xs font-semibold text-label">Vérification…</span>
                             )}
                           </div>
                           {tva && (
-                            <div className="mt-2 flex flex-col gap-1 rounded-lg bg-green-100 p-3 text-green-900 text-sm">
+                            <div className="mt-2 flex flex-col gap-1 rounded-[4px] bg-green-100 p-3 text-green-900 text-sm">
                               <span className="font-bold">✓ {raisonSociale || "Société vérifiée"}</span>
                               <span>TVA : {tva}</span>
                             </div>
@@ -659,15 +659,15 @@ export default function OrderForm() {
 
                       {clientType === 'entreprise' && (
                       <div>
-                        <label className="block text-sm font-bold text-gray-800 mb-2">
+                        <label className="block text-sm font-bold text-ink mb-2">
                           Nom de la société <span className="text-[#ed5518]">*</span>
                         </label>
                         <div className="relative">
                           <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                             {clientType === 'entreprise' ? (
-                              <Building2 className="h-5 w-5 text-gray-400" />
+                              <Building2 className="h-5 w-5 text-label" />
                             ) : (
-                              <User className="h-5 w-5 text-gray-400" />
+                              <User className="h-5 w-5 text-label" />
                             )}
                           </div>
                           <input
@@ -676,25 +676,25 @@ export default function OrderForm() {
                             value={contactName}
                             onChange={(e) => setContactName(e.target.value)}
                             placeholder="Ex: Acme Corp"
-                            className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-12 pr-5 py-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-400 transition-colors"
+                            className="w-full bg-paper border border-line rounded-[4px] pl-12 pr-5 py-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-line focus:border-gray-400 transition-colors"
                           />
                         </div>
                       </div>
                       )}
                       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                         <div>
-                          <label className="block text-sm font-bold text-gray-800 mb-2">Prénom <span className="text-[#ed5518]">*</span></label>
-                          <input type="text" required value={firstName} onChange={(e) => setFirstName(e.target.value)} autoComplete="given-name" placeholder="Jean" className="w-full bg-gray-50 border border-gray-200 rounded-xl px-5 py-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-400 transition-colors" />
+                          <label className="block text-sm font-bold text-ink mb-2">Prénom <span className="text-[#ed5518]">*</span></label>
+                          <input type="text" required value={firstName} onChange={(e) => setFirstName(e.target.value)} autoComplete="given-name" placeholder="Jean" className="w-full bg-paper border border-line rounded-[4px] px-5 py-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-line focus:border-gray-400 transition-colors" />
                         </div>
                         <div>
-                          <label className="block text-sm font-bold text-gray-800 mb-2">Nom <span className="text-[#ed5518]">*</span></label>
-                          <input type="text" required value={lastName} onChange={(e) => setLastName(e.target.value)} autoComplete="family-name" placeholder="Dupont" className="w-full bg-gray-50 border border-gray-200 rounded-xl px-5 py-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-400 transition-colors" />
+                          <label className="block text-sm font-bold text-ink mb-2">Nom <span className="text-[#ed5518]">*</span></label>
+                          <input type="text" required value={lastName} onChange={(e) => setLastName(e.target.value)} autoComplete="family-name" placeholder="Dupont" className="w-full bg-paper border border-line rounded-[4px] px-5 py-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-line focus:border-gray-400 transition-colors" />
                         </div>
                       </div>
 
                       {clientType === 'entreprise' && (
                         <div>
-                          <label className="block text-sm font-bold text-gray-800 mb-2">
+                          <label className="block text-sm font-bold text-ink mb-2">
                             Adresse de facturation <span className="text-[#ed5518]">*</span>
                           </label>
                           <input
@@ -702,45 +702,45 @@ export default function OrderForm() {
                             value={adresseFacturation}
                             onChange={(e) => setAdresseFacturation(e.target.value)}
                             placeholder="Adresse de facturation"
-                            className="w-full bg-gray-50 border border-gray-200 rounded-xl px-5 py-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-400 transition-colors"
+                            className="w-full bg-paper border border-line rounded-[4px] px-5 py-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-line focus:border-gray-400 transition-colors"
                           />
                         </div>
                       )}
 
                       <div>
-                        <label className="block text-sm font-bold text-gray-800 mb-2">
+                        <label className="block text-sm font-bold text-ink mb-2">
                           Téléphone <span className="text-[#ed5518]">*</span>
                         </label>
                         <div className="flex">
-                          <div className="bg-gray-100 border border-gray-200 border-r-0 rounded-l-xl px-4 py-3 flex items-center justify-center gap-2">
+                          <div className="bg-paper border border-line border-r-0 rounded-l-[4px] px-4 py-3 flex items-center justify-center gap-2">
                             <span className="text-lg">🇫🇷</span>
-                            <span className="text-sm font-medium text-gray-600">+33</span>
+                            <span className="text-sm font-medium text-muted">+33</span>
                           </div>
-                          <input type="tel" required value={contactPhone} inputMode="tel" maxLength={12} onChange={(e) => setContactPhone((e.target.value.trim().startsWith("+") ? "+" : "") + e.target.value.replace(/\D/g, "").slice(0, e.target.value.trim().startsWith("+") ? 11 : 10))} placeholder="01 23 45 67 89" className="w-full bg-gray-50 border border-gray-200 rounded-r-xl px-5 py-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-400 transition-colors" />
+                          <input type="tel" required value={contactPhone} inputMode="tel" maxLength={12} onChange={(e) => setContactPhone((e.target.value.trim().startsWith("+") ? "+" : "") + e.target.value.replace(/\D/g, "").slice(0, e.target.value.trim().startsWith("+") ? 11 : 10))} placeholder="01 23 45 67 89" className="w-full bg-paper border border-line rounded-r-[4px] px-5 py-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-line focus:border-gray-400 transition-colors" />
                         </div>
                       </div>
                       
                       <div>
-                        <label className="block text-sm font-bold text-gray-800 mb-2">
+                        <label className="block text-sm font-bold text-ink mb-2">
                           Email <span className="text-[#ed5518]">*</span>
                         </label>
                         <div className="relative">
                           <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                            <Mail className="h-5 w-5 text-gray-400" />
+                            <Mail className="h-5 w-5 text-label" />
                           </div>
-                          <input type="email" required value={contactEmail} onChange={(e) => setContactEmail(e.target.value)} placeholder="contact@masociete.com" className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-12 pr-5 py-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-400 transition-colors" />
+                          <input type="email" required value={contactEmail} onChange={(e) => setContactEmail(e.target.value)} placeholder="contact@masociete.com" className="w-full bg-paper border border-line rounded-[4px] pl-12 pr-5 py-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-line focus:border-gray-400 transition-colors" />
                         </div>
                       </div>
                       {clientType === 'entreprise' && (
                         <div>
-                          <label className="block text-sm font-bold text-gray-800 mb-2">
+                          <label className="block text-sm font-bold text-ink mb-2">
                             Confirmez l'email <span className="text-[#ed5518]">*</span>
                           </label>
                           <div className="relative">
                             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                              <Mail className="h-5 w-5 text-gray-400" />
+                              <Mail className="h-5 w-5 text-label" />
                             </div>
-                            <input type="email" required value={contactEmailConfirm} onChange={(e) => setContactEmailConfirm(e.target.value)} onPaste={(e) => e.preventDefault()} autoComplete="off" placeholder="Retapez votre email (vos factures y seront envoyées)" className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-12 pr-5 py-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-400 transition-colors" />
+                            <input type="email" required value={contactEmailConfirm} onChange={(e) => setContactEmailConfirm(e.target.value)} onPaste={(e) => e.preventDefault()} autoComplete="off" placeholder="Retapez votre email (vos factures y seront envoyées)" className="w-full bg-paper border border-line rounded-[4px] pl-12 pr-5 py-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-line focus:border-gray-400 transition-colors" />
                           </div>
                         </div>
                       )}
@@ -752,17 +752,17 @@ export default function OrderForm() {
                 {step === 3 && (
                   <div className="flex-1 animate-in fade-in slide-in-from-right-4 duration-500">
                     <div className="flex items-center justify-between mb-8">
-                      <div className="flex items-center gap-3 text-gray-900 font-bold text-lg">
-                        <div className="p-2 bg-orange-50 rounded-lg"><Package className="w-5 h-5 text-[#ed5518]" /></div>
+                      <div className="flex items-center gap-3 text-ink font-bold text-lg">
+                        <div className="p-2 bg-orange-50 rounded-[4px]"><Package className="w-5 h-5 text-[#ed5518]" /></div>
                         Détails du pli / colis
                       </div>
-                      <span className="text-sm font-medium text-gray-400 bg-gray-100 px-3 py-1 rounded-full">Max 18 kg</span>
+                      <span className="text-sm font-medium text-label bg-paper px-3 py-1 rounded-full">Max 18 kg</span>
                     </div>
 
                     <div className="space-y-8">
                       <div>
-                        <label className="block text-sm font-bold text-gray-800 mb-1">Que voulez-vous envoyer ? <span className="text-[#ed5518]">*</span></label>
-                        <p className="mb-3 text-xs text-gray-500">Pour préparer le coursier. Le prix reste le même.</p>
+                        <label className="block text-sm font-bold text-ink mb-1">Que voulez-vous envoyer ? <span className="text-[#ed5518]">*</span></label>
+                        <p className="mb-3 text-xs text-muted">Pour préparer le coursier. Le prix reste le même.</p>
                         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                           {ORDER_NATURES.map(({ id, label, Icon }) => (
                             <button
@@ -770,10 +770,10 @@ export default function OrderForm() {
                               type="button"
                               onClick={() => { setNature(id); setFormError(""); }}
                               aria-pressed={nature === id}
-                              className={`flex items-center gap-2 rounded-xl border-2 px-4 py-3 text-left transition-all ${nature === id ? 'border-[#ed5518] bg-orange-50' : 'border-gray-100 bg-white hover:border-gray-200 hover:bg-gray-50'}`}
+                              className={`flex items-center gap-2 rounded-[4px] border-2 px-4 py-3 text-left transition-all ${nature === id ? 'border-[#ed5518] bg-orange-50' : 'border-line bg-paper-card hover:border-line hover:bg-paper'}`}
                             >
-                              <Icon className={`h-5 w-5 shrink-0 ${nature === id ? 'text-[#ed5518]' : 'text-gray-400'}`} />
-                              <span className={`text-sm font-bold ${nature === id ? 'text-[#ed5518]' : 'text-gray-700'}`}>{label}</span>
+                              <Icon className={`h-5 w-5 shrink-0 ${nature === id ? 'text-[#ed5518]' : 'text-label'}`} />
+                              <span className={`text-sm font-bold ${nature === id ? 'text-[#ed5518]' : 'text-muted'}`}>{label}</span>
                             </button>
                           ))}
                         </div>
@@ -786,51 +786,51 @@ export default function OrderForm() {
                             autoFocus
                             placeholder="Précisez ce que vous envoyez (ex. : clés, maquette, pièce détachée…)"
                             aria-label="Précisez ce que vous envoyez"
-                            className="mt-2 w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
+                            className="mt-2 w-full rounded-[4px] border border-line bg-paper px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
                           />
                         )}
                       </div>
 
                       <div>
-                        <label className="block text-sm font-bold text-gray-800 mb-3">Format du courrier</label>
+                        <label className="block text-sm font-bold text-ink mb-3">Format du courrier</label>
                         <div className="grid grid-cols-3 gap-3">
-                          <button type="button" onClick={() => setFormat('doc')} className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all ${format === 'doc' ? 'border-[#ed5518] bg-orange-50' : 'border-gray-100 bg-white hover:border-gray-200 hover:bg-gray-50'}`}>
-                            <Mail className={`w-6 h-6 mb-2 ${format === 'doc' ? 'text-[#ed5518]' : 'text-gray-400'}`} />
-                            <span className={`text-sm font-bold ${format === 'doc' ? 'text-[#ed5518]' : 'text-gray-700'}`}>Pli / Doc</span>
-                            <span className={`text-xs mt-1 ${format === 'doc' ? 'text-orange-400/80' : 'text-gray-400'}`}>{'< 1 kg'}</span>
+                          <button type="button" onClick={() => setFormat('doc')} className={`flex flex-col items-center justify-center p-4 rounded-[4px] border-2 transition-all ${format === 'doc' ? 'border-[#ed5518] bg-orange-50' : 'border-line bg-paper-card hover:border-line hover:bg-paper'}`}>
+                            <Mail className={`w-6 h-6 mb-2 ${format === 'doc' ? 'text-[#ed5518]' : 'text-label'}`} />
+                            <span className={`text-sm font-bold ${format === 'doc' ? 'text-[#ed5518]' : 'text-muted'}`}>Pli / Doc</span>
+                            <span className={`text-xs mt-1 ${format === 'doc' ? 'text-orange-400/80' : 'text-label'}`}>{'< 1 kg'}</span>
                           </button>
-                          <button type="button" onClick={() => setFormat('petit')} className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all ${format === 'petit' ? 'border-[#ed5518] bg-orange-50' : 'border-gray-100 bg-white hover:border-gray-200 hover:bg-gray-50'}`}>
-                            <Package className={`w-6 h-6 mb-2 ${format === 'petit' ? 'text-[#ed5518]' : 'text-gray-400'}`} />
-                            <span className={`text-sm font-bold ${format === 'petit' ? 'text-[#ed5518]' : 'text-gray-700'}`}>Petit colis</span>
-                            <span className={`text-xs mt-1 ${format === 'petit' ? 'text-orange-400/80' : 'text-gray-400'}`}>1 à 10 kg</span>
+                          <button type="button" onClick={() => setFormat('petit')} className={`flex flex-col items-center justify-center p-4 rounded-[4px] border-2 transition-all ${format === 'petit' ? 'border-[#ed5518] bg-orange-50' : 'border-line bg-paper-card hover:border-line hover:bg-paper'}`}>
+                            <Package className={`w-6 h-6 mb-2 ${format === 'petit' ? 'text-[#ed5518]' : 'text-label'}`} />
+                            <span className={`text-sm font-bold ${format === 'petit' ? 'text-[#ed5518]' : 'text-muted'}`}>Petit colis</span>
+                            <span className={`text-xs mt-1 ${format === 'petit' ? 'text-orange-400/80' : 'text-label'}`}>1 à 10 kg</span>
                           </button>
-                          <button type="button" onClick={() => setFormat('volumineux')} className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all ${format === 'volumineux' ? 'border-[#ed5518] bg-orange-50' : 'border-gray-100 bg-white hover:border-gray-200 hover:bg-gray-50'}`}>
-                            <Truck className={`w-6 h-6 mb-2 ${format === 'volumineux' ? 'text-[#ed5518]' : 'text-gray-400'}`} />
-                            <span className={`text-sm font-bold ${format === 'volumineux' ? 'text-[#ed5518]' : 'text-gray-700'}`}>Volumineux</span>
-                            <span className={`text-xs mt-1 ${format === 'volumineux' ? 'text-orange-400/80' : 'text-gray-400'}`}>10 à 18 kg ou encombrant</span>
+                          <button type="button" onClick={() => setFormat('volumineux')} className={`flex flex-col items-center justify-center p-4 rounded-[4px] border-2 transition-all ${format === 'volumineux' ? 'border-[#ed5518] bg-orange-50' : 'border-line bg-paper-card hover:border-line hover:bg-paper'}`}>
+                            <Truck className={`w-6 h-6 mb-2 ${format === 'volumineux' ? 'text-[#ed5518]' : 'text-label'}`} />
+                            <span className={`text-sm font-bold ${format === 'volumineux' ? 'text-[#ed5518]' : 'text-muted'}`}>Volumineux</span>
+                            <span className={`text-xs mt-1 ${format === 'volumineux' ? 'text-orange-400/80' : 'text-label'}`}>10 à 18 kg ou encombrant</span>
                           </button>
                         </div>
                         {format === 'volumineux' && <LargeParcelAlert className="mt-3" />}
                       </div>
 
                       <div>
-                        <label className="block text-sm font-bold text-gray-800 mb-3">Délai de prise en charge</label>
+                        <label className="block text-sm font-bold text-ink mb-3">Délai de prise en charge</label>
                         <div className="flex flex-wrap gap-3">
-                          <button type="button" onClick={() => setDelai('standard')} className={`flex items-center gap-2 px-5 py-3 rounded-xl transition-all ${delai === 'standard' ? 'bg-[#ed5518] text-white shadow-md shadow-accent/20' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
+                          <button type="button" onClick={() => setDelai('standard')} className={`flex items-center gap-2 px-5 py-3 rounded-[4px] transition-all ${delai === 'standard' ? 'bg-[#ed5518] text-white shadow-sm shadow-accent/20' : 'bg-paper text-muted hover:bg-line'}`}>
                             <Clock className="w-5 h-5" />
                             <div className="flex flex-col text-left">
                               <span className="font-semibold leading-tight">NORMAL : 3h</span>
                               <span className="text-xs opacity-80">{priceNormal !== null ? `${eur(priceNormal)} TTC` : 'Saisissez les adresses'}</span>
                             </div>
                           </button>
-                          <button type="button" onClick={() => setDelai('urgent')} className={`flex items-center gap-2 px-5 py-3 rounded-xl transition-all ${delai === 'urgent' ? 'bg-[#ed5518] text-white shadow-md shadow-accent/20' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
+                          <button type="button" onClick={() => setDelai('urgent')} className={`flex items-center gap-2 px-5 py-3 rounded-[4px] transition-all ${delai === 'urgent' ? 'bg-[#ed5518] text-white shadow-sm shadow-accent/20' : 'bg-paper text-muted hover:bg-line'}`}>
                             <Zap className="w-5 h-5" />
                             <div className="flex flex-col text-left">
                               <span className="font-semibold leading-tight">URGENT : 1h30</span>
                               <span className="text-xs opacity-80">{priceUrgent !== null ? `${eur(priceUrgent)} TTC` : '+50% du tarif'}</span>
                             </div>
                           </button>
-                          <button type="button" onClick={() => setDelai('flash')} className={`flex items-center gap-2 px-5 py-3 rounded-xl transition-all ${delai === 'flash' ? 'bg-[#ed5518] text-white shadow-md shadow-accent/20' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
+                          <button type="button" onClick={() => setDelai('flash')} className={`flex items-center gap-2 px-5 py-3 rounded-[4px] transition-all ${delai === 'flash' ? 'bg-[#ed5518] text-white shadow-sm shadow-accent/20' : 'bg-paper text-muted hover:bg-line'}`}>
                             <Zap className="w-5 h-5 text-red-500" />
                             <div className="flex flex-col text-left">
                               <span className="font-semibold leading-tight">SUPER : 1h</span>
@@ -838,7 +838,7 @@ export default function OrderForm() {
                             </div>
                           </button>
                           {clientType === 'entreprise' && hasAccount && (
-                            <button type="button" onClick={() => setDelai('navette')} className={`flex items-center gap-2 px-5 py-3 rounded-xl transition-all ${delai === 'navette' ? 'bg-[#ed5518] text-white shadow-md shadow-accent/20' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
+                            <button type="button" onClick={() => setDelai('navette')} className={`flex items-center gap-2 px-5 py-3 rounded-[4px] transition-all ${delai === 'navette' ? 'bg-[#ed5518] text-white shadow-sm shadow-accent/20' : 'bg-paper text-muted hover:bg-line'}`}>
                               <Calendar className="w-5 h-5" />
                               <span className="font-semibold">Programmée (tarif Normal)</span>
                             </button>
@@ -849,19 +849,19 @@ export default function OrderForm() {
                       {delai === 'navette' && (
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2 duration-300">
                           <div>
-                            <label className="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-wide">Date d'enlèvement</label>
-                            <input type="date" value={scheduledDate} onChange={(e) => setScheduledDate(e.target.value)} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-[14px] font-medium focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-[#ed5518] transition-colors" required />
+                            <label className="block text-xs font-bold text-muted mb-2 uppercase tracking-wide">Date d'enlèvement</label>
+                            <input type="date" value={scheduledDate} onChange={(e) => setScheduledDate(e.target.value)} className="w-full bg-paper border border-line rounded-[4px] px-4 py-3 text-[14px] font-medium focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-[#ed5518] transition-colors" required />
                           </div>
                           <div>
-                            <label className="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-wide">Heure</label>
-                            <input type="time" value={scheduledTime} onChange={(e) => setScheduledTime(e.target.value)} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-[14px] font-medium focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-[#ed5518] transition-colors" required />
+                            <label className="block text-xs font-bold text-muted mb-2 uppercase tracking-wide">Heure</label>
+                            <input type="time" value={scheduledTime} onChange={(e) => setScheduledTime(e.target.value)} className="w-full bg-paper border border-line rounded-[4px] px-4 py-3 text-[14px] font-medium focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-[#ed5518] transition-colors" required />
                           </div>
                         </div>
                       )}
 
                       {clientType === 'entreprise' && (
                         <div>
-                          <label className="block text-sm font-bold text-gray-800 mb-3">Mode de règlement</label>
+                          <label className="block text-sm font-bold text-ink mb-3">Mode de règlement</label>
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             {([
                               { id: 'carte', label: 'Carte bancaire', sub: '', Icon: CreditCard },
@@ -872,12 +872,12 @@ export default function OrderForm() {
                                 type="button"
                                 onClick={() => setPaymentMode(id)}
                                 aria-pressed={paymentMode === id}
-                                className={`flex items-center gap-3 px-5 py-3 rounded-xl border-2 text-left transition-all ${paymentMode === id ? 'border-[#ed5518] bg-orange-50' : 'border-gray-100 bg-white hover:border-gray-200'}`}
+                                className={`flex items-center gap-3 px-5 py-3 rounded-[4px] border-2 text-left transition-all ${paymentMode === id ? 'border-[#ed5518] bg-orange-50' : 'border-line bg-paper-card hover:border-line'}`}
                               >
-                                <Icon className={`w-5 h-5 shrink-0 ${paymentMode === id ? 'text-[#ed5518]' : 'text-gray-400'}`} />
+                                <Icon className={`w-5 h-5 shrink-0 ${paymentMode === id ? 'text-[#ed5518]' : 'text-label'}`} />
                                 <div className="flex flex-col">
-                                  <span className={`font-semibold leading-tight ${paymentMode === id ? 'text-[#ed5518]' : 'text-gray-700'}`}>{label}</span>
-                                  {sub && <span className="text-xs text-gray-500">{sub}</span>}
+                                  <span className={`font-semibold leading-tight ${paymentMode === id ? 'text-[#ed5518]' : 'text-muted'}`}>{label}</span>
+                                  {sub && <span className="text-xs text-muted">{sub}</span>}
                                 </div>
                               </button>
                             ))}
@@ -885,8 +885,8 @@ export default function OrderForm() {
 
                           {paymentMode === 'fin_de_mois' && (
                             <div className="mt-4">
-                              <p className="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-wide">Réglé par</p>
-                              <div className="flex bg-gray-100 p-1 rounded-xl">
+                              <p className="block text-xs font-bold text-muted mb-2 uppercase tracking-wide">Réglé par</p>
+                              <div className="flex bg-paper p-1 rounded-[4px]">
                                 {([
                                   { id: 'sepa', label: 'Prélèvement' },
                                   { id: 'virement', label: 'Virement' },
@@ -896,7 +896,7 @@ export default function OrderForm() {
                                     type="button"
                                     onClick={() => setDebitMethod(id)}
                                     aria-pressed={debitMethod === id}
-                                    className={`flex-1 flex items-center justify-center py-2.5 rounded-lg text-sm font-bold transition-all ${debitMethod === id ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                                    className={`flex-1 flex items-center justify-center py-2.5 rounded-[4px] text-sm font-bold transition-all ${debitMethod === id ? 'bg-paper-card text-ink shadow-sm' : 'text-muted hover:text-muted'}`}
                                   >
                                     {label}
                                   </button>
@@ -909,52 +909,52 @@ export default function OrderForm() {
                       )}
 
                       <div>
-                        <label className="block text-sm font-bold text-gray-800 mb-2">Consignes au coursier</label>
-                        <textarea rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Ex: Le colis est à l'accueil, demander M. Martin..." className="w-full bg-gray-50 border border-gray-200 rounded-xl px-5 py-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-400 resize-none transition-colors"></textarea>
+                        <label className="block text-sm font-bold text-ink mb-2">Consignes au coursier</label>
+                        <textarea rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Ex: Le colis est à l'accueil, demander M. Martin..." className="w-full bg-paper border border-line rounded-[4px] px-5 py-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-line focus:border-gray-400 resize-none transition-colors"></textarea>
                       </div>
 
                       {/* Récapitulatif Prix */}
-                      <div className="bg-orange-50/50 border border-orange-100 rounded-2xl p-6 mt-4">
-                        <h3 className="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2">
+                      <div className="bg-orange-50/50 border border-orange-100 rounded-[4px] p-6 mt-4">
+                        <h3 className="text-sm font-bold text-ink mb-4 flex items-center gap-2">
                           <CheckCircle2 className="w-4 h-4 text-[#ed5518]" />
                           Récapitulatif de votre commande
                         </h3>
-                        <div className="space-y-2 text-[14px] text-gray-600 mb-4">
+                        <div className="space-y-2 text-[14px] text-muted mb-4">
                           <div className="flex justify-between">
                             <span>Départ :</span>
-                            <span className="font-medium text-gray-900 truncate max-w-[200px] sm:max-w-[300px]">{pickupAddress || "À renseigner"}</span>
+                            <span className="font-medium text-ink truncate max-w-[200px] sm:max-w-[300px]">{pickupAddress || "À renseigner"}</span>
                           </div>
                           <div className="flex justify-between">
                             <span>Arrivée :</span>
-                            <span className="font-medium text-gray-900 truncate max-w-[200px] sm:max-w-[300px]">{dropoffAddress || "À renseigner"}</span>
+                            <span className="font-medium text-ink truncate max-w-[200px] sm:max-w-[300px]">{dropoffAddress || "À renseigner"}</span>
                           </div>
                           {nature && (
                             <div className="flex justify-between">
                               <span>Envoi :</span>
-                              <span className="font-medium text-gray-900">{natureLabel(nature, natureDetail)}</span>
+                              <span className="font-medium text-ink">{natureLabel(nature, natureDetail)}</span>
                             </div>
                           )}
                           <div className="flex justify-between">
                             <span>Format :</span>
-                            <span className="font-medium text-gray-900">{format === 'doc' ? 'Pli/Doc' : format === 'petit' ? 'Petit Colis' : 'Volumineux'}</span>
+                            <span className="font-medium text-ink">{format === 'doc' ? 'Pli/Doc' : format === 'petit' ? 'Petit Colis' : 'Volumineux'}</span>
                           </div>
                           <div className="flex justify-between">
                             <span>Délai :</span>
-                            <span className="font-medium text-gray-900">{delai === 'standard' ? 'Normal' : delai === 'urgent' ? 'Urgent' : delai === 'flash' ? 'Super' : 'Navette'}</span>
+                            <span className="font-medium text-ink">{delai === 'standard' ? 'Normal' : delai === 'urgent' ? 'Urgent' : delai === 'flash' ? 'Super' : 'Navette'}</span>
                           </div>
                         </div>
                         <div className="border-t border-orange-200/60 pt-4 flex items-end justify-between">
                           <div>
                             <div className="text-[11px] font-bold uppercase tracking-wider text-orange-600/80 mb-0.5">Tarif estimé</div>
-                            <div className="text-[10px] text-gray-400 mb-1 uppercase tracking-wider font-semibold">Paiement sécurisé</div>
-                            <div className="text-xs text-gray-600 font-medium">{clientType === 'entreprise' && paymentMode === 'fin_de_mois' ? (debitMethod === 'virement' ? 'Virement sous 30 jours' : 'Prélèvement sous 30 jours') : 'Réglé par carte'}</div>
+                            <div className="text-[11px] text-label mb-1 uppercase tracking-wider font-semibold">Paiement sécurisé</div>
+                            <div className="text-xs text-muted font-medium">{clientType === 'entreprise' && paymentMode === 'fin_de_mois' ? (debitMethod === 'virement' ? 'Virement sous 30 jours' : 'Prélèvement sous 30 jours') : 'Réglé par carte'}</div>
                           </div>
                           <div className="text-right">
                             <div className="text-2xl font-extrabold text-[#ed5518]">
                               {prices ? `${eur(prices.ttc)} TTC` : '-- €'}
                             </div>
                             {prices && (
-                              <div className="text-xs font-semibold text-gray-500">
+                              <div className="text-xs font-semibold text-muted">
                                 dont TVA {eur(prices.tva)} ({eur(prices.ht)} HT)
                               </div>
                             )}
@@ -966,18 +966,18 @@ export default function OrderForm() {
                 )}
 
                 {formError && (
-                  <p role="alert" className="mt-6 rounded-xl bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+                  <p role="alert" className="mt-6 rounded-[4px] bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
                     {formError}
                   </p>
                 )}
 
                 {/* Footer Buttons */}
-                <div className="mt-10 pt-6 border-t border-gray-100 flex items-center justify-between">
+                <div className="mt-10 pt-6 border-t border-line flex items-center justify-between">
                   {step > 1 ? (
                     <button 
                       type="button" 
                       onClick={prevStep}
-                      className="flex items-center gap-2 px-6 py-3.5 rounded-xl text-gray-600 font-semibold hover:bg-gray-100 transition-colors"
+                      className="flex items-center gap-2 px-6 py-3.5 rounded-[4px] text-muted font-semibold hover:bg-paper transition-colors"
                     >
                       <ChevronLeft className="w-5 h-5" /> Retour
                     </button>
@@ -987,7 +987,7 @@ export default function OrderForm() {
                     id="submit-btn"
                     type="submit"
                     disabled={submitting || checkingAddress || outOfZone}
-                    className="flex items-center gap-2 bg-black text-white px-8 py-3.5 rounded-xl font-bold hover:bg-gray-800 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 ml-auto disabled:opacity-60"
+                    className="flex items-center gap-2 bg-black text-white px-8 py-3.5 rounded-[4px] font-bold hover:bg-gray-800 transition-all shadow-sm hover:shadow-sm hover:-translate-y-0.5 ml-auto disabled:opacity-60"
                   >
                     {submitting
                       ? (clientType === 'entreprise' && paymentMode === 'fin_de_mois' && debitMethod === 'virement' ? 'Envoi de la commande…' : 'Redirection paiement…')

@@ -20,7 +20,7 @@ export default function About() {
           </p>
 
           <div className="flex flex-col gap-4">
-            {["Un coursier chez vous en moins de 45 minutes", "Paris, 92, 93, 94 et toute l'Île-de-France", "7j/7, de 8 h à 19 h"].map((item) => (
+            {["Un coursier chez vous en moins de 45 minutes", "Paris, 92, 93, 94 et toute l'Île-de-France", "7j/7, de 7 h à 23 h"].map((item) => (
               <div key={item} className="flex items-center gap-3">
                 <CheckCircle2 className="h-5 w-5 text-accent shrink-0" />
                 <span className="font-semibold text-ink">{item}</span>

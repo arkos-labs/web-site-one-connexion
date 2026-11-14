@@ -21,6 +21,17 @@ export default function DashboardLayout({
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<{ full_name: string | null; company: string | null; role: string | null } | null>(null);
   const [ordersThisMonth, setOrdersThisMonth] = useState<number | null>(null);
+  // Dispatch ouvert de 7h à 23h, heure de Paris. Calculé après l'affichage, puis rafraîchi chaque minute.
+  const [dispatchOpen, setDispatchOpen] = useState<boolean | null>(null);
+  useEffect(() => {
+    const check = () => {
+      const hour = Number(new Intl.DateTimeFormat("fr-FR", { hour: "numeric", hourCycle: "h23", timeZone: "Europe/Paris" }).format(new Date()).replace(/\D/g, ""));
+      setDispatchOpen(hour >= 7 && hour < 23);
+    };
+    check();
+    const timer = window.setInterval(check, 60_000);
+    return () => window.clearInterval(timer);
+  }, []);
 
   const loadProfile = async () => {
     const { data: { user: authUser } } = await supabase.auth.getUser();
@@ -94,7 +105,7 @@ export default function DashboardLayout({
     : "??";
 
   return (
-    <div className="relative min-h-screen bg-[#FBFBFB]">
+    <div className="relative min-h-screen bg-paper">
 
       <div className="relative z-10 mx-auto flex w-full max-w-[1280px] flex-col items-start gap-8 px-[clamp(16px,4vw,32px)] py-4 sm:py-10 lg:flex-row">
 
@@ -104,30 +115,28 @@ export default function DashboardLayout({
           <div className="sticky top-[96px] flex flex-col gap-6">
 
             {/* Carte Principale Sidebar */}
-            <div className="flex flex-col overflow-hidden rounded-2xl border border-line bg-white shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
+            <div className="flex flex-col overflow-hidden rounded-[4px] border border-line bg-paper-card shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
 
               {/* En-tête profil */}
               <div className="flex items-center gap-4 border-b border-line p-5">
-                <div className="flex h-[46px] w-[46px] shrink-0 items-center justify-center rounded-xl bg-[#0E0F10] text-[15px] font-bold text-white shadow-sm">
+                <div className="flex h-[46px] w-[46px] shrink-0 items-center justify-center rounded-[4px] bg-[#0E0F10] text-[15px] font-bold text-white shadow-sm">
                   {initials}
                 </div>
                 <div className="flex flex-col">
                   <div className="flex items-center gap-2">
                     <span className="text-[15px] font-bold text-ink">{displayName}</span>
-                    <span className="rounded-full bg-green-50 px-1.5 py-0.5 text-[9px] font-bold uppercase text-green-600">Vérifié</span>
+                    {isProAccount(user) && <span className="rounded-[2px] bg-ink px-1.5 py-0.5 text-[11px] font-bold uppercase text-white">Pro</span>}
                   </div>
                   {company && <span className="text-xs font-medium text-muted">{company}</span>}
                 </div>
               </div>
 
               {/* Statistiques (courses ce mois) */}
-              <div className="flex border-b border-line bg-paper/30 p-4">
-                <div className="flex flex-1 flex-col items-center justify-center">
-                  <span className="text-[11px] font-medium text-label">Courses</span>
-                  <span className="mt-0.5 text-sm font-bold text-ink">
-                    {ordersThisMonth === null ? "…" : ordersThisMonth}
-                  </span>
-                </div>
+              <div className="flex items-baseline justify-between border-b border-line px-5 py-3.5">
+                <span className="text-[13px] font-medium text-muted">Courses ce mois-ci</span>
+                <span className="text-[17px] font-bold text-ink">
+                  {ordersThisMonth === null ? "…" : ordersThisMonth}
+                </span>
               </div>
 
               {/* Navigation Menu */}
@@ -139,7 +148,7 @@ export default function DashboardLayout({
                     <Link
                       key={item.name}
                       href={item.href}
-                      className={`group relative flex items-center gap-3.5 rounded-xl px-4 py-3.5 text-[14px] font-semibold transition-all ${
+                      className={`group relative flex items-center gap-3.5 rounded-[4px] px-4 py-3.5 text-[14px] font-semibold transition-all ${
                         isActive
                           ? "bg-accent/5 text-accent shadow-[inset_0_0_0_1px_rgba(232,93,31,0.15)]"
                           : "text-muted hover:bg-paper hover:text-ink"
@@ -153,7 +162,7 @@ export default function DashboardLayout({
                       )}
 
                       {item.badge && (
-                        <div className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-yellow-100 px-2 py-0.5 text-[10px] font-bold text-yellow-800">
+                        <div className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-yellow-100 px-2 py-0.5 text-[11px] font-bold text-yellow-800">
                           {item.badge}
                         </div>
                       )}
@@ -166,9 +175,9 @@ export default function DashboardLayout({
                     <div className="my-2 border-t border-line" />
                     <Link
                       href="/admin"
-                      className="flex w-full items-center gap-3.5 rounded-xl px-4 py-3.5 text-[14px] font-bold text-accent transition-colors hover:bg-accent/10"
+                      className="flex w-full items-center gap-3.5 rounded-[4px] px-4 py-3.5 text-[14px] font-bold text-accent transition-colors hover:bg-accent/10"
                     >
-                      <span className="flex items-center justify-center w-[18px] h-[18px] rounded-md bg-accent text-white">
+                      <span className="flex items-center justify-center w-[18px] h-[18px] rounded-[4px] bg-accent text-white">
                         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                       </span>
                       Accéder à l'Espace Admin
@@ -180,25 +189,25 @@ export default function DashboardLayout({
 
                 <button
                   onClick={handleLogout}
-                  className="flex w-full items-center gap-3.5 rounded-xl px-4 py-3.5 text-[14px] font-semibold text-red-500 transition-colors hover:bg-red-50 hover:text-red-600"
+                  className="flex w-full items-center gap-3.5 rounded-[4px] px-4 py-3.5 text-[14px] font-semibold text-red-500 transition-colors hover:bg-red-50 hover:text-red-600"
                 >
                   <LogOut size={18} strokeWidth={2} className="text-red-400" />
                   Déconnexion
                 </button>
               </nav>
 
-              {/* Dispatch en ligne (7j/7, 8h–19h) */}
-              <div className="flex flex-col bg-[#1A1C20] text-white p-6">
+              {/* Dispatch en ligne (7j/7, 7h–23h) */}
+              <div className="flex flex-col bg-ink text-white p-6">
                 <div className="mb-2 flex items-center gap-2">
-                  <div className="h-2 w-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]"></div>
-                  <h3 className="text-sm font-bold tracking-wide">DISPATCH EN LIGNE</h3>
+                  <div className={`h-2 w-2 rounded-full ${dispatchOpen ? "bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]" : "bg-white/30"}`}></div>
+                  <h3 className="text-sm font-bold tracking-wide">{dispatchOpen === false ? "DISPATCH FERMÉ · RÉOUVERTURE À 7H" : "DISPATCH EN LIGNE"}</h3>
                 </div>
                 <p className="mb-5 text-xs font-medium text-white/70 leading-relaxed">
-                  Besoin d'une modification urgente ou d'un itinéraire multi-points ? Nos régulateurs vous répondent en direct, 7j/7 de 8h à 19h.
+                  Besoin d'une modification urgente ou d'un itinéraire multi-points ? Nos régulateurs vous répondent en direct, 7j/7 de 7h à 23h.
                 </p>
                 <a
                   href={`tel:${PHONE_TEL}`}
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-white/10 px-4 py-3 text-xs font-bold text-white transition-colors hover:bg-white/20"
+                  className="flex w-full items-center justify-center gap-2 rounded-[4px] bg-white/10 px-4 py-3 text-xs font-bold text-white transition-colors hover:bg-white/20"
                 >
                   <Phone size={14} className="text-accent" />
                   Appeler le dispatching

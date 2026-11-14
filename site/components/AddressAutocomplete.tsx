@@ -18,7 +18,7 @@ export function AddressAutocomplete({
   onChange,
   placeholder = "Numéro et nom de rue",
   required = false,
-  className = "w-full rounded-xl border border-line bg-[#FAFAFA] px-4 py-3 text-sm font-semibold text-ink focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+  className = "w-full rounded-[4px] border border-line bg-paper px-4 py-3 text-sm font-semibold text-ink focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
 }: AddressAutocompleteProps) {
   const [query, setQuery] = useState(value);
   const [suggestions, setSuggestions] = useState<any[]>([]);
@@ -212,13 +212,13 @@ export function AddressAutocomplete({
         <ul
           ref={listRef}
           style={inline ? undefined : pos ?? undefined}
-          className={`z-[9999] overflow-auto rounded-xl border border-line bg-white py-1 text-left shadow-2xl [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${inline ? "absolute left-0 right-0 top-full mt-1 max-h-[40vh]" : ""}`}
+          className={`z-[9999] overflow-auto rounded-[4px] border border-line bg-paper-card py-1 text-left shadow-xl [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${inline ? "absolute left-0 right-0 top-full mt-1 max-h-[40vh]" : ""}`}
         >
           {suggestions.map((feature) => (
             <li
               key={feature.properties.id}
               onClick={() => handleSelect(feature)}
-              className="flex cursor-pointer items-start gap-3 px-4 py-2.5 transition-colors hover:bg-[#FAFAFA]"
+              className="flex cursor-pointer items-start gap-3 px-4 py-2.5 transition-colors hover:bg-paper"
             >
               <MapPin size={16} className="mt-0.5 shrink-0 text-muted" />
               <div className="flex flex-col">

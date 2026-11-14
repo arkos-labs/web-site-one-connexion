@@ -100,7 +100,7 @@ export const LANDING_SERVICES: LandingService[] = [
       {
         question: "En combien de temps le coursier prend-il l’envoi en charge ?",
         answer:
-          "En moins de 45 minutes, 7j/7 de 8h à 19h, sous réserve de disponibilité au moment de la commande. Nous confirmons la faisabilité avant d’engager la course.",
+          "En moins de 45 minutes, 7j/7 de 7h à 23h, sous réserve de disponibilité au moment de la commande. Nous confirmons la faisabilité avant d’engager la course.",
       },
       {
         question: "Combien coûte une course pour un laboratoire ?",
@@ -256,7 +256,7 @@ export const LANDING_SERVICES: LandingService[] = [
       {
         title: "Dimanche et jours fériés : ce qui change et ce qui ne change pas",
         paragraphs: [
-          "Les horaires de prise en charge sont ceux de toute la semaine : 7j/7 de 8h à 19h. Ce qui change le dimanche, c’est l’environnement : bureaux fermés, accueils absents, destinataire à joindre autrement. Ce qui ne change pas, c’est la méthode : une course dédiée, un suivi en ligne, une remise en main propre et l’heure de remise enregistrée.",
+          "Les horaires de prise en charge sont ceux de toute la semaine : 7j/7 de 7h à 23h. Ce qui change le dimanche, c’est l’environnement : bureaux fermés, accueils absents, destinataire à joindre autrement. Ce qui ne change pas, c’est la méthode : une course dédiée, un suivi en ligne, une remise en main propre et l’heure de remise enregistrée.",
           "Pour un jour férié, appelez-nous avant de commander : nous confirmons la faisabilité avant d’engager le coursier.",
         ],
       },
@@ -265,7 +265,7 @@ export const LANDING_SERVICES: LandingService[] = [
       {
         question: "Livrez-vous le dimanche à Paris ?",
         answer:
-          "Oui, 7j/7 de 8h à 19h, sous réserve de disponibilité au moment de la commande. Nous confirmons la faisabilité avant d’engager le coursier.",
+          "Oui, 7j/7 de 7h à 23h, sous réserve de disponibilité au moment de la commande. Nous confirmons la faisabilité avant d’engager le coursier.",
       },
       {
         question: "Que se passe-t-il si le destinataire est absent ?",
@@ -306,9 +306,9 @@ export const LANDING_SERVICES: LandingService[] = [
         ],
       },
       {
-        title: "Délais garantis et horaires (8h–19h, 7j/7)",
+        title: "Délais garantis et horaires (7h–23h, 7j/7)",
         paragraphs: [
-          "Le coursier prend l’envoi en charge en moins de 45 minutes, 7j/7 de 8h à 19h, sous réserve de disponibilité au moment de la commande. Si l’envoi doit être remis avant une heure précise, dites-le à la commande : nous confirmons la faisabilité avant d’engager la course.",
+          "Le coursier prend l’envoi en charge en moins de 45 minutes, 7j/7 de 7h à 23h, sous réserve de disponibilité au moment de la commande. Si l’envoi doit être remis avant une heure précise, dites-le à la commande : nous confirmons la faisabilité avant d’engager la course.",
           "Dans un envoi mutualisé, votre colis attend que d’autres soient collectés, puis suit une tournée avec plusieurs arrêts. En course dédiée, le coursier ne transporte que le vôtre : il part de votre adresse et va directement au destinataire. Vous suivez la course en ligne jusqu’à la remise, et le nom de la personne qui reçoit l’envoi est enregistré avec l’heure.",
         ],
       },
@@ -331,7 +331,7 @@ export const LANDING_SERVICES: LandingService[] = [
       {
         question: "En combien de temps un coursier urgent prend-il mon envoi en charge ?",
         answer:
-          "En moins de 45 minutes, 7j/7 de 8h à 19h, sous réserve de disponibilité au moment de la commande. Nous confirmons la faisabilité avant d’engager la course.",
+          "En moins de 45 minutes, 7j/7 de 7h à 23h, sous réserve de disponibilité au moment de la commande. Nous confirmons la faisabilité avant d’engager la course.",
       },
       {
         question: "Quelle est la différence entre une course urgente et une course super ?",
@@ -396,7 +396,7 @@ export const LANDING_SERVICES: LandingService[] = [
       {
         title: "Zones et délais (Paris, petite couronne, Île-de-France)",
         paragraphs: [
-          `Le coursier prend le prélèvement en charge en moins de 45 minutes, 7j/7 de 8h à 19h, sous réserve de disponibilité au moment de la commande. Il intervient à Paris, en petite couronne (92, 93, 94) et dans le reste de l’Île-de-France. Le délai de livraison dépend de la formule choisie : Normal sous 3 h, Urgent sous 1 h 30, Super sous 1 h.`,
+          `Le coursier prend le prélèvement en charge en moins de 45 minutes, 7j/7 de 7h à 23h, sous réserve de disponibilité au moment de la commande. Il intervient à Paris, en petite couronne (92, 93, 94) et dans le reste de l’Île-de-France. Le délai de livraison dépend de la formule choisie : Normal sous 3 h, Urgent sous 1 h 30, Super sous 1 h.`,
           `Un prélèvement se facture comme n’importe quelle course : la zone et le délai font le tarif, jamais la nature de l’envoi. À Paris, une course Super (sous 1 h) coûte ${gridPrice("flash", 0)} € TTC, et le contenant isotherme est compris. Le prix exact s’affiche avant de valider la commande ; la grille complète figure sur la page [tarif coursier Paris](/tarifs).`,
         ],
       },
@@ -420,7 +420,7 @@ export const LANDING_SERVICES: LandingService[] = [
       {
         question: "En combien de temps un prélèvement est-il pris en charge ?",
         answer:
-          "En moins de 45 minutes, 7j/7 de 8h à 19h, sous réserve de disponibilité au moment de la commande. Pour une urgence, appelez la coordination : nous confirmons la faisabilité avant l’enlèvement.",
+          "En moins de 45 minutes, 7j/7 de 7h à 23h, sous réserve de disponibilité au moment de la commande. Pour une urgence, appelez la coordination : nous confirmons la faisabilité avant l’enlèvement.",
       },
       {
         question: "Combien coûte le transport d’un prélèvement ?",
@@ -447,9 +447,9 @@ export const LANDING_SERVICES: LandingService[] = [
         ],
       },
       {
-        title: "Livraison le jour même : commande et horaires (7j/7, 8h–19h)",
+        title: "Livraison le jour même : commande et horaires (7j/7, 7h–23h)",
         paragraphs: [
-          "Vous commandez en ligne, par téléphone ou depuis votre compte, en indiquant l’adresse d’enlèvement, la destination, la nature de l’envoi et l’heure limite de remise. Le coursier prend l’envoi en charge en moins de 45 minutes, 7j/7 de 8h à 19h, sous réserve de disponibilité au moment de la commande.",
+          "Vous commandez en ligne, par téléphone ou depuis votre compte, en indiquant l’adresse d’enlèvement, la destination, la nature de l’envoi et l’heure limite de remise. Le coursier prend l’envoi en charge en moins de 45 minutes, 7j/7 de 7h à 23h, sous réserve de disponibilité au moment de la commande.",
           "Le délai de livraison dépend de la formule : Normal sous 3 h, Urgent sous 1 h 30, Super sous 1 h. Pour une livraison le jour même, choisissez la formule qui correspond à votre heure limite. Si l’envoi doit être remis avant une heure précise, dites-le à la commande : nous confirmons la faisabilité avant d’engager la course, plutôt que d’accepter puis de manquer l’échéance.",
         ],
       },
@@ -477,7 +477,7 @@ export const LANDING_SERVICES: LandingService[] = [
       {
         question: "En combien de temps le coursier vient-il chercher l’envoi ?",
         answer:
-          "En moins de 45 minutes, 7j/7 de 8h à 19h, sous réserve de disponibilité au moment de la commande. Nous confirmons la faisabilité avant d’engager la course.",
+          "En moins de 45 minutes, 7j/7 de 7h à 23h, sous réserve de disponibilité au moment de la commande. Nous confirmons la faisabilité avant d’engager la course.",
       },
       {
         question: "Comment suivre et prouver la livraison ?",

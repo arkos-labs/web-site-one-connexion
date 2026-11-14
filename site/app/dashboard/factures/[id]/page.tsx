@@ -95,7 +95,7 @@ export default function FactureDetailsPage() {
 
   if (loading) {
     return (
-      <div className="rounded-2xl border border-line bg-white">
+      <div className="rounded-[4px] border border-line bg-paper-card">
         <LoadingState text="Chargement de la facture…" />
       </div>
     );
@@ -110,8 +110,8 @@ export default function FactureDetailsPage() {
   const Route = ({ o }: { o: any }) => {
     const stops: string[] = (Array.isArray(o.stops) ? o.stops : []).map((st: any) => st?.address || String(st));
     const pts = [
-      { c: "border-ink bg-white", a: o.pickup_address },
-      ...stops.map((a) => ({ c: "border-label bg-white", a })),
+      { c: "border-ink bg-paper-card", a: o.pickup_address },
+      ...stops.map((a) => ({ c: "border-label bg-paper-card", a })),
       { c: "border-accent bg-accent", a: o.dropoff_address },
     ];
     return (

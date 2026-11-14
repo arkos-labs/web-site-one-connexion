@@ -153,7 +153,7 @@ export const compteEntreprise: Service = {
         after: "included",
         title: "Livraison le jour même pour les équipes B2B",
         paragraphs: [
-          "Avec un compte entreprise, chaque équipe peut commander une livraison le jour même : l’envoi part dès la confirmation, en course dédiée, avec une prise en charge en moins de 45 minutes, 7j/7 de 8h à 19h, sous réserve de disponibilité. Le prix s’affiche avant la commande, et la facture est rattachée au compte du service ou du site qui a commandé.",
+          "Avec un compte entreprise, chaque équipe peut commander une livraison le jour même : l’envoi part dès la confirmation, en course dédiée, avec une prise en charge en moins de 45 minutes, 7j/7 de 7h à 23h, sous réserve de disponibilité. Le prix s’affiche avant la commande, et la facture est rattachée au compte du service ou du site qui a commandé.",
           "Pour les besoins qui se répètent sur les mêmes trajets, les [tournées régulières](/services/tournees-regulieres) évitent de recommander chaque semaine. Le fonctionnement, les horaires et les métiers concernés sont détaillés sur la page [livraison le jour même B2B](/services/livraison-jour-meme-b2b). Toutes les prestations se commandent depuis le même compte : retrouvez les métiers desservis sur [coursier pour entreprise : nos secteurs](/secteurs), et la grille de prix sur la page [tarif coursier Paris](/tarifs).",
         ],
       },

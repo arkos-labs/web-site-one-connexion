@@ -107,7 +107,7 @@ export default function NavetteDetailsPage() {
 
   if (loading) {
     return (
-      <div className="rounded-2xl border border-line bg-white">
+      <div className="rounded-[4px] border border-line bg-paper-card">
         <LoadingState text="Chargement de la navette…" />
       </div>
     );
@@ -224,7 +224,7 @@ export default function NavetteDetailsPage() {
   ];
 
   const btnDark =
-    "flex h-10 items-center gap-2 whitespace-nowrap rounded-xl border border-white/20 bg-white/[0.07] px-4 text-sm font-bold text-white transition-colors hover:bg-white/15 hover:text-white disabled:opacity-50";
+    "flex h-10 items-center gap-2 whitespace-nowrap rounded-[4px] border border-white/20 bg-white/[0.07] px-4 text-sm font-bold text-white transition-colors hover:bg-white/15 hover:text-white disabled:opacity-50";
 
   return (
     <PageShell
@@ -242,7 +242,7 @@ export default function NavetteDetailsPage() {
       actions={
         <>
           {isPending ? (
-            <span className="max-w-[260px] rounded-xl bg-amber-50 px-3 py-2 text-xs font-bold leading-snug text-amber-800">
+            <span className="max-w-[260px] rounded-[4px] bg-amber-50 px-3 py-2 text-xs font-bold leading-snug text-amber-800">
               En attente de confirmation - One Connexion va vous rappeler
             </span>
           ) : (
@@ -259,7 +259,7 @@ export default function NavetteDetailsPage() {
             type="button"
             onClick={handleDelete}
             disabled={deleting}
-            className="flex h-10 items-center gap-2 whitespace-nowrap rounded-xl bg-red-600 px-4 text-sm font-bold text-white transition-colors hover:bg-red-700 disabled:opacity-50"
+            className="flex h-10 items-center gap-2 whitespace-nowrap rounded-[4px] border border-white/20 px-4 text-sm font-semibold text-white/70 transition-colors hover:border-red-400 hover:text-red-300 disabled:opacity-50"
           >
             {deleting ? <Loader2 size={15} className="animate-spin" /> : <Trash2 size={15} />}
             Supprimer
@@ -277,17 +277,17 @@ export default function NavetteDetailsPage() {
                   <li key={i} className="relative">
                     <span
                       aria-hidden
-                      className={`absolute -left-9 top-0 flex h-6 w-6 items-center justify-center rounded-full border-2 text-[10px] font-bold ${
+                      className={`absolute -left-9 top-0 flex h-6 w-6 items-center justify-center rounded-full border-2 text-[11px] font-bold ${
                         pt.kind === "end"
                           ? "border-accent bg-accent text-white"
                           : pt.kind === "start"
-                          ? "border-ink bg-white text-ink"
-                          : "border-label bg-white text-muted"
+                          ? "border-ink bg-paper-card text-ink"
+                          : "border-label bg-paper-card text-muted"
                       }`}
                     >
                       {pt.kind === "start" ? "A" : pt.kind === "end" ? "B" : i}
                     </span>
-                    <div className="label-mono text-[10.5px] font-medium text-muted">{pt.label}</div>
+                    <div className="label-mono text-[11px] font-medium text-muted">{pt.label}</div>
                     <p className="mt-0.5 text-sm font-semibold leading-snug text-ink">{pt.address}</p>
                     {(pt.contactName || pt.contactPhone) && (
                       <p className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-0.5 text-xs text-muted">
@@ -319,7 +319,7 @@ export default function NavetteDetailsPage() {
                   {navette.delivery_photo_url && (
                     <a href={navette.delivery_photo_url} target="_blank" rel="noreferrer" className="inline-block">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={navette.delivery_photo_url} alt="Photo de livraison" className="h-28 rounded-lg border border-line object-cover" />
+                      <img src={navette.delivery_photo_url} alt="Photo de livraison" className="h-28 rounded-[4px] border border-line object-cover" />
                     </a>
                   )}
                 </div>
@@ -329,7 +329,7 @@ export default function NavetteDetailsPage() {
         }
         side={
           <>
-            <section className="overflow-hidden rounded-xl bg-ink text-white">
+            <section className="overflow-hidden rounded-[4px] bg-ink text-white">
               <div className="border-b border-white/10 px-5 py-3">
                 <h2 className="label-mono text-xs font-medium text-white/60">Tarif estimé</h2>
               </div>
@@ -366,7 +366,7 @@ export default function NavetteDetailsPage() {
                       <span
                         key={d.id}
                         title={d.fr}
-                        className={`flex h-9 w-9 items-center justify-center rounded-lg text-xs font-bold ${
+                        className={`flex h-9 w-9 items-center justify-center rounded-[4px] text-xs font-bold ${
                           isDayActive(d) ? "bg-ink text-white" : "bg-paper-card text-label ring-1 ring-line"
                         }`}
                       >

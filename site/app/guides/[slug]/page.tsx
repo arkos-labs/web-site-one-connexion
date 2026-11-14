@@ -160,7 +160,7 @@ export default async function GuidePage({ params }: { params: Promise<Params> })
             )}
             <div className="flex flex-col gap-4">
               {guide.faq.map((item) => (
-                <div key={item.question} className="rounded-xl border border-line bg-white p-5">
+                <div key={item.question} className="rounded-[4px] border border-line bg-paper-card p-5">
                   <h3 className="mb-2 text-[16px] font-bold text-ink">{item.question}</h3>
                   <p className="text-[15px] leading-[1.65] text-muted"><InlineLinks text={item.answer} /></p>
                 </div>
@@ -168,7 +168,7 @@ export default async function GuidePage({ params }: { params: Promise<Params> })
             </div>
           </section>
 
-          <div className="flex flex-col gap-3 rounded-2xl bg-ink p-8 text-white sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-3 rounded-[4px] bg-ink p-8 text-white sm:flex-row sm:items-center sm:justify-between">
             <p className="text-[16px] font-semibold">Un envoi à organiser ? Prix affiché avant de commander.</p>
             <div className="flex flex-col gap-3 sm:flex-row">
               <Link

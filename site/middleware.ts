@@ -2,6 +2,22 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
+  // Mode démo de l'espace client, en développement uniquement (voir lib/supabase/demo-client.ts) :
+  // /dashboard?demo=1 pose le cookie et laisse entrer sans compte, ?demo=0 le retire.
+  // En production cette branche n'existe pas : l'accès reste réservé aux comptes connectés.
+  if (process.env.NODE_ENV === "development" && request.nextUrl.pathname.startsWith("/dashboard")) {
+    const flag = request.nextUrl.searchParams.get("demo");
+    if (flag === "1" || flag === "0") {
+      const url = request.nextUrl.clone();
+      url.searchParams.delete("demo");
+      const response = NextResponse.redirect(url);
+      if (flag === "1") response.cookies.set("oc_demo", "1", { path: "/" });
+      else response.cookies.delete("oc_demo");
+      return response;
+    }
+    if (request.cookies.get("oc_demo")?.value === "1") return NextResponse.next({ request });
+  }
+
   let supabaseResponse = NextResponse.next({ request });
 
   const supabase = createServerClient(

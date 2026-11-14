@@ -6,6 +6,7 @@
  * Les zones dotées d'un plan SEO (lib/zones/plan.ts : arrondissements,
  * Villejuif) passent par components/zones/PlannedZonePage.
  */
+import QuickOrderBar from "@/components/QuickOrderBar";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -152,7 +153,7 @@ export default async function ZonePage({ params }: Props) {
         {HERO_IMAGES[zone.slug] && <HeroBackdrop src={HERO_IMAGES[zone.slug].src} />}
         <div className="relative mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-20 pt-16">
           {/* Fil d'Ariane */}
-          <nav aria-label="Fil d'Ariane" className="mb-8 flex flex-wrap items-center gap-1 font-mono text-[10px] tracking-[0.16em] text-white/40 uppercase">
+          <nav aria-label="Fil d'Ariane" className="mb-8 flex flex-wrap items-center gap-1 font-mono text-[11px] tracking-[0.16em] text-white/40 uppercase">
             <Link href="/" className="hover:text-white transition-colors">Accueil</Link>
             <ChevronRight size={10} className="text-white/25" />
             <Link href="/zones" className="hover:text-white transition-colors">Zones</Link>
@@ -171,7 +172,7 @@ export default async function ZonePage({ params }: Props) {
               {/* Tag département */}
               <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5">
                 <MapPin size={11} className="text-accent" />
-                <span className="font-mono text-[10px] tracking-[0.14em] uppercase text-white/60">
+                <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-white/60">
                   {categoryLabel(zone.category)} · {zone.dept}
                 </span>
               </div>
@@ -185,6 +186,8 @@ export default async function ZonePage({ params }: Props) {
                 {zone.intro}
               </p>
 
+              <QuickOrderBar className="mb-8" />
+
               {/* Landmarks */}
               <div className="flex flex-wrap gap-2">
                 {zone.landmarks.map((l) => (
@@ -196,32 +199,32 @@ export default async function ZonePage({ params }: Props) {
             </div>
 
             {/* Carte info rapide */}
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-6 self-start">
-              <div className="mb-5 font-mono text-[10px] tracking-[0.14em] uppercase text-white/30">Infos pratiques</div>
+            <div className="rounded-[4px] border border-white/10 bg-white/5 p-6 self-start">
+              <div className="mb-5 font-mono text-[11px] tracking-[0.14em] uppercase text-white/30">Infos pratiques</div>
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
                   <Clock size={14} className="mt-0.5 shrink-0 text-accent" />
                   <div>
-                    <div className="text-[13px] font-semibold text-white">Un coursier chez vous en moins de 45 min</div>
-                    <div className="text-[11px] text-white/40">7j/7, de 8 h à 19 h</div>
+                    <div className="text-[14px] font-semibold text-white">Un coursier chez vous en moins de 45 min</div>
+                    <div className="text-[12.5px] text-white/65">7j/7, de 7 h à 23 h</div>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
                   <MapPin size={14} className="mt-0.5 shrink-0 text-accent" />
                   <div>
-                    <div className="text-[13px] font-semibold text-white">
+                    <div className="text-[14px] font-semibold text-white">
                       {zone.distanceParis ?? "Paris et petite couronne"}
                     </div>
-                    <div className="text-[11px] text-white/40">Distance calculée depuis Paris</div>
+                    <div className="text-[12.5px] text-white/65">Distance calculée depuis Paris</div>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
                   <CheckCircle size={14} className="mt-0.5 shrink-0 text-accent" />
                   <div>
-                    <div className="text-[13px] font-semibold text-white">
-                      {zone.pricingZone === "standard" ? "Dès 28 € TTC la course" : "Prix selon la distance"}
+                    <div className="text-[14px] font-semibold text-white">
+                      {zone.pricingZone !== "standard" ? "Prix selon la distance" : zone.category === "paris" ? "Dès 28 € TTC la course" : "Dès 39 € TTC la course"}
                     </div>
-                    <div className="text-[11px] text-white/40">Par carte, ou sur facture à 30 jours pour les pros</div>
+                    <div className="text-[12.5px] text-white/65">Par carte, ou sur facture à 30 jours pour les pros</div>
                   </div>
                 </div>
               </div>
@@ -233,14 +236,6 @@ export default async function ZonePage({ params }: Props) {
                   <Phone size={14} className="text-accent" />
                   {PHONE_DISPLAY}
                 </a>
-                <Link
-                  href="/#commander"
-                  className="mt-3 flex w-full items-center justify-center gap-2 rounded-[4px] py-3 text-[13px] font-bold transition-opacity hover:opacity-90"
-                  style={{ background: "#ed5518", color: "#fff" }}
-                >
-                  Commander une course
-                  <ArrowRight size={13} />
-                </Link>
               </div>
             </div>
           </div>
@@ -248,11 +243,11 @@ export default async function ZonePage({ params }: Props) {
       </section>
 
       {/* ── Contexte logistique ──────────────────────────────────────────── */}
-      <section className="bg-paper border-b border-gray-100">
+      <section className="bg-paper border-b border-line">
         <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-12">
           <div className="grid lg:grid-cols-[3fr_2fr] gap-10 items-center">
             <div>
-              <div className="mb-3 flex items-center gap-3 font-mono text-[10px] tracking-[0.16em] text-accent uppercase">
+              <div className="mb-3 flex items-center gap-3 font-mono text-[11px] tracking-[0.16em] text-accent uppercase">
                 <span className="h-px w-6 bg-accent" />
                 Logistique locale
               </div>
@@ -269,13 +264,13 @@ export default async function ZonePage({ params }: Props) {
                 { icon: Clock, label: "Réactivité", value: "< 45 min" },
                 { icon: MapPin, label: "Couverture", value: "Toute la zone" },
                 { icon: CheckCircle, label: "Traçabilité", value: "100% des courses" },
-                { icon: Phone, label: "Disponibilité", value: "7j/7 · 8h–19h" },
+                { icon: Phone, label: "Disponibilité", value: "7j/7 · 7h–23h" },
               ].map((item) => {
                 const Icon = item.icon;
                 return (
-                  <div key={item.label} className="rounded-xl border border-gray-100 bg-white p-4">
+                  <div key={item.label} className="rounded-[4px] border border-line bg-paper-card p-4">
                     <Icon size={16} className="mb-2 text-accent" />
-                    <div className="font-mono text-[9px] uppercase tracking-[0.14em] text-muted mb-1">{item.label}</div>
+                    <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted mb-1">{item.label}</div>
                     <div className="text-[14px] font-bold text-ink">{item.value}</div>
                   </div>
                 );
@@ -304,7 +299,7 @@ export default async function ZonePage({ params }: Props) {
       {zone.cases && zone.cases.length > 0 && (
         <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pt-[56px]">
           <div className="mb-8">
-            <div className="mb-3 flex items-center gap-3 font-mono text-[10px] tracking-[0.16em] text-accent uppercase">
+            <div className="mb-3 flex items-center gap-3 font-mono text-[11px] tracking-[0.16em] text-accent uppercase">
               <span className="h-px w-6 bg-accent" />
               Cas concrets
             </div>
@@ -314,7 +309,7 @@ export default async function ZonePage({ params }: Props) {
           </div>
           <div className="grid gap-6 md:grid-cols-3">
             {zone.cases.map((c) => (
-              <div key={c.title} className="rounded-2xl border border-gray-100 bg-white p-6">
+              <div key={c.title} className="rounded-[4px] border border-line bg-paper-card p-6">
                 <h3 className="mb-3 text-[16px] font-bold leading-tight text-ink">{c.title}</h3>
                 <p className="text-[14.5px] leading-[1.7] text-muted">{c.body}</p>
               </div>
@@ -356,7 +351,7 @@ export default async function ZonePage({ params }: Props) {
               <Link
                 key={s.href}
                 href={s.href}
-                className="flex items-center gap-1.5 rounded-[4px] border border-ink/20 bg-white px-4 py-2 text-[13px] font-bold text-ink transition-all hover:bg-ink hover:text-white"
+                className="flex items-center gap-1.5 rounded-[4px] border border-ink/20 bg-paper-card px-4 py-2 text-[13px] font-bold text-ink transition-all hover:bg-ink hover:text-white"
               >
                 {s.label}
                 <ArrowRight size={11} />
@@ -370,7 +365,7 @@ export default async function ZonePage({ params }: Props) {
       {zone.showSectors !== false && (
       <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
         <div className="mb-10">
-          <div className="mb-3 flex items-center gap-3 font-mono text-[10px] tracking-[0.16em] text-accent uppercase">
+          <div className="mb-3 flex items-center gap-3 font-mono text-[11px] tracking-[0.16em] text-accent uppercase">
             <span className="h-px w-6 bg-accent" />
             Tous secteurs
           </div>
@@ -389,9 +384,9 @@ export default async function ZonePage({ params }: Props) {
             const cardColor = getColor(sector.name);
             const iconBg = getIconBg(sector.name);
             return (
-              <div key={sector.name} className={`flex flex-col gap-4 rounded-2xl border p-6 ${cardColor}`}>
+              <div key={sector.name} className={`flex flex-col gap-4 rounded-[4px] border p-6 ${cardColor}`}>
                 <div className="flex items-start gap-3">
-                  <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${iconBg}`}>
+                  <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-[4px] ${iconBg}`}>
                     <Icon size={18} strokeWidth={2} />
                   </div>
                   <div>
@@ -417,10 +412,10 @@ export default async function ZonePage({ params }: Props) {
 
       {/* ── Clients types ────────────────────────────────────────────────── */}
       {zone.keyClients.length > 0 && (
-        <section className="bg-paper border-y border-gray-100">
+        <section className="bg-paper border-y border-line">
           <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-16">
             <div className="mb-8">
-              <div className="mb-3 flex items-center gap-3 font-mono text-[10px] tracking-[0.16em] text-accent uppercase">
+              <div className="mb-3 flex items-center gap-3 font-mono text-[11px] tracking-[0.16em] text-accent uppercase">
                 <span className="h-px w-6 bg-accent" />
                 Ils sont {inZone}
               </div>
@@ -432,7 +427,7 @@ export default async function ZonePage({ params }: Props) {
               {zone.keyClients.map((client) => (
                 <span
                   key={client}
-                  className="flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-[13px] font-medium text-ink"
+                  className="flex items-center gap-2 rounded-full border border-line bg-paper-card px-4 py-2 text-[13px] font-medium text-ink"
                 >
                   <span className="h-1.5 w-1.5 rounded-full bg-accent" />
                   {client}
@@ -445,10 +440,10 @@ export default async function ZonePage({ params }: Props) {
 
       {/* ── Comment ça marche (générique : masqué si la zone a son guide local) ── */}
       {!zone.localGuide && (
-      <section className="bg-paper border-t border-gray-100">
+      <section className="bg-paper border-t border-line">
         <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-20">
           <div className="mb-12 text-center">
-            <div className="mb-3 flex items-center justify-center gap-3 font-mono text-[10px] tracking-[0.16em] text-accent uppercase">
+            <div className="mb-3 flex items-center justify-center gap-3 font-mono text-[11px] tracking-[0.16em] text-accent uppercase">
               <span className="h-px w-6 bg-accent" />
               Processus simple
               <span className="h-px w-6 bg-accent" />
@@ -463,7 +458,7 @@ export default async function ZonePage({ params }: Props) {
               { num: "02", title: "Enlèvement < 45 min", desc: `Un coursier spécialisé se présente à vos bureaux ${inZone} en moins de 45 minutes.` },
               { num: "03", title: "Livraison & Suivi", desc: "Suivez l'avancement de votre course en ligne jusqu'à la remise, horodatée à la réception." }
             ].map((step) => (
-              <div key={step.num} className="relative flex flex-col items-center text-center p-6 bg-white rounded-2xl border border-gray-100 shadow-sm">
+              <div key={step.num} className="relative flex flex-col items-center text-center p-6 bg-paper-card rounded-[4px] border border-line shadow-sm">
                 <div className="absolute -top-4 flex h-10 w-10 items-center justify-center rounded-full bg-accent text-[15px] font-bold text-white shadow-md">
                   {step.num}
                 </div>
@@ -479,7 +474,7 @@ export default async function ZonePage({ params }: Props) {
       {/* ── FAQ ──────────────────────────────────────────────────────────── */}
       <section className="mx-auto max-w-[800px] px-[clamp(20px,4vw,28px)] py-20">
         <div className="mb-10 text-center">
-          <div className="mb-3 flex items-center justify-center gap-3 font-mono text-[10px] tracking-[0.16em] text-accent uppercase">
+          <div className="mb-3 flex items-center justify-center gap-3 font-mono text-[11px] tracking-[0.16em] text-accent uppercase">
             <span className="h-px w-6 bg-accent" />
             Questions fréquentes
             <span className="h-px w-6 bg-accent" />
@@ -490,7 +485,7 @@ export default async function ZonePage({ params }: Props) {
         </div>
         <div className="flex flex-col gap-4">
           {faqItems.map((faq, i) => (
-            <div key={i} className="rounded-xl border border-gray-200 bg-white p-5 hover:border-accent/30 transition-colors">
+            <div key={i} className="rounded-[4px] border border-line bg-paper-card p-5 hover:border-accent/30 transition-colors">
               <h3 className="mb-2 text-[15.5px] font-bold text-ink">{faq.q}</h3>
               <p className="text-[14.5px] leading-[1.65] text-muted">{faq.a}</p>
             </div>
@@ -534,7 +529,7 @@ export default async function ZonePage({ params }: Props) {
       {related.length > 0 && (
         <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-16">
           <div className="mb-8">
-            <div className="mb-3 flex items-center gap-3 font-mono text-[10px] tracking-[0.16em] text-accent uppercase">
+            <div className="mb-3 flex items-center gap-3 font-mono text-[11px] tracking-[0.16em] text-accent uppercase">
               <span className="h-px w-6 bg-accent" />
               Zones proches
             </div>
@@ -554,11 +549,11 @@ export default async function ZonePage({ params }: Props) {
               <Link
                 key={z.slug}
                 href={`/zones/${z.slug}`}
-                className="group flex flex-col gap-2 rounded-xl border border-gray-100 bg-white p-5 transition-all hover:border-accent/30 hover:shadow-sm"
+                className="group flex flex-col gap-2 rounded-[4px] border border-line bg-paper-card p-5 transition-all hover:border-accent/30 hover:shadow-sm"
               >
                 <div className="flex items-center gap-2">
                   <MapPin size={12} className="text-accent" />
-                  <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-muted">{z.dept}</span>
+                  <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted">{z.dept}</span>
                 </div>
                 <div className="font-bold text-ink text-[14px] group-hover:text-accent transition-colors">{z.fullName}</div>
                 {!zone.localGuide && (

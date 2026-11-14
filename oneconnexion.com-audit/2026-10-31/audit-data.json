@@ -1,0 +1,30 @@
+{
+  "summary": {
+    "health_score": 75,
+    "business_type": "Service local B2B (coursier, zone de service Paris / Île-de-France)",
+    "top_findings": [
+      "Image de couverture du Hero : .webp en 404 en ligne, JPG de 838 Ko",
+      "Zoom bloqué sur mobile (user-scalable=no)",
+      "15 meta descriptions > 160 caractères",
+      "3 titres trop longs ou maladroits (/methode, /secteurs, /zones)",
+      "Hubs zones : ~105 liens vers des pages noindex"
+    ],
+    "quick_wins": [
+      "Convertir hero-poster en WebP < 100 Ko",
+      "Retirer maximum-scale/user-scalable de la balise viewport",
+      "Raccourcir les meta descriptions",
+      "Réécrire 3 titres",
+      "Compléter sameAs"
+    ]
+  },
+  "categories": [
+    {"name": "Technical SEO", "score": 82},
+    {"name": "Content Quality", "score": 68},
+    {"name": "On-Page SEO", "score": 75},
+    {"name": "Schema / Structured Data", "score": 85},
+    {"name": "Performance (CWV)", "score": 60, "note": "estimation, quota PageSpeed atteint"},
+    {"name": "AI Search Readiness", "score": 80},
+    {"name": "Images", "score": 75}
+  ],
+  "artifacts": {"report": "FULL-AUDIT-REPORT.md", "action_plan": "ACTION-PLAN.md", "crawl": "crawl-data.json"}
+}

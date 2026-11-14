@@ -21,7 +21,7 @@ const FAQ = [
   {
     question: "En combien de temps un coursier prend-il l’envoi en charge ?",
     answer:
-      "En moins de 45 minutes, 7j/7 de 8h à 19h, sous réserve de disponibilité au moment de la commande. Nous confirmons la faisabilité avant d’engager la course.",
+      "En moins de 45 minutes, 7j/7 de 7h à 23h, sous réserve de disponibilité au moment de la commande. Nous confirmons la faisabilité avant d’engager la course.",
   },
   {
     question: "Combien coûte une course à Paris ?",
@@ -98,7 +98,7 @@ export default function ServicesIndexPage() {
         <div className="relative mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-16 pt-12">
           <nav
             aria-label="Fil d’Ariane"
-            className="mb-9 font-mono text-[10px] tracking-[0.16em] text-white/40 uppercase"
+            className="mb-9 font-mono text-[11px] tracking-[0.16em] text-white/40 uppercase"
           >
             <Link href="/" className="text-white/40 hover:text-white">
               Accueil
@@ -107,7 +107,7 @@ export default function ServicesIndexPage() {
             <span className="text-white/70">Prestations</span>
           </nav>
 
-          <div className="mb-3 flex items-center gap-3 font-mono text-[10px] tracking-[0.16em] text-accent uppercase">
+          <div className="mb-3 flex items-center gap-3 font-mono text-[11px] tracking-[0.16em] text-accent uppercase">
             <span className="h-px w-6 bg-accent" />
             Prestations
           </div>
@@ -139,7 +139,7 @@ export default function ServicesIndexPage() {
               href={`/services/${service.slug}`}
               className="flex flex-col gap-3.5 border border-line bg-paper-card px-[30px] pb-[30px] pt-[34px] text-ink hover:border-ink hover:text-ink"
             >
-              <div className="font-mono text-[10px] tracking-[0.16em] text-label uppercase">
+              <div className="font-mono text-[11px] tracking-[0.16em] text-label uppercase">
                 {service.card.tag}
               </div>
               <h3 className="text-xl font-bold tracking-[-0.02em]">
@@ -148,7 +148,7 @@ export default function ServicesIndexPage() {
               <p className="text-[15px] leading-[1.6] text-muted">
                 {service.card.body}
               </p>
-              <div className="mt-auto pt-5 font-mono text-[10.5px] tracking-[0.1em] text-accent-dark uppercase">
+              <div className="mt-auto pt-5 font-mono text-[11px] tracking-[0.1em] text-accent-dark uppercase">
                 Voir la prestation →
               </div>
             </Link>

@@ -27,7 +27,7 @@ export function useUnservedAddresses(addresses: string[], delay = 700): boolean 
 
 export default function UnservedAddressAlert({ className = "" }: { className?: string }) {
   return (
-    <div role="alert" className={`flex gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800 ${className}`}>
+    <div role="alert" className={`flex gap-3 rounded-[4px] border border-red-200 bg-red-50 p-4 text-sm text-red-800 ${className}`}>
       <AlertTriangle size={18} className="mt-0.5 shrink-0 text-red-600" />
       <div>
         <p className="font-bold text-red-900">Adresse non reconnue</p>

@@ -21,7 +21,7 @@ const config: Config = {
         "paper-card": "#FBFAF8",
         line: "#DFDCD6",
         muted: "#4A4845",
-        label: "#8C8882",
+        label: "#77736D",
         accent: "#ed5518",
         "accent-dark": "#c94410",
       },

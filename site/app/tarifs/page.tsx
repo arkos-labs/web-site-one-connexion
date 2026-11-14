@@ -189,12 +189,12 @@ export default function TarifsPage() {
       <section className="relative overflow-hidden bg-ink text-white">
         <HeroBackdrop src={HERO_IMAGES["tarifs"].src} />
         <div className="relative mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-20 pt-16">
-          <nav aria-label="Fil d'Ariane" className="mb-8 font-mono text-[10px] tracking-[0.16em] text-white/40 uppercase">
+          <nav aria-label="Fil d'Ariane" className="mb-8 font-mono text-[11px] tracking-[0.16em] text-white/40 uppercase">
             <Link href="/" className="hover:text-white">Accueil</Link>
             <span className="px-2 text-white/25">›</span>
             <span className="text-white/70">Tarifs</span>
           </nav>
-          <div className="mb-3 flex items-center gap-3 font-mono text-[10px] tracking-[0.16em] text-accent uppercase">
+          <div className="mb-3 flex items-center gap-3 font-mono text-[11px] tracking-[0.16em] text-accent uppercase">
             <span className="h-px w-6 bg-accent" />
             Tarification
           </div>
@@ -228,15 +228,51 @@ export default function TarifsPage() {
             </Link>
             .
           </p>
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[560px] border-collapse text-[14.5px]">
+          {/* Téléphone : une carte par zone, les trois délais visibles sans faire glisser. */}
+          <div className="grid gap-3 md:hidden">
+            {[
+              { zone: "Paris", dept: "75", z: 0 },
+              { zone: "Petite couronne", dept: "92, 93, 94", z: 1 },
+              { zone: "Grande couronne", dept: "77, 78, 91, 95", z: 2 },
+            ].map((row) => (
+              <div key={row.zone} className={`border bg-paper-card p-5 ${row.z === 0 ? "border-accent" : "border-line"}`}>
+                <div className="flex items-baseline justify-between gap-3">
+                  <p className="text-[18px] font-bold text-ink">{row.zone}</p>
+                  <p className="text-[13px] text-muted">{row.dept}</p>
+                </div>
+                <dl className="mt-4 divide-y divide-line">
+                  {([["standard", "Normal 3 h"], ["urgent", "Urgent 1 h 30"], ["flash", "Super 1 h"]] as const).map(([s, label]) => {
+                    const p = gridPrice(s, row.z as Zone);
+                    return (
+                      <div key={s} className="flex items-start justify-between gap-4 py-3">
+                        <dt className="pt-1 text-[14px] font-medium text-muted">{label}</dt>
+                        <dd className="text-right">
+                          <div className="text-[20px] font-bold leading-tight tracking-[-0.02em] text-ink">
+                            {row.z !== 0 && <span className="mr-1 text-[13px] font-semibold tracking-normal text-muted">dès</span>}
+                            {euro(p)} <span className="text-[13px] font-semibold tracking-normal text-muted">TTC</span>
+                          </div>
+                          <div className="text-[13px] text-muted">{euro(splitTTC(p).ht)} HT</div>
+                          {row.z === 1 && (
+                            <div className="text-[13px] font-medium text-accent-dark">
+                              + {euro(pcKmPrice(s))} TTC/km au-delà de {PC_INCLUDED_KM} km
+                            </div>
+                          )}
+                        </dd>
+                      </div>
+                    );
+                  })}
+                </dl>
+              </div>
+            ))}
+          </div>
+          <div className="hidden overflow-x-auto border border-line bg-paper-card md:block">
+            <table className="w-full min-w-[640px] border-collapse text-[15px]">
               <thead>
                 <tr className="border-b-2 border-ink">
-                  <th className="py-3 pr-6 text-left font-mono text-[10px] tracking-[0.14em] text-label uppercase">Zone</th>
-                  <th className="py-3 pr-6 text-left font-mono text-[10px] tracking-[0.14em] text-label uppercase">Dépt.</th>
-                  <th className="py-3 pr-6 text-left font-mono text-[10px] tracking-[0.14em] text-label uppercase">Normal 3 h</th>
-                  <th className="py-3 pr-6 text-left font-mono text-[10px] tracking-[0.14em] text-label uppercase">Urgent 1 h 30</th>
-                  <th className="py-3 text-left font-mono text-[10px] tracking-[0.14em] text-label uppercase">Super 1 h</th>
+                  <th className="px-5 py-4 text-left font-mono text-[11px] tracking-[0.14em] text-muted uppercase">Zone</th>
+                  <th className="px-5 py-4 text-left font-mono text-[11px] tracking-[0.14em] text-muted uppercase">Normal 3 h</th>
+                  <th className="px-5 py-4 text-left font-mono text-[11px] tracking-[0.14em] text-muted uppercase">Urgent 1 h 30</th>
+                  <th className="px-5 py-4 text-left font-mono text-[11px] tracking-[0.14em] text-muted uppercase">Super 1 h</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-line">
@@ -245,15 +281,20 @@ export default function TarifsPage() {
                   { zone: "Petite couronne", dept: "92, 93, 94", z: 1 },
                   { zone: "Grande couronne", dept: "77, 78, 91, 95", z: 2 },
                 ].map(({ z, ...row }) => ({ ...row, z, from: z !== 0, prix: (["standard", "urgent", "flash"] as const).map((s) => gridPrice(s, z as Zone)) })).map((row) => (
-                  <tr key={row.zone}>
-                    <td className="py-4 pr-6 font-medium text-ink">{row.zone}</td>
-                    <td className="py-4 pr-6 font-mono text-[13px] text-muted">{row.dept}</td>
+                  <tr key={row.zone} className={row.z === 0 ? "bg-accent/[0.07]" : ""}>
+                    <td className={`px-5 py-5 align-top ${row.z === 0 ? "border-l-[3px] border-accent" : "border-l-[3px] border-transparent"}`}>
+                      <div className="text-[17px] font-bold text-ink">{row.zone}</div>
+                      <div className="mt-0.5 text-[13px] text-muted">{row.dept}</div>
+                    </td>
                     {row.prix.map((p, i) => (
-                      <td key={i} className={`py-4 ${i < 2 ? "pr-6" : ""}`}>
-                        <div className="font-semibold text-ink">{row.from ? "dès " : ""}{euro(p)} TTC</div>
-                        <div className="text-[12px] text-muted">{euro(splitTTC(p).ht)} HT</div>
+                      <td key={i} className="px-5 py-5 align-top">
+                        <div className="text-[22px] font-bold leading-tight tracking-[-0.02em] text-ink">
+                          {row.from && <span className="mr-1 text-[13px] font-semibold tracking-normal text-muted">dès</span>}
+                          {euro(p)} <span className="text-[13px] font-semibold tracking-normal text-muted">TTC</span>
+                        </div>
+                        <div className="mt-0.5 text-[13px] text-muted">{euro(splitTTC(p).ht)} HT</div>
                         {row.z === 1 && (
-                          <div className="text-[12px] font-medium text-accent-dark">
+                          <div className="mt-1 text-[13px] font-medium text-accent-dark">
                             + {euro(pcKmPrice((["standard", "urgent", "flash"] as const)[i]))} TTC/km au-delà de {PC_INCLUDED_KM} km
                           </div>
                         )}
@@ -264,7 +305,7 @@ export default function TarifsPage() {
               </tbody>
             </table>
           </div>
-          <p className="mt-4 text-[12px] text-muted/70">
+          <p className="mt-4 text-[13px] text-muted">
             * Tarifs par course, TVA 20 % comprise dans le prix TTC (HT = TTC ÷ 1,20). Compte entreprise : tarif dégressif selon le volume mensuel.
           </p>
         </div>
@@ -298,7 +339,7 @@ export default function TarifsPage() {
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {FACTORS.map(({ icon: Icon, title, desc }) => (
             <div key={title} className="flex flex-col gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10">
+              <div className="flex h-10 w-10 items-center justify-center rounded-[4px] bg-accent/10">
                 <Icon size={18} className="text-accent" strokeWidth={2} />
               </div>
               <h3 className="font-bold tracking-[-0.01em]">{title}</h3>
@@ -349,10 +390,10 @@ export default function TarifsPage() {
           <table className="w-full min-w-[560px] border-collapse text-[14.5px]">
             <thead>
               <tr className="border-b-2 border-ink">
-                <th className="py-3 pr-6 text-left font-mono text-[10px] tracking-[0.14em] text-label uppercase">Délai</th>
-                <th className="py-3 pr-6 text-left font-mono text-[10px] tracking-[0.14em] text-label uppercase">Jusqu&apos;à {PC_INCLUDED_KM} km</th>
-                <th className="py-3 pr-6 text-left font-mono text-[10px] tracking-[0.14em] text-label uppercase">Chaque km en plus</th>
-                <th className="py-3 text-left font-mono text-[10px] tracking-[0.14em] text-label uppercase">Exemple {EXAMPLE_KM} km</th>
+                <th className="py-3 pr-6 text-left font-mono text-[11px] tracking-[0.14em] text-label uppercase">Délai</th>
+                <th className="py-3 pr-6 text-left font-mono text-[11px] tracking-[0.14em] text-label uppercase">Jusqu&apos;à {PC_INCLUDED_KM} km</th>
+                <th className="py-3 pr-6 text-left font-mono text-[11px] tracking-[0.14em] text-label uppercase">Chaque km en plus</th>
+                <th className="py-3 text-left font-mono text-[11px] tracking-[0.14em] text-label uppercase">Exemple {EXAMPLE_KM} km</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-line">
@@ -427,15 +468,15 @@ export default function TarifsPage() {
           {FORMULES.map((f) => (
             <div
               key={f.name}
-              className={`flex flex-col rounded-2xl border p-8 ${
+              className={`flex flex-col rounded-[4px] border p-8 ${
                 f.highlight
                   ? "border-accent bg-ink text-white"
-                  : "border-line bg-white"
+                  : "border-line bg-paper-card"
               }`}
             >
               <div className="mb-6 flex items-start justify-between gap-3">
                 <div>
-                  <div className={`mb-2 inline-block rounded-full px-3 py-1 text-[10px] font-bold tracking-[0.1em] uppercase ${f.tagColor}`}>
+                  <div className={`mb-2 inline-block rounded-full px-3 py-1 text-[11px] font-bold tracking-[0.1em] uppercase ${f.tagColor}`}>
                     {f.tag}
                   </div>
                   <h3 className={`text-[18px] font-bold tracking-[-0.02em] ${f.highlight ? "text-white" : "text-ink"}`}>

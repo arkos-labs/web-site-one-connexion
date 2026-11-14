@@ -9,7 +9,7 @@ import { getIndexedZonesByDept } from "@/lib/zones/data";
 export type DeptCard = { dept: string; name: string; color: string; dotColor: string; sub: string };
 
 export const DEPT_CARDS: Record<string, DeptCard> = {
-  "92": { dept: "92", name: "Hauts-de-Seine", color: "border-blue-200 bg-blue-50", dotColor: "bg-blue-500", sub: "Petite couronne · dès 39 € TTC" },
+  "92": { dept: "92", name: "Hauts-de-Seine", color: "border-blue-200 bg-paper", dotColor: "bg-blue-500", sub: "Petite couronne · dès 39 € TTC" },
   "93": { dept: "93", name: "Seine-Saint-Denis", color: "border-green-200 bg-green-50", dotColor: "bg-green-500", sub: "Petite couronne · dès 39 € TTC" },
   "94": { dept: "94", name: "Val-de-Marne", color: "border-orange-200 bg-orange-50", dotColor: "bg-orange-500", sub: "Petite couronne · dès 39 € TTC" },
   "77": { dept: "77", name: "Seine-et-Marne", color: "border-violet-200 bg-violet-50", dotColor: "bg-violet-500", sub: "Grande couronne · dès 59 € TTC" },

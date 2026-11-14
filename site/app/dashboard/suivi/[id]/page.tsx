@@ -237,7 +237,7 @@ export default function DeliveryDetailsPage() {
 
   if (loading) {
     return (
-      <div className="rounded-2xl border border-line bg-white">
+      <div className="rounded-[4px] border border-line bg-paper-card">
         <LoadingState text="Chargement de la course…" />
       </div>
     );
@@ -282,7 +282,7 @@ export default function DeliveryDetailsPage() {
             type="button"
             onClick={handleCancel}
             disabled={cancelling}
-            className="flex h-10 items-center gap-2 whitespace-nowrap rounded-xl bg-red-600 px-4 text-sm font-bold text-white transition-colors hover:bg-red-700 disabled:opacity-50"
+            className="flex h-10 items-center gap-2 whitespace-nowrap rounded-[4px] bg-red-600 px-4 text-sm font-bold text-white transition-colors hover:bg-red-700 disabled:opacity-50"
           >
             {cancelling ? <Loader2 size={15} className="animate-spin" /> : <XCircle size={15} />}
             {cancelling ? "Annulation…" : "Annuler la commande"}
@@ -294,12 +294,12 @@ export default function DeliveryDetailsPage() {
         main={
           <>
             {cancelError && (
-              <div role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
+              <div role="alert" className="rounded-[4px] border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
                 {cancelError}
               </div>
             )}
             {cancelInfo && (
-              <div role="status" className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800">
+              <div role="status" className="rounded-[4px] border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800">
                 {cancelInfo}
               </div>
             )}
@@ -322,7 +322,7 @@ export default function DeliveryDetailsPage() {
                         <li className="flex min-w-0 flex-1 basis-0 flex-col items-center gap-1.5 text-center sm:w-[76px] sm:flex-none sm:basis-auto">
                           <span
                             className={`flex h-9 w-9 items-center justify-center rounded-full border-2 transition-colors ${
-                              isReached ? "border-accent bg-accent text-white" : "border-line bg-white text-label"
+                              isReached ? "border-accent bg-accent text-white" : "border-line bg-paper-card text-label"
                             }`}
                           >
                             <Icon size={15} />
@@ -351,13 +351,13 @@ export default function DeliveryDetailsPage() {
                   <span className="flex h-9 w-9 items-center justify-center rounded-full bg-ink text-white">
                     <Truck size={16} />
                   </span>
-                  <div className="min-w-0 flex-1">
-                    <div className="label-mono text-[10px] font-medium text-label">Votre chauffeur</div>
+                  <div className="min-w-[150px] flex-1">
+                    <div className="label-mono text-[11px] font-medium text-label">Votre chauffeur</div>
                     <div className="text-sm font-extrabold text-ink">{driver.name || "Chauffeur One Connexion"}</div>
                     {driver.vehicle && <div className="text-xs text-muted">{driver.vehicle}</div>}
                   </div>
                   {driver.phone && !isDelivered && (
-                    <a href={`tel:${driver.phone}`} className="flex h-10 items-center gap-2 rounded-xl bg-ink px-4 text-sm font-bold text-white transition-colors hover:bg-[#25272a] hover:text-white">
+                    <a href={`tel:${driver.phone}`} className="flex h-10 w-full items-center justify-center gap-2 rounded-[4px] bg-ink px-4 text-sm font-bold text-white sm:w-auto transition-colors hover:bg-[#25272a] hover:text-white">
                       <Phone size={14} />
                       {driver.phone}
                     </a>
@@ -373,8 +373,8 @@ export default function DeliveryDetailsPage() {
 
                 {/* Départ */}
                 <li className="relative">
-                  <span aria-hidden className="absolute -left-9 top-0 flex h-6 w-6 items-center justify-center rounded-full border-2 border-ink bg-white text-[10px] font-bold text-ink">A</span>
-                  <div className="label-mono text-[10.5px] font-medium text-muted">Enlèvement</div>
+                  <span aria-hidden className="absolute -left-9 top-0 flex h-6 w-6 items-center justify-center rounded-full border-2 border-ink bg-paper-card text-[11px] font-bold text-ink">A</span>
+                  <div className="label-mono text-[11px] font-medium text-muted">Enlèvement</div>
                   <p className="mt-0.5 text-sm font-semibold leading-snug text-ink">{order.pickup_address}</p>
                   <ProgressNote p={order.point_progress?.["0"]} />
                 </li>
@@ -388,13 +388,13 @@ export default function DeliveryDetailsPage() {
                   const prog = order.point_progress?.[String(index)];
                   return (
                     <li key={index} className="relative">
-                      <span aria-hidden className="absolute -left-9 top-0 flex h-6 w-6 items-center justify-center rounded-full border-2 border-label bg-white text-[10px] font-bold text-muted">{index + 1}</span>
-                      <div className="label-mono flex items-center gap-2 text-[10.5px] font-medium text-muted">
+                      <span aria-hidden className="absolute -left-9 top-0 flex h-6 w-6 items-center justify-center rounded-full border-2 border-label bg-paper-card text-[11px] font-bold text-muted">{index + 1}</span>
+                      <div className="label-mono flex items-center gap-2 text-[11px] font-medium text-muted">
                         Étape {index + 1}
                         {prog?.deliveredAt ? (
-                          <span className="rounded bg-green-100 px-1.5 py-px text-[10px] font-bold normal-case tracking-normal text-green-700">Livré</span>
+                          <span className="rounded bg-green-100 px-1.5 py-px text-[11px] font-bold normal-case tracking-normal text-green-700">Livré</span>
                         ) : prog?.pickedUpAt ? (
-                          <span className="rounded bg-blue-100 px-1.5 py-px text-[10px] font-bold normal-case tracking-normal text-blue-700">Enlevé</span>
+                          <span className="rounded bg-blue-100 px-1.5 py-px text-[11px] font-bold normal-case tracking-normal text-blue-700">Enlevé</span>
                         ) : null}
                       </div>
                       <p className="mt-0.5 text-sm font-semibold leading-snug text-ink">{addr}</p>
@@ -409,8 +409,8 @@ export default function DeliveryDetailsPage() {
 
                 {/* Arrivée */}
                 <li className="relative">
-                  <span aria-hidden className="absolute -left-9 top-0 flex h-6 w-6 items-center justify-center rounded-full border-2 border-accent bg-accent text-[10px] font-bold text-white">B</span>
-                  <div className="label-mono text-[10.5px] font-medium text-muted">Livraison</div>
+                  <span aria-hidden className="absolute -left-9 top-0 flex h-6 w-6 items-center justify-center rounded-full border-2 border-accent bg-accent text-[11px] font-bold text-white">B</span>
+                  <div className="label-mono text-[11px] font-medium text-muted">Livraison</div>
                   <p className="mt-0.5 text-sm font-semibold leading-snug text-ink">{order.dropoff_address}</p>
                   {(order.delivery_recipient || order.delivery_department || order.delivery_comment || order.delivery_photo_url) && (
                     <NoteBox tone="success">
@@ -420,13 +420,13 @@ export default function DeliveryDetailsPage() {
                       {order.delivery_photo_url && (
                         <a href={order.delivery_photo_url} target="_blank" rel="noreferrer" className="mt-1 inline-block">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img src={order.delivery_photo_url} alt="Photo de livraison" className="h-24 rounded-lg border border-line object-cover" />
+                          <img src={order.delivery_photo_url} alt="Photo de livraison" className="h-24 rounded-[4px] border border-line object-cover" />
                         </a>
                       )}
                     </NoteBox>
                   )}
                   {order.notes && (
-                    <div className="mt-2 rounded-lg border border-accent/25 bg-accent/5 px-3 py-2 text-xs font-medium text-accent-dark">
+                    <div className="mt-2 rounded-[4px] border border-accent/25 bg-accent/5 px-3 py-2 text-xs font-medium text-accent-dark">
                       <span className="font-bold">Note :</span> {order.notes}
                     </div>
                   )}
@@ -438,7 +438,7 @@ export default function DeliveryDetailsPage() {
         side={
           <>
             {/* Tarif */}
-            <section className="overflow-hidden rounded-xl bg-ink text-white">
+            <section className="overflow-hidden rounded-[4px] bg-ink text-white">
               <div className="border-b border-white/10 px-5 py-3">
                 <h2 className="label-mono text-xs font-medium text-white/60">Tarif</h2>
               </div>
@@ -458,7 +458,7 @@ export default function DeliveryDetailsPage() {
                   <p className="text-[13px] text-white/70">Tarif en cours d&apos;estimation par notre équipe.</p>
                 )}
                 {!isCancelled && paymentLabel(order) && (
-                  <p className="mt-4 rounded-lg bg-white/[0.07] px-3 py-2 text-center text-xs font-semibold text-white/80">
+                  <p className="mt-4 rounded-[4px] bg-white/[0.07] px-3 py-2 text-center text-xs font-semibold text-white/80">
                     {paymentLabel(order)}
                   </p>
                 )}
@@ -467,7 +467,7 @@ export default function DeliveryDetailsPage() {
                   const paid = invoice?.url ? invoice.status === "paid" : monthlyInvoice?.status === "payee";
                   const failed = !invoice?.url && monthlyInvoice?.status === "echec";
                   return (
-                    <p className={`mt-3 flex items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold ${paid ? "bg-emerald-500/15 text-emerald-300" : failed ? "bg-red-500/15 text-red-300" : "bg-amber-500/15 text-amber-300"}`}>
+                    <p className={`mt-3 flex items-center justify-center gap-1.5 rounded-[4px] px-3 py-2 text-xs font-bold ${paid ? "bg-emerald-500/15 text-emerald-300" : failed ? "bg-red-500/15 text-red-300" : "bg-amber-500/15 text-amber-300"}`}>
                       {paid ? <CheckCircle2 size={14} /> : <Loader2 size={14} />}
                       {paid ? "Facture réglée" : failed ? "Paiement échoué" : "Paiement en attente"}
                     </p>
@@ -475,18 +475,18 @@ export default function DeliveryDetailsPage() {
                 })()}
                 {isDelivered && invoice?.url && (
                   <div className="mt-3 flex flex-col gap-2">
-                    <a href={invoice.url} target="_blank" rel="noreferrer" className="flex h-10 items-center justify-center gap-2 rounded-xl bg-accent text-sm font-bold text-white hover:bg-accent-dark hover:text-white">
+                    <a href={invoice.url} target="_blank" rel="noreferrer" className="flex h-10 items-center justify-center gap-2 rounded-[4px] bg-accent text-sm font-bold text-white hover:bg-accent-dark hover:text-white">
                       <ExternalLink size={15} /> Voir la facture{invoice.number ? ` ${invoice.number}` : ""}
                     </a>
                     {invoice.pdf && (
-                      <a href={invoice.pdf} className="flex h-9 items-center justify-center gap-2 rounded-xl border border-white/20 text-xs font-semibold text-white/80 hover:bg-white/10 hover:text-white">
+                      <a href={invoice.pdf} className="flex h-9 items-center justify-center gap-2 rounded-[4px] border border-white/20 text-xs font-semibold text-white/80 hover:bg-white/10 hover:text-white">
                         <Download size={14} /> Télécharger le PDF
                       </a>
                     )}
                   </div>
                 )}
                 {isDelivered && !invoice?.url && monthlyInvoice && (
-                  <a href={`/dashboard/factures/${monthlyInvoice.id}`} className="mt-3 flex h-10 items-center justify-center gap-2 rounded-xl bg-accent text-sm font-bold text-white hover:bg-accent-dark hover:text-white">
+                  <a href={`/dashboard/factures/${monthlyInvoice.id}`} className="mt-3 flex h-10 items-center justify-center gap-2 rounded-[4px] bg-accent text-sm font-bold text-white hover:bg-accent-dark hover:text-white">
                     <FileText size={15} /> Voir la facture
                   </a>
                 )}

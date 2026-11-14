@@ -163,10 +163,10 @@ export default function NavettesPage() {
                 const start = hm(n.start_time || n.horaire_debut);
                 const end = hm(n.end_time);
                 return (
-                  <li key={n.id} className="flex flex-col overflow-hidden rounded-xl border border-line bg-white">
+                  <li key={n.id} className="flex flex-col overflow-hidden rounded-[4px] border border-line bg-paper-card">
                     <div className="flex items-center justify-between gap-3 border-b border-line px-5 py-3.5">
                       <div className="flex min-w-0 items-center gap-2.5">
-                        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-ink text-white">
+                        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[4px] bg-ink text-white">
                           <RefreshCw size={15} strokeWidth={2.25} />
                         </span>
                         <h2 className="text-[15px] font-extrabold leading-tight text-ink">{nameOf(n)}</h2>
@@ -182,10 +182,10 @@ export default function NavettesPage() {
                           <span
                             aria-hidden
                             className={`absolute -left-7 top-1 flex h-4 w-4 items-center justify-center rounded-full border-2 ${
-                              pt.kind === "end" ? "border-accent bg-accent" : pt.kind === "start" ? "border-ink bg-white" : "border-label bg-white"
+                              pt.kind === "end" ? "border-accent bg-accent" : pt.kind === "start" ? "border-ink bg-paper-card" : "border-label bg-paper-card"
                             }`}
                           />
-                          <div className="label-mono text-[10.5px] font-medium text-muted">{pt.label}</div>
+                          <div className="label-mono text-[11px] font-medium text-muted">{pt.label}</div>
                           <div className="text-[13px] font-semibold leading-snug text-ink">{pt.address}</div>
                         </li>
                       ))}
@@ -199,8 +199,8 @@ export default function NavettesPage() {
                             {DAYS.map((d) => (
                               <span
                                 key={d.id}
-                                className={`flex h-6 w-6 items-center justify-center rounded-md text-[11px] font-bold ${
-                                  days.includes(d.id) ? "bg-ink text-white" : "bg-white text-label ring-1 ring-line"
+                                className={`flex h-6 w-6 items-center justify-center rounded-[4px] text-[11px] font-bold ${
+                                  days.includes(d.id) ? "bg-ink text-white" : "bg-paper-card text-label ring-1 ring-line"
                                 }`}
                               >
                                 {d.label}
@@ -227,7 +227,7 @@ export default function NavettesPage() {
                         )}
                         <Link
                           href={`/dashboard/navettes/${n.id}`}
-                          className="flex h-10 items-center gap-1.5 rounded-lg bg-ink px-4 text-xs font-bold text-white transition-colors hover:bg-[#25272a] hover:text-white"
+                          className="flex h-10 items-center gap-1.5 rounded-[4px] bg-ink px-4 text-xs font-bold text-white transition-colors hover:bg-[#25272a] hover:text-white"
                         >
                           Détails
                           <ChevronRight size={14} strokeWidth={2.5} />

@@ -3,6 +3,7 @@
  * Page locale petite couronne (92/93/94). Requête visée : « coursier banlieue Paris ».
  * Le guide /guides/coursier-paris-banlieue explique la méthode ; les prix vivent sur /tarifs.
  */
+import QuickOrderBar from "@/components/QuickOrderBar";
 import type { Metadata } from "next";
 import Link from "next/link";
 import JsonLd from "@/components/JsonLd";
@@ -50,22 +51,22 @@ const DEPTS = [
   {
     dept: "92",
     name: "Hauts-de-Seine",
-    color: "border-blue-200 bg-blue-50",
-    dotColor: "bg-blue-500",
+    color: "border-line bg-paper-card",
+    dotColor: "bg-accent",
     villes: ["Boulogne-Billancourt", "Neuilly-sur-Seine", "Levallois-Perret", "Issy-les-Moulineaux", "Nanterre", "La Défense", "Antony", "Clamart", "Montrouge"],
   },
   {
     dept: "93",
     name: "Seine-Saint-Denis",
-    color: "border-green-200 bg-green-50",
-    dotColor: "bg-green-500",
+    color: "border-line bg-paper-card",
+    dotColor: "bg-accent",
     villes: ["Saint-Denis", "Montreuil", "Pantin", "Aubervilliers", "Bobigny", "Noisy-le-Grand", "Vincennes (limite)", "Bondy", "Aulnay-sous-Bois"],
   },
   {
     dept: "94",
     name: "Val-de-Marne",
-    color: "border-orange-200 bg-orange-50",
-    dotColor: "bg-orange-500",
+    color: "border-line bg-paper-card",
+    dotColor: "bg-accent",
     villes: ["Créteil", "Vincennes", "Saint-Maur-des-Fossés", "Ivry-sur-Seine", "Vitry-sur-Seine", "Alfortville", "Champigny", "Charenton-le-Pont", "Saint-Mandé"],
   },
 ];
@@ -92,7 +93,7 @@ const FAQ = [
   },
   {
     q: "Quels sont vos horaires en petite couronne ?",
-    a: "Nous prenons en charge vos courses 7j/7, de 8h à 19h, dans les trois départements (92, 93 et 94).",
+    a: "Nous prenons en charge vos courses 7j/7, de 7h à 23h, dans les trois départements (92, 93 et 94).",
   },
   {
     q: "Pouvez-vous transporter un pli confidentiel en banlieue ?",
@@ -133,14 +134,14 @@ export default function ZonePetiteCouronne() {
 
       <section className="bg-ink text-white">
         <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-20 pt-16">
-          <nav aria-label="Fil d'Ariane" className="mb-8 font-mono text-[10px] tracking-[0.16em] text-white/40 uppercase">
+          <nav aria-label="Fil d'Ariane" className="mb-8 font-mono text-[11px] tracking-[0.16em] text-white/40 uppercase">
             <Link href="/" className="hover:text-white">Accueil</Link>
             <span className="px-2 text-white/25">›</span>
             <Link href="/zones" className="hover:text-white">Zones</Link>
             <span className="px-2 text-white/25">›</span>
             <span className="text-white/70">Petite couronne</span>
           </nav>
-          <div className="mb-3 flex items-center gap-3 font-mono text-[10px] tracking-[0.16em] text-accent uppercase">
+          <div className="mb-3 flex items-center gap-3 font-mono text-[11px] tracking-[0.16em] text-accent uppercase">
             <span className="h-px w-6 bg-accent" />
             Zone couverte · 92 / 93 / 94
           </div>
@@ -152,11 +153,7 @@ export default function ZonePetiteCouronne() {
             Hauts-de-Seine (92), Seine-Saint-Denis (93) et Val-de-Marne (94) -
             avec le même coordination et une course dédiée pour chaque envoi.
           </p>
-          <div className="mt-10 flex flex-wrap gap-3">
-            <a href="/#commander" className="rounded-[2px] bg-accent px-[26px] py-[15px] text-[15px] font-semibold text-white hover:bg-accent-dark">
-              Commander une course
-            </a>
-          </div>
+          <QuickOrderBar className="mt-10 max-w-[1000px]" />
         </div>
         <div className="border-t border-white/10">
           <div className="mx-auto grid max-w-[1240px] grid-cols-3 divide-x divide-white/10 px-[clamp(20px,4vw,28px)]">
@@ -180,9 +177,9 @@ export default function ZonePetiteCouronne() {
         <h2 className={`mb-12 ${H2}`}>Coursier banlieue Paris : les communes couvertes (92, 93, 94)</h2>
         <div className="grid gap-6 lg:grid-cols-3">
           {DEPTS.map((d) => (
-            <div key={d.dept} className={`rounded-2xl border p-6 ${d.color}`}>
+            <div key={d.dept} className={`rounded-[4px] border p-6 ${d.color}`}>
               <div className="mb-4 flex items-center gap-3">
-                <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${d.dotColor} text-[13px] font-bold text-white`}>
+                <div className={`flex h-10 w-10 items-center justify-center rounded-[4px] ${d.dotColor} text-[13px] font-bold text-white`}>
                   {d.dept}
                 </div>
                 <div>
@@ -230,8 +227,8 @@ export default function ZonePetiteCouronne() {
         <h2 className={`mb-8 max-w-[28ch] ${H2}`}>Délais et tarifs depuis et vers la banlieue</h2>
         <div className="grid max-w-[72ch] gap-5 text-[15.5px] leading-[1.7] text-muted">
           <p>
-            Depuis et vers la petite couronne, la prise en charge se fait en moins de 45 minutes, 7j/7 de 8h à
-            19h. Le tarif dépend de la zone la plus éloignée entre l&apos;enlèvement et la livraison, et du délai
+            Depuis et vers la petite couronne, la prise en charge se fait en moins de 45 minutes, 7j/7 de 7h à
+            23h. Le tarif dépend de la zone la plus éloignée entre l&apos;enlèvement et la livraison, et du délai
             choisi : en banlieue, une course démarre à {PRIX.normal} TTC en Normal (3 h), {PRIX.urgent} TTC en
             Urgent (1 h 30) et {PRIX.super} TTC en Super (1 h), kilomètres compris jusqu&apos;à {PC_INCLUDED_KM} km
             de route.
@@ -285,12 +282,12 @@ export default function ZonePetiteCouronne() {
             <Link
               key={s.slug}
               href={`/services/${s.slug}`}
-              className="flex flex-col gap-2 rounded-xl border border-line bg-paper-card p-6 hover:border-ink transition-colors"
+              className="flex flex-col gap-2 rounded-[4px] border border-line bg-paper-card p-6 hover:border-ink transition-colors"
             >
-              <div className="font-mono text-[10px] tracking-[0.14em] text-label uppercase">{s.card.tag}</div>
+              <div className="font-mono text-[11px] tracking-[0.14em] text-label uppercase">{s.card.tag}</div>
               <h3 className="font-bold tracking-[-0.01em]">{s.card.title}</h3>
               <p className="text-[13.5px] leading-[1.55] text-muted flex-1">{s.card.body}</p>
-              <div className="mt-4 font-mono text-[10px] tracking-[0.1em] text-accent-dark uppercase">Voir →</div>
+              <div className="mt-4 font-mono text-[11px] tracking-[0.1em] text-accent-dark uppercase">Voir →</div>
             </Link>
           ))}
         </div>
@@ -319,7 +316,7 @@ export default function ZonePetiteCouronne() {
                 desc: "Créteil, Saint-Maur. Transport de prélèvements, dossiers patients, matériel médical."
               }
             ].map((item) => (
-              <div key={item.industry} className="rounded-xl border border-line bg-white p-6">
+              <div key={item.industry} className="rounded-[4px] border border-line bg-paper-card p-6">
                 <h3 className="mb-3 font-bold text-ink">{item.industry}</h3>
                 <p className="text-[14px] leading-[1.6] text-muted">{item.desc}</p>
               </div>
@@ -338,7 +335,7 @@ export default function ZonePetiteCouronne() {
             { num: "02", title: "Prise en charge < 45 min", desc: "Peu importe votre emplacement en petite couronne, un coursier arrive en moins de 45 minutes." },
             { num: "03", title: "Livraison & Suivi", desc: "L'avancement de chaque course est visible en ligne. Une preuve de remise horodatée est disponible dès la livraison." }
           ].map((step) => (
-            <div key={step.num} className="flex flex-col items-center text-center p-6 bg-white rounded-2xl border border-line shadow-sm">
+            <div key={step.num} className="flex flex-col items-center text-center p-6 bg-paper-card rounded-[4px] border border-line shadow-sm">
               <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-accent text-[16px] font-bold text-white shadow-md">
                 {step.num}
               </div>
@@ -364,7 +361,7 @@ export default function ZonePetiteCouronne() {
           </div>
           <div className="flex flex-col gap-4">
             {FAQ.map((faq, i) => (
-              <div key={i} className="rounded-xl border border-line bg-white p-5 hover:border-accent/30 transition-colors">
+              <div key={i} className="rounded-[4px] border border-line bg-paper-card p-5 hover:border-accent/30 transition-colors">
                 <h3 className="mb-2 text-[15.5px] font-bold text-ink">{faq.q}</h3>
                 <p className="text-[14.5px] leading-[1.65] text-muted">{faq.a}</p>
               </div>
@@ -378,13 +375,13 @@ export default function ZonePetiteCouronne() {
         <div className="border-t border-line pt-12">
           <h2 className="mb-6 font-mono text-[11px] font-normal tracking-[0.16em] text-accent-dark uppercase">Zones proches</h2>
           <div className="flex flex-wrap gap-3">
-            <Link href="/zones/paris" className="rounded-lg border border-line bg-paper-card px-4 py-2.5 text-[13.5px] font-medium hover:border-ink">
+            <Link href="/zones/paris" className="rounded-[4px] border border-line bg-paper-card px-4 py-2.5 text-[13.5px] font-medium hover:border-ink">
               Paris intramuros (75)
             </Link>
-            <Link href="/zones/la-defense" className="rounded-lg border border-line bg-paper-card px-4 py-2.5 text-[13.5px] font-medium hover:border-ink">
+            <Link href="/zones/la-defense" className="rounded-[4px] border border-line bg-paper-card px-4 py-2.5 text-[13.5px] font-medium hover:border-ink">
               La Défense & Hauts-de-Seine (92)
             </Link>
-            <Link href="/zones/grande-couronne" className="rounded-lg border border-line bg-paper-card px-4 py-2.5 text-[13.5px] font-medium hover:border-ink">
+            <Link href="/zones/grande-couronne" className="rounded-[4px] border border-line bg-paper-card px-4 py-2.5 text-[13.5px] font-medium hover:border-ink">
               Grande couronne (77, 78, 91, 95) →
             </Link>
           </div>
@@ -398,7 +395,7 @@ export default function ZonePetiteCouronne() {
               <p className="mb-3 text-[clamp(24px,3vw,36px)] font-bold leading-[1.2] tracking-[-0.02em]">
                 Une course en petite couronne maintenant ?
               </p>
-              <p className="text-[15px] text-white/60">Prise en charge en moins de 2 minutes, 7j/7 de 8h à 19h.</p>
+              <p className="text-[15px] text-white/60">Prise en charge en moins de 2 minutes, 7j/7 de 7h à 23h.</p>
             </div>
             <a href={`tel:${PHONE_TEL}`} className="rounded-[4px] bg-accent px-8 py-4 text-center text-[15px] font-bold text-white hover:bg-accent-dark">
               {PHONE_DISPLAY}

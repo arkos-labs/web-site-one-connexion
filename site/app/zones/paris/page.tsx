@@ -4,6 +4,7 @@
  * Prix → /tarifs, banlieue → /zones/petite-couronne, express →
  * /services/coursier-express-paris : la page y renvoie sans les traiter.
  */
+import QuickOrderBar from "@/components/QuickOrderBar";
 import HeroBackdrop from "@/components/HeroBackdrop";
 import { HERO_IMAGES } from "@/lib/hero-images";
 import type { Metadata } from "next";
@@ -14,7 +15,7 @@ import TrustBlock from "@/components/TrustBlock";
 import { SITE_URL, PHONE_TEL, PHONE_DISPLAY } from "@/lib/site-content";
 import { Clock, MapPin, Zap, Shield } from "lucide-react";
 
-const TITLE = "Coursier à Paris : course dédiée 7j/7, 8h-19h";
+const TITLE = "Coursier à Paris : course dédiée 7j/7, 7h-23h";
 const DESCRIPTION =
   "Un coursier dédié par envoi, partout dans Paris, en moins de 45 minutes. Plis, médical, e-commerce. Tarifs clairs, interlocuteur unique.";
 
@@ -93,7 +94,7 @@ const ARRONDISSEMENTS = [
 const STATS = [
   { value: "< 45 min", label: "Enlèvement" },
   { value: "1 course", label: "Un envoi, sans regroupement" },
-  { value: "7j/7", label: "De 8h à 19h" },
+  { value: "7j/7", label: "De 7h à 23h" },
   { value: "20/20", label: "Arrondissements couverts" },
 ];
 
@@ -111,14 +112,14 @@ export default function ZoneParis() {
       <section className="relative overflow-hidden bg-ink text-white">
         <HeroBackdrop src={HERO_IMAGES["paris"].src} />
         <div className="relative mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-20 pt-16">
-          <nav aria-label="Fil d'Ariane" className="mb-8 font-mono text-[10px] tracking-[0.16em] text-white/40 uppercase">
+          <nav aria-label="Fil d'Ariane" className="mb-8 font-mono text-[11px] tracking-[0.16em] text-white/40 uppercase">
             <Link href="/" className="hover:text-white">Accueil</Link>
             <span className="px-2 text-white/25">›</span>
             <Link href="/zones" className="hover:text-white">Zones</Link>
             <span className="px-2 text-white/25">›</span>
             <span className="text-white/70">Paris (75)</span>
           </nav>
-          <div className="mb-3 flex items-center gap-3 font-mono text-[10px] tracking-[0.16em] text-accent uppercase">
+          <div className="mb-3 flex items-center gap-3 font-mono text-[11px] tracking-[0.16em] text-accent uppercase">
             <span className="h-px w-6 bg-accent" />
             Zone couverte · Paris 75
           </div>
@@ -131,14 +132,7 @@ export default function ZoneParis() {
             et le porte directement à destination. Enlèvement en moins de 45
             minutes, suivi de chaque course en ligne, preuve de remise horodatée.
           </p>
-          <div className="mt-10 flex flex-wrap gap-3">
-            <a
-              href="/#commander"
-              className="rounded-[2px] bg-accent px-[26px] py-[15px] text-[15px] font-semibold text-white hover:bg-accent-dark"
-            >
-              Commander une course
-            </a>
-          </div>
+          <QuickOrderBar className="mt-10 max-w-[1000px]" />
         </div>
         {/* Stats */}
         <div className="border-t border-white/10">
@@ -164,7 +158,7 @@ export default function ZoneParis() {
             const match = arr.match(/^(\d+(?:er|e))/);
             const slug = match ? `paris-${match[1]}` : "";
             return (
-              <Link key={arr} href={`/zones/${slug}`} className="flex items-center gap-2 rounded-lg border border-line bg-paper-card px-3 py-2.5 transition-colors hover:border-accent">
+              <Link key={arr} href={`/zones/${slug}`} className="flex items-center gap-2 rounded-[4px] border border-line bg-paper-card px-3 py-2.5 transition-colors hover:border-accent">
                 <MapPin size={12} className="shrink-0 text-accent" />
                 <span className="text-[13px] text-muted hover:text-ink">{arr}</span>
               </Link>
@@ -183,12 +177,12 @@ export default function ZoneParis() {
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {[
               { icon: Zap, title: "Deux-roues, pas de camionnette", desc: "Nos coursiers circulent en moto et en scooter : ils passent là où une camionnette reste coincée, en plein centre comme dans les petites rues." },
-              { icon: Clock, title: "Enlèvement < 45 min", desc: "Le coursier le plus proche part dès la confirmation de la course, 7j/7 de 8 h à 19 h." },
+              { icon: Clock, title: "Enlèvement < 45 min", desc: "Le coursier le plus proche part dès la confirmation de la course, 7j/7 de 7 h à 23 h." },
               { icon: Shield, title: "Accès compliqués", desc: "Digicode, accueil, bâtiment sur cour : nos coursiers ont l'habitude des adresses parisiennes, du Marais au quartier Latin." },
               { icon: MapPin, title: "Tous les sites judiciaires", desc: "Palais de Justice, Tribunal de Commerce, Conseil d'État, Cour de Cassation : tous couverts aux mêmes conditions." },
             ].map(({ icon: Icon, title, desc }) => (
               <div key={title} className="flex flex-col gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10">
+                <div className="flex h-10 w-10 items-center justify-center rounded-[4px] bg-accent/10">
                   <Icon size={18} className="text-accent" strokeWidth={2} />
                 </div>
                 <h3 className="font-bold">{title}</h3>
@@ -255,8 +249,8 @@ export default function ZoneParis() {
                 desc: "Livraison de documents événementiels (invitations, programmes). Acheminement de matériel urgent pour salons & congrès."
               }
             ].map((item) => (
-              <div key={item.sector} className="rounded-xl border border-line bg-white p-6">
-                <div className="mb-2 font-mono text-[10px] tracking-[0.1em] text-label uppercase">{item.zones}</div>
+              <div key={item.sector} className="rounded-[4px] border border-line bg-paper-card p-6">
+                <div className="mb-2 font-mono text-[11px] tracking-[0.1em] text-label uppercase">{item.zones}</div>
                 <h3 className="mb-3 font-bold text-ink">{item.sector}</h3>
                 <p className="text-[14px] leading-[1.6] text-muted">{item.desc}</p>
               </div>
@@ -275,7 +269,7 @@ export default function ZoneParis() {
             { num: "02", title: "Enlèvement", desc: "Un coursier se faufile dans le trafic parisien pour récupérer votre pli en moins de 45 minutes." },
             { num: "03", title: "Preuve de remise", desc: "Vous suivez la course en ligne. Une fois le pli remis en main propre, vous recevez l'heure exacte et le nom du destinataire." }
           ].map((step) => (
-            <div key={step.num} className="flex flex-col items-center text-center p-6 bg-white rounded-2xl border border-line shadow-sm">
+            <div key={step.num} className="flex flex-col items-center text-center p-6 bg-paper-card rounded-[4px] border border-line shadow-sm">
               <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-accent text-[16px] font-bold text-white shadow-md">
                 {step.num}
               </div>
@@ -397,10 +391,10 @@ export default function ZoneParis() {
             ].map((p, idx) => (
               <div
                 key={idx}
-                className={`flex flex-col justify-between rounded-2xl border p-6 transition-shadow ${
+                className={`flex flex-col justify-between rounded-[4px] border p-6 transition-shadow ${
                   p.highlight
-                    ? "border-accent bg-white shadow-md relative"
-                    : "border-line bg-white hover:shadow-sm"
+                    ? "border-accent bg-paper-card shadow-md relative"
+                    : "border-line bg-paper-card hover:shadow-sm"
                 }`}
               >
                 <div>
@@ -454,7 +448,7 @@ export default function ZoneParis() {
           </div>
           <div className="flex flex-col gap-4">
             {FAQ_PARIS.map((faq, i) => (
-              <div key={i} className="rounded-xl border border-line bg-white p-5 hover:border-accent/30 transition-colors">
+              <div key={i} className="rounded-[4px] border border-line bg-paper-card p-5 hover:border-accent/30 transition-colors">
                 <h3 className="mb-2 text-[15.5px] font-bold text-ink">{faq.q}</h3>
                 <p className="text-[14.5px] leading-[1.65] text-muted">{faq.a}</p>
               </div>
@@ -471,7 +465,7 @@ export default function ZoneParis() {
               <p className="mb-3 text-[clamp(24px,3vw,36px)] font-bold leading-[1.2] tracking-[-0.02em]">
                 Une course maintenant ?
               </p>
-              <p className="text-[15px] text-white/60">Prise en charge en moins de 2 minutes, 7j/7 de 8h à 19h.</p>
+              <p className="text-[15px] text-white/60">Prise en charge en moins de 2 minutes, 7j/7 de 7h à 23h.</p>
             </div>
             <a
               href={`tel:${PHONE_TEL}`}

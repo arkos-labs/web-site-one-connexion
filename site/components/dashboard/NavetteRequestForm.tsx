@@ -314,7 +314,7 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
 
   const INPUT_SM = INPUT.replace("h-11", "h-10");
   const ADDRESS_WRAP =
-    "[&_input]:h-11 [&_input]:rounded-lg [&_input]:bg-white [&_input]:py-0 [&_input]:pl-10 [&_input]:pr-3.5 [&_input]:font-medium [&_input]:focus:ring-2 [&_input]:focus:ring-accent/15";
+    "[&_input]:h-11 [&_input]:rounded-[4px] [&_input]:bg-paper-card [&_input]:py-0 [&_input]:pl-10 [&_input]:pr-3.5 [&_input]:font-medium [&_input]:focus:ring-2 [&_input]:focus:ring-accent/15";
   // Les champs d'adresse (Controller) ne reçoivent pas le focus automatique de react-hook-form :
   // on amène donc la première erreur affichée à l'écran.
   const onInvalid = () => {
@@ -327,7 +327,7 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
 
   if (submitSuccess) {
     return (
-      <div className="flex flex-col items-center justify-center rounded-xl border border-line bg-white px-6 py-14 text-center">
+      <div className="flex flex-col items-center justify-center rounded-[4px] border border-line bg-paper-card px-6 py-14 text-center">
         <span className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-green-50 text-green-600 ring-8 ring-green-50/60">
           <ShieldCheck size={28} />
         </span>
@@ -367,7 +367,7 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
 
             {/* Adresse principale */}
             <div className="relative">
-              <span aria-hidden className="absolute -left-9 top-0 flex h-6 w-6 items-center justify-center rounded-full border-2 border-ink bg-white text-[10px] font-bold text-ink">A</span>
+              <span aria-hidden className="absolute -left-9 top-0 flex h-6 w-6 items-center justify-center rounded-full border-2 border-ink bg-paper-card text-[11px] font-bold text-ink">A</span>
               <span className={LABEL}>Adresse d&apos;enlèvement (point 1) <span className="text-accent">*</span></span>
               <div className="relative mb-2">
                 <MapPin size={16} className="pointer-events-none absolute left-3.5 top-1/2 z-10 -translate-y-1/2 text-label" />
@@ -397,7 +397,7 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
             {/* Points secondaires */}
             {fields.map((field, index) => (
               <div key={field.id} className="relative">
-                <span aria-hidden className="absolute -left-9 top-0 flex h-6 w-6 items-center justify-center rounded-full border-2 border-label bg-white text-[10px] font-bold text-muted">{index + 1}</span>
+                <span aria-hidden className="absolute -left-9 top-0 flex h-6 w-6 items-center justify-center rounded-full border-2 border-label bg-paper-card text-[11px] font-bold text-muted">{index + 1}</span>
                 <div className="mb-2 flex h-6 items-center justify-between">
                   <span className={LABEL.replace("mb-1.5 block", "")}>
                     {index === 0 ? "Livraison (point 2)" : `Point ${index + 2} (livraison ou retour)`} <span className="text-accent">*</span>
@@ -406,7 +406,7 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
                     <button
                       type="button"
                       onClick={() => remove(index)}
-                      className="flex items-center gap-1 rounded-md px-2 py-1 text-xs font-bold text-red-600 transition-colors hover:bg-red-50"
+                      className="flex items-center gap-1 rounded-[4px] px-2 py-1 text-xs font-bold text-red-600 transition-colors hover:bg-red-50"
                     >
                       <Trash2 size={13} />
                       Supprimer
@@ -447,7 +447,7 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
             <button
               type="button"
               onClick={() => append({ address: "", contactName: "", contactPhone: "", notes: "", volume: "pli" })}
-              className="flex h-10 items-center justify-center gap-1.5 rounded-lg border border-dashed border-[#c9c5bd] text-xs font-bold text-muted transition-colors hover:border-accent hover:bg-accent/5 hover:text-accent-dark"
+              className="flex h-10 items-center justify-center gap-1.5 rounded-[4px] border border-dashed border-[#c9c5bd] text-xs font-bold text-muted transition-colors hover:border-accent hover:bg-accent/5 hover:text-accent-dark"
             >
               <Plus size={14} strokeWidth={2.5} />
               Ajouter une étape
@@ -459,7 +459,7 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
       {/* Colonne latérale */}
       <div className="flex min-w-0 flex-col gap-4">
         {capacityExceeded && (
-          <div role="alert" className="flex gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 text-amber-900">
+          <div role="alert" className="flex gap-3 rounded-[4px] border border-amber-200 bg-amber-50 p-4 text-amber-900">
             <AlertTriangle size={18} className="mt-0.5 shrink-0 text-amber-600" />
             <div className="text-xs leading-snug">
               <p className="font-extrabold">Capacité 2 roues dépassée</p>
@@ -487,8 +487,8 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
                           setValue("selectedDays", [...watchDays, day.id], { shouldValidate: true });
                         }
                       }}
-                      className={`flex h-10 w-10 items-center justify-center rounded-lg text-sm font-bold transition-colors ${
-                        isSelected ? "bg-ink text-white" : "bg-white text-muted ring-1 ring-line hover:ring-ink hover:text-ink"
+                      className={`flex h-10 w-10 items-center justify-center rounded-[4px] text-sm font-bold transition-colors ${
+                        isSelected ? "bg-ink text-white" : "bg-paper-card text-muted ring-1 ring-line hover:ring-ink hover:text-ink"
                       }`}
                     >
                       {day.label}
@@ -513,7 +513,7 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
           </div>
         </Panel>
 
-        <section className="overflow-hidden rounded-xl bg-ink text-white">
+        <section className="overflow-hidden rounded-[4px] bg-ink text-white">
           <div className="border-b border-white/10 px-5 py-3">
             <h2 className="label-mono text-xs font-medium text-white/60">Tarif</h2>
           </div>
@@ -546,7 +546,7 @@ export function NavetteRequestForm({ initialData, isEdit, onSuccess }: NavetteRe
             <button
               type="submit"
               disabled={isSubmitting || outOfZone}
-              className="mt-4 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-accent text-sm font-bold text-white transition-colors hover:bg-accent-dark disabled:opacity-60"
+              className="mt-4 flex h-11 w-full items-center justify-center gap-2 rounded-[4px] bg-accent text-sm font-bold text-white transition-colors hover:bg-accent-dark disabled:opacity-60"
             >
               {isSubmitting ? (
                 <>

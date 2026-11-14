@@ -22,7 +22,7 @@ export default function DeptCityList({
 }) {
   const [open, setOpen] = useState(false);
   return (
-    <div id={`dept-${dept}`} className="scroll-mt-28 rounded-xl border border-line bg-white">
+    <div id={`dept-${dept}`} className="scroll-mt-28 rounded-[4px] border border-line bg-paper-card">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}

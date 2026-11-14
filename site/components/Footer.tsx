@@ -34,11 +34,11 @@ const TAGLINES: Record<string, string> = {
   "/": "Livraisons urgentes pour cabinets juridiques, laboratoires et entreprises d'Île-de-France.",
   "/tarifs": "Des tarifs clairs et adaptés à vos volumes. Prix affiché avant de commander.",
   "/zones": "Couverture intégrale de Paris et Île-de-France. Enlèvement express en moins de 45 min.",
-  "/zones/paris": "Paris intramuros livré en moins de 45 minutes. Disponible 7j/7, 8h–19h.",
+  "/zones/paris": "Paris intramuros livré en moins de 45 minutes. Disponible 7j/7, 7h–23h.",
   "/zones/petite-couronne": "Petite couronne couverte 7j/7. Clients réguliers : compte entreprise, factures à 30 jours.",
   "/zones/la-defense": "La Défense et Hauts-de-Seine : enlèvement rapide, preuve de remise horodatée.",
   "/services": "Plis confidentiels, transport médical, livraison e-commerce, tournées régulières.",
-  "/services/plis-confidentiels": "Plis strictement confidentiels en course dédiée. Tous les jours, 8h–19h.",
+  "/services/plis-confidentiels": "Plis strictement confidentiels en course dédiée. Tous les jours, 7h–23h.",
   "/services/transport-medical": "Transport de prélèvements et matériel médical aux normes de sécurité.",
   "/methode": "Notre approche : transparence, flexibilité et engagement de service mesuré.",
   "/flotte": "Flotte deux-roues dédiée. Traçabilité GPS en temps réel, photos de remise.",
@@ -79,7 +79,7 @@ const ZONE_LINKS = [
 function ColLabel({ children }: { children: React.ReactNode }) {
   return (
     <div
-      className="font-mono text-[9px] tracking-[0.22em] uppercase mb-[14px] pb-[10px]"
+      className="font-mono text-[11px] tracking-[0.22em] uppercase mb-[14px] pb-[10px]"
       style={{ color: ACCENT, borderBottom: "1px solid rgba(237,85,24,0.2)" }}
     >
       {children}
@@ -99,7 +99,7 @@ function FooterColumn({ title, children }: { title: React.ReactNode; children: R
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-        className="flex w-full items-center justify-between py-3.5 font-mono text-[10px] uppercase tracking-[0.22em] md:hidden"
+        className="flex w-full items-center justify-between py-3.5 font-mono text-[11px] uppercase tracking-[0.22em] md:hidden"
         style={{ color: ACCENT }}
       >
         {title}
@@ -197,17 +197,17 @@ export default function Footer() {
           {/* ── COL 5 : Contact ── */}
           <div className="pt-6 md:pt-0">
             <ColLabel>Nous joindre</ColLabel>
-            <div className="font-mono text-[9px] tracking-[0.16em] uppercase mb-1" style={{ color: "rgba(244,242,238,0.25)" }}>Téléphone</div>
+            <div className="font-mono text-[11px] tracking-[0.16em] uppercase mb-1" style={{ color: "rgba(244,242,238,0.25)" }}>Téléphone</div>
             <a href={`tel:${PHONE_TEL}`} className="block text-[20px] font-bold leading-none mb-4 transition-colors" style={{ letterSpacing: "-0.02em", color: "#F4F2EE", textDecoration: "none" }}>
               {PHONE_DISPLAY}
             </a>
-            <div className="font-mono text-[9px] tracking-[0.16em] uppercase mb-1" style={{ color: "rgba(244,242,238,0.25)" }}>Email</div>
+            <div className="font-mono text-[11px] tracking-[0.16em] uppercase mb-1" style={{ color: "rgba(244,242,238,0.25)" }}>Email</div>
             <a href={`mailto:${EMAIL}`} className="block text-[13px] mb-6 transition-colors" style={{ color: "rgba(244,242,238,0.45)", textDecoration: "none" }}>
               {EMAIL}
             </a>
             <Link
               href="/#commander"
-              className="inline-block font-mono text-[10px] tracking-[0.14em] uppercase transition-opacity hover:opacity-80"
+              className="inline-block font-mono text-[11px] tracking-[0.14em] uppercase transition-opacity hover:opacity-80"
               style={{ color: "#0E0F10", background: ACCENT, padding: "9px 16px", borderRadius: "1px", textDecoration: "none", fontWeight: 500 }}
             >
               Commander une course
@@ -224,7 +224,7 @@ export default function Footer() {
           style={{ maxWidth: "1240px" }}
         >
           <div>
-            <div className="font-mono text-[9px] tracking-[0.16em] uppercase" style={{ color: "rgba(244,242,238,0.3)" }}>
+            <div className="font-mono text-[11px] tracking-[0.16em] uppercase" style={{ color: "rgba(244,242,238,0.3)" }}>
               Paiements sécurisés
             </div>
             <div className="text-[11px] font-semibold mt-1" style={{ color: "rgba(244,242,238,0.6)" }}>
@@ -257,7 +257,7 @@ export default function Footer() {
           style={{ maxWidth: "1240px" }}
         >
           <span
-            className="font-mono text-[10px] tracking-[0.12em] uppercase"
+            className="font-mono text-[11px] tracking-[0.12em] uppercase"
             style={{ color: "rgba(244,242,238,0.16)" }}
           >
             © 2026 One Connexion · Tous droits réservés
@@ -266,7 +266,7 @@ export default function Footer() {
             <Link
               key={l.href}
               href={l.href}
-              className="font-mono text-[10px] tracking-[0.12em] uppercase transition-colors hover:!text-[rgba(244,242,238,0.5)]"
+              className="font-mono text-[11px] tracking-[0.12em] uppercase transition-colors hover:!text-[rgba(244,242,238,0.5)]"
               style={{ color: "rgba(244,242,238,0.25)", textDecoration: "none" }}
             >
               {l.label}

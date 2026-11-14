@@ -282,7 +282,7 @@ export const EXTRA_94: Record<string, ExtraZoneContent> = {
       { title: "Une pièce pour un entrepôt", body: "Un entrepôt de la zone attend une pièce de rechange d'un fournisseur d'Orly. La course est très courte." },
     ],
     tips: [
-      "Notre service couvre 8h–19h, 7j/7 : pour une course en dehors de ces horaires, appelez-nous.",
+      "Notre service couvre 7h–23h, 7j/7 : pour une course en dehors de ces horaires, appelez-nous.",
       "Au marché, donnez le pavillon, l'allée et un contact.",
       "Les accès au marché sont contrôlés : prévenez le destinataire.",
       "Pour Orly et Chevilly-Larue, les courses sont brèves.",

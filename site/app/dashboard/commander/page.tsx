@@ -56,10 +56,10 @@ const eur = (n: number) => n.toLocaleString("fr-FR", { minimumFractionDigits: 2,
 /* ── Styles partagés ──────────────────────────────────────────────────── */
 
 const INPUT =
-  "h-11 w-full rounded-lg border border-line bg-white px-3.5 text-sm font-medium text-ink placeholder:text-label transition-colors hover:border-[#c9c5bd] focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/15";
+  "h-11 w-full rounded-[4px] border border-line bg-paper-card px-3.5 text-sm font-medium text-ink placeholder:text-label transition-colors hover:border-[#c9c5bd] focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/15";
 const INPUT_SM = INPUT.replace("h-11", "h-10");
 const ADDRESS_WRAP =
-  "[&_input]:h-11 [&_input]:rounded-lg [&_input]:bg-white [&_input]:py-0 [&_input]:pl-10 [&_input]:pr-3.5 [&_input]:font-medium [&_input]:transition-colors [&_input]:hover:border-[#c9c5bd] [&_input]:focus:ring-2 [&_input]:focus:ring-accent/15";
+  "[&_input]:h-11 [&_input]:rounded-[4px] [&_input]:bg-paper-card [&_input]:py-0 [&_input]:pl-10 [&_input]:pr-3.5 [&_input]:font-medium [&_input]:transition-colors [&_input]:hover:border-[#c9c5bd] [&_input]:focus:ring-2 [&_input]:focus:ring-accent/15";
 const LABEL = "label-mono text-xs font-medium text-muted";
 
 type Favorite = { id: string; label: string; address: string };
@@ -93,10 +93,10 @@ function RoutePoint({
   const [favOpen, setFavOpen] = useState(false);
   const node =
     kind === "start"
-      ? "border-ink bg-white"
+      ? "border-ink bg-paper-card"
       : kind === "end"
       ? "border-accent bg-accent"
-      : "border-label bg-white";
+      : "border-label bg-paper-card";
 
   return (
     <div className="relative">
@@ -105,7 +105,7 @@ function RoutePoint({
         className={`absolute -left-9 top-0 flex h-6 w-6 items-center justify-center rounded-full border-2 ${node}`}
       >
         {kind === "start" && <span className="h-2 w-2 rounded-full bg-ink" />}
-        {kind === "end" && <span className="h-2 w-2 rounded-full bg-white" />}
+        {kind === "end" && <span className="h-2 w-2 rounded-full bg-paper-card" />}
         {kind === "stop" && <span className="h-1.5 w-1.5 rounded-full bg-label" />}
       </span>
 
@@ -120,7 +120,7 @@ function RoutePoint({
               type="button"
               onClick={() => setFavOpen((o) => !o)}
               aria-expanded={favOpen}
-              className="flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-bold text-accent-dark transition-colors hover:bg-accent/10"
+              className="flex items-center gap-1.5 rounded-[4px] px-2 py-1 text-xs font-bold text-accent-dark transition-colors hover:bg-accent/10"
             >
               <Star size={13} strokeWidth={2.5} />
               Mes favoris
@@ -133,7 +133,7 @@ function RoutePoint({
                   onClick={() => setFavOpen(false)}
                   className="fixed inset-0 z-40 cursor-default"
                 />
-                <div className="absolute right-0 top-8 z-50 w-72 overflow-hidden rounded-xl border border-line bg-white shadow-xl">
+                <div className="absolute right-0 top-8 z-50 w-72 overflow-hidden rounded-[4px] border border-line bg-paper-card shadow-xl">
                   {favorites.length === 0 ? (
                     <div className="px-4 py-3 text-xs text-muted">
                       Aucune adresse favorite.{" "}
@@ -169,7 +169,7 @@ function RoutePoint({
           <button
             type="button"
             onClick={onRemove}
-            className="flex items-center gap-1 rounded-md px-2 py-1 text-xs font-bold text-red-600 transition-colors hover:bg-red-50"
+            className="flex items-center gap-1 rounded-[4px] px-2 py-1 text-xs font-bold text-red-600 transition-colors hover:bg-red-50"
           >
             <X size={13} strokeWidth={2.5} />
             Supprimer
@@ -415,7 +415,7 @@ export default function CommanderPage() {
   const done = step === 5;
 
   return (
-    <div className="flex flex-col overflow-hidden rounded-2xl border border-ink bg-white shadow-[0_12px_40px_-12px_rgba(14,15,16,0.25)] [@media(min-height:760px)_and_(min-width:1024px)]:h-[calc(100dvh-160px)]">
+    <div className="flex flex-col overflow-hidden rounded-[4px] border border-ink bg-paper-card shadow-[0_12px_40px_-12px_rgba(14,15,16,0.25)] [@media(min-height:760px)_and_(min-width:1024px)]:h-[calc(100dvh-160px)]">
       {/* ── Barre supérieure : titre + progression ───────────────────── */}
       <header className="relative flex flex-col gap-4 bg-ink px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-8">
         <span aria-hidden className="absolute inset-x-0 top-0 h-[3px] bg-accent" />
@@ -440,7 +440,7 @@ export default function CommanderPage() {
                 <span
                   className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold transition-colors ${
                     complete
-                      ? "bg-white text-ink"
+                      ? "bg-paper-card text-ink"
                       : active
                       ? "bg-accent text-white"
                       : "border border-white/25 text-white/50"
@@ -490,7 +490,7 @@ export default function CommanderPage() {
             Le dispatching a bien pris en compte votre course. Un coursier arrivera sur place sous peu.
           </p>
           {trackingCode && (
-            <div className="mb-8 rounded-xl border border-line bg-paper px-8 py-4">
+            <div className="mb-8 rounded-[4px] border border-line bg-paper px-8 py-4">
               <p className="label-mono mb-1 text-xs font-medium text-muted">Code de suivi</p>
               <p className="font-mono text-2xl font-bold tracking-[0.2em] text-ink">{trackingCode}</p>
             </div>
@@ -498,14 +498,14 @@ export default function CommanderPage() {
           <div className="flex flex-col gap-3 sm:flex-row">
             <Link
               href="/dashboard/suivi"
-              className="flex h-12 items-center justify-center gap-2 rounded-xl border border-line px-7 text-sm font-bold text-ink transition-colors hover:bg-paper hover:text-ink"
+              className="flex h-12 items-center justify-center gap-2 rounded-[4px] border border-line px-7 text-sm font-bold text-ink transition-colors hover:bg-paper hover:text-ink"
             >
               Suivre la course
             </Link>
             <button
               type="button"
               onClick={resetAll}
-              className="flex h-12 items-center justify-center gap-2 rounded-xl bg-accent px-7 text-sm font-bold text-white shadow-sm transition-colors hover:bg-accent-dark"
+              className="flex h-12 items-center justify-center gap-2 rounded-[4px] bg-accent px-7 text-sm font-bold text-white shadow-sm transition-colors hover:bg-accent-dark"
             >
               Nouvelle commande
             </button>
@@ -562,7 +562,7 @@ export default function CommanderPage() {
                     <button
                       type="button"
                       onClick={addStop}
-                      className="flex h-9 items-center justify-center gap-1.5 rounded-lg border border-dashed border-[#c9c5bd] text-xs font-bold text-muted transition-colors hover:border-accent hover:bg-accent/5 hover:text-accent-dark"
+                      className="flex h-9 items-center justify-center gap-1.5 rounded-[4px] border border-dashed border-[#c9c5bd] text-xs font-bold text-muted transition-colors hover:border-accent hover:bg-accent/5 hover:text-accent-dark"
                     >
                       <Plus size={14} strokeWidth={2.5} />
                       Ajouter une adresse de livraison
@@ -602,8 +602,8 @@ export default function CommanderPage() {
                           role="radio"
                           aria-checked={selected}
                           onClick={() => { setNature(id); setNatureError(false); }}
-                          className={`flex items-center gap-2 rounded-xl border-2 px-3 py-3 text-left text-sm font-bold transition-all ${
-                            selected ? "border-accent bg-accent/[0.03] text-ink" : "border-line bg-white text-muted hover:border-[#c9c5bd]"
+                          className={`flex items-center gap-2 rounded-[4px] border-2 px-3 py-3 text-left text-sm font-bold transition-all ${
+                            selected ? "border-accent bg-accent/[0.03] text-ink" : "border-line bg-paper-card text-muted hover:border-[#c9c5bd]"
                           }`}
                         >
                           <Icon size={18} className={`shrink-0 ${selected ? "text-accent" : "text-label"}`} />
@@ -621,7 +621,7 @@ export default function CommanderPage() {
                       autoFocus
                       placeholder="Précisez ce que vous envoyez (ex. : clés, maquette, pièce détachée…)"
                       aria-label="Précisez ce que vous envoyez"
-                      className="mt-2 w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
+                      className="mt-2 w-full rounded-[4px] border border-line bg-paper px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
                     />
                   )}
                   {natureError && (
@@ -640,8 +640,8 @@ export default function CommanderPage() {
                       return (
                         <label
                           key={f.id}
-                          className={`relative flex cursor-pointer flex-col rounded-xl border-2 p-5 transition-all focus-within:ring-2 focus-within:ring-accent/30 ${
-                            selected ? "border-accent bg-accent/[0.03]" : "border-line bg-white hover:border-[#c9c5bd]"
+                          className={`relative flex cursor-pointer flex-col rounded-[4px] border-2 p-5 transition-all focus-within:ring-2 focus-within:ring-accent/30 ${
+                            selected ? "border-accent bg-accent/[0.03]" : "border-line bg-paper-card hover:border-[#c9c5bd]"
                           }`}
                         >
                           <input
@@ -654,13 +654,13 @@ export default function CommanderPage() {
                           />
                           <span
                             className={`absolute right-4 top-4 flex h-5 w-5 items-center justify-center rounded-full border-2 transition-colors ${
-                              selected ? "border-accent bg-accent text-white" : "border-line bg-white text-transparent"
+                              selected ? "border-accent bg-accent text-white" : "border-line bg-paper-card text-transparent"
                             }`}
                           >
                             <Check size={11} strokeWidth={3.5} />
                           </span>
                           <span
-                            className={`mb-5 flex h-12 w-12 items-center justify-center rounded-xl transition-colors ${
+                            className={`mb-5 flex h-12 w-12 items-center justify-center rounded-[4px] transition-colors ${
                               selected ? "bg-accent text-white" : "bg-paper text-muted"
                             }`}
                           >
@@ -697,9 +697,9 @@ export default function CommanderPage() {
                       return (
                         <label
                           key={d.id}
-                          className={`flex items-center gap-2.5 rounded-xl border-2 px-3 py-3 transition-all focus-within:ring-2 focus-within:ring-accent/30 ${
+                          className={`flex items-center gap-2.5 rounded-[4px] border-2 px-3 py-3 transition-all focus-within:ring-2 focus-within:ring-accent/30 ${
                             disabled ? "cursor-not-allowed border-line bg-paper opacity-60"
-                              : selected ? "cursor-pointer border-accent bg-accent/[0.03]" : "cursor-pointer border-line bg-white hover:border-[#c9c5bd]"
+                              : selected ? "cursor-pointer border-accent bg-accent/[0.03]" : "cursor-pointer border-line bg-paper-card hover:border-[#c9c5bd]"
                           }`}
                         >
                           <input
@@ -712,7 +712,7 @@ export default function CommanderPage() {
                             className="sr-only"
                           />
                           <span
-                            className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition-colors ${
+                            className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-[4px] transition-colors ${
                               selected ? "bg-accent text-white" : "bg-paper text-muted"
                             }`}
                           >
@@ -737,7 +737,7 @@ export default function CommanderPage() {
                         onChange={(e) => setNotes(e.target.value)}
                         placeholder="Digicode, remise à l'accueil, étage…"
                         rows={3}
-                        className="w-full flex-1 resize-none rounded-lg border border-line bg-white px-3.5 py-2.5 text-sm font-medium text-ink placeholder:text-label transition-colors hover:border-[#c9c5bd] focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/15"
+                        className="w-full flex-1 resize-none rounded-[4px] border border-line bg-paper-card px-3.5 py-2.5 text-sm font-medium text-ink placeholder:text-label transition-colors hover:border-[#c9c5bd] focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/15"
                       />
                     </div>
                     <div className="flex flex-col gap-2.5">
@@ -836,14 +836,14 @@ export default function CommanderPage() {
             <div aria-hidden className="pointer-events-none -mt-8 h-8 shrink-0 bg-gradient-to-t from-white to-transparent" />
 
             {/* ── Pied : navigation ─────────────────────────────────── */}
-            <div className="flex items-center justify-between gap-4 border-t border-line bg-white px-5 py-3.5 sm:px-8">
+            <div className="flex items-center justify-between gap-4 border-t border-line bg-paper-card px-5 py-3.5 sm:px-8">
               <div className="flex items-center gap-3">
                 {step > 1 && (
                   <button
                     type="button"
                     onClick={() => setStep(step - 1)}
                     aria-label="Retour"
-                    className="flex h-11 items-center gap-1.5 rounded-xl border border-line bg-white px-3.5 text-sm font-bold text-ink transition-colors hover:bg-paper sm:px-4"
+                    className="flex h-11 items-center gap-1.5 rounded-[4px] border border-line bg-paper-card px-3.5 text-sm font-bold text-ink transition-colors hover:bg-paper sm:px-4"
                   >
                     <ChevronLeft size={16} strokeWidth={2.5} />
                     <span className="hidden sm:inline">Retour</span>
@@ -870,7 +870,7 @@ export default function CommanderPage() {
                   <button
                     type="submit"
                     disabled={outOfZone}
-                    className="group flex h-11 items-center gap-2 rounded-xl bg-ink px-6 text-sm font-bold text-white shadow-sm transition-colors hover:bg-[#25272a] disabled:opacity-50"
+                    className="group flex h-11 items-center gap-2 rounded-[4px] bg-ink px-6 text-sm font-bold text-white shadow-sm transition-colors hover:bg-[#25272a] disabled:opacity-50"
                   >
                     Continuer
                     <ArrowRight size={16} strokeWidth={2.5} className="transition-transform group-hover:translate-x-0.5" />
@@ -879,7 +879,7 @@ export default function CommanderPage() {
                   <button
                     type="submit"
                     disabled={submitting || outOfZone}
-                    className="flex h-11 items-center gap-2 whitespace-nowrap rounded-xl bg-accent px-5 text-sm sm:px-6 font-bold text-white shadow-sm transition-colors hover:bg-accent-dark disabled:opacity-60"
+                    className="flex h-11 items-center gap-2 whitespace-nowrap rounded-[4px] bg-accent px-5 text-sm sm:px-6 font-bold text-white shadow-sm transition-colors hover:bg-accent-dark disabled:opacity-60"
                   >
                     {submitting ? (
                       <>
@@ -966,7 +966,7 @@ export default function CommanderPage() {
                   <li className="pt-1 text-[11px] text-white/50">Adresse en plus : 3 € par km depuis la précédente (1,50 € en grande couronne), selon le délai.</li>
                 </ul>
               )}
-              <div className="mt-3 rounded-lg bg-white/5 border border-white/10 p-3 text-xs text-white/80">
+              <div className="mt-3 rounded-[4px] bg-white/5 border border-white/10 p-3 text-xs text-white/80">
                 {isPro ? (
                   <>
                     <p className="font-bold text-white mb-1 flex items-center gap-1.5"><CalendarClock size={14} className="text-accent" /> Facture à 30 jours</p>
@@ -987,7 +987,7 @@ export default function CommanderPage() {
                 </li>
                 <li className="flex items-center gap-2">
                   <Radio size={14} className="shrink-0 text-green-400" />
-                  Suivi GPS temps réel · Support tous les jours, 8h–19h
+                  Suivi GPS temps réel · Support tous les jours, 7h–23h
                 </li>
               </ul>
             </div>
@@ -1012,13 +1012,13 @@ function ReviewCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className={`rounded-xl border border-line bg-paper-card p-4 ${wide ? "md:col-span-2" : ""}`}>
+    <div className={`rounded-[4px] border border-line bg-paper-card p-4 ${wide ? "md:col-span-2" : ""}`}>
       <div className="mb-2 flex items-center justify-between">
         <span className="label-mono text-xs font-medium text-muted">{title}</span>
         <button
           type="button"
           onClick={onEdit}
-          className="rounded-md px-1.5 py-0.5 text-xs font-bold text-accent-dark transition-colors hover:bg-accent/10"
+          className="rounded-[4px] px-1.5 py-0.5 text-xs font-bold text-accent-dark transition-colors hover:bg-accent/10"
         >
           Modifier
         </button>
@@ -1037,7 +1037,7 @@ function SummaryStop({ kind, label, value }: { kind: "start" | "stop" | "end"; l
           kind === "end" ? "border-accent bg-accent" : kind === "start" ? "border-white bg-ink" : "border-white/50 bg-ink"
         }`}
       >
-        {kind === "start" && <span className="h-1.5 w-1.5 rounded-full bg-white" />}
+        {kind === "start" && <span className="h-1.5 w-1.5 rounded-full bg-paper-card" />}
       </span>
       <div className="label-mono text-[11px] font-medium text-white/50">{label}</div>
       <div className={`mt-0.5 line-clamp-2 text-sm font-semibold leading-snug ${value ? "text-white" : "text-white/30"}`}>

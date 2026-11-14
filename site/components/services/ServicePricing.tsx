@@ -31,8 +31,8 @@ export default function ServicePricing({ pricing }: { pricing: Pricing }) {
     return (
       <div>
         <p className="mb-8 max-w-[68ch] text-[16.5px] leading-[1.65] text-muted">{pricing.intro}</p>
-        <div className="max-w-[68ch] rounded-xl border border-line bg-white p-6">
-          <div className="font-mono text-[10px] tracking-[0.14em] text-label uppercase">Navette · par passage</div>
+        <div className="max-w-[68ch] rounded-[4px] border border-line bg-paper-card p-6">
+          <div className="font-mono text-[11px] tracking-[0.14em] text-label uppercase">Navette · par passage</div>
           <div className="mt-2 text-[28px] font-bold tracking-[-0.02em] text-ink">Sur devis</div>
         </div>
         <p className="mt-6 max-w-[68ch] border-l-2 border-accent pl-4 text-[15px] leading-[1.6] text-ink">{pricing.note}</p>
@@ -47,12 +47,12 @@ export default function ServicePricing({ pricing }: { pricing: Pricing }) {
         <table className="w-full min-w-[520px] border-collapse text-[14.5px]">
           <thead>
             <tr className="border-b-2 border-ink">
-              <th className="py-3 pr-6 text-left font-mono text-[10px] tracking-[0.14em] text-label uppercase">Zone</th>
+              <th className="py-3 pr-6 text-left font-mono text-[11px] tracking-[0.14em] text-label uppercase">Zone</th>
               {columns.map((c) => (
-                <th key={c} className="py-3 pr-6 text-left font-mono text-[10px] tracking-[0.14em] text-label uppercase">
+                <th key={c} className="py-3 pr-6 text-left font-mono text-[11px] tracking-[0.14em] text-label uppercase">
                   {FORMULES[c]}
                   {pricing.recommended.includes(c) && (
-                    <span className="ml-2 rounded-sm bg-accent/10 px-1.5 py-0.5 text-[9px] font-bold text-accent-dark">Conseillé</span>
+                    <span className="ml-2 rounded-sm bg-accent/10 px-1.5 py-0.5 text-[11px] font-bold text-accent-dark">Conseillé</span>
                   )}
                 </th>
               ))}

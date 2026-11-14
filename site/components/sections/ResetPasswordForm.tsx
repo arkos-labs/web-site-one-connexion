@@ -115,7 +115,7 @@ export default function ResetPasswordForm() {
                     placeholder="Min. 8 caractères"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full rounded-[6px] border border-line bg-white py-3.5 pl-11 pr-11 text-[14px] text-ink placeholder:text-label/60 transition-all focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/15"
+                    className="w-full rounded-[6px] border border-line bg-paper-card py-3.5 pl-11 pr-11 text-[14px] text-ink placeholder:text-label/60 transition-all focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/15"
                   />
                   <button
                     type="button"
@@ -144,7 +144,7 @@ export default function ResetPasswordForm() {
                     autoComplete="new-password"
                     value={confirm}
                     onChange={(e) => setConfirm(e.target.value)}
-                    className="w-full rounded-[6px] border border-line bg-white py-3.5 pl-11 pr-4 text-[14px] text-ink transition-all focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/15"
+                    className="w-full rounded-[6px] border border-line bg-paper-card py-3.5 pl-11 pr-4 text-[14px] text-ink transition-all focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/15"
                   />
                 </div>
               </div>

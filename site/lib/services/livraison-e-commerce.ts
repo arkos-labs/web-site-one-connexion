@@ -131,7 +131,7 @@ export const livraisonEcommerce: Service = {
     {
       question: "Jusqu’à quelle heure commander pour livrer le jour même ?",
       answer:
-        "Nous prenons en charge vos courses 7j/7, de 8h à 19h. Pour livrer le jour même, laissez le délai de la formule choisie : Normal 3 h, Urgent 1 h 30, Super 1 h.",
+        "Nous prenons en charge vos courses 7j/7, de 7h à 23h. Pour livrer le jour même, laissez le délai de la formule choisie : Normal 3 h, Urgent 1 h 30, Super 1 h.",
     },
   ],
 

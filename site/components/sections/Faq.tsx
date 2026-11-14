@@ -18,7 +18,7 @@ const FAQ = [
   },
   {
     q: "Quels sont vos horaires ?",
-    a: "7j/7, de 8 h à 19 h. Besoin d'une course en dehors de ces horaires ? Appelez-nous, on regarde ce qu'on peut faire.",
+    a: "7j/7, de 7 h à 23 h. Besoin d'une course en dehors de ces horaires ? Appelez-nous, on regarde ce qu'on peut faire.",
   },
   {
     q: "Comment connaître le prix d’une course ?",

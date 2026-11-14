@@ -5,6 +5,7 @@
  * Le contenu vient des données propres à chaque zone : aucune phrase de
  * remplissage commune à toutes les pages.
  */
+import QuickOrderBar from "@/components/QuickOrderBar";
 import Link from "next/link";
 import type { Zone, ZoneFaqItem } from "@/lib/zones/types";
 import type { ZonePlan } from "@/lib/zones/plan";
@@ -17,11 +18,11 @@ import { HERO_IMAGES } from "@/lib/hero-images";
 const H2 = "text-[clamp(24px,3vw,36px)] font-bold leading-[1.1] tracking-tight text-ink";
 const LINK = "font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark";
 const PILL =
-  "flex items-center gap-1.5 rounded-[4px] border border-ink/20 bg-white px-4 py-2 text-[13px] font-bold text-ink transition-all hover:bg-ink hover:text-white";
+  "flex items-center gap-1.5 rounded-[4px] border border-ink/20 bg-paper-card px-4 py-2 text-[13px] font-bold text-ink transition-all hover:bg-ink hover:text-white";
 
 function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
-    <div className="mb-3 flex items-center gap-3 font-mono text-[10px] tracking-[0.16em] text-accent uppercase">
+    <div className="mb-3 flex items-center gap-3 font-mono text-[11px] tracking-[0.16em] text-accent uppercase">
       <span className="h-px w-6 bg-accent" />
       {children}
     </div>
@@ -83,7 +84,7 @@ export default function PlannedZonePage({
   const cases = zone.cases && zone.cases.length > 0 && (
     <div className="grid gap-6 md:grid-cols-3">
       {zone.cases.map((c) => (
-        <div key={c.title} className="rounded-2xl border border-gray-100 bg-white p-6">
+        <div key={c.title} className="rounded-[4px] border border-line bg-paper-card p-6">
           <h3 className="mb-3 text-[16px] font-bold leading-tight text-ink">{c.title}</h3>
           <p className="text-[14.5px] leading-[1.7] text-muted">{c.body}</p>
         </div>
@@ -112,9 +113,9 @@ export default function PlannedZonePage({
       {zone.sectors.map((sector) => {
         const Icon = getIcon(sector.name);
         return (
-          <div key={sector.name} className={`flex flex-col gap-4 rounded-2xl border p-6 ${getColor(sector.name)}`}>
+          <div key={sector.name} className={`flex flex-col gap-4 rounded-[4px] border p-6 ${getColor(sector.name)}`}>
             <div className="flex items-start gap-3">
-              <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${getIconBg(sector.name)}`}>
+              <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-[4px] ${getIconBg(sector.name)}`}>
                 <Icon size={18} strokeWidth={2} />
               </div>
               <h3 className="text-[15px] font-bold text-ink leading-tight">{sector.name}</h3>
@@ -135,10 +136,10 @@ export default function PlannedZonePage({
 
   const keyClients = zone.keyClients.length > 0 && (
     <div className="mt-10">
-      <p className="mb-4 font-mono text-[10px] tracking-[0.16em] text-accent uppercase">Là où on livre le plus souvent</p>
+      <p className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent uppercase">Là où on livre le plus souvent</p>
       <div className="flex flex-wrap gap-3">
         {zone.keyClients.map((client) => (
-          <span key={client} className="flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-[13px] font-medium text-ink">
+          <span key={client} className="flex items-center gap-2 rounded-full border border-line bg-paper-card px-4 py-2 text-[13px] font-medium text-ink">
             <span className="h-1.5 w-1.5 rounded-full bg-accent" />
             {client}
           </span>
@@ -153,11 +154,11 @@ export default function PlannedZonePage({
         <Link
           key={z.slug}
           href={`/zones/${z.slug}`}
-          className="group flex flex-col gap-2 rounded-xl border border-gray-100 bg-white p-5 transition-all hover:border-accent/30 hover:shadow-sm"
+          className="group flex flex-col gap-2 rounded-[4px] border border-line bg-paper-card p-5 transition-all hover:border-accent/30 hover:shadow-sm"
         >
           <div className="flex items-center gap-2">
             <MapPin size={12} className="text-accent" />
-            <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-muted">{z.dept}</span>
+            <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted">{z.dept}</span>
           </div>
           <div className="font-bold text-ink text-[14px] group-hover:text-accent transition-colors">{z.fullName}</div>
           <div className="flex items-center gap-1 text-[11px] font-semibold text-accent mt-auto">
@@ -174,7 +175,7 @@ export default function PlannedZonePage({
       <section className="relative overflow-hidden bg-ink text-white">
         {HERO_IMAGES[zone.slug] && <HeroBackdrop src={HERO_IMAGES[zone.slug].src} />}
         <div className="relative mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-20 pt-16">
-          <nav aria-label="Fil d'Ariane" className="mb-8 flex flex-wrap items-center gap-1 font-mono text-[10px] tracking-[0.16em] text-white/40 uppercase">
+          <nav aria-label="Fil d'Ariane" className="mb-8 flex flex-wrap items-center gap-1 font-mono text-[11px] tracking-[0.16em] text-white/40 uppercase">
             <Link href="/" className="hover:text-white transition-colors">Accueil</Link>
             <ChevronRight size={10} className="text-white/25" />
             <Link href="/zones" className="hover:text-white transition-colors">Zones</Link>
@@ -192,7 +193,7 @@ export default function PlannedZonePage({
             <div>
               <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5">
                 <MapPin size={11} className="text-accent" />
-                <span className="font-mono text-[10px] tracking-[0.14em] uppercase text-white/60">
+                <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-white/60">
                   {categoryLabel(zone.category)} · {zone.dept}
                 </span>
               </div>
@@ -200,23 +201,25 @@ export default function PlannedZonePage({
                 {plan.h1}
               </h1>
               <p className="max-w-[60ch] text-pretty text-[17px] leading-[1.65] text-white/66">{zone.intro}</p>
+
+              <QuickOrderBar className="mt-8" />
             </div>
 
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-6 self-start">
-              <div className="mb-5 font-mono text-[10px] tracking-[0.14em] uppercase text-white/30">Infos pratiques</div>
+            <div className="rounded-[4px] border border-white/10 bg-white/5 p-6 self-start">
+              <div className="mb-5 font-mono text-[11px] tracking-[0.14em] uppercase text-white/30">Infos pratiques</div>
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
                   <Clock size={14} className="mt-0.5 shrink-0 text-accent" />
                   <div>
-                    <div className="text-[13px] font-semibold text-white">Un coursier chez vous en moins de 45 min</div>
-                    <div className="text-[11px] text-white/40">7j/7, de 8 h à 19 h</div>
+                    <div className="text-[14px] font-semibold text-white">Un coursier chez vous en moins de 45 min</div>
+                    <div className="text-[12.5px] text-white/65">7j/7, de 7 h à 23 h</div>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
                   <CheckCircle size={14} className="mt-0.5 shrink-0 text-accent" />
                   <div>
-                    <div className="text-[13px] font-semibold text-white">Une course dédiée par envoi</div>
-                    <div className="text-[11px] text-white/40">Sans regroupement, remise horodatée</div>
+                    <div className="text-[14px] font-semibold text-white">Une course dédiée par envoi</div>
+                    <div className="text-[12.5px] text-white/65">Sans regroupement, remise horodatée</div>
                   </div>
                 </div>
               </div>
@@ -225,14 +228,6 @@ export default function PlannedZonePage({
                   <Phone size={14} className="text-accent" />
                   {PHONE_DISPLAY}
                 </a>
-                <Link
-                  href="/#commander"
-                  className="mt-3 flex w-full items-center justify-center gap-2 rounded-[4px] py-3 text-[13px] font-bold transition-opacity hover:opacity-90"
-                  style={{ background: "#ed5518", color: "#fff" }}
-                >
-                  Commander une course
-                  <ArrowRight size={13} />
-                </Link>
               </div>
             </div>
           </div>
@@ -253,7 +248,7 @@ export default function PlannedZonePage({
           </section>
 
           {/* 3. Organiser une course */}
-          <section className="bg-paper border-y border-gray-100">
+          <section className="bg-paper border-y border-line">
             <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
               <Eyebrow>Cas concrets</Eyebrow>
               <h2 className={`mb-8 ${H2}`}>{h2Third}</h2>
@@ -296,7 +291,7 @@ export default function PlannedZonePage({
           </section>
 
           {/* 3. Ce que nous transportons */}
-          <section className="bg-paper border-y border-gray-100">
+          <section className="bg-paper border-y border-line">
             <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
               <h2 className={`mb-6 ${H2}`}>{h2Third}</h2>
               <div className="flex flex-wrap gap-3">
@@ -321,7 +316,7 @@ export default function PlannedZonePage({
             {tips}
             {related.length > 0 && (
               <div className="mt-12">
-                <p className="mb-6 font-mono text-[10px] tracking-[0.16em] text-accent uppercase">Zones proches</p>
+                <p className="mb-6 font-mono text-[11px] tracking-[0.16em] text-accent uppercase">Zones proches</p>
                 {relatedGrid}
               </div>
             )}
@@ -333,7 +328,7 @@ export default function PlannedZonePage({
       {faqItems.length > 0 && (
         <section className="mx-auto max-w-[800px] px-[clamp(20px,4vw,28px)] py-20">
           <div className="mb-10 text-center">
-            <div className="mb-3 flex items-center justify-center gap-3 font-mono text-[10px] tracking-[0.16em] text-accent uppercase">
+            <div className="mb-3 flex items-center justify-center gap-3 font-mono text-[11px] tracking-[0.16em] text-accent uppercase">
               <span className="h-px w-6 bg-accent" />
               Questions fréquentes
               <span className="h-px w-6 bg-accent" />
@@ -344,7 +339,7 @@ export default function PlannedZonePage({
           </div>
           <div className="flex flex-col gap-4">
             {faqItems.map((faq) => (
-              <div key={faq.q} className="rounded-xl border border-gray-200 bg-white p-5 hover:border-accent/30 transition-colors">
+              <div key={faq.q} className="rounded-[4px] border border-line bg-paper-card p-5 hover:border-accent/30 transition-colors">
                 <h3 className="mb-2 text-[15.5px] font-bold text-ink">{faq.q}</h3>
                 <p className="text-[14.5px] leading-[1.65] text-muted">{faq.a}</p>
               </div>

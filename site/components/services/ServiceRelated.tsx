@@ -18,13 +18,13 @@ export default function ServiceRelated({ currentSlug }: { currentSlug: string })
           href={`/services/${service.slug}`}
           className="group border border-line bg-paper-card px-[26px] pb-[26px] pt-[28px] text-ink hover:border-ink hover:text-ink"
         >
-          <div className="mb-2.5 font-mono text-[10px] tracking-[0.16em] text-label uppercase">
+          <div className="mb-2.5 font-mono text-[11px] tracking-[0.16em] text-label uppercase">
             {service.card.tag}
           </div>
           <h3 className="mb-4 text-[17px] font-bold tracking-[-0.02em]">
             {service.card.title}
           </h3>
-          <span className="font-mono text-[10.5px] tracking-[0.1em] text-accent-dark uppercase">
+          <span className="font-mono text-[11px] tracking-[0.1em] text-accent-dark uppercase">
             Voir la prestation →
           </span>
         </Link>

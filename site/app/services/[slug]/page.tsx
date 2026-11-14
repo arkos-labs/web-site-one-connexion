@@ -7,6 +7,7 @@
  * les trois blocs du plan, dans l'ordre, puis l'appel à l'action. Les autres
  * blocs suivent, titrés sans balise H2. Sans plan, le gabarit d'origine.
  */
+import { Check } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -209,8 +210,9 @@ export default async function ServicePage({
           {service.included.map((item) => (
             <li
               key={item}
-              className="border-b border-line py-[15px] text-[15.5px] leading-[1.5] text-muted"
+              className="flex items-start gap-3 border-b border-line py-[15px] text-[15.5px] leading-[1.5] text-ink"
             >
+              <Check size={18} strokeWidth={2.2} className="mt-[3px] shrink-0 text-accent" />
               {item}
             </li>
           ))}
@@ -296,14 +298,14 @@ export default async function ServicePage({
           </p>
           <Link
             href="/flotte"
-            className="mt-6 inline-block font-mono text-[10.5px] tracking-[0.1em] text-accent-dark uppercase hover:text-ink"
+            className="mt-6 inline-block text-[15px] font-semibold text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark"
           >
             Voir la flotte et la couverture →
           </Link>
           {service.slug !== "coursier-moto-paris" && (
             <Link
               href="/services/coursier-moto-paris"
-              className="mt-3 block font-mono text-[10.5px] tracking-[0.1em] text-accent-dark uppercase hover:text-ink"
+              className="mt-3 block w-fit text-[15px] font-semibold text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark"
             >
               Coursier moto Paris : livraison en deux-roues →
             </Link>
@@ -312,7 +314,7 @@ export default async function ServicePage({
             <Link
               key={g.slug}
               href={`/guides/${g.slug}`}
-              className="mt-3 block font-mono text-[10.5px] tracking-[0.1em] text-accent-dark uppercase hover:text-ink"
+              className="mt-3 block w-fit text-[15px] font-semibold text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark"
             >
               Guide pratique : {g.title} →
             </Link>

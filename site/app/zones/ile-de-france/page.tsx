@@ -3,6 +3,7 @@
  * Page locale globale Île-de-France (75, 92, 93, 94, 77, 78, 91, 95).
  * Requête visée : « coursier ile de france ».
  */
+import QuickOrderBar from "@/components/QuickOrderBar";
 import HeroBackdrop from "@/components/HeroBackdrop";
 import { HERO_IMAGES } from "@/lib/hero-images";
 import type { Metadata } from "next";
@@ -93,53 +94,39 @@ export default function ZoneIleDeFrance() {
       <JsonLd data={faqSchema} />
 
       {/* ── Hero ── */}
-      <section className="border-b border-line bg-paper">
-        <div
-          role="img"
-          aria-label="Vue aérienne de Paris et de la Seine"
-          className="h-[200px] w-full bg-cover bg-center md:h-[280px]"
-          style={{ backgroundImage: `url('${HERO_IMAGES["ile-de-france"].src}')` }}
-        />
-        <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[clamp(48px,6vw,72px)]">
+      <section className="relative overflow-hidden bg-ink text-white">
+        <HeroBackdrop src={HERO_IMAGES["ile-de-france"].src} />
+        <div className="relative mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-14 pt-16">
           <nav aria-label="Fil d'Ariane" className="mb-6">
-            <ol className="flex flex-wrap items-center gap-2 font-mono text-[11px] tracking-wider text-muted uppercase">
-              <li><Link href="/" className="hover:text-ink">Accueil</Link></li>
+            <ol className="flex flex-wrap items-center gap-2 font-mono text-[11px] tracking-[0.16em] text-white/50 uppercase">
+              <li><Link href="/" className="text-white/50 hover:text-white">Accueil</Link></li>
               <li>/</li>
-              <li><Link href="/zones" className="hover:text-ink">Zones</Link></li>
+              <li><Link href="/zones" className="text-white/50 hover:text-white">Zones</Link></li>
               <li>/</li>
-              <li className="font-semibold text-accent-dark">Île-de-France</li>
+              <li className="text-white/80">Île-de-France</li>
             </ol>
           </nav>
 
-          <div className="max-w-[760px]">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/5 px-3 py-1 font-mono text-[11px] font-semibold text-accent-dark">
-              <span>8 DÉPARTEMENTS COUVERTS</span>
+          <div className="max-w-[900px]">
+            <div className="mb-3 flex items-center gap-3 font-mono text-[11px] tracking-[0.16em] text-accent uppercase">
+              <span className="h-px w-6 bg-accent" />
+              8 départements couverts
             </div>
-            <h1 className="text-[clamp(32px,5vw,56px)] font-bold leading-[1.08] tracking-[-0.035em] text-ink">
+            <h1 className="text-[clamp(32px,5vw,56px)] font-bold leading-[1.05] tracking-[-0.035em]">
               Coursier en Île-de-France : course dédiée et express
             </h1>
-            <p className="mt-6 text-[clamp(16px,2vw,19px)] leading-[1.6] text-muted">
+            <p className="mt-6 text-[clamp(16px,2vw,19px)] leading-[1.6] text-white/75">
               Une seule paire de mains, un coursier unique du départ à l&apos;arrivée. Nous assurons vos livraisons urgentes,
               plis confidentiels et transferts médicaux dans l&apos;ensemble de la région parisienne, 7j/7 de 7h à 23h.
             </p>
 
-            <div className="mt-8 flex flex-wrap items-center gap-4">
-              <Link
-                href="/#commander"
-                className="rounded-[4px] bg-accent px-6 py-3.5 text-[15px] font-bold text-white transition-colors hover:bg-accent-dark"
-              >
-                Commander une course
-              </Link>
-              <a
-                href={`tel:${PHONE_TEL}`}
-                className="rounded-[4px] border border-line bg-white px-6 py-3.5 text-[15px] font-bold text-ink transition-colors hover:bg-paper"
-              >
-                {PHONE_DISPLAY}
-              </a>
-            </div>
+            <QuickOrderBar className="mt-8" />
+            <a href={`tel:${PHONE_TEL}`} className="mt-4 inline-block text-[14px] font-semibold text-white/85 hover:text-white">
+              Une course urgente ? {PHONE_DISPLAY}
+            </a>
           </div>
 
-          <div className="mt-12 grid grid-cols-2 gap-4 border-t border-line/80 pt-8 sm:grid-cols-4">
+          <div className="mt-12 grid grid-cols-2 gap-4 border-t border-white/10 pt-8 sm:grid-cols-4">
             {[
               { val: "< 45 min", label: "Enlèvement Paris & 92, 93, 94" },
               { val: "100%", label: "Course dédiée sans groupage" },
@@ -147,8 +134,8 @@ export default function ZoneIleDeFrance() {
               { val: "7j/7", label: "De 7h à 23h en continu" },
             ].map((st, i) => (
               <div key={i} className="flex flex-col">
-                <span className="text-[clamp(24px,3vw,32px)] font-extrabold text-ink">{st.val}</span>
-                <span className="text-[13px] text-muted">{st.label}</span>
+                <span className="text-[clamp(24px,3vw,32px)] font-bold text-white">{st.val}</span>
+                <span className="text-[13px] text-white/65">{st.label}</span>
               </div>
             ))}
           </div>
@@ -166,7 +153,7 @@ export default function ZoneIleDeFrance() {
         </p>
 
         <div className="grid gap-6 md:grid-cols-3">
-          <div className="rounded-2xl border border-line bg-white p-6 shadow-sm">
+          <div className="rounded-[4px] border border-line bg-paper-card p-6 shadow-sm">
             <span className="mb-2 inline-block font-mono text-[11px] uppercase tracking-wider text-accent-dark font-bold">
               Zone 75
             </span>
@@ -178,7 +165,7 @@ export default function ZoneIleDeFrance() {
             <Link href="/zones/paris" className={LINK}>Voir les détails Paris →</Link>
           </div>
 
-          <div className="rounded-2xl border border-line bg-white p-6 shadow-sm">
+          <div className="rounded-[4px] border border-line bg-paper-card p-6 shadow-sm">
             <span className="mb-2 inline-block font-mono text-[11px] uppercase tracking-wider text-accent-dark font-bold">
               Zone 92 · 93 · 94
             </span>
@@ -186,14 +173,14 @@ export default function ZoneIleDeFrance() {
             <p className="mb-4 text-[14px] leading-relaxed text-muted">
               Liaisons rapides entre Paris et Nanterre, Boulogne, Saint-Denis, Montreuil, Créteil ou La Défense. Deux-roues rapides anti-bouchons.
             </p>
-            <div className="font-semibold text-accent-dark mb-4 text-[14px]">Dès 35 € TTC</div>
+            <div className="font-semibold text-accent-dark mb-4 text-[14px]">Dès 39 € TTC</div>
             <div className="flex gap-4">
               <Link href="/zones/petite-couronne" className={LINK}>Petite couronne →</Link>
               <Link href="/zones/la-defense" className={LINK}>La Défense →</Link>
             </div>
           </div>
 
-          <div className="rounded-2xl border border-line bg-white p-6 shadow-sm">
+          <div className="rounded-[4px] border border-line bg-paper-card p-6 shadow-sm">
             <span className="mb-2 inline-block font-mono text-[11px] uppercase tracking-wider text-accent-dark font-bold">
               Zone 77 · 78 · 91 · 95
             </span>
@@ -227,9 +214,9 @@ export default function ZoneIleDeFrance() {
 
         <div className="grid gap-6 md:grid-cols-3">
           {SERVICES.slice(0, 6).map((s) => (
-            <div key={s.slug} className="flex flex-col justify-between rounded-xl border border-line bg-white p-6 shadow-sm">
+            <div key={s.slug} className="flex flex-col justify-between rounded-[4px] border border-line bg-paper-card p-6 shadow-sm">
               <div>
-                <div className="font-mono text-[10px] tracking-wider uppercase text-accent-dark mb-2">
+                <div className="font-mono text-[11px] tracking-wider uppercase text-accent-dark mb-2">
                   {s.card.tag}
                 </div>
                 <h3 className="text-[18px] font-bold text-ink mb-2">{s.card.title}</h3>
@@ -254,7 +241,7 @@ export default function ZoneIleDeFrance() {
             Chaque course est exclusive : le coursier effectue le trajet direct de l&apos;adresse d&apos;enlèvement à l&apos;adresse de remise, sans aucun arrêt intermédiaire.
           </p>
 
-          <div className="overflow-x-auto rounded-xl border border-line bg-white">
+          <div className="overflow-x-auto rounded-[4px] border border-line bg-paper-card">
             <table className="w-full min-w-[560px] border-collapse text-[14.5px]">
               <thead>
                 <tr className="border-b border-line bg-paper/50">
@@ -306,7 +293,7 @@ export default function ZoneIleDeFrance() {
           </div>
           <div className="flex flex-col gap-4">
             {FAQ_IDF.map((faq, i) => (
-              <div key={i} className="rounded-xl border border-line bg-white p-5 hover:border-accent/30 transition-colors">
+              <div key={i} className="rounded-[4px] border border-line bg-paper-card p-5 hover:border-accent/30 transition-colors">
                 <h3 className="mb-2 text-[15.5px] font-bold text-ink">{faq.q}</h3>
                 <p className="text-[14.5px] leading-[1.65] text-muted">{faq.a}</p>
               </div>

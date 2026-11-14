@@ -40,19 +40,19 @@ export default function PaymentMethodCard({ cardOnly = false }: { cardOnly?: boo
   const Icon = method?.type === "sepa_debit" ? Landmark : CreditCard;
 
   return (
-    <div className="rounded-xl border border-line bg-paper-card p-5">
+    <div className="rounded-[4px] border border-line bg-paper-card p-5">
       <h3 className="text-sm font-extrabold text-ink">Moyen de paiement</h3>
       {loading ? (
         <p className="mt-2 flex items-center gap-2 text-[13px] text-muted"><Loader2 size={14} className="animate-spin" /> Chargement…</p>
       ) : method ? (
         <>
-          <div className="mt-3 flex items-center gap-3 rounded-lg border border-line bg-white px-4 py-3">
-            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-paper text-ink"><Icon size={18} /></span>
+          <div className="mt-3 flex items-center gap-3 rounded-[4px] border border-line bg-paper-card px-4 py-3">
+            <span className="flex h-9 w-9 items-center justify-center rounded-[4px] bg-paper text-ink"><Icon size={18} /></span>
             <div className="min-w-0 flex-1">
               <div className="text-sm font-bold text-ink">{method.label}</div>
               {method.detail && <div className="text-xs text-muted">{method.detail}</div>}
             </div>
-            <button type="button" onClick={remove} disabled={busy} className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-red-600 hover:bg-red-50 disabled:opacity-50">
+            <button type="button" onClick={remove} disabled={busy} className="flex items-center gap-1.5 rounded-[4px] px-2.5 py-1.5 text-xs font-semibold text-red-600 hover:bg-red-50 disabled:opacity-50">
               <Trash2 size={14} /> Retirer
             </button>
           </div>
@@ -68,7 +68,7 @@ export default function PaymentMethodCard({ cardOnly = false }: { cardOnly?: boo
               ? "Enregistrez une carte bancaire : vos prochaines commandes seront réglées en 1 clic."
               : "Enregistrez une carte bancaire ou un RIB (prélèvement) : vos prochaines commandes seront réglées en 1 clic."}
           </p>
-          <button type="button" onClick={add} disabled={busy} className="mt-3 flex h-10 items-center gap-2 rounded-xl bg-ink px-4 text-sm font-bold text-white hover:bg-[#25272a] disabled:opacity-60">
+          <button type="button" onClick={add} disabled={busy} className="mt-3 flex h-10 items-center gap-2 rounded-[4px] bg-ink px-4 text-sm font-bold text-white hover:bg-[#25272a] disabled:opacity-60">
             {busy ? <Loader2 size={15} className="animate-spin" /> : <Plus size={15} />}
             {cardOnly ? "Ajouter une carte" : "Ajouter une carte ou un RIB"}
           </button>

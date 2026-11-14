@@ -35,7 +35,7 @@ export default function Contact({
         <div className="flex flex-wrap gap-4">
           <a
             href="/inscription"
-            className="flex items-center gap-2 rounded-[4px] bg-ink px-6 py-3.5 text-[14px] font-bold text-white hover:bg-white hover:text-ink transition-colors"
+            className="flex items-center gap-2 rounded-[4px] bg-ink px-6 py-3.5 text-[14px] font-bold text-white hover:bg-paper-card hover:text-ink transition-colors"
           >
             Ouvrir un compte
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>

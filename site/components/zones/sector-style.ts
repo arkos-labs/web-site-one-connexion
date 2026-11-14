@@ -20,25 +20,25 @@ const SECTOR_ICONS: Record<string, ElementType> = {
 };
 
 const SECTOR_COLORS: Record<string, string> = {
-  "Juridique & Notarial":   "border-blue-200 bg-blue-50",
-  "Médical & Laboratoires": "border-green-200 bg-green-50",
-  "E-commerce & Luxe":      "border-orange-200 bg-orange-50",
-  "Corporate & Agences":    "border-purple-200 bg-purple-50",
-  "Événementiel":           "border-pink-200 bg-pink-50",
-  "Grands comptes":         "border-gray-200 bg-gray-50",
-  "Médical":                "border-green-200 bg-green-50",
-  "E-commerce":             "border-orange-200 bg-orange-50",
+  "Juridique & Notarial":   "border-line bg-paper-card",
+  "Médical & Laboratoires": "border-line bg-paper-card",
+  "E-commerce & Luxe":      "border-line bg-paper-card",
+  "Corporate & Agences":    "border-line bg-paper-card",
+  "Événementiel":           "border-line bg-paper-card",
+  "Grands comptes":         "border-line bg-paper-card",
+  "Médical":                "border-line bg-paper-card",
+  "E-commerce":             "border-line bg-paper-card",
 };
 
 const SECTOR_ICON_BG: Record<string, string> = {
-  "Juridique & Notarial":   "bg-blue-100 text-blue-700",
-  "Médical & Laboratoires": "bg-green-100 text-green-700",
-  "E-commerce & Luxe":      "bg-orange-100 text-orange-700",
-  "Corporate & Agences":    "bg-purple-100 text-purple-700",
-  "Événementiel":           "bg-pink-100 text-pink-700",
-  "Grands comptes":         "bg-gray-100 text-gray-700",
-  "Médical":                "bg-green-100 text-green-700",
-  "E-commerce":             "bg-orange-100 text-orange-700",
+  "Juridique & Notarial":   "bg-ink text-white",
+  "Médical & Laboratoires": "bg-ink text-white",
+  "E-commerce & Luxe":      "bg-ink text-white",
+  "Corporate & Agences":    "bg-ink text-white",
+  "Événementiel":           "bg-ink text-white",
+  "Grands comptes":         "bg-ink text-white",
+  "Médical":                "bg-ink text-white",
+  "E-commerce":             "bg-ink text-white",
 };
 
 export function getIcon(name: string): ElementType {
@@ -46,11 +46,11 @@ export function getIcon(name: string): ElementType {
 }
 
 export function getColor(name: string): string {
-  return SECTOR_COLORS[name] ?? "border-gray-200 bg-gray-50";
+  return SECTOR_COLORS[name] ?? "border-line bg-paper-card";
 }
 
 export function getIconBg(name: string): string {
-  return SECTOR_ICON_BG[name] ?? "bg-gray-100 text-gray-700";
+  return SECTOR_ICON_BG[name] ?? "bg-ink text-white";
 }
 
 export function categoryLabel(cat: string): string {

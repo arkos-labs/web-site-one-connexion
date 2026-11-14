@@ -371,7 +371,7 @@ export const GUIDES: Guide[] = [
       {
         heading: "Choisir le mode d'expédition",
         paragraphs: [
-          "Le bon choix dépend de l'urgence et de la fréquence de vos envois. Le prix ne dépend ni du contenu ni du poids, jusqu'à 18 kg : seuls comptent la zone, la distance et le délai choisi. Le service fonctionne 7j/7, de 8 h à 19 h.",
+          "Le bon choix dépend de l'urgence et de la fréquence de vos envois. Le prix ne dépend ni du contenu ni du poids, jusqu'à 18 kg : seuls comptent la zone, la distance et le délai choisi. Le service fonctionne 7j/7, de 7 h à 23 h.",
         ],
         list: [
           "Course immédiate : pour une pièce qui bloque un automate ou un réactif attendu le jour même. Le coursier passe en moins de 45 minutes.",
@@ -402,7 +402,7 @@ export const GUIDES: Guide[] = [
       {
         question: "Une pièce d'automate peut-elle être livrée le jour même ?",
         answer:
-          "Oui, 7j/7 entre 8 h et 19 h. En course Super, la livraison se fait en 1 h, par exemple pour 56 € TTC intramuros. Le coursier passe en moins de 45 minutes.",
+          "Oui, 7j/7 entre 7 h et 23 h. En course Super, la livraison se fait en 1 h, par exemple pour 56 € TTC intramuros. Le coursier passe en moins de 45 minutes.",
       },
       {
         question: "Comment ouvrir un compte pour les envois du laboratoire ?",
@@ -452,7 +452,7 @@ export const GUIDES: Guide[] = [
           "Le nom du destinataire et un numéro joignable côté enlèvement comme côté livraison.",
           "Les codes d'accès, l'entrée à utiliser et les horaires de réception, si le site ferme à l'heure du déjeuner.",
           "Le poids et la taille du colis, pour vérifier qu'il tient dans le top-case.",
-          "Le délai réel : Normal (3 h), Urgent (1 h 30), Super (1 h), ou une course programmée à l'avance au tarif Normal. Le service fonctionne 7j/7, de 8 h à 19 h.",
+          "Le délai réel : Normal (3 h), Urgent (1 h 30), Super (1 h), ou une course programmée à l'avance au tarif Normal. Le service fonctionne 7j/7, de 7 h à 23 h.",
         ],
       },
       {
@@ -490,7 +490,7 @@ export const GUIDES: Guide[] = [
       {
         question: "Peut-on commander une course le dimanche ?",
         answer:
-          "Oui. Le service fonctionne 7j/7, de 8 h à 19 h, dimanche compris. Pour un envoi prévu à l'avance, vous pouvez programmer la course à la date et à l'heure de votre choix.",
+          "Oui. Le service fonctionne 7j/7, de 7 h à 23 h, dimanche compris. Pour un envoi prévu à l'avance, vous pouvez programmer la course à la date et à l'heure de votre choix.",
       },
       {
         question: "Comment ouvrir un compte pour les courses de l'entreprise ?",
@@ -517,7 +517,7 @@ export const GUIDES: Guide[] = [
         heading: "Livraison le jour même : de quoi parle-t-on",
         paragraphs: [
           "Une livraison le jour même part et arrive dans la même journée de travail. Elle se distingue d'un envoi standard, qui s'organise sur un ou deux jours ouvrés, par une contrainte : l'heure limite de remise compte autant que la distance. Un dossier qui doit être déposé avant la fermeture d'un accueil ne se mesure pas en kilomètres, mais en minutes restantes.",
-          "Dans une course dédiée, un coursier prend l'envoi à une adresse et le remet à une autre, sans passer par un centre de tri. C'est la forme la plus directe de livraison le jour même. Le service fonctionne 7j/7, de 8 h à 19 h : au-delà de cette plage, il faut prévoir une course pour le lendemain.",
+          "Dans une course dédiée, un coursier prend l'envoi à une adresse et le remet à une autre, sans passer par un centre de tri. C'est la forme la plus directe de livraison le jour même. Le service fonctionne 7j/7, de 7 h à 23 h : au-delà de cette plage, il faut prévoir une course pour le lendemain.",
         ],
       },
       {
@@ -573,7 +573,7 @@ export const GUIDES: Guide[] = [
       {
         question: "Peut-on commander une livraison le jour même le dimanche ?",
         answer:
-          "Oui. Le service fonctionne 7j/7, de 8 h à 19 h, dimanche compris. Au-delà de cette plage, la course se programme pour le lendemain.",
+          "Oui. Le service fonctionne 7j/7, de 7 h à 23 h, dimanche compris. Au-delà de cette plage, la course se programme pour le lendemain.",
       },
       {
         question: "Quel est le délai le plus court ?",
@@ -714,7 +714,7 @@ export const GUIDES: Guide[] = [
       {
         heading: "Combien de temps met un coursier express pour livrer en Île-de-France, concrètement",
         paragraphs: [
-          "La réponse directe : le délai total se décompose en deux séquences. D'abord l'enlèvement, annoncé en moins de 45 minutes chez One Connexion, 7 jours sur 7 entre 8h et 19h, sous réserve de disponibilité au moment où vous commandez. Ensuite le trajet jusqu'au destinataire, qui suit la formule retenue. Une course en formule Super vise la livraison sous 1 heure après enlèvement. La formule Urgent vise sous 1 h 30. La formule Normal vise sous 3 heures. Pour un besoin immédiat, voyez notre service de [coursier urgent](/services/coursier-urgent-paris).",
+          "La réponse directe : le délai total se décompose en deux séquences. D'abord l'enlèvement, annoncé en moins de 45 minutes chez One Connexion, 7 jours sur 7 entre 7h et 23h, sous réserve de disponibilité au moment où vous commandez. Ensuite le trajet jusqu'au destinataire, qui suit la formule retenue. Une course en formule Super vise la livraison sous 1 heure après enlèvement. La formule Urgent vise sous 1 h 30. La formule Normal vise sous 3 heures. Pour un besoin immédiat, voyez notre service de [coursier urgent](/services/coursier-urgent-paris).",
           "Ce découpage a son importance. Beaucoup de prestataires communiquent un chiffre unique, du genre « livraison en 1 heure », sans préciser s'il inclut le temps d'enlèvement. Chez One Connexion, la confirmation se fait avant d'engager la course : vous savez à quelle heure le coursier arrive, et vous savez quelle formule vous avez choisie. Le délai annoncé correspond au délai réel parce que la course est dédiée, sans regroupement avec d'autres colis et sans passage par un centre de tri.",
           "Autre point à intégrer : le coursier ne part pas d'un entrepôt. Il part de l'adresse d'enlèvement que vous indiquez. Le trajet est donc celui de votre expédition, pas celui d'un réseau logistique. C'est ce qui rend le calcul lisible : vous connaissez vos deux adresses, vous connaissez l'heure de prise en charge, vous pouvez estimer le reste.",
           "La zone change la donne. Un trajet intra-Paris en deux-roues et un trajet Paris vers la grande couronne ne se jouent pas de la même façon. Le deux-roues passe là où un utilitaire reste bloqué, ce qui fait la différence aux heures de pointe. Sur les trajets vers la banlieue, La Défense, Roissy ou Orly, ce sont les motos routières qui prennent le relais.",
@@ -729,7 +729,7 @@ export const GUIDES: Guide[] = [
           "Vous saisissez les deux adresses, l'enlèvement et la destination. Le prix s'affiche tout de suite, sans inscription.",
           "Vous choisissez la formule : Normal, Urgent ou Super. Chacune correspond à un engagement de délai différent.",
           "La faisabilité et le prix sont confirmés avant que la course ne soit engagée. Si le créneau n'est pas tenable, vous le savez avant, pas après.",
-          "Un coursier passe chercher le pli ou le colis en moins de 45 minutes, dans la plage 8h-19h, 7j/7.",
+          "Un coursier passe chercher le pli ou le colis en moins de 45 minutes, dans la plage 7h-23h, 7j/7.",
           "La course est dédiée : un seul envoi à bord, trajet direct vers le destinataire, sans autre arrêt en route.",
           "La remise est horodatée. Vous suivez l'avancement de la course en ligne jusqu'à la remise.",
           "La facture avec TVA détaillée arrive par e-mail à la livraison. Le paiement se fait par carte via Stripe, ou sur facture à 30 jours pour les comptes entreprise.",
@@ -752,7 +752,7 @@ export const GUIDES: Guide[] = [
       {
         heading: "Les erreurs qui font rater le délai annoncé",
         paragraphs: [
-          "Le premier piège consiste à commander trop tard dans la journée. La plage de service s'arrête à 19h. Une commande passée en fin d'après-midi pour un trajet long vers la grande couronne peut ne plus être tenable, même si l'enlèvement en moins de 45 minutes reste possible. La confirmation de faisabilité existe précisément pour éviter cette déconvenue : elle vous dit si le créneau tient, avant que vous ne comptiez dessus.",
+          "Le premier piège consiste à commander trop tard dans la journée. La plage de service s'arrête à 23h. Une commande passée tard le soir pour un trajet long vers la grande couronne peut ne plus être tenable, même si l'enlèvement en moins de 45 minutes reste possible. La confirmation de faisabilité existe précisément pour éviter cette déconvenue : elle vous dit si le créneau tient, avant que vous ne comptiez dessus.",
           "Le deuxième piège concerne l'adresse. Une adresse imprécise, un bâtiment avec plusieurs entrées, un destinataire absent à l'arrivée : chacun de ces imprévus ajoute du temps que personne n'avait prévu. Sur une course dédiée, le coursier n'a qu'un arrêt, donc pas de marge pour absorber un contretemps. Donnez un numéro de téléphone joignable pour le destinataire, et vérifiez que quelqu'un sera là pour réceptionner.",
           "Troisième erreur fréquente : confondre course dédiée et livraison mutualisée. Si vous commandez une course en pensant qu'elle sera groupée avec d'autres envois pour réduire le coût, vous serez déçu du prix. À l'inverse, si vous commandez une livraison groupée en espérant un délai serré, vous serez déçu du délai. Le choix entre les deux dépend de l'enjeu de l'envoi, et la page course dédiée ou tournée groupée pour entreprise aide à trancher selon votre cas.",
           "Quatrième erreur : négliger la nature du contenu. Un pli confidentiel ne se remet pas à n'importe qui, un prélèvement médical ne se transporte pas à température ambiante. Ces contraintes ne rallongent pas forcément le trajet, mais elles imposent une procédure de remise qui doit être prévue dès la commande. Si votre envoi est un document sensible, la page sur l'envoi d'un pli confidentiel à Paris précise le cadre.",
@@ -783,7 +783,7 @@ export const GUIDES: Guide[] = [
       {
         question: "Combien de temps met un coursier express pour livrer en Île-de-France si je commande maintenant ?",
         answer:
-          "L'enlèvement se fait en moins de 45 minutes, 7j/7 de 8h à 19h, sous réserve de disponibilité confirmée au moment de la commande. Ensuite, la livraison dépend de la formule : sous 3 h en Normal, sous 1 h 30 en Urgent, sous 1 h en Super. La faisabilité est confirmée avant que la course ne démarre.",
+          "L'enlèvement se fait en moins de 45 minutes, 7j/7 de 7h à 23h, sous réserve de disponibilité confirmée au moment de la commande. Ensuite, la livraison dépend de la formule : sous 3 h en Normal, sous 1 h 30 en Urgent, sous 1 h en Super. La faisabilité est confirmée avant que la course ne démarre.",
       },
       {
         question: "Le délai de livraison inclut-il le temps d'enlèvement ?",
@@ -864,7 +864,7 @@ export const GUIDES: Guide[] = [
       {
         heading: "Course ponctuelle ou tournée régulière",
         paragraphs: [
-          "Pour un besoin imprévu (un prélèvement hors tournée du laboratoire, un consommable en rupture), la course dédiée est la plus adaptée : le coursier part de l'établissement et va directement chez le destinataire, sans arrêt intermédiaire, et la remise est horodatée avec le nom du réceptionnaire. Le service fonctionne 7j/7, de 8 h à 19 h.",
+          "Pour un besoin imprévu (un prélèvement hors tournée du laboratoire, un consommable en rupture), la course dédiée est la plus adaptée : le coursier part de l'établissement et va directement chez le destinataire, sans arrêt intermédiaire, et la remise est horodatée avec le nom du réceptionnaire. Le service fonctionne 7j/7, de 7 h à 23 h.",
           "Pour des envois qui reviennent à jours fixes, une tournée régulière avec des heures de passage convenues est plus économique, et un [compte entreprise](/services/compte-entreprise) regroupe les courses sur des factures à régler sous 30 jours. Le détail des engagements figure sur la page de notre service de [transport médical](/services/transport-medical).",
         ],
       },
@@ -873,7 +873,7 @@ export const GUIDES: Guide[] = [
       {
         question: "Un coursier peut-il venir chercher un prélèvement le week-end ?",
         answer:
-          "Oui. Le service fonctionne 7j/7, de 8 h à 19 h, dimanche compris. Vérifiez avant de commander que le laboratoire destinataire réceptionne bien ce jour-là.",
+          "Oui. Le service fonctionne 7j/7, de 7 h à 23 h, dimanche compris. Vérifiez avant de commander que le laboratoire destinataire réceptionne bien ce jour-là.",
       },
       {
         question: "Qui prépare le colis ?",
@@ -942,7 +942,7 @@ export const GUIDES: Guide[] = [
       {
         heading: "Choisir le délai selon le temps de stabilité",
         paragraphs: [
-          "La prise en charge se fait en moins de 45 minutes, 7 jours sur 7 de 8 h à 19 h, sous réserve de disponibilité au moment de la commande. La livraison suit la formule choisie : Normal sous 3 h, Urgent sous 1 h 30 ou Super sous 1 h. Pour un prélèvement, c'est le délai de stabilité qui décide de la formule, et non l'inverse.",
+          "La prise en charge se fait en moins de 45 minutes, 7 jours sur 7 de 7 h à 23 h, sous réserve de disponibilité au moment de la commande. La livraison suit la formule choisie : Normal sous 3 h, Urgent sous 1 h 30 ou Super sous 1 h. Pour un prélèvement, c'est le délai de stabilité qui décide de la formule, et non l'inverse.",
         ],
         table: {
           head: ["Zone", "Normal 3 h", "Urgent 1 h 30", "Super 1 h"],
@@ -992,7 +992,7 @@ export const GUIDES: Guide[] = [
       {
         question: "Quel délai prévoir pour un prélèvement ?",
         answer:
-          "La prise en charge se fait en moins de 45 minutes, 7j/7 de 8 h à 19 h, sous réserve de disponibilité. La livraison suit la formule : sous 3 h, 1 h 30 ou 1 h.",
+          "La prise en charge se fait en moins de 45 minutes, 7j/7 de 7 h à 23 h, sous réserve de disponibilité. La livraison suit la formule : sous 3 h, 1 h 30 ou 1 h.",
       },
     ],
     service: { href: "/services/transport-prelevements-sang", label: "Transport de prélèvements sanguins" },

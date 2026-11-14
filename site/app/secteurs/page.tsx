@@ -93,8 +93,8 @@ const SECTEURS: {
     name: "Juridique & Notarial",
     h2: "Coursier pour les cabinets juridiques",
     tag: "01 - Cabinets & études",
-    color: "border-blue-200 bg-blue-50",
-    iconBg: "bg-blue-100 text-blue-700",
+    color: "border-line bg-paper-card",
+    iconBg: "bg-ink text-white",
     desc: "Cabinets d'avocats, études notariales, offices d'huissiers. Transport de plis confidentiels avec remise en main propre et preuve horodatée.",
     descLink: "Voir aussi notre [coursier avocat et notaire](/services/coursier-avocat-notaire).",
     more: "Un acte déposé après la clôture du greffe est un délai forclos : le coursier part dès la confirmation, remet le pli en main propre et le justificatif nomme le destinataire, l'heure et le lieu. Chaque pli voyage seul, sans regroupement, et la preuve est archivée pour être versée au dossier.",
@@ -113,8 +113,8 @@ const SECTEURS: {
     name: "Médical & Laboratoires",
     h2: "Coursier pour les laboratoires et la santé",
     tag: "02 - Santé & analyses",
-    color: "border-green-200 bg-green-50",
-    iconBg: "bg-green-100 text-green-700",
+    color: "border-line bg-paper-card",
+    iconBg: "bg-ink text-white",
     desc: "Laboratoires d'analyses, cliniques privées, pharmacies hospitalières, CHU. Transport de prélèvements biologiques, matériel médical sensible et médicaments urgents.",
     descLink: "Voir aussi notre [coursier pour laboratoire](/services/coursier-laboratoire).",
     more: "Pour un prélèvement, le contenant isotherme est convenu à la commande et un relevé de température peut être joint lorsque le protocole du laboratoire l'exige. Pour le sang réfrigéré, voyez notre page [transport de prélèvements sanguins](/services/transport-prelevements-sang) ; pour le matériel et les consommables, notre [coursier médical moto](/services/transport-medical).",
@@ -133,8 +133,8 @@ const SECTEURS: {
     name: "E-commerce & Retail",
     h2: "Coursier pour l'e-commerce et la logistique du dernier kilomètre",
     tag: "03 - Commerce en ligne",
-    color: "border-orange-200 bg-orange-50",
-    iconBg: "bg-orange-100 text-orange-700",
+    color: "border-line bg-paper-card",
+    iconBg: "bg-ink text-white",
     desc: "E-commerçants, boutiques de luxe, showrooms et places de marché. Livraison même jour (J+0) avec remise en main propre et preuve de livraison horodatée.",
     more: "Une commande à livrer le jour même, un retour ou un échange urgent : la course est dédiée, la remise est horodatée et le prix s'affiche avant de commander. Voyez notre page [livraison e-commerce](/services/livraison-e-commerce) pour le détail.",
     detail: [
@@ -152,8 +152,8 @@ const SECTEURS: {
     name: "Corporate & Agences",
     h2: "Coursier pour les entreprises et sièges sociaux",
     tag: "04 - Entreprises & conseil",
-    color: "border-purple-200 bg-purple-50",
-    iconBg: "bg-purple-100 text-purple-700",
+    color: "border-line bg-paper-card",
+    iconBg: "bg-ink text-white",
     desc: "Directions générales, agences de communication, cabinets de conseil et studios créatifs. Transport de maquettes, prototypes, contrats et cadeaux d'affaires.",
     more: "Contrats signés entre sièges, maquettes, dossiers d'appel d'offres : un seul interlocuteur connaît vos adresses et vos habitudes, et un [compte entreprise](/services/compte-entreprise) regroupe les courses de vos équipes, avec des factures à régler sous 30 jours.",
     detail: [
@@ -171,8 +171,8 @@ const SECTEURS: {
     name: "Événementiel & Culture",
     h2: "Coursier pour l'événementiel",
     tag: "05 - Événements",
-    color: "border-pink-200 bg-pink-50",
-    iconBg: "bg-pink-100 text-pink-700",
+    color: "border-line bg-paper-card",
+    iconBg: "bg-ink text-white",
     desc: "Organisateurs d'événements, salons professionnels, maisons de production. Transport de matériel de scène, objets d'exposition et supports de communication en temps contraint.",
     more: "Matériel de scène, supports de dernière minute, objets d'exposition : le coursier part pour votre seul envoi et livre directement sur le site de l'événement. Voyez notre page [transport événementiel](/services/transport-evenementiel).",
     detail: [
@@ -189,8 +189,8 @@ const SECTEURS: {
     slug: "entreprises",
     name: "Grands comptes & PME",
     tag: "06 - Comptes entreprise",
-    color: "border-gray-200 bg-gray-50",
-    iconBg: "bg-gray-100 text-gray-700",
+    color: "border-line bg-paper",
+    iconBg: "bg-paper text-muted",
     desc: "Entreprises multi-sites, ETI et grands comptes. Un compte par service ou par site, avec le même SIRET, et des factures à régler sous 30 jours.",
     detail: [
       "Factures à régler sous 30 jours",
@@ -214,12 +214,12 @@ export default function SecteursPage() {
       <section className="relative overflow-hidden bg-ink text-white">
         <HeroBackdrop src={HERO_IMAGES["secteurs"].src} />
         <div className="relative mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-20 pt-16">
-          <nav aria-label="Fil d'Ariane" className="mb-8 font-mono text-[10px] tracking-[0.16em] text-white/40 uppercase">
+          <nav aria-label="Fil d'Ariane" className="mb-8 font-mono text-[11px] tracking-[0.16em] text-white/40 uppercase">
             <Link href="/" className="hover:text-white">Accueil</Link>
             <span className="px-2 text-white/25">›</span>
             <span className="text-white/70">Secteurs d'activité</span>
           </nav>
-          <div className="mb-3 flex items-center gap-3 font-mono text-[10px] tracking-[0.16em] text-accent uppercase">
+          <div className="mb-3 flex items-center gap-3 font-mono text-[11px] tracking-[0.16em] text-accent uppercase">
             <span className="h-px w-6 bg-accent" />
             Secteurs desservis
           </div>
@@ -240,13 +240,13 @@ export default function SecteursPage() {
           {SECTEURS.map((s) => {
             const Icon = s.icon;
             return (
-              <div key={s.slug} className={`flex flex-col gap-5 rounded-2xl border p-8 ${s.color}`}>
+              <div key={s.slug} className={`flex flex-col gap-5 rounded-[4px] border p-8 ${s.color}`}>
                 <div className="flex items-start gap-4">
-                  <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${s.iconBg}`}>
+                  <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-[4px] ${s.iconBg}`}>
                     <Icon size={22} strokeWidth={2} />
                   </div>
                   <div>
-                    <div className="mb-1 font-mono text-[10px] tracking-[0.14em] text-muted uppercase">{s.tag}</div>
+                    <div className="mb-1 font-mono text-[11px] tracking-[0.14em] text-muted uppercase">{s.tag}</div>
                     {s.h2 ? (
                       <h2 className="text-[17px] font-bold text-ink">{s.h2}</h2>
                     ) : (

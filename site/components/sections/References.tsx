@@ -6,7 +6,7 @@
 import { SHOW_TESTIMONIALS } from "@/lib/site-content";
 
 const STATS = [
-  { value: "7j/7", label: "Tous les jours, 8h–19h" },
+  { value: "7j/7", label: "Tous les jours, 7h–23h" },
   { value: "< 45 min", label: "Prise en charge dès validation" },
   { value: "< 45 min", label: "Enlèvement" },
 ];
@@ -41,7 +41,7 @@ export default function References({ hideHeader = false }: { hideHeader?: boolea
                 <div className="text-[clamp(34px,4vw,48px)] font-bold leading-none tracking-[-0.03em]">
                   {stat.value}
                 </div>
-                <div className="mt-2.5 font-mono text-[10.5px] tracking-[0.14em] text-label uppercase">
+                <div className="mt-2.5 font-mono text-[11px] tracking-[0.14em] text-label uppercase">
                   {stat.label}
                 </div>
               </div>
@@ -56,7 +56,7 @@ export default function References({ hideHeader = false }: { hideHeader?: boolea
                 <p className="mb-6 text-pretty text-[17px] leading-[1.6]">{quote}</p>
                 <footer className="flex items-center gap-3.5">
                   <span className="block h-10 w-10 border border-dashed border-[#C9C4BB]" />
-                  <span className="font-mono text-[10.5px] leading-relaxed tracking-[0.12em] text-label uppercase">
+                  <span className="font-mono text-[11px] leading-relaxed tracking-[0.12em] text-label uppercase">
                     Nom du client
                     <br />
                     Fonction - entreprise

@@ -63,12 +63,12 @@ export default function ContactPage() {
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1.5fr_1fr] lg:gap-20">
           
           {/* Formulaire */}
-          <div className="rounded-2xl border border-line bg-white p-6 shadow-xl shadow-ink/5 sm:p-10">
+          <div className="rounded-[4px] border border-line bg-paper-card p-6 shadow-xl shadow-ink/5 sm:p-10">
             <h2 className="mb-2 text-2xl font-bold text-ink">Envoyez-nous un message</h2>
             <p className="mb-8 text-sm text-muted">Nous vous répondrons dans les plus brefs délais.</p>
             
             {isSubmitted ? (
-              <div className="flex flex-col items-center justify-center rounded-xl bg-green-50 px-6 py-12 text-center text-green-700">
+              <div className="flex flex-col items-center justify-center rounded-[4px] bg-green-50 px-6 py-12 text-center text-green-700">
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
                   <Send size={24} className="text-green-600" />
                 </div>
@@ -95,7 +95,7 @@ export default function ContactPage() {
                       required
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full rounded-[6px] border border-line bg-paper px-4 py-3.5 text-[14px] text-ink placeholder:text-label/60 transition-colors focus:border-accent focus:bg-white focus:outline-none focus:ring-2 focus:ring-accent/15"
+                      className="w-full rounded-[6px] border border-line bg-paper px-4 py-3.5 text-[14px] text-ink placeholder:text-label/60 transition-colors focus:border-accent focus:bg-paper-card focus:outline-none focus:ring-2 focus:ring-accent/15"
                       placeholder="Jean Dupont"
                     />
                   </div>
@@ -105,7 +105,7 @@ export default function ContactPage() {
                       type="text"
                       value={formData.company}
                       onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                      className="w-full rounded-[6px] border border-line bg-paper px-4 py-3.5 text-[14px] text-ink placeholder:text-label/60 transition-colors focus:border-accent focus:bg-white focus:outline-none focus:ring-2 focus:ring-accent/15"
+                      className="w-full rounded-[6px] border border-line bg-paper px-4 py-3.5 text-[14px] text-ink placeholder:text-label/60 transition-colors focus:border-accent focus:bg-paper-card focus:outline-none focus:ring-2 focus:ring-accent/15"
                       placeholder="Nom de votre entreprise"
                     />
                   </div>
@@ -118,7 +118,7 @@ export default function ContactPage() {
                     required
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full rounded-[6px] border border-line bg-paper px-4 py-3.5 text-[14px] text-ink placeholder:text-label/60 transition-colors focus:border-accent focus:bg-white focus:outline-none focus:ring-2 focus:ring-accent/15"
+                    className="w-full rounded-[6px] border border-line bg-paper px-4 py-3.5 text-[14px] text-ink placeholder:text-label/60 transition-colors focus:border-accent focus:bg-paper-card focus:outline-none focus:ring-2 focus:ring-accent/15"
                     placeholder="jean@entreprise.com"
                   />
                 </div>
@@ -130,7 +130,7 @@ export default function ContactPage() {
                     rows={5}
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    className="w-full resize-y rounded-[6px] border border-line bg-paper px-4 py-3.5 text-[14px] text-ink placeholder:text-label/60 transition-colors focus:border-accent focus:bg-white focus:outline-none focus:ring-2 focus:ring-accent/15"
+                    className="w-full resize-y rounded-[6px] border border-line bg-paper px-4 py-3.5 text-[14px] text-ink placeholder:text-label/60 transition-colors focus:border-accent focus:bg-paper-card focus:outline-none focus:ring-2 focus:ring-accent/15"
                     placeholder="Décrivez votre besoin de livraison express..."
                   ></textarea>
                 </div>
@@ -153,7 +153,7 @@ export default function ContactPage() {
 
           {/* Informations de contact */}
           <div className="flex flex-col justify-start gap-8">
-            <div className="flex flex-col rounded-2xl bg-ink p-8 text-white shadow-xl">
+            <div className="flex flex-col rounded-[4px] bg-ink p-8 text-white shadow-xl">
               <h3 className="mb-6 text-xl font-bold">Informations directes</h3>
               
               <div className="flex flex-col gap-6">
@@ -187,7 +187,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <div className="font-mono text-[11px] uppercase tracking-wider text-white/50">Horaires d'opération</div>
-                    <div className="mt-1 text-[15px] font-medium">7j/7 - 8h00 à 19h00</div>
+                    <div className="mt-1 text-[15px] font-medium">7j/7 - 7h00 à 23h00</div>
                     <div className="mt-1 text-[13px] text-white/60">Tous les jours, y compris le dimanche.</div>
                   </div>
                 </div>

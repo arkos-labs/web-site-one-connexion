@@ -88,7 +88,7 @@ export default function GuestAccountBox({ trackingCode }: { trackingCode: string
 
   if (state.kind === "loading") {
     return (
-      <div className="mb-6 flex items-center justify-center gap-2 text-sm text-gray-500">
+      <div className="mb-6 flex items-center justify-center gap-2 text-sm text-muted">
         <Loader2 size={16} className="animate-spin" /> Création de votre espace de suivi…
       </div>
     );
@@ -96,7 +96,7 @@ export default function GuestAccountBox({ trackingCode }: { trackingCode: string
 
   if (state.kind === "logged-in") {
     return (
-      <Link href={state.orderId ? `/dashboard/suivi/${state.orderId}` : "/dashboard/suivi"} className="mb-3 flex w-full items-center justify-center gap-2 rounded-lg bg-ink px-6 py-3 text-sm font-bold text-white hover:bg-black">
+      <Link href={state.orderId ? `/dashboard/suivi/${state.orderId}` : "/dashboard/suivi"} className="mb-3 flex w-full items-center justify-center gap-2 rounded-[4px] bg-ink px-6 py-3 text-sm font-bold text-white hover:bg-black">
         <MapPin size={16} /> Suivre ma course
       </Link>
     );
@@ -104,9 +104,9 @@ export default function GuestAccountBox({ trackingCode }: { trackingCode: string
 
   if (state.kind === "existing") {
     return (
-      <form onSubmit={login} className="mb-6 rounded-xl border border-orange-100 bg-orange-50/60 p-4 text-left">
+      <form onSubmit={login} className="mb-6 rounded-[4px] border border-orange-100 bg-orange-50/60 p-4 text-left">
         <p className="text-sm font-bold text-ink">Vous avez déjà un compte</p>
-        <p className="mt-1 text-sm text-gray-600">
+        <p className="mt-1 text-sm text-muted">
           Entrez le mot de passe de <strong>{state.email}</strong> pour suivre votre course.
         </p>
         <input type="email" value={state.email} autoComplete="username" readOnly hidden />
@@ -117,18 +117,18 @@ export default function GuestAccountBox({ trackingCode }: { trackingCode: string
           autoComplete="current-password"
           placeholder="Mot de passe"
           aria-label="Mot de passe"
-          className="mt-3 w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
+          className="mt-3 w-full rounded-[4px] border border-line bg-paper-card px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
         />
         {error && <p role="alert" className="mt-2 text-sm font-semibold text-red-600">{error}</p>}
         <button
           type="submit"
           disabled={busy || !password}
-          className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg bg-ink px-6 py-3 text-sm font-bold text-white hover:bg-black disabled:opacity-60"
+          className="mt-3 flex w-full items-center justify-center gap-2 rounded-[4px] bg-ink px-6 py-3 text-sm font-bold text-white hover:bg-black disabled:opacity-60"
         >
           {busy ? <Loader2 size={16} className="animate-spin" /> : <MapPin size={16} />}
           Suivre ma course
         </button>
-        <Link href="/mot-de-passe-oublie" className="mt-2 block text-center text-xs font-semibold text-gray-500 hover:text-ink hover:underline">
+        <Link href="/mot-de-passe-oublie" className="mt-2 block text-center text-xs font-semibold text-muted hover:text-ink hover:underline">
           Mot de passe oublié ?
         </Link>
       </form>
@@ -138,9 +138,9 @@ export default function GuestAccountBox({ trackingCode }: { trackingCode: string
   if (state.kind === "none") return null;
 
   return (
-    <form onSubmit={follow} className="mb-6 rounded-xl border border-orange-100 bg-orange-50/60 p-4 text-left">
+    <form onSubmit={follow} className="mb-6 rounded-[4px] border border-orange-100 bg-orange-50/60 p-4 text-left">
       <p className="text-sm font-bold text-ink">Suivez votre course en direct</p>
-      <p className="mt-1 text-sm text-gray-600">
+      <p className="mt-1 text-sm text-muted">
         Un espace client a été ouvert avec <strong>{state.email}</strong>. Choisissez un mot de passe pour
         suivre la course et retrouver vos factures.
       </p>
@@ -152,13 +152,13 @@ export default function GuestAccountBox({ trackingCode }: { trackingCode: string
         minLength={8}
         placeholder="Mot de passe (8 caractères minimum)"
         aria-label="Mot de passe"
-        className="mt-3 w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
+        className="mt-3 w-full rounded-[4px] border border-line bg-paper-card px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
       />
       {error && <p role="alert" className="mt-2 text-sm font-semibold text-red-600">{error}</p>}
       <button
         type="submit"
         disabled={busy}
-        className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg bg-ink px-6 py-3 text-sm font-bold text-white hover:bg-black disabled:opacity-60"
+        className="mt-3 flex w-full items-center justify-center gap-2 rounded-[4px] bg-ink px-6 py-3 text-sm font-bold text-white hover:bg-black disabled:opacity-60"
       >
         {busy ? <Loader2 size={16} className="animate-spin" /> : <MapPin size={16} />}
         Suivre ma course

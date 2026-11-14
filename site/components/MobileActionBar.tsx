@@ -26,7 +26,7 @@ export default function MobileActionBar() {
       >
         <a
           href={`tel:${PHONE_TEL}`}
-          className="flex h-12 flex-1 items-center justify-center gap-2 rounded-xl border border-white/20 text-[15px] font-bold text-white active:bg-white/10"
+          className="flex h-12 flex-1 items-center justify-center gap-2 rounded-[2px] border border-white/20 text-[15px] font-bold text-white active:bg-white/10"
         >
           <Phone size={18} className="text-accent" />
           Appeler
@@ -34,7 +34,7 @@ export default function MobileActionBar() {
         <button
           type="button"
           onClick={() => window.dispatchEvent(new CustomEvent("open-order-modal"))}
-          className="flex h-12 flex-[1.4] items-center justify-center rounded-xl bg-accent text-[15px] font-bold text-white active:bg-accent-dark"
+          className="flex h-12 flex-[1.4] items-center justify-center rounded-[2px] bg-accent text-[15px] font-bold text-white active:bg-accent-dark"
         >
           Commander
         </button>

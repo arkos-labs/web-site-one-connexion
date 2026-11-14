@@ -39,7 +39,7 @@ export function withFaqComplements(zone: Zone, faq: ZoneFaqItem[]): ZoneFaqItem[
       topic: /horaire|heure|soir|week|dimanche|samedi/,
       item: {
         q: `Quels sont vos horaires à ${zone.name} ?`,
-        a: `7j/7, de 8h à 19h. Un coursier vient chercher le colis à ${zone.name} en moins de 45 minutes après la confirmation de la course.`,
+        a: `7j/7, de 7h à 23h. Un coursier vient chercher le colis à ${zone.name} en moins de 45 minutes après la confirmation de la course.`,
       },
     },
     {

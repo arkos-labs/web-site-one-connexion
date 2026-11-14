@@ -37,7 +37,7 @@ export const coursierMotoParis: Service = {
   stats: [
     { value: "< 45 min", label: "Prise en charge" },
     { value: "18 kg", label: "Top-case verrouillé" },
-    { value: "7j/7", label: "De 8h à 19h" },
+    { value: "7j/7", label: "De 7h à 23h" },
   ],
 
   context: {

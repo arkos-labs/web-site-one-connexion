@@ -34,12 +34,12 @@ export const coursierExpressParis: Service = {
   h1: "Coursier express Paris : une course dédiée, sans mutualisation",
 
   intro:
-    "Quand un pli, un colis ou une pièce doit partir maintenant, One Connexion envoie un coursier en deux-roues en course dédiée : un enlèvement, un trajet direct, une remise horodatée. Intramuros et Île-de-France, 7j/7 de 8h à 19h.",
+    "Quand un pli, un colis ou une pièce doit partir maintenant, One Connexion envoie un coursier en deux-roues en course dédiée : un enlèvement, un trajet direct, une remise horodatée. Intramuros et Île-de-France, 7j/7 de 7h à 23h.",
 
   stats: [
     { value: "< 45 min", label: "Prise en charge" },
     { value: "1 course", label: "Un envoi, sans regroupement" },
-    { value: "7j/7", label: "De 8h à 19h" },
+    { value: "7j/7", label: "De 7h à 23h" },
   ],
 
   context: {
@@ -150,7 +150,7 @@ export const coursierExpressParis: Service = {
     {
       question: "Travaillez-vous le week-end ?",
       answer:
-        "Oui, nos courses sont prises en charge 7j/7, de 8h à 19h.",
+        "Oui, nos courses sont prises en charge 7j/7, de 7h à 23h.",
     },
   ],
 
@@ -161,9 +161,9 @@ export const coursierExpressParis: Service = {
     extraSections: [
       {
         after: "context",
-        title: "Délais réels : moins de 45 minutes, 7j/7, 8h–19h",
+        title: "Délais réels : moins de 45 minutes, 7j/7, 7h–23h",
         paragraphs: [
-          "Pour une course express, l’enlèvement se fait en moins de 45 minutes, 7j/7 de 8h à 19h, sous réserve de disponibilité au moment de la commande ; nous confirmons le délai avant d’engager la course. Ensuite, le délai de livraison dépend de la formule choisie : Normal sous 3 h, Urgent sous 1 h 30, Super sous 1 h.",
+          "Pour une course express, l’enlèvement se fait en moins de 45 minutes, 7j/7 de 7h à 23h, sous réserve de disponibilité au moment de la commande ; nous confirmons le délai avant d’engager la course. Ensuite, le délai de livraison dépend de la formule choisie : Normal sous 3 h, Urgent sous 1 h 30, Super sous 1 h.",
           "Contrairement à une livraison mutualisée, où votre colis attend la fin d’une tournée avec plusieurs arrêts, la course dédiée part pour votre seul envoi : le délai annoncé est le délai réel. Notre [flotte de coursiers moto](/flotte) se faufile là où un utilitaire reste bloqué, ce qui fait la différence aux heures de pointe. Le prix de chaque formule figure sur la page [tarif coursier Paris](/tarifs) et s’affiche avant de commander.",
         ],
       },

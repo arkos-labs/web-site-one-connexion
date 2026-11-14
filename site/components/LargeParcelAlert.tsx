@@ -8,7 +8,7 @@ import { PHONE_DISPLAY, PHONE_TEL } from "@/lib/site-content";
 
 export default function LargeParcelAlert({ className = "" }: { className?: string }) {
   return (
-    <div role="alert" className={`flex gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 text-left text-sm text-amber-900 ${className}`}>
+    <div role="alert" className={`flex gap-3 rounded-[4px] border border-amber-200 bg-amber-50 p-4 text-left text-sm text-amber-900 ${className}`}>
       <Package size={18} className="mt-0.5 shrink-0 text-amber-600" />
       <div>
         <p className="font-bold">Colis volumineux : appelez-nous avant de commander</p>

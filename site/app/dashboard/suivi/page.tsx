@@ -181,14 +181,14 @@ export default function SuiviPage() {
               <span
                 aria-hidden
                 className={`mt-[4px] box-content h-1.5 w-1.5 shrink-0 rounded-full border-2 ${
-                  pt.kind === "end" ? "border-accent bg-accent" : pt.kind === "start" ? "border-ink bg-white" : "border-label bg-white"
+                  pt.kind === "end" ? "border-accent bg-accent" : pt.kind === "start" ? "border-ink bg-paper-card" : "border-label bg-paper-card"
                 }`}
               />
               <span>{pt.address}</span>
             </li>
           ))}
         </ol>
-        {ev && <p className="mt-1.5 pl-[18px] text-xs text-muted">{ev}</p>}
+        {ev && <p className="mt-1.5 pl-[18px] text-[13px] text-muted">{ev}</p>}
       </div>
     );
   };
@@ -201,14 +201,14 @@ export default function SuiviPage() {
         {items.map((a) => (
           <li
             key={a.id}
-            className={`flex items-start gap-2 rounded-md border px-2.5 py-1.5 text-xs ${
+            className={`flex items-start gap-2 rounded-[4px] border px-2.5 py-1.5 text-[13px] ${
               a.resolved ? "border-line bg-paper-card text-muted" : "border-red-200 bg-red-50 text-red-800"
             }`}
           >
             <AlertTriangle size={14} className={`mt-px shrink-0 ${a.resolved ? "text-label" : "text-red-600"}`} />
             <div className="min-w-0">
               <p className="font-bold">
-                {a.point_index != null && <span className="mr-1.5 bg-red-200/50 px-1.5 py-0.5 rounded text-[10px] uppercase tracking-wider text-red-800">Point N°{a.point_index + 1}</span>}
+                {a.point_index != null && <span className="mr-1.5 bg-red-200/50 px-1.5 py-0.5 rounded text-[11px] uppercase tracking-wider text-red-800">Point N°{a.point_index + 1}</span>}
                 {ANOMALY_STEP[a.step]} · {a.type}
                 <span className="ml-2 font-semibold opacity-70">{a.resolved ? "Résolue" : "En cours de traitement"}</span>
               </p>
@@ -222,7 +222,7 @@ export default function SuiviPage() {
 
   const Price = ({ d }: { d: any }) => {
     const ttc = priceOf(d);
-    if (ttc === null) return <span className="text-xs text-label">-</span>;
+    if (ttc === null) return <span className="text-[13px] text-label">-</span>;
     return (
       <div className="whitespace-nowrap text-right">
         <div className="text-sm font-extrabold tabular-nums text-ink">{eur(ttc)} TTC</div>
@@ -232,7 +232,7 @@ export default function SuiviPage() {
   };
 
   const NavetteTag = () => (
-    <span className="label-mono ml-2 rounded bg-ink/[0.06] px-1.5 py-0.5 text-[10px] font-medium text-muted">Navette</span>
+    <span className="label-mono ml-2 rounded bg-ink/[0.06] px-1.5 py-0.5 text-[11px] font-medium text-muted">Navette</span>
   );
 
   return (
@@ -290,11 +290,11 @@ export default function SuiviPage() {
                     className={`group cursor-pointer transition-colors hover:bg-paper-card ${hasOpen ? "bg-red-50/40" : ""}`}
                   >
                     <td className={`${TD} whitespace-nowrap align-top`}>
-                      <Link href={hrefOf(d)} onClick={(e) => e.stopPropagation()} className="font-mono text-xs font-bold text-ink hover:text-accent-dark">
+                      <Link href={hrefOf(d)} onClick={(e) => e.stopPropagation()} className="font-mono text-[13px] font-bold text-ink hover:text-accent-dark">
                         {d.tracking_code}
                       </Link>
                       {d.type === "navette" && <NavetteTag />}
-                      <div className="mt-1 text-xs text-muted">{formatDate(d.created_at)}</div>
+                      <div className="mt-1 text-[13px] text-muted">{formatDate(d.created_at)}</div>
                     </td>
                     <td className={`${TD} w-full min-w-[300px] align-top`}>
                       <Route d={d} />
@@ -327,7 +327,7 @@ export default function SuiviPage() {
                     </div>
                     <Route d={d} />
                     <div className="flex items-end justify-between gap-3">
-                      <span className="text-xs text-muted">{formatDate(d.created_at)}</span>
+                      <span className="text-[13px] text-muted">{formatDate(d.created_at)}</span>
                       <Price d={d} />
                     </div>
                   </Link>

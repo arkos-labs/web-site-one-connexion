@@ -15,19 +15,19 @@ export default function TrustBlock() {
         <p className="mb-4 text-[15px] font-bold text-ink">Nos coordonnées</p>
         <dl className="grid gap-x-10 gap-y-3 text-[14.5px] leading-[1.6] text-muted sm:grid-cols-2 lg:grid-cols-4">
           <div>
-            <dt className="font-mono text-[10px] tracking-[0.14em] text-label uppercase">Raison sociale</dt>
+            <dt className="font-mono text-[11px] tracking-[0.14em] text-label uppercase">Raison sociale</dt>
             <dd className="text-ink">{LEGAL.denomination}, SAS</dd>
           </div>
           <div>
-            <dt className="font-mono text-[10px] tracking-[0.14em] text-label uppercase">SIRET</dt>
+            <dt className="font-mono text-[11px] tracking-[0.14em] text-label uppercase">SIRET</dt>
             <dd className="text-ink tabular-nums">{LEGAL.siret}</dd>
           </div>
           <div>
-            <dt className="font-mono text-[10px] tracking-[0.14em] text-label uppercase">Adresse</dt>
+            <dt className="font-mono text-[11px] tracking-[0.14em] text-label uppercase">Adresse</dt>
             <dd className="text-ink">{LEGAL.adresse}</dd>
           </div>
           <div>
-            <dt className="font-mono text-[10px] tracking-[0.14em] text-label uppercase">Téléphone</dt>
+            <dt className="font-mono text-[11px] tracking-[0.14em] text-label uppercase">Téléphone</dt>
             <dd>
               <a href={`tel:${PHONE_TEL}`} className="text-ink tabular-nums hover:text-accent-dark">{PHONE_DISPLAY}</a>
             </dd>

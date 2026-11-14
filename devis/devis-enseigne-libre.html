@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Devis DEV-2026-11-001 – Enseigne Libre</title>
+<style>
+  @page { size: A4; margin: 16mm; }
+  body { font: 13px/1.5 Arial, Helvetica, sans-serif; color: #1a1a1a; margin: 0; }
+  h1 { font-size: 24px; margin: 0; }
+  .top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
+  .box { border: 1px solid #ccc; border-radius: 6px; padding: 10px 14px; min-width: 240px; }
+  .muted { color: #666; }
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  th, td { border-bottom: 1px solid #ddd; padding: 8px 6px; text-align: left; vertical-align: top; }
+  th { background: #f4f4f4; font-size: 12px; }
+  td.n, th.n { text-align: right; white-space: nowrap; }
+  .tot { margin-left: auto; width: 280px; }
+  .tot td { border: 0; padding: 3px 6px; }
+  .tot tr.g td { font-weight: bold; font-size: 15px; border-top: 2px solid #1a1a1a; }
+  h2 { font-size: 14px; margin: 22px 0 6px; }
+  ul { margin: 4px 0 0 18px; padding: 0; }
+  .sign { display: flex; gap: 24px; margin-top: 24px; }
+  .sign div { flex: 1; border: 1px solid #ccc; border-radius: 6px; padding: 10px 14px; height: 90px; }
+  footer { margin-top: 28px; font-size: 10px; color: #666; border-top: 1px solid #ddd; padding-top: 8px; }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div>
+    <h1>DEVIS</h1>
+    <div class="muted">N° DEV-2026-11-001<br>Date : 11/11/2026<br>Valable jusqu'au 11/12/2026</div>
+  </div>
+  <div class="box">
+    <strong>ONE CONNEXION</strong><br>
+    5 Square Nungesser<br>94160 Saint-Mandé<br>
+    SIRET 101 517 100 00018<br>
+    TVA FR24 101 517 100
+  </div>
+</div>
+
+<div class="box" style="margin-bottom:8px">
+  <strong>Client : Enseigne Libre</strong><br>
+  19 rue Cambacérès, 75008 Paris
+</div>
+
+<h2>Objet : navette régulière et courses ponctuelles</h2>
+
+<table>
+  <thead>
+    <tr><th>Prestation</th><th class="n">Qté</th><th class="n">P.U. HT</th><th class="n">Total HT</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Navette régulière, mardi et jeudi matin</strong><br>
+        <span class="muted">19 rue Cambacérès, 75008 Paris → accueil Morning, 179 avenue Charles de Gaulle, 92200 Neuilly-sur-Seine.<br>
+        Forfait par passage (petite couronne), coursier dédié, heure fixe à convenir.</span></td>
+      <td class="n">8,67 / mois<br><span class="muted">(2 par semaine)</span></td>
+      <td class="n">29,17 €</td>
+      <td class="n">252,92 €</td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="tot">
+  <tr><td>Total mensuel estimé HT</td><td class="n">252,92 €</td></tr>
+  <tr><td>TVA 20 %</td><td class="n">50,58 €</td></tr>
+  <tr class="g"><td>Total mensuel estimé TTC</td><td class="n">303,50 €</td></tr>
+</table>
+<p class="muted">Le tarif est de <strong>35 € TTC (29,17 € HT) par passage</strong>. Facturation au réel chaque mois, selon le nombre de passages effectués.</p>
+
+<h2>Missions ponctuelles (sur commande, prix par course TTC)</h2>
+<table>
+  <thead><tr><th></th><th class="n">Normal (3 h)</th><th class="n">Urgent (1 h 30)</th><th class="n">Super (1 h)</th></tr></thead>
+  <tbody>
+    <tr><td>Paris intra-muros</td><td class="n">28 €</td><td class="n">42 €</td><td class="n">56 €</td></tr>
+    <tr><td>Petite couronne (92, 93, 94)</td><td class="n">39 €</td><td class="n">58,50 €</td><td class="n">78 €</td></tr>
+    <tr><td>Grande couronne (77, 78, 91, 95)</td><td class="n">dès 59 €</td><td class="n">dès 88,50 €</td><td class="n">dès 118 €</td></tr>
+  </tbody>
+</table>
+<p class="muted">Petite couronne : 8 km de route compris, puis 2 € / 3 € / 4 € par km en plus (Normal / Urgent / Super). Grande couronne : prix selon la distance depuis Paris, affiché avant chaque commande.</p>
+
+<h2>Conditions</h2>
+<ul>
+  <li>Service 7j/7, de 8 h à 19 h. Coursier sur place en moins de 45 minutes pour les courses ponctuelles.</li>
+  <li>Remise en main propre avec confirmation de livraison.</li>
+  <li>Facture mensuelle unique, avec le détail de chaque course. Paiement à 30 jours.</li>
+  <li>À partir du 3e point d'une tournée (autre livraison ou retour au départ), chaque trajet est facturé au kilomètre.</li>
+</ul>
+
+<div class="sign">
+  <div>Bon pour accord, date et signature du client :</div>
+  <div>ONE CONNEXION</div>
+</div>
+
+<footer>
+  ONE CONNEXION – SAS au capital de 3 000,00 € – 5 Square Nungesser, 94160 Saint-Mandé – SIREN 101 517 100, SIRET 101 517 100 00018, TVA intracommunautaire FR24 101 517 100, NAF 49.41B.
+</footer>
+
+</body>
+</html>

@@ -37,15 +37,19 @@ export default function GuidesPage() {
 
         <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-16">
           <div className="grid gap-6 md:grid-cols-3">
-            {GUIDES.map((guide) => (
+            {GUIDES.map((guide, i) => (
               <Link
                 key={guide.slug}
                 href={`/guides/${guide.slug}`}
-                className="group flex flex-col gap-4 rounded-2xl border border-line bg-white p-7 shadow-sm transition-all hover:border-accent/40 hover:shadow-md"
+                className="group flex flex-col gap-4 border border-line bg-paper-card p-7 transition-colors hover:border-ink"
               >
+                <span className="flex items-center gap-3 font-mono text-[12px] tracking-[0.14em] text-muted">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-[2px] bg-ink text-[12px] font-semibold tracking-normal text-white">{String(i + 1).padStart(2, "0")}</span>
+                  GUIDE
+                </span>
                 <h2 className="text-[19px] font-bold leading-[1.25] tracking-[-0.01em] text-ink">{guide.title}</h2>
                 <p className="flex-1 text-[14.5px] leading-[1.65] text-muted">{guide.summary}</p>
-                <span className="flex items-center gap-1.5 text-[13px] font-bold text-accent">
+                <span className="flex items-center gap-1.5 border-t border-line pt-4 text-[13.5px] font-bold text-accent-dark">
                   Lire le guide
                   <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
                 </span>

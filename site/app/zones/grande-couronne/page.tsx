@@ -3,6 +3,7 @@
  * Page locale grande couronne (77/78/91/95). Requête visée : « coursier grand Paris ».
  * « coursier Île-de-France » appartient à l'accueil.
  */
+import QuickOrderBar from "@/components/QuickOrderBar";
 import type { Metadata } from "next";
 import Link from "next/link";
 import JsonLd from "@/components/JsonLd";
@@ -56,7 +57,7 @@ const FAQ = [
   { q: "Quel est le prix d’une course en grande couronne ?", a: `En grande couronne, le prix suit la distance entre Paris et l’adresse la plus éloignée du trajet, retour du coursier compris. En délai Normal (3 h) : ${normal("Versailles 78")} TTC pour Versailles, ${normal("Évry-Courcouronnes 91")} pour Évry, ${normal("Cergy 95")} pour Cergy, ${normal("Meaux 77")} pour Meaux. L’Urgent (1 h 30) coûte 1,5 fois ce prix, le Super (1 h) 2 fois.` },
   { q: "Faites-vous les trajets entre la grande couronne et Paris ?", a: "Oui, dans les deux sens, et aussi vers la petite couronne ou une autre commune de grande couronne. Le coursier va directement de l’enlèvement à la remise." },
   { q: "Quel poids peut-on vous confier ?", a: "Jusqu’à 18 kg, dans le top-case d’un deux-roues. Au-delà de 10 kg, ou pour un colis encombrant, appelez-nous avant de commander." },
-  { q: "Quels sont vos horaires en grande couronne ?", a: "7j/7, de 8h à 19h, comme à Paris." },
+  { q: "Quels sont vos horaires en grande couronne ?", a: "7j/7, de 7h à 23h, comme à Paris." },
   { q: "Ma commune n’a pas de page, est-elle desservie ?", a: "Les quatre départements de grande couronne sont desservis. Saisissez l’adresse dans le formulaire de commande : le prix s’affiche tout de suite, ou appelez-nous en cas de doute." },
 ];
 
@@ -82,14 +83,14 @@ export default function ZoneGrandeCouronne() {
 
       <section className="bg-ink text-white">
         <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-20 pt-16">
-          <nav aria-label="Fil d'Ariane" className="mb-8 font-mono text-[10px] tracking-[0.16em] text-white/40 uppercase">
+          <nav aria-label="Fil d'Ariane" className="mb-8 font-mono text-[11px] tracking-[0.16em] text-white/40 uppercase">
             <Link href="/" className="hover:text-white">Accueil</Link>
             <span className="px-2 text-white/25">›</span>
             <Link href="/zones" className="hover:text-white">Zones</Link>
             <span className="px-2 text-white/25">›</span>
             <span className="text-white/70">Grande couronne</span>
           </nav>
-          <div className="mb-3 flex items-center gap-3 font-mono text-[10px] tracking-[0.16em] text-accent uppercase">
+          <div className="mb-3 flex items-center gap-3 font-mono text-[11px] tracking-[0.16em] text-accent uppercase">
             <span className="h-px w-6 bg-accent" />
             Zone couverte · 77 / 78 / 91 / 95
           </div>
@@ -101,10 +102,8 @@ export default function ZoneGrandeCouronne() {
             ou votre colis et le livre directement, vers Paris, la petite couronne ou une autre
             commune de la grande couronne.
           </p>
-          <div className="mt-10 flex flex-wrap gap-3">
-            <a href="/#commander" className="rounded-[2px] bg-accent px-[26px] py-[15px] text-[15px] font-semibold text-white hover:bg-accent-dark">
-              Commander une course
-            </a>
+          <QuickOrderBar className="mt-10 max-w-[1000px]" />
+          <div className="mt-5 flex flex-wrap gap-3">
             <Link href="/tarifs" className="rounded-[2px] border border-white/22 px-[26px] py-[15px] text-[15px] font-semibold text-white hover:border-white">
               Voir les tarifs
             </Link>
@@ -130,14 +129,14 @@ export default function ZoneGrandeCouronne() {
           <p className="mb-8 max-w-[62ch] text-[15.5px] leading-[1.7] text-muted">
             Un prix selon la distance, connu avant de commander. Exemples de courses au départ ou à l’arrivée de Paris :
           </p>
-          <div className="overflow-x-auto rounded-xl border border-line bg-white">
+          <div className="overflow-x-auto rounded-[4px] border border-line bg-paper-card">
             <table className="w-full min-w-[520px] border-collapse text-[14.5px]">
               <thead>
                 <tr className="border-b border-line">
-                  <th className="p-4 text-left font-mono text-[10px] tracking-[0.14em] text-label uppercase">Course Paris ↔</th>
-                  <th className="p-4 text-right font-mono text-[10px] tracking-[0.14em] text-label uppercase">Normal · 3 h</th>
-                  <th className="p-4 text-right font-mono text-[10px] tracking-[0.14em] text-label uppercase">Urgent · 1 h 30</th>
-                  <th className="p-4 text-right font-mono text-[10px] tracking-[0.14em] text-label uppercase">Super · 1 h</th>
+                  <th className="p-4 text-left font-mono text-[11px] tracking-[0.14em] text-label uppercase">Course Paris ↔</th>
+                  <th className="p-4 text-right font-mono text-[11px] tracking-[0.14em] text-label uppercase">Normal · 3 h</th>
+                  <th className="p-4 text-right font-mono text-[11px] tracking-[0.14em] text-label uppercase">Urgent · 1 h 30</th>
+                  <th className="p-4 text-right font-mono text-[11px] tracking-[0.14em] text-label uppercase">Super · 1 h</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-line">
@@ -170,12 +169,12 @@ export default function ZoneGrandeCouronne() {
             <Link
               key={s.slug}
               href={`/services/${s.slug}`}
-              className="flex flex-col gap-2 rounded-xl border border-line bg-paper-card p-6 hover:border-ink transition-colors"
+              className="flex flex-col gap-2 rounded-[4px] border border-line bg-paper-card p-6 hover:border-ink transition-colors"
             >
-              <div className="font-mono text-[10px] tracking-[0.14em] text-label uppercase">{s.card.tag}</div>
+              <div className="font-mono text-[11px] tracking-[0.14em] text-label uppercase">{s.card.tag}</div>
               <h3 className="font-bold tracking-[-0.01em]">{s.card.title}</h3>
               <p className="text-[13.5px] leading-[1.55] text-muted flex-1">{s.card.body}</p>
-              <div className="mt-4 font-mono text-[10px] tracking-[0.1em] text-accent-dark uppercase">Voir →</div>
+              <div className="mt-4 font-mono text-[11px] tracking-[0.1em] text-accent-dark uppercase">Voir →</div>
             </Link>
           ))}
         </div>
@@ -202,7 +201,7 @@ export default function ZoneGrandeCouronne() {
           </div>
           <div className="flex flex-col gap-4">
             {FAQ.map((faq) => (
-              <div key={faq.q} className="rounded-xl border border-line bg-white p-5 hover:border-accent/30 transition-colors">
+              <div key={faq.q} className="rounded-[4px] border border-line bg-paper-card p-5 hover:border-accent/30 transition-colors">
                 <h3 className="mb-2 text-[15.5px] font-bold text-ink">{faq.q}</h3>
                 <p className="text-[14.5px] leading-[1.65] text-muted">{faq.a}</p>
               </div>
@@ -216,13 +215,13 @@ export default function ZoneGrandeCouronne() {
         <div className="border-t border-line pt-12">
           <div className="mb-6 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">Autres zones</div>
           <div className="flex flex-wrap gap-3">
-            <Link href="/zones/paris" className="rounded-lg border border-line bg-paper-card px-4 py-2.5 text-[13.5px] font-medium hover:border-ink">
+            <Link href="/zones/paris" className="rounded-[4px] border border-line bg-paper-card px-4 py-2.5 text-[13.5px] font-medium hover:border-ink">
               Paris intramuros (75)
             </Link>
-            <Link href="/zones/petite-couronne" className="rounded-lg border border-line bg-paper-card px-4 py-2.5 text-[13.5px] font-medium hover:border-ink">
+            <Link href="/zones/petite-couronne" className="rounded-[4px] border border-line bg-paper-card px-4 py-2.5 text-[13.5px] font-medium hover:border-ink">
               Petite couronne (92, 93, 94)
             </Link>
-            <Link href="/zones/la-defense" className="rounded-lg border border-line bg-paper-card px-4 py-2.5 text-[13.5px] font-medium hover:border-ink">
+            <Link href="/zones/la-defense" className="rounded-[4px] border border-line bg-paper-card px-4 py-2.5 text-[13.5px] font-medium hover:border-ink">
               La Défense
             </Link>
           </div>
@@ -236,7 +235,7 @@ export default function ZoneGrandeCouronne() {
               <p className="mb-3 text-[clamp(24px,3vw,36px)] font-bold leading-[1.2] tracking-[-0.02em]">
                 Une course en grande couronne maintenant ?
               </p>
-              <p className="text-[15px] text-white/60">7j/7, de 8h à 19h.</p>
+              <p className="text-[15px] text-white/60">7j/7, de 7h à 23h.</p>
             </div>
             <a href={`tel:${PHONE_TEL}`} className="rounded-[4px] bg-accent px-8 py-4 text-center text-[15px] font-bold text-white hover:bg-accent-dark">
               {PHONE_DISPLAY}

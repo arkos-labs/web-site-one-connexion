@@ -181,17 +181,17 @@ export default function AdressesPage() {
                 {addresses.map((addr) => (
                   <li
                     key={addr.id}
-                    className="group flex flex-col rounded-xl border border-line bg-white p-4 transition-colors hover:border-[#c9c5bd]"
+                    className="group flex flex-col rounded-[4px] border border-line bg-paper-card p-4 transition-colors hover:border-[#c9c5bd]"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex min-w-0 items-center gap-3">
-                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent/10 text-accent-dark">
+                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[4px] bg-accent/10 text-accent-dark">
                           <MapPin size={17} strokeWidth={2.25} />
                         </span>
                         <div className="min-w-0">
-                          <h2 className="truncate text-sm font-extrabold text-ink">{addr.label}</h2>
+                          <h2 className="break-words text-sm font-extrabold leading-snug text-ink">{addr.label}</h2>
                           {addr.is_default && (
-                            <span className="label-mono inline-flex items-center gap-1 text-[10px] font-medium text-accent-dark">
+                            <span className="label-mono inline-flex items-center gap-1 text-[11px] font-medium text-accent-dark">
                               <Star size={10} fill="currentColor" /> Par défaut
                             </span>
                           )}
@@ -201,7 +201,7 @@ export default function AdressesPage() {
                         type="button"
                         onClick={() => handleDelete(addr.id)}
                         aria-label={`Supprimer ${addr.label}`}
-                        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-label transition-colors hover:bg-red-50 hover:text-red-600"
+                        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[4px] text-label transition-colors hover:bg-red-50 hover:text-red-600"
                       >
                         <Trash2 size={16} />
                       </button>
@@ -228,7 +228,7 @@ export default function AdressesPage() {
                   <button
                     type="button"
                     onClick={openModal}
-                    className="flex h-full min-h-[104px] w-full items-center justify-center gap-2 rounded-xl border border-dashed border-[#c9c5bd] bg-transparent text-sm font-bold text-muted transition-colors hover:border-accent hover:bg-accent/5 hover:text-accent-dark"
+                    className="flex h-full min-h-[104px] w-full items-center justify-center gap-2 rounded-[4px] border border-dashed border-[#c9c5bd] bg-transparent text-sm font-bold text-muted transition-colors hover:border-accent hover:bg-accent/5 hover:text-accent-dark"
                   >
                     <Plus size={16} strokeWidth={2.5} />
                     Ajouter une adresse
@@ -250,7 +250,7 @@ export default function AdressesPage() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="addr-title"
-            className="step-enter w-full max-w-lg rounded-2xl bg-white shadow-2xl"
+            className="step-enter w-full max-w-lg rounded-[4px] bg-paper-card shadow-2xl"
           >
             <div className="flex items-center justify-between border-b border-line px-6 py-4">
               <h2 id="addr-title" className="text-lg font-extrabold tracking-tight text-ink">Nouvelle adresse</h2>
@@ -258,7 +258,7 @@ export default function AdressesPage() {
                 type="button"
                 onClick={() => setIsModalOpen(false)}
                 aria-label="Fermer"
-                className="flex h-9 w-9 items-center justify-center rounded-lg text-label transition-colors hover:bg-paper hover:text-ink"
+                className="flex h-9 w-9 items-center justify-center rounded-[4px] text-label transition-colors hover:bg-paper hover:text-ink"
               >
                 <X size={18} />
               </button>
@@ -266,7 +266,7 @@ export default function AdressesPage() {
 
             <form className="flex flex-col gap-4 p-6" onSubmit={handleSubmit}>
               {submitError && (
-                <div role="alert" className="rounded-lg bg-red-50 px-3 py-2.5 text-xs font-medium text-red-700">
+                <div role="alert" className="rounded-[4px] bg-red-50 px-3 py-2.5 text-xs font-medium text-red-700">
                   {submitError}
                 </div>
               )}
@@ -286,7 +286,7 @@ export default function AdressesPage() {
 
               <div>
                 <span className={LABEL}>Adresse complète</span>
-                <div className="[&_input]:h-11 [&_input]:rounded-lg [&_input]:bg-white [&_input]:py-0 [&_input]:font-medium [&_input]:focus:ring-2 [&_input]:focus:ring-accent/15">
+                <div className="[&_input]:h-11 [&_input]:rounded-[4px] [&_input]:bg-paper-card [&_input]:py-0 [&_input]:font-medium [&_input]:focus:ring-2 [&_input]:focus:ring-accent/15">
                   <AddressAutocomplete value={address} onChange={setAddress} required={true} />
                 </div>
                 {showZoneAlert && <UnservedAddressAlert className="mt-3" />}

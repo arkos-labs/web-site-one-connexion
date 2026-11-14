@@ -69,7 +69,7 @@ export default function EditNavettePage() {
 
   if (loading) {
     return (
-      <div className="rounded-2xl border border-line bg-white">
+      <div className="rounded-[4px] border border-line bg-paper-card">
         <LoadingState text="Chargement de la navette…" />
       </div>
     );
@@ -83,7 +83,7 @@ export default function EditNavettePage() {
     return (
       <PageShell back={back} eyebrow="Navette récurrente" title="Modification impossible" subtitle="Cette navette est en cours de livraison aujourd'hui.">
         <div className="flex flex-col items-center gap-4 bg-paper-card px-6 py-14 text-center">
-          <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-100 text-amber-700">
+          <span className="flex h-14 w-14 items-center justify-center rounded-[4px] bg-amber-100 text-amber-700">
             <AlertTriangle size={26} />
           </span>
           <p className="max-w-md text-sm leading-relaxed text-muted">

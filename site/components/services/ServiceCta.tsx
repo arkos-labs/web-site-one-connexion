@@ -42,13 +42,13 @@ export default function ServiceCta({
         <div className="flex min-w-0 flex-wrap justify-end gap-3">
           <a
             href={`tel:${PHONE_TEL}`}
-            className="rounded-[2px] bg-ink px-[26px] py-4 text-[15px] font-semibold text-white hover:bg-white hover:text-ink"
+            className="rounded-[2px] bg-ink px-[26px] py-4 text-[15px] font-semibold text-white hover:bg-paper-card hover:text-ink"
           >
             {PHONE_DISPLAY}
           </a>
           <a
             href="/#commander"
-            className="rounded-[2px] border border-white/60 px-[26px] py-4 text-[15px] font-semibold text-white hover:border-white hover:bg-white hover:text-accent"
+            className="rounded-[2px] border border-white/60 px-[26px] py-4 text-[15px] font-semibold text-white hover:border-white hover:bg-paper-card hover:text-accent"
           >
             Commander une course
           </a>

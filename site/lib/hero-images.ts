@@ -15,7 +15,7 @@ export const HERO_IMAGES: Record<string, { src: string; credit: string; position
   "coursier-moto-paris": { src: "/images/hero/coursier-moto-paris.jpg", credit: "Unsplash", position: "center 92%" },
   paris: { src: "/images/hero/paris.jpg", credit: "Unsplash" },
   "ile-de-france": { src: "/images/hero/ile-de-france.jpg", credit: "Unsplash" },
-  tarifs: { src: "/images/hero/tarifs.jpg", credit: "Unsplash" },
+  tarifs: { src: "/images/hero/coursier-express-paris.jpg", credit: "Unsplash" },
   secteurs: { src: "/images/hero/secteurs.jpg", credit: "Unsplash" },
   "paris-1er": { src: "/images/hero/paris-1er.jpg", credit: "Unsplash" },
   "paris-3e": { src: "/images/hero/paris-3e.jpg", credit: "Unsplash" },

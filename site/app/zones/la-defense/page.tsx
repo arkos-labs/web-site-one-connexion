@@ -3,6 +3,7 @@
  * Page locale La Défense. Requête visée : « coursier La Défense ».
  * Pas de prix sur cette page : ils vivent sur /tarifs.
  */
+import QuickOrderBar from "@/components/QuickOrderBar";
 import type { Metadata } from "next";
 import Link from "next/link";
 import JsonLd from "@/components/JsonLd";
@@ -50,7 +51,7 @@ const VILLES = [
 const STATS = [
   { value: "< 45 min", label: "Enlèvement" },
   { value: "1 course", label: "Un envoi, sans regroupement" },
-  { value: "7j/7", label: "De 8h à 19h" },
+  { value: "7j/7", label: "De 7h à 23h" },
   { value: "92", label: "Dépt. couvert" },
 ];
 
@@ -61,7 +62,7 @@ const FAQ = [
   },
   {
     q: "Quels sont vos horaires à La Défense ?",
-    a: "Nous prenons en charge vos courses 7j/7, de 8h à 19h, sur tout le parvis de La Défense et dans les communes limitrophes (Courbevoie, Puteaux, Nanterre).",
+    a: "Nous prenons en charge vos courses 7j/7, de 7h à 23h, sur tout le parvis de La Défense et dans les communes limitrophes (Courbevoie, Puteaux, Nanterre).",
   },
   {
     q: "Pouvez-vous transporter un pli confidentiel depuis La Défense ?",
@@ -105,14 +106,14 @@ export default function ZonelaDefense() {
 
       <section className="bg-ink text-white">
         <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-20 pt-16">
-          <nav aria-label="Fil d'Ariane" className="mb-8 font-mono text-[10px] tracking-[0.16em] text-white/40 uppercase">
+          <nav aria-label="Fil d'Ariane" className="mb-8 font-mono text-[11px] tracking-[0.16em] text-white/40 uppercase">
             <Link href="/" className="hover:text-white">Accueil</Link>
             <span className="px-2 text-white/25">›</span>
             <Link href="/zones" className="hover:text-white">Zones</Link>
             <span className="px-2 text-white/25">›</span>
             <span className="text-white/70">La Défense & Hauts-de-Seine (92)</span>
           </nav>
-          <div className="mb-3 flex items-center gap-3 font-mono text-[10px] tracking-[0.16em] text-accent uppercase">
+          <div className="mb-3 flex items-center gap-3 font-mono text-[11px] tracking-[0.16em] text-accent uppercase">
             <span className="h-px w-6 bg-accent" />
             Zone couverte · Hauts-de-Seine 92
           </div>
@@ -125,14 +126,7 @@ export default function ZonelaDefense() {
             envoie un coursier par envoi, qui va directement de l&apos;enlèvement
             à la remise.
           </p>
-          <div className="mt-10 flex flex-wrap gap-3">
-            <a
-              href="/#commander"
-              className="rounded-[2px] bg-accent px-[26px] py-[15px] text-[15px] font-semibold text-white hover:bg-accent-dark"
-            >
-              Commander une course
-            </a>
-          </div>
+          <QuickOrderBar className="mt-10 max-w-[1000px]" />
         </div>
         <div className="border-t border-white/10">
           <div className="mx-auto grid max-w-[1240px] grid-cols-2 divide-x divide-white/10 px-[clamp(20px,4vw,28px)] md:grid-cols-4 md:divide-y-0">
@@ -178,7 +172,7 @@ export default function ZonelaDefense() {
                   <span className="text-[13px] text-muted hover:text-ink">{v}</span>
                 </>
               );
-              const box = "flex items-center gap-2 rounded-lg border border-line bg-white px-3 py-2.5";
+              const box = "flex items-center gap-2 rounded-[4px] border border-line bg-paper-card px-3 py-2.5";
               // Lien uniquement si la ville a une page dédiée (sinon 404).
               return slug !== "la-defense" && getZone(slug) ? (
                 <Link key={v} href={`/zones/${slug}`} className={`${box} transition-colors hover:border-accent`}>{inner}</Link>
@@ -199,7 +193,7 @@ export default function ZonelaDefense() {
             Le temps de trajet moyen entre La Défense et Paris Centre est inférieur à 20 minutes en dehors des
             pointes de trafic. Nos motos routières empruntent l&apos;A14, l&apos;A86 et le périphérique, là où une
             camionnette reste prise dans les bouchons. L&apos;enlèvement dans les tours se fait en moins de 45
-            minutes, 7j/7 de 8h à 19h, sous réserve de disponibilité au moment de la commande, puis la course part
+            minutes, 7j/7 de 7h à 23h, sous réserve de disponibilité au moment de la commande, puis la course part
             directement vers le destinataire.
           </p>
           <p>
@@ -232,19 +226,19 @@ export default function ZonelaDefense() {
             <Link
               key={s.slug}
               href={`/services/${s.slug}`}
-              className="flex flex-col gap-2 rounded-xl border border-line bg-paper-card p-6 hover:border-ink transition-colors"
+              className="flex flex-col gap-2 rounded-[4px] border border-line bg-paper-card p-6 hover:border-ink transition-colors"
             >
-              <div className="font-mono text-[10px] tracking-[0.14em] text-label uppercase">{s.card.tag}</div>
+              <div className="font-mono text-[11px] tracking-[0.14em] text-label uppercase">{s.card.tag}</div>
               <h3 className="font-bold tracking-[-0.01em]">{s.card.title}</h3>
               <p className="text-[13.5px] leading-[1.55] text-muted flex-1">{s.card.body}</p>
-              <div className="mt-4 font-mono text-[10px] tracking-[0.1em] text-accent-dark uppercase">Voir →</div>
+              <div className="mt-4 font-mono text-[11px] tracking-[0.1em] text-accent-dark uppercase">Voir →</div>
             </Link>
           ))}
         </div>
       </section>
 
       {/* ── 3. Organiser une course ── */}
-      <section className="bg-paper border-t border-gray-100">
+      <section className="bg-paper border-t border-line">
         <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[72px]">
           <div className="mb-4 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase text-center">Processus simple</div>
           <h2 className={`mb-12 text-center ${H2}`}>Organiser une course à La Défense</h2>
@@ -254,7 +248,7 @@ export default function ZonelaDefense() {
               { num: "02", title: "Prise en charge rapide", desc: "Un coursier dédié se présente à l'adresse indiquée (La Défense, Nanterre, etc.) en moins de 45 minutes." },
               { num: "03", title: "Suivi & Confirmation", desc: "Suivez l'avancement de votre course en ligne et retrouvez la preuve de remise une fois le pli remis en main propre." }
             ].map((step) => (
-              <div key={step.num} className="flex flex-col items-center text-center p-6 bg-white rounded-2xl border border-line shadow-sm">
+              <div key={step.num} className="flex flex-col items-center text-center p-6 bg-paper-card rounded-[4px] border border-line shadow-sm">
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-accent text-[16px] font-bold text-white shadow-md">
                   {step.num}
                 </div>
@@ -287,7 +281,7 @@ export default function ZonelaDefense() {
           </div>
           <div className="flex flex-col gap-4">
             {FAQ.map((faq, i) => (
-              <div key={i} className="rounded-xl border border-line bg-white p-5 hover:border-accent/30 transition-colors">
+              <div key={i} className="rounded-[4px] border border-line bg-paper-card p-5 hover:border-accent/30 transition-colors">
                 <h3 className="mb-2 text-[15.5px] font-bold text-ink">{faq.q}</h3>
                 <p className="text-[14.5px] leading-[1.65] text-muted">{faq.a}</p>
               </div>
@@ -304,7 +298,7 @@ export default function ZonelaDefense() {
               <p className="mb-3 text-[clamp(24px,3vw,36px)] font-bold leading-[1.2] tracking-[-0.02em]">
                 Une course dans le 92 maintenant ?
               </p>
-              <p className="text-[15px] text-white/60">Prise en charge en moins de 2 minutes, 7j/7 de 8h à 19h.</p>
+              <p className="text-[15px] text-white/60">Prise en charge en moins de 2 minutes, 7j/7 de 7h à 23h.</p>
             </div>
             <a href={`tel:${PHONE_TEL}`} className="rounded-[4px] bg-accent px-8 py-4 text-center text-[15px] font-bold text-white hover:bg-accent-dark">
               {PHONE_DISPLAY}

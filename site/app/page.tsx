@@ -1,12 +1,14 @@
 import Hero from "@/components/sections/Hero";
 import About from "@/components/sections/About";
-import OrderForm from "@/components/sections/OrderForm";
+import OrderCta from "@/components/sections/OrderCta";
+import ZonesDiagram from "@/components/zones/ZonesDiagram";
 import Contact from "@/components/sections/Contact";
 import Faq from "@/components/sections/Faq";
 import JsonLd from "@/components/JsonLd";
 import Services from "@/components/sections/Services";
 import TrustStrip from "@/components/sections/TrustStrip";
 import Link from "next/link";
+import { Clock, MapPinned, Headset } from "lucide-react";
 import type { Metadata } from "next";
 import { LEGAL, PHONE_TEL, EMAIL, SITE_URL, MAPS_URL } from "@/lib/site-content";
 import { getZonesByCategory } from "@/lib/zones/data";
@@ -77,8 +79,8 @@ const organizationSchema = {
     {
       "@type": "OpeningHoursSpecification",
       dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-      opens: "08:00",
-      closes: "19:00",
+      opens: "07:00",
+      closes: "23:00",
     },
   ],
   priceRange: "€€",
@@ -112,9 +114,9 @@ export default function Home() {
       <Hero />
       <TrustStrip />
       <Services />
-      <OrderForm />
-      <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[88px]">
-        <div className="mb-3 flex items-center gap-3 font-mono text-[10px] tracking-[0.16em] text-accent uppercase">
+      <OrderCta />
+      <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[64px] md:py-[88px]">
+        <div className="mb-3 flex items-center gap-3 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
           <span className="h-px w-6 bg-accent" />
           Zones desservies
         </div>
@@ -127,15 +129,20 @@ export default function Home() {
           <Link href="/zones/paris" className="text-ink underline underline-offset-2">coursier Paris</Link> et notre{" "}
           <Link href="/tarifs" className="text-ink underline underline-offset-2">tarif coursier Paris</Link>.
         </p>
-        <ul className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-5">
-          {getZonesByCategory("paris").map((z) => (
-            <li key={z.slug}>
-              <Link href={`/zones/${z.slug}`} className="block rounded-lg border border-gray-100 bg-white px-4 py-3 text-[14px] font-medium text-ink transition-colors hover:border-accent/30 hover:text-accent-dark">
-                {z.name}
-              </Link>
-            </li>
-          ))}
-        </ul>
+        <div className="grid items-center gap-10 lg:grid-cols-[360px_1fr] lg:gap-14">
+          <div className="mx-auto w-full max-w-[320px] lg:max-w-none">
+            <ZonesDiagram />
+          </div>
+          <ul className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+              {getZonesByCategory("paris").map((z) => (
+                <li key={z.slug}>
+                  <Link href={`/zones/${z.slug}`} className="block rounded-[2px] border border-line bg-paper-card px-4 py-3 text-[14px] font-medium text-ink transition-colors hover:border-ink hover:text-ink">
+                    {z.name}
+                  </Link>
+                </li>
+              ))}
+          </ul>
+        </div>
 
         <p className="mb-4 mt-16 max-w-[26ch] text-balance text-[clamp(22px,2.5vw,30px)] font-bold leading-[1.15] tracking-[-0.02em]">
           Hors de Paris aussi, on arrive vite.
@@ -150,7 +157,7 @@ export default function Home() {
           <Link href="/zones/grande-couronne" className="text-ink underline underline-offset-2">Grande couronne : 77, 78, 91, 95</Link>
           <Link href="/zones" className="text-ink underline underline-offset-2">Voir toutes nos villes</Link>
         </div>
-        <div className="mt-6 rounded-xl bg-ink px-6 py-6 text-white sm:px-8">
+        <div className="mt-6 rounded-[4px] bg-ink px-6 py-6 text-white sm:px-8">
           <div>
             <p className="text-[19px] font-bold leading-tight">Vous ne voyez pas votre ville ? Pas de souci.</p>
             <p className="mt-2 text-[14px] leading-[1.6] text-white/70">
@@ -161,7 +168,7 @@ export default function Home() {
         </div>
       </section>
       <About />
-      <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[88px]">
+      <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[64px] md:py-[88px]">
         <h2 className="mb-6 max-w-[26ch] text-balance text-[clamp(26px,3vw,38px)] font-bold leading-[1.1] tracking-[-0.03em]">
           Coursier Île-de-France : ce que change une flotte propre
         </h2>
@@ -171,15 +178,24 @@ export default function Home() {
             One Connexion, vos courses sont assurées par notre propre flotte de deux-roues, pas par une plateforme
             qui distribue les envois à des livreurs différents chaque jour. Le dispatcheur qui connaît votre
             dossier affecte le coursier le plus proche, qui prend votre envoi en charge en moins de 45 minutes, 7j/7
-            de 8h à 19h, et le conduit directement à destination, sans regroupement.
+            de 7h à 23h, et le conduit directement à destination, sans regroupement.
           </p>
-          <p>
-            Cette organisation change trois choses. La ponctualité d&apos;abord : le délai annoncé est le délai
-            réel, puisque votre colis n&apos;attend pas d&apos;autres envois. La traçabilité ensuite :
-            l&apos;avancement de la course est visible en ligne et la remise est horodatée avec le nom du
-            destinataire, ce qui en fait une preuve pour vos dossiers. L&apos;interlocuteur unique enfin : une
-            ligne directe avec votre dispatcheur plutôt qu&apos;un standard.
-          </p>
+        </div>
+        <p className="mb-5 mt-10 text-[17px] font-bold text-ink">Cette organisation change trois choses.</p>
+        <ul className="mb-10 grid gap-4 md:grid-cols-3">
+          {[
+            { icon: Clock, title: "La ponctualité", body: "Le délai annoncé est le délai réel, puisque votre colis n'attend pas d'autres envois." },
+            { icon: MapPinned, title: "La traçabilité", body: "L'avancement de la course est visible en ligne et la remise est horodatée avec le nom du destinataire, ce qui en fait une preuve pour vos dossiers." },
+            { icon: Headset, title: "L'interlocuteur unique", body: "Une ligne directe avec votre dispatcheur plutôt qu'un standard." },
+          ].map(({ icon: Icon, title, body }) => (
+            <li key={title} className="border border-line bg-paper-card p-6">
+              <Icon size={22} strokeWidth={1.8} className="mb-4 text-accent" />
+              <p className="mb-2 text-[17px] font-bold tracking-[-0.01em] text-ink">{title}</p>
+              <p className="text-[15px] leading-[1.6] text-muted">{body}</p>
+            </li>
+          ))}
+        </ul>
+        <div className="grid max-w-[72ch] gap-5 text-[15.5px] leading-[1.7] text-muted">
           <p>
             Elle vaut à Paris comme hors de Paris : voyez notre{" "}
             <Link href="/zones/petite-couronne" className="font-medium text-ink underline decoration-accent underline-offset-4 hover:text-accent-dark">coursier banlieue Paris</Link>{" "}

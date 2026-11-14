@@ -381,10 +381,10 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
 
           {/* Panneau principal */}
           {/* Téléphone : plein écran, comme une page. Ordinateur : fenêtre centrée. */}
-          <div className="relative transform rounded-none sm:rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-3 w-full sm:max-w-3xl flex flex-col h-[100dvh] sm:h-auto max-h-[100dvh] sm:max-h-[96dvh] overflow-hidden">
+          <div className="relative transform rounded-none sm:rounded-[4px] bg-paper-card text-left shadow-2xl transition-all sm:my-3 w-full sm:max-w-3xl flex flex-col h-[100dvh] sm:h-auto max-h-[100dvh] sm:max-h-[96dvh] overflow-hidden">
 
             {/* Header (Fixe) */}
-            <div className="flex flex-col gap-2 border-b border-gray-100 bg-white px-6 py-2 shrink-0">
+            <div className="flex flex-col gap-2 border-b border-line bg-paper-card px-6 py-2 shrink-0">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-[11px] font-bold uppercase tracking-widest text-accent">Commander une course</p>
@@ -392,7 +392,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                 </div>
                 <button
                   onClick={onClose}
-                  className="flex h-9 w-9 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700"
+                  className="flex h-9 w-9 items-center justify-center rounded-[4px] text-label transition-colors hover:bg-paper hover:text-muted"
                   aria-label="Fermer"
                 >
                   <X size={20} />
@@ -400,7 +400,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
               </div>
               {/* Stepper */}
               <div className="relative flex items-center justify-between px-2">
-                <div className="absolute left-2 right-2 top-1/2 -translate-y-1/2 h-1 rounded-full bg-gray-100" />
+                <div className="absolute left-2 right-2 top-1/2 -translate-y-1/2 h-1 rounded-full bg-paper" />
                 <div
                   className="absolute left-2 top-1/2 -translate-y-1/2 h-1 rounded-full bg-accent transition-all duration-500"
                   style={{ width: `calc((100% - 1rem) * ${(step - 1) / 2})` }}
@@ -408,7 +408,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                 {[1, 2, 3].map((s) => (
                   <div
                     key={s}
-                    className={`relative z-10 flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold transition-colors ${step >= s ? "bg-accent text-white" : "bg-gray-100 text-gray-400"}`}
+                    className={`relative z-10 flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold transition-colors ${step >= s ? "bg-accent text-white" : "bg-paper text-label"}`}
                   >
                     {step > s ? <CheckCircle2 size={14} /> : s}
                   </div>
@@ -420,7 +420,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
             <div className="flex flex-col md:flex-row flex-1 min-h-0">
               
               {/* Colonne Gauche (Formulaire) */}
-              <div className="flex-1 flex flex-col min-h-0 md:border-r border-gray-100">
+              <div className="flex-1 flex flex-col min-h-0 md:border-r border-line">
                 <div className="flex-1 overflow-y-auto px-6 pt-2 pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {submitted ? (
             <div className="py-12 text-center">
@@ -437,8 +437,8 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                 </p>
               )}
               {trackingCode && (
-                <div className="mb-6 rounded-xl border border-gray-200 bg-gray-50 px-6 py-3">
-                  <p className="text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-1">Code de suivi</p>
+                <div className="mb-6 rounded-[4px] border border-line bg-paper px-6 py-3">
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-label mb-1">Code de suivi</p>
                   <p className="text-xl font-extrabold tracking-widest text-ink">{trackingCode}</p>
                 </div>
               )}
@@ -446,13 +446,13 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
               <div className="flex flex-col gap-3">
                 <button
                   onClick={() => { setSubmitted(false); setStep(1); }}
-                  className="rounded-lg border border-line px-6 py-3 text-sm font-semibold text-ink hover:bg-paper transition-colors"
+                  className="rounded-[4px] border border-line px-6 py-3 text-sm font-semibold text-ink hover:bg-paper transition-colors"
                 >
                   Nouvelle commande
                 </button>
                 <button
                   onClick={onClose}
-                  className="rounded-lg bg-accent px-6 py-3 text-sm font-bold text-white hover:bg-accent-dark transition-colors"
+                  className="rounded-[4px] bg-accent px-6 py-3 text-sm font-bold text-white hover:bg-accent-dark transition-colors"
                 >
                   Fermer
                 </button>
@@ -468,7 +468,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                     <div>
                       <div className="mb-3 flex items-center justify-between gap-3">
                         <span className="text-xs font-bold uppercase tracking-wider text-ink">Délai de prise en charge</span>
-                        <span className="rounded-md bg-orange-50 px-2 py-0.5 text-[11px] font-semibold text-orange-700">Garantie ponctualité</span>
+                        <span className="rounded-[4px] bg-orange-50 px-2 py-0.5 text-[11px] font-semibold text-orange-700">Garantie ponctualité</span>
                       </div>
                       <div className="grid grid-cols-3 gap-2">
                         {[
@@ -480,18 +480,18 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                             key={id}
                             type="button"
                             onClick={() => setDelai(id)}
-                            className={`relative flex flex-col items-center gap-1 rounded-xl border-2 px-2 py-3 text-center transition-all ${delai === id ? 'border-accent bg-accent text-white' : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'}`}
+                            className={`relative flex flex-col items-center gap-1 rounded-[4px] border-2 px-2 py-3 text-center transition-all ${delai === id ? 'border-accent bg-accent text-white' : 'border-line bg-paper-card text-muted hover:border-line'}`}
                           >
                             {id === 'flash' && (
-                              <span className="absolute -top-2 rounded bg-yellow-400 px-1.5 text-[9px] font-bold text-gray-900">EXPRESS</span>
+                              <span className="absolute -top-2 rounded bg-yellow-400 px-1.5 text-[11px] font-bold text-ink">EXPRESS</span>
                             )}
-                            <span className={`flex h-8 w-8 items-center justify-center rounded-full ${delai === id ? 'bg-white/20' : 'bg-gray-100'}`}>
+                            <span className={`flex h-8 w-8 items-center justify-center rounded-full ${delai === id ? 'bg-white/20' : 'bg-paper'}`}>
                               <Icon size={16} />
                             </span>
                             <span className="text-xs font-bold uppercase leading-tight">{label}</span>
                             <span className="text-sm font-bold">
                               {price !== null ? `${price.toFixed(2).replace('.', ',')} €` : fallback}
-                              {price !== null && <span className="ml-1 text-[10px] font-normal opacity-80">TTC</span>}
+                              {price !== null && <span className="ml-1 text-[11px] font-normal opacity-80">TTC</span>}
                             </span>
                           </button>
                         ))}
@@ -499,36 +499,36 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                     </div>
 
                     <div>
-                      <label htmlFor="order-scheduled-date" className="mb-2 block text-xs font-bold uppercase tracking-wider text-gray-600">Enlèvement un autre jour (optionnel)</label>
+                      <label htmlFor="order-scheduled-date" className="mb-2 block text-xs font-bold uppercase tracking-wider text-muted">Enlèvement un autre jour (optionnel)</label>
                       <input
                         id="order-scheduled-date"
                         type="date"
                         min={tomorrowIso()}
                         value={scheduledDate}
                         onChange={(e) => setScheduledDate(e.target.value)}
-                        className="w-full rounded-xl border border-line bg-[#FAFAFA] px-4 py-2 text-sm font-semibold text-ink focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+                        className="w-full rounded-[4px] border border-line bg-paper px-4 py-2 text-sm font-semibold text-ink focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
                       />
                       {scheduledDate && (
                         <div className="mt-3">
-                          <label htmlFor="order-scheduled-time" className="mb-2 block text-xs font-bold uppercase tracking-wider text-gray-600">Heure souhaitée</label>
+                          <label htmlFor="order-scheduled-time" className="mb-2 block text-xs font-bold uppercase tracking-wider text-muted">Heure souhaitée</label>
                           <input
                             id="order-scheduled-time"
                             type="time"
                             value={scheduledTime}
                             onChange={(e) => setScheduledTime(e.target.value)}
-                            className="w-full rounded-xl border border-line bg-[#FAFAFA] px-4 py-2 text-sm font-semibold text-ink focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+                            className="w-full rounded-[4px] border border-line bg-paper px-4 py-2 text-sm font-semibold text-ink focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
                           />
                         </div>
                       )}
-                      <p className="mt-1 text-[11px] text-gray-500">Laissez vide pour un enlèvement aujourd’hui. Pour demain ou plus tard, choisissez la date et l’heure.</p>
+                      <p className="mt-1 text-[11px] text-muted">Laissez vide pour un enlèvement aujourd’hui. Pour demain ou plus tard, choisissez la date et l’heure.</p>
                     </div>
 
                     {/* Adresse enlèvement */}
                     <div className="relative pl-8" onFocus={() => setAddressFocused(true)} onBlur={() => setAddressFocused(false)}>
-                      <div className="absolute left-0 top-1.5 flex h-5 w-5 items-center justify-center rounded-full border-[3px] border-emerald-500 bg-white">
+                      <div className="absolute left-0 top-1.5 flex h-5 w-5 items-center justify-center rounded-full border-[3px] border-emerald-500 bg-paper-card">
                         <div className="h-2 w-2 rounded-full bg-emerald-500" />
                       </div>
-                      <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">
+                      <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-muted">
                         Adresse d'enlèvement <span className="text-accent">*</span>
                       </label>
                       <AddressAutocomplete
@@ -536,22 +536,22 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                         onChange={setPickupAddress}
                         placeholder="Rue, ville..."
                         required
-                        className="w-full rounded-xl border border-line bg-[#FAFAFA] px-4 py-2 text-sm font-semibold text-ink focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+                        className="w-full rounded-[4px] border border-line bg-paper px-4 py-2 text-sm font-semibold text-ink focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
                       />
                     </div>
 
                     {stops.map((stop, i) => (
                       <div key={i} className="relative pl-8">
-                        <div className="absolute left-0 top-1.5 h-5 w-5 rounded-full border-[3px] border-gray-400 bg-white" />
+                        <div className="absolute left-0 top-1.5 h-5 w-5 rounded-full border-[3px] border-gray-400 bg-paper-card" />
                         <div className="mb-1.5 flex items-center justify-between">
-                          <label className="block text-xs font-bold uppercase tracking-wider text-gray-600">Arrêt {i + 1}</label>
-                          <button type="button" onClick={() => setStops(stops.filter((_, j) => j !== i))} className="text-xs font-semibold text-gray-500 hover:text-red-600">Retirer</button>
+                          <label className="block text-xs font-bold uppercase tracking-wider text-muted">Arrêt {i + 1}</label>
+                          <button type="button" onClick={() => setStops(stops.filter((_, j) => j !== i))} className="text-xs font-semibold text-muted hover:text-red-600">Retirer</button>
                         </div>
                         <AddressAutocomplete
                           value={stop}
                           onChange={(v) => setStops(stops.map((s, j) => (j === i ? v : s)))}
                           placeholder="Adresse de l’arrêt"
-                          className="w-full rounded-xl border border-line bg-[#FAFAFA] px-4 py-2 text-sm font-semibold text-ink focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+                          className="w-full rounded-[4px] border border-line bg-paper px-4 py-2 text-sm font-semibold text-ink focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
                         />
                       </div>
                     ))}
@@ -559,20 +559,20 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                       type="button"
                       onClick={() => setStops([...stops, ""])}
                       disabled={delai === "flash" && stops.length >= 1}
-                      className="self-start pl-8 text-sm font-semibold text-accent hover:underline disabled:cursor-not-allowed disabled:text-gray-400 disabled:no-underline"
+                      className="self-start pl-8 text-sm font-semibold text-accent hover:underline disabled:cursor-not-allowed disabled:text-label disabled:no-underline"
                     >
                       + Ajouter un arrêt
                     </button>
                     {delai === "flash" && stops.length >= 1 && (
-                      <p className="pl-8 text-xs text-gray-500">En Super 1 h, 2 adresses de livraison au maximum : l’arrêt et la livraison finale.</p>
+                      <p className="pl-8 text-xs text-muted">En Super 1 h, 2 adresses de livraison au maximum : l’arrêt et la livraison finale.</p>
                     )}
 
                     {/* Adresse livraison */}
                     <div className="relative pl-8" onFocus={() => setAddressFocused(true)} onBlur={() => setAddressFocused(false)}>
-                      <div className="absolute left-0 top-1.5 flex h-5 w-5 items-center justify-center rounded-full border-[3px] border-accent bg-white">
+                      <div className="absolute left-0 top-1.5 flex h-5 w-5 items-center justify-center rounded-full border-[3px] border-accent bg-paper-card">
                         <div className="h-2 w-2 rounded-full bg-accent" />
                       </div>
-                      <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">
+                      <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-muted">
                         Adresse de livraison <span className="text-accent">*</span>
                       </label>
                       <AddressAutocomplete
@@ -580,7 +580,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                         onChange={setDropoffAddress}
                         placeholder="Rue, ville..."
                         required
-                        className="w-full rounded-xl border border-line bg-[#FAFAFA] px-4 py-2 text-sm font-semibold text-ink focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+                        className="w-full rounded-[4px] border border-line bg-paper px-4 py-2 text-sm font-semibold text-ink focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
                       />
                     </div>
                     {/* Pas d'alerte pendant la saisie : seule la liste d'adresses bouge. */}
@@ -588,20 +588,20 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
 
                     {/* Détail du prix (téléphone ; sur ordinateur il est dans le récapitulatif de droite) */}
                     {prices && (
-                      <div className="rounded-2xl border border-gray-100 bg-gray-50 px-4 py-3 text-sm md:hidden">
+                      <div className="rounded-[4px] border border-line bg-paper px-4 py-3 text-sm md:hidden">
                         <div className="flex justify-between py-1">
-                          <span className="text-gray-500">Formule sélectionnée</span>
+                          <span className="text-muted">Formule sélectionnée</span>
                           <span className="font-semibold text-ink">{delai === 'standard' ? 'Normal (3h)' : delai === 'urgent' ? 'Urgent (1h30)' : 'Super (1h)'}</span>
                         </div>
                         <div className="flex justify-between py-1">
-                          <span className="text-gray-500">Sous-total HT</span>
-                          <span className="text-gray-700">{eur(prices.ht)}</span>
+                          <span className="text-muted">Sous-total HT</span>
+                          <span className="text-muted">{eur(prices.ht)}</span>
                         </div>
                         <div className="flex justify-between py-1">
-                          <span className="text-gray-500">TVA (20 %)</span>
-                          <span className="text-gray-700">{eur(prices.tva)}</span>
+                          <span className="text-muted">TVA (20 %)</span>
+                          <span className="text-muted">{eur(prices.tva)}</span>
                         </div>
-                        <div className="mt-1 flex items-baseline justify-between border-t border-gray-200 pt-2">
+                        <div className="mt-1 flex items-baseline justify-between border-t border-line pt-2">
                           <span className="font-bold text-ink">Total TTC</span>
                           <span className="text-xl font-extrabold text-[#ed5518]">{eur(prices.ttc)}</span>
                         </div>
@@ -613,13 +613,13 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                 {/* Étape 2 : Contact */}
                 {step === 2 && (
                   <div className="flex flex-col gap-3">
-                    <div className="flex rounded-xl bg-gray-100 p-1">
+                    <div className="flex rounded-[4px] bg-paper p-1">
                       {(["entreprise", "particulier"] as const).map((t) => (
                         <button
                           key={t}
                           type="button"
                           onClick={() => setClientType(t)}
-                          className={`flex flex-1 items-center justify-center gap-2 rounded-lg py-2.5 text-sm font-bold transition-all ${clientType === t ? "bg-white text-ink shadow-sm" : "text-gray-500 hover:text-gray-700"}`}
+                          className={`flex flex-1 items-center justify-center gap-2 rounded-[4px] py-2.5 text-sm font-bold transition-all ${clientType === t ? "bg-paper-card text-ink shadow-sm" : "text-muted hover:text-muted"}`}
                         >
                           {t === "entreprise" ? <Building2 size={15} /> : <User size={15} />}
                           {t === "entreprise" ? "Entreprise" : "Particulier"}
@@ -627,20 +627,20 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                       ))}
                     </div>
                     <div className="flex items-center gap-3 font-bold text-ink">
-                      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/10"><User size={16} className="text-accent" /></div>
+                      <div className="flex h-8 w-8 items-center justify-center rounded-[4px] bg-accent/10"><User size={16} className="text-accent" /></div>
                       Vos informations
                     </div>
                     {clientType === "particulier" && (
-                      <p className="rounded-xl border border-orange-100 bg-orange-50 px-4 py-3 text-sm text-orange-800">Paiement par carte, sécurisé par Stripe, avant la prise en charge.</p>
+                      <p className="rounded-[4px] border border-orange-100 bg-orange-50 px-4 py-3 text-sm text-orange-800">Paiement par carte, sécurisé par Stripe, avant la prise en charge.</p>
                     )}
                     {clientType === "entreprise" && (
-                      <p className="rounded-xl border border-blue-100 bg-blue-50 px-4 py-3 text-sm text-blue-800">Pros : paiement par carte immédiat, ou sur facture à 30 jours. Choix à la dernière étape.</p>
+                      <p className="rounded-[4px] border border-line bg-paper px-4 py-3 text-sm text-ink">Pros : paiement par carte immédiat, ou sur facture à 30 jours. Choix à la dernière étape.</p>
                     )}
                     <div className="flex flex-col gap-2.5">
                       <div className="grid grid-cols-2 gap-2.5">
                       {clientType === "entreprise" && (
                         <div>
-                          <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">SIRET <span className="text-accent">*</span></label>
+                          <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-muted">SIRET <span className="text-accent">*</span></label>
                           <div className="flex gap-2">
                             <input
                               type="text"
@@ -648,14 +648,14 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                               onChange={(e) => { setSiret(e.target.value.replace(/\D/g, "").slice(0, 14)); setTva(""); setAdresseFacturation(""); setContactName(""); setRaisonSociale(""); }}
                               maxLength={14}
                               placeholder="14 chiffres"
-                              className="w-44 shrink-0 rounded-xl border border-gray-200 bg-gray-50 px-4 py-2 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
+                              className="w-44 shrink-0 rounded-[4px] border border-line bg-paper px-4 py-2 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
                             />
                             {validatingSiret && (
-                              <span className="flex items-center whitespace-nowrap px-2 text-xs text-gray-500">Vérification…</span>
+                              <span className="flex items-center whitespace-nowrap px-2 text-xs text-muted">Vérification…</span>
                             )}
                           </div>
                           {tva && (
-                            <span className="mt-2 inline-flex rounded-lg border border-green-200 bg-green-50 px-3 py-1.5 text-xs font-semibold text-green-900">
+                            <span className="mt-2 inline-flex rounded-[4px] border border-green-200 bg-green-50 px-3 py-1.5 text-xs font-semibold text-green-900">
                               ✓ TVA : {tva}
                             </span>
                           )}
@@ -663,38 +663,38 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                       )}
                       {clientType === "entreprise" && (
                         <div>
-                          <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">Nom de la société <span className="text-accent">*</span></label>
+                          <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-muted">Nom de la société <span className="text-accent">*</span></label>
                           {/* Nom officiel du SIRET (Sirene), non modifiable. */}
-                          <input type="text" required readOnly value={contactName} placeholder="Rempli depuis le SIRET" className="w-full cursor-not-allowed rounded-xl border border-gray-200 bg-gray-100 px-4 py-2 text-sm text-gray-700 focus:outline-none" />
+                          <input type="text" required readOnly value={contactName} placeholder="Rempli depuis le SIRET" className="w-full cursor-not-allowed rounded-[4px] border border-line bg-paper px-4 py-2 text-sm text-muted focus:outline-none" />
                         </div>
                       )}
                       </div>
                       {clientType === "entreprise" && (
                         <div>
-                          <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">Adresse de facturation <span className="text-accent">*</span></label>
+                          <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-muted">Adresse de facturation <span className="text-accent">*</span></label>
                           {/* Adresse officielle du SIRET (Sirene), non modifiable : évite une facture adressée ailleurs. */}
                           <input
                             type="text"
                             value={adresseFacturation}
                             readOnly
                             placeholder="Remplie automatiquement depuis le SIRET"
-                            className="w-full cursor-not-allowed rounded-xl border border-gray-200 bg-gray-100 px-4 py-2 text-sm text-gray-700 focus:outline-none"
+                            className="w-full cursor-not-allowed rounded-[4px] border border-line bg-paper px-4 py-2 text-sm text-muted focus:outline-none"
                           />
                         </div>
                       )}
                       <div className="grid grid-cols-2 gap-2.5">
                         <div>
-                          <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">Prénom <span className="text-accent">*</span></label>
-                          <input type="text" required value={firstName} onChange={(e) => setFirstName(e.target.value)} autoComplete="given-name" placeholder="Jean" className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30" />
+                          <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-muted">Prénom <span className="text-accent">*</span></label>
+                          <input type="text" required value={firstName} onChange={(e) => setFirstName(e.target.value)} autoComplete="given-name" placeholder="Jean" className="w-full rounded-[4px] border border-line bg-paper px-4 py-2 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30" />
                         </div>
                         <div>
-                          <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">Nom <span className="text-accent">*</span></label>
-                          <input type="text" required value={lastName} onChange={(e) => setLastName(e.target.value)} autoComplete="family-name" placeholder="Dupont" className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30" />
+                          <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-muted">Nom <span className="text-accent">*</span></label>
+                          <input type="text" required value={lastName} onChange={(e) => setLastName(e.target.value)} autoComplete="family-name" placeholder="Dupont" className="w-full rounded-[4px] border border-line bg-paper px-4 py-2 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30" />
                         </div>
                       </div>
                       <div className="grid grid-cols-2 gap-2.5">
                       <div>
-                        <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">Téléphone<span className="text-accent">*</span></label>
+                        <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-muted">Téléphone<span className="text-accent">*</span></label>
                         <input
                           type="tel"
                           required
@@ -703,12 +703,12 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                           placeholder="06 12 34 56 78"
                           pattern="^(0[1-9]|(\+33)[1-9])[0-9 ]{8,9}$"
                           title="Numéro français valide : 06 12 34 56 78"
-                          className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
+                          className="w-full rounded-[4px] border border-line bg-paper px-4 py-2 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
                         />
                       </div>
                       <div>
-                        <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">Email <span className="text-accent">*</span></label>
-                        <input type="email" required value={contactEmail} onChange={(e) => setContactEmail(e.target.value)} placeholder="contact@societe.fr" className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30" />
+                        <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-muted">Email <span className="text-accent">*</span></label>
+                        <input type="email" required value={contactEmail} onChange={(e) => setContactEmail(e.target.value)} placeholder="contact@societe.fr" className="w-full rounded-[4px] border border-line bg-paper px-4 py-2 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30" />
                       </div>
                       </div>
                     </div>
@@ -722,7 +722,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                     <div>
                       <div className="mb-2 flex items-baseline justify-between gap-3">
                         <label className="text-xs font-bold uppercase tracking-wider text-ink">Que voulez-vous envoyer ? <span className="text-accent">*</span></label>
-                        <span className="text-[11px] text-gray-400">Pour préparer le coursier. Même tarif.</span>
+                        <span className="text-[11px] text-label">Pour préparer le coursier. Même tarif.</span>
                       </div>
                       <div className="flex flex-wrap gap-1.5">
                         {ORDER_NATURES.map(({ id, label }) => (
@@ -731,7 +731,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                             type="button"
                             onClick={() => { setNature(id); setFormError(""); }}
                             aria-pressed={nature === id}
-                            className={`flex items-center gap-1 rounded-lg border px-3 py-1.5 text-sm transition-all ${nature === id ? "border-accent bg-accent/5 font-semibold text-accent" : "border-gray-200 bg-white text-gray-700 hover:border-gray-300"}`}
+                            className={`flex items-center gap-1 rounded-[4px] border px-3 py-1.5 text-sm transition-all ${nature === id ? "border-accent bg-accent/5 font-semibold text-accent" : "border-line bg-paper-card text-muted hover:border-line"}`}
                           >
                             {nature === id && <Check size={14} />}
                             {label}
@@ -747,7 +747,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                           autoFocus
                           placeholder="Précisez ce que vous envoyez (ex. : clés, maquette, pièce détachée…)"
                           aria-label="Précisez ce que vous envoyez"
-                          className="mt-2 w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
+                          className="mt-2 w-full rounded-[4px] border border-line bg-paper px-4 py-2 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
                         />
                       )}
                     </div>
@@ -764,11 +764,11 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                             key={id}
                             type="button"
                             onClick={() => setFormat(id)}
-                            className={`relative flex flex-col items-start rounded-xl border-2 px-3 py-2 text-left transition-all ${format === id ? "border-accent bg-accent/5" : "border-gray-200 bg-white hover:border-gray-300"}`}
+                            className={`relative flex flex-col items-start rounded-[4px] border-2 px-3 py-2 text-left transition-all ${format === id ? "border-accent bg-accent/5" : "border-line bg-paper-card hover:border-line"}`}
                           >
                             {format === id && <Check size={14} className="absolute right-2 top-2 text-accent" />}
-                            <span className={`text-sm font-semibold ${format === id ? "text-accent" : "text-gray-800"}`}>{label}</span>
-                            <span className={`text-[11px] ${format === id ? "text-accent/70" : "text-gray-400"}`}>{sub}</span>
+                            <span className={`text-sm font-semibold ${format === id ? "text-accent" : "text-ink"}`}>{label}</span>
+                            <span className={`text-[11px] ${format === id ? "text-accent/70" : "text-label"}`}>{sub}</span>
                           </button>
                         ))}
                       </div>
@@ -788,13 +788,13 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                               type="button"
                               onClick={() => setPaymentMode(id)}
                               aria-pressed={paymentMode === id}
-                              className={`flex flex-col items-center rounded-xl border-2 px-3 py-2.5 text-center transition-all ${paymentMode === id ? "border-accent bg-accent/5" : "border-gray-200 bg-white hover:border-gray-300"}`}
+                              className={`flex flex-col items-center rounded-[4px] border-2 px-3 py-2.5 text-center transition-all ${paymentMode === id ? "border-accent bg-accent/5" : "border-line bg-paper-card hover:border-line"}`}
                             >
-                              <span className={`flex items-center gap-1 text-sm font-semibold ${paymentMode === id ? "text-accent" : "text-gray-700"}`}>
+                              <span className={`flex items-center gap-1 text-sm font-semibold ${paymentMode === id ? "text-accent" : "text-muted"}`}>
                                 {label}
                                 {paymentMode === id && <Check size={14} />}
                               </span>
-                              <span className={`text-[11px] ${paymentMode === id ? "text-accent/70" : "text-gray-400"}`}>{sub}</span>
+                              <span className={`text-[11px] ${paymentMode === id ? "text-accent/70" : "text-label"}`}>{sub}</span>
                             </button>
                           ))}
                         </div>
@@ -802,7 +802,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                         {paymentMode === "fin_de_mois" && (
                           <div className="mt-2">
                             <div className="flex items-center gap-2">
-                              <span className="text-xs text-gray-600">Réglé par :</span>
+                              <span className="text-xs text-muted">Réglé par :</span>
                               {([
                                 { id: "sepa", label: "Prélèvement SEPA" },
                                 { id: "virement", label: "Virement" },
@@ -812,7 +812,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                                   type="button"
                                   onClick={() => setDebitMethod(id)}
                                   aria-pressed={debitMethod === id}
-                                  className={`flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold transition-all ${debitMethod === id ? "bg-accent text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}
+                                  className={`flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold transition-all ${debitMethod === id ? "bg-accent text-white" : "bg-paper text-muted hover:bg-line"}`}
                                 >
                                   {debitMethod === id && <Check size={12} />}
                                   {label}
@@ -826,57 +826,57 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                     )}
 
                     <div>
-                      <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-ink">Consignes au coursier <span className="font-normal normal-case text-gray-400">(optionnel)</span></label>
-                      <input type="text" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Ex : code 4821B, bâtiment C, 3e étage" className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30" />
+                      <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-ink">Consignes au coursier <span className="font-normal normal-case text-label">(optionnel)</span></label>
+                      <input type="text" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Ex : code 4821B, bâtiment C, 3e étage" className="w-full rounded-[4px] border border-line bg-paper px-4 py-2 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30" />
                     </div>
 
                     {/* Récapitulatif Prix (Mobile Uniquement) */}
-                    <div className="md:hidden bg-orange-50/50 border border-orange-100 rounded-2xl p-6 mt-2">
-                      <h3 className="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2">
+                    <div className="md:hidden bg-orange-50/50 border border-orange-100 rounded-[4px] p-6 mt-2">
+                      <h3 className="text-sm font-bold text-ink mb-4 flex items-center gap-2">
                         <CheckCircle2 className="w-4 h-4 text-[#ed5518]" />
                         Récapitulatif de votre commande
                       </h3>
-                      <div className="space-y-2 text-[14px] text-gray-600 mb-4">
+                      <div className="space-y-2 text-[14px] text-muted mb-4">
                         <div className="flex justify-between gap-4">
                           <span>Départ :</span>
-                          <span className="font-medium text-gray-900 truncate text-right">{pickupAddress || "À renseigner"}</span>
+                          <span className="font-medium text-ink truncate text-right">{pickupAddress || "À renseigner"}</span>
                         </div>
                         <div className="flex justify-between gap-4">
                           <span>Arrivée :</span>
-                          <span className="font-medium text-gray-900 truncate text-right">{dropoffAddress || "À renseigner"}</span>
+                          <span className="font-medium text-ink truncate text-right">{dropoffAddress || "À renseigner"}</span>
                         </div>
                         {nature && (
                           <div className="flex justify-between">
                             <span>Envoi :</span>
-                            <span className="font-medium text-gray-900">{natureLabel(nature, natureDetail)}</span>
+                            <span className="font-medium text-ink">{natureLabel(nature, natureDetail)}</span>
                           </div>
                         )}
                         <div className="flex justify-between">
                           <span>Format :</span>
-                          <span className="font-medium text-gray-900">{format === 'doc' ? 'Pli/Doc' : format === 'petit' ? 'Petit Colis' : 'Volumineux'}</span>
+                          <span className="font-medium text-ink">{format === 'doc' ? 'Pli/Doc' : format === 'petit' ? 'Petit Colis' : 'Volumineux'}</span>
                         </div>
                         <div className="flex justify-between">
                           <span>Délai :</span>
-                          <span className="font-medium text-gray-900">{delai === 'standard' ? 'Normal' : delai === 'urgent' ? 'Urgent' : 'Super'}</span>
+                          <span className="font-medium text-ink">{delai === 'standard' ? 'Normal' : delai === 'urgent' ? 'Urgent' : 'Super'}</span>
                         </div>
                         {returnTrip && (
                           <div className="flex justify-between">
                             <span>Retour à l’adresse d’enlèvement :</span>
-                            <span className="font-medium text-gray-900">oui (40 % de la course)</span>
+                            <span className="font-medium text-ink">oui (40 % de la course)</span>
                           </div>
                         )}
                       </div>
                       <div className="border-t border-orange-200/60 pt-4 flex items-end justify-between">
                         <div>
                           <div className="text-[11px] font-bold uppercase tracking-wider text-orange-600/80 mb-0.5">Tarif estimé</div>
-                          <div className="text-xs text-gray-500">{clientType === "entreprise" && paymentMode === "fin_de_mois" ? (debitMethod === "virement" ? "Virement sous 30 jours" : "Prélèvement sous 30 jours") : "Règlement sécurisé par carte"}</div>
+                          <div className="text-xs text-muted">{clientType === "entreprise" && paymentMode === "fin_de_mois" ? (debitMethod === "virement" ? "Virement sous 30 jours" : "Prélèvement sous 30 jours") : "Règlement sécurisé par carte"}</div>
                         </div>
                         <div className="text-right">
                           <div className="text-2xl font-extrabold text-[#ed5518]">
                             {prices ? `${eur(prices.ttc)} TTC` : "-- €"}
                           </div>
                           {prices && (
-                            <div className="text-xs font-semibold text-gray-500">
+                            <div className="text-xs font-semibold text-muted">
                               dont TVA {eur(prices.tva)} ({eur(prices.ht)} HT)
                             </div>
                           )}
@@ -892,16 +892,16 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                 </div>
 
                 {formError && (
-                  <p role="alert" className="mx-6 mb-2 rounded-lg bg-red-50 px-4 py-2.5 text-sm font-medium text-red-700">
+                  <p role="alert" className="mx-6 mb-2 rounded-[4px] bg-red-50 px-4 py-2.5 text-sm font-medium text-red-700">
                     {formError}
                   </p>
                 )}
 
                 {/* Footer Fixe (Navigation) */}
                 {!submitted && (
-                  <div className="shrink-0 flex items-center justify-between border-t border-gray-100 bg-white px-6 py-4">
+                  <div className="shrink-0 flex items-center justify-between border-t border-line bg-paper-card px-6 py-4">
                     {step > 1 ? (
-                      <button type="button" onClick={() => setStep(step - 1)} className="flex items-center gap-1.5 rounded-lg px-4 py-2.5 text-sm font-semibold text-gray-600 hover:bg-gray-100 transition-colors">
+                      <button type="button" onClick={() => setStep(step - 1)} className="flex items-center gap-1.5 rounded-[4px] px-4 py-2.5 text-sm font-semibold text-muted hover:bg-paper transition-colors">
                         <ChevronLeft size={16} /> Retour
                       </button>
                     ) : <div />}
@@ -909,7 +909,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                       type="button"
                       onClick={handleSubmit}
                       disabled={submitting || checkingAddress || outOfZone}
-                      className="ml-auto flex flex-1 items-center justify-center gap-2 rounded-xl bg-accent px-6 py-3 text-sm font-bold text-white hover:bg-accent-dark transition-colors disabled:opacity-60 sm:flex-none sm:rounded-lg sm:py-2.5"
+                      className="ml-auto flex flex-1 items-center justify-center gap-2 rounded-[4px] bg-accent px-6 py-3 text-sm font-bold text-white hover:bg-accent-dark transition-colors disabled:opacity-60 sm:flex-none sm:rounded-[4px] sm:py-2.5"
                     >
                       {submitting
                         ? (clientType === "entreprise" && paymentMode === "fin_de_mois" && debitMethod === "virement" ? "Envoi…" : "Redirection…")
@@ -923,74 +923,74 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
               </div>
 
               {/* Récapitulatif (Droite - Desktop Uniquement) */}
-              <div className="hidden md:flex w-[300px] bg-gray-50 p-6 flex-col shrink-0 overflow-y-auto">
-                <h3 className="text-sm font-bold text-gray-800 mb-3 flex items-center gap-2">
+              <div className="hidden md:flex w-[300px] bg-paper p-6 flex-col shrink-0 overflow-y-auto">
+                <h3 className="text-sm font-bold text-ink mb-3 flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-[#ed5518]" />
                   Récapitulatif de votre commande
                 </h3>
 
-                <label className="mb-3 flex cursor-pointer items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-1.5">
+                <label className="mb-3 flex cursor-pointer items-center gap-2 rounded-[4px] border border-line bg-paper-card px-3 py-1.5">
                   <input
                     type="checkbox"
                     checked={returnTrip}
                     onChange={(e) => setReturnTrip(e.target.checked)}
                     className="h-4 w-4 accent-[#ed5518]"
                   />
-                  <span className="text-xs font-bold text-gray-900">Retour à l’adresse d’enlèvement (40 %)</span>
+                  <span className="text-xs font-bold text-ink">Retour à l’adresse d’enlèvement (40 %)</span>
                 </label>
 
-                <div className="mb-3 border-b border-gray-200 pb-3">
+                <div className="mb-3 border-b border-line pb-3">
                   <div className="text-[11px] font-bold uppercase tracking-wider text-orange-600 mb-1">Tarif estimé</div>
                   <div className="whitespace-nowrap text-3xl font-extrabold text-[#ed5518]">
                     {prices ? `${eur(prices.ttc)} TTC` : "-- €"}
                   </div>
                   {prices && (
-                    <div className="text-xs font-semibold text-gray-500">
+                    <div className="text-xs font-semibold text-muted">
                       dont TVA {eur(prices.tva)} ({eur(prices.ht)} HT)
                     </div>
                   )}
-                  <div className="mt-1 text-[10px] text-gray-500">{clientType === "entreprise" && paymentMode === "fin_de_mois" ? (debitMethod === "virement" ? "Virement sous 30 jours" : "Prélèvement sous 30 jours") : "Règlement sécurisé par carte"}</div>
+                  <div className="mt-1 text-[11px] text-muted">{clientType === "entreprise" && paymentMode === "fin_de_mois" ? (debitMethod === "virement" ? "Virement sous 30 jours" : "Prélèvement sous 30 jours") : "Règlement sécurisé par carte"}</div>
                 </div>
 
-                <div className="flex-1 space-y-1.5 text-[13px] text-gray-600">
-                  <div className="flex flex-col gap-0.5 border-b border-gray-200 pb-2">
-                    <span className="text-xs font-semibold uppercase text-gray-400">Départ</span>
-                    <span className="font-medium text-gray-900">{pickupAddress || "À renseigner"}</span>
+                <div className="flex-1 space-y-1.5 text-[13px] text-muted">
+                  <div className="flex flex-col gap-0.5 border-b border-line pb-2">
+                    <span className="text-xs font-semibold uppercase text-label">Départ</span>
+                    <span className="font-medium text-ink">{pickupAddress || "À renseigner"}</span>
                   </div>
                   
-                  <div className="flex flex-col gap-1 border-b border-gray-200 pb-3">
-                    <span className="text-xs font-semibold uppercase text-gray-400">Arrivée</span>
-                    <span className="font-medium text-gray-900">{dropoffAddress || "À renseigner"}</span>
+                  <div className="flex flex-col gap-1 border-b border-line pb-3">
+                    <span className="text-xs font-semibold uppercase text-label">Arrivée</span>
+                    <span className="font-medium text-ink">{dropoffAddress || "À renseigner"}</span>
                   </div>
 
                   {stops.filter((s) => s.trim()).map((s, i) => (
-                    <div key={i} className="flex flex-col gap-1 border-b border-gray-200 pb-3">
-                      <span className="text-xs font-semibold uppercase text-gray-400">Arrêt {i + 1}</span>
-                      <span className="font-medium text-gray-900">{s}</span>
+                    <div key={i} className="flex flex-col gap-1 border-b border-line pb-3">
+                      <span className="text-xs font-semibold uppercase text-label">Arrêt {i + 1}</span>
+                      <span className="font-medium text-ink">{s}</span>
                     </div>
                   ))}
 
                   {returnTrip && (
-                    <div className="flex flex-col gap-1 border-b border-gray-200 pb-3">
-                      <span className="text-xs font-semibold uppercase text-gray-400">Retour</span>
-                      <span className="font-medium text-gray-900">À l’adresse d’enlèvement (40 % de la course)</span>
+                    <div className="flex flex-col gap-1 border-b border-line pb-3">
+                      <span className="text-xs font-semibold uppercase text-label">Retour</span>
+                      <span className="font-medium text-ink">À l’adresse d’enlèvement (40 % de la course)</span>
                     </div>
                   )}
 
                   {nature && (
-                    <div className="flex flex-col gap-1 border-b border-gray-200 pb-3">
-                      <span className="text-xs font-semibold uppercase text-gray-400">Envoi</span>
-                      <span className="font-medium text-gray-900">{natureLabel(nature, natureDetail)}</span>
+                    <div className="flex flex-col gap-1 border-b border-line pb-3">
+                      <span className="text-xs font-semibold uppercase text-label">Envoi</span>
+                      <span className="font-medium text-ink">{natureLabel(nature, natureDetail)}</span>
                     </div>
                   )}
-                  <div className="flex flex-col gap-1 border-b border-gray-200 pb-3">
-                    <span className="text-xs font-semibold uppercase text-gray-400">Format</span>
-                    <span className="font-medium text-gray-900">{format === 'doc' ? 'Pli/Doc' : format === 'petit' ? 'Petit Colis' : 'Volumineux'}</span>
+                  <div className="flex flex-col gap-1 border-b border-line pb-3">
+                    <span className="text-xs font-semibold uppercase text-label">Format</span>
+                    <span className="font-medium text-ink">{format === 'doc' ? 'Pli/Doc' : format === 'petit' ? 'Petit Colis' : 'Volumineux'}</span>
                   </div>
                   
                   <div className="flex flex-col gap-1 pb-3">
-                    <span className="text-xs font-semibold uppercase text-gray-400">Délai</span>
-                    <span className="font-medium text-gray-900">{delai === 'standard' ? 'Normal (3h)' : delai === 'urgent' ? 'Urgent (1h30)' : 'Super (1h)'}</span>
+                    <span className="text-xs font-semibold uppercase text-label">Délai</span>
+                    <span className="font-medium text-ink">{delai === 'standard' ? 'Normal (3h)' : delai === 'urgent' ? 'Urgent (1h30)' : 'Super (1h)'}</span>
                   </div>
                 </div>
                 

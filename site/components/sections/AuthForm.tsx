@@ -18,7 +18,7 @@ const PERKS = [
   { title: "Commander en quelques clics", sub: "Course flash prise en charge en moins de 45 min." },
   { title: "Suivi de chaque course en ligne", sub: "Statut à chaque étape, de la prise en charge à la remise, avec preuve de livraison." },
   { title: "Factures à 30 jours", sub: "Factures détaillées course par course, à régler sous 30 jours." },
-  { title: "Dispatch 7j/7 · 8h–19h", sub: "Un régulateur dédié, joignable aux heures d'ouverture." },
+  { title: "Dispatch 7j/7 · 7h–23h", sub: "Un régulateur dédié, joignable aux heures d'ouverture." },
 ];
 
 export default function AuthForm() {
@@ -94,7 +94,7 @@ export default function AuthForm() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full rounded-[6px] border border-line bg-white py-3.5 pl-11 pr-4 text-[14px] text-ink placeholder:text-label/60 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/15 transition-all"
+                  className="w-full rounded-[6px] border border-line bg-paper-card py-3.5 pl-11 pr-4 text-[14px] text-ink placeholder:text-label/60 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/15 transition-all"
                 />
               </div>
             </div>
@@ -117,7 +117,7 @@ export default function AuthForm() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full rounded-[6px] border border-line bg-white py-3.5 pl-11 pr-11 text-[14px] text-ink placeholder:text-label/60 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/15 transition-all"
+                  className="w-full rounded-[6px] border border-line bg-paper-card py-3.5 pl-11 pr-11 text-[14px] text-ink placeholder:text-label/60 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/15 transition-all"
                 />
                 <button
                   type="button"

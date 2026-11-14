@@ -235,8 +235,8 @@ export default function ParametresPage() {
                 type="button"
                 onClick={() => setActiveTab(id)}
                 aria-current={active ? "page" : undefined}
-                className={`flex min-h-11 items-center gap-2 rounded-lg px-3 py-2 text-left text-[13px] font-bold leading-tight transition-colors md:h-11 md:shrink-0 md:gap-3 md:whitespace-nowrap md:px-3.5 md:text-sm ${
-                  active ? "bg-white text-ink shadow-sm ring-1 ring-line" : "text-muted hover:bg-white/70 hover:text-ink"
+                className={`flex min-h-11 items-center gap-2 rounded-[4px] px-3 py-2 text-left text-[13px] font-bold leading-tight transition-colors md:h-11 md:shrink-0 md:gap-3 md:whitespace-nowrap md:px-3.5 md:text-sm ${
+                  active ? "bg-paper-card text-ink shadow-sm ring-1 ring-line" : "text-muted hover:bg-white/70 hover:text-ink"
                 }`}
               >
                 <Icon size={17} className={`shrink-0 ${active ? "text-accent" : "text-label"}`} />
@@ -306,7 +306,7 @@ export default function ParametresPage() {
                   <div className="max-w-2xl">
                     <SectionTitle title="Informations de l'entreprise" text="Les détails de votre structure juridique, repris sur vos factures." />
                     {(locked.company || locked.siret || locked.vat || locked.billing) && (
-                      <p className="mb-5 flex items-start gap-2.5 rounded-xl border border-line bg-paper px-4 py-3 text-[13px] font-medium text-muted">
+                      <p className="mb-5 flex items-start gap-2.5 rounded-[4px] border border-line bg-paper px-4 py-3 text-[13px] font-medium text-muted">
                         <Lock size={15} className="mt-0.5 shrink-0 text-label" />
                         <span>
                           Les informations déjà enregistrées ne peuvent plus être modifiées, car elles figurent sur vos factures.
@@ -340,7 +340,7 @@ export default function ParametresPage() {
                   <div className="max-w-2xl">
                     <SectionTitle title={isPro ? "Facturation & paiement" : "Paiement"} text={isPro ? "Vos méthodes de paiement et vos conditions." : "Les particuliers règlent chaque course par carte bancaire."} />
                     {methodSaved && (
-                      <p role="status" className="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800">
+                      <p role="status" className="mb-4 rounded-[4px] border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800">
                         Moyen de paiement enregistré. Vos prochaines commandes seront réglées en 1 clic.
                       </p>
                     )}
@@ -358,12 +358,12 @@ export default function ParametresPage() {
                   <div className="max-w-md">
                     <SectionTitle title="Sécurité du compte" text="Modifiez votre mot de passe et sécurisez votre accès." />
                     {passwordMessage && (
-                      <div role="status" className="mb-4 flex items-center gap-2 rounded-lg bg-green-50 px-3 py-2.5 text-xs font-bold text-green-700">
+                      <div role="status" className="mb-4 flex items-center gap-2 rounded-[4px] bg-green-50 px-3 py-2.5 text-xs font-bold text-green-700">
                         <Check size={14} strokeWidth={3} /> {passwordMessage}
                       </div>
                     )}
                     {passwordError && (
-                      <div role="alert" className="mb-4 rounded-lg bg-red-50 px-3 py-2.5 text-xs font-bold text-red-700">
+                      <div role="alert" className="mb-4 rounded-[4px] bg-red-50 px-3 py-2.5 text-xs font-bold text-red-700">
                         {passwordError}
                       </div>
                     )}
@@ -399,7 +399,7 @@ export default function ParametresPage() {
           </div>
 
           {editable && (
-            <div className="flex items-center justify-end gap-4 border-t border-line bg-white px-5 py-3.5 sm:px-8">
+            <div className="flex items-center justify-end gap-4 border-t border-line bg-paper-card px-5 py-3.5 sm:px-8">
               {saveMessage && (
                 <span role="status" className="flex items-center gap-1.5 text-xs font-bold text-green-700">
                   <Check size={14} strokeWidth={3} /> {saveMessage}

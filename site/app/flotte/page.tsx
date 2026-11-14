@@ -31,7 +31,7 @@ const STATS = [
   { value: "Dédiée", label: "Une course, un coursier" },
   { value: "18 kg", label: "Charge par course" },
   { value: "< 45 min", label: "Prise en charge moyenne" },
-  { value: "7j/7", label: "De 8h à 19h" },
+  { value: "7j/7", label: "De 7h à 23h" },
 ];
 
 const VEHICLES = [
@@ -64,7 +64,7 @@ const VEHICLES = [
 const FEATURES = [
   { Icon: Award, title: "Discrétion & rigueur", desc: "Nos coursiers sont sensibilisés aux exigences juridiques et médicales et travaillent en toute discrétion." },
   { Icon: Route, title: "Optimisation d'itinéraire", desc: "Dispatch assuré par notre équipe pour affecter le coursier le plus adapté." },
-  { Icon: Clock, title: "Horaires d'ouverture", desc: "7j/7, de 8h à 19h." },
+  { Icon: Clock, title: "Horaires d'ouverture", desc: "7j/7, de 7h à 23h." },
   { Icon: CheckCircle2, title: "Coursiers vérifiés", desc: "Permis et casier judiciaire vérifiés, formation interne obligatoire avant prise de poste." },
 ];
 
@@ -92,7 +92,7 @@ const FAQ = [
   },
   {
     q: "Quel est le délai de prise en charge ?",
-    a: "Le coursier prend l'envoi en charge en moins de 45 minutes, 7j/7 de 8h à 19h, sous réserve de disponibilité au moment de la commande. Le délai de livraison dépend de la formule : Normal 3 h, Urgent 1 h 30, Super 1 h.",
+    a: "Le coursier prend l'envoi en charge en moins de 45 minutes, 7j/7 de 7h à 23h, sous réserve de disponibilité au moment de la commande. Le délai de livraison dépend de la formule : Normal 3 h, Urgent 1 h 30, Super 1 h.",
   },
   {
     q: "Quelles zones la flotte couvre-t-elle ?",
@@ -176,8 +176,8 @@ export default function FlottePage() {
           {VEHICLES.slice(0, 2).map((v) => {
             const Icon = v.icon;
             return (
-              <div key={v.title} className="flex flex-col gap-4 rounded-2xl border border-line bg-white p-8 shadow-sm">
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent/10">
+              <div key={v.title} className="flex flex-col gap-4 rounded-[4px] border border-line bg-paper-card p-8 shadow-sm">
+                <div className="flex h-11 w-11 items-center justify-center rounded-[4px] bg-accent/10">
                   <Icon size={20} className="text-accent" strokeWidth={2} />
                 </div>
                 <div>
@@ -233,8 +233,8 @@ export default function FlottePage() {
           </p>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {FEATURES.map(({ Icon, title, desc }) => (
-              <div key={title} className="flex flex-col gap-3 rounded-2xl bg-white p-6 shadow-sm border border-line">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-ink text-white">
+              <div key={title} className="flex flex-col gap-3 rounded-[4px] bg-paper-card p-6 shadow-sm border border-line">
+                <div className="flex h-10 w-10 items-center justify-center rounded-[4px] bg-ink text-white">
                   <Icon size={18} strokeWidth={2} />
                 </div>
                 <h3 className="font-bold text-ink">{title}</h3>
@@ -258,8 +258,8 @@ export default function FlottePage() {
         </p>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {ZONES.map((z) => (
-            <div key={z.dept} className="flex items-start gap-4 rounded-xl border border-line p-5">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-accent text-[13px] font-bold text-white">
+            <div key={z.dept} className="flex items-start gap-4 rounded-[4px] border border-line p-5">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[4px] bg-accent text-[13px] font-bold text-white">
                 {z.dept}
               </div>
               <div>
@@ -308,7 +308,7 @@ export default function FlottePage() {
           <div className="flex flex-wrap gap-4">
             <Link
               href="/inscription"
-              className="flex items-center gap-2 rounded-[4px] bg-ink px-6 py-3.5 text-[14px] font-bold text-white hover:bg-white hover:text-ink transition-colors"
+              className="flex items-center gap-2 rounded-[4px] bg-ink px-6 py-3.5 text-[14px] font-bold text-white hover:bg-paper-card hover:text-ink transition-colors"
             >
               Ouvrir un compte
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>

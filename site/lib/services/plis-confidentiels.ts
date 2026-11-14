@@ -96,7 +96,6 @@ export const plisConfidentiels: Service = {
     "Suivi de chaque course en ligne pendant le transport",
     "Justificatif de livraison archivé et restituable",
     "Coursier identifiable et joignable pendant la course",
-    "Course dédiée, sans regroupement avec d’autres colis",
   ],
 
   useCases: [
@@ -115,7 +114,7 @@ export const plisConfidentiels: Service = {
   ],
 
   coverage:
-    "Prise en charge en moins de 45 minutes, 7j/7 de 8h à 19h. Intramuros et petite couronne (92, 93, 94) au tarif standard ; Roissy, Orly et le reste de l’Île-de-France au tarif de leur zone. Les palais de justice, greffes et études sont desservis aux mêmes conditions. Les prix par zone sont détaillés sur la [grille de tarifs](/tarifs).",
+    "Prise en charge en moins de 45 minutes, 7j/7 de 7h à 23h. Intramuros et petite couronne (92, 93, 94) au tarif standard ; Roissy, Orly et le reste de l’Île-de-France au tarif de leur zone. Les palais de justice, greffes et études sont desservis aux mêmes conditions. Les prix par zone sont détaillés sur la [grille de tarifs](/tarifs).",
 
   pricing: {
     title: "Tarifs d’un envoi de pli confidentiel",
@@ -132,7 +131,7 @@ export const plisConfidentiels: Service = {
     {
       question: "Quel est le délai pour un envoi de pli confidentiel ?",
       answer:
-        "La prise en charge se fait en moins de 45 minutes, 7j/7 de 8h à 19h. Le coursier part en course directe vers le destinataire, sans regroupement : le délai total dépend de la distance et de la formule choisie (Standard, Urgent ou Super).",
+        "La prise en charge se fait en moins de 45 minutes, 7j/7 de 7h à 23h. Le coursier part en course directe vers le destinataire, sans regroupement : le délai total dépend de la distance et de la formule choisie (Standard, Urgent ou Super).",
     },
     {
       question: "Comment la confidentialité du pli est-elle garantie ?",

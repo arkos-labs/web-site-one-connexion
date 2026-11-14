@@ -165,36 +165,36 @@ export default function RegisterForm() {
         {/* Colonne Gauche : Argumentaire */}
         <div className="hidden flex-col justify-center lg:flex">
           
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#E85D1F]/20 bg-[#E85D1F]/10 px-3 py-1.5 text-xs font-bold tracking-wide text-accent">
-            <span className="h-1.5 w-1.5 rounded-full bg-accent"></span>
+          <div className="mb-5 inline-flex items-center gap-3 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
+            <span className="h-px w-6 bg-accent"></span>
             PARTENAIRE LOGISTIQUE URBAIN • PARIS & IDF
           </div>
 
-          <h1 className="mb-4 text-[clamp(2.5rem,5vw,3.5rem)] font-extrabold leading-[1.05] tracking-tight text-ink">
+          <h1 className="mb-5 text-[clamp(32px,4vw,48px)] font-bold leading-[1.08] tracking-[-0.03em] text-ink">
             Vos livraisons <br />
             express en toute <br />
-            <span className="text-accent">sérénité</span><span className="text-ink">.</span>
+            sérénité.
           </h1>
 
-          <p className="mb-10 text-lg leading-relaxed text-muted md:text-xl">
+          <p className="mb-10 max-w-[48ch] text-[16.5px] leading-[1.65] text-muted">
             La solution de coursier sur-mesure pour les entreprises exigeantes. Enlèvement immédiat, dispatch en direct et suivi de chaque course en ligne.
           </p>
 
           <div className="flex flex-col gap-4">
             {/* Feature 1 */}
-            <div className="flex items-start gap-4 rounded-xl border border-line bg-paper-card p-4 shadow-sm">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#E85D1F]/10 text-accent">
+            <div className="flex items-start gap-4 rounded-[4px] border border-line bg-paper-card p-4 shadow-sm">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[2px] bg-ink text-white">
                 <Clock size={20} strokeWidth={2.5} />
               </div>
               <div>
-                <h3 className="font-bold text-ink">Courses Flash en 30 à 45 minutes</h3>
+                <h3 className="font-bold text-ink">Un coursier chez vous en moins de 45 minutes</h3>
                 <p className="mt-1 text-sm text-muted">Mise à disposition immédiate d'un coursier deux-roues dédié à votre course.</p>
               </div>
             </div>
 
             {/* Feature 2 */}
-            <div className="flex items-start gap-4 rounded-xl border border-line bg-paper-card p-4 shadow-sm">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-green-500/10 text-green-600">
+            <div className="flex items-start gap-4 rounded-[4px] border border-line bg-paper-card p-4 shadow-sm">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[2px] bg-ink text-white">
                 <ShieldCheck size={20} strokeWidth={2.5} />
               </div>
               <div>
@@ -204,8 +204,8 @@ export default function RegisterForm() {
             </div>
 
             {/* Feature 3 */}
-            <div className="flex items-start gap-4 rounded-xl border border-line bg-paper-card p-4 shadow-sm">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-500/10 text-blue-600">
+            <div className="flex items-start gap-4 rounded-[4px] border border-line bg-paper-card p-4 shadow-sm">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[2px] bg-ink text-white">
                 <FileText size={20} strokeWidth={2.5} />
               </div>
               <div>
@@ -218,7 +218,7 @@ export default function RegisterForm() {
         </div>
 
         {/* Colonne Droite : Formulaire */}
-        <div className="flex w-full flex-col overflow-hidden rounded-[8px] border border-line bg-white shadow-xl shadow-ink/5">
+        <div className="flex w-full flex-col overflow-hidden rounded-[4px] border border-line bg-paper-card shadow-sm">
           <div className="flex flex-col p-6 sm:p-8">
             
             {/* Header du Formulaire */}
@@ -234,7 +234,7 @@ export default function RegisterForm() {
                   onClick={() => setAccountType("pro")}
                   className={`rounded-full px-4 py-1.5 text-sm font-semibold transition-all ${
                     accountType === "pro" 
-                      ? "bg-white text-accent shadow-sm" 
+                      ? "bg-paper-card text-accent shadow-sm" 
                       : "text-muted hover:text-ink"
                   }`}
                 >
@@ -244,7 +244,7 @@ export default function RegisterForm() {
                   onClick={() => setAccountType("particulier")}
                   className={`rounded-full px-4 py-1.5 text-sm font-semibold transition-all ${
                     accountType === "particulier" 
-                      ? "bg-white text-accent shadow-sm" 
+                      ? "bg-paper-card text-accent shadow-sm" 
                       : "text-muted hover:text-ink"
                   }`}
                 >
@@ -263,7 +263,7 @@ export default function RegisterForm() {
                     placeholder="ex. Alexandre"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
-                    className="w-full rounded-[4px] border border-line bg-transparent px-4 py-2.5 text-sm text-ink placeholder:text-line focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+                    className="w-full rounded-[4px] border border-line bg-transparent px-4 py-2.5 text-sm text-ink placeholder:text-label focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
                     required
                   />
                 </div>
@@ -274,17 +274,17 @@ export default function RegisterForm() {
                     placeholder="ex. Dupont"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
-                    className="w-full rounded-[4px] border border-line bg-transparent px-4 py-2.5 text-sm text-ink placeholder:text-line focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+                    className="w-full rounded-[4px] border border-line bg-transparent px-4 py-2.5 text-sm text-ink placeholder:text-label focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
                     required
                   />
                 </div>
               </div>
 
               {accountType === "pro" && (
-                <div className="flex flex-col gap-4 rounded-lg border border-blue-100 bg-blue-50 p-4">
+                <div className="flex flex-col gap-4 rounded-[4px] border border-line bg-paper p-4">
                   <div>
-                    <label className="text-xs font-bold uppercase tracking-wider text-blue-900">Infos B2B - Validation obligatoire</label>
-                    <p className="mt-1 text-xs text-blue-700">Vos informations seront vérifiées auprès de l'INSEE.</p>
+                    <label className="text-xs font-bold uppercase tracking-wider text-ink">Infos B2B - Validation obligatoire</label>
+                    <p className="mt-1 text-xs text-muted">Vos informations seront vérifiées auprès de l'INSEE.</p>
                   </div>
 
                   {/* SIRET */}
@@ -297,14 +297,14 @@ export default function RegisterForm() {
                         value={siret}
                         onChange={(e) => setSiret(e.target.value.replace(/\D/g, "").slice(0, 14))}
                         maxLength={14}
-                        className="flex-1 rounded-[4px] border border-line bg-transparent px-4 py-2.5 text-sm text-ink placeholder:text-line focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+                        className="min-w-0 flex-1 rounded-[4px] border border-line bg-transparent px-4 py-2.5 text-sm text-ink placeholder:text-label focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
                         required
                       />
                       <button
                         type="button"
                         onClick={validateSiretHandler}
                         disabled={validatingSiret || !siret}
-                        className="rounded-[4px] bg-accent px-4 py-2.5 text-sm font-bold text-white hover:bg-accent-dark disabled:opacity-60"
+                        className="shrink-0 rounded-[4px] bg-accent px-4 py-2.5 text-sm font-bold text-white hover:bg-accent-dark disabled:opacity-60"
                       >
                         {validatingSiret ? <Loader2 size={16} className="animate-spin" /> : "Vérifier"}
                       </button>
@@ -319,7 +319,7 @@ export default function RegisterForm() {
                       placeholder="ex. Studio Créatif SARL"
                       value={raisonSociale}
                       onChange={(e) => setRaisonSociale(e.target.value)}
-                      className="w-full rounded-[4px] border border-line bg-transparent px-4 py-2.5 text-sm text-ink placeholder:text-line focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+                      className="w-full rounded-[4px] border border-line bg-transparent px-4 py-2.5 text-sm text-ink placeholder:text-label focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
                       required
                     />
                   </div>
@@ -332,14 +332,14 @@ export default function RegisterForm() {
                       placeholder="ex. 123 Rue de la Paix, 75000 Paris"
                       value={adresseFacturation}
                       onChange={(e) => setAdresseFacturation(e.target.value)}
-                      className="w-full rounded-[4px] border border-line bg-transparent px-4 py-2.5 text-sm text-ink placeholder:text-line focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+                      className="w-full rounded-[4px] border border-line bg-transparent px-4 py-2.5 text-sm text-ink placeholder:text-label focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
                       required
                     />
                   </div>
 
                   {/* TVA (lecture seule) */}
                   {tva && (
-                    <div className="flex items-center gap-2 rounded-lg bg-green-50 p-3">
+                    <div className="flex items-center gap-2 rounded-[4px] bg-green-50 p-3">
                       <CheckCircle2 size={16} className="text-green-600" strokeWidth={2.5} />
                       <div>
                         <p className="text-xs font-bold text-green-900">Validé ✓</p>
@@ -351,7 +351,7 @@ export default function RegisterForm() {
               )}
 
               {accountType === "pro" && !tva && (
-                <div className="flex items-start gap-3 rounded-lg border border-orange-200 bg-orange-50 p-3">
+                <div className="flex items-start gap-3 rounded-[4px] border border-orange-200 bg-orange-50 p-3">
                   <AlertCircle size={16} className="mt-0.5 shrink-0 text-orange-600" strokeWidth={2.5} />
                   <p className="text-xs text-orange-700">
                     <strong>Vérification SIRET requise</strong> pour valider votre compte professionnel.
@@ -370,7 +370,7 @@ export default function RegisterForm() {
                     placeholder="contact@votre-entreprise.fr"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full rounded-[4px] border border-line bg-transparent py-2.5 pl-10 pr-4 text-sm text-ink placeholder:text-line focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+                    className="w-full rounded-[4px] border border-line bg-transparent py-2.5 pl-10 pr-4 text-sm text-ink placeholder:text-label focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
                     required
                   />
                 </div>
@@ -388,7 +388,7 @@ export default function RegisterForm() {
                     placeholder="06 12 34 56 78"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    className="w-full bg-transparent px-3 py-2.5 text-sm text-ink placeholder:text-line focus:outline-none"
+                    className="w-full bg-transparent px-3 py-2.5 text-sm text-ink placeholder:text-label focus:outline-none"
                     required
                   />
                 </div>
@@ -403,7 +403,7 @@ export default function RegisterForm() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     minLength={8}
-                    className="w-full rounded-[4px] border border-line bg-transparent px-4 py-2.5 text-sm text-ink placeholder:text-line focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+                    className="w-full rounded-[4px] border border-line bg-transparent px-4 py-2.5 text-sm text-ink placeholder:text-label focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
                     required
                   />
                 </div>
@@ -414,7 +414,7 @@ export default function RegisterForm() {
                     placeholder="Répéter le mot de passe"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="w-full rounded-[4px] border border-line bg-transparent px-4 py-2.5 text-sm text-ink placeholder:text-line focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+                    className="w-full rounded-[4px] border border-line bg-transparent px-4 py-2.5 text-sm text-ink placeholder:text-label focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
                     required
                   />
                 </div>
@@ -466,7 +466,7 @@ export default function RegisterForm() {
           </div>
           
           {/* Footer Card */}
-          <div className="flex items-center justify-between border-t border-line bg-[#F8F9FA] px-6 py-4 text-xs font-medium text-muted sm:px-8">
+          <div className="flex items-center justify-between border-t border-line bg-paper px-6 py-4 text-xs font-medium text-muted sm:px-8">
             <div className="flex items-center gap-1.5">
               <ShieldCheck size={14} className="text-green-600" strokeWidth={2.5} />
               Chiffrement SSL 256-bit

@@ -78,7 +78,7 @@ export default function ChatWidget() {
     } else if (c.action === "call") {
       window.location.assign(`tel:${PHONE_TEL}`);
     } else {
-      setMessages((m) => [...m, { role: "user", content: c.label }, { role: "assistant", content: "Laissez vos coordonnées : nous vous rappelons rapidement (7j/7, de 8 h à 19 h)." }]);
+      setMessages((m) => [...m, { role: "user", content: c.label }, { role: "assistant", content: "Laissez vos coordonnées : nous vous rappelons rapidement (7j/7, de 7 h à 23 h)." }]);
       setCallback(true);
     }
   }
@@ -133,7 +133,7 @@ export default function ChatWidget() {
           role="dialog"
           aria-label="Assistant ONE CONNEXION"
           data-lenis-prevent
-          className="fixed inset-0 z-[80] flex flex-col bg-paper-card md:inset-auto md:bottom-6 md:right-6 md:h-[620px] md:max-h-[calc(100vh-48px)] md:w-[390px] md:overflow-hidden md:rounded-2xl md:border md:border-line md:shadow-2xl"
+          className="fixed inset-0 z-[80] flex flex-col bg-paper-card md:inset-auto md:bottom-6 md:right-6 md:h-[620px] md:max-h-[calc(100vh-48px)] md:w-[390px] md:overflow-hidden md:rounded-[4px] md:border md:border-line md:shadow-2xl"
           style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
         >
           <div className="bg-ink px-4 pb-3 pt-3 text-white" style={{ paddingTop: "max(12px, env(safe-area-inset-top))" }}>
@@ -153,7 +153,7 @@ export default function ChatWidget() {
                   </div>
                 </div>
               </div>
-              <button type="button" onClick={() => setOpen(false)} aria-label="Fermer" className="rounded-lg p-2 hover:bg-white/10">
+              <button type="button" onClick={() => setOpen(false)} aria-label="Fermer" className="rounded-[4px] p-2 hover:bg-white/10">
                 <X size={22} />
               </button>
             </div>
@@ -161,7 +161,7 @@ export default function ChatWidget() {
               <span className="flex items-center gap-1.5">
                 <Clock size={14} className="text-amber-400" /> Coursiers en service :
               </span>
-              <span className="rounded-full border border-white/15 px-2.5 py-0.5 text-white/90">7j/7 • 8 h – 19 h</span>
+              <span className="rounded-full border border-white/15 px-2.5 py-0.5 text-white/90">7j/7 • 7 h – 23 h</span>
             </div>
           </div>
 
@@ -203,7 +203,7 @@ export default function ChatWidget() {
                         key={c.label}
                         type="button"
                         onClick={() => choose(c)}
-                        className={`flex items-center gap-1.5 rounded-full border px-3 py-2 text-left text-[13.5px] font-semibold transition ${primary ? "border-ink bg-ink text-white hover:bg-ink/90" : "border-line bg-white text-ink shadow-sm hover:border-accent/50"}`}
+                        className={`flex items-center gap-1.5 rounded-full border px-3 py-2 text-left text-[13.5px] font-semibold transition ${primary ? "border-ink bg-ink text-white hover:bg-ink/90" : "border-line bg-paper-card text-ink shadow-sm hover:border-accent/50"}`}
                       >
                         <Icon size={15} className="shrink-0 text-accent" />
                         {c.label}
@@ -217,16 +217,16 @@ export default function ChatWidget() {
 
           <a
             href={`tel:${PHONE_TEL}`}
-            className="mx-3 mb-2 flex items-center gap-3 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2.5"
+            className="mx-3 mb-2 flex items-center gap-3 rounded-[4px] border border-amber-200 bg-amber-50 px-3 py-2.5"
           >
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-amber-500 text-white">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[4px] bg-amber-500 text-white">
               <Phone size={16} />
             </span>
             <span className="min-w-0 flex-1">
               <span className="block text-[11px] font-bold uppercase tracking-wide text-red-900">Urgence &amp; coordination directe</span>
               <span className="block text-[15px] font-bold tracking-wide text-ink">{PHONE_DISPLAY}</span>
             </span>
-            <span className="shrink-0 rounded-lg border border-amber-300 bg-white px-2.5 py-1 text-[12px] font-semibold text-ink">Appel direct</span>
+            <span className="shrink-0 rounded-[4px] border border-amber-300 bg-paper-card px-2.5 py-1 text-[12px] font-semibold text-ink">Appel direct</span>
           </a>
 
           <form
@@ -251,13 +251,13 @@ export default function ChatWidget() {
               placeholder="Votre question…"
               aria-label="Votre question"
               // 16 px minimum : évite le zoom automatique de l'iPhone sur le champ.
-              className="max-h-28 min-h-[44px] flex-1 resize-none rounded-xl border border-line bg-white px-3 py-2.5 text-[16px] text-ink outline-none focus:border-accent"
+              className="max-h-28 min-h-[44px] flex-1 resize-none rounded-[4px] border border-line bg-paper-card px-3 py-2.5 text-[16px] text-ink outline-none focus:border-accent"
             />
             <button
               type="submit"
               disabled={loading || !input.trim()}
               aria-label="Envoyer"
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-ink text-white disabled:opacity-40"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[4px] bg-ink text-white disabled:opacity-40"
             >
               <Send size={18} />
             </button>
@@ -276,7 +276,7 @@ function Bubble({ role, content }: Pick<Msg, "role" | "content">) {
   if (mine) {
     return (
       <div className="flex justify-end">
-        <div className="max-w-[88%] whitespace-pre-line rounded-2xl rounded-br-md bg-ink px-4 py-2.5 text-[14.5px] leading-[1.5] text-white shadow-sm">{content}</div>
+        <div className="max-w-[88%] whitespace-pre-line rounded-[4px] rounded-br-md bg-ink px-4 py-2.5 text-[14.5px] leading-[1.5] text-white shadow-sm">{content}</div>
       </div>
     );
   }
@@ -284,7 +284,7 @@ function Bubble({ role, content }: Pick<Msg, "role" | "content">) {
     <div className="flex items-end gap-2">
       <img src="/chat-avatar.png" alt="" className="h-8 w-8 shrink-0 rounded-full object-cover" />
       <div className="max-w-[85%]">
-        <div className="whitespace-pre-line rounded-2xl rounded-bl-md bg-white px-4 py-2.5 text-[14.5px] leading-[1.5] text-ink shadow-sm ring-1 ring-slate-200/70">{content}</div>
+        <div className="whitespace-pre-line rounded-[4px] rounded-bl-md bg-paper-card px-4 py-2.5 text-[14.5px] leading-[1.5] text-ink shadow-sm ring-1 ring-slate-200/70">{content}</div>
         <p className="mt-1 pl-1 text-[11px] text-label">Envoyé à l'instant</p>
       </div>
     </div>
@@ -336,13 +336,13 @@ function CallbackForm({ lastQuestion, onDone }: { lastQuestion: string; onDone: 
     }
   }
 
-  const field = "w-full rounded-lg border border-line bg-white px-3 py-2 text-[16px] text-ink outline-none focus:border-accent";
+  const field = "w-full rounded-[4px] border border-line bg-paper-card px-3 py-2 text-[16px] text-ink outline-none focus:border-accent";
   return (
-    <form onSubmit={submit} className="space-y-2 rounded-2xl bg-white p-3 shadow-sm">
+    <form onSubmit={submit} className="space-y-2 rounded-[4px] bg-paper-card p-3 shadow-sm">
       <input className={field} placeholder="Nom et prénom" autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} maxLength={120} required />
       <input className={field} placeholder="Téléphone" type="tel" autoComplete="tel" value={phone} onChange={(e) => setPhone(e.target.value)} maxLength={30} required />
       <input className={field} placeholder="E-mail" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} maxLength={200} required />
-      <button type="submit" disabled={sending || !name.trim() || !phoneOk || !email.trim()} className="w-full rounded-lg bg-accent py-2.5 text-[14px] font-bold text-white disabled:opacity-50">
+      <button type="submit" disabled={sending || !name.trim() || !phoneOk || !email.trim()} className="w-full rounded-[4px] bg-accent py-2.5 text-[14px] font-bold text-white disabled:opacity-50">
         {sending ? "Envoi…" : "Me faire rappeler"}
       </button>
     </form>
@@ -371,7 +371,7 @@ function typingMs(text: string): number {
 function TypingBubble() {
   return (
     <div className="flex justify-start" role="status" aria-label="L'assistant écrit">
-      <div className="flex items-center gap-1 rounded-2xl bg-white px-4 py-3 shadow-sm">
+      <div className="flex items-center gap-1 rounded-[4px] bg-paper-card px-4 py-3 shadow-sm">
         {[0, 150, 300].map((delay) => (
           <span
             key={delay}

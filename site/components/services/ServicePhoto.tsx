@@ -22,7 +22,7 @@ export default function ServicePhoto({
         height={photo.height}
         loading="lazy"
         sizes="(max-width: 1024px) 100vw, 440px"
-        className="block aspect-[3/2] h-auto w-full rounded-lg border border-line object-cover"
+        className="block aspect-[3/2] h-auto w-full rounded-[4px] border border-line object-cover"
       />
       <figcaption className="mt-3 text-[13.5px] leading-[1.45] text-muted">
         {photo.caption}
