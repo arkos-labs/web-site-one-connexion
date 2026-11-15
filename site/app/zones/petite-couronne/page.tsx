@@ -99,6 +99,10 @@ const FAQ = [
     q: "Pouvez-vous transporter un pli confidentiel en banlieue ?",
     a: "Oui. Un pli confidentiel part en course dédiée, sans regroupement, et est remis en main propre au destinataire, dont le nom et l'heure de remise sont enregistrés. Il se facture au tarif de la zone, comme toute course.",
   },
+  {
+    q: "Peut-on faire une course entre Paris et la banlieue ?",
+    a: "Oui, dans les deux sens : du centre de Paris vers la petite couronne, ou de la banlieue vers Paris. La course est dédiée, sans arrêt intermédiaire. Le tarif dépend des zones de départ et d'arrivée : le prix exact s'affiche avant de commander, et les tarifs détaillés sont sur notre page tarifs.",
+  },
 ];
 
 const faqSchema = {
