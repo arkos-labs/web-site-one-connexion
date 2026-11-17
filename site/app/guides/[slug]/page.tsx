@@ -104,7 +104,57 @@ export default async function GuidePage({ params }: { params: Promise<Params> })
                   <InlineLinks text={p} />
                 </p>
               ))}
-              {section.table && (
+              {section.table?.prose && (
+                <div className="my-6">
+                  {/* Mobile : une carte par ligne, lisible sans défilement horizontal */}
+                  <div className="flex flex-col gap-4 md:hidden">
+                    {section.table.rows.map((row) => (
+                      <div key={row[0]} className="rounded-xl border border-line bg-white p-4">
+                        <p className="mb-3 font-semibold text-ink">{row[0]}</p>
+                        <dl className="space-y-3 text-[15px] leading-[1.6]">
+                          {row.slice(1).map((cell, i) => (
+                            <div key={i}>
+                              <dt className="font-mono text-[11px] tracking-[0.12em] text-label uppercase">{section.table!.head[i + 1]}</dt>
+                              <dd className="text-muted">{cell}</dd>
+                            </div>
+                          ))}
+                        </dl>
+                      </div>
+                    ))}
+                  </div>
+                  {/* Bureau : tableau classique, texte aligné à gauche */}
+                  <div className="hidden md:block">
+                    <table className="w-full border-collapse text-[15px] leading-[1.6]">
+                      <thead>
+                        <tr className="border-b-2 border-ink text-left">
+                          {section.table.head.map((h) => (
+                            <th key={h} scope="col" className="py-3 pr-4 font-mono text-[11px] font-normal tracking-[0.12em] text-label uppercase">
+                              {h}
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {section.table.rows.map((row) => (
+                          <tr key={row[0]} className="border-b border-line align-top">
+                            {row.map((cell, i) =>
+                              i === 0 ? (
+                                <th key={cell} scope="row" className="py-4 pr-4 text-left font-semibold text-ink">{cell}</th>
+                              ) : (
+                                <td key={i} className="py-4 pr-4 text-muted">{cell}</td>
+                              ),
+                            )}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  {section.table.note && (
+                    <p className="mt-3 text-[13px] leading-[1.6] text-label">{section.table.note}</p>
+                  )}
+                </div>
+              )}
+              {section.table && !section.table.prose && (
                 <div className="my-6">
                   <div className="overflow-x-auto">
                     <table className="w-full min-w-[520px] border-collapse text-[15px]">

@@ -13,7 +13,8 @@ export interface GuideSection {
   paragraphs: string[];
   list?: string[];
   /** Tableau optionnel, affiché sous les paragraphes. */
-  table?: { head: string[]; rows: string[][]; note?: string };
+  /** prose : tableau de texte (cartes sur mobile), sinon tableau de valeurs chiffrées. */
+  table?: { head: string[]; rows: string[][]; note?: string; prose?: boolean };
 }
 
 export interface Guide {
@@ -1068,6 +1069,134 @@ export const GUIDES: Guide[] = [
     ],
     service: { href: "/services/coursier-express-paris", label: "Coursier express Paris" },
     published: "2026-11-13",
+  },
+  {
+    slug: "course-dediee-ou-tournee-groupee-entreprise-idf",
+    title: "Course dédiée ou tournée groupée : comment choisir pour votre entreprise",
+    h1: "Course dédiée ou tournée groupée : comment choisir",
+    seoTitle: "Course dédiée ou tournée groupée : comment choisir en Île-de-France",
+    description:
+      "Course dédiée ou tournée groupée pour votre entreprise en Île-de-France : le critère de décision, le comparatif et les erreurs à éviter.",
+    summary:
+      "Comment trancher entre une course dédiée et une tournée groupée : la tolérance à l'attente de l'envoi, pas seulement le volume.",
+    intro:
+      "Choisir entre une course dédiée et une tournée groupée pour votre entreprise en Île-de-France revient à trancher une question simple : votre envoi supporte-t-il d'attendre, ou non ? La course dédiée mobilise un coursier pour un seul pli, sans détour, avec un enlèvement en moins de 45 minutes et une livraison directe. La tournée groupée rassemble plusieurs envois sur un même parcours, ce qui change le coût comme le délai. Le reste, ce sont des arbitrages de volume, de criticité et d'organisation interne qu'il faut poser noir sur blanc avant de commander.",
+    sections: [
+      {
+        heading: "Course dédiée ou tournée groupée : la réponse en deux lignes",
+        paragraphs: [
+          "La course dédiée convient à un envoi unique qui ne peut pas attendre ni partager son trajet avec un autre colis. La tournée groupée convient à un flux de plusieurs envois à faire circuler dans la même journée ou la même semaine, quand aucun d'eux ne porte d'enjeu de délai à la minute.",
+          "Cette distinction paraît évidente sur le papier. Dans la pratique, beaucoup d'entreprises commandent des courses dédiées pour des envois qui auraient très bien supporté une tournée, et inversement, groupent des plis qui n'auraient jamais dû attendre. Le coût de la mauvaise décision se lit rarement sur la facture du coursier : il se lit dans un dossier arrivé trop tard au tribunal, un prélèvement dégradé, ou une journée de production bloquée par une pièce manquante.",
+          "Chez oneconnexion, la course dédiée est le format de base : un coursier passe chercher votre pli en moins de 45 minutes et le porte directement à destination, sans autre arrêt en route, un principe que partage [La Sphère Digital](https://laspheredigital.com/), agence digitale créant sites internet, applications web, CRM et intégrations IA. La tournée régulière existe aussi, sous une autre logique : un coordinateur dédié organise vos flux récurrents, avec des coursiers affectés à des navettes inter-sites. Ce sont deux réponses à deux problèmes différents.",
+        ],
+      },
+      {
+        heading: "La course dédiée : un envoi, un coursier, aucun détour",
+        paragraphs: [
+          "Le mécanisme est linéaire. Vous saisissez deux adresses, le prix exact s'affiche immédiatement, sans inscription. Un coursier est déclenché, récupère le pli sur le lieu d'enlèvement, puis le dépose chez le destinataire. Aucun autre ramassage ne s'intercale. La course est couverte du départ à la remise, et chaque étape reste visible en ligne.",
+          "Ce format s'applique quand la nature de l'envoi impose l'exclusivité. Un pli juridique remis en main propre à un notaire ou à un huissier ne passe que par une seule paire de mains, celle du coursier, et vous recevez l'heure exacte du dépôt. Un prélèvement sanguin destiné à un plateau technique doit respecter un délai de stabilité fixé par le laboratoire, ce qui interdit d'ajouter des arrêts imprévus. Une pièce d'automate qui bloque une chaîne d'analyse n'a pas de deuxième chance dans la journée.",
+          "Le prix de la course dédiée se calcule à partir des deux adresses, et l'offre parisienne démarre à 28 € TTC. La facture est émise pour chaque course, avec la TVA détaillée, envoyée par e-mail à la livraison. Pour les entreprises, le paiement peut se faire par carte via Stripe ou en facture à 30 jours.",
+        ],
+      },
+      {
+        heading: "La tournée groupée : plusieurs envois, un parcours ordonné",
+        paragraphs: [
+          "La tournée groupée inverse la logique. Un coursier ou un véhicule enchaîne plusieurs points d'enlèvement et de livraison sur un trajet construit à l'avance. L'ordre de passage détermine qui reçoit en premier, qui attend, et combien de temps chaque envoi reste immobilisé.",
+          "Ce format suppose que vous connaissiez vos flux. Une entreprise qui expédie chaque matin des documents vers trois sites différents, ou qui récupère des échantillons dans plusieurs cabinets pour les regrouper vers un même laboratoire, a de quoi construire une tournée. Une entreprise qui envoie un pli par semaine n'a rien à grouper.",
+          "La tournée régulière, telle que la propose oneconnexion, s'appuie sur un coordinateur dédié et des coursiers affectés à vos flux récurrents. Elle vise les navettes inter-sites et les organisations logistiques sur-mesure, pas l'urgence ponctuelle. C'est un dispositif d'organisation, pas un bouton de commande instantanée.",
+        ],
+      },
+      {
+        heading: "Les étapes concrètes pour trancher",
+        paragraphs: [
+          "Quatre questions suffisent à orienter le choix. Notez les réponses pour chaque envoi, pas pour l'entreprise en général.",
+        ],
+        list: [
+          "Listez vos envois de la semaine passée, avec leur nature et leur délai impératif.",
+          "Séparez ceux qui ne supportent aucun arrêt de ceux qui peuvent attendre quelques heures.",
+          "Comptez les envois qui partent vers une même zone ou un même destinataire.",
+          "Vérifiez si un envoi critique peut voyager avec d'autres sans risque de dégradation.",
+          "Confrontez le résultat à votre budget coursier réel, pas à celui que vous imaginez.",
+        ],
+      },
+      {
+        heading: "Tableau comparatif : course dédiée contre tournée groupée",
+        paragraphs: [
+          "Le tableau compare les critères observables. Il ne dit pas qu'une formule est meilleure : il dit que les deux ne répondent pas à la même question.",
+        ],
+        table: {
+          prose: true,
+          head: ["Critère", "Course dédiée", "Tournée groupée"],
+          rows: [
+            ["Nombre d'envois par trajet", "Un seul", "Plusieurs, répartis sur le parcours"],
+            ["Délai d'enlèvement", "Moins de 45 minutes", "Dépend de la position dans la tournée"],
+            ["Trajet", "Direct du point A au point B", "Ordre de passage défini à l'avance"],
+            ["Mélange avec d'autres plis", "Aucun", "Oui, plusieurs envois cohabitent"],
+            ["Pertinence pour un pli juridique", "Adaptée : remise en main propre, heure de dépôt", "Risquée : attente possible avant remise"],
+            ["Pertinence pour un prélèvement", "Adaptée si le délai de stabilité est court", "À éviter si le délai est serré"],
+            ["Pertinence pour du matériel fragile", "Adaptée : un seul envoi à caler", "Dépend du calage et des manipulations"],
+            ["Volume adapté", "Ponctuel ou faible", "Récurrent et prévisible"],
+            ["Organisation en amont", "Aucune : deux adresses suffisent", "Nécessite un planning et un coordinateur"],
+            ["Suivi", "En direct, étape par étape", "Suivi de tournée, plusieurs points"],
+            ["Facturation", "Une facture par course", "Facturation liée au dispositif"],
+            ["Prix", "Affiché avant commande selon les adresses, à partir de 28 € TTC à Paris", "Sur devis selon l'organisation"],
+          ],
+        },
+      },
+      {
+        heading: "Les erreurs qui coûtent cher",
+        paragraphs: [
+          "La première erreur consiste à grouper un envoi qui ne supporte pas l'attente. Un pli qui doit être déposé avant la fermeture d'un greffe n'a rien à faire en troisième position sur une tournée. Le temps gagné sur le coût se paie en retard, et un retard de dépôt ne se rattrape pas.",
+          "La deuxième erreur est inverse : commander une course dédiée pour chaque petit envoi d'une journée chargée. Une entreprise qui expédie quinze documents vers le même quartier dans la matinée multiplie les trajets et les factures sans gagner de temps utile, parce qu'aucun de ces envois n'avait d'échéance à la minute.",
+          "Troisième piège : confondre tournée groupée et ramassage improvisé. Une tournée se construit sur des flux connus. Si vous ne pouvez pas dire à l'avance quels envois partent et vers où, vous n'avez pas de tournée, vous avez une course dédiée mal étiquetée.",
+          "Quatrième erreur, plus discrète : négliger les conditions de transport dans le choix du format. Un contenant isotherme pour un prélèvement, un calage pour une pièce d'automate, un top-case verrouillé pour du matériel fragile : ces précautions se décident à la commande, pas après. Une tournée qui mélange un échantillon thermosensible et un colis lourd dans le même véhicule sans organisation pose un problème que le prix ne compense pas.",
+          "Cinquième point, celui que personne n'écrit dans les comparatifs : le format choisi doit être tenable par votre équipe interne. Si la personne qui prépare les envois ne peut pas tenir un planning de tournée à jour, la tournée échouera. Mieux vaut une course dédiée commandée au fil de l'eau qu'une tournée mal alimentée.",
+        ],
+      },
+      {
+        heading: "Le vrai critère n'est pas le volume, c'est la tolérance à l'attente",
+        paragraphs: [
+          "La plupart des comparatifs classent les envois par volume : peu d'envois, course dédiée ; beaucoup d'envois, tournée. Ce raisonnement passe à côté de l'essentiel. Le volume détermine le coût, la tolérance à l'attente détermine la faisabilité.",
+          "Prenez deux entreprises avec le même volume quotidien. La première expédie des contrats à signer chez des clients, sans échéance à l'heure près. La seconde achemine des prélèvements vers un plateau technique avec un délai de stabilité court. Les deux ont cinq envois par jour. La première peut construire une tournée sans risque. La seconde ne le peut pas, parce qu'un prélèvement qui attend deux heures dans un top-case pendant que le coursier termine sa tournée n'arrive pas dans les mêmes conditions qu'un prélèvement parti directement.",
+          "Le critère de décision tient donc en une question posée à chaque envoi : si cet envoi attend deux heures de plus, que se passe-t-il ? Si la réponse est « rien », il peut rejoindre une tournée. Si la réponse est « le dossier est refusé », « l'analyse est à refaire » ou « la production s'arrête », il part en course dédiée, quel que soit le volume du jour.",
+          "Cette lecture a une conséquence pratique : la plupart des entreprises n'ont pas à choisir un format unique. Elles ont à trier leurs envois. Un service juridique et un service logistique d'une même société n'ont pas les mêmes contraintes, et imposer un format commun aux deux dégrade soit le délai, soit le budget.",
+          "Un détail que peu d'organisations anticipent : le délai de stabilité d'un prélèvement n'est pas une donnée fixe. Il varie selon la nature de l'échantillon et les exigences du laboratoire destinataire. C'est vous qui le fixez, et c'est lui qui détermine si la course est réalisable. Une entreprise qui ne connaît pas ce délai pour ses propres envois ne peut pas arbitrer correctement entre les deux formats. La faisabilité se confirme avant d'engager, plutôt que d'accepter puis d'échouer.",
+        ],
+      },
+      {
+        heading: "Quand la tournée groupée devient un mauvais calcul",
+        paragraphs: [
+          "Il existe un cas où la tournée groupée coûte plus qu'elle ne rapporte, même sur des flux récurrents : quand le nombre de points de livraison dépasse ce qu'un seul parcours peut absorber dans la fenêtre utile. Une tournée qui enchaîne douze arrêts dans Paris intra-muros sur une matinée finit par livrer les derniers destinataires à une heure où ils ne sont plus là pour réceptionner. Le gain de coût se transforme en échecs de remise, en repassages, et en temps perdu pour tout le monde.",
+          "La tournée suppose aussi une régularité réelle. Un flux qui varie fortement d'un jour à l'autre, avec des pics imprévisibles, se prête mal à un parcours figé. Dans ce cas, la course dédiée commandée à la demande reste plus souple, même si elle coûte plus cher à l'unité.",
+          "Enfin, la tournée groupée n'est pas une solution d'urgence. Elle s'organise. Si votre besoin est de faire partir un pli dans l'heure, la question ne se pose même pas : c'est une course dédiée, avec un enlèvement en moins de 45 minutes et une livraison directe.",
+          "Pour creuser les tarifs selon les configurations, la page sur le [prix d'un coursier express à Paris](/guides/prix-coursier-express-paris) détaille ce qui fait varier la facture. Et si votre problème est de savoir combien de temps prend réellement une livraison urgente en Île-de-France, la réponse se trouve dans le guide sur les [délais d'un coursier express en Île-de-France](/guides/combien-coute-un-coursier-a-paris).",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "Une tournée groupée est-elle toujours moins chère qu'une course dédiée ?",
+        answer:
+          "À l'unité, une tournée répartit le coût du trajet sur plusieurs envois, ce qui la rend généralement plus économique par colis. Mais ce calcul ne tient que si les envois supportent l'attente. Un envoi critique livré en retard par une tournée coûte plus cher qu'une course dédiée, parce que le retard lui-même a un coût pour l'entreprise.",
+      },
+      {
+        question: "Puis-je mélanger envois urgents et non urgents sur une même tournée ?",
+        answer:
+          "Techniquement, un parcours peut inclure plusieurs envois de criticité différente. En pratique, l'envoi urgent passe en premier, et les autres attendent. Si l'attente dépasse ce que supporte l'envoi non urgent, ou si l'urgence impose un détour qui rallonge la tournée pour tous, il vaut mieux séparer les flux.",
+      },
+      {
+        question: "Comment savoir si mon envoi supporte une tournée ?",
+        answer:
+          "Posez la question du délai de stabilité ou de l'échéance de remise. Si l'envoi doit arriver avant une heure précise, ou si sa nature impose une limite de temps (prélèvement, échantillon, pièce bloquante), il ne supporte pas l'attente d'une tournée. Dans le doute, la course dédiée reste la valeur sûre.",
+      },
+      {
+        question: "La course dédiée est-elle réservée aux envois confidentiels ?",
+        answer:
+          "Non. La course dédiée convient à tout envoi qui ne peut pas partager son trajet : un pli juridique, un prélèvement, une pièce technique immobilisante, un colis fragile. La confidentialité est un motif parmi d'autres, pas le seul. Un envoi banal mais urgent relève aussi de la course dédiée.",
+      },
+    ],
+    service: { href: "/services/coursier-express-paris", label: "Coursier express Paris" },
+    published: "2026-11-17",
   },
 ];
 
