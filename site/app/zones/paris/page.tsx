@@ -15,9 +15,9 @@ import TrustBlock from "@/components/TrustBlock";
 import { SITE_URL, PHONE_TEL, PHONE_DISPLAY } from "@/lib/site-content";
 import { Clock, MapPin, Zap, Shield } from "lucide-react";
 
-const TITLE = "Coursier à Paris : course dédiée 7j/7, 7h-23h";
+const TITLE = "Coursier Paris : course dédiée 7j/7, de 7h à 23h";
 const DESCRIPTION =
-  "Un coursier dédié par envoi, partout dans Paris, en moins de 45 minutes. Plis, médical, e-commerce. Tarifs clairs, interlocuteur unique.";
+  "Coursier à Paris dans les 20 arrondissements : une course dédiée par envoi, enlèvement en moins de 45 minutes, 7j/7 de 7h à 23h. Dès 28 € TTC.";
 
 export const metadata: Metadata = {
   title: { absolute: TITLE },
@@ -124,7 +124,7 @@ export default function ZoneParis() {
             Zone couverte · Paris 75
           </div>
           <h1 className="mb-6 max-w-[20ch] text-balance text-[clamp(36px,5vw,64px)] font-bold leading-[1.05] tracking-[-0.035em]">
-            Coursier Paris : une course dédiée par envoi
+            Coursier Paris : une course dédiée dans les 20 arrondissements
           </h1>
           <p className="max-w-[58ch] text-pretty text-[17px] leading-[1.6] text-white/66">
             One Connexion couvre les 20 arrondissements avec sa flotte de
@@ -465,7 +465,7 @@ export default function ZoneParis() {
               <p className="mb-3 text-[clamp(24px,3vw,36px)] font-bold leading-[1.2] tracking-[-0.02em]">
                 Une course maintenant ?
               </p>
-              <p className="text-[15px] text-white/60">Prise en charge en moins de 2 minutes, 7j/7 de 7h à 23h.</p>
+              <p className="text-[15px] text-white/60">Enlèvement en moins de 45 minutes, 7j/7 de 7h à 23h.</p>
             </div>
             <a
               href={`tel:${PHONE_TEL}`}

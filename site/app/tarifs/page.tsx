@@ -19,7 +19,7 @@ const euro = (n: number) =>
 
 const TITLE = "Tarif coursier Paris dès 28 € TTC : grille et prix au km";
 const DESCRIPTION =
-  "Tarif coursier à Paris dès 28 € TTC, 39 € TTC en petite couronne puis 2 € par km. Grille complète, exemples de courses et devis gratuit sous 2 h ouvrées.";
+  "Tarif coursier à Paris : 28 € TTC en Normal 3 h, 42 € en Urgent, 56 € en Super. Petite couronne dès 39 € TTC, puis 2 € par km au-delà de 8 km.";
 
 // Petite couronne : prix de base (jusqu'à 8 km) et chaque km en plus, par délai.
 const PC_LEVELS = [

@@ -306,7 +306,7 @@ export const LANDING_SERVICES: LandingService[] = [
         ],
       },
       {
-        title: "Délais garantis et horaires (7h–23h, 7j/7)",
+        title: "Enlèvement en moins de 45 minutes, 7j/7 de 7h à 23h",
         paragraphs: [
           "Le coursier prend l’envoi en charge en moins de 45 minutes, 7j/7 de 7h à 23h, sous réserve de disponibilité au moment de la commande. Si l’envoi doit être remis avant une heure précise, dites-le à la commande : nous confirmons la faisabilité avant d’engager la course.",
           "Dans un envoi mutualisé, votre colis attend que d’autres soient collectés, puis suit une tournée avec plusieurs arrêts. En course dédiée, le coursier ne transporte que le vôtre : il part de votre adresse et va directement au destinataire. Vous suivez la course en ligne jusqu’à la remise, et le nom de la personne qui reçoit l’envoi est enregistré avec l’heure.",
