@@ -1198,6 +1198,104 @@ export const GUIDES: Guide[] = [
     service: { href: "/services/coursier-express-paris", label: "Coursier express Paris" },
     published: "2026-11-17",
   },
+  {
+    slug: "coursier-tribunal-remise-document-urgence",
+    title: "Coursier pour tribunal : remettre un document en urgence",
+    h1: "Coursier pour tribunal : remettre un document dans les délais",
+    seoTitle: "Coursier tribunal : déposer un document en urgence",
+    description:
+      "Coursier pour tribunal et cour d'appel : préparer la remise d'un document en urgence à Paris et en Île-de-France, choisir le délai et garder la preuve.",
+    summary:
+      "Remettre un document au greffe ou à un autre cabinet dans un délai court : préparation de la course, choix de la formule, horaires à vérifier et preuve de remise.",
+    intro:
+      "Un mémoire à déposer avant la fermeture du greffe, une pièce à remettre à un autre cabinet avant une audience : les délais judiciaires ne se négocient pas. Ce guide décrit comment organiser une course de remise de document en urgence, ce qu'il faut transmettre au coursier et ce qui reste à votre charge.",
+    sections: [
+      {
+        heading: "Ce que recouvre une remise de document au tribunal",
+        paragraphs: [
+          "Dans la pratique, une remise de document au tribunal prend plusieurs formes : dépôt au greffe, remise à un service de la juridiction, transmission à un confrère ou à un avocat adverse dans un autre tribunal. Chaque cas a ses propres horaires et ses propres modalités d'accueil.",
+          "Le coursier intervient sur le trajet et sur la remise. Il ne décide ni de la forme du dépôt, ni de l'acte à accomplir, ni du respect d'un délai de procédure. Ces points relèvent de votre conseil, qui connaît les règles applicables à votre dossier.",
+        ],
+      },
+      {
+        heading: "Vérifier l'heure limite avant de commander",
+        paragraphs: [
+          "L'heure limite compte plus que la distance. Un greffe ferme ses guichets à une heure fixe, parfois plus tôt que l'heure affichée sur son site pour les dépôts en présentiel. Avant de commander, vérifiez les horaires d'accueil du service concerné, le jour même, auprès de la juridiction ou de son site officiel.",
+          "Une fois l'heure limite connue, comptez-la en partant de la fin : le délai choisi doit tenir la course jusqu'à la remise, sans marge sur la fermeture.",
+        ],
+      },
+      {
+        heading: "Préparer le document et les informations de course",
+        paragraphs: [
+          "Le document doit être prêt et complet au moment de l'enlèvement. Le coursier transporte le pli fermé tel qu'il lui est remis : il ne le relit pas et ne le complète pas.",
+        ],
+        list: [
+          "Le nom de la juridiction ou du service, et l'adresse exacte du point de dépôt.",
+          "La référence du dossier, pour retrouver la course dans votre facturation.",
+          "Le nombre d'exemplaires et de pièces jointes, pour vérifier la remise complète.",
+          "L'heure limite réelle de dépôt, et les contraintes d'accès (contrôle à l'entrée, badge, horaires de réception).",
+          "Un numéro de téléphone joignable à l'enlèvement comme à la remise.",
+        ],
+      },
+      {
+        heading: "Choisir la formule : Normal, Urgent ou Super",
+        paragraphs: [
+          "Le délai se choisit selon l'échéance. Dans Paris, la formule Normal (remise sous 3 h) est à 28 € TTC, la formule Urgent (sous 1 h 30) à 42 € TTC et la formule Super (sous 1 h) à 56 € TTC. En petite couronne, le prix Normal part de 39 € TTC jusqu'à 8 km, puis 2 € TTC par km en plus. Le détail figure sur notre [grille tarifaire](/tarifs).",
+          "La prise en charge se fait en moins de 45 minutes, 7 jours sur 7 de 7 h à 23 h, sous réserve de disponibilité au moment de la commande. Une échéance qui tombe après 23 h ou avant la prise en charge ne peut pas être tenue par une course immédiate : il faut anticiper la veille.",
+        ],
+      },
+      {
+        heading: "Garder la preuve de remise",
+        paragraphs: [
+          "La preuve de remise est ce qui justifie le dépôt. Pour chaque course, l'heure de prise en charge et l'heure de remise sont enregistrées, avec le nom de la personne qui a reçu le pli. Ces informations restent consultables dans votre espace en ligne.",
+          "Conservez le numéro de course dans votre dossier. Si le greffe ou un confrère conteste la date de réception, c'est ce justificatif qui permet de reconstituer le trajet. Il ne remplace pas le récépissé ou l'accusé de dépôt que la juridiction peut délivrer de son côté.",
+        ],
+      },
+      {
+        heading: "Confier la course à un coursier dédié",
+        paragraphs: [
+          "Pour une pièce de procédure, la course dédiée est la plus adaptée : le coursier part de votre cabinet, va directement au point de dépôt et ne s'arrête pas chez un autre client. Une tournée groupée convient à des envois sans échéance, pas à un dépôt avant une heure fixe.",
+          "Pour les cabinets et les études, le détail de notre offre figure sur la page [coursier avocat et notaire](/services/coursier-avocat-notaire). Pour les documents qui ne doivent être remis qu'à une personne nommée, lisez aussi le guide sur l'[envoi d'un pli confidentiel à Paris](/guides/envoyer-un-pli-confidentiel-paris).",
+        ],
+      },
+      {
+        heading: "Ce que la course ne couvre pas",
+        paragraphs: [
+          "Le coursier garantit le transport, le respect de la formule choisie et la preuve de remise. Il ne garantit pas que le greffe accepte le dépôt : une pièce incomplète, un mauvais service ou un accueil fermé peuvent bloquer la remise, même si la course est arrivée à temps.",
+          "Si votre acte doit faire l'objet d'une signification ou d'une formalité particulière, comme une lettre recommandée avec accusé de réception, ces formalités restent à accomplir selon les règles qui vous sont applicables. En cas de doute, interrogez votre conseil avant de commander.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "Un coursier peut-il déposer un document au greffe à ma place ?",
+        answer:
+          "Oui, si la juridiction accepte le dépôt par un coursier et si le pli est complet. Vérifiez les modalités d'accueil du service avant de commander, car elles diffèrent selon les juridictions.",
+      },
+      {
+        question: "Quel délai choisir pour une remise avant la fermeture d'un greffe ?",
+        answer:
+          "Partez de l'heure limite réelle de dépôt et choisissez la formule qui laisse une marge suffisante : Normal (3 h), Urgent (1 h 30) ou Super (1 h). Pour une échéance très serrée, appelez-nous avant de commander.",
+      },
+      {
+        question: "Combien coûte une remise de document à Paris ?",
+        answer:
+          "Dans Paris, 28 € TTC en Normal (3 h), 42 € TTC en Urgent (1 h 30) et 56 € TTC en Super (1 h). Le prix ne dépend pas du nombre de pages, jusqu'à 18 kg.",
+      },
+      {
+        question: "Comment prouver la date de remise ?",
+        answer:
+          "L'heure de prise en charge et l'heure de remise sont enregistrées, avec le nom de la personne qui reçoit le pli. Gardez le numéro de course dans votre dossier.",
+      },
+      {
+        question: "Les courses sont-elles disponibles le dimanche ?",
+        answer:
+          "Oui, le service fonctionne 7 jours sur 7, de 7 h à 23 h. Mais un greffe est souvent fermé le dimanche : la remise doit être possible à l'ouverture de la juridiction.",
+      },
+    ],
+    service: { href: "/services/coursier-avocat-notaire", label: "Coursier avocat et notaire" },
+    published: "2026-11-26",
+  },
 ];
 
 export const GUIDE_SLUGS = GUIDES.map((g) => g.slug);
