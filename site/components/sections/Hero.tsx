@@ -5,7 +5,7 @@
  */
 "use client";
 
-import { Phone } from "lucide-react";
+import { Phone, Star } from "lucide-react";
 import QuickOrderBar from "@/components/QuickOrderBar";
 import { ZONES } from "@/lib/pricing";
 import { PHONE_DISPLAY, PHONE_TEL } from "@/lib/site-content";
@@ -52,7 +52,7 @@ export default function Hero() {
       <div className="pointer-events-none absolute inset-0 z-10 hidden bg-gradient-to-r from-ink/90 via-ink/55 to-transparent md:block"></div>
 
       <div className="relative z-30 mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)]">
-        <div className="min-w-0 pt-8 [text-shadow:0_1px_12px_rgba(0,0,0,0.65)] md:pt-12">
+        <div className="min-w-0 pt-8 [text-shadow:0_1px_12px_rgba(0,0,0,0.65)] md:pr-[310px] md:pt-12">
           <h1 className="mb-3 text-balance text-[clamp(32px,5vw,64px)] font-bold leading-[1.05] tracking-[-0.035em]">
             Coursier Île-de-France : une course dédiée par envoi
           </h1>
@@ -71,6 +71,32 @@ export default function Hero() {
             <span className="text-white/80">Course dans Paris</span>
             <span>à partir de <strong className="text-[18px] font-bold">{ZONES.paris.from}&nbsp;€ TTC</strong></span>
           </p>
+
+          <a
+            href="https://share.google/Qdfd63CULw434rMDR"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Voir nos avis Google : 5,0 sur 5, 4 avis"
+            className="mb-4 inline-flex items-center gap-3 rounded-full bg-white transition-transform hover:scale-[1.03] md:absolute md:right-[clamp(20px,4vw,28px)] md:top-[calc(42%-56px)] md:mb-0 md:-translate-y-1/2 py-2.5 pl-4 pr-5 font-sans text-[#202124] shadow-[0_2px_10px_rgba(0,0,0,0.35)] [text-shadow:none]">
+            <svg viewBox="0 0 48 48" width="30" height="30" aria-hidden="true" className="shrink-0">
+              <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z" />
+              <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z" />
+              <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z" />
+              <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
+            </svg>
+            <div className="flex flex-col leading-tight">
+              <span className="text-[14px] font-medium text-[#202124]">Avis Google</span>
+              <span className="flex items-center gap-2">
+                <span className="text-[20px] font-medium">5,0</span>
+                <span className="flex items-center gap-0.5 text-[#fbbc04]" aria-label="5 étoiles sur 5">
+                  {[0, 1, 2, 3, 4].map((i) => (
+                    <Star key={i} size={20} fill="currentColor" strokeWidth={0} />
+                  ))}
+                </span>
+                <span className="text-[15px] text-[#70757a]">(4 avis)</span>
+              </span>
+            </div>
+          </a>
         </div>
 
         {/* Barre de commande rapide : l'action principale de la page. */}
