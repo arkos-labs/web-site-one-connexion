@@ -9,6 +9,7 @@ import { natureLabel } from "@/lib/order-nature";
 import { htOf, normalizeOrderPriceTTC } from "@/lib/price-display";
 import { AdminPage } from "@/components/dashboard/ui";
 import { useQueryParam } from "@/lib/use-query-state";
+import { formatScheduled, isScheduledAfterToday, orderScheduledAt } from "@/lib/order-schedule";
 import { AlertTriangle, ArrowRight, ChevronDown, ChevronUp, Clock, MapPin, Search, Send, Truck, Users, X, Zap, Plus } from "lucide-react";
 import { CreateOrderModal } from "@/components/admin/CreateOrderModal";
 
@@ -24,6 +25,8 @@ type Course = {
   status: string;
   price: number | null;
   createdAt: string;
+  // Enlèvement programmé un autre jour (null = dès que possible)
+  scheduledAt?: string | null;
   driverId: string | null;
   stops: { address: string; contact_name?: string; contact_phone?: string }[] | null;
   delai?: string | null;
@@ -158,7 +161,7 @@ function AdminCoursesPageInner() {
       supabase.from("drivers").select("id, name, phone, vehicle, status, auth_id").order("name"),
       supabase
         .from("orders")
-        .select("id, pickup_address, dropoff_address, status, driver_id, tracking_code, price_estimate, created_at, user_id, stops, point_progress, delai, format, nature, nature_detail, contact_name, contact_phone, driver_accepted_at, picked_up_at, delivered_at, delivery_recipient, delivery_department, delivery_comment, delivery_photo_url, client_type, source, billing_status")
+        .select("id, pickup_address, dropoff_address, status, driver_id, tracking_code, price_estimate, created_at, user_id, stops, point_progress, delai, format, nature, nature_detail, contact_name, contact_phone, driver_accepted_at, picked_up_at, delivered_at, delivery_recipient, delivery_department, delivery_comment, delivery_photo_url, client_type, source, billing_status, scheduled_at, notes")
         .or(ADMIN_VISIBLE_ORDERS)
         .neq("status", "annulee")
         .order("created_at", { ascending: false }),
@@ -205,6 +208,7 @@ function AdminCoursesPageInner() {
       status: o.status,
       price: normalizeOrderPriceTTC(o.price_estimate, o.pickup_address, o.dropoff_address, o.delai),
       createdAt: o.created_at,
+      scheduledAt: orderScheduledAt(o),
       driverId: o.driver_id,
       stops: Array.isArray(o.stops) ? o.stops : null,
       delai: o.delai,
@@ -367,6 +371,11 @@ function AdminCoursesPageInner() {
 
   const openAnomalies = (missionId: string) => anomalies.filter((a) => a.mission_id === missionId && !a.resolved);
 
+  // Course programmée pour un jour suivant, non terminée (onglet « À venir »). Cette page n'a pas
+  // d'onglet « En cours » : on y garde aussi celles déjà marquées enlevées.
+  const isUpcoming = (c: Course) =>
+    !["livree", "delivered", "annulee", "cancelled"].includes(c.status) && isScheduledAfterToday(c.scheduledAt);
+  const upcomingCount = courses.filter(isUpcoming).length;
   const pendingCount = courses.filter((c) => c.status === "en_attente" || c.status === "pending").length;
   const toDispatchCount = courses.filter((c) => c.status !== "en_attente" && c.status !== "pending" && c.status !== "livree" && c.status !== "delivered" && c.status !== "annulee" && c.status !== "cancelled" && !c.driverId).length;
   const inProgressCount = courses.filter((c) => c.status !== "en_attente" && c.status !== "pending" && c.status !== "livree" && c.status !== "delivered" && c.status !== "annulee" && c.status !== "cancelled" && c.driverId).length;
@@ -387,6 +396,7 @@ function AdminCoursesPageInner() {
       const needsDriver = isOperational && !c.driverId;
       const onDriverApp = isOperational && !!c.driverId;
 
+      if (filter === "upcoming" && !isUpcoming(c)) return false;
       if (filter === "to_accept" && !isPending) return false;
       if (filter === "to_dispatch" && !needsDriver) return false;
       if (filter === "in_progress" && !onDriverApp) return false;
@@ -468,6 +478,7 @@ function AdminCoursesPageInner() {
         <div className="flex flex-wrap gap-2">
             {([
               ["to_accept", "À accepter", pendingCount],
+              ["upcoming", "À venir", upcomingCount],
               ["finished", "Terminées", finishedCount],
             ] as const).map(([key, label, count]) => (
             <button
@@ -533,6 +544,11 @@ function AdminCoursesPageInner() {
                       {c.delai && c.type !== "navette" && (
                         <span className={`rounded-full px-2 py-0.5 text-[11px] font-bold uppercase ${c.delai === 'flash' ? 'bg-red-50 text-red-700' : c.delai === 'urgent' ? 'bg-orange-50 text-orange-700' : 'bg-slate-100 text-slate-700'}`}>
                           {c.delai === 'flash' ? 'Super 1h' : c.delai === 'urgent' ? 'Urgent 1h30' : c.delai === 'standard' ? 'Normal 3h' : c.delai}
+                        </span>
+                      )}
+                      {c.scheduledAt && (
+                        <span className="rounded-full bg-violet-100 px-2 py-0.5 text-[11px] font-bold uppercase text-violet-800" title="Date d'enlèvement demandée par le client">
+                          Prévue {formatScheduled(c.scheduledAt)}
                         </span>
                       )}
                       {c.type === "commande" && c.status !== "en_attente" && c.status !== "pending" ? (

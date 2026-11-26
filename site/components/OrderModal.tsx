@@ -20,6 +20,7 @@ import GuestAccountBox from "@/components/GuestAccountBox";
 import DeferredPaymentNote from "@/components/DeferredPaymentNote";
 import { saveOrderDraft, loadOrderDraft, clearOrderDraft, checkoutSessionIdFromUrl } from "@/lib/order-draft";
 import { ORDER_NATURES, NATURE_DETAIL_MAX, natureLabel } from "@/lib/order-nature";
+import { parisLocalToISO } from "@/lib/order-schedule";
 
 interface OrderModalProps {
   open: boolean;
@@ -284,6 +285,8 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
         notes: scheduledDate
           ? `Enlèvement souhaité le ${scheduledDate.split("-").reverse().join("/")}${scheduledTime ? ` à ${scheduledTime}` : ""}${notes.trim() ? `\n${notes}` : ""}`
           : notes,
+        // Date d'enlèvement programmée : lue par le dashboard admin (onglet « À venir ») et le suivi client.
+        scheduled_at: scheduledDate ? parisLocalToISO(scheduledDate, scheduledTime) : null,
         contact_name: `${firstName.trim()} ${lastName.trim()}`.trim(),
         contact_email: contactEmail.trim(),
         contact_phone: contactPhone.trim(),
